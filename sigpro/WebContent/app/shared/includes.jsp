@@ -19,7 +19,7 @@
 <script type="text/javascript" src="/assets/libs/angular/angular-touch.min.js"></script>
 <script type="text/javascript" src="/assets/libs/angular/angular-messages.min.js"></script>
 <script type="text/javascript" src="/assets/libs/angular/angular-aria.min.js"></script>
-<script type="text/javascript" src="/assets/libs/ui-bootstrap-tpls-1.2.1.min.js"></script> 
+<script type="text/javascript" src="/assets/libs/ui-bootstrap-tpls-2.5.0.min.js"></script> 
 <script type="text/javascript" src="/assets/libs/moment.min.js"></script>
 <script type="text/javascript" src="/assets/libs/Chart.min.js"></script>
 <script type="text/javascript" src="/assets/libs/angular-chart.min.js"></script>

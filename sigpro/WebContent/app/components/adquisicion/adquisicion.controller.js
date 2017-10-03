@@ -1,5 +1,5 @@
 app.controller('adquisicionController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','$mdDialog','$uibModal','$q', 'dialogoConfirmacion', 
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion) {
+	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,$mdDialog,$uibModal,$q, $dialogoConfirmacion) {
 		var mi=this;
 		
 		mi.mostrarcargando=true;
@@ -21,19 +21,19 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		mi.parentController=null;
 		
 		if($scope.$parent.producto){
-			$scope.$parent.producto.child_adquisicion = $scope.adquisicionc;
+			$scope.$parent.producto.child_adquisiciones = $scope.adquisicionc;
 			mi.parentController = $scope.$parent.producto;
 			mi.objetoTipo = 3;
 			mi.objetoId = $scope.$parent.producto.producto.id;
 		}
 		if($scope.$parent.subproductoc){
-			$scope.$parent.subproductoc.child_adquisicion = $scope.adquisicionc;
+			$scope.$parent.subproductoc.child_adquisiciones = $scope.adquisicionc;
 			mi.parentController = $scope.$parent.subproductoc;
 			mi.objetoTipo = 4;
 			mi.objetoId = $scope.$parent.subproductoc.subproducto.id;
 		}
 		if($scope.$parent.actividadc){
-			$scope.$parent.actividadc.child_adquisicion = $scope.adquisicionc;
+			$scope.$parent.actividadc.child_adquisiciones = $scope.adquisicionc;
 			mi.parentController = $scope.$parent.actividadc;
 			mi.objetoTipo = 5;
 			mi.objetoId = $scope.$parent.actividadc.actividad.id;
@@ -52,7 +52,7 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		mi.cambioTipo=function(selected){
 			if(selected!== undefined){
 				mi.adquisicion.tipoNombre=selected.originalObject.nombre;
-				mi.adquisicioin.tipoId=selected.originalObject.id;
+				mi.adquisicion.tipoId=selected.originalObject.id;
 			}
 			else{
 				mi.adquisicion.tipoNombre="";
@@ -69,7 +69,7 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		mi.cambioCategoria=function(selected){
 			if(selected!== undefined){
 				mi.adquisicion.categoriaNombre=selected.originalObject.nombre;
-				mi.adquisicioin.categoriaId=selected.originalObject.id;
+				mi.adquisicion.categoriaId=selected.originalObject.id;
 			}
 			else{
 				mi.adquisicion.categoriaNombre="";
@@ -97,22 +97,30 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
 			$http.post('/SPlanAdquisicion', { accion: 'getPlanAdquisicionPorObjeto',  
-				objetoid: mi.objetoId, objetotipo: mi.objetoTipo, t: (new Date()).getTime()
+				objetoId: mi.objetoId, objetoTipo: mi.objetoTipo, t: (new Date()).getTime()
 				}).success(
 					function(response) {
 						mi.adquisiciones = response.adquisiciones;
 						mi.mostrarcargando = false;
 						for(var i=0; i<mi.adquisiciones.length; i++){
-							mi.adquisiciones[i].adjudicacionPlanificada = mi.adquisiciones[i].adjudicacionPlanificada!=null ? moment(mi.adquisiciones[i].adjudicacionPlanificada,'DD/MM/YYYY').toDate() : null;
-							mi.adquisiciones[i].adjudicacionReal = mi.adquisiciones[i].adjudicacionReal!=null ? moment(mi.adquisiciones[i].adjudicacionReal,'DD/MM/YYYY').toDate() : null;
-							mi.adquisiciones[i].firmaContratoPlanificada = mi.adquisiciones[i].firmaContratoPlanificada!=null ? moment(mi.adquisiciones[i].firmaContratoPlanificada,'DD/MM/YYYY').toDate() : null;
-							mi.adquisiciones[i].firmaContratoReal = mi.adquisiciones[i].firmaContratoReal!=null ? moment(mi.adquisiciones[i].firmaContratoReal,'DD/MM/YYYY').toDate() : null;
-							mi.adquisiciones[i].lanzamientoEventoPlanificada = mi.adquisiciones[i].lanzamientoEventoPlanificada!=null ? moment(mi.adquisiciones[i].lanzamientoEventoPlanificada,'DD/MM/YYYY').toDate() : null;
-							mi.adquisiciones[i].lanzamientoEventoReal = mi.adquisiciones[i].lanzamientoEventoReal!=null ? moment(mi.adquisiciones[i].lanzamientoEventoReal,'DD/MM/YYYY').toDate() : null;
-							mi.adquisiciones[i].preparacionDocumentosPlanificada = mi.adquisiciones[i].preparacionDocumentosPlanificada!=null ? moment(mi.adquisiciones[i].preparacionDocumentosPlanificada,'DD/MM/YYYY').toDate() : null;
-							mi.adquisiciones[i].preparacionDocumentosReal = mi.adquisiciones[i].preparacionDocumentosReal!=null ? moment(mi.adquisiciones[i].preparacionDocumentosReal,'DD/MM/YYYY').toDate() : null;
-							mi.adquisiciones[i].recepcionOfertasPlanificada = mi.adquisiciones[i].recepcionOfertasPlanificada!=null ? moment(mi.adquisiciones[i].recepcionOfertasPlanificada,'DD/MM/YYYY').toDate() : null;
-							mi.adquisiciones[i].recepcionOfertasReal = mi.adquisiciones[i].recepcionOfertasReal!=null ? moment(mi.adquisiciones[i].recepcionOfertasReal,'DD/MM/YYYY').toDate() : null;
+							mi.adquisiciones[i].adjudicacionPlanificada = mi.adquisiciones[i].adjudicacionPlanificada!="" ? moment(mi.adquisiciones[i].adjudicacionPlanificada,'DD/MM/YYYY').toDate() : null;
+							mi.adquisiciones[i].adjudicacionReal = mi.adquisiciones[i].adjudicacionReal!="" ? moment(mi.adquisiciones[i].adjudicacionReal,'DD/MM/YYYY').toDate() : null;
+							mi.adquisiciones[i].firmaContratoPlanificada = mi.adquisiciones[i].firmaContratoPlanificada!="" ? moment(mi.adquisiciones[i].firmaContratoPlanificada,'DD/MM/YYYY').toDate() : null;
+							mi.adquisiciones[i].firmaContratoReal = mi.adquisiciones[i].firmaContratoReal!="" ? moment(mi.adquisiciones[i].firmaContratoReal,'DD/MM/YYYY').toDate() : null;
+							mi.adquisiciones[i].lanzamientoEventoPlanificada = mi.adquisiciones[i].lanzamientoEventoPlanificada!="" ? moment(mi.adquisiciones[i].lanzamientoEventoPlanificada,'DD/MM/YYYY').toDate() : null;
+							mi.adquisiciones[i].lanzamientoEventoReal = mi.adquisiciones[i].lanzamientoEventoReal!="" ? moment(mi.adquisiciones[i].lanzamientoEventoReal,'DD/MM/YYYY').toDate() : null;
+							mi.adquisiciones[i].preparacionDocumentosPlanificada = mi.adquisiciones[i].preparacionDocumentosPlanificada!="" ? moment(mi.adquisiciones[i].preparacionDocumentosPlanificada,'DD/MM/YYYY').toDate() : null;
+							mi.adquisiciones[i].preparacionDocumentosReal = mi.adquisiciones[i].preparacionDocumentosReal!="" ? moment(mi.adquisiciones[i].preparacionDocumentosReal,'DD/MM/YYYY').toDate() : null;
+							mi.adquisiciones[i].recepcionOfertasPlanificada = mi.adquisiciones[i].recepcionOfertasPlanificada!="" ? moment(mi.adquisiciones[i].recepcionOfertasPlanificada,'DD/MM/YYYY').toDate() : null;
+							mi.adquisiciones[i].recepcionOfertasReal = mi.adquisiciones[i].recepcionOfertasReal!="" ? moment(mi.adquisiciones[i].recepcionOfertasReal,'DD/MM/YYYY').toDate() : null;
+							if(mi.adquisiciones[i].pagos===undefined || mi.adquisiciones[i].pagos==null)
+								mi.adquisiciones[i].pagos=[];
+							else{
+								for(var j=0; j<mi.adquisiciones[i].pagos.length; j++){
+									mi.adquisiciones[i].pagos[j].fecha = mi.adquisiciones[i].pagos[j].fechaPago;
+									mi.adquisiciones[i].pagos[j].fechaPago = (mi.adquisiciones[i].pagos[j].fechaPago!=null && mi.adquisiciones[i].pagos[j].fechaPago!="") ? moment(mi.adquisiciones[i].pagos[j].fechaPago,'DD/MM/YYYY').toDate() : null;
+								}
+							}
 						}
 					});
 		}
@@ -127,7 +135,7 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 			
 			if(mi.adquisiciones.length>0){
 				$http.post('/SPlanAdquisicion', {
-					accion: 'guardarRiesgos',
+					accion: 'guardarAdquisiciones',
 					adquisiciones: JSON.stringify(mi.adquisiciones),
 					objetoTipo: mi.objetoTipo,
 					objetoId: mi.objetoId,
@@ -148,12 +156,10 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 				$utilidades.mensaje('success',mensaje_success);
 		};
 
-		mi.borrar = function(index) {
-			mi.adquisicion = mi.adquisiciones[index];
-			if(mi.adquisicion!=null && index >-1){
+		mi.borrar = function(row) {
 				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 						, "Confirmación de Borrado"
-						, '¿Desea borrar el Riesgo "'+mi.adquisicion.nombre+'"?'
+						, '¿Desea borrar la adquisición "'+mi.adquisicion.categoriaNombre+'"?'
 						, "Borrar"
 						, "Cancelar")
 				.result.then(function(data) {
@@ -166,16 +172,17 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 				}, function(){
 					
 				});
-			}
-			else
-				$utilidades.mensaje('warning','Debe seleccionar la adquisición que desea borrar');
 		};
 
 		mi.nuevo = function() {
 			mi.mostraringreso=true;
 			mi.esnuevo = true;
-			mi.adquisicion = { 
+			mi.adquisicion = {
+					
 			};
+			mi.adquisicion.pagos=[];
+			$scope.$broadcast('angucomplete-alt:clearInput','categoria');
+			$scope.$broadcast('angucomplete-alt:clearInput','tipo');
 		};
 
 		mi.editar = function(row) {
@@ -184,7 +191,8 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 				mi.form_valid = null;
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
-				$utilidades.setFocus(document.getElementById("descripcion"));
+				$scope.$broadcast('angucomplete-alt:changeInput','categoria', mi.adquisicion.categoriaNombre);
+				$scope.$broadcast('angucomplete-alt:changeInput','tipo', mi.adquisicion.tipoNombre);
 				for (campos in mi.adquisicion.camposdinamicos) {
 					switch (mi.adquisicion.camposdinamicos[campos].tipo){
 						case 5:
@@ -204,31 +212,31 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 
 		mi.irATabla = function() {
 			if(mi.esnuevo){
-					console.log(mi.parentController.mForm.$valid);
 					if(mi.parentController.mForm.$valid || 
 							(mi.parentController.mForm.$error.required.length==1 && mi.parentController.mForm.$error.required[0].$name=='form_valid'))
 						mi.adquisiciones.push({
+							id: -1,
 							tipoNombre: mi.adquisicion.tipoNombre,
 							tipoId: mi.adquisicion.tipoId,
 							categoriaNombre: mi.adquisicion.categoriaNombre,
 							categoriaId: mi.adquisicion.categoriaId,
 							medidaNombre: mi.adquisicion.medidaNombre,
 							cantidad: mi.adquisicion.cantidad,
-							precio: mi.adquisicion.precio,
+							precioUnitario: mi.adquisicion.precioUnitario,
 							total: mi.adquisicion.total,
 							nog: mi.adquisicion.nog,
 							numeroContrato: mi.adquisicion.numeroContrato,
 							montoContrato: mi.adquisicion.montoContrato,
-							preparacionDocumentoPlanificado: moment(mi.adquisicion.preparacionDocumentoPlanifiado).format('DD/MM/YYY'),
-							preparacionDocumentoReal: moment(mi.adquisicion.preparacionDocumentoReal).format('DD/MM/YYYY'),
-							lanzamientoEventoPlanificado:moment(mi.adquisicion.lanzamientoEventoPlanificado).format('DD/MM/YYYY'),
-							lanzamientoEventoReal:moment(mi.adquisicion.lanzamientoEventoReal).format('DD/MM/YYYY'),
-							recepcionOfertasPlanificado:moment(mi.adquisicion.recepcionOfertasPlanificado).format('DD/MM/YYYY'),
-							recepcionOfertasReal:moment(mi.adquisicion.recepcionOfertasReal).format('DD/MM/YYYY'),
-							adjudicacionPlanificado:moment(mi.adquisicion.adjudicacionPlanificado).format('DD/MM/YYYY'),
-							adjudicacionReal:moment(mi.adquisicion.adjudicacionReal).format('DD/MM/YYYY'),
-							firmaContratoPlanificado:moment(mi.adquisicion.firmaContratoPlanificado).format('DD/MM/YYYY'),
-							firmaContratoReal: mi.adquisicion.moment(mi.adquisicion.firmaContratoReal).format('DD/MM/YYYY'),
+							preparacionDocumentoPlanificado: mi.adquisicion.preparacionDocumentoPlanificado!=null ? moment(mi.adquisicion.preparacionDocumentoPlanifiado).format('DD/MM/YYY') : null,
+							preparacionDocumentoReal: mi.adquisicion.preparacionDocumentoReal!=null ? moment(mi.adquisicion.preparacionDocumentoReal).format('DD/MM/YYYY') : null,
+							lanzamientoEventoPlanificado: mi.adquisicion.lanzamientoEventoPlanificado!=null ? moment(mi.adquisicion.lanzamientoEventoPlanificado).format('DD/MM/YYYY') : null,
+							lanzamientoEventoReal:mi.adquisicion.lanzamientoEventoReal!=null ? moment(mi.adquisicion.lanzamientoEventoReal).format('DD/MM/YYYY') : null,
+							recepcionOfertasPlanificado: mi.adquisicion.recepcionOfertasPlanificado!=null ? moment(mi.adquisicion.recepcionOfertasPlanificado).format('DD/MM/YYYY') : null,
+							recepcionOfertasReal: mi.adquisicion.recepcionOfertasReal!=null ? moment(mi.adquisicion.recepcionOfertasReal).format('DD/MM/YYYY') : null,
+							adjudicacionPlanificado: mi.adquisicion.adjudicacionPlanificado!=null ? moment(mi.adquisicion.adjudicacionPlanificado).format('DD/MM/YYYY') : null,
+							adjudicacionReal: mi.adquisicion.adjudicacionReal!=null ? moment(mi.adquisicion.adjudicacionReal).format('DD/MM/YYYY') : null,
+							firmaContratoPlanificado: mi.adquisicion.firmaContratoPlanificado!=null ? moment(mi.adquisicion.firmaContratoPlanificado).format('DD/MM/YYYY') :null,
+							firmaContratoReal:  mi.adquisicion.firmaContratoReal!=null ? moment(mi.adquisicion.firmaContratoReal).format('DD/MM/YYYY') : null,
 							pagos: mi.adquisicion.pagos
 						});
 					mi.mostraringreso=false;
@@ -250,213 +258,101 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 			mi.popup_fechas[index]=true;
 		};
 		
-		
-		mi.filtrar = function(evt){
-			if(evt.keyCode==13){
-				mi.obtenerTotalRiesgos();
-				mi.gridApi.selection.clearSelectedRows();
-				mi.adquisicion = null;
-			}
-		};
-		
-		
-		mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
-			var resultado = $q.defer();
+		mi.agregarPagos = function(row) {
 			var modalInstance = $uibModal.open({
 				animation : 'true',
 				ariaLabelledBy : 'modal-title',
 				ariaDescribedBy : 'modal-body',
-				templateUrl : 'buscarPorRiesgo.jsp',
-				controller : 'buscarPorRiesgo',
-				controllerAs : 'modalBuscar',
+				templateUrl : 'pago.jsp',
+				controller : 'modalPlanadquisicionPagos',
+				controllerAs : 'modalPagos',
 				backdrop : 'static',
 				size : 'md',
-				resolve : {
-					$servlet : function() {
-						return servlet;
-					},
-					$accionServlet : function() {
-						return accionServlet;
-					},
-					$datosCarga : function() {
-						return datosCarga;
-					},
-					$columnaId : function() {
-						return columnaId;
-					},
-					$columnaNombre : function() {
-						return columnaNombre;
-					}
-				}
+				resolve: {
+				    pagos: function(){
+				    	return row.pagos;
+				    }
+				  }
 			});
 
-			modalInstance.result.then(function(itemSeleccionado) {
-				resultado.resolve(itemSeleccionado);
+			modalInstance.result.then(function() {
+			   
+			}, function() {
 			});
-			return resultado.promise;
+
 		};
-	
-	
-	
-	
-	mi.buscarRiesgoTipo = function() {
-		var resultado = mi.llamarModalBusqueda('/SRiesgoTipo', {
-			accion : 'numeroComponenteTipos'
-		}, function(pagina, elementosPorPagina) {
-			return {
-				accion : 'getRiesgotiposPagina',
-				pagina : pagina,
-				numeroriesgostipo : elementosPorPagina
-			};
-		},'id','nombre');
 		
-		
-		resultado.then(function(itemSeleccionado) {
-			mi.adquisicionTipoid = itemSeleccionado.id;
-			mi.adquisicionTipoNombre = itemSeleccionado.nombre;
-			
-			var parametros = { 
-					accion: 'getRiesgoPropiedadPorTipo', 
-					idRiesgo: mi.adquisicion!=null ? mi.adquisicion.id : 0,
-					idRiesgoTipo: itemSeleccionado.id,
-					t: (new Date()).getTime()
-			}
-			
-			$http.post('/SRiesgoPropiedad', parametros).then(function(response){
-				mi.camposdinamicos = response.data.componentepropiedades;
-				for (campos in mi.camposdinamicos) {
-					switch (mi.camposdinamicos[campos].tipo){
-					case "fecha":
-						mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
-						break;
-					case "entero":
-						mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? Number(mi.camposdinamicos[campos].valor) : null;
-						break;
-					case "decimal":
-						mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? Number(mi.camposdinamicos[campos].valor) : null;
-						break;
-					case "booleano":
-						mi.camposdinamicos[campos].valor = mi.camposdinamicos[campos].valor == 'true' ? true : false;
-						break;
-					}
-				}
-				
-			});
-		});
-	};
-	
-	mi.buscarColaborador = function() {
-		var resultado = mi.llamarModalBusqueda('/SColaborador', {
-			accion : 'totalElementos'
-		}, function(pagina, elementosPorPagina) {
-			return {
-				accion : 'cargar',
-				pagina : pagina,
-				registros : elementosPorPagina
-			};
-		},'id','nombreCompleto');
-		
-		
-		resultado.then(function(itemSeleccionado) {
-			mi.colaboradorid = itemSeleccionado.id;
-			mi.colaboradorNombre = itemSeleccionado.nombreCompleto;
-			
-		});
-	};
-	
 			
 } ]);
 
-app.controller('buscarPorRiesgo', [ '$uibModalInstance',
+app.controller('modalPlanadquisicionPagos', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log', '$servlet', '$accionServlet', '$datosCarga','$columnaId','$columnaNombre',buscarPorRiesgo ]);
-
-function buscarPorRiesgo($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, $servlet,$accionServlet,$datosCarga, $columnaId,$columnaNombre) {
+	'$timeout', '$log','dialogoConfirmacion', 'pagos', 
+	function ($uibModalInstance, $scope, $http, $interval,
+		i18nService, $utilidades, $timeout, $log,$dialogoConfirmacion, pagos, totalPagos) {
 	
-	var mi = this;
+		var mi = this;
+		
+		$scope.pagos = pagos;
+		mi.pagos = $scope.pagos;
+		mi.formatofecha = 'dd/MM/yyyy';
+		mi.totalPagos=0;
+				
+		mi.abrirPopupFecha = function(index, tipo) {
+			if(tipo==0){
+				mi.pagos[index].isOpen = true;
+			}else{
+				mi.pagos[index].isOpenValor = true;
+			}
+			
+		};
 
-	mi.totalElementos = 0;
-	mi.paginaActual = 1;
-	mi.numeroMaximoPaginas = 5;
-	mi.elementosPorPagina = 9;
-
-	mi.mostrarCargando = false;
-	mi.data = [];
-
-	mi.itemSeleccionado = null;
-	mi.seleccionado = false;
-	
-	$http.post($servlet, $accionServlet).success(function(response) {
-		for ( var key in response) {
-			mi.totalElementos = response[key];
+		mi.fechaOptions = {
+				formatYear : 'yy',
+				startingDay : 1
+		};
+		
+		mi.guardarFecha = function(row){
+			row.fecha = row.fechaPago!=null ? moment(row.fechaPago).format('DD/MM/YYYY') : null;
 		}
-		mi.cargarData(1);
-	});
-	
-	mi.opcionesGrid = {
-		data : mi.data,
-		columnDefs : [ {
-			displayName : 'ID',
-			name : $columnaId,
-			cellClass : 'grid-align-right',
-			type : 'number',
-			width : 70
-		}, {
-			displayName : 'Nombre',
-			name : $columnaNombre,
-			cellClass : 'grid-align-left'
-		} ],
-		enableRowSelection : true,
-		enableRowHeaderSelection : false,
-		multiSelect : false,
-		modifierKeysToMultiSelect : false,
-		noUnselect : false,
-		enableFiltering : true,
-		enablePaginationControls : false,
-		paginationPageSize : 5,
-		onRegisterApi : function(gridApi) {
-			mi.gridApi = gridApi;
-			mi.gridApi.selection.on.rowSelectionChanged($scope,
-					mi.seleccionarTipoRiesgo);
+				
+		mi.nuevoPago = function(){
+			$scope.pagos.push({  
+	               fechaPago: null,
+	               pago: null
+	            });
 		}
-	}
-
-	mi.seleccionarTipoAdquisicion = function(row) {
-		mi.itemSeleccionado = row.entity;
-		mi.seleccionado = row.isSelected;
-	};
-	
-	mi.cargarData = function(pagina) {
-		mi.mostrarCargando = true;
-		$http.post($servlet, $datosCarga(pagina, mi.elementosPorPagina)).then(
-				function(response) {
-					if (response.data.success) {
-
-						for ( var key in response.data) {
-							if (key != 'success')
-								mi.data = response.data[key];
-						}
-						mi.opcionesGrid.data = mi.data;
-
-						mi.mostrarCargando = false;
+		
+		mi.borrarPago = function(row){
+			$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+					, "Confirmación de Borrado"
+					, '¿Desea borrar el pago con fecha '+(row.fecha!=null ? moment(row.fecha).format('DD/MM/YYYY') : '')+'?'
+					, "Borrar"
+					, "Cancelar")
+			.result.then(function(data) {
+				if(data){
+					var index = mi.pagos.indexOf(row);
+					if (index > -1) {
+						mi.pagos.splice(index, 1);
 					}
-				});
-	};
-
-	mi.cambioPagina = function() {
-		mi.cargarData(mi.paginaActual);
-	}
-
-	mi.ok = function() {
-		if (mi.seleccionado) {
-			$uibModalInstance.close(mi.itemSeleccionado);
-		} else {
-			$utilidades.mensaje('warning', 'Debe seleccionar una ENTIDAD');
+				}
+			}, function(){
+				
+			});
 		}
-	};
-
-	mi.cancel = function() {
-		$uibModalInstance.dismiss('cancel');
-	};
-}
+		
+		mi.ok = function() {
+			$uibModalInstance.close();
+		};
+		
+		$scope.$watch('pagos', function(array) {
+		     var total = 0;
+		     if (array) {
+		         mi.totalPagos = array.reduce(function(total,item) {
+		             return total + item.pago;
+		         },0);
+		     } 
+		 }, true);
+	
+	}
+]);

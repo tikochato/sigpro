@@ -181,7 +181,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		Workbook wb=null;
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
-			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);	
+			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
 			EstructuraProyectoDAO estructura = new EstructuraProyectoDAO();
 			List<CPrestamoCostos> lstPrestamo = estructura.getEstructuraConCostos(prestamoId, anioInicio, anioFin, usuario);
 			estructura = null;

@@ -17,7 +17,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	
 	if(!mi.esTreeview)
 		$window.document.title = $utilidades.sistema_nombre+' - Producto';
-	mi.child_scope = null;
+	mi.child_metas = null;
+	mi.child_adquisiciones = null;
 	
 	mi.componenteid = $routeParams.componente_id;
 	mi.esForma = false;
@@ -351,10 +352,16 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 							mi.producto.fechaCreacion = response.data.fechaCreacion;
 							mi.producto.usuarioactualizo = response.data.usuarioactualizo;
 							mi.producto.fechaactualizacion = response.data.fechaactualizacion;
-							if(mi.child_scope!=null)
-								mi.child_scope.guardar('Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Producto');
-							else
-								$utilidades.mensaje('success','Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+							if(mi.child_metas!=null)
+								mi.child_metas.guardar(mi.child_adquisiciones,'Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+										'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Producto');
+							else{
+								if(mi.child_adquisiciones!=null)
+									mi.child_adquisiciones.guardar('Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+										'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Producto');
+								else
+									$utilidades.mensaje('success','Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+							}
 							if(!mi.esTreeview)
 								mi.obtenerTotalProductos();
 							else{
