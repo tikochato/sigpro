@@ -68,7 +68,7 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 	mi.generarReporte = function (){
 		if (mi.prestamoSeleccionado !=null && mi.prestamoSeleccionado != undefined){
 			mi.inicializarDatos();
-			$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: mi.prestamoSeleccionado.value }).success(
+			$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: mi.prestamoSeleccionado.value,t:moment().unix() }).success(
 				function(response) {
 					mi.proyectoid = response.id;
 					mi.proyectoNombre = response.nombre;
@@ -110,18 +110,26 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 		}
 	}
 	
+
 	mi.exportarExcel = function(){
-			$http.post('/SAgenda', { accion: 'exportarExcel', proyectoid:$routeParams.proyectoId,t:moment().unix()
-				  } ).then( function successCallback(response) {
-						var anchor = angular.element('<a/>');
-					    anchor.attr({
-					         href: 'data:application/ms-excel;base64,' + response.data,
-					         target: '_blank',
-					         download: 'Agenda.xls'
-					     })[0].click();
-					  }.bind(this), function errorCallback(response){
-					 	}
-					 );
+
+		
+		
+		$http.post('/SPlanEjecucion', { 
+			accion: 'exportarExcel', 
+			id: mi.prestamoSeleccionado.value,
+			t:moment().unix()
+		  } ).then(
+				  function successCallback(response) {
+					  var anchor = angular.element('<a/>');
+					  anchor.attr({
+				         href: 'data:application/ms-excel;base64,' + response.data,
+				         target: '_blank',
+				         download: 'CargaTrabajo.xls'
+					  })[0].click();
+				  }.bind(this), function errorCallback(response){
+			 	}
+		  	);
 		};
 		
 	
