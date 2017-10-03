@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -52,11 +53,12 @@ public class PlanAdquisicionDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		
 		try{
-			String query = "FROM PlanAdquisicion where objetoId=:objetoId and objetoTipo=:objetoTipo";
+			String query = "FROM PlanAdquisicion pa where pa.objetoId=:objetoId and pa.objetoTipo=:objetoTipo and pa.estado=1";
 			Query<PlanAdquisicion> criteria = session.createQuery(query, PlanAdquisicion.class);
 			criteria.setParameter("objetoId", ObjetoId);
 			criteria.setParameter("objetoTipo", objetoTipo);
 			retList = criteria.getResultList();
+			
 		}catch(Throwable e){
 			CLogger.write("3", PlanAdquisicionDAO.class, e);
 		}
@@ -82,6 +84,31 @@ public class PlanAdquisicionDAO {
 			session.close();
 		}
 		
+		return ret;
+	}
+	
+	public static List<PlanAdquisicion> getAdquisicionesNotIn(Integer objetoId, Integer objetoTipo,List<Integer> adquisiciones){
+		List<PlanAdquisicion> ret = new ArrayList<PlanAdquisicion>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "SELECT pa FROM PlanAdquisicion as pa "
+					+ "WHERE pa.estado = 1 "
+					+ "and pa.objetoId = :objid "
+					+ "and pa.objetoTipo = :objetoTipo "
+					+ "and pa.id NOT IN (:ids)";
+			
+			Query<PlanAdquisicion> criteria = session.createQuery(query,PlanAdquisicion.class);
+			criteria.setParameter("objid", objetoId);
+			criteria.setParameter("objetoTipo", objetoTipo);
+			criteria.setParameterList("ids", adquisiciones);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("5", PlanAdquisicionDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
 		return ret;
 	}
 	

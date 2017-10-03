@@ -1,4 +1,5 @@
 package dao;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -108,6 +109,27 @@ public class PlanAdquisicionPagoDAO {
 		return ret;
 	}
 	
+	public static boolean eliminarPagos(ArrayList<PlanAdquisicionPago> pagos){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			for(PlanAdquisicionPago pago: pagos){
+				if(eliminarPago(pago))
+					ret = true;
+				else
+					return false;
+			}
+			ret = true;
+		}catch(Throwable e){
+			CLogger.write("6", PlanAdquisicionPagoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return ret;
+	}
+	
 	public static List<PlanAdquisicionPago> getPagosByObjetoTipo(Integer objetoId,Integer objetoTipo){
 		List<PlanAdquisicionPago> ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -117,7 +139,7 @@ public class PlanAdquisicionPagoDAO {
 			criteria.setParameter("objetoTipo", objetoTipo);
 			ret = criteria.getResultList();
 		}catch(Throwable e){
-			CLogger.write("6", PlanAdquisicionPagoDAO.class, e);
+			CLogger.write("7", PlanAdquisicionPagoDAO.class, e);
 		}
 		finally{
 			session.close();
