@@ -861,12 +861,7 @@ public class CPdf {
 						}
 						table_x.draw();
 						
-						if (pagina==0){
-							PDImageXObject pdImage = PDImageXObject.createFromFile("/archivos/temporales/temp_150638226555.png", doc);
-							
-							contentStream.drawImage(pdImage, 70, 250, 400, 150);
-							
-						}
+						
 						
 						contentStream.close();
 						pagina++;
