@@ -118,6 +118,7 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 		$http.post('/SPlanEjecucion', { 
 			accion: 'exportarExcel', 
 			id: mi.prestamoSeleccionado.value,
+			plazoEjecucion:mi.prestamo.plazoEjecucionUe,
 			t:moment().unix()
 		  } ).then(
 				  function successCallback(response) {
@@ -125,7 +126,7 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 					  anchor.attr({
 				         href: 'data:application/ms-excel;base64,' + response.data,
 				         target: '_blank',
-				         download: 'CargaTrabajo.xls'
+				         download: 'Plan_De_Ejecucion.xls'
 					  })[0].click();
 				  }.bind(this), function errorCallback(response){
 			 	}

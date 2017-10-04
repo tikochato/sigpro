@@ -100,9 +100,10 @@ public class SPlanEjecucion extends HttpServlet {
 		}else if(accion.equals("exportarExcel")){
 			try{
 				int idPrestamo = Utils.String2Int(map.get("id"),0);
+				Double plazoEjecucion = Double.parseDouble(map.get("plazoEjecucion") != null ? map.get("plazoEjecucion") : "0");
 				
 				
-		        byte [] outArray = exportarExcel(idPrestamo, usuario);
+		        byte [] outArray = exportarExcel(idPrestamo, usuario, plazoEjecucion);
 			
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
@@ -322,7 +323,8 @@ public BigDecimal calcularEjecucionFisicaPlanificada(Integer proyectoId){
 	}
 
 	
-	private byte[] exportarExcel(int idPrestamo, String usuario) throws IOException{
+	private byte[] exportarExcel(int idPrestamo, String usuario, Double plazoEjecucion
+			) throws IOException{
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -332,10 +334,10 @@ public BigDecimal calcularEjecucionFisicaPlanificada(Integer proyectoId){
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
 			headers = generarHeaders();
-			datos = generarDatos(idPrestamo, usuario);
+			datos = generarDatos(idPrestamo, usuario,plazoEjecucion);
 			//CGraficaExcel grafica = generarGrafica(datos);
 			excel = new CExcel("Plan de Ejecucion", false, null);
-			wb=excel.generateExcelOfData(datos, "Plan de Ejecución", headers, null, true, usuario);
+			wb=excel.generateExcelOfData(datos, "Plan de Ejecución", headers, null, false, usuario);
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
@@ -348,10 +350,10 @@ public BigDecimal calcularEjecucionFisicaPlanificada(Integer proyectoId){
 		String headers[][];
 		
 		headers = new String[][]{
-			{"", "", "",""},  //titulos
+			{" ", " ", " ", " "},  //titulos
 			null, //mapeo
 			{"string", "string", "string", "string"}, //tipo dato
-			{"", "", "", "", ""}, //operaciones columnas
+			{"", "", "", ""}, //operaciones columnas
 			null, //operaciones div
 			null,
 			null,
@@ -361,19 +363,73 @@ public BigDecimal calcularEjecucionFisicaPlanificada(Integer proyectoId){
 		return headers;
 	}
 
-	public String[][] generarDatos(int idPrestamo, String usuario){
+	public String[][] generarDatos(int idPrestamo, String usuario,Double plazoEjecucion){
 		Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(idPrestamo, 1);
 		Date fecha_actual = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("MM");
 		String[][] datos = new String[20][4];
-		for (int i=0; i<20; i++){
+		for (int i=0; i<14; i++){
 			for (int j=0; j<4; j++){
 				datos[i][j] = "";
 			}
 		}
 		
-		datos[0][0] = "Mes Reportado";
-		datos[0][3] = obtenerMes(Integer.parseInt(sdf.format(fecha_actual)));	
+		datos[0][1] = "Mes Reportado";
+		datos[0][2] = obtenerMes(Integer.parseInt(sdf.format(fecha_actual)));
+		datos[1][1] = "Año Fiscal";
+		sdf = new SimpleDateFormat("YYYY");
+		datos [1][2] = sdf.format(fecha_actual);
+		datos[2][1] = "Proyecto/Programa";
+		datos[2][2] = prestamo.getProyectoPrograma();
+		datos[3][1] = "Organismo Ejecutor";
+		datos[3][2] = prestamo.getUnidadEjecutora().getEntidad().getNombre();
+		
+		datos[5][0] = "Número del Préstamo";
+		datos[5][1]= prestamo.getNumeroPrestamo();
+		datos[5][2] = "Fecha ulimta actualización";
+		datos[5][3] = Utils.formatDate(prestamo.getFechaActualizacion());
+		
+		datos[6][0] = "Código Presupuestario";
+		datos[6][1]= prestamo.getCodigoPresupuestario() + "";
+		datos[6][2] = "Fecha del decreto";
+		datos[6][3] = Utils.formatDate(prestamo.getFechaDecreto());
+		
+		datos[7][0] = "Organismo Financiero";
+		datos[7][1]= prestamo.getCooperante().getNombre();
+		datos[7][2] = "Fecha del suscripción";
+		datos[7][3] = Utils.formatDate(prestamo.getFechaSuscripcion());
+		
+		datos[8][0] = "Organismo Financiero";
+		datos[8][1]= prestamo.getCooperante().getNombre();
+		datos[8][2] = "Fecha del suscripción";
+		datos[8][3] = Utils.formatDate(prestamo.getFechaSuscripcion());
+		
+		datos[9][0] = "Entidad Ejecutora";
+		datos[9][1]= prestamo.getUnidadEjecutora().getEntidad().getNombre();
+		datos[9][2] = "Fecha de vigencia";
+		datos[9][3] = Utils.formatDate(prestamo.getFechaVigencia());
+		
+		datos[10][0] = "Unidad Ejecutroa";
+		datos[10][1]= prestamo.getUnidadEjecutora().getNombre();
+		datos[10][2] = "Fecha de elegibilidad";
+		datos[10][3] = Utils.formatDate(prestamo.getFechaElegibilidadUe());
+		
+		datos[11][0] = "Moneda de préstamo";
+		datos[11][1]= prestamo.getTipoMoneda().getNombre();
+		datos[11][2] = "Fecha de cierre";
+		datos[11][3] = Utils.formatDate(prestamo.getFechaCierreActualUe());
+		
+		datos[12][0] = "Monto aprobado";
+		datos[12][1]=  "$" + prestamo.getMontoContratadoUsd().toString();
+		datos[12][2] = "Meses de prorroga";
+		datos[12][3] = prestamo.getMesesProrrogaUe()+ "";
+		
+		datos[13][0] = "Monto aprobado Q";
+		datos[13][1]=  "Q" + prestamo.getMontoContratadoQtz();
+		datos[13][2] = "Plazo ejecucion";
+		datos[13][3] = plazoEjecucion.toString();
+		
+		
 		return datos;
 	}
 	
