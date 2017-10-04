@@ -135,13 +135,13 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 						, "Cancelar")
 				.result.then(function(data) {
 					if(data){
-						
+						var index = mi.desembolsos.indexOf(row);
+				        if (index !== -1) {
+				            mi.desembolsos.splice(index, 1);
+				        }
 					}
 				}, function(){
-					var index = mi.desembolsos.indexOf(row);
-			        if (index !== -1) {
-			            mi.desembolsos.splice(index, 1);
-			        }
+
 				});
 		    }
 			

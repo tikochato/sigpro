@@ -362,7 +362,7 @@ public BigDecimal calcularEjecucionFisicaPlanificada(Integer proyectoId){
 	}
 
 	public String[][] generarDatos(int idPrestamo, String usuario){
-		Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(idPrestamo, 1);
+		//Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(idPrestamo, 1);
 		Date fecha_actual = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("MM");
 		String[][] datos = new String[20][4];

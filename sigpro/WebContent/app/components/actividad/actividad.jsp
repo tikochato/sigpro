@@ -82,7 +82,7 @@
 				  </div>
 				</div>
 				<br/>
-				<div class="total-rows">Total de {{  actividadc.totalActividades + (actividadc.totalActividades == 1 ? " Actividad" : " Actividades" ) }}</div>
+				<div class="total-rows">Total de {{  actividadc.totalActividades + (actividadc.totalActividades > 1 ? " Actividades" : " Actividad" ) }}</div>
 				<ul uib-pagination total-items="actividadc.totalActividades"
 						ng-model="actividadc.paginaActual"
 						max-size="actividadc.numeroMaximoPaginas"
@@ -141,58 +141,43 @@
 									<tr>
 										<td style="width: 14%; padding-right:5px;">
 											<input name="programa" type="number" class="inputText" ng-model="actividadc.actividad.programa" ng-value="actividadc.actividad.programa" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;" />
-							       			<label for="programa" class="floating-label">Programa</label>
+							       			<label class="floating-label">Programa</label>
 										</td>
 										<td style="width: 14%; padding-right:5px;">
 											<input type="number" class="inputText" ng-model="actividadc.actividad.subprograma" ng-value="actividadc.actividad.subprograma" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
-							  				<label for="isubprog" class="floating-label">Subprograma</label>
+							  				<label class="floating-label">Subprograma</label>
 										</td>
 										<td style="width: 14%; padding-right:5px;">
 											<input type="number" class="inputText" ng-model="actividadc.actividad.proyecto" ng-value="actividadc.actividad.proyecto" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
-							  				<label for="iproy_" class="floating-label">Proyecto</label>
+							  				<label class="floating-label">Proyecto</label>
 										</td>
 										<td style="width: 14%; padding-right:5px;">
 											<input type="number" class="inputText" ng-model="actividadc.actividad.actividad" ng-value="actividadc.actividad.actividad" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
-								  			<label for="iobra" class="floating-label">Actividad</label>
+								  			<label class="floating-label">Actividad</label>
 										</td>
 										<td style="width: 14%; padding-right:5px;">
 											<input type="number" class="inputText" ng-model="actividadc.actividad.obra" ng-value="actividadc.actividad.obra" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
-							 				<label for="iobra" class="floating-label">Obra</label>
+							 				<label class="floating-label">Obra</label>
 										</td>
 										<td style="width: 14%; padding-right:5px;">
 											<input type="number" class="inputText" ng-model="actividadc.actividad.renglon" ng-value="actividadc.actividad.renglon" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
-							  				<label for="fuente" class="floating-label">Renglón</label>
+							  				<label class="floating-label">Renglón</label>
 										</td>
 										<td style="width: 14%; padding-right:5px;">
 											<input type="number" class="inputText" ng-model="actividadc.actividad.ubicacionGeografica" ng-value="actividadc.actividad.ubicacionGeografica" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
-							  				<label for="fuente" class="floating-label">Geográfico</label>
+							  				<label class="floating-label">Geográfico</label>
 										</td>
 									</tr>
 								</table>
 							</div>
 						</div>
-						<div class="form-group" >
-						    <input type="text" class="inputText" id="iactividadtipo" name="iactividadtipo" ng-model="actividadc.actividad.actividadtiponombre" ng-value="actividadc.actividad.actividadtiponombre" 
-							ng-click="actividadc.buscarActividadTipo()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
-							<span class="label-icon" ng-click="actividadc.buscarActividadTipo()"><i class="glyphicon glyphicon-search"></i></span>
-							<label for="campo3" class="floating-label">* Tipo de Actividad</label>
-						</div>
-						
-						<div class="form-group" >
-						    <input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="actividadc.coordenadas" ng-value="actividadc.coordenadas" 
-								            		ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); " onblur="this.setAttribute('value', this.value);" ng-readonly="true"/>
-							<span class="label-icon" ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
-							<label for="campo3" class="floating-label">Coordenadas</label>
-						</div>
-						
-						
-						<div class="form-group">
-						   <input type="text" name="inombre"  class="inputText" id="idescripcion" 
-						     ng-model="actividadc.actividad.descripcion" ng-value="actividadc.actividad.descripcion"   
-						     onblur="this.setAttribute('value', this.value);" >
-						   <label class="floating-label">Descripción</label>
-						</div>
-						
+							<div class="form-group">
+								<div id="tipoNombre" angucomplete-alt placeholder="" pause="100" selected-object="actividadc.cambioTipo"
+												  local-data="actividadc.tipos" search-fields="nombre" title-field="nombre" field-required="true" field-label="* Tipo de Actividad"
+												  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+												  initial-value="actividadc.actividad.actividadtiponombre" focus-out="actividadc.blurTipo()" input-name="tipo"></div>
+								<span class="label-icon"><i class="glyphicon glyphicon-search"></i></span>
+							</div>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group">
@@ -200,7 +185,7 @@
 										ng-options="dim as dim.nombre for dim in actividadc.dimensiones track by dim.value"
 										 ng-required="true">
 									</select>
-									<label for="nombre" class="floating-label">* Dimension</label>
+									<label class="floating-label">* Dimension</label>
 								</div>
 							</div>
 							
@@ -223,7 +208,7 @@
 								            <span class="label-icon" ng-click="actividadc.abrirPopupFecha(1000)">
 								              <i class="glyphicon glyphicon-calendar"></i>
 								            </span>
-								  <label for="campo.id" class="floating-label">*Fecha de Inicio</label>
+								  <label class="floating-label">*Fecha de Inicio</label>
 								</div>
 							</div>
 							
@@ -237,7 +222,7 @@
 								            <span class="label-icon" ng-click="actividadc.abrirPopupFecha(1001)">
 								              <i class="glyphicon glyphicon-calendar"></i>
 								            </span>
-								  <label for="campo.id" class="floating-label">* Fecha de Fin</label>
+								  <label class="floating-label">* Fecha de Fin</label>
 								</div>
 							</div>
 						</div>
@@ -254,33 +239,47 @@
 					       	onblur="this.setAttribute('value', this.value);" style="text-align: left" ng-required="actividadc.actividad.acumulacionCostoId > 0"/>
 					       <label for="iprog" class="floating-label">{{actividadc.actividad.acumulacionCostoId > 0 ? "* Costo" : "Costo"}}</label>
 						</div>
-						
 						<div class="form-group" >
-						    <input type="text" class="inputText" id="acumulacionCosto" name="acumulacionCosto" ng-model="actividadc.actividad.acumulacionCostoNombre" ng-value="actividadc.actividad.acumulacionCostoNombre" 
-							ng-click="actividadc.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="actividadc.actividad.costo != null && actividadc.actividad.costo > 0"/>
-							<span class="label-icon" ng-click="actividadc.buscarAcumulacionCosto()"><i class="glyphicon glyphicon-search"></i></span>
-							<label for="campo3" class="floating-label">{{actividadc.validarRequiredCosto(actividadc.actividad.costo)}} </label>
-						</div>	
+							<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="actividadc.cambioAcumulacionCosto"
+											  local-data="actividadc.acumulacionCostos" search-fields="nombre" title-field="nombre" field-label="Tipo de acumulación del costo"
+											  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+											  initial-value="actividadc.actividad.acumulacionCostoNombre" focus-out="actividadc.blurAcumulacionCosto()" input-name="acumulacionCosto"></div>
+							<span class="label-icon"><i class="glyphicon glyphicon-search"></i></span>
+						</div>
+						<div class="form-group" >
+						    <input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="actividadc.coordenadas" ng-value="actividadc.coordenadas" 
+								            		ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); " onblur="this.setAttribute('value', this.value);" ng-readonly="true"/>
+							<span class="label-icon" ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
+							<label class="floating-label">Coordenadas</label>
+						</div>
+						
+						
+						<div class="form-group">
+						   <input type="text" name="inombre"  class="inputText" id="idescripcion" 
+						     ng-model="actividadc.actividad.descripcion" ng-value="actividadc.actividad.descripcion"   
+						     onblur="this.setAttribute('value', this.value);" >
+						   <label class="floating-label">Descripción</label>
+						</div>
 						<div ng-repeat="campo in actividadc.camposdinamicos">
 							<div ng-switch="campo.tipo">
 								<div ng-switch-when="texto" class="form-group" >
 									<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText" 
 										ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>	
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+									<label class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="entero" class="form-group" >
 									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
 									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);" />
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+									<label class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="decimal" class="form-group" >
 									<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText"  
 									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+									<label class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="booleano" class="form-group" >
 									<input type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+									<label class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="fecha" class="form-group" >
 									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
@@ -289,7 +288,7 @@
 														<span class="label-icon" ng-click="actividadc.abrirPopupFecha($index)">
 															<i class="glyphicon glyphicon-calendar"></i>
 														</span>
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+									<label class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="select" class="form-group" >
 									<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor">
@@ -297,7 +296,7 @@
 													<option ng-repeat="number in campo.opciones"
 														ng-value="number.valor">{{number.label}}</option>
 								</select>
-									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
+									<label class="floating-label">{{ campo.label }}</label>
 								</div>
 							</div>
 						</div>
