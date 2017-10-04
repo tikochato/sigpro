@@ -28,8 +28,8 @@ app.controller('planAdquisicionesController', [ '$scope', '$http', '$interval', 
 						}else if(noElemento && noElemento == 3 && (mi.fechaFin - mi.fechaInicio)>mi.limiteAnios){ //fechaFin
 							mi.fechaFin = mi.fechaInicio + mi.limiteAnios;
 							$utilidades.mensaje('warning','La diferencia de años no puede ser mayor a '+mi.limiteAnios);
-						}
-						mi.generar(mi.agrupacionActual);
+						}else
+							mi.generar(mi.agrupacionActual);
 					}else{
 						$utilidades.mensaje('warning','La fecha inicial es mayor a la fecha final');
 					}
