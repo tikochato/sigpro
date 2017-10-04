@@ -111,7 +111,8 @@
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>
-		<div>
+		<uib-tabset active="producto.activeTab">
+    	<uib-tab index="0" name="tproducto" heading="Producto">
 		<div class="col-sm-12">
 			<form name="subproducto.mForm" class="css-form">
 				
@@ -340,7 +341,8 @@
 				</div>
 			</form>
 			</div>
-		</div>
+			</uib-tab>
+		</uib-tabset>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div align="center" class="label-form">Los campos marcados con * son obligatorios y las fechas deben tener formato de dd/mm/yyyy</div>
 			<br/>

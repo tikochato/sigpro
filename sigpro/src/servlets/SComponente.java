@@ -40,7 +40,6 @@ import pojo.ComponenteTipo;
 import pojo.Proyecto;
 import pojo.UnidadEjecutora;
 import utilities.Utils;
-import utilities.COrden;
 
 /**
  * Servlet implementation class SComponente
@@ -361,10 +360,10 @@ public class SComponente extends HttpServlet {
 						}
 					}
 					
-					if(result){
+					/*if(result){
 						COrden orden = new COrden();
 						result = orden.calcularOrdenObjetosSuperiores(componente.getProyecto().getId(), 1, usuario, COrden.getSessionCalculoOrden(),componente.getProyecto().getId(), null, null);
-					}
+					}*/
 					
 					response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 							+ "\"id\": " + componente.getId() , ","
@@ -429,9 +428,9 @@ public class SComponente extends HttpServlet {
 						
 					}
 					result = ComponenteDAO.guardarComponente(componente);
-					COrden orden = new COrden();
+					/*COrden orden = new COrden();
 					orden.calcularOrdenObjetosSuperiores(componente.getProyecto().getId(), 1,  usuario, COrden.getSessionCalculoOrden(),componente.getProyecto().getId(), null, null);
-					
+					*/
 				}
 				stcomponente temp = new stcomponente();
 				if (result){
@@ -475,15 +474,15 @@ public class SComponente extends HttpServlet {
 				Componente componente = ComponenteDAO.getComponentePorId(id,usuario);
 				componente.setUsuarioActualizo(usuario);
 				
-				Integer objetoId = componente.getProyecto().getId();
-				Integer objetoTipo = 1;
+				/*Integer objetoId = componente.getProyecto().getId();
+				Integer objetoTipo = 1;*/
 				
 				boolean eliminado = ComponenteDAO.eliminarComponente(componente);
 				
-				if(eliminado){
+				/*if(eliminado){
 					COrden orden = new COrden();
 					orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, COrden.getSessionCalculoOrden(),objetoId, null, null);
-				}
+				}*/
 				
 				response_text = String.join("","{ \"success\": ",(eliminado ? "true" : "false")," }");
 			}

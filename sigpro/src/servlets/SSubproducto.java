@@ -43,7 +43,6 @@ import pojo.UnidadEjecutora;
 import pojo.Usuario;
 import utilities.Utils;
 import utilities.CLogger;
-import utilities.COrden;
 
 @WebServlet("/SSubproducto")
 public class SSubproducto extends HttpServlet {
@@ -283,11 +282,11 @@ public class SSubproducto extends HttpServlet {
 				}
 			}
 			
-			if(ret){
+			/*if(ret){
 				COrden orden = new COrden();
 				ret = orden.calcularOrdenObjetosSuperiores(subproducto.getProducto().getId(), 3, usuario, COrden.getSessionCalculoOrden(),
 						subproducto.getProducto().getComponente().getProyecto().getId(), null, null);
-			}
+			}*/
 			
 			resultadoJson = String.join("","{ \"success\": ",(ret ? "true" : "false"),", "
 					+ "\"id\": " + subproducto.getId().toString(), ","
@@ -312,15 +311,15 @@ public class SSubproducto extends HttpServlet {
 	private void eliminar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
 		int codigo = Utils.String2Int(parametro.get("codigo"), -1);
 		
-		Subproducto pojo = SubproductoDAO.getSubproductoPorId(codigo,usuario);
-		Integer proyectoId = pojo.getProducto().getComponente().getProyecto().getId();
-		boolean eliminado = SubproductoDAO.eliminar(codigo, usuario);
-		if (eliminado) {
+		//Subproducto pojo = SubproductoDAO.getSubproductoPorId(codigo,usuario);
+		//Integer proyectoId = pojo.getProducto().getComponente().getProyecto().getId();
+		SubproductoDAO.eliminar(codigo, usuario);
+		/*if (eliminado) {
 			COrden orden = new COrden();
 			orden.calcularOrdenObjetosSuperiores(pojo.getProducto().getId(), 3, usuario, COrden.getSessionCalculoOrden(),proyectoId, null, null);
 			
 			listar(parametro, response);
-		}
+		}*/
 	}
 
 	private void total(Map<String, String> parametro,HttpServletResponse response) throws IOException {
@@ -561,9 +560,10 @@ public class SSubproducto extends HttpServlet {
 				
 				
 				
-				COrden orden = new COrden();
+				/*COrden orden = new COrden();
 				orden.calcularOrdenObjetosSuperiores(subproducto.getProducto().getId(), 3, usuario, COrden.getSessionCalculoOrden(),
 						subproducto.getProducto().getComponente().getProyecto().getId(), null, null);
+						*/
 				
 				
 				stsubproducto temp = new stsubproducto();

@@ -35,7 +35,52 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
 		mi.responsables=[];
 		
+		mi.tipos=[];
+		mi.acumulacionCostos=[];
 		
+		$http.post('/SActividadTipo', { accion: 'getActividadtipos', t: (new Date()).getTime()}).success(
+				function(response) {
+					mi.tipos = response.actividadtipos;
+		});
+		
+		$http.post('/SAcumulacionCosto', { accion: 'getAcumulacionesCosto', t: (new Date()).getTime()}).success(
+				function(response) {
+					mi.acumulacionCostos = response.acumulacionesTipos;
+		});
+		
+		mi.cambioTipo=function(selected){
+			if(selected!== undefined){
+				mi.actividad.actividadtipoombre=selected.originalObject.nombre;
+				mi.actividad.actividadtipoid=selected.originalObject.id;
+			}
+			else{
+				mi.actividad.actividadtipoombre="";
+				mi.actividad.actividadtipoid="";
+			}
+		}
+		
+		mi.blurTipo=function(){
+			if(document.getElementById("tipoNombre_value").defaultValue!=mi.actividad.actividadtipoombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','tipoNombre');
+			}
+		}
+		
+		mi.cambioAcumulacionCosto=function(selected){
+			if(selected!== undefined){
+				mi.actividad.acumulacionCostoNombre=selected.originalObject.nombre;
+				mi.actividad.acumulacionCostoId=selected.originalObject.id;
+			}
+			else{
+				mi.actividad.acumulacionCostoNombre="";
+				mi.actividad.acumulacionCostoId="";
+			}
+		}
+		
+		mi.blurAcumulacionCosto=function(){
+			if(document.getElementById("acumulacionCosto_value").defaultValue!=mi.actividad.acumulacionCostoNombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','acumulacionCosto');
+			}
+		}
 		
 		mi.validarRequiredCosto = function(costo){
 			if(costo != null && costo > 0)
@@ -129,14 +174,15 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 
 		mi.filtros = [];
 		
-		$http.post('/SObjeto', { accion: 'getObjetoPorId', id: $routeParams.objeto_id, tipo: mi.objetotipo, t: new Date().getTime()}).success(
-				function(response) {
-					mi.objetoid = response.id;
-					mi.objetoNombre = response.nombre;
-					mi.objetoTipoNombre = response.tiponombre;
-					var fechaInicioPadre = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
-					mi.modificarFechaInicial(fechaInicioPadre);
-		});
+		if(!mi.esTreeview)
+			$http.post('/SObjeto', { accion: 'getObjetoPorId', id: $routeParams.objeto_id, tipo: mi.objetotipo, t: new Date().getTime()}).success(
+					function(response) {
+						mi.objetoid = response.id;
+						mi.objetoNombre = response.nombre;
+						mi.objetoTipoNombre = response.tiponombre;
+						var fechaInicioPadre = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
+						mi.modificarFechaInicial(fechaInicioPadre);
+			});
 		
 		mi.modificarFechaInicial = function(fechaPadre){
 			mi.fi_opciones.minDate = fechaPadre;
@@ -391,8 +437,10 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 				mi.esNuevoDocumento = false;
 				mi.actividadResponsable = "";
 				mi.mostraringreso = true;
-				mi.actividadtipoid = mi.actividad.actividadtipoid;
 				mi.esnuevo = false;
+				
+				$scope.$broadcast('angucomplete-alt:changeInput','acumulacionTipo', mi.actividad.acumulacionTipoNombre);
+				$scope.$broadcast('angucomplete-alt:changeInput','tipoNombre', mi.actividad.actividadtiponombre);
 				
 				if(mi.actividad.duracionDimension.toLowerCase() == 'd'){
 					mi.duracionDimension = mi.dimensiones[0];
@@ -522,7 +570,6 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 				mi.actividad = null;
 			}
 		};
-
 
 		mi.obtenerTotalActividades=function(){
 			$http.post('/SActividad', { accion: 'numeroActividadesPorObjeto',objetoid:$routeParams.objeto_id, tipo: mi.objetotipo,
@@ -839,103 +886,6 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 		}
 } ]);
 
-app.controller('modalBuscarActividadTipo', [ '$uibModalInstance',
-	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log', 'titulo', 'mensaje', modalBuscarActividadTipo ]);
-
-function modalBuscarActividadTipo($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, titulo, mensaje) {
-
-	var mi = this;
-
-	mi.totalElementos = 0;
-	mi.paginaActual = 1;
-	mi.numeroMaximoPaginas = 5;
-	mi.elementosPorPagina = 9;
-
-	mi.mostrarCargando = false;
-	mi.data = [];
-	mi.titulo = titulo;
-	mi.itemSeleccionado = null;
-	mi.seleccionado = false;
-
-	$http.post('/SActividadTipo', {
-		accion : 'numeroActividadTipos', t: new Date().getTime()
-	}).success(function(response) {
-		mi.totalElementos = response.totalactividadtipos;
-		mi.cargarData(1);
-	});
-
-	mi.opcionesGrid = {
-		data : mi.data,
-		columnDefs : [ {
-			displayName : 'ID',
-			name : 'id',
-			cellClass : 'grid-align-right',
-			type : 'number',
-			width : 70
-		}, {
-			displayName : 'Nombre Tipo',
-			name : 'nombre',
-			cellClass : 'grid-align-left'
-		} ],
-		enableRowSelection : true,
-		enableRowHeaderSelection : false,
-		multiSelect : false,
-		modifierKeysToMultiSelect : false,
-		noUnselect : false,
-		enableFiltering : true,
-		enablePaginationControls : false,
-		paginationPageSize : 5,
-		onRegisterApi : function(gridApi) {
-			mi.gridApi = gridApi;
-
-			mi.gridApi.selection.on.rowSelectionChanged($scope,
-					mi.seleccionarEntidad);
-		}
-	}
-
-	mi.seleccionarEntidad = function(row) {
-		mi.itemSeleccionado = row.entity;
-		mi.seleccionado = row.isSelected;
-	};
-
-	mi.cargarData = function(pagina) {
-		var datos = {
-			accion : 'getActividadtiposPagina',
-			pagina : pagina,
-			numeroactividadstipo : mi.elementosPorPagina, 
-			t: new Date().getTime()
-		};
-
-		mi.mostrarCargando = true;
-		$http.post('/SActividadTipo', datos).then(function(response) {
-			if (response.data.success) {
-				mi.data = response.data.actividadtipos;
-				mi.opcionesGrid.data = mi.data;
-				mi.mostrarCargando = false;
-			}
-		});
-	};
-
-	mi.cambioPagina = function() {
-		mi.cargarData(mi.paginaActual);
-	}
-
-	mi.ok = function() {
-		if (mi.seleccionado) {
-			$uibModalInstance.close(mi.itemSeleccionado);
-		} else {
-			$utilidades.mensaje('warning', 'Debe seleccionar un Tipo');
-		}
-	};
-
-	mi.cancel = function() {
-		$uibModalInstance.dismiss('cancel');
-	};
-
-
-}
 
 app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogleMapApi','glat','glong',
     function ($scope, $uibModalInstance,$timeout, uiGmapGoogleMapApi, glat, glong) {
