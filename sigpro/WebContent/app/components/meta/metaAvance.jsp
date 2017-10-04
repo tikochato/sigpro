@@ -85,7 +85,7 @@
 	<div class="row">
 	    <div class="col-sm-12 operation_buttons" align="right">
 		    <div class="btn-group">
-		        <label class="btn btn-success" ng-click="modalAvances.ok()">Cerrar</label>
+		        <label class="btn btn-success" ng-click="modalAvances.ok()">&nbsp;&nbsp;&nbsp;&nbsp;Ok&nbsp;&nbsp;&nbsp;&nbsp;</label>
 	    	</div>
 	      
 	    </div>

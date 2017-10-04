@@ -754,6 +754,12 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 		mi.t_crearNodo=function(id,nombre,objeto_tipo,estado){
 			$rootScope.$emit("crearNodo",{ id: id, nombre: nombre, objeto_tipo: objeto_tipo, estado: estado })
 		}
+		
+		mi.adquisicionesActivo = function(){
+			if(!mi.adquisicionesCargadas){
+				mi.adquisicionesCargadas = true;
+			}
+		}
 }
 
 moduloSubproducto.controller('modalBuscarPorSubproducto', [ '$uibModalInstance',

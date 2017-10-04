@@ -182,7 +182,7 @@
 									<div class="form-group" >
 										<div id="cooperante" angucomplete-alt placeholder="" pause="100" selected-object="controller.cambioCooperante"
 											  local-data="controller.cooperantes" search-fields="nombre" title-field="nombre" field-required="true" field-label="* Cooperante"
-											  minlength="2" input-class="form-control form-control-small field-cooperante" match-class="angucomplete-highlight"
+											  minlength="2" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
 											  initial-value="controller.prestamo.cooperantenombre" focus-out="controller.blurCooperante()"></div>
 									</div>
 								</div>

@@ -49,9 +49,9 @@
 				</div>
 				<div class="col-sm-6 operation_buttons" style="text-align: right;"  >
 		    			<div class="btn-group" role="group" aria-label="" >
-							<label class="btn btn-default" ng-click="planc.exportarExcel()" uib-tooltip="Exportar a Excel" >
+							<label class="btn btn-default" ng-click="planc.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!planc.mostrarExport">
 							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-							<label class="btn btn-default" ng-click="controller.exportarPdf()" uib-tooltip="Exportar a PDF" >
+							<label class="btn btn-default" ng-click="controller.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="!planc.mostrarExport" >
 								<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 						</div>
 		    		</div>

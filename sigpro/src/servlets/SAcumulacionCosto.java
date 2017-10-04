@@ -59,10 +59,8 @@ public class SAcumulacionCosto extends HttpServlet {
 			Map<String, String> map = gson.fromJson(sb.toString(), type);
 			String accion = map.get("accion")!=null ? map.get("accion") : "";
 			
-			if(accion.equals("getAcumulacionCosto")){
-				int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-				int numeroAcumulacionCosto = map.get("numeroresponsablerol")!=null  ? Integer.parseInt(map.get("numeroacumulacioncosto")) : 0;
-				List<AcumulacionCosto> acumulacionCostos = AcumulacionCostoDAO.getAcumulacionCostoPagina(pagina, numeroAcumulacionCosto);
+			if(accion.equals("getAcumulacionesCosto")){
+				List<AcumulacionCosto> acumulacionCostos = AcumulacionCostoDAO.getAcumulacionesCosto();
 				
 				List<stAcumulacionCosto> stacumulacioncosto=new ArrayList<stAcumulacionCosto>();
 				for(AcumulacionCosto acumulacionCosto:acumulacionCostos){
@@ -73,10 +71,8 @@ public class SAcumulacionCosto extends HttpServlet {
 				}
 				
 				response_text=new GsonBuilder().serializeNulls().create().toJson(stacumulacioncosto);
-		        response_text = String.join("", "\"resposablerol\":",response_text);
+		        response_text = String.join("", "\"acumulacionesTipos\":",response_text);
 		        response_text = String.join("", "{\"success\":true,", response_text,"}");
-			}else if(accion.equals("numeroAcumulacionCosto")){
-				response_text = String.join("","{ \"success\": true, \"totalresponsablerol\":",AcumulacionCostoDAO.getTotalAcumulacionCosto().toString()," }");
 			}
 		}catch (Exception ex){
 			response_text = String.join("","{ \"success\": false }");
