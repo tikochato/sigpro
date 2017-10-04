@@ -61,6 +61,7 @@
 						<select class="inputText" ng-model="row.datoTipoId" ng-change="metac.getMetasAnio(row, metac.anio)"
 							ng-options="tipo as tipo.nombre for tipo in metac.datoTipos track by tipo.id"
 							 ng-required="true">
+						<option disabled value>Seleccione Tipo</option>
 						</select>
 					</td>
 					<td>

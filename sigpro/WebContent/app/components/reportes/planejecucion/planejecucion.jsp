@@ -38,7 +38,7 @@
 			<div class="col-sm-12 ">
 			
 			<form name="form">
-				<div class="form-group col-sm-4" >
+				<div class="form-group col-sm-6" >
 						<select  class="inputText" ng-model="planc.prestamoSeleccionado" 
 							ng-options="a.text for a in planc.prestamos"
 							ng-readonly="true"
@@ -47,6 +47,14 @@
 							<option value="">Seleccione una préstamo</option>
 							</select>
 				</div>
+				<div class="col-sm-6 operation_buttons" style="text-align: right;"  >
+		    			<div class="btn-group" role="group" aria-label="" >
+							<label class="btn btn-default" ng-click="planc.exportarExcel()" uib-tooltip="Exportar a Excel" >
+							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
+							<label class="btn btn-default" ng-click="controller.exportarPdf()" uib-tooltip="Exportar a PDF" >
+								<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
+						</div>
+		    		</div>
 			</form>
 			<br/> <br/><br/>
 			

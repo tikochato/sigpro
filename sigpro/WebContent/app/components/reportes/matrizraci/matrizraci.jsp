@@ -10,8 +10,21 @@
 		  font-size: 13px;
 		    opacity: 1;
 		    color: rgba(0,0,0,0.38) !important;
-		    font-weight: bold;
-		   
+		    font-weight: bold; 
+		   white-space: nowrap;
+		}
+		
+		th.no_rotate {
+		  height: 50px;
+		  white-space: nowrap;
+		  overflow-y: hidden;
+		  text-overflow: ellipsis; 
+		  
+		  font-size: 13px;
+		  opacity: 1;
+		  color: rgba(0,0,0,0.38) !important;
+		  font-weight: bold;
+		  text-align: center;
 		   white-space: nowrap;
 		}
 		
@@ -127,11 +140,6 @@
     	overflow-x: hidden;
 	}
 
-
-
-
-
-
 	.thTarea {
 		margin: 0px auto;
     	width: 1600px;	
@@ -214,7 +222,7 @@
 
         	</div>
         	<div class="modal-footer">
-            	<button class="btn btn-primary" type="button" ng-click="infoc.ok()">Aceptar</button>
+            	<button class="btn btn-primary" type="button" ng-click="infoc.ok()">Cerrar</button>
         	</div>
     </script>
 	    
@@ -241,9 +249,9 @@
 					</div>
 					<div class="operation_buttons"  style="float: right;">
 		    			<div class="btn-group" role="group" aria-label="">
-							<label class="btn btn-default" ng-click="racic.exportarExcel()" uib-tooltip="Exportar" ng-hide="!racic.mostrarTabla">
+							<label class="btn btn-default" ng-click="racic.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!racic.mostrarExport">
 							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-							<label class="btn btn-default" ng-click="racic.exportarPdf()" uib-tooltip="Exportar PDF" ng-hide="!racic.mostrarTabla">
+							<label class="btn btn-default" ng-click="racic.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="!racic.mostrarExport">
 								<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 							
 						</div>
@@ -260,7 +268,7 @@
 					</div>
 				  </div>
 				
-				<div class="divTabla" ng-show="!racic.mostrarTabla">
+				<div class="divTabla" ng-hide="!racic.mostrarExport">
 	  			
 					<table st-table="racic.matrizRaci" class="table table-header-rotated  table-striped table-hover table-condensed" >
 							<thead class="cabecera">

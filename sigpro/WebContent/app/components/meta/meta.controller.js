@@ -32,7 +32,7 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			}else if($scope.$parent.subproducto){
 				mi.objeto_id = $scope.$parent.subproducto.subproducto.id;
 				mi.objeto_tipo = 4;
-				$scope.$parent.subproducto.child_metas= $scope.metac;
+				$scope.$parent.subproducto.child_metas = $scope.metac;
 			}else if($scope.$parent.actividadc){
 				mi.objeto_id = $scope.$parent.actividadc.actividad.id;
 				mi.objeto_tipo = 5;
@@ -47,16 +47,39 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 			mi.planificado = null;
 			mi.real = null;
 			mi.planificadoActual = null;
-			
-			switch(mi.objeto_tipo){
+						
+			mi.inicializarControlador = function(){
+				if($scope.$parent.controller){
+					mi.objeto_id = $scope.$parent.controller.proyecto.id;
+					mi.objeto_tipo = 1;
+					$scope.$parent.controller.child_scope = $scope.metac;
+				}else if($scope.$parent.componentec){
+					mi.objeto_id = $scope.$parent.componentec.componente.id;
+					mi.objeto_tipo = 2;
+					$scope.$parent.componentec.child_scope = $scope.metac;
+				}else if($scope.$parent.producto){
+					mi.objeto_id = $scope.$parent.producto.producto.id;
+					mi.objeto_tipo = 3;
+					$scope.$parent.producto.child_scope = $scope.metac;
+				}else if($scope.$parent.subproducto){
+					mi.objeto_id = $scope.$parent.subproducto.subproducto.id;
+					mi.objeto_tipo = 4;
+					$scope.$parent.subproducto.child_scope = $scope.metac;
+				}else if($scope.$parent.actividadc){
+					mi.objeto_id = $scope.$parent.actividadc.actividad.id;
+					mi.objeto_tipo = 5;
+					$scope.$parent.actividadc.child_scope = $scope.metac;
+				}
+				
+				switch(mi.objeto_tipo){
 				case "1": mi.nombreTipoPcp = "Préstamo"; break;
 				case "2": mi.nombreTipoPcp = "Componente"; break;
 				case "3": mi.nombreTipoPcp = "Producto"; break;
 				case "4": mi.nombreTipoPcp = "Subproducto"; break;
 				
-			}
-			
-			$http.post('/SMeta', { accion: 'getPcp', id: mi.objeto_id, tipo: mi.objeto_tipo, t: (new Date()).getTime()}).success(
+				}
+				
+				$http.post('/SMeta', { accion: 'getPcp', id: mi.objeto_id, tipo: mi.objeto_tipo, t: (new Date()).getTime()}).success(
 					function(response) {
 						mi.nombrePcp = response.nombre;
 						mi.fechaInicio = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
@@ -69,18 +92,20 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 						if(mi.anios.length>0){
 							mi.anio=mi.anios[0];
 						}
-			});
-						
-			$http.post('/SMeta', { accion: 'getMetasUnidadesMedida', t: (new Date()).getTime() }).success(
-					function(response) {
-						mi.metaunidades = response.MetasUnidades;
-						$http.post('/SDatoTipo', { accion: 'cargarCombo', t: (new Date()).getTime() }).success(
-								function(response) {
-									mi.datoTipos = response.datoTipos;
-									mi.cargarTabla();
-						});
-			});
+				});
+				
+				$http.post('/SMeta', { accion: 'getMetasUnidadesMedida', t: (new Date()).getTime() }).success(
+						function(response) {
+							mi.metaunidades = response.MetasUnidades;
+							$http.post('/SDatoTipo', { accion: 'cargarCombo', t: (new Date()).getTime() }).success(
+									function(response) {
+										mi.datoTipos = response.datoTipos;
+										mi.cargarTabla();
+							});
+				});
+			}
 			
+			mi.inicializarControlador();
 			
 			mi.cargarTabla = function(){
 				$http.post('/SMeta', { accion: 'getMetasCompletas', 
@@ -424,18 +449,18 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 							octubreDecimal: meta.planificado[i].octubreDecimal != null ? meta.planificado[i].octubreDecimal : inicial,
 							noviembreDecimal: meta.planificado[i].noviembreDecimal != null ? meta.planificado[i].noviembreDecimal : inicial,
 							diciembreDecimal: meta.planificado[i].diciembreDecimal != null ? meta.planificado[i].diciembreDecimal : inicial,
-							eneroTiempo: meta.planificado[i].eneroTiempo != null ? moment(meta.planificado[i].eneroTiempo,'DD/MM/YYYY').toDate() : null,
-							febreroTiempo: meta.planificado[i].febreroTiempo != null ? moment(meta.planificado[i].febreroTiempo,'DD/MM/YYYY').toDate() : null,
-							marzoTiempo: meta.planificado[i].marzoTiempo != null ? moment(meta.planificado[i].marzoTiempo,'DD/MM/YYYY').toDate() : null,
-							abrilTiempo: meta.planificado[i].abrilTiempo != null ? moment(meta.planificado[i].abrilTiempo,'DD/MM/YYYY').toDate() : null,
-							mayoTiempo: meta.planificado[i].mayoTiempo != null ? moment(meta.planificado[i].mayoTiempo,'DD/MM/YYYY').toDate() : null,
-							junioTiempo: meta.planificado[i].junioTiempo != null ? moment(meta.planificado[i].junioTiempo,'DD/MM/YYYY').toDate() : null,
-							julioTiempo: meta.planificado[i].julioTiempo != null ? moment(meta.planificado[i].julioTiempo,'DD/MM/YYYY').toDate() : null,
-							agostoTiempo: meta.planificado[i].agostoTiempo != null ? moment(meta.planificado[i].agostoTiempo,'DD/MM/YYYY').toDate() : null,
-							septiembreTiempo: meta.planificado[i].septiembreTiempo != null ? moment(meta.planificado[i].septiembreTiempo,'DD/MM/YYYY').toDate() : null,
-							octubreTiempo: meta.planificado[i].octubreTiempo != null ? moment(meta.planificado[i].octubreTiempo,'DD/MM/YYYY').toDate() : null,
-							noviembreTiempo: meta.planificado[i].noviembreTiempo != null ? moment(meta.planificado[i].noviembreTiempo,'DD/MM/YYYY').toDate() : null,
-							diciembreTiempo: meta.planificado[i].diciembreTiempo != null ? moment(meta.planificado[i].diciembreTiempo,'DD/MM/YYYY').toDate() : null,
+							eneroTiempo: (meta.planificado[i].eneroTiempo != null && meta.planificado[i].eneroTiempo != "") ? moment(meta.planificado[i].eneroTiempo,'DD/MM/YYYY').toDate() : null,
+							febreroTiempo: (meta.planificado[i].febreroTiempo != null && meta.planificado[i].febreroTiempo != "") ? moment(meta.planificado[i].febreroTiempo,'DD/MM/YYYY').toDate() : null,
+							marzoTiempo: (meta.planificado[i].marzoTiempo != null && meta.planificado[i].marzoTiempo != "") ? moment(meta.planificado[i].marzoTiempo,'DD/MM/YYYY').toDate() : null,
+							abrilTiempo: (meta.planificado[i].abrilTiempo != null && meta.planificado[i].abrilTiempo != "")? moment(meta.planificado[i].abrilTiempo,'DD/MM/YYYY').toDate() : null,
+							mayoTiempo: (meta.planificado[i].mayoTiempo != null && meta.planificado[i].mayoTiempo != "") ? moment(meta.planificado[i].mayoTiempo,'DD/MM/YYYY').toDate() : null,
+							junioTiempo: (meta.planificado[i].junioTiempo != null && meta.planificado[i].junioTiempo != "") ? moment(meta.planificado[i].junioTiempo,'DD/MM/YYYY').toDate() : null,
+							julioTiempo: (meta.planificado[i].julioTiempo != null && meta.planificado[i].julioTiempo != "") ? moment(meta.planificado[i].julioTiempo,'DD/MM/YYYY').toDate() : null,
+							agostoTiempo: (meta.planificado[i].agostoTiempo != null && meta.planificado[i].agostoTiempo != "") ? moment(meta.planificado[i].agostoTiempo,'DD/MM/YYYY').toDate() : null,
+							septiembreTiempo: (meta.planificado[i].septiembreTiempo != null && meta.planificado[i].septiembreTiempo != "") ? moment(meta.planificado[i].septiembreTiempo,'DD/MM/YYYY').toDate() : null,
+							octubreTiempo: (meta.planificado[i].octubreTiempo != null && meta.planificado[i].octubreTiempo != "") ? moment(meta.planificado[i].octubreTiempo,'DD/MM/YYYY').toDate() : null,
+							noviembreTiempo: (meta.planificado[i].noviembreTiempo != null && meta.planificado[i].noviembreTiempo != "") ? moment(meta.planificado[i].noviembreTiempo,'DD/MM/YYYY').toDate() : null,
+							diciembreTiempo: (meta.planificado[i].diciembreTiempo != null && meta.planificado[i].diciembreTiempo != "") ? moment(meta.planificado[i].diciembreTiempo,'DD/MM/YYYY').toDate() : null,
 							total: inicial
 						}
 						if(mi.meta.datoTipoId!=null && mi.meta.datoTipoId.id==4){
@@ -485,8 +510,10 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 					if(response.success){
 						if(child_scope!=null)
 							child_scope.guardar(mensaje, mensaje_error);
-						else	
+						else{
 							$utilidades.mensaje('success',mensaje);
+							mi.inicializarControlador();
+						}
 					}
 					else
 						$utilidades.mensaje('danger',mensaje_error);

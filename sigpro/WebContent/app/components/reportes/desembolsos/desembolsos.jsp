@@ -5,8 +5,7 @@
 	 
 	.planificado {
 		color: #3647b2;
-		 border-right: 1px solid #ddd; 
-		
+		 border-right: 1px solid #ddd;
 	}
 	
 	.real2 {
@@ -131,7 +130,7 @@
 										<span>Q</span></label>
 							</div>
 									<div class="btn-group" style="padding-left: 20px;">
-										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="1" ng-click="desembolsosc.agruparDatos(1)" uib-tooltip="Mensual" role="button" tabindex="1" aria-invalid="false">
+										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="1" ng-click="desembolsosc.agruparDatos(1)" uib-tooltip="Mes" role="button" tabindex="1" aria-invalid="false">
 										<span>M</span></label>
 										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="2" ng-click="desembolsosc.agruparDatos(2)" uib-tooltip="Bimestre" role="button" tabindex="2" aria-invalid="false">
 										<span>B</span></label>
@@ -142,16 +141,15 @@
 										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="5" ng-click="desembolsosc.agruparDatos(5)" uib-tooltip="Semestre" role="button" tabindex="5" aria-invalid="false">
 										<span>S</span></label>
 										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="6" ng-click="desembolsosc.anio_inicio != desembolsosc.anio_fin ? desembolsosc.agruparDatos(6) : ''" 
-										uib-tooltip="Anual" role="button" tabindex="6" aria-invalid="false" ng-disabled="desembolsosc.anio_inicio == desembolsosc.anio_fin">
+										uib-tooltip="Año" role="button" tabindex="6" aria-invalid="false" ng-disabled="desembolsosc.anio_inicio == desembolsosc.anio_fin">
 										<span>A</span></label>
 						</div>
 									
 									<div class="btn-group" style="padding-left: 20px;">
-										<label class="btn btn-default" ng-click="desembolsosc.exportarExcel()" uib-tooltip="Exportar" ng-hide="!desembolsosc.mostrarDescargar">
+										<label class="btn btn-default" ng-click="desembolsosc.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!desembolsosc.mostrarDescargar">
 										<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-										<label class="btn btn-default" ng-click="desembolsosc.exportarPdf()" uib-tooltip="Exportar PDF" ng-hide="!desembolsosc.mostrarDescargar">
+										<label class="btn btn-default" ng-click="desembolsosc.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="!desembolsosc.mostrarDescargar">
 										<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
-										
 							</div>
 						</div>
 			    	</div>
@@ -184,14 +182,15 @@
 				<tr class = "{{desembolsosc.clase($index)}}" ng-repeat="row in desembolsosc.tabla track by $index" style="text-align: right;">
 					<td ng-repeat = "col in row track by $index" 
 					 	 nowrap style="font-weight: bold; border-right: 1px solid #ddd; min-width:125px;">
-					 	 <div ng-if=" desembolsosc.esNumero(col)" >
+					 	 <div ng-if=" desembolsosc.esNumero(col) && $parent.$index != 3" >
 					 	 	{{col | formatoMillones : desembolsosc.enMillones }}
 					 	 </div>
-					 	 
 					 	 <div ng-if="! desembolsosc.esNumero(col)" >
 					 	 	{{col}}
 					 	 </div>
-					 	 
+					 	 <div ng-if="desembolsosc.esNumero(col) && $parent.$index == 3" >
+					 	 	{{col | formatoMillonesDolares : desembolsosc.enMillones }}
+					 	 </div>
 					 </td>
 				</tr>
 				</tbody>

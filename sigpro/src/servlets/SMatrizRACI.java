@@ -1,6 +1,5 @@
 package servlets;
 
-import java.sql.Connection;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -32,7 +31,6 @@ import dao.ActividadDAO;
 import dao.AsignacionRaciDAO;
 import dao.ComponenteDAO;
 import dao.EstructuraProyectoDAO;
-import dao.InformacionPresupuestariaDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
 import dao.SubproductoDAO;
@@ -45,7 +43,6 @@ import pojo.Proyecto;
 import pojo.Subproducto;
 import utilities.CExcel;
 import utilities.CLogger;
-import utilities.CMariaDB;
 import utilities.CPdf;
 import utilities.Utils;
 
@@ -123,13 +120,33 @@ public class SMatrizRACI extends HttpServlet {
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 			
 			lstMatriz = getMatriz(idPrestamo);
-				
+			boolean sinColaborador = false;
 			List<stcolaborador> stcolaboradores = getColaboradores(idPrestamo, usuario);
+			if (stcolaboradores.size() ==0){
+				sinColaborador = true;
+				stcolaborador temp = new stcolaborador();
+				temp.id = 1;
+				temp.nombre = "R";
+				stcolaboradores.add(temp);
+				temp = new stcolaborador();
+				temp.id = 1;
+				temp.nombre = "A";
+				stcolaboradores.add(temp);
+				temp = new stcolaborador();
+				temp.id = 1;
+				temp.nombre = "C";
+				stcolaboradores.add(temp);
+				temp = new stcolaborador();
+				temp.id = 1;
+				temp.nombre = "I";
+				stcolaboradores.add(temp);	
+			}
 			if(lstMatriz!=null && stcolaboradores!=null){
 				String response_col = new GsonBuilder().serializeNulls().create().toJson(stcolaboradores);
 				
 				response_text=new GsonBuilder().serializeNulls().create().toJson(lstMatriz);
 		        response_text = String.join("", "\"matriz\":",response_text,",",
+		        		"\"sinColaboradores\":",sinColaborador ? "true" : "false",",",
 		        		"\"colaboradores\":",response_col);
 		        
 		        response_text = String.join("", "{\"success\":true,", response_text, "}");
@@ -303,122 +320,6 @@ public class SMatrizRACI extends HttpServlet {
 		return lstMatriz;
 	}
 	
-	private List<stmatriz> getMatriz(Integer idPrestamo, String usuario){
-		List<stmatriz> lstMatriz=null;
-		Proyecto proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
-		
-		if(proyecto != null){
-			stmatriz tempmatriz = new stmatriz();
-			lstMatriz = new ArrayList<>();
-			if(CMariaDB.connect()){
-					Connection conn = CMariaDB.getConnection();
-					ArrayList<Integer> componentes = InformacionPresupuestariaDAO.getEstructuraArbolComponentes(idPrestamo, conn);
-					tempmatriz = new stmatriz();
-					tempmatriz.objetoId = proyecto.getId();
-					tempmatriz.objetoNombre = proyecto.getNombre();
-					tempmatriz.nivel = 1;
-					tempmatriz.objetoTipo = 1;
-					getAsignacionRACI(tempmatriz);
-					lstMatriz.add(tempmatriz);
-					
-					for(Integer componente:componentes){
-						
-						Componente objComponente = ComponenteDAO.getComponentePorId(componente, usuario);
-						tempmatriz = new stmatriz();
-						tempmatriz.objetoId = objComponente.getId();
-						tempmatriz.objetoNombre = objComponente.getNombre();
-						tempmatriz.nivel = 2;
-						tempmatriz.objetoTipo = 2;
-						getAsignacionRACI(tempmatriz);
-						lstMatriz.add(tempmatriz);
-						
-						
-						ArrayList<Integer> productos = InformacionPresupuestariaDAO.getEstructuraArbolProducto(idPrestamo, objComponente.getId(), conn);
-						for(Integer producto: productos){
-							
-							Producto objProducto = ProductoDAO.getProductoPorId(producto);
-							tempmatriz = new stmatriz();
-							tempmatriz.objetoId = objProducto.getId();
-							tempmatriz.objetoNombre = objProducto.getNombre();
-							tempmatriz.nivel = 3;
-							tempmatriz.objetoTipo = 3;
-							getAsignacionRACI(tempmatriz);
-							lstMatriz.add(tempmatriz);
-						
-							ArrayList<Integer> subproductos = InformacionPresupuestariaDAO.getEstructuraArbolSubProducto(idPrestamo,objComponente.getId(),objProducto.getId(), conn);
-							for(Integer subproducto: subproductos){
-								
-								Subproducto objSubProducto = SubproductoDAO.getSubproductoPorId(subproducto);
-								tempmatriz = new stmatriz();
-								tempmatriz.objetoId = objSubProducto.getId();
-								tempmatriz.objetoNombre = objSubProducto.getNombre();
-								tempmatriz.nivel = 4;
-								tempmatriz.objetoTipo = 4;
-								getAsignacionRACI(tempmatriz);
-								lstMatriz.add(tempmatriz);
-						
-								ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolSubProductoActividades(idPrestamo, objComponente.getId(), objProducto.getId(),objSubProducto.getId(), conn);
-								for(ArrayList<Integer> actividad : actividades){
-									
-									Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0));
-									tempmatriz = new stmatriz();
-									tempmatriz.objetoId = objActividad.getId();
-									tempmatriz.objetoNombre = objActividad.getNombre();
-									tempmatriz.nivel = 5 + actividad.get(1);
-									tempmatriz.objetoTipo = 5;
-									getAsignacionRACI(tempmatriz);
-									lstMatriz.add(tempmatriz);
-														
-								}
-							}
-					
-							ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolProductoActividades(idPrestamo, objComponente.getId(), objProducto.getId(), conn);
-							for(ArrayList<Integer> actividad : actividades){
-								Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0));
-								tempmatriz = new stmatriz();
-								tempmatriz.objetoId = objActividad.getId();
-								tempmatriz.objetoNombre = objActividad.getNombre();
-								tempmatriz.nivel = 5 + actividad.get(1);
-								tempmatriz.objetoTipo = 5;
-								getAsignacionRACI(tempmatriz);
-								lstMatriz.add(tempmatriz);
-							}  
-						} 
-					
-						ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolComponentesActividades(idPrestamo, objComponente.getId(), conn);							
-						for(ArrayList<Integer> actividad : actividades){
-							Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0));
-							tempmatriz = new stmatriz();
-							tempmatriz.objetoId = objActividad.getId();
-							tempmatriz.objetoNombre = objActividad.getNombre();
-							tempmatriz.nivel = 5 + actividad.get(1);
-							tempmatriz.objetoTipo = 5;
-							getAsignacionRACI(tempmatriz);
-							lstMatriz.add(tempmatriz);
-							
-						} 
-					}
-				
-					ArrayList<ArrayList<Integer>> actividades = InformacionPresupuestariaDAO.getEstructuraArbolPrestamoActividades(idPrestamo, conn);
-					
-					for(ArrayList<Integer> actividad : actividades){
-						Actividad objActividad = ActividadDAO.getActividadPorId(actividad.get(0));
-						tempmatriz = new stmatriz();
-						tempmatriz.objetoId = objActividad.getId();
-						tempmatriz.objetoNombre = objActividad.getNombre();
-						tempmatriz.nivel = 5 + actividad.get(1);
-						tempmatriz.objetoTipo = 5;
-						getAsignacionRACI(tempmatriz);
-						lstMatriz.add(tempmatriz);
-					
-					}
-					
-					CMariaDB.close();
-				}
-			}
-		return lstMatriz;
-	}
-	
 	private List<stcolaborador> getColaboradores(Integer idPrestamo, String usuario){
 		List<stcolaborador> stcolaboradores = null;
 		Proyecto proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
@@ -469,15 +370,34 @@ public class SMatrizRACI extends HttpServlet {
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
 			List<stcolaborador> colaboradores = getColaboradores(idPrestamo, usuario);
-			if(colaboradores!=null){
-				headers = generarHeaders(colaboradores);
-				datos = generarDatos(idPrestamo, colaboradores, usuario);
-				excel = new CExcel("Matriz RACI", false, null);
-				wb=excel.generateExcelOfData(datos, "Matriz RACI", headers, null, true, usuario);
+			if (colaboradores.size() ==0){
 			
-				wb.write(outByteStream);
-				outArray = Base64.encode(outByteStream.toByteArray());
+				stcolaborador temp = new stcolaborador();
+				temp.id = 1;
+				temp.nombre = "R";
+				colaboradores.add(temp);
+				temp = new stcolaborador();
+				temp.id = 1;
+				temp.nombre = "A";
+				colaboradores.add(temp);
+				temp = new stcolaborador();
+				temp.id = 1;
+				temp.nombre = "C";
+				colaboradores.add(temp);
+				temp = new stcolaborador();
+				temp.id = 1;
+				temp.nombre = "I";
+				colaboradores.add(temp);
+				
 			}
+			
+			headers = generarHeaders(colaboradores);
+			datos = generarDatos(idPrestamo, colaboradores, usuario);
+			excel = new CExcel("Matriz RACI", false, null);
+			wb=excel.generateExcelOfData(datos, "Matriz RACI", headers, null, true, usuario);
+			wb.write(outByteStream);
+			outArray = Base64.encode(outByteStream.toByteArray());
+			
 		}catch(Exception e){
 			CLogger.write("2", SMatrizRACI.class, e);
 		}
@@ -515,7 +435,7 @@ public class SMatrizRACI extends HttpServlet {
 	}
 	
 	public String[][] generarDatos(Integer idPrestamo, List<stcolaborador> colaboradores, String usuario){
-		List<stmatriz> stmatriz = getMatriz(idPrestamo, usuario);
+		List<stmatriz> stmatriz = getMatriz(idPrestamo);
 		String[][] datos = null;
 		
 		if(stmatriz!= null && colaboradores!=null){
