@@ -11,6 +11,10 @@ import org.hibernate.query.Query;
 import pojo.Actividad;
 import pojo.ActividadUsuario;
 import pojo.ActividadUsuarioId;
+import pojo.Componente;
+import pojo.Producto;
+import pojo.Proyecto;
+import pojo.Subproducto;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 import utilities.Utils;
@@ -106,6 +110,32 @@ public class ActividadDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
+			if(Actividad.getId()==null || Actividad.getId()<1){
+				session.save(Actividad);
+				session.flush();
+				switch(Actividad.getObjetoTipo()){
+					case 1:
+						Proyecto proyecto = ProyectoDAO.getProyecto(Actividad.getObjetoId());
+						Actividad.setTreePath(proyecto.getTreePath()+""+(10000000+Actividad.getId()));
+						break;
+					case 2:
+						Componente componente = ComponenteDAO.getComponente(Actividad.getObjetoId());
+						Actividad.setTreePath(componente.getTreePath()+""+(10000000+Actividad.getId()));
+						break;
+					case 3:
+						Producto producto = ProductoDAO.getProductoPorId(Actividad.getObjetoId());
+						Actividad.setTreePath(producto.getTreePath()+""+(10000000+Actividad.getId()));
+						break;
+					case 4:
+						Subproducto subproducto = SubproductoDAO.getSubproductoPorId(Actividad.getObjetoId());
+						Actividad.setTreePath(subproducto.getTreePath()+""+(10000000+Actividad.getId()));
+						break;
+					case 5:
+						Actividad actividad = ActividadDAO.getActividadPorId(Actividad.getObjetoId());
+						Actividad.setTreePath(actividad.getTreePath()+""+(10000000+Actividad.getId()));
+						break;
+				}
+			}
 			session.saveOrUpdate(Actividad);
 			ActividadUsuario au = new ActividadUsuario(new ActividadUsuarioId(Actividad.getId(), Actividad.getUsuarioCreo()),Actividad);
 			session.saveOrUpdate(au);

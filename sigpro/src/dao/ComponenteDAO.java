@@ -68,7 +68,11 @@ public class ComponenteDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
-			Componente.setNivel(1);
+			if(Componente.getId()==null || Componente.getId()<1){
+				session.saveOrUpdate(Componente);
+				session.flush();
+				Componente.setTreePath(Componente.getProyecto().getTreePath()+""+(10000000+Componente.getId()));
+			}
 			session.saveOrUpdate(Componente);
 			Usuario usuario = UsuarioDAO.getUsuario(Componente.getUsuarioCreo());
 			ComponenteUsuario cu = new ComponenteUsuario(new ComponenteUsuarioId(Componente.getId(), Componente.getUsuarioCreo()), Componente, usuario);

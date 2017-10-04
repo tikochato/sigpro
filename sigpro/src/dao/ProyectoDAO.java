@@ -313,8 +313,12 @@ public class ProyectoDAO implements java.io.Serializable  {
 	public static boolean guardarProyectoOrden(Proyecto proyecto, Session session){
 		boolean ret = false;
 		try{
-			proyecto.setTreePath("1");
-			session.saveOrUpdate(proyecto);
+			if(proyecto.getId()==null || proyecto.getId()<1){
+				session.saveOrUpdate(proyecto);
+				session.flush();
+				proyecto.setTreePath((10000000+proyecto.getId())+"");
+			}
+			session.save(proyecto);
 			session.flush();
 			session.clear();
 			ret = true;
