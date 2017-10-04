@@ -241,7 +241,7 @@ public class SFlujoCaja extends HttpServlet {
 						totales.filaVariacionPorcentaje[m] = planificadoActual.compareTo(BigDecimal.ZERO)==0 ? new BigDecimal(0) : totales.filaVariacion[m].divide(planificadoActual);
 						
 					}
-				//TODO: obtener desembolsos y saldo
+				//TODO: obtener desembolsos reales y saldo
 				DateTime fecha = new DateTime(fechaCorte);
 				Integer anioInicial = fecha.getYear();
 				Integer mesInicial = fecha.getMonthOfYear();
