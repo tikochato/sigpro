@@ -158,21 +158,18 @@
 					<div class="form-group col-sm-3">
 						<select  class="inputText" ng-model="controller.prestamo"
 							ng-options="a.text for a in controller.prestamos"
-							ng-change="controller.validar(1)"></select>
+							ng-change="controller.validar()"></select>
 					</div>
 					
-					<div class="form-group col-sm-1">
-						<input type="number"  class="inputText" ng-model="controller.fechaInicio" maxlength="4" 
-						ng-value="controller.fechaInicio" onblur="this.setAttribute('value', this.value);"
-						ng-change="controller.validar(2)">
-					  	<label for="campo.id" class="floating-label" >*Año Inicial</label>
-					</div>
-					
-					<div class="form-group col-sm-1">
-						<input type="number"  class="inputText" ng-model="controller.fechaFin" maxlength="4" 
-						ng-value="controller.fechaFin" onblur="this.setAttribute('value', this.value);"
-						ng-change="controller.validar(3)" ng-hide="true"/>
-					  	<label for="campo.id" class="floating-label" ng-hide="true">*Año Final</label>
+					<div class="form-group col-sm-2">
+						<input type="text"  class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.fechaCorte" is-open="controller.isOpen"
+				            datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  
+				            ng-required="true" ng-change="controller.validar()"
+				            ng-value="controller.fechaCorte" onblur="this.setAttribute('value', this.value);"/>
+				            <span class="label-icon" ng-click="controller.abrirPopupFecha()">
+				              <i class="glyphicon glyphicon-calendar"></i>
+				            </span>
+					  	<label for="campo.id" class="floating-label">*Fecha Inicial</label>
 					</div>
 					
 					<div class="col-sm-7" align="right" ng-hide="!controller.mostrarDescargar">
@@ -340,7 +337,7 @@
 							      		<td ng-repeat="posicion in controller.resumenTotales.filaVariacion track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion | formatoMillones : controller.enMillones}} </td>
 							      	</tr>
 							      	<tr>
-							      		<td ng-repeat="posicion in controller.resumenTotales.filaVariacionPorcentaje track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion | formatoMillones : controller.enMillones}} </td>
+							      		<td ng-repeat="posicion in controller.resumenTotales.filaVariacionPorcentaje track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion}}%</td>
 							      	</tr>
 							      	<tr>
 							      		<td ng-repeat="posicion in controller.resumenTotales.filaDesembolsos track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion | formatoMillones : controller.enMillones}} </td>

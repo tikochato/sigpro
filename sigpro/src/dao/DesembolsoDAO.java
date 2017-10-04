@@ -221,6 +221,32 @@ public class DesembolsoDAO {
 		return ret;
 	}
 	
+	public static List<?> getDesembolsosEntreFechas(Integer idProyecto, Date fechaInicio, Date fechaFin){
+		java.sql.Date fechaInicial = new java.sql.Date(fechaInicio.getTime());
+		java.sql.Date fechaFinal = new java.sql.Date(fechaFin.getTime());
+		List<?> ret= null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "select year (fecha) anio ,month(fecha) mes ,SUM(monto)  monto",
+				"from desembolso where proyectoid = ?1",
+				"and estado  = 1", 
+				"and  fecha between ?2 and ?3",
+				"GROUP BY year (fecha),month(fecha) order by year(fecha),month (fecha) asc");
+			Query<?>  desembolsos = session.createNativeQuery(query);
+			desembolsos.setParameter(1, idProyecto);
+			desembolsos.setParameter(2, fechaInicial);
+			desembolsos.setParameter(3, fechaFinal);
+			ret = desembolsos.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("8", DesembolsoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
 	public static List<?> getCostosPorEjercicio(Integer idProyecto, int anio_inicial, int anio_final){
 		List<?> ret= null;
 		Session session = CHibernateSession.getSessionFactory().openSession();

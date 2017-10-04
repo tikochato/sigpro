@@ -62,8 +62,8 @@
 							</div>
 							<div ng-switch-when="fecha" class="form-group" >
 								<input type="text" class="inputText" uib-datepicker-popup="{{modalAvances.formatofecha}}" ng-model="row.valorTiempoControl" is-open="row.isOpenValor"
-									datepicker-options="modalAvances.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="modalAvances.abrirPopupFecha($index,1)"
-									ng-change="modalAvances.guardarFecha(row)" ng-readonly="true"/>
+									datepicker-options="modalAvances.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
+									ng-change="modalAvances.guardarFecha(row)"/>
 									<span class="label-icon" ng-click="modalAvances.abrirPopupFecha($index,1)">
 										<i class="glyphicon glyphicon-calendar"></i>
 									</span>

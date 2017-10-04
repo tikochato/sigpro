@@ -5,8 +5,7 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
 
 	var mi = this;
-	mi.fechaInicio = "";
-	mi.fechaFin = "";
+	mi.fechaCorte = null;
 	mi.movimiento = false;
 	mi.mostrarDescargar = false;
 	mi.mostrarCargando = false;
@@ -89,19 +88,17 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 	$window.document.title = $utilidades.sistema_nombre+' - Flujo de Caja';
 	i18nService.setCurrentLang('es');
 
-	mi.formatofecha = 'yyyy';
+	mi.formatofecha = 'dd/MM/yyyy';
 
-	mi.abrirPopupFecha = function(index) {
-		switch(index){
-		case 1000: mi.fi_abierto = true; break;
-		case 1001: mi.ff_abierto = true; break;
-		}
+	mi.abrirPopupFecha = function() {
+		mi.isOpen = true; 
 	};
 
 	mi.fechaOptions = {
-			formatYear: 'yyyy',
-			startingDay: 1,
-			minMode: 'year'
+			formatYear : 'yy',
+			maxDate : new Date(2050, 12, 31),
+			minDate : new Date(1990, 1, 1),
+			startingDay : 1
 	};
 
 	$http.post('/SProyecto',{accion: 'getProyectos'}).success(
@@ -160,26 +157,12 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 		mi.scrollPosicion = elemento.scrollLeft;
 	}
 
-	mi.validar = function(noElemento){
-		//TODO: quitar
-		mi.fechaFin = mi.fechaInicio;
+	mi.validar = function(){
 		if(mi.prestamo.value > 0)
 		{
-			if(mi.fechaInicio != null && mi.fechaInicio.toString().length == 4 && 
-					mi.fechaFin != null && mi.fechaFin.toString().length == 4)
+			if(mi.fechaCorte != null)
 			{
-				if (mi.fechaFin >= mi.fechaInicio){
-					if(noElemento && noElemento == 2 && (mi.fechaFin - mi.fechaInicio)>mi.limiteAnios){ //fechaInicio
-						mi.fechaInicio = mi.fechaFin - mi.limiteAnios;
-						$utilidades.mensaje('warning','La diferencia de años no puede ser mayor a '+mi.limiteAnios);
-					}else if(noElemento && noElemento == 3 && (mi.fechaFin - mi.fechaInicio)>mi.limiteAnios){ //fechaFin
-						mi.fechaFin = mi.fechaInicio + mi.limiteAnios;
-						$utilidades.mensaje('warning','La diferencia de años no puede ser mayor a '+mi.limiteAnios);
-					}
-					mi.generar(mi.agrupacionActual);
-				}else{
-					$utilidades.mensaje('warning','La fecha inicial es mayor a la fecha final');
-				}
+				mi.generar(mi.agrupacionActual);
 			}
 		}
 	}
@@ -190,7 +173,7 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 			tamanioMinimo = mi.tamanioMinimoColumnaMillones;
 		}
 		mi.tamanoPantalla = Math.floor(document.getElementById("reporte").offsetWidth) - 300;
-		mi.totalAnios = Number(mi.fechaFin) - Number(mi.fechaInicio) + 1;
+		mi.totalAnios = 1;
 		mi.totalCabecerasAMostrar = $utilidades.getCantidadCabecerasReporte(mi.tamanoPantalla, mi.totalAnios, mi.totalCabeceras, tamanioMinimo, mi.columnasTotal);
 		if(mi.totalCabecerasAMostrar == 0){
 			mi.tamanoCelda = tamanioMinimo;
@@ -210,8 +193,7 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 		var datos = {
 				accion : 'getFlujoCaja',
 				idPrestamo: mi.prestamo.value,
-				anioInicial: mi.fechaInicio,
-				anioFinal: mi.fechaFin,
+				fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY'),
 				t: (new Date()).getTime()
 		};
 
@@ -313,9 +295,8 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 	mi.cambiarAgrupacion = function(agrupacion){
 		if(mi.prestamo.value > 0)
 		{
-			if(mi.fechaInicio != null && mi.fechaFin != null)
+			if(mi.fechaCorte != null)
 			{
-				if (mi.fechaFin >= mi.fechaInicio){
 					if(agrupacion != 0){
 						mi.data = JSON.parse(JSON.stringify(mi.dataOriginal));
 						mi.agrupacionActual = agrupacion;
@@ -329,10 +310,8 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 						}
 						mi.renderizaTabla();
 					}
-				}else
-					$utilidades.mensaje('warning','La fecha inicial es mayor a la fecha final');
 			}else
-				$utilidades.mensaje('warning','Favor de ingresar un año inicial y final válido');
+				$utilidades.mensaje('warning','Favor de ingresar una fecha válida');
 		}else
 			$utilidades.mensaje('warning','Debe de seleccionar un préstamo');
 	}
@@ -340,18 +319,15 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 	mi.generar = function(agrupacion){
 		if(mi.prestamo.value > 0)
 		{
-			if(mi.fechaInicio != null && mi.fechaFin != null)
+			if(mi.fechaCorte != null)
 			{
-				if (mi.fechaFin >= mi.fechaInicio){
-					if(agrupacion != 0){
-						mi.agrupacionActual = agrupacion;
-						mi.cargarTabla();
+				if(agrupacion != 0){
+					mi.agrupacionActual = agrupacion;
+					mi.cargarTabla();
 
-					}
-				}else
-					$utilidades.mensaje('warning','La fecha inicial es mayor a la fecha final');
+				}
 			}else
-				$utilidades.mensaje('warning','Favor de ingresar un año inicial y final válido');
+				$utilidades.mensaje('warning','Favor de ingresar una fecha válida');
 		}else
 			$utilidades.mensaje('warning','Debe de seleccionar un préstamo');
 	}
@@ -368,9 +344,9 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 		}			
 		
 		mi.anios = [];
-		for(var i = mi.fechaInicio; i <= mi.fechaFin; i++){
-			mi.anios.push({anio: i});
-		}
+		var fecha = moment(mi.fechaCorte).format('DD/MM/YYYY')
+		var anio = moment(fecha, 'DD/MM/YYYY').year();
+		mi.anios.push({anio: anio});
 		mi.colspan = mi.anios.length;
 		mi.aniosfinales = [];
 
@@ -444,8 +420,7 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 		$http.post('/SFlujoCaja', { 
 			accion: 'exportarExcel', 
 			proyectoid: mi.prestamo.value,
-			fechaInicio: mi.fechaInicio,
-			fechaFin: mi.fechaFin,
+			fechaCorte: mi.fechaCorte,
 			agrupacion: mi.agrupacionActual,
 			t:moment().unix()
 		} ).then(
@@ -471,8 +446,7 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 		$http.post('/SFlujoCaja', { 
 			accion: 'exportarPdf',
 			proyectoid: mi.prestamo.value,
-			fechaInicio: mi.fechaInicio,
-			fechaFin: mi.fechaFin,
+			fechaCorte: mi.fechaCorte,
 			agrupacion: mi.agrupacionActual,
 			tipoVisualizacion: tipoVisualizacion,
 			t:moment().unix()
