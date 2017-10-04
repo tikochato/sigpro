@@ -15,6 +15,28 @@ app.controller('planAdquisicionesController', [ '$scope', '$http', '$interval', 
 		mi.grupoMostrado= {"planificado":true};
 		mi.estiloAlineacion="text-align: center;";
 		
+		mi.validar = function(noElemento){
+			if(mi.prestamo.value > 0)
+			{
+				if(mi.fechaInicio != null && mi.fechaInicio.toString().length == 4 && 
+						mi.fechaFin != null && mi.fechaFin.toString().length == 4)
+				{
+					if (mi.fechaFin >= mi.fechaInicio){
+						if(noElemento && noElemento == 2 && (mi.fechaFin - mi.fechaInicio)>mi.limiteAnios){ //fechaInicio
+							mi.fechaInicio = mi.fechaFin - mi.limiteAnios;
+							$utilidades.mensaje('warning','La diferencia de años no puede ser mayor a '+mi.limiteAnios);
+						}else if(noElemento && noElemento == 3 && (mi.fechaFin - mi.fechaInicio)>mi.limiteAnios){ //fechaFin
+							mi.fechaFin = mi.fechaInicio + mi.limiteAnios;
+							$utilidades.mensaje('warning','La diferencia de años no puede ser mayor a '+mi.limiteAnios);
+						}
+						mi.generar(mi.agrupacionActual);
+					}else{
+						$utilidades.mensaje('warning','La fecha inicial es mayor a la fecha final');
+					}
+				}
+			}
+		}
+		
 		$scope.divActivo = "";
 		mi.activarScroll = function(id){
 			$scope.divActivo = id;
@@ -139,6 +161,8 @@ app.controller('planAdquisicionesController', [ '$scope', '$http', '$interval', 
 				$http.post('/SPlanAdquisiciones',{
 					accion: 'generarPlan',
 					idPrestamo: mi.idPrestamo,
+					fechaInicio: mi.fechaInicio,
+					fechaFin: mi.fechaFin,
 					anio: mi.anio
 				}).success(function(response){
 					if(response.success){
@@ -486,6 +510,27 @@ app.controller('planAdquisicionesController', [ '$scope', '$http', '$interval', 
 		            return 'glyphicon glyphicon-th-list';
 		    }
 		};
+		
+		mi.exportarExcel = function(){
+			$http.post('/SPlanAdquisiciones', { 
+				accion: 'exportarExcel', 
+				idPrestamo: mi.prestamo.value,
+				anio: mi.anio,
+				agrupacion: mi.agrupacionActual,				
+				t:moment().unix()
+			}).then(
+				function successCallback(response) {
+					var anchor = angular.element('<a/>');
+					anchor.attr({
+						href: 'data:application/ms-excel;base64,' + response.data,
+						target: '_blank',
+						download: 'PlanDeAdquisiciones.xls'
+					})[0].click();
+				}.bind(this), function errorCallback(response){ }
+			);
+		};
+
+		
 }]);
 
 app.directive('scrollespejo', ['$window', function($window) {

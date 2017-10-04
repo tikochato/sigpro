@@ -182,16 +182,30 @@
 					</div>
 					<br>
 					<div class="row" style="width: 100%; height: 15%">
-		    			<div class="form-group col-sm-3" align="left">
-							<select  class="inputText" ng-model="controller.prestamo"
-								ng-options="a.text for a in controller.prestamos" 
-								ng-change="controller.generar(0);"></select>		
-	    				</div>
-	    				
-		    			<div class="col-sm-9" align="right" ng-hide="!controller.mostrarDescargar">
-							<div class="form-group col-sm-1">
+						<div class="row">
+							<div class="form-group col-sm-3" align="left">
+								<select  class="inputText" ng-model="controller.prestamo"
+									ng-options="a.text for a in controller.prestamos" 
+									ng-change="controller.validar(1)"></select>		
+		    				</div>
+		    				
+		    				<div align="left" class="form-group col-sm-1">
+								<input type="number"  class="inputText" ng-model="controller.fechaInicio" maxlength="4" 
+								ng-value="controller.fechaInicio" onblur="this.setAttribute('value', this.value);"
+								ng-change="controller.validar(2)"/>
+							  	<label for="campo.id" class="floating-label">*Año Inicial</label>
 							</div>
-							<div class="col-sm-11">
+					
+							<div align="left" class="form-group col-sm-1">
+								<input type="number"  class="inputText" ng-model="controller.fechaFin" maxlength="4" 
+								ng-value="controller.fechaFin" onblur="this.setAttribute('value', this.value);"
+								ng-change="controller.validar(3)"/>
+							  	<label for="campo.id" class="floating-label">*Año Final</label>
+							</div>
+						</div>
+						<br/>
+		    			<div class="row">
+		    				<div class="col-sm-12" align="right" ng-hide="!controller.mostrarDescargar">
 								<div class="btn-group">
 									<label class="btn btn-default" ng-model="controller.enMillones" uib-btn-radio="true" ng-click="controller.calcularTamaniosCeldas(); controller.convertirMillones();" uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false">
 									<span>MQ</span></label>
@@ -217,9 +231,9 @@
 									<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
 									<label class="btn btn-default" ng-click="controller.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="!controller.mostrarDescargar">
 									<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
-								</div>
+								</div>								
 							</div>
-						</div>
+		    			</div>	
 		    		</div>
 	    		</div>				
 				<div class="row" style="height: 80%">
