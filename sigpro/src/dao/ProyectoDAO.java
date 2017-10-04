@@ -43,8 +43,11 @@ public class ProyectoDAO implements java.io.Serializable  {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
-			proyecto.setTreePath("1");
-			proyecto.setNivel(0);
+			if(proyecto.getId()==null || proyecto.getId()<1){
+				session.saveOrUpdate(proyecto);
+				session.flush();
+				proyecto.setTreePath((10000000+proyecto.getId())+"");
+			}
 			session.saveOrUpdate(proyecto);
 			Usuario usu = UsuarioDAO.getUsuario( proyecto.getUsuarioCreo());
 			ProyectoUsuario pu = new ProyectoUsuario(new ProyectoUsuarioId(proyecto.getId(),proyecto.getUsuarioCreo()), proyecto,usu);
@@ -313,11 +316,6 @@ public class ProyectoDAO implements java.io.Serializable  {
 	public static boolean guardarProyectoOrden(Proyecto proyecto, Session session){
 		boolean ret = false;
 		try{
-			if(proyecto.getId()==null || proyecto.getId()<1){
-				session.saveOrUpdate(proyecto);
-				session.flush();
-				proyecto.setTreePath((10000000+proyecto.getId())+"");
-			}
 			session.save(proyecto);
 			session.flush();
 			session.clear();
