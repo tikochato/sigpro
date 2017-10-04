@@ -149,7 +149,7 @@ public class EstructuraProyectoDAO {
 				int id_ = dato[0]!=null ? (Integer)dato[0] : 0;
 				int objeto_tipo = dato[2]!=null ? ((BigInteger)dato[2]).intValue() : 0;
 				String nombre = dato[1]!=null ? (String)dato[1] : null;
-				int nivel = dato[4]!=null ? (Integer)dato[4] : 0;
+				int nivel = (dato[3]!=null) ? ((String)dato[3]).length()/8 : 0;
 				root = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, false);
 				Nodo nivel_actual_estructura = root;
 				for(int i=1; i<estructuras.size(); i++){
