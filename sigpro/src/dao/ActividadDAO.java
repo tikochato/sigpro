@@ -680,4 +680,23 @@ public class ActividadDAO {
 		}
 		return ret;
 	}
+	
+	public static List<Actividad> getActividadesPorObjeto(Integer objetoId, Integer objetoTipo){
+		List<Actividad> ret = new ArrayList<Actividad>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "SELECT a FROM Actividad a WHERE a.estado = 1 AND a.objetoId = :objetoId AND a.objetoTipo = :objetoTipo ";
+			Query<Actividad> criteria = session.createQuery(query,Actividad.class);
+			criteria.setParameter("objetoId", objetoId);
+			criteria.setParameter("objetoTipo", objetoTipo);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("19", ActividadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 }
