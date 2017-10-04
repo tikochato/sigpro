@@ -320,7 +320,7 @@ public class CProject {
 			item_.duracion = (int) task.getDuration().getDuration();
 			item_.unidades = task.getDuration().getUnits().getName();
 			
-			System.out.println(task.getID() + " - " + item_.contenido);
+			//System.out.println(task.getID() + " - " + item_.contenido);
 			items.put(task.getUniqueID(), item_);
 			
 			boolean tieneHijos = task.getChildTasks()!=null && task.getChildTasks().size()>0;

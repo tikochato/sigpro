@@ -73,13 +73,13 @@
 						<div class="form-group">
 				            	<div id="categoria" angucomplete-alt placeholder="" pause="100" selected-object="adquisicionc.cambioCategoria"
 											  local-data="adquisicionc.categorias" search-fields="nombre" title-field="nombre" field-required="adquisicionc.mostraringreso" field-label="* Categoría"
-											  minlength="1" input-class="form-control form-control-small field-cooperante" match-class="angucomplete-highlight"
+											  minlength="1" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
 											  initial-value="adquisicionc.adquisicion.categoriaNombre" focus-out="adquisicionc.blurCategoria()" input-name="categoria"></div>
 						</div>
 						<div class="form-group">
 				            	<div id="tipo" angucomplete-alt placeholder="" pause="100" selected-object="adquisicionc.cambioTipo"
 											  local-data="adquisicionc.tipos" search-fields="nombre" title-field="nombre" field-required="adquisicionc.mostraringreso" field-label="* Tipo"
-											  minlength="1" input-class="form-control form-control-small field-cooperante" match-class="angucomplete-highlight"
+											  minlength="1" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
 											  initial-value="adquisicionc.adquisicion.tipoNombre" focus-out="adquisicionc.blurTipo()" input-name="tipo"></div>
 						</div>
 						<div class="row">
