@@ -69,7 +69,11 @@ public class ProductoDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			producto.setNivel(2);
+			if(producto.getId()==null || producto.getId()<1){
+				session.saveOrUpdate(producto);
+				session.flush();
+				producto.setTreePath(producto.getComponente().getTreePath()+""+(10000000+producto.getId()));
+			}
 			session.saveOrUpdate(producto);
 			Usuario usu = UsuarioDAO.getUsuario( producto.getUsuarioCreo());
 			ProductoUsuario pu = new ProductoUsuario(new ProductoUsuarioId(producto.getId(), producto.getUsuarioCreo()), producto,usu
