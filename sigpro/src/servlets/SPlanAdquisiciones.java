@@ -61,6 +61,11 @@ public class SPlanAdquisiciones extends HttpServlet {
 		Integer anio;
 	}
 	
+	class sttotal{
+		stpresupuestoPlan[] total = new stpresupuestoPlan[1];
+		Integer anio;
+	}
+	
 	class stcomponenteplanadquisicion{
 		Integer objetoId;
 		String nombre;
@@ -74,6 +79,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 		DateTime fechaFinal;
 		BigDecimal costo;
 		stplan[] anioPlan;
+		sttotal[] anioTotalPlan;
 		BigDecimal total;
 	}
 	
@@ -275,6 +281,50 @@ public class SPlanAdquisiciones extends HttpServlet {
 					inicializarObjCategoria(lsttempCategorias);
 				}
 			}
+			for(stcomponenteplanadquisicion stprestamo : lstPrestamo){
+				sttotal[] sttotaltemp = inicializarStTotalPlan(fechaInicial, fechaFinal);
+				if(stprestamo.anioPlan != null){
+					for(int j = 0; j < stprestamo.anioPlan.length; j++){
+						for(int i = 0; i< stprestamo.anioPlan[j].mes.length; i++){
+							if(sttotaltemp[j].anio.equals(stprestamo.anioPlan[j].anio)){
+								sttotaltemp[j].total[0].planificado = sttotaltemp[j].total[0].planificado.add(stprestamo.anioPlan[j].mes[i].planificado);
+							}
+						}
+					}
+					
+					stprestamo.anioTotalPlan =  sttotaltemp;
+				}				
+			}
+			
+			int posComponente = 0;
+			for(int i = 0; i < lstPrestamo.size(); i++){
+				if(lstPrestamo.get(i).objetoTipo != null && lstPrestamo.get(i).objetoTipo == 2){
+					posComponente = i;
+					lstPrestamo.get(i).anioTotalPlan = inicializarStTotalPlan(fechaInicial, fechaFinal);
+				}else{
+					if(lstPrestamo.get(i).anioTotalPlan != null){
+						for(int j=0; j < lstPrestamo.get(i).anioTotalPlan.length; j++){
+							for(int h = 0; h < lstPrestamo.get(i).anioTotalPlan[j].total.length; h++){
+								if(lstPrestamo.get(posComponente).anioTotalPlan[j].anio.equals(lstPrestamo.get(i).anioTotalPlan[j].anio)){
+									lstPrestamo.get(posComponente).anioTotalPlan[j].total[h].planificado = lstPrestamo.get(posComponente).anioTotalPlan[j].total[h].planificado.add(lstPrestamo.get(i).anioTotalPlan[j].total[h].planificado); 
+								}
+							}
+						}						
+					}
+				}		
+			}
+			
+			for(stcomponenteplanadquisicion stprestamo : lstPrestamo){
+				if(stprestamo.anioTotalPlan != null){
+					stprestamo.total = new BigDecimal(0);
+					for(int j = 0; j < stprestamo.anioTotalPlan.length; j++){
+						for(int i = 0; i< stprestamo.anioTotalPlan[j].total.length; i++){
+							stprestamo.total = stprestamo.total.add(stprestamo.anioTotalPlan[j].total[i].planificado);
+						}
+					}
+				}
+			}
+			
 			return lstPrestamo;
 		}catch(Exception e){
 			CLogger.write("1", SControlAdquisiciones.class, e);
@@ -366,6 +416,23 @@ public class SPlanAdquisiciones extends HttpServlet {
 			for(int m=0; m<12; m++){
 				temp.mes[m]= new stpresupuestoPlan();
 				temp.mes[m].planificado = new BigDecimal(0);
+			}
+			temp.anio = anioInicial+i;
+			anios[i] = temp;
+		}
+		return anios;
+	}
+	
+	private sttotal[] inicializarStTotalPlan(Integer anioInicial, Integer anioFinal){		
+		int longitudArrelgo = anioFinal - anioInicial+1;
+		
+		sttotal[] anios = new sttotal[longitudArrelgo];
+		
+		for (int i = 0;i <longitudArrelgo; i++){
+			sttotal temp = new sttotal();
+			for(int m=0; m<1; m++){
+				temp.total[m]= new stpresupuestoPlan();
+				temp.total[m].planificado = new BigDecimal(0);
 			}
 			temp.anio = anioInicial+i;
 			anios[i] = temp;
