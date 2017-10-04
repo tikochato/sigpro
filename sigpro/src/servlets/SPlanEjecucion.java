@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
@@ -18,6 +19,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.shiro.codec.Base64;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -33,6 +38,8 @@ import pojo.MetaPlanificado;
 import pojo.Prestamo;
 import pojo.Producto;
 import pojo.Proyecto;
+import utilities.CExcel;
+import utilities.CLogger;
 import utilities.Utils;
 
 @WebServlet("/SPlanEjecucion")
@@ -50,6 +57,8 @@ public class SPlanEjecucion extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
+		HttpSession sesionweb = request.getSession();
+		String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
 		Gson gson = new Gson();
 		Type type = new TypeToken<Map<String, String>>(){}.getType();
 		StringBuilder sb = new StringBuilder();
@@ -88,6 +97,24 @@ public class SPlanEjecucion extends HttpServlet {
 					"\"fecha\": \"" , sdf.format(fecha_actual), "\"",
 					"}");
 			
+		}else if(accion.equals("exportarExcel")){
+			try{
+				int idPrestamo = Utils.String2Int(map.get("id"),0);
+				
+				
+		        byte [] outArray = exportarExcel(idPrestamo, usuario);
+			
+				response.setContentType("application/ms-excel");
+				response.setContentLength(outArray.length);
+				response.setHeader("Cache-Control", "no-cache"); 
+				response.setHeader("Content-Disposition", "attachment; Plan_de_Ejecución.xls");
+				OutputStream outStream = response.getOutputStream();
+				outStream.write(outArray);
+				outStream.flush();
+			}catch(Exception e){
+			    CLogger.write("1", SPlanEjecucion.class, e);
+			}
+			
 		}else{
 			response_text = "{ \"success\": false }";
 		}
@@ -103,11 +130,8 @@ public class SPlanEjecucion extends HttpServlet {
 	}
 	
 	public BigDecimal calcularEjecucionFisicaReal(Proyecto proyecto){
-		
-		
 		BigDecimal ejecucionFisica = new BigDecimal(proyecto.getEjecucionFisicaReal()!= null ? 
 				proyecto.getEjecucionFisicaReal():0);
-		
 		return ejecucionFisica;
 	}
 	
@@ -295,5 +319,80 @@ public BigDecimal calcularEjecucionFisicaPlanificada(Integer proyectoId){
 		return ejecucionFisica; 
 		
 	
+	}
+
+	
+	private byte[] exportarExcel(int idPrestamo, String usuario) throws IOException{
+		byte [] outArray = null;
+		CExcel excel=null;
+		String headers[][];
+		String datos[][];
+		
+		Workbook wb=null;
+		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+		try{			
+			headers = generarHeaders();
+			datos = generarDatos(idPrestamo, usuario);
+			//CGraficaExcel grafica = generarGrafica(datos);
+			excel = new CExcel("Plan de Ejecucion", false, null);
+			wb=excel.generateExcelOfData(datos, "Plan de Ejecución", headers, null, true, usuario);
+		wb.write(outByteStream);
+		outArray = Base64.encode(outByteStream.toByteArray());
+		}catch(Exception e){
+		    CLogger.write("1", SCargaTrabajo.class, e);
+		}
+		return outArray;
+	}
+	
+	private String[][] generarHeaders(){
+		String headers[][];
+		
+		headers = new String[][]{
+			{"", "", "",""},  //titulos
+			null, //mapeo
+			{"string", "string", "string", "string"}, //tipo dato
+			{"", "", "", "", ""}, //operaciones columnas
+			null, //operaciones div
+			null,
+			null,
+			null
+			};
+			
+		return headers;
+	}
+
+	public String[][] generarDatos(int idPrestamo, String usuario){
+		Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(idPrestamo, 1);
+		Date fecha_actual = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("MM");
+		String[][] datos = new String[20][4];
+		for (int i=0; i<20; i++){
+			for (int j=0; j<4; j++){
+				datos[i][j] = "";
+			}
+		}
+		
+		datos[0][0] = "Mes Reportado";
+		datos[0][3] = obtenerMes(Integer.parseInt(sdf.format(fecha_actual)));	
+		return datos;
+	}
+	
+	public String obtenerMes(int mes){
+		switch (mes){
+			case 1: return "Enero";
+			case 2: return "Febrero";
+			case 3: return "Marzo";
+			case 4: return "Abril";
+			case 5: return "Mayo";
+			case 6: return "Junio";
+			case 7: return "Julio";
+			case 8: return "Agosto";
+			case 9: return "Septiembre";
+			case 10: return "Ocutubre";
+			case 11: return "Noviembre";
+			case 12: return "Diciembre";
+			
+		}
+		return "";
 	}
 }
