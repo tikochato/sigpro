@@ -44,7 +44,6 @@ import pojo.UnidadEjecutora;
 import pojo.Usuario;
 import utilities.Utils;
 import utilities.CLogger;
-import utilities.COrden;
 
 @WebServlet("/SProducto")
 public class SProducto extends HttpServlet {
@@ -333,11 +332,11 @@ public class SProducto extends HttpServlet {
 					}
 				}
 				
-				if(ret){
+				/*if(ret){
 					COrden orden = new COrden();
 					ret = orden.calcularOrdenObjetosSuperiores(producto.getComponente().getId(), 2, usuario, COrden.getSessionCalculoOrden(), null, null, producto.getId());				
 					
-				}
+				}*/
 				
 				response_text = String.join("","{ \"success\": ",(ret ? "true" : "false"),", "
 						, "\"id\": " , producto.getId().toString() , ","
@@ -358,12 +357,13 @@ public class SProducto extends HttpServlet {
 		} else if (accion.equals("borrar")) {
 			int codigo = Utils.String2Int(parametro.get("codigo"), -1);
 			
-			Producto pojo = ProductoDAO.getProductoPorId(codigo,usuario);
+			//Producto pojo = ProductoDAO.getProductoPorId(codigo,usuario);
 			boolean eliminado = ProductoDAO.eliminar(codigo, usuario);
 			
 			if (eliminado) {
-				COrden orden = new COrden();
+				/*COrden orden = new COrden();
 				orden.calcularOrdenObjetosSuperiores(pojo.getComponente().getId(), 2, usuario, COrden.getSessionCalculoOrden(),null, null, codigo);		
+				*/
 				
 				int componenteid = Utils.String2Int(parametro.get("componenteid"), 0);
 				int pagina = Utils.String2Int(parametro.get("pagina"), 1);
@@ -723,9 +723,9 @@ public class SProducto extends HttpServlet {
 				
 				ret = ProductoDAO.guardarProducto(producto);
 				
-				COrden orden = new COrden();
+				/*COrden orden = new COrden();
 				orden.calcularOrdenObjetosSuperiores(producto.getComponente().getId(), 2, usuario, COrden.getSessionCalculoOrden(),
-						null, null, producto.getId());
+						null, null, producto.getId()); */
 			}
 			
 			stproducto temp = new stproducto();

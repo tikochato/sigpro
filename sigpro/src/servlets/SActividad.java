@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.hibernate.Session;
 import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
@@ -50,7 +49,6 @@ import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subproducto;
 import utilities.Utils;
-import utilities.COrden;
 
 @WebServlet("/SActividad")
 public class SActividad extends HttpServlet {
@@ -437,12 +435,12 @@ public class SActividad extends HttpServlet {
 						}
 					}
 					
-					Session session = COrden.getSessionCalculoOrden();
+					/*Session session = COrden.getSessionCalculoOrden();
 					
 					if(result){
 						COrden orden = new COrden();
 						result = orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoBase,componenteBase,productoBase);
-					}
+					}*/
 					
 					response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 							+ "\"id\": " + actividad.getId() ,","
@@ -464,25 +462,25 @@ public class SActividad extends HttpServlet {
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0){
 				Actividad actividad = ActividadDAO.getActividadPorId(id);
-				Integer objetoId = actividad.getObjetoId();
+				/*Integer objetoId = actividad.getObjetoId();
 				Integer objetoTipo = actividad.getObjetoTipo();
 				Integer proyectoId = actividad.getProyectoBase();
 				Integer componenteId = actividad.getComponenteBase();
-				Integer productoId = actividad.getProductoBase();
+				Integer productoId = actividad.getProductoBase(); */
 				
 				actividad.setUsuarioActualizo(usuario);
 				boolean result = false;
 				actividad.setUsuarioActualizo(usuario);
 				actividad.setFechaActualizacion(new Date());
-				boolean eliminado = ActividadDAO.eliminarActividad(actividad);
+				ActividadDAO.eliminarActividad(actividad);
 				
-				if(eliminado){
+				/*if(eliminado){
 					
 					Session session = COrden.getSessionCalculoOrden();
 					
 					COrden orden = new COrden();
 					result = orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoId, componenteId, productoId);
-				}
+				}*/
 				
 				response_text = String.join("","{ \"success\": ",( result ? "true" : "false")," }");
 			}
@@ -623,8 +621,8 @@ public class SActividad extends HttpServlet {
 				ActividadTipo actividadTipo= new ActividadTipo();
 				actividadTipo.setId(actividadtipoid);
 				Integer proyectoBase=null;
-				Integer componenteBase = null;
-				Integer productoBase = null;
+				/*Integer componenteBase = null;
+				Integer productoBase = null; 
 				switch (objetoTipo){
                 case 1:
                     proyectoBase = objetoId;
@@ -645,7 +643,7 @@ public class SActividad extends HttpServlet {
                     componenteBase = actividadTemp.getComponenteBase();
                     productoBase = actividadTemp.getProductoBase();
                     break;
-            }
+            } */
 				
 				if (esnuevo){
 					actividad = new Actividad(actividadTipo, nombre, fechaInicio, fechaFin, porcentajeAvance
@@ -670,10 +668,11 @@ public class SActividad extends HttpServlet {
 				}
 				result = ActividadDAO.guardarActividad(actividad);
 				
-				Session session = COrden.getSessionCalculoOrden();
+				/*Session session = COrden.getSessionCalculoOrden();
 				
 				COrden orden = new COrden();
 				result = orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoBase,componenteBase, productoBase);
+				*/
 			}
 			
 			if (result){
