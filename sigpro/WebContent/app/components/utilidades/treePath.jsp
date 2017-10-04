@@ -5,6 +5,6 @@
 <head>
 </head>
 <body>
-	<% ProyectoDAO.calcularTreepath(1); %>	
+	<% ProyectoDAO.calcularTreepah(1); %>	
 </body>
 </html>
