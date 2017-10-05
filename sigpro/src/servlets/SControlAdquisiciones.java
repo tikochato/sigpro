@@ -31,7 +31,9 @@ import com.google.gson.reflect.TypeToken;
 import dao.ActividadDAO;
 import dao.CategoriaAdquisicionDAO;
 import dao.EstructuraProyectoDAO;
+import dao.PlanAdquisicionDAO;
 import pojo.Actividad;
+import pojo.PlanAdquisicion;
 import utilities.CExcel;
 import utilities.CLogger;
 import utilities.CPdf;
@@ -113,154 +115,6 @@ public class SControlAdquisiciones extends HttpServlet {
 				catch (Exception e){
 					CLogger.write("2", SControlAdquisiciones.class, e);
 				}
-			}else if(accion.equals("guardarPlan")){
-				/*try{
-					boolean result = false;
-					String data = map.get("data");
-					String[] datos = data.split("\\|");
-					
-					for(String str1: datos){
-						String[] row = str1.split(",");
-						
-						Integer objetoId = Utils.String2Int(row[0]);
-						Integer objetoTipo = Utils.String2Int(row[1]);
-						Integer tipoAdquisicion = Utils.String2Int(row[2]);
-						Integer categoriaAdquisicionId = Utils.String2Int(row[3]);
-						
-						CategoriaAdquisicion categoriaAdquisicion;
-						if(categoriaAdquisicionId != 0){
-							categoriaAdquisicion = new CategoriaAdquisicion();
-							categoriaAdquisicion.setId(categoriaAdquisicionId);					
-						}else
-						{
-							categoriaAdquisicion = null;
-						}
-						
-						Integer PlanAdquisicionId = Utils.String2Int(row[4]);
-						PlanAdquisicion PlanAdquisicion;
-						if(PlanAdquisicionId != 0){
-							PlanAdquisicion = new PlanAdquisicion();
-							PlanAdquisicion.setId(PlanAdquisicionId);
-						}else{
-							PlanAdquisicion = null;
-						}
-							
-						String unidadMedida = row[5] == null ? "" : row[5]; 
-						
-						Integer cantidad = 0;
-						if(!row[6].equals("null"))
-							cantidad = Utils.String2Int(row[6]);
-						BigDecimal costo = BigDecimal.ZERO;
-						if(!row[7].equals("null"))
-							costo = new BigDecimal(row[7]);
-						BigDecimal total = BigDecimal.ZERO;
-						if(!row[8].equals("null"))
-							total = new BigDecimal(row[8]);
-
-						if(objetoTipo == 1 && !total.equals(BigDecimal.ZERO)){
-							Proyecto proyecto = ProyectoDAO.getProyectoPorId(objetoId, usuario);
-							proyecto.setCosto(total);
-							proyecto.setUsuarioActualizo(usuario);
-							proyecto.setFechaActualizacion(new Date());
-							ProyectoDAO.guardarProyecto(proyecto);
-						}else if(objetoTipo == 2 && !total.equals(BigDecimal.ZERO)){
-							Componente componente = ComponenteDAO.getComponentePorId(objetoId, usuario);
-							componente.setCosto(total);
-							componente.setUsuarioActualizo(usuario);
-							componente.setFechaActualizacion(new Date());
-							ComponenteDAO.guardarComponente(componente);
-						}else if(objetoTipo == 3 && !total.equals(BigDecimal.ZERO)){
-							Producto producto = ProductoDAO.getProductoPorId(objetoId,usuario);
-							producto.setCosto(total);
-							producto.setUsuarioActualizo(usuario);
-							producto.setFechaActualizacion(new Date());
-							ProductoDAO.guardarProducto(producto);
-						}else if(objetoTipo == 4 && !total.equals(BigDecimal.ZERO)){
-							Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId, usuario);
-							subproducto.setCosto(total);
-							subproducto.setUsuarioActualizo(usuario);
-							subproducto.setFechaActualizacion(new Date());
-							SubproductoDAO.guardarSubproducto(subproducto);
-						}else if(objetoTipo == 5 && !total.equals(BigDecimal.ZERO) ){
-							Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
-							actividad.setCosto(total);
-							actividad.setUsuarioActualizo(usuario);
-							actividad.setFechaActualizacion(new Date());
-							ActividadDAO.guardarActividad(actividad);
-						}
-						
-						Date planificadoDocs = Utils.dateFromString(row[9]);
-						Date realDocs = Utils.dateFromString(row[10]);
-						Date planificadoLanzamiento = Utils.dateFromString(row[11]);
-						Date realLanzamiento = Utils.dateFromString(row[12]);
-						Date planificadoRecepcionEval = Utils.dateFromString(row[13]);
-						Date realRecepcionEval = Utils.dateFromString(row[14]);
-						Date planificadoAdjudica = Utils.dateFromString(row[15]);
-						Date realAdjudica = Utils.dateFromString(row[16]);
-						Date planificadoFirma =  Utils.dateFromString(row[17]);
-						Date realFirma = Utils.dateFromString(row[18]);
-						Integer bloqueado = Utils.String2Boolean(row[19],0);
-						Integer nog = Utils.String2Int(row[20]);
-						String numeroContrato = row[21];
-						BigDecimal montoContrato = BigDecimal.ZERO;
-						if (!row[22].equals("null"))
-							montoContrato = new BigDecimal(row[22]);
-						List<PlanAdquisicion> plan = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(objetoTipo, objetoId);
-						if(plan != null){
-							plan.setTipoAdquisicion(tipoAdquisicion);
-							plan.setCategoriaAdquisicion(categoriaAdquisicion);
-							plan.setUnidadMedida(unidadMedida);
-							plan.setCantidad(cantidad);
-							plan.setPrecioUnitario(costo);
-							plan.setTotal(total);
-							plan.setPreparacionDocPlanificado(planificadoDocs);
-							plan.setPreparacionDocReal(realDocs);
-							plan.setLanzamientoEventoPlanificado(planificadoLanzamiento);
-							plan.setLanzamientoEventoReal(realLanzamiento);
-							plan.setRecepcionOfertasPlanificado(planificadoRecepcionEval);
-							plan.setRecepcionOfertasReal(realRecepcionEval);
-							plan.setAdjudicacionPlanificado(planificadoAdjudica);
-							plan.setAdjudicacionReal(realAdjudica);
-							plan.setFirmaContratoPlanificado(planificadoFirma);
-							plan.setFirmaContratoReal(realFirma);
-							plan.setObjetoId(objetoId);
-							plan.setObjetoTipo(objetoTipo);
-							plan.setUsuarioCreo(usuario);
-							plan.setFechaCreacion(new DateTime().toDate());
-							plan.setEstado(1);
-							plan.setBloqueado(bloqueado);
-							plan.setNog(nog.intValue());
-							plan.setNumeroContrato(numeroContrato);
-							plan.setMontoContrato(montoContrato);
-						}else{
-							plan = new PlanAdquisicion(categoriaAdquisicion, tipoAdquisicion,unidadMedida,cantidad, total,  costo, 
-									planificadoDocs, realDocs, planificadoLanzamiento, realLanzamiento, planificadoRecepcionEval, realRecepcionEval, 
-									planificadoAdjudica, realAdjudica, planificadoFirma, realFirma, objetoId, objetoTipo, usuario, null, new DateTime().toDate(), null,1,
-									bloqueado,  numeroContrato, montoContrato,nog, null);
-						}
-						
-						result = PlanAdquisicionDAO.guardarPlanAdquisicion(plan) > 0;
-						
-						if(!result)
-							break;
-					}
-					
-					response_text = String.join("","{ \"success\": ",(result ? "true" : "false"), "}");
-				}
-				catch (Throwable e) {
-					CLogger.write("3", SControlAdquisiciones.class, e);
-				}*/
-			}else if(accion.equals("guardarMontoContrato")){
-				/*Integer objetoId = Utils.String2Int(map.get("objetoId"));
-				Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
-				String numeroContrato = map.get("numeroContrato");
-				BigDecimal montoContrato = Utils.String2BigDecimal(map.get("montoContrato"), null);
-				
-				PlanAdquisicion planAdquisicion = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(objetoTipo, objetoId);
-				planAdquisicion.setMontoContrato(montoContrato);
-				planAdquisicion.setNumeroContrato(numeroContrato);
-				PlanAdquisicionDAO.guardarPlanAdquisicion(planAdquisicion);*/
-				
 			}else if(accion.equals("exportarExcel")){
 				Integer idPlanAdquisicion = Utils.String2Int(map.get("idPlanAdquisicion"), null);
 				try{ 
@@ -350,6 +204,8 @@ public class SControlAdquisiciones extends HttpServlet {
 			Integer proyectoId = 0;
 			Integer componenteId = 0;
 			Integer productoId = 0;
+			Integer subProductoId = 0;
+			Integer actividadId = 0;
 			
 			for(Object objeto: estruturaProyecto){
 				Object[] obj = (Object[]) objeto;
@@ -361,7 +217,7 @@ public class SControlAdquisiciones extends HttpServlet {
 					temp.nombre = nivel != 0 ? String.format(tabs, (String)obj[1]).replace(' ', '\t') : (String)obj[1];
 					temp.objetoTipo = ((BigInteger)obj[2]).intValue();
 					temp.nivel = nivel;
-					
+					List<PlanAdquisicion> adquisiciones = null;
 					inicializarPlanAdquisicion(temp);
 					
 					switch(temp.objetoTipo){
@@ -371,6 +227,8 @@ public class SControlAdquisiciones extends HttpServlet {
 							proyectoId = temp.objetoId;
 							
 							temp.hijos = EstructuraProyectoDAO.getHijos((String)obj[3], estruturaProyecto);
+							
+							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(temp.objetoTipo, proyectoId);
 							break;
 						case 2:
 							temp.objetoPredecesorTipo = 1;
@@ -378,6 +236,8 @@ public class SControlAdquisiciones extends HttpServlet {
 							componenteId = temp.objetoId;
 							
 							temp.hijos = EstructuraProyectoDAO.getHijos((String)obj[3], estruturaProyecto);
+							
+							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(temp.objetoTipo, componenteId);
 						break;
 						case 3:
 							temp.objetoPredecesorTipo = 2;
@@ -385,20 +245,52 @@ public class SControlAdquisiciones extends HttpServlet {
 							productoId = temp.objetoId;
 							
 							temp.hijos = EstructuraProyectoDAO.getHijos((String)obj[3], estruturaProyecto);
+							
+							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(temp.objetoTipo, productoId);
 						break;
 						case 4:
 							temp.objetoPredecesorTipo = 3;
 							temp.predecesorId = productoId;
 							temp.hijos = EstructuraProyectoDAO.getHijos((String)obj[3], estruturaProyecto);
+							subProductoId = temp.objetoId;
+							
+							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(temp.objetoTipo, subProductoId);
 						break;
 						case 5:
 							Actividad actividad = ActividadDAO.getActividadPorId(temp.objetoId);
 							if(actividad != null){
 								temp.predecesorId = actividad.getObjetoId();
 								temp.objetoPredecesorTipo = actividad.getPredObjetoTipo();
-								temp.hijos = EstructuraProyectoDAO.getHijos((String)obj[3], estruturaProyecto);	
+								temp.hijos = EstructuraProyectoDAO.getHijos((String)obj[3], estruturaProyecto);
+								actividadId = temp.objetoId;
+								
+								adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(temp.objetoTipo, actividadId);
 							}
 						break;
+					}
+					
+					if(adquisiciones != null){
+						for(PlanAdquisicion adquisicion : adquisiciones){
+							temp.planificadoDocs = Utils.formatDate(adquisicion.getPreparacionDocPlanificado());
+							temp.realDocs = Utils.formatDate(adquisicion.getPreparacionDocReal());
+							temp.planificadoRecepcionEval = Utils.formatDate(adquisicion.getRecepcionOfertasPlanificado());
+							temp.realRecepcionEval = Utils.formatDate(adquisicion.getRecepcionOfertasReal());
+							temp.planificadoLanzamiento = Utils.formatDate(adquisicion.getLanzamientoEventoPlanificado());
+							temp.realLanzamiento = Utils.formatDate(adquisicion.getLanzamientoEventoReal());
+							temp.planificadoAdjudica = Utils.formatDate(adquisicion.getAdjudicacionPlanificado());
+							temp.realAdjudica = Utils.formatDate(adquisicion.getAdjudicacionReal());
+							temp.planificadoFirma = Utils.formatDate(adquisicion.getFirmaContratoPlanificado());
+							temp.realFirma = Utils.formatDate(adquisicion.getFirmaContratoReal());
+							temp.tipoAdquisicion = adquisicion.getTipoAdquisicion() != null ? adquisicion.getTipoAdquisicion().getId() : 0;
+							temp.tipoAdquisicionNombre = adquisicion.getTipoAdquisicion() != null ? adquisicion.getTipoAdquisicion().getNombre() : "";
+							temp.categoriaAdquisicion = adquisicion.getCategoriaAdquisicion() != null ? adquisicion.getCategoriaAdquisicion().getId() : 0;
+							temp.categoriaAdquisicionNombre = adquisicion.getCategoriaAdquisicion() != null ? adquisicion.getCategoriaAdquisicion().getNombre() : "";
+							temp.unidadMedida = adquisicion.getUnidadMedida();
+							temp.cantidad = adquisicion.getCantidad();
+							temp.costo = adquisicion.getPrecioUnitario() != null ? adquisicion.getPrecioUnitario() : new BigDecimal(0);
+							temp.total = adquisicion.getTotal() != null ? adquisicion.getTotal() : new BigDecimal(0);
+							temp.nog = adquisicion.getNog();
+						}
 					}
 					
 					lstPrestamo.add(temp);
