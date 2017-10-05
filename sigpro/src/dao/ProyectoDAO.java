@@ -9,9 +9,13 @@ import javax.persistence.NoResultException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import pojo.Actividad;
+import pojo.Componente;
+import pojo.Producto;
 import pojo.Proyecto;
 import pojo.ProyectoUsuario;
 import pojo.ProyectoUsuarioId;
+import pojo.Subproducto;
 import pojo.Usuario;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -43,8 +47,11 @@ public class ProyectoDAO implements java.io.Serializable  {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
-			proyecto.setTreePath("1");
-			proyecto.setNivel(0);
+			if(proyecto.getId()==null || proyecto.getId()<1){
+				session.saveOrUpdate(proyecto);
+				session.flush();
+				proyecto.setTreePath((10000000+proyecto.getId())+"");
+			}
 			session.saveOrUpdate(proyecto);
 			Usuario usu = UsuarioDAO.getUsuario( proyecto.getUsuarioCreo());
 			ProyectoUsuario pu = new ProyectoUsuario(new ProyectoUsuarioId(proyecto.getId(),proyecto.getUsuarioCreo()), proyecto,usu);
@@ -313,8 +320,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 	public static boolean guardarProyectoOrden(Proyecto proyecto, Session session){
 		boolean ret = false;
 		try{
-			proyecto.setTreePath("1");
-			session.saveOrUpdate(proyecto);
+			session.save(proyecto);
 			session.flush();
 			session.clear();
 			ret = true;
@@ -339,6 +345,72 @@ public class ProyectoDAO implements java.io.Serializable  {
 		}
 		finally{
 			session.close();
+		}
+		return ret;
+	}
+	
+	public static Boolean calcularTreepath(Integer proyectoId){
+		Boolean ret = true;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
+			proyecto.setTreePath((10000000+proyecto.getId())+"");
+			ProyectoDAO.guardarProyecto(proyecto);
+			calcularTreepathActividades(proyecto.getId(),1);
+			for(Componente componente : proyecto.getComponentes()){
+				componente.setTreePath(proyecto.getTreePath()+""+(10000000+componente.getId()));
+				ComponenteDAO.guardarComponente(componente);
+				calcularTreepathActividades(componente.getId(),2);
+				for(Producto producto:componente.getProductos()){
+					producto.setTreePath(componente.getTreePath()+""+(10000000+producto.getId()));
+					ProductoDAO.guardarProducto(producto);
+					calcularTreepathActividades(producto.getId(),3);
+					for(Subproducto subproducto:producto.getSubproductos()){
+						subproducto.setTreePath(producto.getTreePath()+""+(10000000+subproducto.getId()));
+						SubproductoDAO.guardarSubproducto(subproducto);
+						calcularTreepathActividades(subproducto.getId(),4);
+					}
+				}
+			}
+			
+		}
+		catch(Throwable e){
+			CLogger.write("14", Proyecto.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Boolean calcularTreepathActividades(Integer objetoId, Integer objetoTipo){
+		boolean ret = false;
+		ArrayList<Actividad> actividades = new ArrayList<Actividad>(ActividadDAO.getActividadesPorObjeto(objetoId,objetoTipo));
+		for(Actividad actividad:actividades){
+			switch(actividad.getObjetoTipo()){
+				case 1:
+					Proyecto proyecto = ProyectoDAO.getProyecto(objetoId);
+					actividad.setTreePath(proyecto.getTreePath()+""+(10000000+actividad.getId()));
+					break;
+				case 2:
+					Componente componente = ComponenteDAO.getComponente(actividad.getObjetoId());
+					actividad.setTreePath(componente.getTreePath()+""+(10000000+actividad.getId()));
+					break;
+				case 3:
+					Producto producto = ProductoDAO.getProductoPorId(actividad.getObjetoId());
+					actividad.setTreePath(producto.getTreePath()+""+(10000000+actividad.getId()));
+					break;
+				case 4:
+					Subproducto subproducto = SubproductoDAO.getSubproductoPorId(actividad.getObjetoId());
+					actividad.setTreePath(subproducto.getTreePath()+""+(10000000+actividad.getId()));
+					break;
+				case 5:
+					Actividad parent_actividad = ActividadDAO.getActividadPorId(actividad.getObjetoId());
+					actividad.setTreePath(parent_actividad.getTreePath()+""+(10000000+actividad.getId()));
+					break;
+			}
+			ActividadDAO.guardarActividad(actividad);
+			calcularTreepathActividades(actividad.getId(),5);
 		}
 		return ret;
 	}

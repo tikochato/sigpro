@@ -107,7 +107,12 @@ public class SubproductoDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
 			session.beginTransaction();
-			subproducto.setNivel(3);
+			if(subproducto.getId()==null || subproducto.getId()<1){
+				session.saveOrUpdate(subproducto);
+				session.flush();
+				subproducto.setTreePath(subproducto.getProducto().getTreePath()+""+
+				(10000000+subproducto.getId()));
+			}
 			session.saveOrUpdate(subproducto);
 			Usuario usu = UsuarioDAO.getUsuario(subproducto.getUsuarioCreo());
 			SubproductoUsuario su = new SubproductoUsuario(new SubproductoUsuarioId(subproducto.getId(),subproducto.getUsuarioCreo())
