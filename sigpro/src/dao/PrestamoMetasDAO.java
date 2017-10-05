@@ -136,7 +136,7 @@ public class PrestamoMetasDAO {
 			}
 		}
 		catch(Throwable e){
-			CLogger.write("8", PrestamoMetasDAO.class, e);
+			CLogger.write("1", PrestamoMetasDAO.class, e);
 		}
 		
 		return result;
@@ -184,7 +184,7 @@ public class PrestamoMetasDAO {
     			}
 			}
 			catch(Throwable e){
-				CLogger.write("1", PrestamoMetasDAO.class, e);
+				CLogger.write("2", PrestamoMetasDAO.class, e);
 			}
 			finally{
 				session.close();
