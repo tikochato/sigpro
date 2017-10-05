@@ -366,7 +366,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 					ProductoDAO.guardarProducto(producto);
 					calcularTreepathActividades(producto.getId(),3);
 					for(Subproducto subproducto:producto.getSubproductos()){
-						subproducto.setTreePath(producto.getTreePath());
+						subproducto.setTreePath(producto.getTreePath()+""+(10000000+subproducto.getId()));
 						SubproductoDAO.guardarSubproducto(subproducto);
 						calcularTreepathActividades(subproducto.getId(),4);
 					}
@@ -390,7 +390,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 			switch(actividad.getObjetoTipo()){
 				case 1:
 					Proyecto proyecto = ProyectoDAO.getProyecto(objetoId);
-					actividad.setTreePath(proyecto.getTreePath()+""+(10000000+proyecto.getId()));
+					actividad.setTreePath(proyecto.getTreePath()+""+(10000000+actividad.getId()));
 					break;
 				case 2:
 					Componente componente = ComponenteDAO.getComponente(actividad.getObjetoId());
