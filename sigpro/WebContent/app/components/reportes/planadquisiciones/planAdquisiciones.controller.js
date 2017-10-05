@@ -582,8 +582,10 @@ app.controller('planAdquisicionesController', [ '$scope', '$http', '$interval', 
 			$http.post('/SPlanAdquisiciones', { 
 				accion: 'exportarExcel', 
 				idPrestamo: mi.prestamo.value,
-				anio: mi.anio,
-				agrupacion: mi.agrupacionActual,				
+				agrupacion: mi.agrupacionActual,
+				fechaInicio: mi.fechaInicio,
+				fechaFin: mi.fechaFin,
+				tipoVisualizacion: 0,
 				t:moment().unix()
 			}).then(
 				function successCallback(response) {
