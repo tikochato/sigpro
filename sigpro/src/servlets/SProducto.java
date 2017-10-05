@@ -212,9 +212,7 @@ public class SProducto extends HttpServlet {
 				String nombre = parametro.get("nombre");
 				String descripcion = parametro.get("descripcion");
 				
-				
 				Integer componenteId = Utils.String2Int(parametro.get("componente"));
-				Integer productoPadreId = Utils.String2Int(parametro.get("productoPadre"));
 				Integer tipoproductoId = Utils.String2Int(parametro.get("tipoproductoid"));
 				
 				Integer unidadEjecutoraId = Utils.String2Int(parametro.get("unidadEjecutora"));
@@ -241,7 +239,7 @@ public class SProducto extends HttpServlet {
 				
 				AcumulacionCosto acumulacionCosto = null;
 				if(acumulacionCostoid!= null && acumulacionCostoid > 0){
-					acumulacionCosto = new AcumulacionCosto();
+					acumulacionCosto =   new AcumulacionCosto();
 					acumulacionCosto.setId(Utils.String2Int(parametro.get("acumulacionCosto")));
 				}
 				
@@ -251,10 +249,9 @@ public class SProducto extends HttpServlet {
 				}.getType();
 
 				List<stdatadinamico> datos = gson.fromJson(parametro.get("datadinamica"), type);
-				Componente componente = new Componente();
-				componente.setId(componenteId);
-				Producto productoPadre = new Producto();
-				productoPadre.setId(productoPadreId);
+				Componente componente = ComponenteDAO.getComponente(componenteId);
+				
+				
 				ProductoTipo productoTipo = new ProductoTipo();
 				productoTipo.setId(tipoproductoId);
 				new UnidadEjecutoraDAO();

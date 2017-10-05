@@ -285,7 +285,7 @@
 								<td ng-repeat = "col in row track by $index" class="{{racic.claseBody(col)}}" 
 								ng-click="$index > 0 ? racic.mostrarColaborador(col) : ''" 
 								style="border-right: 2px solid #ddd;">
-								 	 <div ng-if="$index == 0" class="{{ $index == 0 ? racic.claseIcon(row) : ''}}" style="margin-left: {{col.objetoTipo-1}}em"></div>
+								 	 <div ng-if="$index == 0" class="{{ $index == 0 ? racic.claseIcon(row) : ''}}" style="margin-left: {{col.nivel-1}}em"></div>
 								 	 <span>{{col.rol}}</span>
 								 </td>
 							</tr>
