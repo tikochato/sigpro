@@ -169,7 +169,7 @@
 				            <span class="label-icon" ng-click="controller.abrirPopupFecha()">
 				              <i class="glyphicon glyphicon-calendar"></i>
 				            </span>
-					  	<label for="campo.id" class="floating-label">*Fecha Inicial</label>
+					  	<label for="campo.id" class="floating-label">*Fecha Corte</label>
 					</div>
 					
 					<div class="col-sm-7" align="right" ng-hide="!controller.mostrarDescargar">
@@ -267,11 +267,7 @@
 		    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos"  style="height: 100%">
 							<thead class="theadDatos">
 									<tr>
-			          					<th nowrap colspan={{controller.colspan}} style="{{controller.estiloCelda}} text-align: center;" class="label-form"><span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real">Total Anual</span><span ng-hide="controller.grupoMostrado.planificado && controller.grupoMostrado.real">Anual</span></th>
-				          				<th rowspan="2" style="{{controller.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Total</th>
-				          			</tr>
-				          			<tr>
-			          					<th ng-repeat="a in controller.aniosTotal" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};" class="label-form">{{a.anio}}</th>
+			          					<th style="{{controller.estiloCelda}} text-align:center; vertical-align: top; height: 71px;" class="label-form">Total</th>
 							        </tr>
 								</thead>
 							<tbody class="cuerpoTablaTotales bordeIzquierda" id="divTotales" ng-mouseover="controller.activarScroll('divTotales')"  style="max-height: 150px;" scrollespejo>
@@ -308,6 +304,9 @@
 							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">%</td>
 							      	</tr>
 							      	<tr>
+							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Desembolsos Ejecutados</td>
+							      	</tr>
+							      	<tr>
 							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Desembolsos</td>
 							      	</tr>
 							      	<tr>
@@ -340,6 +339,9 @@
 							      		<td ng-repeat="posicion in controller.resumenTotales.filaVariacionPorcentaje track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion}}%</td>
 							      	</tr>
 							      	<tr>
+							      		<td ng-repeat="posicion in controller.resumenTotales.filaDesembolsosReal track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion | formatoMillones : controller.enMillones}} </td>
+							      	</tr>
+							      	<tr>
 							      		<td ng-repeat="posicion in controller.resumenTotales.filaDesembolsos track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion | formatoMillones : controller.enMillones}} </td>
 							      	</tr>
 							      	<tr>
@@ -353,43 +355,30 @@
 		    			<table class="table table-striped tablaDatos"  style="height: 100%">
 							<tbody class="cuerpoTablaTotales bordeIzquierda">
 								<tr>
-									<td style="{{controller.estiloCabecera}} text-align: right;" ><span>-</span>
-									</td>
 									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalPlanificado | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{controller.estiloCabecera}} text-align: right;"><span>-</span>
-									</td>
 									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalPlanificadoAcumulado | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{controller.estiloCabecera}} text-align: right;" ><span>-</span>
-									</td>
 									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalEjecutado | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{controller.estiloCabecera}} text-align: right;" ><span>-</span>
-									</td>
 									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalEjecutadoAcumulado | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{controller.estiloCabecera}} text-align: right;" ><span>-</span>
-									</td>
 									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalVariacion | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{controller.estiloCabecera}} text-align: right;" ><span>-</span>
-									</td>
 									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalVariacionPorcentaje | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{controller.estiloCabecera}} text-align: right;" ><span>-</span>
-									</td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalDesembolsosReal | formatoMillones : controller.enMillones}}</span></td>
+								</tr>
+								<tr>
 									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalDesembolsos | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{controller.estiloCabecera}} text-align: right;" ><span>-</span>
-									</td>
 									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalSaldo | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 							</tbody>

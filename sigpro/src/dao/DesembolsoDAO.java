@@ -1,6 +1,9 @@
 package dao;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -243,6 +246,47 @@ public class DesembolsoDAO {
 		}
 		finally{
 			session.close();
+		}
+		return ret;
+	}
+	
+	public static ArrayList<DesembolsoReal> getDesembolsosReales(long codigoPresupuestario, Integer mesInicial, Integer anioInicial, Integer mesFinal, Integer anioFinal, Connection conn){
+		ArrayList<DesembolsoReal> ret= null;
+		
+		try{
+			if(!conn.isClosed() ){
+				String str_Query = String.join(" ", "select ejercicio_fiscal, mes_desembolso, SUM(desembolsos_mes_gtq) desembolso_gtq ",
+						"from dtm_avance_fisfinan_det_dti", 
+						"where codigo_presupuestario = ? ",
+						"and ejercicio_fiscal between ? and ?",
+						"and mes_desembolso between ? and ?",
+						"group by ejercicio_fiscal, mes_desembolso",
+						"order by ejercicio_fiscal, mes_desembolso asc");
+				PreparedStatement pstm  = conn.prepareStatement(str_Query);
+				pstm.setFetchSize(1000);
+                pstm.setLong(1, codigoPresupuestario);
+                pstm.setInt(2, anioInicial);
+                pstm.setInt(3, anioFinal);
+                pstm.setInt(4, mesInicial);
+                pstm.setInt(5, mesFinal);
+                ResultSet rs = pstm.executeQuery();
+                        
+                ret = new ArrayList<DesembolsoReal>();
+                while(rs!=null && rs.next()){
+                	Integer ejercicioFiscal = rs.getInt("ejercicio_fiscal");
+                	Integer mes = rs.getInt("mes_desembolso");
+                	BigDecimal desembolsoGTQ = rs.getBigDecimal("desembolso_gtq");
+                	
+                    DesembolsoReal desembolso = new DesembolsoReal(ejercicioFiscal, mes, codigoPresupuestario, null, null, null, null, null, null, null, desembolsoGTQ);
+                    ret.add(desembolso);
+                }
+                
+                rs.close();
+                pstm.close();
+			}
+		}
+		catch(Throwable e){
+			CLogger.write("10", DesembolsoDAO.class, e);
 		}
 		return ret;
 	}

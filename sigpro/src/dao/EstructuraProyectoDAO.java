@@ -379,23 +379,6 @@ public class EstructuraProyectoDAO {
 				
 				tempPrestamo.setAnios(tempPrestamo.inicializarStanio(anioInicial, anioFinal));
 				
-				
-//				CPrestamoCostos tempPrestamo =  new CPrestamoCostos();
-//				tempPrestamo.setObjeto_id(obj[0]!=null ? (Integer)obj[0] : null);
-//				tempPrestamo.setNombre(obj[1]!=null ? (String)obj[1] : null);
-//				tempPrestamo.setNivel(nivel);
-//				tempPrestamo.setObjeto_tipo(obj[2]!=null ? ((Integer) obj[2]).intValue() : null);
-//				tempPrestamo.setFecha_inicial(obj[5]!=null ? new DateTime((Timestamp)obj[5]) : null);
-//				tempPrestamo.setFecha_final(obj[6]!=null ? new DateTime((Timestamp)obj[6]) : null);
-//				tempPrestamo.setAnios(tempPrestamo.inicializarStanio(anioInicial, anioFinal));
-//				tempPrestamo.setAcumulacion_costoid(obj[11]!=null ? (Integer)obj[11] : null);
-//				tempPrestamo.setCosto(obj[9]!=null ? (BigDecimal)obj[9] : null);
-//				tempPrestamo.setPrograma(obj[12]!=null ? (Integer)obj[12] : null);
-//				tempPrestamo.setSubprograma(obj[13]!=null ? (Integer)obj[13] : null);
-//				tempPrestamo.setProyecto(obj[14]!=null ? (Integer)obj[14] : null);
-//				tempPrestamo.setActividad(obj[15]!=null ? (Integer)obj[15] : null);
-//				tempPrestamo.setObra(obj[16]!=null ? (Integer)obj[16] : null);
-				
 				try {
 					if(CMariaDB.connect()){
 						Connection conn = CMariaDB.getConnection();

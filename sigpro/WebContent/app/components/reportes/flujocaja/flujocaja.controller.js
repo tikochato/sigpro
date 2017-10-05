@@ -13,7 +13,7 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 	mi.AnteriorActivo = false;
 	mi.enMillones = true;
 	mi.agrupacionActual = 1
-	mi.columnasTotal = 1;
+	mi.columnasTotal = 0;
 	mi.limiteAnios = 5;
 	mi.tamanioMinimoColumna = 125;
 	mi.tamanioMinimoColumnaMillones = 60;
@@ -61,18 +61,6 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 			4: "Subproducto",
 			5: "Actividad",
 	};
-
-	mi.agrupaciones = [
-		{'value' : 0, 'text' : 'Seleccione una opción'},
-		{'value' : AGRUPACION_MES, 'text' : 'Mensual'},
-		{'value' : AGRUPACION_BIMESTRE, 'text' : 'Bimestre'},
-		{'value' : AGRUPACION_TRIMESTRE, 'text' : 'Trimestre'},
-		{'value' : AGRUPACION_CUATRIMESTRE, 'text' : 'Cuatrimestre'},
-		{'value' : AGRUPACION_SEMESTRE, 'text' : 'Semestre'},
-		{'value' : AGRUPACION_ANUAL, 'text' : 'Anual'},
-		];	
-
-	mi.agrupacion = mi.agrupaciones[0];
 
 	mi.redireccionSinPermisos=function(){
 		$window.location.href = '/main.jsp#!/forbidden';		
@@ -210,9 +198,6 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 				mi.resumenTotales = JSON.parse(JSON.stringify(response.data.totales));
 				mi.totales = [];
 				for (x in mi.data){
-					if(mi.data[x].objeto_tipo==1){
-						
-					}
 					 var totalFinalPlanificado = 0;
 					 var totalFinalReal = 0;
 					 var fila = [];
@@ -226,8 +211,6 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 						 }
 						 totalFinalPlanificado += totalAnualPlanificado;
 						 totalFinalReal += totalAnualReal;
-						 var tot = {"valor": {"planificado": totalAnualPlanificado, "real": totalAnualReal}};
-						 fila.push(tot);
 					 }
 					 var tot = {"valor": {"planificado": totalFinalPlanificado, "real": totalFinalReal}};
 					 fila.push(tot);
@@ -250,44 +233,150 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 		if(mi.agrupacionActual != AGRUPACION_MES){
 			var anioN = {};
 			if(mi.agrupacionActual == AGRUPACION_BIMESTRE){
-				anioN = {
-						"bimestre1" : [anio[MES_DISPLAY_NAME_MIN[0]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[1]][mi.VALOR_PLANIFICADO],anio[MES_DISPLAY_NAME_MIN[0]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[1]][mi.VALOR_REAL]],
-						"bimestre2" : [anio[MES_DISPLAY_NAME_MIN[2]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[3]][mi.VALOR_PLANIFICADO],anio[MES_DISPLAY_NAME_MIN[2]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[3]][mi.VALOR_REAL]],
-						"bimestre3" : [anio[MES_DISPLAY_NAME_MIN[4]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[5]][mi.VALOR_PLANIFICADO],anio[MES_DISPLAY_NAME_MIN[4]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[5]][mi.VALOR_REAL]],
-						"bimestre4" : [anio[MES_DISPLAY_NAME_MIN[6]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[7]][mi.VALOR_PLANIFICADO],anio[MES_DISPLAY_NAME_MIN[6]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[7]][mi.VALOR_REAL]],
-						"bimestre5" : [anio[MES_DISPLAY_NAME_MIN[8]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[9]][mi.VALOR_PLANIFICADO],anio[MES_DISPLAY_NAME_MIN[8]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[9]][mi.VALOR_REAL]],
-						"bimestre6" : [anio[MES_DISPLAY_NAME_MIN[10]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[11]][mi.VALOR_PLANIFICADO],anio[MES_DISPLAY_NAME_MIN[10]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[11]][mi.VALOR_REAL]],
-				}
+				anioN.mes= [
+						{"planificado": anio.mes[0].planificado+anio.mes[1].planificado, "real": anio.mes[0].real+anio.mes[1].real},
+						{"planificado": anio.mes[2].planificado+anio.mes[3].planificado, "real": anio.mes[2].real+anio.mes[3].real},
+						{"planificado": anio.mes[4].planificado+anio.mes[5].planificado, "real": anio.mes[4].real+anio.mes[5].real},
+						{"planificado": anio.mes[6].planificado+anio.mes[7].planificado, "real": anio.mes[6].real+anio.mes[7].real},
+						{"planificado": anio.mes[8].planificado+anio.mes[9].planificado, "real": anio.mes[8].real+anio.mes[9].real},
+						{"planificado": anio.mes[10].planificado+anio.mes[11].planificado, "real": anio.mes[10].real+anio.mes[11].real}
+				];
 			}else if(mi.agrupacionActual == AGRUPACION_TRIMESTRE){
-				anioN = {
-						"trimestre1" : [anio[MES_DISPLAY_NAME_MIN[0]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[1]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[2]][mi.VALOR_PLANIFICADO],anio[MES_DISPLAY_NAME_MIN[0]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[1]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[2]][mi.VALOR_REAL]],
-						"trimestre2" : [anio[MES_DISPLAY_NAME_MIN[3]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[4]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[5]][mi.VALOR_PLANIFICADO],anio[MES_DISPLAY_NAME_MIN[3]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[4]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[5]][mi.VALOR_REAL]],
-						"trimestre3" : [anio[MES_DISPLAY_NAME_MIN[6]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[7]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[8]][mi.VALOR_PLANIFICADO],anio[MES_DISPLAY_NAME_MIN[6]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[7]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[8]][mi.VALOR_REAL]],
-						"trimestre4" : [anio[MES_DISPLAY_NAME_MIN[9]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[10]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[11]][mi.VALOR_PLANIFICADO],anio[MES_DISPLAY_NAME_MIN[9]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[10]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[11]][mi.VALOR_REAL]]
-				}
+				anioN.mes= [
+					{"planificado": anio.mes[0].planificado+anio.mes[1].planificado+anio.mes[2].planificado, "real": anio.mes[0].real+anio.mes[1].real+anio.mes[2].real},
+					{"planificado": anio.mes[3].planificado+anio.mes[4].planificado+anio.mes[5].planificado, "real": anio.mes[3].real+anio.mes[4].real+anio.mes[5].real},
+					{"planificado": anio.mes[6].planificado+anio.mes[7].planificado+anio.mes[8].planificado, "real": anio.mes[6].real+anio.mes[7].real+anio.mes[8].real},
+					{"planificado": anio.mes[9].planificado+anio.mes[10].planificado+anio.mes[11].planificado, "real": anio.mes[9].real+anio.mes[10].real+anio.mes[11].real}
+				]
 			}else if(mi.agrupacionActual == AGRUPACION_CUATRIMESTRE){
-				anioN = {
-						"cuatrimestre1" : [anio[MES_DISPLAY_NAME_MIN[0]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[1]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[2]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[3]][mi.VALOR_PLANIFICADO]
-						,anio[MES_DISPLAY_NAME_MIN[0]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[1]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[2]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[3]][mi.VALOR_REAL]],
-						"cuatrimestre2" : [anio[MES_DISPLAY_NAME_MIN[4]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[5]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[6]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[7]][mi.VALOR_PLANIFICADO]
-						,anio[MES_DISPLAY_NAME_MIN[4]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[5]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[6]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[7]][mi.VALOR_REAL]],
-						"cuatrimestre3" : [anio[MES_DISPLAY_NAME_MIN[8]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[9]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[10]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[11]][mi.VALOR_PLANIFICADO]
-						,anio[MES_DISPLAY_NAME_MIN[8]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[9]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[10]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[11]][mi.VALOR_REAL]]
-				}
+				anioN.mes= [
+					{"planificado": anio.mes[0].planificado+anio.mes[1].planificado+anio.mes[2].planificado+anio.mes[3].planificado
+					, "real": anio.mes[0].real+anio.mes[1].real+anio.mes[2].real+anio.mes[3].real},
+					{"planificado": anio.mes[4].planificado+anio.mes[5].planificado+anio.mes[6].planificado+anio.mes[7].planificado
+					, "real": anio.mes[4].real+anio.mes[5].real+anio.mes[6].real+anio.mes[7].real},
+					{"planificado": anio.mes[8].planificado+anio.mes[9].planificado+anio.mes[10].planificado+anio.mes[11].planificado
+					, "real": anio.mes[8].real+anio.mes[9].real+anio.mes[10].real+anio.mes[11].real}
+				]
 			}else if(mi.agrupacionActual == AGRUPACION_SEMESTRE){
-				anioN = {
-						"semestre1" : [anio[MES_DISPLAY_NAME_MIN[0]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[1]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[2]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[3]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[4]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[5]][mi.VALOR_PLANIFICADO]
-						,anio[MES_DISPLAY_NAME_MIN[0]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[1]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[2]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[3]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[4]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[5]][mi.VALOR_REAL]],
-						"semestre2" : [anio[MES_DISPLAY_NAME_MIN[6]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[7]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[8]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[9]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[10]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[11]][mi.VALOR_PLANIFICADO]
-						,anio[MES_DISPLAY_NAME_MIN[6]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[7]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[8]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[9]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[10]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[11]][mi.VALOR_REAL]],
-				}
+				anioN.mes= [
+					{"planificado": anio.mes[0].planificado+anio.mes[1].planificado+anio.mes[2].planificado+anio.mes[3].planificado+anio.mes[4].planificado+anio.mes[5].planificado
+						,"real": anio.mes[0].real+anio.mes[1].real+anio.mes[2].real+anio.mes[3].real+anio.mes[4].real+anio.mes[5].real},
+					{"planificado": anio.mes[6].planificado+anio.mes[7].planificado+anio.mes[8].planificado+anio.mes[9].planificado+anio.mes[10].planificado+anio.mes[11].planificado
+						,"real": anio.mes[6].real+anio.mes[7].real+anio.mes[8].real+anio.mes[9].real+anio.mes[10].real+anio.mes[11].real},
+				]
 			}else if(mi.agrupacionActual == AGRUPACION_ANUAL){
-				anioN = {
-						"anual1" : [anio[MES_DISPLAY_NAME_MIN[0]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[1]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[2]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[3]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[4]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[5]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[6]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[7]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[8]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[9]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[10]][mi.VALOR_PLANIFICADO]+anio[MES_DISPLAY_NAME_MIN[11]][mi.VALOR_PLANIFICADO]
-						,anio[MES_DISPLAY_NAME_MIN[0]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[1]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[2]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[3]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[4]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[5]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[6]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[7]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[8]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[9]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[10]][mi.VALOR_REAL]+anio[MES_DISPLAY_NAME_MIN[11]][mi.VALOR_REAL]],
-				}
+				anioN.mes= [
+					{"planificado": anio.mes[0].planificado+anio.mes[1].planificado+anio.mes[2].planificado+anio.mes[3].planificado+anio.mes[4].planificado+anio.mes[5].planificado+anio.mes[6].planificado+anio.mes[7].planificado+anio.mes[8].planificado+anio.mes[9].planificado+anio.mes[10].planificado+anio.mes[11].planificado
+						,"real": anio.mes[0].real+anio.mes[1].real+anio.mes[2].real+anio.mes[3].real+anio.mes[4].real+anio.mes[5].real+anio.mes[6].real+anio.mes[7].real+anio.mes[8].real+anio.mes[9].real+anio.mes[10].real+anio.mes[11].real},
+					]
 			}
 			anio = anioN;
+		}
+		return anio;
+	}
+	
+	mi.agruparResumenTotales = function(){
+		if(mi.agrupacionActual != AGRUPACION_MES){
+			for(m=0; m<12;m++){
+				mi.resumenTotales.filaDesembolsos[m] = mi.resumenTotales.filaDesembolsos[m]!=null ? mi.resumenTotales.filaDesembolsos[m] : 0;
+				mi.resumenTotales.filaDesembolsosReal[m] = mi.resumenTotales.filaDesembolsosReal[m]!=null ? mi.resumenTotales.filaDesembolsosReal[m] : 0;
+			}
+			if(mi.agrupacionActual == AGRUPACION_BIMESTRE){
+				var fila = mi.resumenTotales.filaPlanificado;
+				mi.resumenTotales.filaPlanificado = [fila[0]+fila[1], fila[2]+fila[3], fila[4]+fila[5], fila[6]+fila[7], fila[8]+fila[9], fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaPlanificadoAcumulado;
+				mi.resumenTotales.filaPlanificadoAcumulado = [fila[1], fila[3], fila[5], fila[7], fila[9], fila[11]];
+				var fila = mi.resumenTotales.filaEjecutado;
+				mi.resumenTotales.filaEjecutado = [fila[0]+fila[1], fila[2]+fila[3], fila[4]+fila[5], fila[6]+fila[7], fila[8]+fila[9], fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaEjecutadoAcumulado;
+				mi.resumenTotales.filaEjecutadoAcumulado = [fila[0]+fila[1], fila[2]+fila[3], fila[4]+fila[5], fila[6]+fila[7], fila[8]+fila[9], fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaVariacion;
+				mi.resumenTotales.filaVariacion = [fila[0]+fila[1], fila[2]+fila[3], fila[4]+fila[5], fila[6]+fila[7], fila[8]+fila[9], fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaVariacionPorcentaje;
+				mi.resumenTotales.filaVariacionPorcentaje = [fila[0]+fila[1], fila[2]+fila[3], fila[4]+fila[5], fila[6]+fila[7], fila[8]+fila[9], fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaDesembolsos;
+				mi.resumenTotales.filaDesembolsos = [fila[0]+fila[1], fila[2]+fila[3], fila[4]+fila[5], fila[6]+fila[7], fila[8]+fila[9], fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaDesembolsosReal;
+				mi.resumenTotales.filaDesembolsosReal = [fila[0]+fila[1], fila[2]+fila[3], fila[4]+fila[5], fila[6]+fila[7], fila[8]+fila[9], fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaSaldo;
+				mi.resumenTotales.filaSaldo = [fila[0]+fila[1], fila[2]+fila[3], fila[4]+fila[5], fila[6]+fila[7], fila[8]+fila[9], fila[10]+fila[11]];
+			}else if(mi.agrupacionActual == AGRUPACION_TRIMESTRE){
+				var fila = mi.resumenTotales.filaPlanificado;
+				mi.resumenTotales.filaPlanificado = [fila[0]+fila[1]+fila[2], fila[3]+fila[4]+fila[5], fila[6]+fila[7]+fila[8], fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaPlanificadoAcumulado;
+				mi.resumenTotales.filaPlanificadoAcumulado = [fila[0]+fila[1]+fila[2], fila[3]+fila[4]+fila[5], fila[6]+fila[7]+fila[8], fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaEjecutado;
+				mi.resumenTotales.filaEjecutado = [fila[0]+fila[1]+fila[2], fila[3]+fila[4]+fila[5], fila[6]+fila[7]+fila[8], fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaEjecutadoAcumulado;
+				mi.resumenTotales.filaEjecutadoAcumulado = [fila[0]+fila[1]+fila[2], fila[3]+fila[4]+fila[5], fila[6]+fila[7]+fila[8], fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaVariacion;
+				mi.resumenTotales.filaVariacion = [fila[0]+fila[1]+fila[2], fila[3]+fila[4]+fila[5], fila[6]+fila[7]+fila[8], fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaVariacionPorcentaje;
+				mi.resumenTotales.filaVariacionPorcentaje = [fila[0]+fila[1]+fila[2], fila[3]+fila[4]+fila[5], fila[6]+fila[7]+fila[8], fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaDesembolsos;
+				mi.resumenTotales.filaDesembolsos = [fila[0]+fila[1]+fila[2], fila[3]+fila[4]+fila[5], fila[6]+fila[7]+fila[8], fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaDesembolsosReal;
+				mi.resumenTotales.filaDesembolsosReal = [fila[0]+fila[1]+fila[2], fila[3]+fila[4]+fila[5], fila[6]+fila[7]+fila[8], fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaSaldo;
+				mi.resumenTotales.filaSaldo = [fila[0]+fila[1]+fila[2], fila[3]+fila[4]+fila[5], fila[6]+fila[7]+fila[8], fila[9]+fila[10]+fila[11]];
+			}else if(mi.agrupacionActual == AGRUPACION_CUATRIMESTRE){
+				var fila = mi.resumenTotales.filaPlanificado;
+				mi.resumenTotales.filaPlanificado = [fila[0]+fila[1]+fila[2]+fila[3], fila[4]+fila[5]+fila[6]+fila[7], fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaPlanificadoAcumulado;
+				mi.resumenTotales.filaPlanificadoAcumulado = [fila[0]+fila[1]+fila[2]+fila[3], fila[4]+fila[5]+fila[6]+fila[7], fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaEjecutado;
+				mi.resumenTotales.filaEjecutado = [fila[0]+fila[1]+fila[2]+fila[3], fila[4]+fila[5]+fila[6]+fila[7], fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaEjecutadoAcumulado;
+				mi.resumenTotales.filaEjecutadoAcumulado = [fila[0]+fila[1]+fila[2]+fila[3], fila[4]+fila[5]+fila[6]+fila[7], fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaVariacion;
+				mi.resumenTotales.filaVariacion = [fila[0]+fila[1]+fila[2]+fila[3], fila[4]+fila[5]+fila[6]+fila[7], fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaVariacionPorcentaje;
+				mi.resumenTotales.filaVariacionPorcentaje = [fila[0]+fila[1]+fila[2]+fila[3], fila[4]+fila[5]+fila[6]+fila[7], fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaDesembolsos;
+				mi.resumenTotales.filaDesembolsos = [fila[0]+fila[1]+fila[2]+fila[3], fila[4]+fila[5]+fila[6]+fila[7], fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaDesembolsosReal;
+				mi.resumenTotales.filaDesembolsosReal = [fila[0]+fila[1]+fila[2]+fila[3], fila[4]+fila[5]+fila[6]+fila[7], fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaSaldo;
+				mi.resumenTotales.filaSaldo = [fila[0]+fila[1]+fila[2]+fila[3], fila[4]+fila[5]+fila[6]+fila[7], fila[8]+fila[9]+fila[10]+fila[11]];
+			}else if(mi.agrupacionActual == AGRUPACION_SEMESTRE){
+				var fila = mi.resumenTotales.filaPlanificado;
+				mi.resumenTotales.filaPlanificado = [fila[0]+fila[1]+fila[2]+fila[3]+fila[4]+fila[5], fila[6]+fila[7]+fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaPlanificadoAcumulado;
+				mi.resumenTotales.filaPlanificadoAcumulado = [fila[0]+fila[1]+fila[2]+fila[3]+fila[4]+fila[5], fila[6]+fila[7]+fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaEjecutado;
+				mi.resumenTotales.filaEjecutado = [fila[0]+fila[1]+fila[2]+fila[3]+fila[4]+fila[5], fila[6]+fila[7]+fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaEjecutadoAcumulado;
+				mi.resumenTotales.filaEjecutadoAcumulado = [fila[0]+fila[1]+fila[2]+fila[3]+fila[4]+fila[5], fila[6]+fila[7]+fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaVariacion;
+				mi.resumenTotales.filaVariacion = [fila[0]+fila[1]+fila[2]+fila[3]+fila[4]+fila[5], fila[6]+fila[7]+fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaVariacionPorcentaje;
+				mi.resumenTotales.filaVariacionPorcentaje = [fila[0]+fila[1]+fila[2]+fila[3]+fila[4]+fila[5], fila[6]+fila[7]+fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaDesembolsos;
+				mi.resumenTotales.filaDesembolsos = [fila[0]+fila[1]+fila[2]+fila[3]+fila[4]+fila[5], fila[6]+fila[7]+fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaDesembolsosReal;
+				mi.resumenTotales.filaDesembolsosReal = [fila[0]+fila[1]+fila[2]+fila[3]+fila[4]+fila[5], fila[6]+fila[7]+fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaSaldo;
+				mi.resumenTotales.filaSaldo = [fila[0]+fila[1]+fila[2]+fila[3]+fila[4]+fila[5], fila[6]+fila[7]+fila[8]+fila[9]+fila[10]+fila[11]];
+			}else if(mi.agrupacionActual == AGRUPACION_ANUAL){
+				var fila = mi.resumenTotales.filaPlanificado;
+				mi.resumenTotales.filaPlanificado = [fila[0]+fila[1]+fila[2]+fila[3]+fila[4]+fila[5]+fila[6]+fila[7]+fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaPlanificadoAcumulado;
+				mi.resumenTotales.filaPlanificadoAcumulado = [fila[0]+fila[1]+fila[2]+fila[3]+fila[4]+fila[5]+fila[6]+fila[7]+fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaEjecutado;
+				mi.resumenTotales.filaEjecutado = [fila[0]+fila[1]+fila[2]+fila[3]+fila[4]+fila[5]+fila[6]+fila[7]+fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaEjecutadoAcumulado;
+				mi.resumenTotales.filaEjecutadoAcumulado = [fila[0]+fila[1]+fila[2]+fila[3]+fila[4]+fila[5]+fila[6]+fila[7]+fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaVariacion;
+				mi.resumenTotales.filaVariacion = [fila[0]+fila[1]+fila[2]+fila[3]+fila[4]+fila[5]+fila[6]+fila[7]+fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaVariacionPorcentaje;
+				mi.resumenTotales.filaVariacionPorcentaje = [fila[0]+fila[1]+fila[2]+fila[3]+fila[4]+fila[5]+fila[6]+fila[7]+fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaDesembolsos;
+				mi.resumenTotales.filaDesembolsos = [fila[0]+fila[1]+fila[2]+fila[3]+fila[4]+fila[5]+fila[6]+fila[7]+fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaDesembolsosReal;
+				mi.resumenTotales.filaDesembolsosReal = [fila[0]+fila[1]+fila[2]+fila[3]+fila[4]+fila[5]+fila[6]+fila[7]+fila[8]+fila[9]+fila[10]+fila[11]];
+				var fila = mi.resumenTotales.filaSaldo;
+				mi.resumenTotales.filaSaldo = [fila[0]+fila[1]+fila[2]+fila[3]+fila[4]+fila[5]+fila[6]+fila[7]+fila[8]+fila[9]+fila[10]+fila[11]];
+			}
 		}
 		return anio;
 	}
@@ -299,15 +388,15 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 			{
 					if(agrupacion != 0){
 						mi.data = JSON.parse(JSON.stringify(mi.dataOriginal));
+						mi.resumenTotales = JSON.parse(JSON.stringify(mi.resumenTotalesOriginal));
 						mi.agrupacionActual = agrupacion;
 						for (x in mi.data){
-							if(mi.data[x].objeto_tipo == 0){
-								for(a in mi.data[x].anios){
-									var anio = mi.data[x].anios[a];
-									mi.data[x].anios[a] = mi.agruparMeses(anio);
-								}
+							for(a in mi.data[x].anios){
+								var anio = mi.data[x].anios[a];
+								mi.data[x].anios[a] = mi.agruparMeses(anio);
 							}
-						}
+						}	
+						mi.agruparResumenTotales();
 						mi.renderizaTabla();
 					}
 			}else

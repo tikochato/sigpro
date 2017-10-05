@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -27,10 +30,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.DesembolsoDAO;
+import dao.DesembolsoReal;
 import dao.EstructuraProyectoDAO;
+import dao.PrestamoDAO;
 import dao.ProyectoDAO;
+import pojo.Prestamo;
 import utilities.CExcel;
 import utilities.CLogger;
+import utilities.CMariaDB;
 import utilities.Utils;
 import utilities.CPrestamoCostos;
 
@@ -55,6 +62,7 @@ public class SFlujoCaja extends HttpServlet {
 		BigDecimal totalEjecutadoAcumulado = new BigDecimal(0);
 		BigDecimal totalVariacion = new BigDecimal(0);
 		BigDecimal totalVariacionPorcentaje = new BigDecimal(0);
+		BigDecimal totalDesembolsosReal = new BigDecimal(0);
 		BigDecimal totalDesembolsos = new BigDecimal(0);
 		BigDecimal totalSaldo = new BigDecimal(0);
 
@@ -241,31 +249,56 @@ public class SFlujoCaja extends HttpServlet {
 						totales.filaVariacionPorcentaje[m] = planificadoActual.compareTo(BigDecimal.ZERO)==0 ? new BigDecimal(0) : totales.filaVariacion[m].divide(planificadoActual);
 						
 					}
-				//TODO: obtener desembolsos reales y saldo
+
 				DateTime fecha = new DateTime(fechaCorte);
-				Integer anioInicial = fecha.getYear();
-				Integer mesInicial = fecha.getMonthOfYear();
-				Date fechaInicial = Utils.dateFromString("01/01/"+ anioInicial);
+				Integer anioFinal = fecha.getYear();
+				Integer mesFinal = fecha.getMonthOfYear();
+				Date fechaInicial = Utils.dateFromString("01/01/"+ anioFinal);
 				List<?> objDesembolso =DesembolsoDAO.getDesembolsosEntreFechas(prestamo.getObjeto_id(),fechaInicial,fechaCorte);
 				for(int d=0; d<objDesembolso.size(); d++){
 					Integer anio = (Integer) ((Object[]) objDesembolso.get(d))[0];
 					Integer mes = (Integer) ((Object[]) objDesembolso.get(d))[1];
-					BigDecimal valor = (BigDecimal) ((Object[]) objDesembolso.get(d))[2];
-					if (anio.compareTo((anioInicial)) == 0){
+					if (anio.compareTo((anioFinal)) == 0){
+						BigDecimal valor = (BigDecimal) ((Object[]) objDesembolso.get(d))[2];
 						totales.filaDesembolsos[mes-1] = totales.filaDesembolsos[mes-1]!=null ? totales.filaDesembolsos[mes-1].add(valor) : valor;
-					}
-					totales.totalDesembolsos = totales.totalDesembolsos!=null ? totales.totalDesembolsos.add(valor) : valor; 
+						totales.totalDesembolsos = totales.totalDesembolsos!=null ? totales.totalDesembolsos.add(valor) : valor;
+					} 
 				}
+				
+				try {
+					Prestamo prestamoObj = PrestamoDAO.getPrestamoPorObjetoYTipo(prestamo.getObjeto_id(), prestamo.getObjeto_tipo());
+					if(prestamoObj!=null){
+						if(CMariaDB.connectAnalytic()){
+							Connection conn_analytic = CMariaDB.getConnection_analytic();
+							ArrayList<DesembolsoReal> desembolsosReal = DesembolsoDAO.getDesembolsosReales(prestamoObj.getCodigoPresupuestario(), 1, anioFinal, mesFinal, anioFinal, conn_analytic);
+							for(int d=0; d<desembolsosReal.size();d++){
+								DesembolsoReal desembolso = desembolsosReal.get(d); 
+								if (desembolso.getEjercicioFiscal().compareTo((anioFinal)) == 0){
+									BigDecimal valor = desembolso.getDesembolsosMesGTQ();
+									Integer mes = desembolso.getMes();
+									totales.filaDesembolsosReal[mes-1] = totales.filaDesembolsosReal[mes-1]!=null ? totales.filaDesembolsosReal[mes-1].add(valor) : valor;
+									totales.totalDesembolsosReal = totales.totalDesembolsosReal!=null ? totales.totalDesembolsosReal.add(valor) : valor;
+								} 
+							}
+							
+							
+							conn_analytic.close();
+						}
+					}
+				} catch (SQLException e) {
+					CLogger.write("7", SFlujoCaja.class, e);
+				}
+				
 				//Calculo primer mes diferente
 				totales.filaDesembolsosReal[0] = totales.filaDesembolsosReal[0]!=null ? totales.filaDesembolsosReal[0] : new BigDecimal(0);
 				totales.filaSaldo[0] = totales.filaDesembolsosReal[0].add(totales.filaDesembolsos[0]!=null ? totales.filaDesembolsos[0] : new BigDecimal(0));
 				totales.filaSaldo[0] = totales.filaSaldo[0].subtract(totales.filaEjecutado[0]!=null ? totales.filaEjecutado[0] : new BigDecimal(0));
-				for(int mes=1; mes<=mesInicial; mes++){
+				for(int mes=1; mes<mesFinal; mes++){
 					totales.filaSaldo[mes-1] = totales.filaSaldo[mes-1]!=null ? totales.filaSaldo[mes-1] : new BigDecimal(0);
 					totales.filaSaldo[mes] = totales.filaSaldo[mes-1].add(totales.filaDesembolsos[mes]!=null ? totales.filaDesembolsos[mes] : new BigDecimal(0));
 					totales.filaSaldo[mes] = totales.filaSaldo[mes].subtract(totales.filaEjecutado[mes]!=null ? totales.filaEjecutado[mes] : new BigDecimal(0));
 				}
-				for(int mes=(mesInicial+1); mes<12; mes++){
+				for(int mes=mesFinal; mes<12; mes++){
 					totales.filaSaldo[mes-1] = totales.filaSaldo[mes-1]!=null ? totales.filaSaldo[mes-1] : new BigDecimal(0);
 					totales.filaSaldo[mes] = totales.filaSaldo[mes-1].add(totales.filaDesembolsos[mes]!=null ? totales.filaDesembolsos[mes] : new BigDecimal(0));
 					totales.filaSaldo[mes] = totales.filaSaldo[mes].subtract(totales.filaPlanificado[mes]!=null ? totales.filaPlanificado[mes] : new BigDecimal(0));
@@ -315,7 +348,6 @@ public class SFlujoCaja extends HttpServlet {
 		int totalesCant = 1;
 		int aniosDiferencia =1; 
 		int columnasTotal = (aniosDiferencia*(AgrupacionesTitulo[agrupacion-1].length));
-		totalesCant+=aniosDiferencia;
 		columnasTotal += 1+totalesCant; 
 		
 		String titulo[] = new String[columnasTotal];
@@ -352,7 +384,7 @@ public class SFlujoCaja extends HttpServlet {
 		titulo[pos] = "Total";
 		tipo[pos] = "double";
 		operacionesFila[pos]="sum";
-		columnasOperacion[pos]=totales[totalesCant];
+		columnasOperacion[pos]=totales[0];
 		pos++;
 		
 		headers = new String[][]{
