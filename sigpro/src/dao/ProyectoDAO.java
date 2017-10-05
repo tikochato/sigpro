@@ -429,21 +429,21 @@ public class ProyectoDAO implements java.io.Serializable  {
 	public static BigDecimal calcularCosto(Proyecto proyecto){
 		BigDecimal costo = new BigDecimal(0);
 		try{
-			Set<Componente> componentes = proyecto.getComponentes();			
-			Iterator<Componente> iterador = componentes.iterator();
-			
-			if(iterador.hasNext()){
+			Set<Componente> componentes = proyecto.getComponentes();
+			if(componentes != null && componentes.size() > 0){
+				Iterator<Componente> iterador = componentes.iterator();
+				
 				while(iterador.hasNext()){
 					Componente componente = iterador.next();
 					costo = costo.add(componente.getCosto());
 				}
-				
+					
 				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(proyecto.getId(), 1);
 				if(actividades != null && actividades.size() > 0){
 					for(Actividad actividad : actividades){
 						costo = costo.add(actividad.getCosto());
 					}
-				}
+				}			
 			}else{
 				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(proyecto.getId(), 1);
 				if(actividades != null && actividades.size() > 0){
@@ -452,7 +452,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 					}
 				}else
 					costo = proyecto.getCosto();
-			}			
+			}				
 		}catch(Exception e){
 			CLogger.write("16", Proyecto.class, e);
 		} 
