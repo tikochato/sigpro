@@ -173,7 +173,7 @@ app.controller('controlAdquisicionesController',['$scope', '$http', '$interval',
         	row.c12 = !row.c12;
         	break;
         case 13:
-	        if(borrar)
+	        if(borrar)//prueba
 	        	row.realAdjudica = null;
         	row.c13 = !row.c13;
         	break;
@@ -188,7 +188,7 @@ app.controller('controlAdquisicionesController',['$scope', '$http', '$interval',
         	row.c15 = !row.c15;
         	break;
         }
-    }
+    } 
 	
 	mi.validarFecha = function(row,fecha,tipo){
 		switch(fecha){
