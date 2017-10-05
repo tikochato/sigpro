@@ -42,8 +42,8 @@ class duracionFecha{
 	
 	public int getDuracion(){
 		return this.duracion;
-	}
-	
+	} 
+	 
 	public void setFechaInicial(Date fechaInicial){
 		this.fecha_inicial = fechaInicial;
 	}
