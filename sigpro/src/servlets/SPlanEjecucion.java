@@ -39,6 +39,7 @@ import pojo.Prestamo;
 import pojo.Producto;
 import pojo.Proyecto;
 import utilities.CExcel;
+import utilities.CGraficaExcel;
 import utilities.CLogger;
 import utilities.Utils;
 
@@ -100,10 +101,17 @@ public class SPlanEjecucion extends HttpServlet {
 		}else if(accion.equals("exportarExcel")){
 			try{
 				int idPrestamo = Utils.String2Int(map.get("id"),0);
-				Double plazoEjecucion = Double.parseDouble(map.get("plazoEjecucion") != null ? map.get("plazoEjecucion") : "0");
+				Double plazoEjecucionReal = Double.parseDouble(map.get("plazoEjecucionReal") != null ? map.get("plazoEjecucionReal") : "0");
+				Double ejecucionFinancieraReal =  Double.parseDouble(map.get("ejecucionFinancieraReal") != null ? map.get("ejecucionFinancieraReal") : "0");
+				Double ejecucionFisicaReal =  Double.parseDouble(map.get("ejecucionFisicaReal") != null ? map.get("ejecucionFisicaReal") : "0");
+				Double plazoEjecucionPlan = Double.parseDouble(map.get("plazoEjecucionPlan") != null ? map.get("plazoEjecucionPlan") : "0");
+				Double ejecucionFinancieraPlan =  Double.parseDouble(map.get("ejecucionFinancieraPlan") != null ? map.get("ejecucionFinancieraPlan") : "0");
+				Double ejecucionFisicaPlan =  Double.parseDouble(map.get("ejecucionFisicaPlan") != null ? map.get("ejecucionFisicaPlan") : "0");
 				
 				
-		        byte [] outArray = exportarExcel(idPrestamo, usuario, plazoEjecucion);
+				
+		        byte [] outArray = exportarExcel(idPrestamo, usuario, plazoEjecucionReal,ejecucionFinancieraReal,ejecucionFisicaReal
+		        		,plazoEjecucionPlan,ejecucionFinancieraPlan,ejecucionFisicaPlan);
 			
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
@@ -323,7 +331,8 @@ public BigDecimal calcularEjecucionFisicaPlanificada(Integer proyectoId){
 	}
 
 	
-	private byte[] exportarExcel(int idPrestamo, String usuario, Double plazoEjecucion
+	private byte[] exportarExcel(int idPrestamo, String usuario, Double plazoEjecucionReal, Double ejecucionFinancieraReal,
+			Double ejecucionFisicaReal ,Double plazoEjecucionPlan, Double ejecucionFinancieraPlan, Double ejecucionFisicaPlan
 			) throws IOException{
 		byte [] outArray = null;
 		CExcel excel=null;
@@ -334,9 +343,10 @@ public BigDecimal calcularEjecucionFisicaPlanificada(Integer proyectoId){
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
 			headers = generarHeaders();
-			datos = generarDatos(idPrestamo, usuario,plazoEjecucion);
-			//CGraficaExcel grafica = generarGrafica(datos);
-			excel = new CExcel("Plan de Ejecucion", false, null);
+			datos = generarDatos(idPrestamo, usuario,plazoEjecucionReal);
+			CGraficaExcel grafica = generarGrafica(plazoEjecucionReal,ejecucionFinancieraReal,ejecucionFisicaReal
+	        		,plazoEjecucionPlan,ejecucionFinancieraPlan,ejecucionFisicaPlan);
+			excel = new CExcel("Plan de Ejecucion", false, grafica);
 			wb=excel.generateExcelOfData(datos, "Plan de Ejecución", headers, null, false, usuario);
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
@@ -352,7 +362,7 @@ public BigDecimal calcularEjecucionFisicaPlanificada(Integer proyectoId){
 		headers = new String[][]{
 			{" ", " ", " ", " "},  //titulos
 			null, //mapeo
-			{"string", "string", "string", "string"}, //tipo dato
+			{"string_sin_formato", "string_sin_formato", "string_sin_formato", "string_sin_formato"}, //tipo dato
 			{"", "", "", ""}, //operaciones columnas
 			null, //operaciones div
 			null,
@@ -452,5 +462,31 @@ public BigDecimal calcularEjecucionFisicaPlanificada(Integer proyectoId){
 			
 		}
 		return "";
+	}
+	
+	public CGraficaExcel generarGrafica(Double plazoEjecucionReal, Double ejecucionFinancieraReal,
+			Double ejecucionFisicaReal ,Double plazoEjecucionPlan, Double ejecucionFinancieraPlan, Double ejecucionFisicaPlan){
+		
+		String[][] datos = new String[4][2];
+		String[][] datosIgualar = new String[4][2];
+		String[] tipoData = new String[]{"String","double","double","double"};
+				
+		
+			datos[0][0] = "Planificada";
+			datos[0][1] = "Real";
+			
+			datos[1][0] = ejecucionFisicaPlan.toString();
+			datos[1][1] = ejecucionFisicaReal.toString();
+			
+			datos[2][0] = plazoEjecucionPlan.toString();
+			datos[2][1] = plazoEjecucionReal.toString();
+			
+			datos[3][0] = ejecucionFinancieraPlan.toString();
+			datos[3][1] = ejecucionFinancieraReal.toString();
+			
+		
+		CGraficaExcel grafica = new CGraficaExcel("Plan de Ejecución", CGraficaExcel.EXCEL_CHART_RADAR, " ", "Ejecución Física", datos, tipoData, datosIgualar);
+	
+		return grafica;
 	}
 }
