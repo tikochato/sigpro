@@ -1,8 +1,11 @@
 package dao;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.LockModeType;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -12,9 +15,12 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import pojo.Actividad;
 import pojo.Producto;
 import pojo.ProductoUsuario;
 import pojo.ProductoUsuarioId;
+import pojo.Proyecto;
+import pojo.Subproducto;
 import pojo.Usuario;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -84,7 +90,13 @@ public class ProductoDAO {
 						, producto.getUsuarioCreo(), null, new Date(), null);
 				session.saveOrUpdate(pu_admin);
 			}
+			
+			producto.setCosto(calcularCosto(producto));
+			session.saveOrUpdate(producto);
 			session.getTransaction().commit();
+			session.close();
+			
+			ComponenteDAO.guardarComponente(producto.getComponente());
 			ret = true;
 		} catch (Throwable e) {
 			CLogger.write("3", ProductoDAO.class, e);
@@ -357,5 +369,39 @@ public class ProductoDAO {
 			session.close();
 		}
 		return ret;
+	}
+	
+	public static BigDecimal calcularCosto(Producto producto){
+		BigDecimal costo = new BigDecimal(0);
+		try{
+			Set<Subproducto> subproductos = producto.getSubproductos();			
+			Iterator<Subproducto> iterador = subproductos.iterator();
+			
+			if(iterador.hasNext()){
+				while(iterador.hasNext()){
+					Subproducto subproducto = iterador.next();
+					costo = costo.add(subproducto.getCosto());
+				}
+				
+				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(producto.getId(), 3);
+				if(actividades != null && actividades.size() > 0){
+					for(Actividad actividad : actividades){
+						costo = costo.add(actividad.getCosto());
+					}
+				}
+			}else{
+				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(producto.getId(), 3);
+				if(actividades != null && actividades.size() > 0){
+					for(Actividad actividad : actividades){
+						costo = costo.add(actividad.getCosto());
+					}
+				}else
+					costo = producto.getCosto();
+			}			
+		}catch(Exception e){
+			CLogger.write("16", Proyecto.class, e);
+		}
+		
+		return costo;
 	}
 }

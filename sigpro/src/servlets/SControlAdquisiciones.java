@@ -29,7 +29,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
-import dao.CategoriaAdquisicionDAO;
 import dao.EstructuraProyectoDAO;
 import dao.PlanAdquisicionDAO;
 import pojo.Actividad;
@@ -209,7 +208,7 @@ public class SControlAdquisiciones extends HttpServlet {
 			
 			for(Object objeto: estruturaProyecto){
 				Object[] obj = (Object[]) objeto;
-				Integer nivel = (Integer)obj[4];
+				Integer nivel = (obj[3]!=null) ? ((String)obj[3]).length()/8 : 0;
 				if(nivel != null){
 					temp = new stcontroladquisiciones();
 					temp.objetoId = (Integer)obj[0];
@@ -286,7 +285,7 @@ public class SControlAdquisiciones extends HttpServlet {
 							temp.categoriaAdquisicion = adquisicion.getCategoriaAdquisicion() != null ? adquisicion.getCategoriaAdquisicion().getId() : 0;
 							temp.categoriaAdquisicionNombre = adquisicion.getCategoriaAdquisicion() != null ? adquisicion.getCategoriaAdquisicion().getNombre() : "";
 							temp.unidadMedida = adquisicion.getUnidadMedida();
-							temp.cantidad = adquisicion.getCantidad();
+							temp.cantidad = adquisicion.getCantidad() != null ? adquisicion.getCantidad() : 0;
 							temp.costo = adquisicion.getPrecioUnitario() != null ? adquisicion.getPrecioUnitario() : new BigDecimal(0);
 							temp.total = adquisicion.getTotal() != null ? adquisicion.getTotal() : new BigDecimal(0);
 							temp.nog = adquisicion.getNog();
@@ -357,7 +356,7 @@ public class SControlAdquisiciones extends HttpServlet {
 			{"Nombre", "Tipo de Adquisicion", "Unidad de Medida", "Categoria de Aquisicion", "Cantidad", "Costo", "Total", "Preparacion de Documentos", "", "Lanzamiento de Evento","", 
 				"Recepcion y Evaluacion de Ofertas", "", "Adjudicacion", "", "Firma de Contrato", ""},  //titulos
 			null, //mapeo
-			{"string", "string", "string", "string", "double", "currency", "currency", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string"}, //tipo dato
+			{"string", "string", "string", "string", "double", "double", "double", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string"}, //tipo dato
 			null, //operaciones columnas
 			null, //operaciones div
 			{"", "", "", "", "", "", "", "Planificado", "Real", "Planificado","Real", 
@@ -379,14 +378,9 @@ public class SControlAdquisiciones extends HttpServlet {
 				datos = new String[lstprestamo.size()][17];
 				for (int i=0; i<lstprestamo.size(); i++){
 						datos[i][0] = lstprestamo.get(i).nombre;
-						datos[i][1] = lstprestamo.get(i).tipoAdquisicion.toString();
+						datos[i][1] = lstprestamo.get(i).tipoAdquisicionNombre;
 						datos[i][2] = lstprestamo.get(i).unidadMedida;
-						String strCategoria = "";
-						Integer categoria = lstprestamo.get(i).categoriaAdquisicion;
-						if(categoria > 0){
-							strCategoria = CategoriaAdquisicionDAO.getCategoriaPorId(categoria).getNombre();
-						}
-						datos[i][3] = strCategoria;
+						datos[i][3] = lstprestamo.get(i).categoriaAdquisicionNombre;
 						datos[i][4] = lstprestamo.get(i).cantidad.toString();
 						datos[i][5] = lstprestamo.get(i).costo.toString();
 						datos[i][6] = lstprestamo.get(i).total.toString();

@@ -213,11 +213,11 @@
 					       <label for="iprog" class="floating-label">{{componentec.componente.acumulacionCostoId > 0 ? "* Costo" : "Costo"}}</label>
 						</div>
 						
-						<div class="form-group" >
-						    <input type="text" class="inputText" id="acumulacionCosto" name="acumulacionCosto" ng-model="componentec.componente.acumulacionCostoNombre" ng-value="componentec.componente.acumulacionCostoNombre" 
-							ng-click="componentec.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="componentec.componente.costo != null && componentec.componente.costo > 0"/>
-							<span class="label-icon" ng-click="componentec.buscarAcumulacionCosto()"><i class="glyphicon glyphicon-search"></i></span>
-							<label for="campo3" class="floating-label">{{componentec.validarRequiredCosto(componentec.componente.costo)}} </label>
+						<div class="form-group">
+		            		<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="componentec.cambioAcumulacionCosto"
+							  local-data="componentec.acumulacionesCosto" search-fields="nombre" title-field="nombre" field-required="componentec.mostraringreso" field-label="* Tipo Acumulación de Costo"
+							  minlength="1" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
+							  initial-value="componentec.componente.acumulacionCostoNombre" focus-out="componentec.blurCategoria()" input-name="acumulacionCosto"></div>
 						</div>
 						
 						<div class = "row">

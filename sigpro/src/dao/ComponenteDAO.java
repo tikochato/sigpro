@@ -1,16 +1,22 @@
 package dao;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.NoResultException;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import pojo.Actividad;
 import pojo.Componente;
 import pojo.ComponenteUsuario;
 import pojo.ComponenteUsuarioId;
+import pojo.Producto;
+import pojo.Proyecto;
 import pojo.Usuario;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -81,7 +87,14 @@ public class ComponenteDAO {
 				ComponenteUsuario cu_admin = new ComponenteUsuario(new ComponenteUsuarioId(Componente.getId(), "admin"), Componente, UsuarioDAO.getUsuario("admin"));
 				session.saveOrUpdate(cu_admin);
 			}
+			
+			Componente.setCosto(calcularCosto(Componente));
+			session.saveOrUpdate(Componente);
 			session.getTransaction().commit();
+			session.close();
+			
+			ProyectoDAO.guardarProyecto(Componente.getProyecto());
+			
 			ret = true;
 		}
 		catch(Throwable e){
@@ -343,5 +356,39 @@ public class ComponenteDAO {
 			session.close();
 		}
 		return ret;
+	}
+	
+	public static BigDecimal calcularCosto(Componente componente){
+		BigDecimal costo = new BigDecimal(0);
+		try{
+			Set<Producto> productos = componente.getProductos();			
+			Iterator<Producto> iterador = productos.iterator();
+			
+			if(iterador.hasNext()){
+				while(iterador.hasNext()){
+					Producto producto = iterador.next();
+					costo = costo.add(producto.getCosto());
+				}
+				
+				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(componente.getId(), 2);
+				if(actividades != null && actividades.size() > 0){
+					for(Actividad actividad : actividades){
+						costo = costo.add(actividad.getCosto());
+					}
+				}
+			}else{
+				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(componente.getId(), 2);
+				if(actividades != null && actividades.size() > 0){
+					for(Actividad actividad : actividades){
+						costo = costo.add(actividad.getCosto());
+					}
+				}else
+					costo = componente.getCosto();
+			}			
+		}catch(Exception e){
+			CLogger.write("17", Proyecto.class, e);
+		} 
+		
+		return costo;
 	}
 }
