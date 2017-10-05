@@ -164,7 +164,7 @@ public class EstructuraProyectoDAO {
 							nivel_actual_estructura = nivel_actual_estructura.children.get(nivel_actual_estructura.children.size()-1);
 						}
 						else{
-							for(int j=0; j<=(nivel_actual_estructura.nivel-nodo.nivel+1); j++)
+							for(int j=0; j<(nivel_actual_estructura.nivel-nodo.nivel+1); j++)
 								nivel_actual_estructura=nivel_actual_estructura.parent;
 						}
 					}
