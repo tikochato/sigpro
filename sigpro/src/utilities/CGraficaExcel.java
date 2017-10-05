@@ -12,7 +12,7 @@ public class CGraficaExcel {
 	public static final String EXCEL_CHART_BAR_PATH = "/archivos/plantillas/TemplateChartBar.xls";
 	public static final String EXCEL_CHART_PIE_PATH = "/archivos/plantillas/TemplateChartPie.xls";
 	public static final String EXCEL_CHART_AREA_PATH = "/archivos/plantillas/TemplateChartArea.xls";
-	public static final String EXCEL_CHART_AREA2_PATH = "/archivos/plantillas/TemplateChartArea2.xls";
+	public static final String EXCEL_CHART_AREA2_PATH = "/archivos/plantillas/TemplateChartAreaPlan.xls";
 	public static final String EXCEL_CHART_RADAR_PATH = "/archivos/plantillas/TemplateChartRadar.xls";
 	public static final int EXCEL_CHART_BAR = 1;
 	public static final int EXCEL_CHART_PIE = 2;

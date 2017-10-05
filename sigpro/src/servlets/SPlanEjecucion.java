@@ -362,7 +362,7 @@ public BigDecimal calcularEjecucionFisicaPlanificada(Integer proyectoId){
 		headers = new String[][]{
 			{" ", " ", " ", " "},  //titulos
 			null, //mapeo
-			{"string_sin_formato", "string_sin_formato", "string_sin_formato", "string_sin_formato"}, //tipo dato
+			{"stringsinformat", "stringsinformat", "stringsinformat", "stringsinformat"}, //tipo dato
 			{"", "", "", ""}, //operaciones columnas
 			null, //operaciones div
 			null,
