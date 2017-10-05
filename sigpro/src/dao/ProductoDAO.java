@@ -375,9 +375,9 @@ public class ProductoDAO {
 		BigDecimal costo = new BigDecimal(0);
 		try{
 			Set<Subproducto> subproductos = producto.getSubproductos();			
-			Iterator<Subproducto> iterador = subproductos.iterator();
-			
-			if(iterador.hasNext()){
+			if(subproductos != null && subproductos.size() > 0){
+				Iterator<Subproducto> iterador = subproductos.iterator();
+				
 				while(iterador.hasNext()){
 					Subproducto subproducto = iterador.next();
 					costo = costo.add(subproducto.getCosto());
