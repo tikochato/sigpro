@@ -1,8 +1,10 @@
 package dao;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -699,4 +701,20 @@ public class ActividadDAO {
 		}
 		return ret;
 	}
+		
+	public static BigDecimal calcularActividadCosto(Actividad actividad){
+		BigDecimal costo = new BigDecimal(0);
+		List<Actividad> subactividades = getActividadesPorObjeto(actividad.getId(), 5);
+		if(subactividades!=null && subactividades.size()>0){
+			Iterator<Actividad> actual = subactividades.iterator();
+			while (actual.hasNext()) {
+				Actividad hija = actual.next();
+				costo = calcularActividadCosto(hija);
+			}
+		}else{
+			costo = actividad.getCosto();
+		}
+		return costo;
+	}
+	
 }
