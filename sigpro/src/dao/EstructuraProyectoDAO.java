@@ -37,19 +37,19 @@ public class EstructuraProyectoDAO {
 
 			String query =
 					"select * from ( "+
-					"select p.id, p.nombre, 1 objeto_tipo,  p.treePath, p.nivel, p.fecha_inicio, "+
+					"select p.id, p.nombre, 1 objeto_tipo,  p.treePath, p.fecha_inicio, "+
 					"p.fecha_fin, p.duracion, p.duracion_dimension,p.costo,0, p.acumulacion_costoid,  "+
 					"p.programa, p.subprograma, p.proyecto, p.actividad, p.obra "+
 					"from proyecto p "+
 					"where p.id= ?1 and p.estado=1  "+
 					"union "+
-					"select c.id, c.nombre, 2 objeto_tipo,  c.treePath, c.nivel, c.fecha_inicio, "+
+					"select c.id, c.nombre, 2 objeto_tipo,  c.treePath, c.fecha_inicio, "+
 					"c.fecha_fin , c.duracion, c.duracion_dimension,c.costo,0,c.acumulacion_costoid, "+
 					"c.programa, c.subprograma, c.proyecto, c.actividad, c.obra "+
 					"from componente c "+
 					"where c.proyectoid=?1 and c.estado=1  "+
 					"union "+
-					"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.nivel, pr.fecha_inicio, "+
+					"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
 					"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid, "+
 					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra "+
 					"from producto pr "+
@@ -57,7 +57,7 @@ public class EstructuraProyectoDAO {
 					"left outer join proyecto p on p.id=c.proyectoid "+
 					"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1   "+
 					"union "+
-					"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.nivel, sp.fecha_inicio, "+
+					"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
 					"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid, "+
 					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra "+
 					"from subproducto sp "+
@@ -66,15 +66,11 @@ public class EstructuraProyectoDAO {
 					"left outer join proyecto p on p.id=c.proyectoid "+
 					"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1 and sp.estado=1 and sp.id  "+
 					"union "+
-					"select a.id, a.nombre, 5 objeto_tipo,  a.treePath, a.nivel, a.fecha_inicio, "+
+					"select a.id, a.nombre, 5 objeto_tipo,  a.treePath, a.fecha_inicio, "+
 					"a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id,a.acumulacion_costo acumulacion_costoid, "+
 					"a.programa, a.subprograma, a.proyecto, a.actividad, a.obra "+
 					"from actividad a "+
-					"where a.estado=1 and ( "+
-						"(a.proyecto_base = ?1  ) "+
-						"OR (a.componente_base in (select id from componente where proyectoid=?1) ) "+
-						"OR (a.producto_base in (select p.id from producto p, componente c where p.componenteid=c.id and c.proyectoid=?1) ) "+
-					")"+
+					"where a.estado=1 and  a.treepath like '"+(10000000+idProyecto)+"%'"+
 					") arbol "+
 					"order by treePath ";			
 				
@@ -98,24 +94,24 @@ public class EstructuraProyectoDAO {
 		try{
 			String query =
 				"select * from ( "+
-				"select p.id, p.nombre, 1 objeto_tipo,  p.treePath, p.nivel, p.fecha_inicio, "+
+				"select p.id, p.nombre, 1 objeto_tipo,  p.treePath, p.fecha_inicio, "+
 				"p.fecha_fin, p.duracion, p.duracion_dimension,p.costo,0, p.acumulacion_costoid  "+
 				"from proyecto p "+
 				"where p.id= ?1 and p.estado=1 and p.id in ( select proyectoid from proyecto_usuario where usuario = ?2 ) "+
 				"union "+
-				"select c.id, c.nombre, 2 objeto_tipo,  c.treePath, c.nivel, c.fecha_inicio, "+
+				"select c.id, c.nombre, 2 objeto_tipo,  c.treePath, c.fecha_inicio, "+
 				"c.fecha_fin , c.duracion, c.duracion_dimension,c.costo,0,c.acumulacion_costoid "+
 				"from componente c "+
 				"where c.proyectoid=?1 and c.estado=1 and c.id in (select componenteid from componente_usuario where usuario = ?2 ) "+
 				"union "+
-				"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.nivel, pr.fecha_inicio, "+
+				"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
 				"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid "+
 				"from producto pr "+
 				"left outer join componente c on c.id=pr.componenteid "+
 				"left outer join proyecto p on p.id=c.proyectoid "+
 				"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1 and pr.id in ( select productoid from producto_usuario where usuario = ?2 )  "+
 				"union "+
-				"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.nivel, sp.fecha_inicio, "+
+				"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
 				"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid "+
 				"from subproducto sp "+
 				"left outer join producto pr on pr.id=sp.productoid "+
@@ -123,14 +119,10 @@ public class EstructuraProyectoDAO {
 				"left outer join proyecto p on p.id=c.proyectoid "+
 				"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1 and sp.estado=1 and sp.id and pr.id in ( select productoid from producto_usuario where usuario = ?2 ) "+
 				"union "+
-				"select a.id, a.nombre, 5 objeto_tipo,  a.treePath, a.nivel, a.fecha_inicio, "+
+				"select a.id, a.nombre, 5 objeto_tipo,  a.treePath, a.fecha_inicio, "+
 				"a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id,a.acumulacion_costo acumulacion_costoid "+
 				"from actividad a "+
-				"where a.estado=1 and ( "+
-					"(a.proyecto_base = ?1 and a.proyecto_base in ( select proyectoid from proyecto_usuario where usuario = ?2 ) ) "+
-					"OR (a.componente_base in (select id from componente where proyectoid=?1) and a.componente_base in (select componenteid from componente_usuario where usuario = ?2 )) "+
-					"OR (a.producto_base in (select p.id from producto p, componente c where p.componenteid=c.id and c.proyectoid=?1) and a.producto_base in (select productoid from producto_usuario where usuario = ?2 )) "+
-				")"+
+				"where a.estado=1 and  a.treepath like '"+(10000000+idProyecto)+"%'"+
 				") arbol "+
 				"order by treePath ";			
 			
@@ -157,7 +149,7 @@ public class EstructuraProyectoDAO {
 				int id_ = dato[0]!=null ? (Integer)dato[0] : 0;
 				int objeto_tipo = dato[2]!=null ? ((BigInteger)dato[2]).intValue() : 0;
 				String nombre = dato[1]!=null ? (String)dato[1] : null;
-				int nivel = dato[4]!=null ? (Integer)dato[4] : 0;
+				int nivel = (dato[3]!=null) ? ((String)dato[3]).length()/8 : 0;
 				root = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, false);
 				Nodo nivel_actual_estructura = root;
 				for(int i=1; i<estructuras.size(); i++){
@@ -165,14 +157,15 @@ public class EstructuraProyectoDAO {
 					id_ = dato[0]!=null ? (Integer)dato[0] : 0;
 					objeto_tipo = dato[2]!=null ? ((BigInteger)dato[2]).intValue() : 0;
 					nombre = dato[1]!=null ? (String)dato[1] : null;
-					nivel = dato[4]!=null ? (Integer)dato[4] : 0;
+					nivel = (dato[3]!=null) ? ((String)dato[3]).length()/8 : 0;
 					Nodo nodo = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, false);
 					if(nodo.nivel!=nivel_actual_estructura.nivel+1){
 						if(nodo.nivel>nivel_actual_estructura.nivel){
 							nivel_actual_estructura = nivel_actual_estructura.children.get(nivel_actual_estructura.children.size()-1);
 						}
 						else{
-							for(int j=0; j<=(nivel_actual_estructura.nivel-nodo.nivel+1); j++)
+							int retornar = nivel_actual_estructura.nivel-nodo.nivel+1;
+							for(int j=0; j<retornar; j++)
 								nivel_actual_estructura=nivel_actual_estructura.parent;
 						}
 					}
@@ -197,7 +190,7 @@ public class EstructuraProyectoDAO {
 				int id_ = dato[0]!=null ? (Integer)dato[0] : 0;
 				int objeto_tipo = dato[2]!=null ? ((BigInteger)dato[2]).intValue() : 0;
 				String nombre = dato[1]!=null ? (String)dato[1] : null;
-				int nivel = dato[4]!=null ? (Integer)dato[4] : 0;
+				int nivel = (dato[3]!=null) ? ((String)dato[3]).length()/8 : 0;
 				boolean estado = checkPermiso(id,objeto_tipo,usuario);
 				root = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, estado);
 				Nodo nivel_actual_estructura = root;
@@ -206,7 +199,7 @@ public class EstructuraProyectoDAO {
 					id_ = dato[0]!=null ? (Integer)dato[0] : 0;
 					objeto_tipo = dato[2]!=null ? ((BigInteger)dato[2]).intValue() : 0;
 					nombre = dato[1]!=null ? (String)dato[1] : null;
-					nivel = dato[4]!=null ? (Integer)dato[4] : 0;
+					nivel = (dato[3]!=null) ? ((String)dato[3]).length()/8 : 0;
 					estado = checkPermiso(id_,objeto_tipo,usuario);
 					if(objeto_tipo<4){
 						Nodo nodo = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, estado);
@@ -215,7 +208,8 @@ public class EstructuraProyectoDAO {
 								nivel_actual_estructura = nivel_actual_estructura.children.get(nivel_actual_estructura.children.size()-1);
 							}
 							else{
-								for(int j=0; j<=(nivel_actual_estructura.nivel-nodo.nivel+1); j++)
+								int retornar = nivel_actual_estructura.nivel-nodo.nivel+1;
+								for(int j=0; j<(retornar); j++)
 									nivel_actual_estructura=nivel_actual_estructura.parent;
 							}
 						}
