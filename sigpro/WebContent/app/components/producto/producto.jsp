@@ -212,11 +212,11 @@
 				       <label for="iprog" class="floating-label">{{producto.producto.acumulacionCostoNombre  != null ?"* Costo":"Costo"}}</label>
 					</div>
 						
-					<div class="form-group" >
-					    <input type="text" class="inputText" id="acumulacionCosto" name="acumulacionCosto" ng-model="producto.producto.acumulacionCostoNombre" ng-value="producto.producto.acumulacionCostoNombre" 
-						ng-click="producto.buscarAcumulacionCosto()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="producto.producto.costo != null && producto.producto.costo>0"/>
-						<span class="label-icon" ng-click="producto.buscarAcumulacionCosto()"><i class="glyphicon glyphicon-search"></i></span>
-						<label for="campo3" class="floating-label">{{producto.validarRequiredCosto(producto.producto.costo)}}</label>
+				    <div class="form-group">
+	            		<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="producto.cambioAcumulacionCosto"
+						  local-data="producto.acumulacionesCosto" search-fields="nombre" title-field="nombre" field-required="producto.mostraringreso" field-label="* Tipo Acumulación de Costo"
+						  minlength="1" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
+						  initial-value="producto.producto.acumulacionCostoNombre" focus-out="producto.blurCategoria()" input-name="acumulacionCosto"></div>
 					</div>
 					
 					<div class = "row">

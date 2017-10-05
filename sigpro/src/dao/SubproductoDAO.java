@@ -11,6 +11,8 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import pojo.Actividad;
+import pojo.Proyecto;
 import pojo.Subproducto;
 import pojo.SubproductoUsuario;
 import pojo.SubproductoUsuarioId;
@@ -123,7 +125,13 @@ public class SubproductoDAO {
 						, subproducto, usu, subproducto.getUsuarioCreo(), subproducto.getFechaCreacion());
 				session.saveOrUpdate(su_admin);
 			}
+			
+			subproducto.setCosto(calcularCosto(subproducto));
+			session.saveOrUpdate(subproducto);
 			session.getTransaction().commit();
+			session.close();
+			
+			ProductoDAO.guardarProducto(subproducto.getProducto());
 			ret = true;
 		} catch (Throwable e) {
 			CLogger.write("3", SubproductoDAO.class, e);
@@ -425,5 +433,22 @@ public class SubproductoDAO {
 		}
 		return ret;
 	}
-
+	
+	public static BigDecimal calcularCosto(Subproducto subproducto){
+		BigDecimal costo = new BigDecimal(0);
+		try{
+			List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(subproducto.getId(), 4);
+			if(actividades != null && actividades.size() > 0){
+				for(Actividad actividad : actividades){
+					costo = costo.add(actividad.getCosto());
+				}
+			}else{				
+				costo = subproducto.getCosto();
+			}
+		}catch(Exception e){
+			CLogger.write("14", Proyecto.class, e);
+		}
+		
+		return costo;
+	}
 }

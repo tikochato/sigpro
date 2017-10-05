@@ -10,6 +10,8 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 		if(!mi.esTreeview)
 			$window.document.title = $utilidades.sistema_nombre+' - Componentes';
 		
+		mi.acumulacionesCosto = [];
+		
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.componentes = [];
@@ -59,6 +61,28 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 					mi.proyectoNombre = response.nombre;
 					mi.objetoTipoNombre = "Proyecto";
 		});
+		
+		$http.post('/SAcumulacionCosto', { accion: 'getAcumulacionesCosto', t: (new Date()).getTime()}).success(
+				function(response) {
+					mi.acumulacionesCosto = response.acumulacionesTipos;
+		});
+		
+		mi.blurCategoria=function(){
+			if(document.getElementById("acumulacionCosto_value").defaultValue!=mi.componente.acumulacionCostoNombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','acumulacionCosto');
+			}
+		}
+		
+		mi.cambioAcumulacionCosto=function(selected){
+			if(selected!== undefined){
+				mi.componente.acumulacionCostoNombre = selected.originalObject.nombre;
+				mi.componente.acumulacionCostoId = selected.originalObject.id;
+			}
+			else{
+				mi.componente.acumulacionCostoNombre="";
+				mi.componente.acumulacionCostoId="";
+			}
+		}
 		
 		mi.fechaOptions = {
 				formatYear : 'yy',
