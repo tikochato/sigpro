@@ -164,7 +164,8 @@ public class EstructuraProyectoDAO {
 							nivel_actual_estructura = nivel_actual_estructura.children.get(nivel_actual_estructura.children.size()-1);
 						}
 						else{
-							for(int j=0; j<(nivel_actual_estructura.nivel-nodo.nivel+1); j++)
+							int retornar = nivel_actual_estructura.nivel-nodo.nivel+1;
+							for(int j=0; j<retornar; j++)
 								nivel_actual_estructura=nivel_actual_estructura.parent;
 						}
 					}
@@ -189,7 +190,7 @@ public class EstructuraProyectoDAO {
 				int id_ = dato[0]!=null ? (Integer)dato[0] : 0;
 				int objeto_tipo = dato[2]!=null ? ((BigInteger)dato[2]).intValue() : 0;
 				String nombre = dato[1]!=null ? (String)dato[1] : null;
-				int nivel = dato[4]!=null ? (Integer)dato[4] : 0;
+				int nivel = (dato[3]!=null) ? ((String)dato[3]).length()/8 : 0;
 				boolean estado = checkPermiso(id,objeto_tipo,usuario);
 				root = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, estado);
 				Nodo nivel_actual_estructura = root;
@@ -198,7 +199,7 @@ public class EstructuraProyectoDAO {
 					id_ = dato[0]!=null ? (Integer)dato[0] : 0;
 					objeto_tipo = dato[2]!=null ? ((BigInteger)dato[2]).intValue() : 0;
 					nombre = dato[1]!=null ? (String)dato[1] : null;
-					nivel = dato[4]!=null ? (Integer)dato[4] : 0;
+					nivel = (dato[3]!=null) ? ((String)dato[3]).length()/8 : 0;
 					estado = checkPermiso(id_,objeto_tipo,usuario);
 					if(objeto_tipo<4){
 						Nodo nodo = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, estado);
@@ -207,7 +208,8 @@ public class EstructuraProyectoDAO {
 								nivel_actual_estructura = nivel_actual_estructura.children.get(nivel_actual_estructura.children.size()-1);
 							}
 							else{
-								for(int j=0; j<=(nivel_actual_estructura.nivel-nodo.nivel+1); j++)
+								int retornar = nivel_actual_estructura.nivel-nodo.nivel+1;
+								for(int j=0; j<(retornar); j++)
 									nivel_actual_estructura=nivel_actual_estructura.parent;
 							}
 						}
