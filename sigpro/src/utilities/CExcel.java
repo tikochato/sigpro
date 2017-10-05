@@ -95,6 +95,9 @@ public class CExcel {
 					case CGraficaExcel.EXCEL_CHART_AREA2: 
 						fileInputStream = new FileInputStream(CGraficaExcel.EXCEL_CHART_AREA2_PATH);
 						break;
+					case CGraficaExcel.EXCEL_CHART_RADAR: 
+						fileInputStream = new FileInputStream(CGraficaExcel.EXCEL_CHART_RADAR_PATH);
+						break;
 					default: 
 						fileInputStream = new FileInputStream(CGraficaExcel.EXCEL_CHART_BAR_PATH);
 				}
@@ -228,6 +231,13 @@ public class CExcel {
 		cell.setCellStyle(estiloCelda);
 	}
 	
+	public void setCellValueStringSinFormato(String value, int irow, int icell, boolean bold, boolean borde) {
+		cell = sheet.getRow(irow) != null ? (sheet.getRow(irow).getCell(icell) != null
+				? sheet.getRow(irow).getCell(icell) : sheet.getRow(irow).createCell(icell))
+				: sheet.createRow(irow).createCell(icell);
+		cell.setCellValue(value);
+	}
+	
 	public void setCellValueString(String value, int irow, int icell, boolean bold, boolean letraMin, boolean borde) {
 		cell = sheet.getRow(irow) != null ? (sheet.getRow(irow).getCell(icell) != null
 				? sheet.getRow(irow).getCell(icell) : sheet.getRow(irow).createCell(icell))
@@ -359,6 +369,10 @@ public class CExcel {
 							break;
 						case "percent":
 							setCellValuePercent(Double.parseDouble((f.get(data.get(i))).toString()), line, j, false, false);
+							break;
+						case "string_sin_formato":
+							setCellValueStringSinFormato(String.class.cast(f.get(data.get(i))), line, j, false, false);
+							break;
 						}
 					}
 					f = c.getDeclaredField("parent");
@@ -589,6 +603,9 @@ public class CExcel {
 					setCellValueCurrency(Double.parseDouble(stgrafica.data[i][j]), linea, columna+j, false, true);
 					break;
 				case "string":
+					setCellValueString(String.class.cast(stgrafica.data[i][j]), linea, columna+j, false, true);
+					break;
+				case "string_sin_formato":
 					setCellValueString(String.class.cast(stgrafica.data[i][j]), linea, columna+j, false, true);
 					break;
 				case "percent":

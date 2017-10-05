@@ -67,6 +67,8 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 	}
 	
 	mi.generarReporte = function (){
+		mi.mostrarExport = false;
+		mi.mostrar=false;
 		if (mi.prestamoSeleccionado !=null && mi.prestamoSeleccionado != undefined){
 			mi.inicializarDatos();
 			$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: mi.prestamoSeleccionado.value,t:moment().unix() }).success(
@@ -101,6 +103,7 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 								 mi.anioFiscal = Number(moment(fecha_actual).format('YYYY'));
 								 mi.mostrar = true; 
 								 mi.mostrarCargando = false;
+								 mi.mostrarExport = true;
 							});
 						 
 						 }else{
@@ -119,7 +122,13 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 		$http.post('/SPlanEjecucion', { 
 			accion: 'exportarExcel', 
 			id: mi.prestamoSeleccionado.value,
-			plazoEjecucion:mi.prestamo.plazoEjecucionUe,
+			ejecucionFisicaPlan : mi.dataRadar[0][0],
+			plazoEjecucionPlan: mi.dataRadar[0][1],
+			ejecucionFinancieraPlan : mi.dataRadar[0][2],
+			ejecucionFisicaReal : mi.dataRadar[1][0],
+			plazoEjecucionReal: mi.dataRadar[1][1],
+			ejecucionFinancieraReal : mi.dataRadar[1][2],
+			
 			t:moment().unix()
 		  } ).then(
 				  function successCallback(response) {
