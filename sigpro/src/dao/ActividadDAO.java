@@ -1,8 +1,10 @@
 package dao;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -139,7 +141,11 @@ public class ActividadDAO {
 			session.saveOrUpdate(Actividad);
 			ActividadUsuario au = new ActividadUsuario(new ActividadUsuarioId(Actividad.getId(), Actividad.getUsuarioCreo()),Actividad);
 			session.saveOrUpdate(au);
+			Actividad.setCosto(calcularActividadCosto(Actividad));
+			session.save(Actividad);
 			session.getTransaction().commit();
+			session.close();
+			actualizarCostoPapa(Actividad);
 			ret = true;
 		}
 		catch(Throwable e){
@@ -698,5 +704,45 @@ public class ActividadDAO {
 			session.close();
 		}
 		return ret;
+	}
+		
+	public static BigDecimal calcularActividadCosto(Actividad actividad){
+		BigDecimal costo = new BigDecimal(0);
+		List<Actividad> subactividades = getActividadesPorObjeto(actividad.getId(), 5);
+		if(subactividades!=null && subactividades.size()>0){
+			Iterator<Actividad> actual = subactividades.iterator();
+			while (actual.hasNext()) {
+				Actividad hija = actual.next();
+				costo = calcularActividadCosto(hija);
+			}
+		}else{
+			costo = actividad.getCosto();
+			costo = costo!=null ? costo : new BigDecimal(0);
+		}
+		return costo;
+	}
+	
+	public static void actualizarCostoPapa(Actividad actividad){
+		switch(actividad.getObjetoTipo()){
+			case 1:
+				Proyecto proyecto = ProyectoDAO.getProyecto(actividad.getObjetoId());
+				ProyectoDAO.guardarProyecto(proyecto); 
+				break;
+			case 2:
+				Componente componente = ComponenteDAO.getComponente(actividad.getObjetoId());
+				ComponenteDAO.guardarComponente(componente); 
+				break;
+			case 3:
+				Producto producto = ProductoDAO.getProductoPorId(actividad.getObjetoId());
+				ProductoDAO.guardarProducto(producto);
+				break;
+			case 4: 
+				Subproducto subproducto = SubproductoDAO.getSubproductoPorId(actividad.getObjetoId());
+				SubproductoDAO.guardarSubproducto(subproducto);
+				break;
+			case 5:
+				Actividad padre = getActividadPorId(actividad.getObjetoId());
+				guardarActividad(padre);
+		}
 	}
 }
