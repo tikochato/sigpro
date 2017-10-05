@@ -169,8 +169,8 @@ public class SPlanEjecucion extends HttpServlet {
 			Long fin = proyecto.getFechaFin().getTime();
 			
 			Long total = fin - inicio;
-			Long transcurrido = hoy - inicio;
 			
+			Long transcurrido = hoy - inicio;
 			return transcurrido*1.0/total;
 			
 		}else
