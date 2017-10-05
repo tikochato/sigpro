@@ -81,19 +81,16 @@ app.controller('matrizraciController',['$scope','$http','$interval','i18nService
 		  
 		  for (x in mi.matrizAsignacion ){
 			  var item = [];
-			  
-			  
-				 
-			  item[0] = {rol: mi.matrizAsignacion[x].objetoNombre,id:-1,objetoId:-1,objetoTipo:mi.matrizAsignacion[x].objetoTipo};
+			  item[0] = {rol: mi.matrizAsignacion[x].objetoNombre,id:-1,objetoId:-1,objetoTipo:mi.matrizAsignacion[x].objetoTipo,nivel:mi.matrizAsignacion[x].nivel};
 			  for (y in mi.colaboradores){
 				  if (mi.matrizAsignacion[x].idR == mi.colaboradores[y].id ){
-					  item[Number(y)+1] = {rol:'R',rolId:1,id:mi.colaboradores[y].id,objetoId:mi.matrizAsignacion[x].objetoId,objetoTipo:mi.matrizAsignacion[x].objetoTipo};
+					  item[Number(y)+1] = {rol:'R',rolId:1,id:mi.colaboradores[y].id,objetoId:mi.matrizAsignacion[x].objetoId,objetoTipo:mi.matrizAsignacion[x].objetoTipo, nivel:mi.matrizAsignacion[x].nivel};
 				  } else if (mi.matrizAsignacion[x].idA == mi.colaboradores[y].id ){
-					  item[Number(y)+1] = {rol:'A',rolId:2,id:mi.colaboradores[y].id,objetoId:mi.matrizAsignacion[x].objetoId,objetoTipo:mi.matrizAsignacion[x].objetoTipo};
+					  item[Number(y)+1] = {rol:'A',rolId:2,id:mi.colaboradores[y].id,objetoId:mi.matrizAsignacion[x].objetoId,objetoTipo:mi.matrizAsignacion[x].objetoTipo, nivel:mi.matrizAsignacion[x].nivel};
 				  }else if (mi.matrizAsignacion[x].idC == mi.colaboradores[y].id ){
-					  item[Number(y)+1] = {rol:'C',rolId:3,id:mi.colaboradores[y].id,objetoId:mi.matrizAsignacion[x].objetoId,objetoTipo:mi.matrizAsignacion[x].objetoTipo};
+					  item[Number(y)+1] = {rol:'C',rolId:3,id:mi.colaboradores[y].id,objetoId:mi.matrizAsignacion[x].objetoId,objetoTipo:mi.matrizAsignacion[x].objetoTipo, nivel:mi.matrizAsignacion[x].nivel};
 				  }else if (mi.matrizAsignacion[x].idI == mi.colaboradores[y].id ){
-					  item[Number(y)+1] = {rol:'I',rolId:4,id:mi.colaboradores[y].id,objetoId:mi.matrizAsignacion[x].objetoId,objetoTipo:mi.matrizAsignacion[x].objetoTipo};
+					  item[Number(y)+1] = {rol:'I',rolId:4,id:mi.colaboradores[y].id,objetoId:mi.matrizAsignacion[x].objetoId,objetoTipo:mi.matrizAsignacion[x].objetoTipo, nivel:mi.matrizAsignacion[x].nivel};
 				  }
 				  else{
 					  item[Number(y)+1] = '';
