@@ -1,7 +1,10 @@
 package dao;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
@@ -60,6 +63,9 @@ public class ProyectoDAO implements java.io.Serializable  {
 				ProyectoUsuario pu_admin = new ProyectoUsuario(new ProyectoUsuarioId(proyecto.getId(),"admin"), proyecto,usu);
 				session.saveOrUpdate(pu_admin);
 			}
+			
+			proyecto.setCosto(ProyectoDAO.calcularCosto(proyecto));
+			session.saveOrUpdate(proyecto);
 			session.getTransaction().commit();
 			ret = true;
 		}
@@ -385,33 +391,72 @@ public class ProyectoDAO implements java.io.Serializable  {
 	
 	public static Boolean calcularTreepathActividades(Integer objetoId, Integer objetoTipo){
 		boolean ret = false;
-		ArrayList<Actividad> actividades = new ArrayList<Actividad>(ActividadDAO.getActividadesPorObjeto(objetoId,objetoTipo));
-		for(Actividad actividad:actividades){
-			switch(actividad.getObjetoTipo()){
-				case 1:
-					Proyecto proyecto = ProyectoDAO.getProyecto(objetoId);
-					actividad.setTreePath(proyecto.getTreePath()+""+(10000000+actividad.getId()));
-					break;
-				case 2:
-					Componente componente = ComponenteDAO.getComponente(actividad.getObjetoId());
-					actividad.setTreePath(componente.getTreePath()+""+(10000000+actividad.getId()));
-					break;
-				case 3:
-					Producto producto = ProductoDAO.getProductoPorId(actividad.getObjetoId());
-					actividad.setTreePath(producto.getTreePath()+""+(10000000+actividad.getId()));
-					break;
-				case 4:
-					Subproducto subproducto = SubproductoDAO.getSubproductoPorId(actividad.getObjetoId());
-					actividad.setTreePath(subproducto.getTreePath()+""+(10000000+actividad.getId()));
-					break;
-				case 5:
-					Actividad parent_actividad = ActividadDAO.getActividadPorId(actividad.getObjetoId());
-					actividad.setTreePath(parent_actividad.getTreePath()+""+(10000000+actividad.getId()));
-					break;
+		try{
+			ArrayList<Actividad> actividades = new ArrayList<Actividad>(ActividadDAO.getActividadesPorObjeto(objetoId,objetoTipo));
+			for(Actividad actividad:actividades){
+				switch(actividad.getObjetoTipo()){
+					case 1:
+						Proyecto proyecto = ProyectoDAO.getProyecto(objetoId);
+						actividad.setTreePath(proyecto.getTreePath()+""+(10000000+actividad.getId()));
+						break;
+					case 2:
+						Componente componente = ComponenteDAO.getComponente(actividad.getObjetoId());
+						actividad.setTreePath(componente.getTreePath()+""+(10000000+actividad.getId()));
+						break;
+					case 3:
+						Producto producto = ProductoDAO.getProductoPorId(actividad.getObjetoId());
+						actividad.setTreePath(producto.getTreePath()+""+(10000000+actividad.getId()));
+						break;
+					case 4:
+						Subproducto subproducto = SubproductoDAO.getSubproductoPorId(actividad.getObjetoId());
+						actividad.setTreePath(subproducto.getTreePath()+""+(10000000+actividad.getId()));
+						break;
+					case 5:
+						Actividad parent_actividad = ActividadDAO.getActividadPorId(actividad.getObjetoId());
+						actividad.setTreePath(parent_actividad.getTreePath()+""+(10000000+actividad.getId()));
+						break;
+				}
+				ActividadDAO.guardarActividad(actividad);
+				calcularTreepathActividades(actividad.getId(),5);
 			}
-			ActividadDAO.guardarActividad(actividad);
-			calcularTreepathActividades(actividad.getId(),5);
+		
+		}catch(Exception e){
+			CLogger.write("15", Proyecto.class, e);
 		}
 		return ret;
+	}
+	
+	public static BigDecimal calcularCosto(Proyecto proyecto){
+		BigDecimal costo = new BigDecimal(0);
+		try{
+			Set<Componente> componentes = proyecto.getComponentes();			
+			Iterator<Componente> iterador = componentes.iterator();
+			
+			if(iterador.hasNext()){
+				while(iterador.hasNext()){
+					Componente componente = iterador.next();
+					costo = costo.add(componente.getCosto());
+				}
+				
+				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(proyecto.getId(), 1);
+				if(actividades != null && actividades.size() > 0){
+					for(Actividad actividad : actividades){
+						costo = costo.add(actividad.getCosto());
+					}
+				}
+			}else{
+				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(proyecto.getId(), 1);
+				if(actividades != null && actividades.size() > 0){
+					for(Actividad actividad : actividades){
+						costo = costo.add(actividad.getCosto());
+					}
+				}else
+					costo = proyecto.getCosto();
+			}			
+		}catch(Exception e){
+			CLogger.write("16", Proyecto.class, e);
+		} 
+		
+		return costo;
 	}
 }
