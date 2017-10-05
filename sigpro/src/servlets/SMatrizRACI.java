@@ -312,7 +312,7 @@ public class SMatrizRACI extends HttpServlet {
 			stmatriz tempmatriz = new stmatriz();
 			tempmatriz.objetoId = (Integer)obj[0];
 			tempmatriz.objetoNombre = (String)obj[1];
-			tempmatriz.nivel = (Integer)obj[4] +1;
+			tempmatriz.nivel = (obj[3]!=null) ? ((String)obj[3]).length()/8 : 0;
 			tempmatriz.objetoTipo = ((BigInteger) obj[2]).intValue();
 			getAsignacionRACI(tempmatriz);
 			lstMatriz.add(tempmatriz);

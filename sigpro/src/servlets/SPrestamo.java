@@ -157,8 +157,6 @@ public class SPrestamo extends HttpServlet {
 				temp.numeroPrestamo = prestamo.getNumeroPrestamo(); 
 				temp.destino = prestamo.getDestino();
 				temp.sectorEconomico = prestamo.getSectorEconomico();
-				temp.unidadEjecutora = prestamo.getUnidadEjecutora().getId().getUnidadEjecutora();
-				temp.unidadEjecutoraNombre = prestamo.getUnidadEjecutora().getNombre();
 				temp.fechaFirma = (prestamo.getFechaFirma() == null ? null : Utils.formatDate(prestamo.getFechaFirma()));
 				temp.tipoAutorizacionId = (prestamo.getAutorizacionTipo() == null ? null : prestamo.getAutorizacionTipo().getId());
 				temp.tipoAutorizacionNombre = (prestamo.getAutorizacionTipo() == null ? null : prestamo.getAutorizacionTipo().getNombre());
@@ -222,14 +220,17 @@ public class SPrestamo extends HttpServlet {
 				temp.cooperantenombre =  (prestamo.getCooperante().getSiglas()!=null ? 
 						prestamo.getCooperante().getSiglas() + " - " : "") + prestamo.getCooperante().getNombre();
 				
-				temp.unidadEjecutora = prestamo.getUnidadEjecutora().getId().getUnidadEjecutora();
-				temp.unidadEjecutoraNombre = prestamo.getUnidadEjecutora().getNombre();
+				if (prestamo.getUnidadEjecutora()!=null){
+					temp.unidadEjecutora = prestamo.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.unidadEjecutoraNombre = prestamo.getUnidadEjecutora().getNombre();
+					temp.nombreEntidadEjecutora = prestamo.getUnidadEjecutora().getEntidad().getNombre();
+				}
 				
 				temp.usuarioCreo = prestamo.getUsuarioCreo();
 				temp.usuarioActualizo = prestamo.getUsuarioActualizo();
 				temp.fechaCreacion = Utils.formatDate(prestamo.getFechaCreacion());
 				temp.fechaActualizacion = Utils.formatDate(prestamo.getFechaActualizacion());
-				temp.nombreEntidadEjecutora = prestamo.getUnidadEjecutora().getEntidad().getNombre();
+				
 				
 					response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 			        response_text = String.join("", "\"prestamo\":",response_text);

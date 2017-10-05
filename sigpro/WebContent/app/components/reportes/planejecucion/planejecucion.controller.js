@@ -15,6 +15,7 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 	mi.mesReportado = "";
 	mi.prestamo = {};
 	mi.mostrarCargando = false;
+	mi.mostrarExport = false;
 	
 	mi.fechaOptions = {
 			datepickerMode:"year",
@@ -118,6 +119,7 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 		$http.post('/SPlanEjecucion', { 
 			accion: 'exportarExcel', 
 			id: mi.prestamoSeleccionado.value,
+			plazoEjecucion:mi.prestamo.plazoEjecucionUe,
 			t:moment().unix()
 		  } ).then(
 				  function successCallback(response) {
@@ -125,7 +127,7 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 					  anchor.attr({
 				         href: 'data:application/ms-excel;base64,' + response.data,
 				         target: '_blank',
-				         download: 'CargaTrabajo.xls'
+				         download: 'Plan_De_Ejecucion.xls'
 					  })[0].click();
 				  }.bind(this), function errorCallback(response){
 			 	}
@@ -167,7 +169,7 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 					var dif1 = fechaCierreTemp - fechaElegibilidadTemp;
 					var dif2 = hoy - fechaElegibilidadTemp;
 					n = (dif2 / dif1) * 100;
-					if (isNaN(n))
+					if (isNaN(n) || dif1 == 0)
 						n = 0.00;
 					mi.prestamo.plazoEjecucionUe = Number(n.toFixed(2));	
 					mi.dataRadar[1][1] = mi.prestamo.plazoEjecucionUe.toFixed(0);

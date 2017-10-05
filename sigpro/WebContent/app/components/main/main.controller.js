@@ -518,6 +518,10 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'flujocajaController',
 	    	   script: '/app/components/reportes/flujocaja/flujocaja.controller.js',
 	    	   template: '/app/components/reportes/flujocaja/flujocaja.jsp'
+	       } , {
+	    	   name: 'treePathController',
+	    	   script: '/app/components/utilidades/calcularTreePath.controller.js',
+	    	   template: '/app/components/utilidades/calcularTreePath.jsp'
 	       }
 
 	   ];
