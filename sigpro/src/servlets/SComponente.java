@@ -280,8 +280,7 @@ public class SComponente extends HttpServlet {
 					componenteTipo.setId(componentetipoid);
 
 					UnidadEjecutora unidadEjecutora_ = UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidad, unidadEjecutoraId);
-					Proyecto proyecto = new Proyecto();
-					proyecto .setId(proyectoid);
+					Proyecto proyecto = ProyectoDAO.getProyecto(proyectoid);
 
 					type = new TypeToken<List<stdatadinamico>>() {
 					}.getType();
