@@ -263,7 +263,7 @@
 		    						</thead>
 		    						<tbody class="cuerpoTablaNombres" style="height: 350px; max-height: 350px; min-height: 350px" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo>
 		    							<tr ng-repeat="row in controller.data" style="height: 35px; max-height: 35px; min-height: 35px">
-		    								<td nowrap style="min-width:200px;">
+		    								<td nowrap style="min-width:200px; {{controller.padre(row)}}">
 				    							<div uib-tooltip="{{item.nombre}}" class="nombreFormat">
 				    								<div uib-tooltip="{{row.nombre}}"><span ng-class="row.objetoTipo == 2 ? controller.claseIcon(row) : ''" style="margin-left: {{row.nivel}}em" uib-tooltip="{{controller.tooltipObjetoTipo[row.objetoTipo-1]}}"></span>{{row.nombre}}</div>
 				    							</div>

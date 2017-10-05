@@ -15,6 +15,12 @@ app.controller('planAdquisicionesController', [ '$scope', '$http', '$interval', 
 		mi.grupoMostrado= {"planificado":true};
 		mi.estiloAlineacion="text-align: center;";
 		
+		mi.padre = function(row){
+			if(row.nivel < 2){
+				return 'font-weight: bold;';
+			}
+		}
+		
 		mi.validar = function(noElemento){
 			if(mi.prestamo.value > 0)
 			{
