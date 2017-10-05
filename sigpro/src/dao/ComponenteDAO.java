@@ -361,10 +361,10 @@ public class ComponenteDAO {
 	public static BigDecimal calcularCosto(Componente componente){
 		BigDecimal costo = new BigDecimal(0);
 		try{
-			Set<Producto> productos = componente.getProductos();			
-			Iterator<Producto> iterador = productos.iterator();
-			
-			if(iterador.hasNext()){
+			Set<Producto> productos = componente.getProductos();
+			if(productos != null && productos.size() > 0){
+				Iterator<Producto> iterador = productos.iterator();
+				
 				while(iterador.hasNext()){
 					Producto producto = iterador.next();
 					costo = costo.add(producto.getCosto());
@@ -384,7 +384,7 @@ public class ComponenteDAO {
 					}
 				}else
 					costo = componente.getCosto();
-			}			
+			}
 		}catch(Exception e){
 			CLogger.write("17", Proyecto.class, e);
 		} 
