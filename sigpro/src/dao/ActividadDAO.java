@@ -141,7 +141,11 @@ public class ActividadDAO {
 			session.saveOrUpdate(Actividad);
 			ActividadUsuario au = new ActividadUsuario(new ActividadUsuarioId(Actividad.getId(), Actividad.getUsuarioCreo()),Actividad);
 			session.saveOrUpdate(au);
+			Actividad.setCosto(calcularActividadCosto(Actividad));
+			session.save(Actividad);
 			session.getTransaction().commit();
+			session.close();
+			actualizarCostoPapa(Actividad);
 			ret = true;
 		}
 		catch(Throwable e){
@@ -713,8 +717,32 @@ public class ActividadDAO {
 			}
 		}else{
 			costo = actividad.getCosto();
+			costo = costo!=null ? costo : new BigDecimal(0);
 		}
 		return costo;
 	}
 	
+	public static void actualizarCostoPapa(Actividad actividad){
+		switch(actividad.getObjetoTipo()){
+			case 1:
+				Proyecto proyecto = ProyectoDAO.getProyecto(actividad.getObjetoId());
+				ProyectoDAO.guardarProyecto(proyecto); 
+				break;
+			case 2:
+				Componente componente = ComponenteDAO.getComponente(actividad.getObjetoId());
+				ComponenteDAO.guardarComponente(componente); 
+				break;
+			case 3:
+				Producto producto = ProductoDAO.getProductoPorId(actividad.getObjetoId());
+				ProductoDAO.guardarProducto(producto);
+				break;
+			case 4: 
+				Subproducto subproducto = SubproductoDAO.getSubproductoPorId(actividad.getObjetoId());
+				SubproductoDAO.guardarSubproducto(subproducto);
+				break;
+			case 5:
+				Actividad padre = getActividadPorId(actividad.getObjetoId());
+				guardarActividad(padre);
+		}
+	}
 }
