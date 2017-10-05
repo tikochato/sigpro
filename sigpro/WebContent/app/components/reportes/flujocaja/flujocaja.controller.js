@@ -89,7 +89,8 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 			startingDay : 1
 	};
 
-	$http.post('/SProyecto',{accion: 'getProyectos'}).success(
+	$http.post('/SProyecto',{accion: 'getProyectos',
+		t:moment().unix()}).success(
 			function(response) {
 				mi.prestamos = [];
 				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione una opción'});
@@ -509,7 +510,7 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 		$http.post('/SFlujoCaja', { 
 			accion: 'exportarExcel', 
 			proyectoid: mi.prestamo.value,
-			fechaCorte: mi.fechaCorte,
+			fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY'),
 			agrupacion: mi.agrupacionActual,
 			t:moment().unix()
 		} ).then(
@@ -526,18 +527,11 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 	};
 
 	mi.exportarPdf=function(){
-		var tipoVisualizacion = 0;
-		if (mi.grupoMostrado.planificado && mi.grupoMostrado.real){
-			tipoVisualizacion = 2;
-		}else if(mi.grupoMostrado.real){
-			tipoVisualizacion = 1;
-		}
 		$http.post('/SFlujoCaja', { 
 			accion: 'exportarPdf',
 			proyectoid: mi.prestamo.value,
-			fechaCorte: mi.fechaCorte,
+			fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY'),
 			agrupacion: mi.agrupacionActual,
-			tipoVisualizacion: tipoVisualizacion,
 			t:moment().unix()
 		} ).then(
 				function successCallback(response) {

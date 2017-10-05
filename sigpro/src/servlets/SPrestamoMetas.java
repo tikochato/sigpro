@@ -221,8 +221,9 @@ public class SPrestamoMetas extends HttpServlet {
 		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
 		for(Object objeto : estructuraProyecto){
 			Object[] obj = (Object[]) objeto;
-			Integer nivel = (Integer)obj[4];
+			Integer nivel = ((String)obj[3]).length();
 			if(nivel!= null){
+				nivel = nivel/8;
 				stprestamo tempPrestamo =  new stprestamo();
 				tempPrestamo.objeto_id = (Integer)obj[0];
 				tempPrestamo.nombre = (String)obj[1];

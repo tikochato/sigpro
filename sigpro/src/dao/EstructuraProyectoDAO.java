@@ -353,20 +353,20 @@ public class EstructuraProyectoDAO {
 		
 		for(Object objeto : estructuraProyecto){
 			Object[] obj = (Object[]) objeto;
-			Integer nivel = obj[4]!=null ? (Integer)obj[4] : null;
+			Integer nivel = ((String)obj[3]).length();
 			if(nivel != null){
 				Integer objeto_id = obj[0]!=null ? (Integer)obj[0] : null;
 				String nombre = obj[1]!=null ? (String)obj[1] : null;
 				Integer objeto_tipo = obj[2]!=null ? ((BigInteger) obj[2]).intValue() : null;
-				DateTime fecha_inicial = obj[5]!=null ? new DateTime((Timestamp)obj[5]) : null;
-				DateTime fecha_final = obj[6]!=null ? new DateTime((Timestamp)obj[6]) : null;
-				Integer acumulacion_costoid = obj[11]!=null ? Integer.valueOf(obj[11].toString()) : null;
-				BigDecimal costo = obj[9]!=null ? (BigDecimal)obj[9] : null;
-				Integer programa = obj[12]!=null ? (Integer)obj[12] : null;
-				Integer subprograma = obj[13]!=null ? (Integer)obj[13] : null;
-				Integer proyecto = obj[14]!=null ? (Integer)obj[14] : null;
-				Integer actividad = obj[15]!=null ? (Integer)obj[15] : null;
-				Integer obra = obj[16]!=null ? (Integer)obj[16] : null;
+				DateTime fecha_inicial = obj[4]!=null ? new DateTime((Timestamp)obj[4]) : null;
+				DateTime fecha_final = obj[5]!=null ? new DateTime((Timestamp)obj[5]) : null;
+				Integer acumulacion_costoid = obj[10]!=null ? Integer.valueOf(obj[10].toString()) : null;
+				BigDecimal costo = obj[8]!=null ? (BigDecimal)obj[8] : null;
+				Integer programa = obj[11]!=null ? (Integer)obj[11] : null;
+				Integer subprograma = obj[12]!=null ? (Integer)obj[12] : null;
+				Integer proyecto = obj[13]!=null ? (Integer)obj[13] : null;
+				Integer actividad = obj[14]!=null ? (Integer)obj[14] : null;
+				Integer obra = obj[15]!=null ? (Integer)obj[15] : null;
 				
 				CPrestamoCostos tempPrestamo =  new CPrestamoCostos(nombre, objeto_id, objeto_tipo, nivel, fecha_inicial, fecha_final, null,
 						acumulacion_costoid, costo, programa, subprograma, proyecto, actividad, obra);

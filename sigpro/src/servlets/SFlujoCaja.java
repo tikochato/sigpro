@@ -128,7 +128,7 @@ public class SFlujoCaja extends HttpServlet {
 			}
 		}else if (accion.equals("exportarExcel")){
 			int proyectoId = Utils.String2Int(map.get("proyectoid"), 0);
-			Date fechaCorte = Utils.stringToDate(map.get("fechaCorte"));
+			Date fechaCorte = Utils.dateFromString(map.get("fechaCorte"));
 			int agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
 			
 			try{
@@ -373,14 +373,6 @@ public class SFlujoCaja extends HttpServlet {
 				pos++;
 			}
 		}
-		for (int j=0; j<aniosDiferencia; j++){
-			titulo[pos] = "Total " + (anioInicio+j);
-			tipo[pos] = "double";
-			operacionesFila[pos]="sum";
-			columnasOperacion[pos]= totales[j];
-			totales[totalesCant-1] += pos+",";
-			pos++;
-		}
 		titulo[pos] = "Total";
 		tipo[pos] = "double";
 		operacionesFila[pos]="sum";
@@ -404,16 +396,15 @@ public class SFlujoCaja extends HttpServlet {
 	public String[][] generarDatosFlujoCaja(int prestamoId, Date fechaCorte, int agrupacion, int columnasTotal, String usuario){
 		String[][] datos = null;
 		int columna = 0;
-//		int sumaColumnas = ((anioFin-anioInicio) + 1);
-		List<CPrestamoCostos> lstPrestamo = getFlujoCaja(prestamoId, fechaCorte, usuario);		
+		List<CPrestamoCostos> lstPrestamo = getFlujoCaja(prestamoId, fechaCorte, usuario);
 		if (lstPrestamo != null && !lstPrestamo.isEmpty()){
-			datos = new String[lstPrestamo.size()][columnasTotal];
+			stTotales stTotales = getFlujoCajaTotales(lstPrestamo, fechaCorte, usuario);
+			datos = new String[lstPrestamo.size()+9][columnasTotal];
 			for (int i=0; i<lstPrestamo.size(); i++){
 				columna = 0;
 				CPrestamoCostos prestamo = lstPrestamo.get(i);
 				String sangria;
 				switch (prestamo.getObjeto_tipo()){
-					case 0: sangria = "         "; break;
 					case 1: sangria = ""; break;
 					case 2: sangria = "   "; break;
 					case 3: sangria = "      "; break;
@@ -424,189 +415,410 @@ public class SFlujoCaja extends HttpServlet {
 				datos[i][columna] = sangria+prestamo.getNombre();
 				columna++;
 
-//				if(lstPrestamo.get(i).objeto_tipo == 0){ //es meta
-//					int posicion = columna;
-//					BigDecimal totalAniosP = new BigDecimal(0);
-//					BigDecimal totalAniosR = new BigDecimal(0);
-//					//Valores planificado-real
-//					for(int a=0; a<prestamo.anios.length; a++){
-//						posicion = columna + (a*factorVisualizacion);
-//						
-//						//Verificar nullos y volverlos 0
-//						prestamo.anios[a].enero[0]=(prestamo.anios[a].enero[0]==null) ? new BigDecimal(0) : prestamo.anios[a].enero[0];
-//						prestamo.anios[a].febrero[0]=(prestamo.anios[a].febrero[0]==null) ? new BigDecimal(0) : prestamo.anios[a].febrero[0];
-//						prestamo.anios[a].marzo[0]=(prestamo.anios[a].marzo[0]==null) ? new BigDecimal(0) : prestamo.anios[a].marzo[0];
-//						prestamo.anios[a].abril[0]=(prestamo.anios[a].abril[0]==null) ? new BigDecimal(0) : prestamo.anios[a].abril[0];
-//						prestamo.anios[a].mayo[0]=(prestamo.anios[a].mayo[0]==null) ? new BigDecimal(0) : prestamo.anios[a].mayo[0];
-//						prestamo.anios[a].junio[0]=(prestamo.anios[a].junio[0]==null) ? new BigDecimal(0) : prestamo.anios[a].junio[0];
-//						prestamo.anios[a].julio[0]=(prestamo.anios[a].julio[0]==null) ? new BigDecimal(0) : prestamo.anios[a].julio[0];
-//						prestamo.anios[a].agosto[0]=(prestamo.anios[a].agosto[0]==null) ? new BigDecimal(0) : prestamo.anios[a].agosto[0];
-//						prestamo.anios[a].septiembre[0]=(prestamo.anios[a].septiembre[0]==null) ? new BigDecimal(0) : prestamo.anios[a].septiembre[0];
-//						prestamo.anios[a].octubre[0]=(prestamo.anios[a].octubre[0]==null) ? new BigDecimal(0) : prestamo.anios[a].octubre[0];
-//						prestamo.anios[a].noviembre[0]=(prestamo.anios[a].noviembre[0]==null) ? new BigDecimal(0) : prestamo.anios[a].noviembre[0];
-//						prestamo.anios[a].diciembre[0]=(prestamo.anios[a].diciembre[0]==null) ? new BigDecimal(0) : prestamo.anios[a].diciembre[0];
-//						prestamo.anios[a].enero[1]=(prestamo.anios[a].enero[1]==null) ? new BigDecimal(0) : prestamo.anios[a].enero[1];
-//						prestamo.anios[a].febrero[1]=(prestamo.anios[a].febrero[1]==null) ? new BigDecimal(0) : prestamo.anios[a].febrero[1];
-//						prestamo.anios[a].marzo[1]=(prestamo.anios[a].marzo[1]==null) ? new BigDecimal(0) : prestamo.anios[a].marzo[1];
-//						prestamo.anios[a].abril[1]=(prestamo.anios[a].abril[1]==null) ? new BigDecimal(0) : prestamo.anios[a].abril[1];
-//						prestamo.anios[a].mayo[1]=(prestamo.anios[a].mayo[1]==null) ? new BigDecimal(0) : prestamo.anios[a].mayo[1];
-//						prestamo.anios[a].junio[1]=(prestamo.anios[a].junio[1]==null) ? new BigDecimal(0) : prestamo.anios[a].junio[1];
-//						prestamo.anios[a].julio[1]=(prestamo.anios[a].julio[1]==null) ? new BigDecimal(0) : prestamo.anios[a].julio[1];
-//						prestamo.anios[a].agosto[1]=(prestamo.anios[a].agosto[1]==null) ? new BigDecimal(0) : prestamo.anios[a].agosto[1];
-//						prestamo.anios[a].septiembre[1]=(prestamo.anios[a].septiembre[1]==null) ? new BigDecimal(0) : prestamo.anios[a].septiembre[1];
-//						prestamo.anios[a].octubre[1]=(prestamo.anios[a].octubre[1]==null) ? new BigDecimal(0) : prestamo.anios[a].octubre[1];
-//						prestamo.anios[a].noviembre[1]=(prestamo.anios[a].noviembre[1]==null) ? new BigDecimal(0) : prestamo.anios[a].noviembre[1];
-//						prestamo.anios[a].diciembre[1]=(prestamo.anios[a].diciembre[1]==null) ? new BigDecimal(0) : prestamo.anios[a].diciembre[1];
-//						
-//						BigDecimal totalAnualP = (prestamo.anios[a].enero[0].add(prestamo.anios[a].febrero[0]).add(prestamo.anios[a].marzo[0].add(prestamo.anios[a].abril[0].add(prestamo.anios[a].mayo[0].add(prestamo.anios[a].junio[0]))))
-//								.add(prestamo.anios[a].julio[0].add(prestamo.anios[a].agosto[0]).add(prestamo.anios[a].septiembre[0].add(prestamo.anios[a].octubre[0].add(prestamo.anios[a].noviembre[0].add(prestamo.anios[a].diciembre[0]))))));
-//						BigDecimal totalAnualR = (prestamo.anios[a].enero[1].add(prestamo.anios[a].febrero[1]).add(prestamo.anios[a].marzo[1].add(prestamo.anios[a].abril[1].add(prestamo.anios[a].mayo[1].add(prestamo.anios[a].junio[1]))))
-//								.add(prestamo.anios[a].julio[1].add(prestamo.anios[a].agosto[1]).add(prestamo.anios[a].septiembre[1].add(prestamo.anios[a].octubre[1].add(prestamo.anios[a].noviembre[1].add(prestamo.anios[a].diciembre[1]))))));
-//						totalAniosP = totalAniosP.add(totalAnualP);
-//						totalAniosR = totalAniosR.add(totalAnualR);
-//						switch(agrupacion){
-//						case AGRUPACION_MES:
-//							if(tipoVisualizacion==0 || tipoVisualizacion==2){
-//								datos[i][posicion]= prestamo.anios[a].enero[0].toString();
-//								datos[i][posicion+(1*sumaColumnas)]= prestamo.anios[a].febrero[0].toString();
-//								datos[i][posicion+(2*sumaColumnas)]= prestamo.anios[a].marzo[0].toString();
-//								datos[i][posicion+(3*sumaColumnas)]= prestamo.anios[a].abril[0].toString();
-//								datos[i][posicion+(4*sumaColumnas)]= prestamo.anios[a].mayo[0].toString();
-//								datos[i][posicion+(5*sumaColumnas)]= prestamo.anios[a].junio[0].toString();
-//								datos[i][posicion+(6*sumaColumnas)]= prestamo.anios[a].julio[0].toString();
-//								datos[i][posicion+(7*sumaColumnas)]= prestamo.anios[a].agosto[0].toString();
-//								datos[i][posicion+(8*sumaColumnas)]= prestamo.anios[a].septiembre[0].toString();
-//								datos[i][posicion+(9*sumaColumnas)]= prestamo.anios[a].octubre[0].toString();
-//								datos[i][posicion+(10*sumaColumnas)]= prestamo.anios[a].noviembre[0].toString();
-//								datos[i][posicion+(11*sumaColumnas)]= prestamo.anios[a].diciembre[0].toString();
-//								datos[i][posicion+(12*sumaColumnas)]= totalAnualP.toString();
-//							}
-//							if(tipoVisualizacion == 2){
-//								posicion++;
-//							}
-//							if(tipoVisualizacion==1 || tipoVisualizacion == 2){
-//								datos[i][posicion]= prestamo.anios[a].enero[1].toString();
-//								datos[i][posicion+(1*sumaColumnas)]= prestamo.anios[a].febrero[1].toString();
-//								datos[i][posicion+(2*sumaColumnas)]= prestamo.anios[a].marzo[1].toString();
-//								datos[i][posicion+(3*sumaColumnas)]= prestamo.anios[a].abril[1].toString();
-//								datos[i][posicion+(4*sumaColumnas)]= prestamo.anios[a].mayo[1].toString();
-//								datos[i][posicion+(5*sumaColumnas)]= prestamo.anios[a].junio[1].toString();
-//								datos[i][posicion+(6*sumaColumnas)]= prestamo.anios[a].julio[1].toString();
-//								datos[i][posicion+(7*sumaColumnas)]= prestamo.anios[a].agosto[1].toString();
-//								datos[i][posicion+(8*sumaColumnas)]= prestamo.anios[a].septiembre[1].toString();
-//								datos[i][posicion+(9*sumaColumnas)]= prestamo.anios[a].octubre[1].toString();
-//								datos[i][posicion+(10*sumaColumnas)]= prestamo.anios[a].noviembre[1].toString();
-//								datos[i][posicion+(11*sumaColumnas)]= prestamo.anios[a].diciembre[1].toString();
-//								datos[i][posicion+(12*sumaColumnas)]= totalAnualR.toString();
-//							}
-//							posicion = posicion+(12*sumaColumnas)+1;
-//							break;
-//						case AGRUPACION_BIMESTRE:
-//							if(tipoVisualizacion==0 || tipoVisualizacion==2){
-//								datos[i][posicion]= (prestamo.anios[a].enero[0].add(prestamo.anios[a].febrero[0])).toString();
-//								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].marzo[0].add(prestamo.anios[a].abril[0])).toString();
-//								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].mayo[0].add(prestamo.anios[a].junio[0])).toString();
-//								datos[i][posicion+(3*sumaColumnas)]= (prestamo.anios[a].julio[0].add(prestamo.anios[a].agosto[0])).toString();
-//								datos[i][posicion+(4*sumaColumnas)]= (prestamo.anios[a].septiembre[0].add(prestamo.anios[a].octubre[0])).toString();
-//								datos[i][posicion+(5*sumaColumnas)]= (prestamo.anios[a].noviembre[0].add(prestamo.anios[a].diciembre[0])).toString();
-//								datos[i][posicion+(6*sumaColumnas)]= totalAnualP.toString();
-//							}
-//							if(tipoVisualizacion == 2){
-//								posicion++;
-//							}
-//							if(tipoVisualizacion==1 || tipoVisualizacion == 2){
-//								datos[i][posicion]= (prestamo.anios[a].enero[1].add(prestamo.anios[a].febrero[1])).toString();
-//								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].marzo[1].add(prestamo.anios[a].abril[1])).toString();
-//								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].mayo[1].add(prestamo.anios[a].junio[1])).toString();
-//								datos[i][posicion+(3*sumaColumnas)]= (prestamo.anios[a].julio[1].add(prestamo.anios[a].agosto[1])).toString();
-//								datos[i][posicion+(4*sumaColumnas)]= (prestamo.anios[a].septiembre[1].add(prestamo.anios[a].octubre[1])).toString();
-//								datos[i][posicion+(5*sumaColumnas)]= (prestamo.anios[a].noviembre[1].add(prestamo.anios[a].diciembre[1])).toString();
-//								datos[i][posicion+(6*sumaColumnas)]= totalAnualR.toString();
-//							}
-//							posicion = posicion+(6*sumaColumnas)+1;
-//							break;
-//						case AGRUPACION_TRIMESTRE:
-//							if(tipoVisualizacion==0 || tipoVisualizacion==2){
-//								datos[i][posicion]= (prestamo.anios[a].enero[0].add(prestamo.anios[a].febrero[0].add(prestamo.anios[a].marzo[0]))).toString();
-//								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].abril[0].add(prestamo.anios[a].mayo[0].add(prestamo.anios[a].junio[0]))).toString();
-//								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].julio[0].add(prestamo.anios[a].agosto[0].add(prestamo.anios[a].septiembre[0]))).toString();
-//								datos[i][posicion+(3*sumaColumnas)]= (prestamo.anios[a].octubre[0].add(prestamo.anios[a].noviembre[0].add(prestamo.anios[a].diciembre[0]))).toString();
-//								datos[i][posicion+(4*sumaColumnas)]= totalAnualP.toString();
-//							}
-//							if(tipoVisualizacion == 2){
-//								posicion++;
-//							}
-//							if(tipoVisualizacion==1 || tipoVisualizacion == 2){
-//								datos[i][posicion]= (prestamo.anios[a].enero[1].add(prestamo.anios[a].febrero[1].add(prestamo.anios[a].marzo[1]))).toString();
-//								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].abril[1].add(prestamo.anios[a].mayo[1].add(prestamo.anios[a].junio[1]))).toString();
-//								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].julio[1].add(prestamo.anios[a].agosto[1].add(prestamo.anios[a].septiembre[1]))).toString();
-//								datos[i][posicion+(3*sumaColumnas)]= (prestamo.anios[a].octubre[1].add(prestamo.anios[a].noviembre[1].add(prestamo.anios[a].diciembre[1]))).toString();
-//								datos[i][posicion+(4*sumaColumnas)]= totalAnualR.toString();
-//							}
-//							posicion = posicion+(4*sumaColumnas)+1;
-//							break;
-//						case AGRUPACION_CUATRIMESTRE:
-//							if(tipoVisualizacion==0 || tipoVisualizacion==2){
-//								datos[i][posicion]= (prestamo.anios[a].enero[0].add(prestamo.anios[a].febrero[0]).add(prestamo.anios[a].marzo[0].add(prestamo.anios[a].abril[0]))).toString();
-//								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].mayo[0]).add(prestamo.anios[a].junio[0].add(prestamo.anios[a].julio[0].add(prestamo.anios[a].agosto[0]))).toString();
-//								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].septiembre[0].add(prestamo.anios[a].octubre[0]).add(prestamo.anios[a].noviembre[0].add(prestamo.anios[a].diciembre[0]))).toString();
-//								datos[i][posicion+(3*sumaColumnas)]= totalAnualP.toString();
-//							}
-//							if(tipoVisualizacion == 2){
-//								posicion++;
-//							}
-//							if(tipoVisualizacion==1 || tipoVisualizacion == 2){
-//								datos[i][posicion]= (prestamo.anios[a].enero[1].add(prestamo.anios[a].febrero[1]).add(prestamo.anios[a].marzo[1].add(prestamo.anios[a].abril[1]))).toString();
-//								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].mayo[1]).add(prestamo.anios[a].junio[1].add(prestamo.anios[a].julio[1].add(prestamo.anios[a].agosto[1]))).toString();
-//								datos[i][posicion+(2*sumaColumnas)]= (prestamo.anios[a].septiembre[1].add(prestamo.anios[a].octubre[1]).add(prestamo.anios[a].noviembre[1].add(prestamo.anios[a].diciembre[1]))).toString();
-//								datos[i][posicion+(3*sumaColumnas)]= totalAnualR.toString();
-//							}
-//							posicion = posicion+(3*sumaColumnas)+1;
-//							break;
-//						case AGRUPACION_SEMESTRE:
-//							if(tipoVisualizacion==0 || tipoVisualizacion==2){
-//								datos[i][posicion]= (prestamo.anios[a].enero[0].add(prestamo.anios[a].febrero[0]).add(prestamo.anios[a].marzo[0].add(prestamo.anios[a].abril[0].add(prestamo.anios[a].mayo[0].add(prestamo.anios[a].junio[0]))))).toString();
-//								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].julio[0].add(prestamo.anios[a].agosto[0]).add(prestamo.anios[a].septiembre[0].add(prestamo.anios[a].octubre[0].add(prestamo.anios[a].noviembre[0].add(prestamo.anios[a].diciembre[0]))))).toString();
-//								datos[i][posicion+(2*sumaColumnas)]= totalAnualP.toString();
-//							}
-//							if(tipoVisualizacion == 2){
-//								posicion++;
-//							}
-//							if(tipoVisualizacion==1 || tipoVisualizacion == 2){
-//								datos[i][posicion]= (prestamo.anios[a].enero[1].add(prestamo.anios[a].febrero[1]).add(prestamo.anios[a].marzo[1].add(prestamo.anios[a].abril[1].add(prestamo.anios[a].mayo[1].add(prestamo.anios[a].junio[1]))))).toString();
-//								datos[i][posicion+(1*sumaColumnas)]= (prestamo.anios[a].julio[1].add(prestamo.anios[a].agosto[1]).add(prestamo.anios[a].septiembre[1].add(prestamo.anios[a].octubre[1].add(prestamo.anios[a].noviembre[1].add(prestamo.anios[a].diciembre[1]))))).toString();
-//								datos[i][posicion+(2*sumaColumnas)]= totalAnualR.toString();
-//							}
-//							posicion = posicion+(2*sumaColumnas)+1;
-//							break;
-//						case AGRUPACION_ANUAL:
-//							if(tipoVisualizacion==0 || tipoVisualizacion==2){
-//								datos[i][posicion]= totalAnualP.toString();
-//								datos[i][posicion+(1*sumaColumnas)]= totalAnualP.toString();
-//							}
-//							if(tipoVisualizacion == 2){
-//								posicion++;
-//							}
-//							if(tipoVisualizacion==1 || tipoVisualizacion == 2){
-//								datos[i][posicion]= totalAnualR.toString();
-//								datos[i][posicion+(1*sumaColumnas)]= totalAnualR.toString();
-//							}
-//							posicion = posicion+(1*sumaColumnas)+1;
-//							break;
-//						}
-//					}
-//					if(tipoVisualizacion==0 || tipoVisualizacion==2){
-//						datos[i][posicion]= totalAniosP.toString();
-//					}
-//					if(tipoVisualizacion == 2){
-//						posicion++;
-//					}
-//					if(tipoVisualizacion==1 || tipoVisualizacion == 2){
-//						datos[i][posicion]= totalAniosR.toString();
-//					}
-//					datos[i][columnasTotal-2]=prestamo.metaFinal!=null ? prestamo.metaFinal.toString() : "";
-//					datos[i][columnasTotal-1]=prestamo.porcentajeAvance!=null ? prestamo.porcentajeAvance.toString() : "";
-//				}
+				int posicion = columna;
+				BigDecimal total = new BigDecimal(0);
+				//Valores planificado-real
+				for(int a=0; a<prestamo.getAnios().length; a++){
+					CPrestamoCostos.stanio anio = prestamo.getAnios()[a];
+					//Verificar nullos y volverlos 0
+					for(int m=0; m<12; m++){
+						anio.mes[m].planificado = anio.mes[m].planificado!=null ? anio.mes[m].planificado : new BigDecimal(0);
+						anio.mes[m].real = anio.mes[m].real!=null ? anio.mes[m].real : new BigDecimal(0);
+						total = total.add(anio.mes[m].planificado);
+					}
+					
+					switch(agrupacion){
+					case AGRUPACION_MES:
+						for(int m=0; m<12; m++){
+							datos[i][posicion+m]= anio.mes[m].planificado.toString();
+						}
+						datos[i][posicion+12]= total.toString();
+						break;
+					case AGRUPACION_BIMESTRE:
+						datos[i][posicion+0]= (anio.mes[0].planificado.add(anio.mes[1].planificado)).toString();
+						datos[i][posicion+1]= (anio.mes[2].planificado.add(anio.mes[3].planificado)).toString();
+						datos[i][posicion+2]= (anio.mes[4].planificado.add(anio.mes[5].planificado)).toString();
+						datos[i][posicion+3]= (anio.mes[6].planificado.add(anio.mes[7].planificado)).toString();
+						datos[i][posicion+4]= (anio.mes[8].planificado.add(anio.mes[9].planificado)).toString();
+						datos[i][posicion+5]= (anio.mes[10].planificado.add(anio.mes[11].planificado)).toString();
+						datos[i][posicion+6]= total.toString();
+						break;
+					case AGRUPACION_TRIMESTRE:
+						datos[i][posicion+0]= (anio.mes[0].planificado.add(anio.mes[1].planificado).add(anio.mes[2].planificado)).toString();
+						datos[i][posicion+1]= (anio.mes[3].planificado.add(anio.mes[4].planificado).add(anio.mes[5].planificado)).toString();
+						datos[i][posicion+2]= (anio.mes[6].planificado.add(anio.mes[7].planificado).add(anio.mes[8].planificado)).toString();
+						datos[i][posicion+3]= (anio.mes[9].planificado.add(anio.mes[10].planificado).add(anio.mes[11].planificado)).toString();
+						datos[i][posicion+4]= total.toString();
+						break;
+					case AGRUPACION_CUATRIMESTRE:
+						datos[i][posicion+0]= (anio.mes[0].planificado.add(anio.mes[1].planificado).add(anio.mes[2].planificado).add(anio.mes[3].planificado)).toString();
+						datos[i][posicion+1]= (anio.mes[4].planificado.add(anio.mes[5].planificado).add(anio.mes[6].planificado).add(anio.mes[7].planificado)).toString();
+						datos[i][posicion+2]= (anio.mes[8].planificado.add(anio.mes[9].planificado).add(anio.mes[10].planificado).add(anio.mes[11].planificado)).toString();
+						datos[i][posicion+3]= total.toString();
+						break;
+					case AGRUPACION_SEMESTRE:
+						datos[i][posicion+0]= (anio.mes[0].planificado.add(anio.mes[1].planificado).add(anio.mes[2].planificado).add(anio.mes[3].planificado).add(anio.mes[4].planificado).add(anio.mes[5].planificado)).toString();
+						datos[i][posicion+1]= (anio.mes[6].planificado.add(anio.mes[7].planificado).add(anio.mes[8].planificado).add(anio.mes[9].planificado).add(anio.mes[10].planificado).add(anio.mes[11].planificado)).toString();
+						datos[i][posicion+2]= total.toString();
+						break;
+					case AGRUPACION_ANUAL:
+						datos[i][posicion+0]= total.toString();
+						datos[i][posicion+1]= total.toString();
+						break;
+					}
+				}
+			}
+			
+			//Inicializar desembolsos
+			if(agrupacion!=AGRUPACION_MES){
+				for(int m=0; m<12; m++){
+					stTotales.filaDesembolsos[m] = stTotales.filaDesembolsos[m]!=null ? stTotales.filaDesembolsos[m] : new BigDecimal(0);
+					stTotales.filaDesembolsosReal[m] = stTotales.filaDesembolsosReal[m]!=null ? stTotales.filaDesembolsosReal[m] : new BigDecimal(0);
+				}
+			}
+
+			int fila = lstPrestamo.size();
+			switch(agrupacion){
+			case AGRUPACION_MES:
+				datos[fila][0] = "Total Planificado";
+				for(int m=0; m<12; m++){
+					datos[fila][1+m] = stTotales.filaPlanificado[m].toString();
+				}
+				datos[fila][13] = stTotales.totalPlanificado.toString();
+				fila++; 
+				datos[fila][0] = "Total Planificado Acumulado";
+				for(int m=0; m<12; m++){
+					datos[fila][1+m] = stTotales.filaPlanificadoAcumulado[m].toString();
+				}
+				datos[fila][13] = stTotales.totalPlanificadoAcumulado.toString();
+				fila++; 
+				datos[fila][0] = "Total Ejecutado";
+				for(int m=0; m<12; m++){
+					datos[fila][1+m] = stTotales.filaEjecutado[m].toString();
+				}
+				datos[fila][13] = stTotales.totalEjecutado.toString();
+				fila++; 
+				datos[fila][0] = "Total Ejecutado Acumulado";
+				for(int m=0; m<12; m++){
+					datos[fila][1+m] = stTotales.filaEjecutadoAcumulado[m].toString();
+				}
+				datos[fila][13] = stTotales.totalEjecutadoAcumulado.toString();
+				fila++; 
+				datos[fila][0] = "Variacion";
+				for(int m=0; m<12; m++){
+					datos[fila][1+m] = stTotales.filaVariacion[m].toString();
+				}
+				datos[fila][13] = stTotales.totalVariacion.toString();
+				fila++; 
+				datos[fila][0] = "%";
+				for(int m=0; m<12; m++){
+					datos[fila][1+m] = stTotales.filaVariacionPorcentaje[m].toString();
+				}
+				datos[fila][13] = stTotales.totalVariacionPorcentaje.toString();
+				fila++; 
+				datos[fila][0] = "Desembolsos Ejecutados";
+				for(int m=0; m<12; m++){
+					datos[fila][1+m] = stTotales.filaDesembolsosReal[m]!=null ? stTotales.filaDesembolsosReal[m].toString() : "";
+				}
+				datos[fila][13] = stTotales.totalDesembolsosReal.toString();
+				fila++; 
+				datos[fila][0] = "Desembolsos";
+				for(int m=0; m<12; m++){
+					datos[fila][1+m] = stTotales.filaDesembolsos[m]!=null ? stTotales.filaDesembolsos[m].toString() : "";
+				}
+				datos[fila][13] = stTotales.totalDesembolsos.toString();
+				fila++; 
+				datos[fila][0] = "Saldo";
+				for(int m=0; m<12; m++){
+					datos[fila][1+m] = stTotales.filaSaldo[m].toString();
+				}
+				datos[fila][13] = stTotales.totalSaldo.toString();
+				break;
+			case AGRUPACION_BIMESTRE:
+				datos[fila][0] = "Total Planificado";
+				datos[fila][1] = (stTotales.filaPlanificado[0].add(stTotales.filaPlanificado[1])).toString();
+				datos[fila][2] = (stTotales.filaPlanificado[2].add(stTotales.filaPlanificado[3])).toString();
+				datos[fila][3] = (stTotales.filaPlanificado[4].add(stTotales.filaPlanificado[5])).toString();
+				datos[fila][4] = (stTotales.filaPlanificado[6].add(stTotales.filaPlanificado[7])).toString();
+				datos[fila][5] = (stTotales.filaPlanificado[8].add(stTotales.filaPlanificado[9])).toString();
+				datos[fila][6] = (stTotales.filaPlanificado[10].add(stTotales.filaPlanificado[11])).toString();
+				datos[fila][7] = stTotales.totalPlanificado.toString();
+				fila++; 
+				datos[fila][0] = "Total Planificado Acumulado";
+				datos[fila][1] = (stTotales.filaPlanificadoAcumulado[0].add(stTotales.filaPlanificadoAcumulado[1])).toString();
+				datos[fila][2] = (stTotales.filaPlanificadoAcumulado[2].add(stTotales.filaPlanificadoAcumulado[3])).toString();
+				datos[fila][3] = (stTotales.filaPlanificadoAcumulado[4].add(stTotales.filaPlanificadoAcumulado[5])).toString();
+				datos[fila][4] = (stTotales.filaPlanificadoAcumulado[6].add(stTotales.filaPlanificadoAcumulado[7])).toString();
+				datos[fila][5] = (stTotales.filaPlanificadoAcumulado[8].add(stTotales.filaPlanificadoAcumulado[9])).toString();
+				datos[fila][6] = (stTotales.filaPlanificadoAcumulado[10].add(stTotales.filaPlanificadoAcumulado[11])).toString();
+				datos[fila][7] = stTotales.totalPlanificadoAcumulado.toString();
+				fila++; 
+				datos[fila][0] = "Total Ejecutado";
+				datos[fila][1] = (stTotales.filaEjecutado[0].add(stTotales.filaEjecutado[1])).toString();
+				datos[fila][2] = (stTotales.filaEjecutado[2].add(stTotales.filaEjecutado[3])).toString();
+				datos[fila][3] = (stTotales.filaEjecutado[4].add(stTotales.filaEjecutado[5])).toString();
+				datos[fila][4] = (stTotales.filaEjecutado[6].add(stTotales.filaEjecutado[7])).toString();
+				datos[fila][5] = (stTotales.filaEjecutado[8].add(stTotales.filaEjecutado[9])).toString();
+				datos[fila][6] = (stTotales.filaEjecutado[10].add(stTotales.filaEjecutado[11])).toString();
+				datos[fila][7] = stTotales.totalEjecutado.toString();
+				fila++; 
+				datos[fila][0] = "Total Ejecutado Acumulado";
+				datos[fila][1] = (stTotales.filaEjecutadoAcumulado[0].add(stTotales.filaEjecutadoAcumulado[1])).toString();
+				datos[fila][2] = (stTotales.filaEjecutadoAcumulado[2].add(stTotales.filaEjecutadoAcumulado[3])).toString();
+				datos[fila][3] = (stTotales.filaEjecutadoAcumulado[4].add(stTotales.filaEjecutadoAcumulado[5])).toString();
+				datos[fila][4] = (stTotales.filaEjecutadoAcumulado[6].add(stTotales.filaEjecutadoAcumulado[7])).toString();
+				datos[fila][5] = (stTotales.filaEjecutadoAcumulado[8].add(stTotales.filaEjecutadoAcumulado[9])).toString();
+				datos[fila][6] = (stTotales.filaEjecutadoAcumulado[10].add(stTotales.filaEjecutadoAcumulado[11])).toString();
+				datos[fila][7] = stTotales.totalEjecutadoAcumulado.toString();
+				fila++; 
+				datos[fila][0] = "Variacion";
+				datos[fila][1] = (stTotales.filaVariacion[0].add(stTotales.filaVariacion[1])).toString();
+				datos[fila][2] = (stTotales.filaVariacion[2].add(stTotales.filaVariacion[3])).toString();
+				datos[fila][3] = (stTotales.filaVariacion[4].add(stTotales.filaVariacion[5])).toString();
+				datos[fila][4] = (stTotales.filaVariacion[6].add(stTotales.filaVariacion[7])).toString();
+				datos[fila][5] = (stTotales.filaVariacion[8].add(stTotales.filaVariacion[9])).toString();
+				datos[fila][6] = (stTotales.filaVariacion[10].add(stTotales.filaVariacion[11])).toString();
+				datos[fila][7] = stTotales.totalVariacion.toString();
+				fila++; 
+				datos[fila][0] = "%";
+				datos[fila][1] = (stTotales.filaVariacionPorcentaje[0].add(stTotales.filaVariacionPorcentaje[1])).toString();
+				datos[fila][2] = (stTotales.filaVariacionPorcentaje[2].add(stTotales.filaVariacionPorcentaje[3])).toString();
+				datos[fila][3] = (stTotales.filaVariacionPorcentaje[4].add(stTotales.filaVariacionPorcentaje[5])).toString();
+				datos[fila][4] = (stTotales.filaVariacionPorcentaje[6].add(stTotales.filaVariacionPorcentaje[7])).toString();
+				datos[fila][5] = (stTotales.filaVariacionPorcentaje[8].add(stTotales.filaVariacionPorcentaje[9])).toString();
+				datos[fila][6] = (stTotales.filaVariacionPorcentaje[10].add(stTotales.filaVariacionPorcentaje[11])).toString();
+				datos[fila][7] = stTotales.totalVariacionPorcentaje.toString();
+				fila++; 
+				datos[fila][0] = "Desembolsos Ejecutados";
+				datos[fila][1] = (stTotales.filaDesembolsosReal[0].add(stTotales.filaDesembolsosReal[1])).toString();
+				datos[fila][2] = (stTotales.filaDesembolsosReal[2].add(stTotales.filaDesembolsosReal[3])).toString();
+				datos[fila][3] = (stTotales.filaDesembolsosReal[4].add(stTotales.filaDesembolsosReal[5])).toString();
+				datos[fila][4] = (stTotales.filaDesembolsosReal[6].add(stTotales.filaDesembolsosReal[7])).toString();
+				datos[fila][5] = (stTotales.filaDesembolsosReal[8].add(stTotales.filaDesembolsosReal[9])).toString();
+				datos[fila][6] = (stTotales.filaDesembolsosReal[10].add(stTotales.filaDesembolsosReal[11])).toString();
+				datos[fila][7] = stTotales.totalDesembolsosReal.toString();
+				fila++; 
+				datos[fila][0] = "Desembolsos";
+				datos[fila][1] = (stTotales.filaDesembolsos[0].add(stTotales.filaDesembolsos[1])).toString();
+				datos[fila][2] = (stTotales.filaDesembolsos[2].add(stTotales.filaDesembolsos[3])).toString();
+				datos[fila][3] = (stTotales.filaDesembolsos[4].add(stTotales.filaDesembolsos[5])).toString();
+				datos[fila][4] = (stTotales.filaDesembolsos[6].add(stTotales.filaDesembolsos[7])).toString();
+				datos[fila][5] = (stTotales.filaDesembolsos[8].add(stTotales.filaDesembolsos[9])).toString();
+				datos[fila][6] = (stTotales.filaDesembolsos[10].add(stTotales.filaDesembolsos[11])).toString();
+				datos[fila][7] = stTotales.totalDesembolsos.toString();
+				fila++; 
+				datos[fila][0] = "Saldo";
+				datos[fila][1] = (stTotales.filaSaldo[0].add(stTotales.filaSaldo[1])).toString();
+				datos[fila][2] = (stTotales.filaSaldo[2].add(stTotales.filaSaldo[3])).toString();
+				datos[fila][3] = (stTotales.filaSaldo[4].add(stTotales.filaSaldo[5])).toString();
+				datos[fila][4] = (stTotales.filaSaldo[6].add(stTotales.filaSaldo[7])).toString();
+				datos[fila][5] = (stTotales.filaSaldo[8].add(stTotales.filaSaldo[9])).toString();
+				datos[fila][6] = (stTotales.filaSaldo[10].add(stTotales.filaSaldo[11])).toString();
+				datos[fila][7] = stTotales.totalSaldo.toString();
+				break;
+			case AGRUPACION_TRIMESTRE:
+				datos[fila][0] = "Total Planificado";
+				datos[fila][1] = (stTotales.filaPlanificado[0].add(stTotales.filaPlanificado[1]).add(stTotales.filaPlanificado[2])).toString();
+				datos[fila][2] = (stTotales.filaPlanificado[3].add(stTotales.filaPlanificado[4]).add(stTotales.filaPlanificado[5])).toString();
+				datos[fila][3] = (stTotales.filaPlanificado[6].add(stTotales.filaPlanificado[7]).add(stTotales.filaPlanificado[8])).toString();
+				datos[fila][4] = (stTotales.filaPlanificado[9].add(stTotales.filaPlanificado[10]).add(stTotales.filaPlanificado[11])).toString();
+				datos[fila][5] = stTotales.totalPlanificado.toString();
+				fila++; 
+				datos[fila][0] = "Total Planificado Acumulado";
+				datos[fila][1] = (stTotales.filaPlanificadoAcumulado[0].add(stTotales.filaPlanificadoAcumulado[1]).add(stTotales.filaPlanificadoAcumulado[2])).toString();
+				datos[fila][2] = (stTotales.filaPlanificadoAcumulado[3].add(stTotales.filaPlanificadoAcumulado[4]).add(stTotales.filaPlanificadoAcumulado[5])).toString();
+				datos[fila][3] = (stTotales.filaPlanificadoAcumulado[6].add(stTotales.filaPlanificadoAcumulado[7]).add(stTotales.filaPlanificadoAcumulado[8])).toString();
+				datos[fila][4] = (stTotales.filaPlanificadoAcumulado[9].add(stTotales.filaPlanificadoAcumulado[10]).add(stTotales.filaPlanificadoAcumulado[11])).toString();
+				datos[fila][5] = stTotales.totalPlanificadoAcumulado.toString();
+				fila++; 
+				datos[fila][0] = "Total Ejecutado";
+				datos[fila][1] = (stTotales.filaEjecutado[0].add(stTotales.filaEjecutado[1]).add(stTotales.filaEjecutado[2])).toString();
+				datos[fila][2] = (stTotales.filaEjecutado[3].add(stTotales.filaEjecutado[4]).add(stTotales.filaEjecutado[5])).toString();
+				datos[fila][3] = (stTotales.filaEjecutado[6].add(stTotales.filaEjecutado[7]).add(stTotales.filaEjecutado[8])).toString();
+				datos[fila][4] = (stTotales.filaEjecutado[9].add(stTotales.filaEjecutado[10]).add(stTotales.filaEjecutado[11])).toString();
+				datos[fila][5] = stTotales.totalEjecutado.toString();
+				fila++; 
+				datos[fila][0] = "Total Ejecutado Acumulado";
+				datos[fila][1] = (stTotales.filaEjecutadoAcumulado[0].add(stTotales.filaEjecutadoAcumulado[1]).add(stTotales.filaEjecutadoAcumulado[2])).toString();
+				datos[fila][2] = (stTotales.filaEjecutadoAcumulado[3].add(stTotales.filaEjecutadoAcumulado[4]).add(stTotales.filaEjecutadoAcumulado[5])).toString();
+				datos[fila][3] = (stTotales.filaEjecutadoAcumulado[6].add(stTotales.filaEjecutadoAcumulado[7]).add(stTotales.filaEjecutadoAcumulado[8])).toString();
+				datos[fila][4] = (stTotales.filaEjecutadoAcumulado[9].add(stTotales.filaEjecutadoAcumulado[10]).add(stTotales.filaEjecutadoAcumulado[11])).toString();
+				datos[fila][5] = stTotales.totalEjecutadoAcumulado.toString();
+				fila++; 
+				datos[fila][0] = "Variacion";
+				datos[fila][1] = (stTotales.filaVariacion[0].add(stTotales.filaVariacion[1]).add(stTotales.filaVariacion[2])).toString();
+				datos[fila][2] = (stTotales.filaVariacion[3].add(stTotales.filaVariacion[4]).add(stTotales.filaVariacion[5])).toString();
+				datos[fila][3] = (stTotales.filaVariacion[6].add(stTotales.filaVariacion[7]).add(stTotales.filaVariacion[8])).toString();
+				datos[fila][4] = (stTotales.filaVariacion[9].add(stTotales.filaVariacion[10]).add(stTotales.filaVariacion[11])).toString();
+				datos[fila][5] = stTotales.totalVariacion.toString();
+				fila++; 
+				datos[fila][0] = "%";
+				datos[fila][1] = (stTotales.filaVariacionPorcentaje[0].add(stTotales.filaVariacionPorcentaje[1]).add(stTotales.filaVariacionPorcentaje[2])).toString();
+				datos[fila][2] = (stTotales.filaVariacionPorcentaje[3].add(stTotales.filaVariacionPorcentaje[4]).add(stTotales.filaVariacionPorcentaje[5])).toString();
+				datos[fila][3] = (stTotales.filaVariacionPorcentaje[6].add(stTotales.filaVariacionPorcentaje[7]).add(stTotales.filaVariacionPorcentaje[8])).toString();
+				datos[fila][4] = (stTotales.filaVariacionPorcentaje[9].add(stTotales.filaVariacionPorcentaje[10]).add(stTotales.filaVariacionPorcentaje[11])).toString();
+				datos[fila][5] = stTotales.totalVariacionPorcentaje.toString();
+				fila++; 
+				datos[fila][0] = "Desembolsos Ejecutados";
+				datos[fila][1] = (stTotales.filaDesembolsosReal[0].add(stTotales.filaDesembolsosReal[1]).add(stTotales.filaDesembolsosReal[2])).toString();
+				datos[fila][2] = (stTotales.filaDesembolsosReal[3].add(stTotales.filaDesembolsosReal[4]).add(stTotales.filaDesembolsosReal[5])).toString();
+				datos[fila][3] = (stTotales.filaDesembolsosReal[6].add(stTotales.filaDesembolsosReal[7]).add(stTotales.filaDesembolsosReal[8])).toString();
+				datos[fila][4] = (stTotales.filaDesembolsosReal[9].add(stTotales.filaDesembolsosReal[10]).add(stTotales.filaDesembolsosReal[11])).toString();
+				datos[fila][5] = stTotales.totalDesembolsosReal.toString();
+				fila++; 
+				datos[fila][0] = "Desembolsos";
+				datos[fila][1] = (stTotales.filaDesembolsos[0].add(stTotales.filaDesembolsos[1]).add(stTotales.filaDesembolsos[2])).toString();
+				datos[fila][2] = (stTotales.filaDesembolsos[3].add(stTotales.filaDesembolsos[4]).add(stTotales.filaDesembolsos[5])).toString();
+				datos[fila][3] = (stTotales.filaDesembolsos[6].add(stTotales.filaDesembolsos[7]).add(stTotales.filaDesembolsos[8])).toString();
+				datos[fila][4] = (stTotales.filaDesembolsos[9].add(stTotales.filaDesembolsos[10]).add(stTotales.filaDesembolsos[11])).toString();
+				datos[fila][5] = stTotales.totalDesembolsos.toString();
+				fila++; 
+				datos[fila][0] = "Saldo";
+				datos[fila][1] = (stTotales.filaSaldo[0].add(stTotales.filaSaldo[1]).add(stTotales.filaSaldo[2])).toString();
+				datos[fila][2] = (stTotales.filaSaldo[3].add(stTotales.filaSaldo[4]).add(stTotales.filaSaldo[5])).toString();
+				datos[fila][3] = (stTotales.filaSaldo[6].add(stTotales.filaSaldo[7]).add(stTotales.filaSaldo[8])).toString();
+				datos[fila][4] = (stTotales.filaSaldo[9].add(stTotales.filaSaldo[10]).add(stTotales.filaSaldo[11])).toString();
+				datos[fila][5] = stTotales.totalSaldo.toString();
+				break;
+			case AGRUPACION_CUATRIMESTRE:
+				datos[fila][0] = "Total Planificado";
+				datos[fila][1] = (stTotales.filaPlanificado[0].add(stTotales.filaPlanificado[1]).add(stTotales.filaPlanificado[2]).add(stTotales.filaPlanificado[3])).toString();
+				datos[fila][2] = (stTotales.filaPlanificado[4].add(stTotales.filaPlanificado[5]).add(stTotales.filaPlanificado[6]).add(stTotales.filaPlanificado[7])).toString();
+				datos[fila][3] = (stTotales.filaPlanificado[8].add(stTotales.filaPlanificado[9]).add(stTotales.filaPlanificado[10]).add(stTotales.filaPlanificado[11])).toString();
+				datos[fila][4] = stTotales.totalPlanificado.toString();
+				fila++; 
+				datos[fila][0] = "Total Planificado Acumulado";
+
+				datos[fila][1] = (stTotales.filaPlanificadoAcumulado[0].add(stTotales.filaPlanificadoAcumulado[1]).add(stTotales.filaPlanificadoAcumulado[2]).add(stTotales.filaPlanificadoAcumulado[3])).toString();
+				datos[fila][2] = (stTotales.filaPlanificadoAcumulado[4].add(stTotales.filaPlanificadoAcumulado[5]).add(stTotales.filaPlanificadoAcumulado[6]).add(stTotales.filaPlanificadoAcumulado[7])).toString();
+				datos[fila][3] = (stTotales.filaPlanificadoAcumulado[8].add(stTotales.filaPlanificadoAcumulado[9]).add(stTotales.filaPlanificadoAcumulado[10]).add(stTotales.filaPlanificadoAcumulado[11])).toString();
+				datos[fila][4] = stTotales.totalPlanificadoAcumulado.toString();
+				fila++; 
+				datos[fila][0] = "Total Ejecutado";
+				datos[fila][1] = (stTotales.filaEjecutado[0].add(stTotales.filaEjecutado[1]).add(stTotales.filaEjecutado[2]).add(stTotales.filaEjecutado[3])).toString();
+				datos[fila][2] = (stTotales.filaEjecutado[4].add(stTotales.filaEjecutado[5]).add(stTotales.filaEjecutado[6]).add(stTotales.filaEjecutado[7])).toString();
+				datos[fila][3] = (stTotales.filaEjecutado[8].add(stTotales.filaEjecutado[9]).add(stTotales.filaEjecutado[10]).add(stTotales.filaEjecutado[11])).toString();
+				datos[fila][4] = stTotales.totalEjecutado.toString();
+				fila++; 
+				datos[fila][0] = "Total Ejecutado Acumulado";
+				datos[fila][1] = (stTotales.filaEjecutadoAcumulado[0].add(stTotales.filaEjecutadoAcumulado[1]).add(stTotales.filaEjecutadoAcumulado[2]).add(stTotales.filaEjecutadoAcumulado[3])).toString();
+				datos[fila][2] = (stTotales.filaEjecutadoAcumulado[4].add(stTotales.filaEjecutadoAcumulado[5]).add(stTotales.filaEjecutadoAcumulado[6]).add(stTotales.filaEjecutadoAcumulado[7])).toString();
+				datos[fila][3] = (stTotales.filaEjecutadoAcumulado[8].add(stTotales.filaEjecutadoAcumulado[9]).add(stTotales.filaEjecutadoAcumulado[10]).add(stTotales.filaEjecutadoAcumulado[11])).toString();
+				datos[fila][4] = stTotales.totalEjecutadoAcumulado.toString();
+				fila++; 
+				datos[fila][0] = "Variacion";
+				datos[fila][1] = (stTotales.filaVariacion[0].add(stTotales.filaVariacion[1]).add(stTotales.filaVariacion[2]).add(stTotales.filaVariacion[3])).toString();
+				datos[fila][2] = (stTotales.filaVariacion[4].add(stTotales.filaVariacion[5]).add(stTotales.filaVariacion[6]).add(stTotales.filaVariacion[7])).toString();
+				datos[fila][3] = (stTotales.filaVariacion[8].add(stTotales.filaVariacion[9]).add(stTotales.filaVariacion[10]).add(stTotales.filaVariacion[11])).toString();
+				datos[fila][4] = stTotales.totalVariacion.toString();
+				fila++; 
+				datos[fila][0] = "%";
+				datos[fila][1] = (stTotales.filaVariacionPorcentaje[0].add(stTotales.filaVariacionPorcentaje[1]).add(stTotales.filaVariacionPorcentaje[2]).add(stTotales.filaVariacionPorcentaje[3])).toString();
+				datos[fila][2] = (stTotales.filaVariacionPorcentaje[4].add(stTotales.filaVariacionPorcentaje[5]).add(stTotales.filaVariacionPorcentaje[6]).add(stTotales.filaVariacionPorcentaje[7])).toString();
+				datos[fila][3] = (stTotales.filaVariacionPorcentaje[8].add(stTotales.filaVariacionPorcentaje[9]).add(stTotales.filaVariacionPorcentaje[10]).add(stTotales.filaVariacionPorcentaje[11])).toString();
+				datos[fila][4] = stTotales.totalVariacionPorcentaje.toString();
+				fila++; 
+				datos[fila][0] = "Desembolsos Ejecutados";
+				datos[fila][1] = (stTotales.filaDesembolsosReal[0].add(stTotales.filaDesembolsosReal[1]).add(stTotales.filaDesembolsosReal[2]).add(stTotales.filaDesembolsosReal[3])).toString();
+				datos[fila][2] = (stTotales.filaDesembolsosReal[4].add(stTotales.filaDesembolsosReal[5]).add(stTotales.filaDesembolsosReal[6]).add(stTotales.filaDesembolsosReal[7])).toString();
+				datos[fila][3] = (stTotales.filaDesembolsosReal[8].add(stTotales.filaDesembolsosReal[9]).add(stTotales.filaDesembolsosReal[10]).add(stTotales.filaDesembolsosReal[11])).toString();
+				datos[fila][4] = stTotales.totalDesembolsosReal.toString();
+				fila++; 
+				datos[fila][0] = "Desembolsos";
+				datos[fila][1] = (stTotales.filaDesembolsos[0].add(stTotales.filaDesembolsos[1]).add(stTotales.filaDesembolsos[2]).add(stTotales.filaDesembolsos[3])).toString();
+				datos[fila][2] = (stTotales.filaDesembolsos[4].add(stTotales.filaDesembolsos[5]).add(stTotales.filaDesembolsos[6]).add(stTotales.filaDesembolsos[7])).toString();
+				datos[fila][3] = (stTotales.filaDesembolsos[8].add(stTotales.filaDesembolsos[9]).add(stTotales.filaDesembolsos[10]).add(stTotales.filaDesembolsos[11])).toString();
+				datos[fila][4] = stTotales.totalDesembolsos.toString();
+				fila++; 
+				datos[fila][0] = "Saldo";
+				datos[fila][1] = (stTotales.filaSaldo[0].add(stTotales.filaSaldo[1]).add(stTotales.filaSaldo[2]).add(stTotales.filaSaldo[3])).toString();
+				datos[fila][2] = (stTotales.filaSaldo[4].add(stTotales.filaSaldo[5]).add(stTotales.filaSaldo[6]).add(stTotales.filaSaldo[7])).toString();
+				datos[fila][3] = (stTotales.filaSaldo[8].add(stTotales.filaSaldo[9]).add(stTotales.filaSaldo[10]).add(stTotales.filaSaldo[11])).toString();
+				datos[fila][4] = stTotales.totalSaldo.toString();
+				break;
+			case AGRUPACION_SEMESTRE:
+				datos[fila][0] = "Total Planificado";
+				datos[fila][1] = (stTotales.filaPlanificado[0].add(stTotales.filaPlanificado[1]).add(stTotales.filaPlanificado[2]).add(stTotales.filaPlanificado[3]).add(stTotales.filaPlanificado[4]).add(stTotales.filaPlanificado[5])).toString();
+				datos[fila][2] = (stTotales.filaPlanificado[6].add(stTotales.filaPlanificado[7]).add(stTotales.filaPlanificado[8]).add(stTotales.filaPlanificado[9]).add(stTotales.filaPlanificado[10]).add(stTotales.filaPlanificado[11])).toString();
+				datos[fila][3] = stTotales.totalPlanificado.toString();
+				fila++; 
+				datos[fila][0] = "Total Planificado Acumulado";
+				datos[fila][1] = (stTotales.filaPlanificadoAcumulado[0].add(stTotales.filaPlanificadoAcumulado[1]).add(stTotales.filaPlanificadoAcumulado[2]).add(stTotales.filaPlanificadoAcumulado[3]).add(stTotales.filaPlanificadoAcumulado[4]).add(stTotales.filaPlanificadoAcumulado[5])).toString();
+				datos[fila][2] = (stTotales.filaPlanificadoAcumulado[6].add(stTotales.filaPlanificadoAcumulado[7]).add(stTotales.filaPlanificadoAcumulado[8]).add(stTotales.filaPlanificadoAcumulado[9]).add(stTotales.filaPlanificadoAcumulado[10]).add(stTotales.filaPlanificadoAcumulado[11])).toString();
+				datos[fila][3] = stTotales.totalPlanificadoAcumulado.toString();
+				fila++; 
+				datos[fila][0] = "Total Ejecutado";
+				datos[fila][1] = (stTotales.filaEjecutado[0].add(stTotales.filaEjecutado[1]).add(stTotales.filaEjecutado[2]).add(stTotales.filaEjecutado[3]).add(stTotales.filaEjecutado[4]).add(stTotales.filaEjecutado[5])).toString();
+				datos[fila][2] = (stTotales.filaEjecutado[6].add(stTotales.filaEjecutado[7]).add(stTotales.filaEjecutado[8]).add(stTotales.filaEjecutado[9]).add(stTotales.filaEjecutado[10]).add(stTotales.filaEjecutado[11])).toString();
+				datos[fila][3] = stTotales.totalEjecutado.toString();
+				fila++; 
+				datos[fila][0] = "Total Ejecutado Acumulado";
+				datos[fila][1] = (stTotales.filaEjecutadoAcumulado[0].add(stTotales.filaEjecutadoAcumulado[1]).add(stTotales.filaEjecutadoAcumulado[2]).add(stTotales.filaEjecutadoAcumulado[3]).add(stTotales.filaEjecutadoAcumulado[4]).add(stTotales.filaEjecutadoAcumulado[5])).toString();
+				datos[fila][2] = (stTotales.filaEjecutadoAcumulado[6].add(stTotales.filaEjecutadoAcumulado[7]).add(stTotales.filaEjecutadoAcumulado[8]).add(stTotales.filaEjecutadoAcumulado[9]).add(stTotales.filaEjecutadoAcumulado[10]).add(stTotales.filaEjecutadoAcumulado[11])).toString();
+				datos[fila][3] = stTotales.totalEjecutadoAcumulado.toString();
+				fila++; 
+				datos[fila][0] = "Variacion";
+				datos[fila][1] = (stTotales.filaVariacion[0].add(stTotales.filaVariacion[1]).add(stTotales.filaVariacion[2]).add(stTotales.filaVariacion[3]).add(stTotales.filaVariacion[4]).add(stTotales.filaVariacion[5])).toString();
+				datos[fila][2] = (stTotales.filaVariacion[6].add(stTotales.filaVariacion[7]).add(stTotales.filaVariacion[8]).add(stTotales.filaVariacion[9]).add(stTotales.filaVariacion[10]).add(stTotales.filaVariacion[11])).toString();
+				datos[fila][3] = stTotales.totalVariacion.toString();
+				fila++; 
+				datos[fila][0] = "%";
+				datos[fila][1] = (stTotales.filaVariacionPorcentaje[0].add(stTotales.filaVariacionPorcentaje[1]).add(stTotales.filaVariacionPorcentaje[2]).add(stTotales.filaVariacionPorcentaje[3]).add(stTotales.filaVariacionPorcentaje[4]).add(stTotales.filaVariacionPorcentaje[5])).toString();
+				datos[fila][2] = (stTotales.filaVariacionPorcentaje[6].add(stTotales.filaVariacionPorcentaje[7]).add(stTotales.filaVariacionPorcentaje[8]).add(stTotales.filaVariacionPorcentaje[9]).add(stTotales.filaVariacionPorcentaje[10]).add(stTotales.filaVariacionPorcentaje[11])).toString();
+				datos[fila][3] = stTotales.totalVariacionPorcentaje.toString();
+				fila++; 
+				datos[fila][0] = "Desembolsos Ejecutados";
+				datos[fila][1] = (stTotales.filaDesembolsosReal[0].add(stTotales.filaDesembolsosReal[1]).add(stTotales.filaDesembolsosReal[2]).add(stTotales.filaDesembolsosReal[3]).add(stTotales.filaDesembolsosReal[4]).add(stTotales.filaDesembolsosReal[5])).toString();
+				datos[fila][2] = (stTotales.filaDesembolsosReal[6].add(stTotales.filaDesembolsosReal[7]).add(stTotales.filaDesembolsosReal[8]).add(stTotales.filaDesembolsosReal[9]).add(stTotales.filaDesembolsosReal[10]).add(stTotales.filaDesembolsosReal[11])).toString();
+				datos[fila][3] = stTotales.totalDesembolsosReal.toString();
+				fila++; 
+				datos[fila][0] = "Desembolsos";
+				datos[fila][1] = (stTotales.filaDesembolsos[0].add(stTotales.filaDesembolsos[1]).add(stTotales.filaDesembolsos[2]).add(stTotales.filaDesembolsos[3]).add(stTotales.filaDesembolsos[4]).add(stTotales.filaDesembolsos[5])).toString();
+				datos[fila][2] = (stTotales.filaDesembolsos[6].add(stTotales.filaDesembolsos[7]).add(stTotales.filaDesembolsos[8]).add(stTotales.filaDesembolsos[9]).add(stTotales.filaDesembolsos[10]).add(stTotales.filaDesembolsos[11])).toString();
+				datos[fila][3] = stTotales.totalDesembolsos.toString();
+				fila++; 
+				datos[fila][0] = "Saldo";
+				datos[fila][1] = (stTotales.filaSaldo[0].add(stTotales.filaSaldo[1]).add(stTotales.filaSaldo[2]).add(stTotales.filaSaldo[3]).add(stTotales.filaSaldo[4]).add(stTotales.filaSaldo[5])).toString();
+				datos[fila][2] = (stTotales.filaSaldo[6].add(stTotales.filaSaldo[7]).add(stTotales.filaSaldo[8]).add(stTotales.filaSaldo[9]).add(stTotales.filaSaldo[10]).add(stTotales.filaSaldo[11])).toString();
+				datos[fila][3] = stTotales.totalSaldo.toString();
+				break;
+			case AGRUPACION_ANUAL:
+				datos[fila][0] = "Total Planificado";
+				datos[fila][1] = (stTotales.filaPlanificado[0].add(stTotales.filaPlanificado[1]).add(stTotales.filaPlanificado[2]).add(stTotales.filaPlanificado[3]).add(stTotales.filaPlanificado[4]).add(stTotales.filaPlanificado[5]).add(stTotales.filaPlanificado[6]).add(stTotales.filaPlanificado[7]).add(stTotales.filaPlanificado[8]).add(stTotales.filaPlanificado[9]).add(stTotales.filaPlanificado[10]).add(stTotales.filaPlanificado[11])).toString();
+				datos[fila][2] = stTotales.totalPlanificado.toString();
+				fila++; 
+				datos[fila][0] = "Total Planificado Acumulado";
+				datos[fila][1] = (stTotales.filaPlanificadoAcumulado[0].add(stTotales.filaPlanificadoAcumulado[1]).add(stTotales.filaPlanificadoAcumulado[2]).add(stTotales.filaPlanificadoAcumulado[3]).add(stTotales.filaPlanificadoAcumulado[4]).add(stTotales.filaPlanificadoAcumulado[5]).add(stTotales.filaPlanificadoAcumulado[6]).add(stTotales.filaPlanificadoAcumulado[7]).add(stTotales.filaPlanificadoAcumulado[8]).add(stTotales.filaPlanificadoAcumulado[9]).add(stTotales.filaPlanificadoAcumulado[10]).add(stTotales.filaPlanificadoAcumulado[11])).toString();
+				datos[fila][2] = stTotales.totalPlanificadoAcumulado.toString();
+				fila++; 
+				datos[fila][0] = "Total Ejecutado";
+				datos[fila][1] = (stTotales.filaEjecutado[0].add(stTotales.filaEjecutado[1]).add(stTotales.filaEjecutado[2]).add(stTotales.filaEjecutado[3]).add(stTotales.filaEjecutado[4]).add(stTotales.filaEjecutado[5]).add(stTotales.filaEjecutado[6]).add(stTotales.filaEjecutado[7]).add(stTotales.filaEjecutado[8]).add(stTotales.filaEjecutado[9]).add(stTotales.filaEjecutado[10]).add(stTotales.filaEjecutado[11])).toString();
+				datos[fila][2] = stTotales.totalEjecutado.toString();
+				fila++; 
+				datos[fila][0] = "Total Ejecutado Acumulado";
+				datos[fila][1] = (stTotales.filaEjecutadoAcumulado[0].add(stTotales.filaEjecutadoAcumulado[1]).add(stTotales.filaEjecutadoAcumulado[2]).add(stTotales.filaEjecutadoAcumulado[3]).add(stTotales.filaEjecutadoAcumulado[4]).add(stTotales.filaEjecutadoAcumulado[5]).add(stTotales.filaEjecutadoAcumulado[6]).add(stTotales.filaEjecutadoAcumulado[7]).add(stTotales.filaEjecutadoAcumulado[8]).add(stTotales.filaEjecutadoAcumulado[9]).add(stTotales.filaEjecutadoAcumulado[10]).add(stTotales.filaEjecutadoAcumulado[11])).toString();
+				datos[fila][2] = stTotales.totalEjecutadoAcumulado.toString();
+				fila++; 
+				datos[fila][0] = "Variacion";
+				datos[fila][1] = (stTotales.filaVariacion[0].add(stTotales.filaVariacion[1]).add(stTotales.filaVariacion[2]).add(stTotales.filaVariacion[3]).add(stTotales.filaVariacion[4]).add(stTotales.filaVariacion[5]).add(stTotales.filaVariacion[6]).add(stTotales.filaVariacion[7]).add(stTotales.filaVariacion[8]).add(stTotales.filaVariacion[9]).add(stTotales.filaVariacion[10]).add(stTotales.filaVariacion[11])).toString();
+				datos[fila][2] = stTotales.totalVariacion.toString();
+				fila++; 
+				datos[fila][0] = "%";
+				datos[fila][1] = (stTotales.filaVariacionPorcentaje[0].add(stTotales.filaVariacionPorcentaje[1]).add(stTotales.filaVariacionPorcentaje[2]).add(stTotales.filaVariacionPorcentaje[3]).add(stTotales.filaVariacionPorcentaje[4]).add(stTotales.filaVariacionPorcentaje[5]).add(stTotales.filaVariacionPorcentaje[6]).add(stTotales.filaVariacionPorcentaje[7]).add(stTotales.filaVariacionPorcentaje[8]).add(stTotales.filaVariacionPorcentaje[9]).add(stTotales.filaVariacionPorcentaje[10]).add(stTotales.filaVariacionPorcentaje[11])).toString();
+				datos[fila][2] = stTotales.totalVariacionPorcentaje.toString();
+				fila++; 
+				datos[fila][0] = "Desembolsos Ejecutados";
+				datos[fila][1] = (stTotales.filaDesembolsosReal[0].add(stTotales.filaDesembolsosReal[1]).add(stTotales.filaDesembolsosReal[2]).add(stTotales.filaDesembolsosReal[3]).add(stTotales.filaDesembolsosReal[4]).add(stTotales.filaDesembolsosReal[5]).add(stTotales.filaDesembolsosReal[6]).add(stTotales.filaDesembolsosReal[7]).add(stTotales.filaDesembolsosReal[8]).add(stTotales.filaDesembolsosReal[9]).add(stTotales.filaDesembolsosReal[10]).add(stTotales.filaDesembolsosReal[11])).toString();
+				datos[fila][2] = stTotales.totalDesembolsosReal.toString();
+				fila++; 
+				datos[fila][0] = "Desembolsos";
+				datos[fila][1] = (stTotales.filaDesembolsos[0].add(stTotales.filaDesembolsos[1]).add(stTotales.filaDesembolsos[2]).add(stTotales.filaDesembolsos[3]).add(stTotales.filaDesembolsos[4]).add(stTotales.filaDesembolsos[5]).add(stTotales.filaDesembolsos[6]).add(stTotales.filaDesembolsos[7]).add(stTotales.filaDesembolsos[8]).add(stTotales.filaDesembolsos[9]).add(stTotales.filaDesembolsos[10]).add(stTotales.filaDesembolsos[11])).toString();
+				datos[fila][2] = stTotales.totalDesembolsos.toString();
+				fila++; 
+				datos[fila][0] = "Saldo";
+				datos[fila][1] = (stTotales.filaSaldo[0].add(stTotales.filaSaldo[1]).add(stTotales.filaSaldo[2]).add(stTotales.filaSaldo[3]).add(stTotales.filaSaldo[4]).add(stTotales.filaSaldo[5]).add(stTotales.filaSaldo[6]).add(stTotales.filaSaldo[7]).add(stTotales.filaSaldo[8]).add(stTotales.filaSaldo[9]).add(stTotales.filaSaldo[10]).add(stTotales.filaSaldo[11])).toString();
+				datos[fila][2] = stTotales.totalSaldo.toString();
+				break;
 			}
 		}
 		return datos;
