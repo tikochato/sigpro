@@ -33,7 +33,7 @@ class duracionFecha{
 	public int getId(){
 		return this.id;
 	}
-	
+	 
 	public void setDuracion(int duracion){
 		this.duracion = duracion;
 	}
