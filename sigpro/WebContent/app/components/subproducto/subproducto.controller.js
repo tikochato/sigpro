@@ -31,6 +31,8 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 	mi.entidad='';
 	mi.ejercicio = '';
 	
+	mi.acumulacionesCosto = [];
+	
 	mi.fechaFinPadre;
 
 	mi.dimensiones = [
@@ -67,6 +69,29 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 				var fechaInicioPadre = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
 				mi.modificarFechaInicial(fechaInicioPadre);
 	});*/
+	
+	
+	$http.post('/SAcumulacionCosto', { accion: 'getAcumulacionesCosto', t: (new Date()).getTime()}).success(
+			function(response) {
+				mi.acumulacionesCosto = response.acumulacionesTipos;
+	});
+	
+	mi.blurCategoria=function(){
+		if(document.getElementById("acumulacionCosto_value").defaultValue!=mi.subproducto.acumulacionCostoNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','acumulacionCosto');
+		}
+	}
+	
+	mi.cambioAcumulacionCosto=function(selected){
+		if(selected!== undefined){
+			mi.subproducto.acumulacionCostoNombre = selected.originalObject.nombre;
+			mi.subproducto.acumulacionCostoId = selected.originalObject.id;
+		}
+		else{
+			mi.subproducto.acumulacionCostoNombre="";
+			mi.subproducto.acumulacionCostoId="";
+		}
+	}
 	
 	mi.modificarFechaInicial = function(fechaPadre){
 		mi.fi_opciones.minDate = fechaPadre;

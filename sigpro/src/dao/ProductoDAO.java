@@ -24,6 +24,7 @@ import pojo.Subproducto;
 import pojo.Usuario;
 import utilities.CHibernateSession;
 import utilities.CLogger;
+import utilities.Utils;
 
 public class ProductoDAO {
 

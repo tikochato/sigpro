@@ -21,6 +21,7 @@ import pojo.Proyecto;
 import pojo.Usuario;
 import utilities.CHibernateSession;
 import utilities.CLogger;
+import utilities.Utils;
 
 public class ComponenteDAO {
 	public static List<Componente> getComponentes(String usuario){
@@ -404,60 +405,62 @@ public class ComponenteDAO {
 		
 		return costo;
 	}
+	
+	public static Date calcularFechaMinima(Componente componente){
+		Date ret = null;
+		try{
+			Set<Producto> productos = componente.getProductos();
+			if(productos != null && productos.size() > 0){
+				Iterator<Producto> iterador = productos.iterator();
+				Date fechaMinima = new Date();
+				while(iterador.hasNext()){
+					Producto producto = iterador.next();
+					if(ret == null)
+						ret = producto.getFechaInicio();
+					else{
+						fechaMinima = producto.getFechaInicio();
+						
+						if(ret.after(fechaMinima))
+							ret = fechaMinima;
+					}
+				}
+			}else
+				ret = componente.getFechaInicio();
+		}catch(Exception e){
+			CLogger.write("17", Proyecto.class, e);
+		}
+		
+		return ret;
+	}
+
+	public static Date calcularFechaMaxima(Componente componente){
+		Date ret = null;
+		try{
+			Set<Producto> productos = componente.getProductos();
+			if(productos != null && productos.size() > 0){
+				Iterator<Producto> iterador = productos.iterator();
+				Date fechaMaxima = new Date();
+				while(iterador.hasNext()){
+					Producto producto = iterador.next();
+					if(ret == null)
+						ret = producto.getFechaFin();
+					else{
+						fechaMaxima = producto.getFechaFin();
+						
+						if(ret.before(fechaMaxima))
+							ret = fechaMaxima;
+					}
+				}
+			}else
+				ret = componente.getFechaInicio();
+		}catch(Exception e){
+			CLogger.write("17", Proyecto.class, e);
+		}
+		
+		return ret;
+	}
 }
 
-public static Date calcularFechaMinima(Componente componente){
-	Date ret = null;
-	try{
-		Set<Producto> productos = componente.getProductos();
-		if(productos != null && productos.size() > 0){
-			Iterator<Producto> iterador = productos.iterator();
-			Date fechaMinima = new Date();
-			while(iterador.hasNext()){
-				Producto producto = iterador.next();
-				if(ret == null)
-					ret = producto.getFechaInicio();
-				else{
-					fechaMinima = producto.getFechaInicio();
-					
-					if(ret.after(fechaMinima))
-						ret = fechaMinima;
-				}
-			}
-		}else
-			ret = componente.getFechaInicio();
-	}catch(Exception e){
-		CLogger.write("17", Proyecto.class, e);
-	}
-	
-	return ret;
-}
 
-public static Date calcularFechaMaxima(Componente componente){
-	Date ret = null;
-	try{
-		Set<Producto> productos = componente.getProductos();
-		if(productos != null && productos.size() > 0){
-			Iterator<Producto> iterador = productos.iterator();
-			Date fechaMaxima = new Date();
-			while(iterador.hasNext()){
-				Producto producto = iterador.next();
-				if(ret == null)
-					ret = producto.getFechaFin();
-				else{
-					fechaMaxima = producto.getFechaFin();
-					
-					if(ret.before(fechaMaxima))
-						ret = fechaMaxima;
-				}
-			}
-		}else
-			ret = componente.getFechaInicio();
-	}catch(Exception e){
-		CLogger.write("17", Proyecto.class, e);
-	}
-	
-	return ret;
-}
-}
+
 
