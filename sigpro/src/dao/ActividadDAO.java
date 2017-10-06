@@ -141,17 +141,7 @@ public class ActividadDAO {
 			session.saveOrUpdate(Actividad);
 			ActividadUsuario au = new ActividadUsuario(new ActividadUsuarioId(Actividad.getId(), Actividad.getUsuarioCreo()),Actividad);
 			session.saveOrUpdate(au);
-<<<<<<< HEAD
-=======
-			Actividad.setCosto(calcularActividadCosto(Actividad));
-			Date fechaMinima = calcularFechaMinima(Actividad);
-			Date fechaMaxima = calcularFechaMaxima(Actividad);
-			Integer duracion = Utils.getWorkingDays(fechaMinima, fechaMaxima);
-			Actividad.setFechaInicio(fechaMinima);
-			Actividad.setFechaFin(fechaMaxima);
-			Actividad.setDuracion(duracion);
-			session.saveOrUpdate(Actividad);
->>>>>>> branch 'master' of https://github.com/MINFIN-GT/sigpro.git
+
 			session.getTransaction().commit();
 			if(calcular_valores_agregados){
 				Actividad.setCosto(calcularActividadCosto(Actividad));

@@ -90,7 +90,6 @@ public class ComponenteDAO {
 				session.saveOrUpdate(cu_admin);
 			}
 			
-<<<<<<< HEAD
 			if(calcular_valores_agregados){
 				Componente.setCosto(calcularCosto(Componente));
 				Date fechaMinima = calcularFechaMinima(Componente);
@@ -110,22 +109,6 @@ public class ComponenteDAO {
 				session.getTransaction().commit();
 				session.close();
 			}
-=======
-			Componente.setCosto(calcularCosto(Componente));
-			Date fechaMinima = calcularFechaMinima(Componente);
-			Date fechaMaxima = calcularFechaMaxima(Componente);
-			Integer duracion = Utils.getWorkingDays(fechaMinima, fechaMaxima);
-			
-			Componente.setFechaInicio(fechaMinima);
-			Componente.setFechaFin(fechaMaxima);
-			Componente.setDuracion(duracion.intValue());
-			session.saveOrUpdate(Componente);
-			session.getTransaction().commit();
-			session.close();
-			
-			ProyectoDAO.guardarProyecto(Componente.getProyecto());
-			
->>>>>>> branch 'master' of https://github.com/MINFIN-GT/sigpro.git
 			ret = true;
 		}
 		catch(Throwable e){
@@ -449,11 +432,7 @@ public class ComponenteDAO {
 		
 		return ret;
 	}
-<<<<<<< HEAD
 
-=======
-	
->>>>>>> branch 'master' of https://github.com/MINFIN-GT/sigpro.git
 	public static Date calcularFechaMaxima(Componente componente){
 		Date ret = null;
 		try{

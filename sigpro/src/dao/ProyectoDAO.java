@@ -61,13 +61,8 @@ public class ProyectoDAO implements java.io.Serializable  {
 				ProyectoUsuario pu_admin = new ProyectoUsuario(new ProyectoUsuarioId(proyecto.getId(),"admin"), proyecto,usu);
 				session.saveOrUpdate(pu_admin);
 			}
-<<<<<<< HEAD
 			if(calcular_valores_agregados)
 				proyecto.setCosto(ProyectoDAO.calcularCosto(proyecto));
-=======
-			
-			proyecto.setCosto(calcularCosto(proyecto));
->>>>>>> branch 'master' of https://github.com/MINFIN-GT/sigpro.git
 			session.saveOrUpdate(proyecto);
 			session.getTransaction().commit();
 			ret = true;
