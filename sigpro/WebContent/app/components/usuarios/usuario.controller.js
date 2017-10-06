@@ -74,6 +74,7 @@ app.controller(
 	mi.editarElemento = function (event) {
         var filaId = angular.element(event.toElement).scope().rowRenderIndex;
         mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
+        mi.usuariosSelected=mi.gridOptions.data[filaId];
         mi.editarUsuario();
     };
 	
@@ -168,24 +169,22 @@ app.controller(
 	mi.cancelar = function() {
 		mi.colaboradorSeleccionado=false;
 		mi.verAreaPermisos=false;
-		mi.nombreUnidadEjecutora="";
-		mi.nombreCooperante="";
-		mi.tipoUsuario={id:"",nombre:"",grupo:""};
-		mi.nombreUnidadEjecutora="";
+//		mi.nombreUnidadEjecutora="";
+//		mi.nombreCooperante="";
+//		mi.tipoUsuario={id:"",nombre:"",grupo:""};
 		mi.isCollapsed = false;
 		mi.cambioPassword= false;
 		mi.mostrarCambioPassword = false;
 		mi.tieneColaborador=false;
 		mi.edicionPermisos=false;
 		mi.cargandoPermisos=false; 
-		mi.prestamosAsignados=[];
-		mi.unidadEjecutoraUsuario="";
-		mi.cooperanteUsuario="";
-		mi.rolUsuario="";
-		mi.prestamosNuevos=[];
-		mi.prestamosEliminados=[];
-		mi.prestamosNuevos=[];
-		mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:"", colaborador:""};
+//		mi.prestamosAsignados=[];
+//		mi.unidadEjecutoraUsuario="";
+//		mi.cooperanteUsuario="";
+//		mi.rolUsuario="";
+//		mi.prestamosNuevos=[];
+//		mi.prestamosEliminados=[];
+//		mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:"", colaborador:""};
 	}
 
 	mi.verPermisos=function(){
@@ -194,7 +193,7 @@ app.controller(
 	mi.nuevoUsuario=function(){
 		mi.treedata=[];
 		mi.expanded=[];
-		
+		mi.gridApi.selection.clearSelectedRows();
 		mi.cargarArbol=false;
 		mi.claves.password1="";
 		mi.claves.password2="";
@@ -250,7 +249,7 @@ app.controller(
 									function(data) {
 										if(data.success){
 											mi.paginaActual=1;
-											$utilidades.mensaje('success','Usuario creado exitosamente!');
+											$utilidades.mensaje('success','Usuario creado exitosamente');
 											check_mess=true;
 											mi.cargarTabla(mi.paginaActual);
 											mi.nuevosPermisos=[];
@@ -259,14 +258,14 @@ app.controller(
 										}
 							});
 					}else{
-						$utilidades.mensaje('danger','No coinciden la contraseña y su confirmación.');
+						$utilidades.mensaje('danger','Las contraseñas no coinciden');
 					}
 				}else{
-					$utilidades.mensaje('danger','correo electrónico no válido.');
+					$utilidades.mensaje('danger','Ingrese un correo electrónico válido');
 				}
 
 			}else{
-				$utilidades.mensaje('danger','Los campos obligatorios están vacíos.');
+				$utilidades.mensaje('danger','Existen campos obligatorios vacíos');
 			}
 		}else{
 			if(mi.usuariosSelected.email!==""){
@@ -291,7 +290,7 @@ app.controller(
 													$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password, t: (new Date()).getTime()}).success(
 															function(response) {
 																if(response.success){
-																	 $utilidades.mensaje('success', 'Cambio de contraseña Exitoso.');
+																	 $utilidades.mensaje('success', 'Cambio de contraseña exitoso');
 																}else{
 																	$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
 																}
@@ -322,14 +321,14 @@ app.controller(
 													$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password, t: (new Date()).getTime()}).success(
 															function(response) {
 																if(response.success){
-																	 $utilidades.mensaje('success', 'actualizacion de datos exitosa.');
+																	 $utilidades.mensaje('success', 'Actualizacion de datos exitosa');
 																}else{
-																	$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
+																	$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña');
 																}
 													});
 												}
 												if(!check_mess){
-													$utilidades.mensaje('success', 'Usuario creado exitosamente.');
+													$utilidades.mensaje('success', 'Usuario creado exitosamente');
 												}
 												
 											}else{
@@ -351,15 +350,15 @@ app.controller(
 																				function(response) {
 																					if(response.success){
 																						mi.paginaActual=1;
-																						$utilidades.mensaje('success','información actualizada exitosamente.');
+																						$utilidades.mensaje('success','Información actualizada exitosamente.');
 																						mi.isCollapsed = false;
 																						mi.cargarTabla(mi.paginaActual);
 																					}else{
-																						$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
+																						$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña');
 																					}
 																		});
 																	}else{
-																		$utilidades.mensaje('success','información actualizada exitosamente.');
+																		$utilidades.mensaje('success','Información actualizada exitosamente');
 																	}
 
 																}
@@ -367,18 +366,18 @@ app.controller(
 
 											}
 										}else {
-											$utilidades.mensaje('danger','No se pudo realizar cambios.');
+											$utilidades.mensaje('danger','No se lograron realizar los cambios');
 										}
 
 							});
 
 					}
 				}else{
-					$utilidades.mensaje('warning','correo electrónico no válido.');
+					$utilidades.mensaje('warning','El correo electrónico no es válido');
 				}
 
 			}else{
-				$utilidades.mensaje('warning','Los campos no deben de quedar vacios.');
+				$utilidades.mensaje('warning','Los campos no deben de quedar vacios');
 			}
 		}
     if(mi.colaboradorSeleccionado && mi.tipoUsuario.id==4 &&validarEmail(mi.usuariosSelected.email) ){
@@ -521,7 +520,7 @@ app.controller(
 				mi.prestamosNuevos.push(data.id);
 				
 			}catch(err){
-				$utilidades.mensaje('warning', 'Ya está agregado el préstamo.');
+				$utilidades.mensaje('warning', 'El préstamo ya se encuentra agregado');
 			}
 		}, function() {
 		});
@@ -659,7 +658,7 @@ app.controller(
 							}
 						} else {
 							$utilidades.mensaje('danger',
-									'Error al actualizar datos...!!!');
+									'No se pudieron actualizar los datos');
 						}
 					});
 		}
@@ -722,7 +721,7 @@ app.controller(
 										'Colaborador asignado con exito.');
 							} else {
 								$utilidades.mensaje('danger',
-										'Error al actualizar datos...!!!');
+										'No se pudieron actualizar los datos');
 							}
 						});
 		}else{

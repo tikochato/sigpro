@@ -31,7 +31,8 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.DesembolsoDAO;
 import dao.DesembolsoReal;
-import dao.EstructuraProyectoDAO;
+import dao.ObjetoCosto;
+import dao.ObjetoDAO;
 import dao.PrestamoDAO;
 import dao.ProyectoDAO;
 import pojo.Prestamo;
@@ -39,7 +40,6 @@ import utilities.CExcel;
 import utilities.CLogger;
 import utilities.CMariaDB;
 import utilities.Utils;
-import utilities.CPrestamoCostos;
 
 @WebServlet("/SFlujoCaja")
 public class SFlujoCaja extends HttpServlet {
@@ -113,7 +113,7 @@ public class SFlujoCaja extends HttpServlet {
 		if(accion.equals("getFlujoCaja")){
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 			Date fechaCorte = Utils.dateFromString(map.get("fechaCorte"));
-			List<CPrestamoCostos> lstPrestamo = getFlujoCaja(idPrestamo, fechaCorte, usuario);
+			List<ObjetoCosto> lstPrestamo = getFlujoCaja(idPrestamo, fechaCorte, usuario);
 			
 			
 			if (null != lstPrestamo && !lstPrestamo.isEmpty()){
@@ -214,22 +214,20 @@ public class SFlujoCaja extends HttpServlet {
 		}
 	}
 	
-	private List<CPrestamoCostos> getFlujoCaja(int idPrestamo, Date fechaCorte, String usuario){
+	private List<ObjetoCosto> getFlujoCaja(int idPrestamo, Date fechaCorte, String usuario){
 		DateTime fecha = new DateTime(fechaCorte);
 		Integer anio = fecha.getYear();
-		EstructuraProyectoDAO estructura = new EstructuraProyectoDAO();
-		List<CPrestamoCostos> lstPrestamo = estructura.getEstructuraConCostos(idPrestamo, anio, anio, usuario);
-		estructura = null;
+		List<ObjetoCosto> lstPrestamo = ObjetoDAO.getEstructuraConCosto(idPrestamo, anio, anio, true, true, usuario);
 		return lstPrestamo;
 	}
 	
-	private stTotales getFlujoCajaTotales(List<CPrestamoCostos> lstPrestamo, Date fechaCorte, String usuario){
+	private stTotales getFlujoCajaTotales(List<ObjetoCosto> lstPrestamo, Date fechaCorte, String usuario){
 		stTotales totales = new stTotales();		
 		
 		BigDecimal planificadoAcumulado = new BigDecimal(0);
 		BigDecimal ejecutadoAcumulado = new BigDecimal(0);
 		for(int i=0;i<lstPrestamo.size();i++){
-			CPrestamoCostos prestamo = lstPrestamo.get(i);
+			ObjetoCosto prestamo = lstPrestamo.get(i);
 			if(prestamo.getObjeto_tipo() == 1){				
 					for(int m=0; m<12; m++){
 						BigDecimal planificadoActual = prestamo.getAnios()[0].mes[m].planificado!=null ? prestamo.getAnios()[0].mes[m].planificado : new BigDecimal(0);
@@ -396,13 +394,13 @@ public class SFlujoCaja extends HttpServlet {
 	public String[][] generarDatosFlujoCaja(int prestamoId, Date fechaCorte, int agrupacion, int columnasTotal, String usuario){
 		String[][] datos = null;
 		int columna = 0;
-		List<CPrestamoCostos> lstPrestamo = getFlujoCaja(prestamoId, fechaCorte, usuario);
+		List<ObjetoCosto> lstPrestamo = getFlujoCaja(prestamoId, fechaCorte, usuario);
 		if (lstPrestamo != null && !lstPrestamo.isEmpty()){
 			stTotales stTotales = getFlujoCajaTotales(lstPrestamo, fechaCorte, usuario);
 			datos = new String[lstPrestamo.size()+9][columnasTotal];
 			for (int i=0; i<lstPrestamo.size(); i++){
 				columna = 0;
-				CPrestamoCostos prestamo = lstPrestamo.get(i);
+				ObjetoCosto prestamo = lstPrestamo.get(i);
 				String sangria;
 				switch (prestamo.getObjeto_tipo()){
 					case 1: sangria = ""; break;
@@ -419,7 +417,7 @@ public class SFlujoCaja extends HttpServlet {
 				BigDecimal total = new BigDecimal(0);
 				//Valores planificado-real
 				for(int a=0; a<prestamo.getAnios().length; a++){
-					CPrestamoCostos.stanio anio = prestamo.getAnios()[a];
+					ObjetoCosto.stanio anio = prestamo.getAnios()[a];
 					//Verificar nullos y volverlos 0
 					for(int m=0; m<12; m++){
 						anio.mes[m].planificado = anio.mes[m].planificado!=null ? anio.mes[m].planificado : new BigDecimal(0);
