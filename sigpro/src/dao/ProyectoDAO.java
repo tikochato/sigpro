@@ -64,7 +64,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 				session.saveOrUpdate(pu_admin);
 			}
 			
-			proyecto.setCosto(ProyectoDAO.calcularCosto(proyecto));
+			proyecto.setCosto(calcularCosto(proyecto));
 			session.saveOrUpdate(proyecto);
 			session.getTransaction().commit();
 			ret = true;
