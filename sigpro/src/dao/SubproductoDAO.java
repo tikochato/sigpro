@@ -2,6 +2,7 @@ package dao;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -127,6 +128,13 @@ public class SubproductoDAO {
 			}
 			
 			subproducto.setCosto(calcularCosto(subproducto));
+			Date fechaMinima = calcularFechaMinima(subproducto);
+			Date fechaMaxima = calcularFechaMaxima(subproducto);
+			Integer duracion = Utils.getWorkingDays(fechaMinima, fechaMaxima);
+			
+			subproducto.setDuracion(duracion.intValue());
+			subproducto.setFechaInicio(fechaMinima);
+			subproducto.setFechaFin(fechaMaxima);
 			session.saveOrUpdate(subproducto);
 			session.getTransaction().commit();
 			session.close();
@@ -450,5 +458,55 @@ public class SubproductoDAO {
 		}
 		
 		return costo;
+	}
+	
+	public static Date calcularFechaMinima(Subproducto subproducto){
+		Date ret = null;
+		try{
+			List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(subproducto.getId(), 4);
+			if(actividades != null && actividades.size() > 0){
+				Date fechaMinima = new Date();
+				for(Actividad actividad : actividades){
+					if(ret == null)
+						ret = actividad.getFechaInicio();
+					else{
+						fechaMinima = actividad.getFechaInicio();
+						
+						if(ret.after(fechaMinima))
+							ret = fechaMinima;
+					}
+				}
+			}else
+				ret = subproducto.getFechaInicio();
+		}catch(Exception e){
+			CLogger.write("15", Proyecto.class, e);
+		}
+		
+		return ret;
+	}
+	
+	public static Date calcularFechaMaxima(Subproducto subproducto){
+		Date ret = null;
+		try{
+			List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(subproducto.getId(), 4);			
+			if(actividades != null && actividades.size() > 0){
+				Date fechaMaxima = new Date();
+				for(Actividad actividad : actividades){
+					if(ret == null)
+						ret = actividad.getFechaFin();
+					else{
+						fechaMaxima = actividad.getFechaInicio();
+						
+						if(ret.before(fechaMaxima))
+							ret = fechaMaxima;
+					}
+				}
+			}else
+				ret = subproducto.getFechaFin();
+		}catch(Exception e){
+			CLogger.write("16", Proyecto.class, e);
+		}
+		
+		return ret;
 	}
 }
