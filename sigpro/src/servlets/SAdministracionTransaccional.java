@@ -112,7 +112,12 @@ public class SAdministracionTransaccional extends HttpServlet {
 			Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
 			Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
 			
-			List<stusuario> lstusuarios = getAdministracionTransaccional(fechaInicio, fechaFin);
+			DateTime nuevaFechaFin = new DateTime(fechaFin);
+			nuevaFechaFin = nuevaFechaFin.plusHours(23);
+			nuevaFechaFin = nuevaFechaFin.plusMinutes(59);
+			nuevaFechaFin = nuevaFechaFin.plusSeconds(59);
+			
+			List<stusuario> lstusuarios = getAdministracionTransaccional(fechaInicio, nuevaFechaFin.toDate());
 			
 			List<stagrupacion> lstcreados = getTransaccionesCreadas(fechaInicio, fechaFin);
 			List<stagrupacion> lstactualizados = getTransaccionesActualizadas(fechaInicio, fechaFin);

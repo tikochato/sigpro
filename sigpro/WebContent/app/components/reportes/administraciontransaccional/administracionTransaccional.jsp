@@ -59,7 +59,7 @@
 			   		<div style="width: 100%; height: 15%">
 			   			<div class="row">
 			   				<div class="panel panel-default">
-			  					<div class="panel-heading"><h3>Administración Transaccional</h3></div>
+			  					<div class="panel-heading"><h3>Detalle de Transacciones</h3></div>
 							</div>
 						</div>
 			   			<br>
@@ -131,7 +131,7 @@
 														<th class="label-form" style="max-width:{{controller.tamanoCelda}}px; min-width:{{controller.tamanoCelda}}px; text-align: center;">Descargar</th>
 													</tr>
 													<tr>
-														<th colspan="5">
+														<th>
 															<input st-search="usuario" st-delay="false" placeholder="búsqueda por usuario..." class="input-sm form-control" type="search"/>
 														</th>
 													<tr>
