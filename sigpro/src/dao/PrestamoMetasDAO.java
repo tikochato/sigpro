@@ -184,7 +184,7 @@ public class PrestamoMetasDAO {
     			}
 			}
 			catch(Throwable e){
-				CLogger.write("3", PrestamoMetasDAO.class, e);
+				CLogger.write("2", PrestamoMetasDAO.class, e);
 			}
 			finally{
 				session.close();
