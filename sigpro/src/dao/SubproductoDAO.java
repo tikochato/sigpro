@@ -126,6 +126,7 @@ public class SubproductoDAO {
 						, subproducto, usu, subproducto.getUsuarioCreo(), subproducto.getFechaCreacion());
 				session.saveOrUpdate(su_admin);
 			}
+<<<<<<< HEAD
 			if(calcular_valores_agregados){
 				subproducto.setCosto(calcularCosto(subproducto));
 				Date fechaMinima = calcularFechaMinima(subproducto);
@@ -144,6 +145,22 @@ public class SubproductoDAO {
 				session.getTransaction().commit();
 				session.close();
 			}
+=======
+			
+			subproducto.setCosto(calcularCosto(subproducto));
+			Date fechaMinima = calcularFechaMinima(subproducto);
+			Date fechaMaxima = calcularFechaMaxima(subproducto);
+			Integer duracion = Utils.getWorkingDays(fechaMinima, fechaMaxima);
+			
+			subproducto.setDuracion(duracion.intValue());
+			subproducto.setFechaInicio(fechaMinima);
+			subproducto.setFechaFin(fechaMaxima);
+			session.saveOrUpdate(subproducto);
+			session.getTransaction().commit();
+			session.close();
+			
+			ProductoDAO.guardarProducto(subproducto.getProducto());
+>>>>>>> branch 'master' of https://github.com/MINFIN-GT/sigpro.git
 			ret = true;
 		} catch (Throwable e) {
 			CLogger.write("3", SubproductoDAO.class, e);
