@@ -404,6 +404,8 @@ public class SProducto extends HttpServlet {
 					temp.fechaFin = Utils.formatDate(producto.getFechaFin());
 					temp.duracion = producto.getDuracion();
 					temp.duracionDimension = producto.getDuracionDimension();
+					temp.acumulacionCostoId = producto.getAcumulacionCosto()!=null ? producto.getAcumulacionCosto().getId() : null;
+					temp.acumulacionCostoNombre = producto.getAcumulacionCosto()!=null ? producto.getAcumulacionCosto().getNombre() : null;
 					
 					if (producto.getComponente() != null) {
 						temp.idComponente = producto.getComponente().getId();
@@ -494,6 +496,8 @@ public class SProducto extends HttpServlet {
 				temp.fechaFin = Utils.formatDate(producto.getFechaFin());
 				temp.duracion = producto.getDuracion();
 				temp.duracionDimension = producto.getDuracionDimension();
+				temp.acumulacionCostoId = producto.getAcumulacionCosto()!=null ? producto.getAcumulacionCosto().getId() : null;
+				temp.acumulacionCostoNombre = producto.getAcumulacionCosto()!=null ? producto.getAcumulacionCosto().getNombre() : null;
 				
 				if (producto.getComponente() != null) {
 					temp.idComponente = producto.getComponente().getId();
@@ -572,6 +576,8 @@ public class SProducto extends HttpServlet {
 				temp.fechaFin = Utils.formatDate(producto.getFechaFin());
 				temp.duracion = producto.getDuracion();
 				temp.duracionDimension = producto.getDuracionDimension();
+				temp.acumulacionCostoId = producto.getAcumulacionCosto()!=null ? producto.getAcumulacionCosto().getId() : null;
+				temp.acumulacionCostoNombre = producto.getAcumulacionCosto()!=null ? producto.getAcumulacionCosto().getNombre() : null;
 				
 				if (producto.getComponente() != null) {
 					temp.idComponente = producto.getComponente().getId();
@@ -634,6 +640,9 @@ public class SProducto extends HttpServlet {
 			if (producto !=null) {
 				temp.id = producto.getId();
 				temp.nombre = producto.getNombre();
+				temp.costo = producto.getCosto()!=null ? producto.getCosto() : new BigDecimal(0);
+				temp.acumulacionCostoId = producto.getAcumulacionCosto()!=null ? producto.getAcumulacionCosto().getId() : null;
+				temp.acumulacionCostoNombre = producto.getAcumulacionCosto()!=null ? producto.getAcumulacionCosto().getNombre() : null;
 				if (producto.getComponente() != null) {
 					temp.idComponente = producto.getComponente().getId();
 					temp.componente = producto.getComponente().getNombre();
