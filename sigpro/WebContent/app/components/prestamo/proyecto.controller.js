@@ -296,6 +296,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				objetoivoEspecifico: mi.proyecto.objetivoEspecifico,
 				visionGeneral : mi.proyecto.visionGeneral,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
+				ejecucionFisicaReal: mi.proyecto.ejecucionFisicaReal,
 				t:moment().unix()
 			};
 			$http.post('/SProyecto',param_data).then(

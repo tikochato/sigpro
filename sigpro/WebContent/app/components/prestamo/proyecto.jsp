@@ -189,6 +189,22 @@
 							</div>
 							
 							<div class="row">
+								<div class="col-sm-12">
+									<div class="form-group">
+										<input type="number"
+										 class="inputText "  
+										 ng-model="controller.proyecto.ejecucionFisicaReal"
+										 ng-value="controller.proyecto.ejecucionFisicaReal"
+										 onblur="this.setAttribute('value', this.value);"
+										 min="0" max="100"
+										 
+										 >
+										<label class="floating-label" >Ejecucion Física Real %</label>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
 								<div class="col-sm-4">
 									<div class="form-group">    						
 										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaDecreto" is-open="controller.fd_abierto"
