@@ -398,6 +398,9 @@ public class SSubproducto extends HttpServlet {
 			temp.obra = subproducto.getObra();
 			temp.latitud = subproducto.getLatitud();
 			temp.longitud = subproducto.getLongitud();
+			temp.costo = subproducto.getCosto();
+			temp.acumulacionCosto = subproducto.getAcumulacionCosto()!=null ? subproducto.getAcumulacionCosto().getId() : null;
+			temp.acumulacionCostoNombre = subproducto.getAcumulacionCosto()!=null ? subproducto.getAcumulacionCosto().getNombre() : null;
 			
 			if (subproducto.getSubproductoTipo() != null){
 				temp.subProductoTipoId = subproducto.getSubproductoTipo().getId();
