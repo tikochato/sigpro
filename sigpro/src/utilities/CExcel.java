@@ -370,7 +370,7 @@ public class CExcel {
 						case "percent":
 							setCellValuePercent(Double.parseDouble((f.get(data.get(i))).toString()), line, j, false, false);
 							break;
-						case "string_sin_formato":
+						case "stringsinformat":
 							setCellValueStringSinFormato(String.class.cast(f.get(data.get(i))), line, j, false, false);
 							break;
 						}
@@ -450,6 +450,9 @@ public class CExcel {
 									break;
 								case "string":
 									setCellValueString(String.class.cast(data[i][j]), line, j, false, borde);
+									break;
+								case "stringsinformat":
+									setCellValueStringSinFormato(String.class.cast(data[i][j]), line, j, false, borde);
 									break;
 								case "percent":
 									if(!data[i][j].isEmpty()){
@@ -605,7 +608,7 @@ public class CExcel {
 				case "string":
 					setCellValueString(String.class.cast(stgrafica.data[i][j]), linea, columna+j, false, true);
 					break;
-				case "string_sin_formato":
+				case "stringsinformat":
 					setCellValueString(String.class.cast(stgrafica.data[i][j]), linea, columna+j, false, true);
 					break;
 				case "percent":
