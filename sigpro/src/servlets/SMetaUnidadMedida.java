@@ -14,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.joda.time.DateTime;
 
@@ -57,6 +58,8 @@ public class SMetaUnidadMedida extends HttpServlet {
 		Type type = new TypeToken<Map<String, String>>(){}.getType();
 		StringBuilder sb = new StringBuilder();
 		BufferedReader br = request.getReader();
+		HttpSession sesionweb = request.getSession();
+		String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
 		String str;
 		while ((str = br.readLine()) != null) {
 			sb.append(str);
@@ -124,14 +127,14 @@ public class SMetaUnidadMedida extends HttpServlet {
 				String simbolo = map.get("simbolo");
 				MetaUnidadMedida MetaUnidadMedida;
 				if(esnuevo){
-					MetaUnidadMedida = new MetaUnidadMedida(nombre, descripcion,simbolo,"admin",null, new DateTime().toDate(), null, 1, null );
+					MetaUnidadMedida = new MetaUnidadMedida(nombre, descripcion,simbolo,usuario,null, new DateTime().toDate(), null, 1, null );
 				}
 				else{
 					MetaUnidadMedida = MetaUnidadMedidaDAO.getMetaUnidadMedidaPorId(id);
 					MetaUnidadMedida.setNombre(nombre);
 					MetaUnidadMedida.setDescripcion(descripcion);
 					MetaUnidadMedida.setSimbolo(simbolo);
-					MetaUnidadMedida.setUsuarioActualizo("admin");
+					MetaUnidadMedida.setUsuarioActualizo(usuario);
 					MetaUnidadMedida.setFechaActualizacion(new DateTime().toDate());
 				}
 				result = MetaUnidadMedidaDAO.guardarMetaUnidadMedida(MetaUnidadMedida);

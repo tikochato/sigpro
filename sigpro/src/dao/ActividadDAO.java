@@ -142,7 +142,13 @@ public class ActividadDAO {
 			ActividadUsuario au = new ActividadUsuario(new ActividadUsuarioId(Actividad.getId(), Actividad.getUsuarioCreo()),Actividad);
 			session.saveOrUpdate(au);
 			Actividad.setCosto(calcularActividadCosto(Actividad));
-			session.save(Actividad);
+			Date fechaMinima = calcularFechaMinima(Actividad);
+			Date fechaMaxima = calcularFechaMaxima(Actividad);
+			Integer duracion = Utils.getWorkingDays(fechaMinima, fechaMaxima);
+			Actividad.setFechaInicio(fechaMinima);
+			Actividad.setFechaFin(fechaMaxima);
+			Actividad.setDuracion(duracion);
+			session.saveOrUpdate(Actividad);
 			session.getTransaction().commit();
 			session.close();
 			actualizarCostoPapa(Actividad);
@@ -713,13 +719,48 @@ public class ActividadDAO {
 			Iterator<Actividad> actual = subactividades.iterator();
 			while (actual.hasNext()) {
 				Actividad hija = actual.next();
-				costo = calcularActividadCosto(hija);
+				BigDecimal costoHija = calcularActividadCosto(hija);
+				costo = costo.add(costoHija!=null ? costoHija : new BigDecimal(0));
 			}
 		}else{
 			costo = actividad.getCosto();
 			costo = costo!=null ? costo : new BigDecimal(0);
 		}
 		return costo;
+	}
+	
+	public static Date calcularFechaMinima(Actividad actividad){
+		Date fecha = null;
+		List<Actividad> subactividades = getActividadesPorObjeto(actividad.getId(), 5);
+		if(subactividades!=null && subactividades.size()>0){
+			Iterator<Actividad> actual = subactividades.iterator();
+			while (actual.hasNext()){
+				Actividad hija = actual.next();
+				Date fechaHija = calcularFechaMinima(hija);
+				if(fecha==null || fechaHija.before(fecha)){
+					fecha = fechaHija;
+				}
+			}
+		}
+		fecha = fecha!=null ? fecha : actividad.getFechaInicio();
+		return fecha;
+	}
+	
+	public static Date calcularFechaMaxima(Actividad actividad){
+		Date fecha = null;
+		List<Actividad> subactividades = getActividadesPorObjeto(actividad.getId(), 5);
+		if(subactividades!=null && subactividades.size()>0){
+			Iterator<Actividad> actual = subactividades.iterator();
+			while (actual.hasNext()){
+				Actividad hija = actual.next();
+				Date fechaHija = calcularFechaMaxima(hija);
+				if(fecha==null || fechaHija.after(fecha)){
+					fecha = fechaHija;
+				}
+			}
+		}
+		fecha = fecha!=null ? fecha : actividad.getFechaFin();
+		return fecha;
 	}
 	
 	public static void actualizarCostoPapa(Actividad actividad){
