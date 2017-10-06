@@ -70,7 +70,7 @@ public class ProductoDAO {
 		return ret;
 	}
 
-	public static boolean guardarProducto(Producto producto) {
+	public static boolean guardarProducto(Producto producto,boolean calcular_valores_agregados) {
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
@@ -91,12 +91,26 @@ public class ProductoDAO {
 				session.saveOrUpdate(pu_admin);
 			}
 			
-			producto.setCosto(calcularCosto(producto));
-			session.saveOrUpdate(producto);
-			session.getTransaction().commit();
-			session.close();
-			
-			ComponenteDAO.guardarComponente(producto.getComponente());
+			if(calcular_valores_agregados){
+				producto.setCosto(calcularCosto(producto));
+				Date fechaMinima = calcularFechaMinima(producto);
+				Date fechaMaxima = calcularFechaMaxima(producto);
+				Integer duracion = Utils.getWorkingDays(fechaMinima, fechaMaxima);
+				
+				producto.setFechaInicio(fechaMinima);
+				producto.setFechaFin(fechaMaxima);
+				producto.setDuracion(duracion.intValue());
+				session.saveOrUpdate(producto);
+				session.saveOrUpdate(producto);
+				session.getTransaction().commit();
+				session.close();
+				
+				ComponenteDAO.guardarComponente(producto.getComponente(),calcular_valores_agregados);
+			}
+			else{
+				session.getTransaction().commit();
+				session.close();
+			}
 			ret = true;
 		} catch (Throwable e) {
 			CLogger.write("3", ProductoDAO.class, e);
@@ -403,5 +417,59 @@ public class ProductoDAO {
 		}
 		
 		return costo;
+	}
+	
+	public static Date calcularFechaMinima(Producto producto){
+		Date ret = null;
+		try{
+			Set<Subproducto> subproductos = producto.getSubproductos();
+			if(subproductos != null && subproductos.size() > 0){
+				Iterator<Subproducto> iterador = subproductos.iterator();
+				Date fechaMinima = new Date();
+				while(iterador.hasNext()){
+					Subproducto subproducto = iterador.next();
+					if(ret == null)
+						ret = subproducto.getFechaInicio();
+					else{
+						fechaMinima = subproducto.getFechaInicio();
+						
+						if(ret.after(fechaMinima))
+							ret = fechaMinima;
+					}
+				}
+			}else
+				ret = producto.getFechaInicio();
+		}catch(Exception e){
+			CLogger.write("17", Proyecto.class, e);
+		}
+		
+		return ret;
+	}
+	
+	public static Date calcularFechaMaxima(Producto producto){
+		Date ret = null;
+		try{
+			Set<Subproducto> subproductos = producto.getSubproductos();
+			if(subproductos != null && subproductos.size() > 0){
+				Iterator<Subproducto> iterador = subproductos.iterator();
+				Date fechaMaxima = new Date();
+				while(iterador.hasNext()){
+					Subproducto subproducto = iterador.next();
+					if(ret == null)
+						ret = subproducto.getFechaFin();
+					else{
+						fechaMaxima = subproducto.getFechaFin();
+						
+						if(ret.before(fechaMaxima))
+							ret = fechaMaxima;
+					}
+				}
+			}else
+				ret = producto.getFechaInicio();
+		}catch(Exception e){
+			CLogger.write("18", Proyecto.class, e);
+		}
+		
+		return ret;
 	}
 }

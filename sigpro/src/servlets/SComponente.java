@@ -320,7 +320,7 @@ public class SComponente extends HttpServlet {
 						componente.setUnidadEjecutora(unidadEjecutora_);
 						componente.setComponenteTipo(componenteTipo);
 					}
-					result = ComponenteDAO.guardarComponente(componente);
+					result = ComponenteDAO.guardarComponente(componente, true);
 					
 					Set<ComponentePropiedadValor> valores_temp = componente.getComponentePropiedadValors();
 					componente.setComponentePropiedadValors(null);
@@ -426,7 +426,7 @@ public class SComponente extends HttpServlet {
 						componente.setDuracionDimension(duracionDimension);
 						
 					}
-					result = ComponenteDAO.guardarComponente(componente);
+					result = ComponenteDAO.guardarComponente(componente, true);
 					/*COrden orden = new COrden();
 					orden.calcularOrdenObjetosSuperiores(componente.getProyecto().getId(), 1,  usuario, COrden.getSessionCalculoOrden(),componente.getProyecto().getId(), null, null);
 					*/

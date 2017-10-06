@@ -107,7 +107,7 @@ public class ActividadDAO {
 		return ret;
 	}
 
-	public static boolean guardarActividad(Actividad Actividad){
+	public static boolean guardarActividad(Actividad Actividad, boolean calcular_valores_agregados){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -141,11 +141,23 @@ public class ActividadDAO {
 			session.saveOrUpdate(Actividad);
 			ActividadUsuario au = new ActividadUsuario(new ActividadUsuarioId(Actividad.getId(), Actividad.getUsuarioCreo()),Actividad);
 			session.saveOrUpdate(au);
-			Actividad.setCosto(calcularActividadCosto(Actividad));
-			session.save(Actividad);
 			session.getTransaction().commit();
-			session.close();
-			actualizarCostoPapa(Actividad);
+			if(calcular_valores_agregados){
+				Actividad.setCosto(calcularActividadCosto(Actividad));
+				Date fechaMinima = calcularFechaMinima(Actividad);
+				Date fechaMaxima = calcularFechaMaxima(Actividad);
+				Integer duracion = Utils.getWorkingDays(fechaMinima, fechaMaxima);
+				Actividad.setFechaInicio(fechaMinima);
+				Actividad.setFechaFin(fechaMaxima);
+				Actividad.setDuracion(duracion);
+				session.saveOrUpdate(Actividad);
+				session.getTransaction().commit();
+				session.close();
+				actualizarCostoPapa(Actividad);
+			}
+			else{
+				session.close();
+			}
 			ret = true;
 		}
 		catch(Throwable e){
@@ -722,27 +734,61 @@ public class ActividadDAO {
 		return costo;
 	}
 	
+	public static Date calcularFechaMinima(Actividad actividad){
+		Date fecha = null;
+		List<Actividad> subactividades = getActividadesPorObjeto(actividad.getId(), 5);
+		if(subactividades!=null && subactividades.size()>0){
+			Iterator<Actividad> actual = subactividades.iterator();
+			while (actual.hasNext()){
+				Actividad hija = actual.next();
+				Date fechaHija = calcularFechaMinima(hija);
+				if(fecha==null || fechaHija.before(fecha)){
+					fecha = fechaHija;
+				}
+			}
+		}
+		fecha = fecha!=null ? fecha : actividad.getFechaInicio();
+		return fecha;
+	}
+	
+	public static Date calcularFechaMaxima(Actividad actividad){
+		Date fecha = null;
+		List<Actividad> subactividades = getActividadesPorObjeto(actividad.getId(), 5);
+		if(subactividades!=null && subactividades.size()>0){
+			Iterator<Actividad> actual = subactividades.iterator();
+			while (actual.hasNext()){
+				Actividad hija = actual.next();
+				Date fechaHija = calcularFechaMaxima(hija);
+				if(fecha==null || fechaHija.after(fecha)){
+					fecha = fechaHija;
+				}
+			}
+		}
+		fecha = fecha!=null ? fecha : actividad.getFechaFin();
+		return fecha;
+	}
+	
 	public static void actualizarCostoPapa(Actividad actividad){
 		switch(actividad.getObjetoTipo()){
 			case 1:
 				Proyecto proyecto = ProyectoDAO.getProyecto(actividad.getObjetoId());
-				ProyectoDAO.guardarProyecto(proyecto); 
+				ProyectoDAO.guardarProyecto(proyecto, true); 
 				break;
 			case 2:
 				Componente componente = ComponenteDAO.getComponente(actividad.getObjetoId());
-				ComponenteDAO.guardarComponente(componente); 
+				ComponenteDAO.guardarComponente(componente, true); 
 				break;
 			case 3:
 				Producto producto = ProductoDAO.getProductoPorId(actividad.getObjetoId());
-				ProductoDAO.guardarProducto(producto);
+				ProductoDAO.guardarProducto(producto, true);
 				break;
 			case 4: 
 				Subproducto subproducto = SubproductoDAO.getSubproductoPorId(actividad.getObjetoId());
-				SubproductoDAO.guardarSubproducto(subproducto);
+				SubproductoDAO.guardarSubproducto(subproducto, true);
 				break;
 			case 5:
 				Actividad padre = getActividadPorId(actividad.getObjetoId());
-				guardarActividad(padre);
+				guardarActividad(padre, true);
 		}
 	}
 }

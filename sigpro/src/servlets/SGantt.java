@@ -83,12 +83,6 @@ public class SGantt extends HttpServlet {
 		String items = "";
 		String accion = "";
 		Integer proyectoId = null;
-		Integer objetoId = null;
-		Integer objetoTipo = null;
-		String nombre = "";
-		Date inicio = null;
-		Date fin = null;
-		boolean completada = false;
 		boolean multiproyecto = false;
 		Integer programaId = null;
 
@@ -277,26 +271,6 @@ public class SGantt extends HttpServlet {
 			}catch(Exception e){
 				e.printStackTrace();
 			}
-		}else if (accion.equals("modificarData")){
-
-			objetoId = Utils.String2Int(map.get("objetoId"));
-			objetoTipo = Utils.String2Int(map.get("objetoTipo"));
-			nombre = map.get("nombre");
-			inicio=Utils.dateFromString(map.get("inicio"));
-			fin = Utils.dateFromString(map.get("fin"));
-			completada = Utils.String2Boolean(map.get("completada"), 0) == 1;
-
-			boolean guardado = modificarDatos(objetoTipo, objetoId, nombre, inicio, fin,usuario,completada);
-			String response_text = "{ \"success\": " + (guardado ? "true" : "false") +" }";
-			response.setHeader("Content-Encoding", "gzip");
-			response.setCharacterEncoding("UTF-8");
-
-
-	        OutputStream output = response.getOutputStream();
-			GZIPOutputStream gz = new GZIPOutputStream(output);
-	        gz.write(response_text.getBytes("UTF-8"));
-	        gz.close();
-	        output.close();
 		}
 
 
@@ -411,59 +385,6 @@ public class SGantt extends HttpServlet {
 			ret = String.join("","\"predecesores\": [",ret,"]");
 		}
 		return ret;
-	}
-
-	private boolean modificarDatos(int objetoTipo, int objetoId, String nombre, Date inicio, Date fin,String usuario,boolean completada){
-		switch(objetoTipo){
-			case 1:
-				Proyecto proyecto = ProyectoDAO.getProyectoPorId(objetoId, usuario);
-				if (proyecto!=null){
-					proyecto.setNombre(nombre);
-					proyecto.setUsuarioActualizo(usuario);
-					proyecto.setFechaActualizacion(new Date());
-					return ProyectoDAO.guardarProyecto(proyecto);
-				}
-				break;
-			case 2:
-				Componente componente = ComponenteDAO.getComponentePorId(objetoId, usuario);
-				if (componente!=null){
-					componente.setNombre(nombre);
-					componente.setUsuarioActualizo(usuario);
-					componente.setFechaActualizacion(new Date());
-					return ComponenteDAO.guardarComponente(componente);
-				}
-				break;
-			case 3:
-				Producto  producto = ProductoDAO.getProductoPorId(objetoId);
-				if  (producto != null){
-					producto.setNombre(nombre);
-					producto.setUsuarioActualizo(usuario);
-					producto.setFechaActualizacion(new Date());
-					return ProductoDAO.guardarProducto(producto);
-				}
-				break;
-			case 4:
-				Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId);
-				if (subproducto !=null){
-					subproducto.setNombre(nombre);
-					subproducto.setUsuarioActualizo(usuario);
-					subproducto.setFechaActualizacion(new Date());
-					return SubproductoDAO.guardarSubproducto(subproducto);
-				}
-				break;
-			case 5:
-				Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
-				if (actividad!=null){
-					actividad.setNombre(nombre);
-					actividad.setFechaInicio(inicio);
-					actividad.setFechaFin(fin);
-					actividad.setPorcentajeAvance(100);
-					actividad.setUsuarioActualizo(usuario);
-					actividad.setFechaActualizacion(new Date());
-					return ActividadDAO.guardarActividad(actividad);
-				}
-		}
-		return false;
 	}
 
 	private String getProyecto(Integer proyectoId,String usuario, HashMap<Integer,List<Integer>> predecesores){

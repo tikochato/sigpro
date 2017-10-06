@@ -2,6 +2,7 @@ package dao;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -69,7 +70,7 @@ public class ComponenteDAO {
 		return ret;
 	}
 
-	public static boolean guardarComponente(Componente Componente){
+	public static boolean guardarComponente(Componente Componente, boolean calcular_valores_agregados){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -88,13 +89,25 @@ public class ComponenteDAO {
 				session.saveOrUpdate(cu_admin);
 			}
 			
-			Componente.setCosto(calcularCosto(Componente));
-			session.saveOrUpdate(Componente);
-			session.getTransaction().commit();
-			session.close();
-			
-			ProyectoDAO.guardarProyecto(Componente.getProyecto());
-			
+			if(calcular_valores_agregados){
+				Componente.setCosto(calcularCosto(Componente));
+				Date fechaMinima = calcularFechaMinima(Componente);
+				Date fechaMaxima = calcularFechaMaxima(Componente);
+				Integer duracion = Utils.getWorkingDays(fechaMinima, fechaMaxima);
+				
+				Componente.setFechaInicio(fechaMinima);
+				Componente.setFechaFin(fechaMaxima);
+				Componente.setDuracion(duracion.intValue());
+				session.saveOrUpdate(Componente);
+				session.getTransaction().commit();
+				session.close();
+				
+				ProyectoDAO.guardarProyecto(Componente.getProyecto(), calcular_valores_agregados);
+			}
+			else{
+				session.getTransaction().commit();
+				session.close();
+			}
 			ret = true;
 		}
 		catch(Throwable e){
@@ -392,3 +405,59 @@ public class ComponenteDAO {
 		return costo;
 	}
 }
+
+public static Date calcularFechaMinima(Componente componente){
+	Date ret = null;
+	try{
+		Set<Producto> productos = componente.getProductos();
+		if(productos != null && productos.size() > 0){
+			Iterator<Producto> iterador = productos.iterator();
+			Date fechaMinima = new Date();
+			while(iterador.hasNext()){
+				Producto producto = iterador.next();
+				if(ret == null)
+					ret = producto.getFechaInicio();
+				else{
+					fechaMinima = producto.getFechaInicio();
+					
+					if(ret.after(fechaMinima))
+						ret = fechaMinima;
+				}
+			}
+		}else
+			ret = componente.getFechaInicio();
+	}catch(Exception e){
+		CLogger.write("17", Proyecto.class, e);
+	}
+	
+	return ret;
+}
+
+public static Date calcularFechaMaxima(Componente componente){
+	Date ret = null;
+	try{
+		Set<Producto> productos = componente.getProductos();
+		if(productos != null && productos.size() > 0){
+			Iterator<Producto> iterador = productos.iterator();
+			Date fechaMaxima = new Date();
+			while(iterador.hasNext()){
+				Producto producto = iterador.next();
+				if(ret == null)
+					ret = producto.getFechaFin();
+				else{
+					fechaMaxima = producto.getFechaFin();
+					
+					if(ret.before(fechaMaxima))
+						ret = fechaMaxima;
+				}
+			}
+		}else
+			ret = componente.getFechaInicio();
+	}catch(Exception e){
+		CLogger.write("17", Proyecto.class, e);
+	}
+	
+	return ret;
+}
+}
+

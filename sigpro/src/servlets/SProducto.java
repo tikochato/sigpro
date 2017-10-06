@@ -292,7 +292,7 @@ public class SProducto extends HttpServlet {
 					producto.setDuracionDimension(duracionDimension);
 				}
 				
-				ret = ProductoDAO.guardarProducto(producto);
+				ret = ProductoDAO.guardarProducto(producto, true);
 				
 				if (ret){
 					ProductoUsuarioId productoUsuarioId = new ProductoUsuarioId(producto.getId(), usuario);
@@ -727,7 +727,7 @@ public class SProducto extends HttpServlet {
 					producto.setDuracionDimension(duracionDimension);
 				}
 				
-				ret = ProductoDAO.guardarProducto(producto);
+				ret = ProductoDAO.guardarProducto(producto, true);
 				
 				/*COrden orden = new COrden();
 				orden.calcularOrdenObjetosSuperiores(producto.getComponente().getId(), 2, usuario, COrden.getSessionCalculoOrden(),
@@ -815,7 +815,7 @@ public class SProducto extends HttpServlet {
 						producto.setPeso(Utils.String2Int(temp[1]));
 						producto.setUsuarioActualizo(usuario);
 						producto.setFechaActualizacion(new Date());
-						ret = ProductoDAO.guardarProducto(producto);
+						ret = ProductoDAO.guardarProducto(producto, true);
 					}
 				}
 			}
