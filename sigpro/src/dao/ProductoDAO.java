@@ -380,23 +380,23 @@ public class ProductoDAO {
 				
 				while(iterador.hasNext()){
 					Subproducto subproducto = iterador.next();
-					costo = costo.add(subproducto.getCosto());
+					costo = costo.add(subproducto.getCosto() != null ? subproducto.getCosto() : new BigDecimal(0));
 				}
 				
 				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(producto.getId(), 3);
 				if(actividades != null && actividades.size() > 0){
 					for(Actividad actividad : actividades){
-						costo = costo.add(actividad.getCosto());
+						costo = costo.add(actividad.getCosto() != null ? actividad.getCosto() : new BigDecimal(0));
 					}
 				}
 			}else{
 				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(producto.getId(), 3);
 				if(actividades != null && actividades.size() > 0){
 					for(Actividad actividad : actividades){
-						costo = costo.add(actividad.getCosto());
+						costo = costo.add(actividad.getCosto() != null ? actividad.getCosto() : new BigDecimal(0));
 					}
 				}else
-					costo = producto.getCosto();
+					costo = producto.getCosto() != null ? producto.getCosto() : new BigDecimal(0);
 			}			
 		}catch(Exception e){
 			CLogger.write("16", Proyecto.class, e);
