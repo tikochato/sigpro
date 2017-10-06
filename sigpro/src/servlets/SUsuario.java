@@ -412,10 +412,9 @@ public class SUsuario extends HttpServlet {
 						Usuario usuarioEdicion = UsuarioDAO.getUsuario(usuario);
 						if(usuarioEdicion!=null){
 							String email = map.get("email");
+							String permisosAsignados = map.get("permisos");
 							if(email!=null){
 								usuarioEdicion.setEmail(email);
-								String prestamosAsignados=map.get("prestamosNuevos");
-								String prestamosEliminados= map.get("prestamosEliminados");
 								String estructura_permisos = map.get("estructuraAsignada");
 								String[] estructuras = estructura_permisos.split("\\|");
 								int id=0;
@@ -438,22 +437,16 @@ public class SUsuario extends HttpServlet {
 										}
 									}
 								}
-								int rol = RolDAO.getRolUser(usuario).getId().getRol();
-								if(prestamosAsignados.compareTo("[]")!=0){
+								
+								UsuarioDAO.desasignarPermisos(usuario);
+								if(permisosAsignados!=null && permisosAsignados.compareTo("[]")!=0){
 									Gson entradaJson = new Gson();
 									Type tipo = new TypeToken<List<Integer>>() {}.getType();
-									List<Integer> prestamos = entradaJson.fromJson(prestamosAsignados, tipo);
-									UsuarioDAO.asignarPrestamos(usuario, prestamos,usuario);
-									UsuarioDAO.asignarPrestamoRol(usuario, prestamos, rol);
-								}
-								if(prestamosEliminados.compareTo("[]")!=0){
-									Gson entradaJson = new Gson();
-									Type tipo = new TypeToken<List<Integer>>() {}.getType();
-									List<Integer> prestamos = entradaJson.fromJson(prestamosEliminados, tipo);
-									UsuarioDAO.desasignarPrestamo(usuario, prestamos);
+									List<Integer> permisos = entradaJson.fromJson(permisosAsignados, tipo);
+									UsuarioDAO.asignarPermisosUsuario(usuario, permisos, usuario_texto);
 								}
 								if(UsuarioDAO.editarUsuario(usuarioEdicion, sesionweb.getAttribute("usuario").toString())){
-									response_text = String.join("","{ \"success\": true, \"mensaje\":\"actualizaciÃ³n de usuario exitosa.\" }");
+									response_text = String.join("","{ \"success\": true, \"mensaje\":\"actualización de usuario exitosa.\" }");
 								}else{
 									response_text = String.join("","{ \"success\": false, \"error\":\"no se pudo actualizar al usuario. \" }");
 								}
