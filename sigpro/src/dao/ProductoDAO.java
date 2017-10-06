@@ -24,6 +24,7 @@ import pojo.Subproducto;
 import pojo.Usuario;
 import utilities.CHibernateSession;
 import utilities.CLogger;
+import utilities.Utils;
 
 public class ProductoDAO {
 
@@ -92,6 +93,13 @@ public class ProductoDAO {
 			}
 			
 			producto.setCosto(calcularCosto(producto));
+			Date fechaMinima = calcularFechaMinima(producto);
+			Date fechaMaxima = calcularFechaMaxima(producto);
+			Integer duracion = Utils.getWorkingDays(fechaMinima, fechaMaxima);
+			
+			producto.setFechaInicio(fechaMinima);
+			producto.setFechaFin(fechaMaxima);
+			producto.setDuracion(duracion.intValue());
 			session.saveOrUpdate(producto);
 			session.getTransaction().commit();
 			session.close();
@@ -403,5 +411,59 @@ public class ProductoDAO {
 		}
 		
 		return costo;
+	}
+	
+	public static Date calcularFechaMinima(Producto producto){
+		Date ret = null;
+		try{
+			Set<Subproducto> subproductos = producto.getSubproductos();
+			if(subproductos != null && subproductos.size() > 0){
+				Iterator<Subproducto> iterador = subproductos.iterator();
+				Date fechaMinima = new Date();
+				while(iterador.hasNext()){
+					Subproducto subproducto = iterador.next();
+					if(ret == null)
+						ret = subproducto.getFechaInicio();
+					else{
+						fechaMinima = subproducto.getFechaInicio();
+						
+						if(ret.after(fechaMinima))
+							ret = fechaMinima;
+					}
+				}
+			}else
+				ret = producto.getFechaInicio();
+		}catch(Exception e){
+			CLogger.write("17", Proyecto.class, e);
+		}
+		
+		return ret;
+	}
+	
+	public static Date calcularFechaMaxima(Producto producto){
+		Date ret = null;
+		try{
+			Set<Subproducto> subproductos = producto.getSubproductos();
+			if(subproductos != null && subproductos.size() > 0){
+				Iterator<Subproducto> iterador = subproductos.iterator();
+				Date fechaMaxima = new Date();
+				while(iterador.hasNext()){
+					Subproducto subproducto = iterador.next();
+					if(ret == null)
+						ret = subproducto.getFechaFin();
+					else{
+						fechaMaxima = subproducto.getFechaFin();
+						
+						if(ret.before(fechaMaxima))
+							ret = fechaMaxima;
+					}
+				}
+			}else
+				ret = producto.getFechaInicio();
+		}catch(Exception e){
+			CLogger.write("18", Proyecto.class, e);
+		}
+		
+		return ret;
 	}
 }

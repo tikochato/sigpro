@@ -91,6 +91,7 @@ public class SProyecto extends HttpServlet {
 		String objetivoEspecifico;
 		String visionGeneral;
 		stprestamo prestamo;
+		Integer ejecucionFisicaReal;
 
 	};
 
@@ -261,6 +262,7 @@ public class SProyecto extends HttpServlet {
 										+ " " + proyecto.getColaborador().getSnombre()
 										+ " " + proyecto.getColaborador().getPapellido()
 										+ " " + proyecto.getColaborador().getSapellido()) : null;
+				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
 				datos_.add(dato);
 			}
 
@@ -317,6 +319,7 @@ public class SProyecto extends HttpServlet {
 										+ " " + proyecto.getColaborador().getSnombre()
 										+ " " + proyecto.getColaborador().getPapellido()
 										+ " " + proyecto.getColaborador().getSapellido()) : null;
+				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
 				datos_.add(dato);
 			}
 
@@ -376,6 +379,7 @@ public class SProyecto extends HttpServlet {
 										+ " " + proyecto.getColaborador().getSapellido()) : null;
 
 				dato.prestamo = obtenerPrestamo(proyecto.getId(),1);
+				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -432,6 +436,7 @@ public class SProyecto extends HttpServlet {
 										+ " " + proyecto.getColaborador().getSnombre()
 										+ " " + proyecto.getColaborador().getPapellido()
 										+ " " + proyecto.getColaborador().getSapellido()) : null;
+				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -465,7 +470,7 @@ public class SProyecto extends HttpServlet {
 				String visionGeneral = map.get("visionGeneral");
 				Integer unidad_ejecutora = (map.get("unidadejecutoraid")!=null) ? Utils.String2Int(map.get("unidadejecutoraid")) : null;
 				Integer entidad = (map.get("entidadid")!=null) ? Utils.String2Int(map.get("entidadid")) : null;
-				Integer ejecucionFisicaReal = Utils.String2Int(map.get("ejecucionFisicaReal"),null);
+				Integer ejecucionFisicaReal = Utils.String2Int(map.get("ejecucionFisicaReal"));
 
 				AcumulacionCosto acumulacionCosto = null;
 				if (map.get("acumulacionCosto")!=null){
@@ -777,6 +782,7 @@ public class SProyecto extends HttpServlet {
 										+ " " + proyecto.getColaborador().getSnombre()
 										+ " " + proyecto.getColaborador().getPapellido()
 										+ " " + proyecto.getColaborador().getSapellido()) : null;
+				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
 
 				dato.prestamo = obtenerPrestamo(proyecto.getId(),1);
 			}
