@@ -201,8 +201,20 @@ public class SAvanceActividades extends HttpServlet {
 						fin = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
 			                    .parse(actividad.fechaFin);
 						
+						DateTime nuevaFechaFin = new DateTime(fin);
+						nuevaFechaFin = nuevaFechaFin.plusHours(23);
+						nuevaFechaFin = nuevaFechaFin.plusMinutes(59);
+						nuevaFechaFin = nuevaFechaFin.plusSeconds(59);
+						fin = nuevaFechaFin.toDate();
+						
 						Corte = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
 			                    .parse(fechaCorte);
+						
+						DateTime nuevaFechaCorte = new DateTime(Corte);
+						nuevaFechaFin = nuevaFechaFin.plusHours(23);
+						nuevaFechaFin = nuevaFechaFin.plusMinutes(59);
+						nuevaFechaFin = nuevaFechaFin.plusSeconds(59);
+						Corte = nuevaFechaCorte.toDate();
 						
 						if (actividad.porcentajeAvance == 0 && (!Corte.after(fin))){
 							temp.estado = "Sin iniciar";
@@ -233,32 +245,28 @@ public class SAvanceActividades extends HttpServlet {
 					try{	
 						fechaHito = new SimpleDateFormat("dd/MM/yyyy", Locale.US).parse(Utils.formatDate(hito.getFecha()));
 						
+						DateTime nuevaFechaHito = new DateTime(fechaHito);
+						nuevaFechaHito = nuevaFechaHito.plusHours(23);
+						nuevaFechaHito = nuevaFechaHito.plusMinutes(59);
+						nuevaFechaHito = nuevaFechaHito.plusSeconds(59);
+						fechaHito = nuevaFechaHito.toDate();						
+						
+						Corte = new SimpleDateFormat("dd/MM/yyyy", Locale.US).parse(fechaCorte);
+						
+						DateTime nuevaFechaCorte = new DateTime(Corte);
+						nuevaFechaCorte = nuevaFechaCorte.plusHours(23);
+						nuevaFechaCorte = nuevaFechaCorte.plusMinutes(59);
+						nuevaFechaCorte = nuevaFechaCorte.plusSeconds(59);
+						Corte = nuevaFechaCorte.toDate();
+						
 						if(hitoResultado != null){
-							if(Corte.before(fechaHito)){
-								temp = new stelementosActividadesAvance();
-								temp.id = hito.getId();
-								temp.nombre = hito.getNombre();
-								temp.avance = 0;
-								temp.fechaInicial = Utils.formatDate(hito.getFecha());
-								temp.estado = "Sin Iniciar";
-								lstElementosActividadesAvance.add(temp);
-							}else if(Corte.after(fechaHito) && (hitoResultado.getValorEntero() == 0 && hitoResultado.getValorDecimal() == new BigDecimal(0) && hitoResultado.getValorString().equals("") && hitoResultado.getValorTiempo() == null)){
-								temp = new stelementosActividadesAvance();
-								temp.id = hito.getId();
-								temp.nombre = hito.getNombre();
-								temp.avance = 0;
-								temp.estado = "Retrasado";
-								temp.fechaInicial = Utils.formatDate(hito.getFecha());
-								lstElementosActividadesAvance.add(temp);
-							} else if(Corte.after(fechaHito) && (hitoResultado.getValorEntero() > 0 || hitoResultado.getValorDecimal() != new BigDecimal(0) || !hitoResultado.getValorString().equals("") || hitoResultado.getValorTiempo() != null)){
-								temp = new stelementosActividadesAvance();
-								temp.id = hito.getId();
-								temp.nombre = hito.getNombre();
-								temp.avance = 100;
-								temp.estado = "Completado";
-								temp.fechaInicial = Utils.formatDate(hito.getFecha());
-								lstElementosActividadesAvance.add(temp);
-							}
+							temp = new stelementosActividadesAvance();
+							temp.id = hito.getId();
+							temp.nombre = hito.getNombre();
+							temp.avance = 100;
+							temp.estado = "Completado";
+							temp.fechaInicial = Utils.formatDate(hito.getFecha());
+							lstElementosActividadesAvance.add(temp);							
 						}else{							
 							if (Corte.before(fechaHito) || Corte.equals(fechaHito)){
 								temp = new stelementosActividadesAvance();
@@ -328,8 +336,20 @@ public class SAvanceActividades extends HttpServlet {
 					fin = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
 		                    .parse(actividad.fechaFin);
 					
+					DateTime nuevaFechaFin = new DateTime(fin);
+					nuevaFechaFin = nuevaFechaFin.plusHours(23);
+					nuevaFechaFin = nuevaFechaFin.plusMinutes(59);
+					nuevaFechaFin = nuevaFechaFin.plusSeconds(59);
+					fin = nuevaFechaFin.toDate();
+					
 					Corte = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
 		                    .parse(fechaCorte);
+					
+					DateTime nuevaFechaCorte = new DateTime(Corte);
+					nuevaFechaCorte = nuevaFechaCorte.plusHours(23);
+					nuevaFechaCorte = nuevaFechaCorte.plusMinutes(59);
+					nuevaFechaCorte = nuevaFechaCorte.plusSeconds(59);
+					Corte = nuevaFechaCorte.toDate();
 					
 					if (actividad.porcentajeAvance == 0 && (!Corte.after(fin))){
 						temp.estado = "Sin iniciar";
@@ -476,15 +496,28 @@ public class SAvanceActividades extends HttpServlet {
 						fin = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
 			                    .parse(actividad.fechaFin);
 						
+						DateTime nuevaFechaFin = new DateTime(fin);
+						nuevaFechaFin = nuevaFechaFin.plusHours(23);
+						nuevaFechaFin = nuevaFechaFin.plusMinutes(59);
+						nuevaFechaFin = nuevaFechaFin.plusSeconds(59);
+						fin = nuevaFechaFin.toDate();
+						
 						Corte = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
 			                    .parse(fechaCorte);
+						
+						DateTime nuevaFechaCorte = new DateTime(Corte);
+						nuevaFechaCorte = nuevaFechaCorte.plusHours(23);
+						nuevaFechaCorte = nuevaFechaCorte.plusMinutes(59);
+						nuevaFechaCorte = nuevaFechaCorte.plusSeconds(59);
+						Corte = nuevaFechaCorte.toDate();
 						
 						anioCorte = new DateTime(Corte);
 						Integer anio = anioCorte.getYear();
 						
+						DateTime anioInicio = new DateTime(anio,1,1,0,0,0);
 						DateTime anioFin = new DateTime(anio,12,31,23,59,59);
 						
-						if(actividad.porcentajeAvance >= 0 && actividad.porcentajeAvance < 100 && !inicio.after(anioFin.toDate())){
+						if(actividad.porcentajeAvance >= 0 && actividad.porcentajeAvance < 100 && inicio.after(anioInicio.toDate()) && inicio.before(anioFin.toDate())){
 							totalEsperadasAnio++;
 						}
 						
@@ -597,13 +630,20 @@ public class SAvanceActividades extends HttpServlet {
 			double  totalHitos = 0;
 			
 			Corte = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
-					.parse(fechaCorte);
+                    .parse(fechaCorte);
+			
+			DateTime nuevaFechaCorte = new DateTime(Corte);
+			nuevaFechaCorte = nuevaFechaCorte.plusHours(23);
+			nuevaFechaCorte = nuevaFechaCorte.plusMinutes(59);
+			nuevaFechaCorte = nuevaFechaCorte.plusSeconds(59);
+			Corte = nuevaFechaCorte.toDate();
 			
 			Date fechaHito = new Date();
 			
 			anioCorte = new DateTime(Corte);
 			Integer anio = anioCorte.getYear();
 			
+			DateTime anioInicio = new DateTime(anio, 1,1,0,0,0);
 			DateTime anioFin = new DateTime(anio,12,31,23,59,59);
 			
 			for(Hito hito : hitos){
@@ -629,7 +669,7 @@ public class SAvanceActividades extends HttpServlet {
 					}
 				}else{
 					
-					if(!fechaHito.after(anioFin.toDate())){
+					if(fechaHito.after(anioInicio.toDate()) && fechaHito.before(anioFin.toDate())){
 						totalEsperadasAnio++;
 					}
 					
@@ -769,18 +809,31 @@ public class SAvanceActividades extends HttpServlet {
 							inicio = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
 									.parse(actividad.fechaInicio);
 							
-							fin = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
+							fin =  new SimpleDateFormat("dd/MM/yyyy", Locale.US)
 									.parse(actividad.fechaFin);
 							
+							DateTime nuevaFechaFin = new DateTime(fin);
+							nuevaFechaFin = nuevaFechaFin.plusHours(23);
+							nuevaFechaFin = nuevaFechaFin.plusMinutes(59);
+							nuevaFechaFin = nuevaFechaFin.plusSeconds(59);
+							fin = nuevaFechaFin.toDate();
+							
 							Corte = new SimpleDateFormat("dd/MM/yyyy", Locale.US)
-									.parse(fechaCorte);
+				                    .parse(fechaCorte);
+							
+							DateTime nuevaFechaCorte = new DateTime(Corte);
+							nuevaFechaCorte = nuevaFechaCorte.plusHours(23);
+							nuevaFechaCorte = nuevaFechaCorte.plusMinutes(59);
+							nuevaFechaCorte = nuevaFechaCorte.plusSeconds(59);
+							Corte = nuevaFechaCorte.toDate();
 							
 							anioCorte = new DateTime(Corte);
 							Integer anio = anioCorte.getYear();
 							
+							DateTime anioInicio = new DateTime(anio,1,1,0,0,0);
 							DateTime anioFin = new DateTime(anio,12,31,23,59,59);
 							
-							if(actividad.porcentajeAvance >= 0 && actividad.porcentajeAvance < 100 && !inicio.after(anioFin.toDate())){
+							if(actividad.porcentajeAvance >= 0 && actividad.porcentajeAvance < 100 && inicio.after(anioInicio.toDate()) && inicio.before(anioFin.toDate())){
 								totalEsperadasAnio++;
 							}
 							
@@ -887,7 +940,7 @@ public class SAvanceActividades extends HttpServlet {
 		String headers[][];
 		
 		headers = new String[][]{
-			{"Nombre", "Estado", "Completadas", "Sin Iniciar", "En Proceso", "Retrasadas","Esperadas fin de aÃ±o", "AÃ±os siguientes"},  //titulos
+			{"Nombre", "Estado", "Completadas", "Sin Iniciar", "En Proceso", "Retrasadas","Esperadas fin de año", "Años siguientes"},  //titulos
 			null, //mapeo
 			{"string", "string", "string", "string", "string", "string", "string", "string"}, //tipo dato
 			{"", "", "", "", "", "", "", ""}, //operaciones columnas
@@ -902,7 +955,9 @@ public class SAvanceActividades extends HttpServlet {
 	
 	public String[][] generarDatos(Integer idPrestamo, String fechaCorte, String usuario){
 		String[][] datos = null;
+		Integer totalesdeActividades = 0;
 		Integer totalActividades = 0;
+		Integer totalesHitos = 0;
 		Integer totalHitos = 0;
 		Integer totalProductos = 0;
 		
@@ -910,9 +965,11 @@ public class SAvanceActividades extends HttpServlet {
 		stElementoResult avanceHitos = getAvanceHitos(idPrestamo, fechaCorte, usuario);
 		stElementoResult avanceProductos = getAvanceProductos(idPrestamo, fechaCorte, usuario);
 		if(avanceActividades!=null){
+			totalesdeActividades = (int)avanceActividades.total;
 			totalActividades = avanceActividades.listaResult.size();
 		}
 		if(avanceHitos!=null){
+			totalesHitos = (int)avanceHitos.total;
 			totalHitos = avanceHitos.listaResult.size();
 		}
 		if(avanceProductos!=null){
@@ -936,14 +993,14 @@ public class SAvanceActividades extends HttpServlet {
 			datos[fila][7] = String.valueOf(avanceActividades.listaResult.get(i).aniosSiguientes)+"%";
 			fila++;
 		}
-		datos[fila][0]="Total de Actividades: "+totalActividades;
+		datos[fila][0]="Total de Actividades: "+totalesdeActividades;
 		datos[fila][1]="";
-		datos[fila][2] = avanceActividades!=null ? String.valueOf(avanceActividades.listaResultCantidad.get(0).completadas) : "0";
-		datos[fila][3] = avanceActividades!=null ? String.valueOf(avanceActividades.listaResultCantidad.get(0).sinIniciar) : "0";
-		datos[fila][4] = avanceActividades!=null ? String.valueOf(avanceActividades.listaResultCantidad.get(0).proceso) : "0";
-		datos[fila][5] = avanceActividades!=null ? String.valueOf(avanceActividades.listaResultCantidad.get(0).retrasadas) : "0";
-		datos[fila][6] = avanceActividades!=null ? String.valueOf(avanceActividades.listaResultCantidad.get(0).esperadasfinanio) : "0";
-		datos[fila][7] = avanceActividades!=null ? String.valueOf(avanceActividades.listaResultCantidad.get(0).aniosiguientes) : "0";
+		datos[fila][2] = avanceActividades!=null ? String.valueOf((int)avanceActividades.listaResultCantidad.get(0).completadas) : "0";
+		datos[fila][3] = avanceActividades!=null ? String.valueOf((int)avanceActividades.listaResultCantidad.get(0).sinIniciar) : "0";
+		datos[fila][4] = avanceActividades!=null ? String.valueOf((int)avanceActividades.listaResultCantidad.get(0).proceso) : "0";
+		datos[fila][5] = avanceActividades!=null ? String.valueOf((int)avanceActividades.listaResultCantidad.get(0).retrasadas) : "0";
+		datos[fila][6] = avanceActividades!=null ? String.valueOf((int)avanceActividades.listaResultCantidad.get(0).esperadasfinanio) : "0";
+		datos[fila][7] = avanceActividades!=null ? String.valueOf((int)avanceActividades.listaResultCantidad.get(0).aniosiguientes) : "0";
 		fila++;
 		fila++;
 		
@@ -961,14 +1018,14 @@ public class SAvanceActividades extends HttpServlet {
 			datos[fila][7] = String.valueOf(avanceHitos.listaResult.get(i).aniosSiguientes)+"%";
 			fila++;
 		}
-		datos[fila][0]="Total de Hitos: "+totalHitos;
+		datos[fila][0]="Total de Hitos: "+totalesHitos;
 		datos[fila][1]="";
-		datos[fila][2] = avanceHitos!=null ? String.valueOf(avanceHitos.listaResultCantidad.get(0).completadas) : "0";
-		datos[fila][3] = avanceHitos!=null ? String.valueOf(avanceHitos.listaResultCantidad.get(0).sinIniciar) : "0";
+		datos[fila][2] = avanceHitos!=null ? String.valueOf((int)avanceHitos.listaResultCantidad.get(0).completadas) : "0";
+		datos[fila][3] = avanceHitos!=null ? String.valueOf((int)avanceHitos.listaResultCantidad.get(0).sinIniciar) : "0";
 		datos[fila][4] = String.valueOf(0);
-		datos[fila][5] = avanceHitos!=null ? String.valueOf(avanceHitos.listaResultCantidad.get(0).retrasadas) : "0";
-		datos[fila][6] = avanceHitos!=null ? String.valueOf(avanceHitos.listaResultCantidad.get(0).esperadasfinanio) : "0";
-		datos[fila][7] = avanceHitos!=null ? String.valueOf(avanceHitos.listaResultCantidad.get(0).esperadasfinanio) : "0";
+		datos[fila][5] = avanceHitos!=null ? String.valueOf((int)avanceHitos.listaResultCantidad.get(0).retrasadas) : "0";
+		datos[fila][6] = avanceHitos!=null ? String.valueOf((int)avanceHitos.listaResultCantidad.get(0).esperadasfinanio) : "0";
+		datos[fila][7] = avanceHitos!=null ? String.valueOf((int)avanceHitos.listaResultCantidad.get(0).esperadasfinanio) : "0";
 		fila++;
 		fila++;
 		
@@ -978,12 +1035,12 @@ public class SAvanceActividades extends HttpServlet {
 		for(int i=0; i<totalProductos;i++){
 			datos[fila][0] = "    "+avanceProductos.listaResult.get(i).nombre;
 			datos[fila][1] = "";
-			datos[fila][2] = String.valueOf(avanceProductos.listaResult.get(i).completadas);
-			datos[fila][3] = String.valueOf(avanceProductos.listaResult.get(i).sinIniciar);
-			datos[fila][4] = String.valueOf(avanceProductos.listaResult.get(i).proceso);
-			datos[fila][5] = String.valueOf(avanceProductos.listaResult.get(i).retrasadas);
-			datos[fila][6] = String.valueOf(avanceProductos.listaResult.get(i).esperadasfinanio);
-			datos[fila][7] = String.valueOf(avanceProductos.listaResult.get(i).aniosSiguientes);
+			datos[fila][2] = String.valueOf((int)avanceProductos.listaResult.get(i).completadas);
+			datos[fila][3] = String.valueOf((int)avanceProductos.listaResult.get(i).sinIniciar);
+			datos[fila][4] = String.valueOf((int)avanceProductos.listaResult.get(i).proceso);
+			datos[fila][5] = String.valueOf((int)avanceProductos.listaResult.get(i).retrasadas);
+			datos[fila][6] = String.valueOf((int)avanceProductos.listaResult.get(i).esperadasfinanio);
+			datos[fila][7] = String.valueOf((int)avanceProductos.listaResult.get(i).aniosSiguientes);
 			fila++;
 		}
 		datos[fila][0]="Total de Productos: "+totalProductos;

@@ -130,6 +130,8 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 							mi.totalHitosCompletados = 0;
 							mi.totalHitosSinIniciar = 0;
 							mi.totalHitosRetrasados = 0;
+							mi.totalHitosEsperados = 0;
+							mi.totalHitosAnioSiguientes = 0;
 							
 							if(response.actividades != undefined){
 								mi.rowCollectionActividades = response.actividades;
@@ -309,6 +311,9 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 				resolve : {
 					objetoRow : function(){
 						return objetoRow;
+					},
+					fechaCorte : function(){
+						return mi.fechaCorte
 					}
 				}
 			});
@@ -360,9 +365,9 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 
 app.controller('modalAvance', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log', 'objetoRow',modalAvance ]);
+	'$timeout', '$log', 'objetoRow','fechaCorte',modalAvance ]);
 
-function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $utilidades, $timeout, $log, objetoRow) {
+function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $utilidades, $timeout, $log, objetoRow, fechaCorte) {
 	var mi = this;	
 
 	if(objetoRow.objetoTipo == 1){
@@ -371,7 +376,7 @@ function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $u
 		$http.post('/SAvanceActividades', {
 			accion: 'getActividadesProyecto',
 			idPrestamo: objetoRow.objetoId,
-			fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY')
+			fechaCorte: moment(fechaCorte).format('DD/MM/YYYY')
 		}).success(function(response){
 			if (response.success){
 				mi.items = response.items;
@@ -385,7 +390,7 @@ function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $u
 		$http.post('/SAvanceActividades', {
 			accion: 'getHitos',
 			idPrestamo: objetoRow.objetoId,
-			fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY')
+			fechaCorte: moment(fechaCorte).format('DD/MM/YYYY')
 		}).success(function(response){
 			if (response.success){
 				mi.items = response.items;
@@ -399,7 +404,7 @@ function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $u
 		$http.post('/SAvanceActividades', {
 			accion: 'getActividadesProducto',
 			productoId: objetoRow.objetoId,
-			fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY')
+			fechaCorte: moment(fechaCorte).format('DD/MM/YYYY')
 		}).success(function(response){
 			if (response.success){
 				mi.items = response.items;

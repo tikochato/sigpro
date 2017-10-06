@@ -57,7 +57,7 @@
 	    	<div class="col-sm-12">
 	    		<div class="row">
     				<div class="panel panel-default" style="max-width:{{controller.tamanoPantalla}}px;">
-	  					<div class="panel-heading"><h3>Reporte de Avance</h3></div>
+	  					<div class="panel-heading"><h3>Reporte de Avance de Actividades e Hitos</h3></div>
 					</div>
 				</div>
     			<br>
@@ -171,7 +171,7 @@
 		    				</div>
 		    			</div>
 		    			<br>
-		    			<div class="row" ng-hide="!controller.mostrarHitos">
+		    			<div class="row">
 			    			<div class="col-sm-12">
 				    			<div style="height: 5%; width: 100%">
 									<div><h4><b>Hitos</b></h4></div>
