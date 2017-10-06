@@ -212,7 +212,7 @@ public class SPlanAdquisicion extends HttpServlet {
 						temp.recepcionOfertasReal = Utils.formatDate(adq.getRecepcionOfertasReal());
 						temp.tipoId = adq.getTipoAdquisicion().getId();
 						temp.tipoNombre = adq.getTipoAdquisicion().getNombre();
-						temp.total = adq.getCantidad()!=null && adq.getPrecioUnitario()!=null ? adq.getPrecioUnitario().multiply(new BigDecimal(adq.getCantidad())) : adq.getTotal();
+						temp.total = adq.getTotal()!= null ? adq.getTotal() : new BigDecimal(0);
 						if(adq.getPlanAdquisicionPagos()!=null && adq.getPlanAdquisicionPagos().size()>0){
 							stpago[] pagos = new stpago[adq.getPlanAdquisicionPagos().size()];
 							ArrayList<PlanAdquisicionPago> apagos = new ArrayList<PlanAdquisicionPago>(adq.getPlanAdquisicionPagos());
