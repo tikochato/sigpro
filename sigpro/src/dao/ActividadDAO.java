@@ -142,7 +142,6 @@ public class ActividadDAO {
 			ActividadUsuario au = new ActividadUsuario(new ActividadUsuarioId(Actividad.getId(), Actividad.getUsuarioCreo()),Actividad);
 			session.saveOrUpdate(au);
 
-			session.getTransaction().commit();
 			if(calcular_valores_agregados){
 				Actividad.setCosto(calcularActividadCosto(Actividad));
 				Date fechaMinima = calcularFechaMinima(Actividad);
@@ -157,6 +156,7 @@ public class ActividadDAO {
 				actualizarCostoPapa(Actividad);
 			}
 			else{
+				session.getTransaction().commit();
 				session.close();
 			}
 			ret = true;
