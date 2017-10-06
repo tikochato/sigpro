@@ -435,23 +435,23 @@ public class ProyectoDAO implements java.io.Serializable  {
 				
 				while(iterador.hasNext()){
 					Componente componente = iterador.next();
-					costo = costo.add(componente.getCosto());
+					costo = costo.add(componente.getCosto() != null ? componente.getCosto() : new BigDecimal(0));
 				}
 					
 				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(proyecto.getId(), 1);
 				if(actividades != null && actividades.size() > 0){
 					for(Actividad actividad : actividades){
-						costo = costo.add(actividad.getCosto());
+						costo = costo.add(actividad.getCosto() != null ? actividad.getCosto() : new BigDecimal(0));
 					}
 				}			
 			}else{
 				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(proyecto.getId(), 1);
 				if(actividades != null && actividades.size() > 0){
 					for(Actividad actividad : actividades){
-						costo = costo.add(actividad.getCosto());
+						costo = costo.add(actividad.getCosto() != null ? actividad.getCosto() : new BigDecimal(0));
 					}
 				}else
-					costo = proyecto.getCosto();
+					costo = proyecto.getCosto() != null ? proyecto.getCosto() : new BigDecimal(0);
 			}				
 		}catch(Exception e){
 			CLogger.write("16", Proyecto.class, e);

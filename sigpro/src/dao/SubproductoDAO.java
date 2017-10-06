@@ -440,10 +440,10 @@ public class SubproductoDAO {
 			List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(subproducto.getId(), 4);
 			if(actividades != null && actividades.size() > 0){
 				for(Actividad actividad : actividades){
-					costo = costo.add(actividad.getCosto());
+					costo = costo.add(actividad.getCosto() != null ? actividad.getCosto() : new BigDecimal(0));
 				}
 			}else{				
-				costo = subproducto.getCosto();
+				costo = subproducto.getCosto() != null ? subproducto.getCosto() : new BigDecimal(0);
 			}
 		}catch(Exception e){
 			CLogger.write("14", Proyecto.class, e);

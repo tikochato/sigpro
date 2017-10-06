@@ -367,23 +367,23 @@ public class ComponenteDAO {
 				
 				while(iterador.hasNext()){
 					Producto producto = iterador.next();
-					costo = costo.add(producto.getCosto());
+					costo = costo.add(producto.getCosto() != null ? producto.getCosto() : new BigDecimal(0));
 				}
 				
 				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(componente.getId(), 2);
 				if(actividades != null && actividades.size() > 0){
 					for(Actividad actividad : actividades){
-						costo = costo.add(actividad.getCosto());
+						costo = costo.add(actividad.getCosto() != null ? actividad.getCosto() : new BigDecimal(0));
 					}
 				}
 			}else{
 				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(componente.getId(), 2);
 				if(actividades != null && actividades.size() > 0){
 					for(Actividad actividad : actividades){
-						costo = costo.add(actividad.getCosto());
+						costo = costo.add(actividad.getCosto() != null ? actividad.getCosto() : new BigDecimal(0));
 					}
 				}else
-					costo = componente.getCosto();
+					costo = componente.getCosto() != null ? componente.getCosto() : new BigDecimal(0);
 			}
 		}catch(Exception e){
 			CLogger.write("17", Proyecto.class, e);
