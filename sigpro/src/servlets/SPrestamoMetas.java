@@ -140,7 +140,7 @@ public class SPrestamoMetas extends HttpServlet {
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
 				response.setHeader("Cache-Control", "no-cache"); 
-				response.setHeader("Content-Disposition", "attachment; Metas_de_Prestamo.xls");
+				response.setHeader("Content-Disposition", "attachment; Avance_de_Metas.xls");
 				OutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
 				outStream.flush();
@@ -148,7 +148,7 @@ public class SPrestamoMetas extends HttpServlet {
 				CLogger.write("1", SPrestamoMetas.class, e);
 			}
 		}else if(accion.equals("exportarPdf")){
-			CPdf archivo = new CPdf("Metas de Prestamo");
+			CPdf archivo = new CPdf("Avance de Metas");
 			int proyectoId = Utils.String2Int(map.get("proyectoid"), 0);
 			int anioInicio = Utils.String2Int(map.get("fechaInicio"), 0);
 			int anioFin = Utils.String2Int(map.get("fechaFin"), 0);
@@ -193,7 +193,7 @@ public class SPrestamoMetas extends HttpServlet {
 				response.setContentType("application/pdf");
 				response.setContentLength(outArray.length);
 				response.setHeader("Cache-Control", "no-cache");  
-				response.setHeader("Content-Disposition", "in-line; 'Metas_de_Prestamo.pdf'");
+				response.setHeader("Content-Disposition", "in-line; 'Avance_de_Metas.pdf'");
 				OutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
 				outStream.flush();
@@ -353,10 +353,10 @@ public class SPrestamoMetas extends HttpServlet {
 		Workbook wb=null;
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{		
-			excel = new CExcel("Metas de Préstamo", false, null);
+			excel = new CExcel("Avance de Metas", false, null);
 			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
 			datosMetas = generarDatosMetas(prestamoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
-			wb=excel.generateExcelOfData(datosMetas, "Reporte de Metas - Préstamo "+ProyectoDAO.getProyecto(prestamoId).getNombre(), headers, null, true, usuario);
+			wb=excel.generateExcelOfData(datosMetas, "Avance de Metas - Préstamo "+ProyectoDAO.getProyecto(prestamoId).getNombre(), headers, null, true, usuario);
 		
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
