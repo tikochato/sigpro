@@ -490,7 +490,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 		});
 	};
 	
-	mi.irAActividades=function(){
+	mi.irActividades=function(){
 		if(mi.subproducto.id!=null){
 			$location.path('/actividad/'+ mi.subproducto.id +'/4' );
 		}
