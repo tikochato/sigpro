@@ -225,11 +225,7 @@
 		    						</thead>
 		    						<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo>
 		    							<tr ng-repeat="row in controller.rowCollectionPrestamo">
-		    								<td nowrap ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'">
-				    							<div style="height: 25px;">
-				    								<div uib-tooltip="{{row.nombre}}"><span ng-class="controller.claseIcon(row);" style="margin-left: {{row.nivel}}em" uib-tooltip="{{controller.tooltipObjetoTipo[row.objetoTipo-1]}}"></span>{{row.nombre}}</div>
-				    							</div>
-				    						</td>
+		    								
 		    							</tr>
 		    						</tbody>
 		    					</table>
@@ -241,7 +237,8 @@
 		    						style="max-width: {{controller.tamanoTotal}}px;">
 		    						<thead id="divCabecerasDatos" class="theadDatos">
 		    							<tr>
-		    								<th class="label-form" rowspan="2" style="text-align: center; min-width: 200px; max-width: 200px">Tipo de Adq.</th>
+		    								<th style="min-width:300px;text-align: left; height:71px;;vertical-align: middle;" class="label-form">Nombre</th>
+				    						<th class="label-form" rowspan="2" style="text-align: center; min-width: 200px; max-width: 200px">Tipo de Adq.</th>
 				    						<th class="label-form" rowspan="2" style="text-align: center; min-width: 150px; max-width: 150px">Ud. Medida</th>
 				    						<th class="label-form" rowspan="2" style="text-align: center; min-width: 200px; max-width: 200px">Cat. de Adq.</th>
 				    						<th class="label-form" rowspan="2" style="text-align: center; min-width: 75px; max-width: 75px">Cant.</th>
@@ -269,87 +266,92 @@
 		    						</thead>
 		    						<tbody class="cuerpoTablaDatos" id="divTablaDatos" ng-mouseover="controller.activarScroll('divTablaDatos')" scrollespejo>
 		    							<tr ng-repeat="row in controller.rowCollectionPrestamo">
-		    								<td class="divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="min-width: 200px; max-width: 200px">
+		    								<td nowrap style="min-width:300px;">
+				    							<div style="height: 25px;">
+				    								<div uib-tooltip="{{row.nombre}}"><span ng-class="controller.claseIcon(row);" style="margin-left: {{row.nivel}}em" uib-tooltip="{{controller.tooltipObjetoTipo[row.objetoTipo-1]}}"></span>{{row.nombre}}</div>
+				    							</div>
+				    						</td>
+		    								<td class="divisionColumna" style="min-width: 200px; max-width: 200px">
 		    									<div style="height: 25px;">
 			    									{{row.tipoAdquisicionNombre}}
 							    				</div>
 		    								</td>		    								
-							    			<td class="divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="min-width: 150px; max-width: 150px">
+							    			<td class="divisionColumna" style="min-width: 150px; max-width: 150px">
 								    			<div style="height: 25px;">
 								    				{{row.unidadMedida}}
 								    			</div>
 							    			</td>
-							    			<td class="divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="min-width: 200px; max-width: 200px">
+							    			<td class="divisionColumna" style="min-width: 200px; max-width: 200px">
 								    			<div style="height: 25px;">
 								    				{{row.categoriaAdquisicionNombre}}								    				
 								    			</div>
 							    			</td>			
-				    						<td class="divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: right; min-width: 75px; max-width: 75px">
+				    						<td class="divisionColumna" style="text-align: right; min-width: 75px; max-width: 75px">
 					    						<div style="height: 25px;">
 					    							{{row.cantidad || 0}}
 					    						</div>
 				    						</td>
-				    						<td class="divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: right; min-width: 140px; max-width: 140px">
+				    						<td class="divisionColumna" style="text-align: right; min-width: 140px; max-width: 140px">
 					    						<div style="height: 25px;">
 					    							{{row.costo || 0 | formatoMillones : controller.enMillones}}
 					    						</div>
 				    						</td>
-				    						<td class="divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="min-width: 140px; max-width: 140px; text-align: right">
+				    						<td class="divisionColumna" style="min-width: 140px; max-width: 140px; text-align: right">
 					    						<div style="height: 25px;">
 					    							{{row.total | formatoMillones : controller.enMillones}}
 					    						</div>
 				    						</td>
-				    						<td class="divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="min-width: 140px; max-width: 140px; text-align: right">
+				    						<td class="divisionColumna" style="min-width: 140px; max-width: 140px; text-align: right">
 				    							<div style="height: 25px;">
 				    								{{row.nog}}
 				    							</div>
 				    						</td>
-				    						<td class="colorPlanificado divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: left; min-width: 90px; max-width: 90px;">
+				    						<td class="colorPlanificado divisionColumna" style="text-align: left; min-width: 90px; max-width: 90px;">
 					    						<div style="height: 25px;">
 					    							{{row.planificadoDocs}}
 					    						</div>
 				    						</td>
-				    						<td class="colorReal divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: left; min-width: 90px; max-width: 90px;">
+				    						<td class="colorReal divisionColumna" style="text-align: left; min-width: 90px; max-width: 90px;">
 					    						<div style="height: 25px;">
 					    							{{row.realDocs}}
 					    						</div>
 				    						</td>
-				    						<td class="colorPlanificado divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: left;min-width: 90px; max-width: 90px;">
+				    						<td class="colorPlanificado divisionColumna" style="text-align: left;min-width: 90px; max-width: 90px;">
 					    						<div style="height: 25px;">
 					    							{{row.planificadoLanzamiento}}
 					    						</div>
 				    						</td>
-				    						<td class="colorReal divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: left; min-width: 90px; max-width: 90px;">
+				    						<td class="colorReal divisionColumna" style="text-align: left; min-width: 90px; max-width: 90px;">
 					    						<div style="height: 25px;">
 					    							{{row.realLanzamiento}}
 					    						</div>
 				    						</td>
-				    						<td class="colorPlanificado divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: left; min-width: 90px; max-width: 90px;">
+				    						<td class="colorPlanificado divisionColumna" style="text-align: left; min-width: 90px; max-width: 90px;">
 					    						<div style="height: 25px;">
 					    							{{row.planificadoRecepcionEval}}
 					    						</div>
 				    						</td>
-				    						<td class="colorReal divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: left; min-width: 90px; max-width: 90px;">
+				    						<td class="colorReal divisionColumna" style="text-align: left; min-width: 90px; max-width: 90px;">
 					    						<div style="height: 25px;">
 					    							{{row.realRecepcionEval}}
 					    						</div>
 				    						</td>
-				    						<td class="colorPlanificado divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: left; min-width: 90px; max-width: 90px;">
+				    						<td class="colorPlanificado divisionColumna" style="text-align: left; min-width: 90px; max-width: 90px;">
 					    						<div style="height: 25px;">
 					    							{{row.planificadoAdjudica}}
 												</div>					    							
 				    						</td>
-				    						<td class="colorReal divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: left; min-width: 90px; max-width: 90px;">
+				    						<td class="colorReal divisionColumna" style="text-align: left; min-width: 90px; max-width: 90px;">
 					    						<div style="height: 25px;">
 					    							{{row.realAdjudica}}
 					    						</div>
 				    						</td>
-				    						<td class="colorPlanificado divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: left; min-width: 90px; max-width: 90px;">
+				    						<td class="colorPlanificado divisionColumna" style="text-align: left; min-width: 90px; max-width: 90px;">
 					    						<div style="height: 25px;">
 					    							{{row.planificadoFirma}}
 					    						</div>
 				    						</td>
-				    						<td class="colorReal divisionColumna" ng-class="row.bloqueado == true ? 'colorCeldaBloqueado' : 'colorCeldaDesbloqueado'" style="text-align: left; min-width: 90px; max-width: 90px;">
+				    						<td class="colorReal divisionColumna" style="text-align: left; min-width: 90px; max-width: 90px;">
 					    						<div style="height: 25px;">
 					    							{{row.realFirma}}
 					    						</div>
