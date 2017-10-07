@@ -339,7 +339,7 @@ public class SActividad extends HttpServlet {
 						actividad.setProductoBase(productoBase);
 					}
 					
-					result = ActividadDAO.guardarActividad(actividad);
+					result = ActividadDAO.guardarActividad(actividad, true);
 					
 					if (result){
 						List<AsignacionRaci> asignaciones_temp = AsignacionRaciDAO.getAsignacionPorTarea(actividad.getId(), 5);
@@ -472,7 +472,7 @@ public class SActividad extends HttpServlet {
 				boolean result = false;
 				actividad.setUsuarioActualizo(usuario);
 				actividad.setFechaActualizacion(new Date());
-				ActividadDAO.eliminarActividad(actividad);
+				result=ActividadDAO.eliminarActividad(actividad);
 				
 				/*if(eliminado){
 					
@@ -666,7 +666,7 @@ public class SActividad extends HttpServlet {
 					
 					
 				}
-				result = ActividadDAO.guardarActividad(actividad);
+				result = ActividadDAO.guardarActividad(actividad, true);
 				
 				/*Session session = COrden.getSessionCalculoOrden();
 				

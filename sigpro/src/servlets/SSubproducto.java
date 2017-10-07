@@ -245,7 +245,7 @@ public class SSubproducto extends HttpServlet {
 				subproducto.setDuracion(duracion);
 				subproducto.setDuracionDimension(duracionDimension);
 			}
-			ret = SubproductoDAO.guardarSubproducto(subproducto);
+			ret = SubproductoDAO.guardarSubproducto(subproducto, true);
 			
 			if (ret){
 				SubproductoUsuarioId subproductoUsuarioId = new SubproductoUsuarioId(subproducto.getId(), usuario);
@@ -562,7 +562,7 @@ public class SSubproducto extends HttpServlet {
 					}
 				}
 				
-				ret = SubproductoDAO.guardarSubproducto(subproducto);
+				ret = SubproductoDAO.guardarSubproducto(subproducto, true);
 				
 				
 				

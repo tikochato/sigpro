@@ -21,7 +21,7 @@ public class ProductoDAOTest {
 	
 	@Test
 	public void guardarProductoTest(){
-		assertEquals(ProductoDAO.guardarProducto(new Producto()),false);
+		assertEquals(ProductoDAO.guardarProducto(new Producto(), true),false);
 	}
 	
 	@Test

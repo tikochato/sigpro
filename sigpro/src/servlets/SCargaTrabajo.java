@@ -149,12 +149,10 @@ public class SCargaTrabajo extends HttpServlet {
 			}else if(accion.equals("getCargaTrabajoPrestamo")){
 				Integer anio_inicio = Utils.String2Int(map.get("anio_inicio"));
 				Integer anio_fin = Utils.String2Int(map.get("anio_fin"));
-				String idPrestamos = map.get("idPrestamos") != null && map.get("idPrestamos").length() > 0? map.get("idPrestamos") : "0";
-				String idComponentes = map.get("idComponentes") != null && map.get("idComponentes").length() > 0 ? map.get("idComponentes") : "0";
-				String idProductos = map.get("idProductos") != null && map.get("idProductos").length() > 0 ? map.get("idProductos") : "0";
-				String idSubproductos = map.get("idSubproductos") != null && map.get("idSubproductos").length() > 0 ? map.get("idSubproductos") : "0";
+				Integer idPrestamos = Utils.String2Int(map.get("idPrestamos"));
+				
 								
-				List<stcargatrabajo> cargas = getCargaTrabajoPrestamo(idPrestamos, idComponentes, idProductos, idSubproductos, anio_inicio, anio_fin);
+				List<stcargatrabajo> cargas = getCargaTrabajoPrestamo(idPrestamos,  anio_inicio, anio_fin);
 				
 				response_text=new GsonBuilder().serializeNulls().create().toJson(cargas);
 		        response_text = String.join("", "\"cargatrabajo\":",response_text);
@@ -207,29 +205,26 @@ public class SCargaTrabajo extends HttpServlet {
 							
 						switch(objeto_tipo){
 						case 1: 
-							stprestamo = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);						 
-							estructuracolaborador.add(stprestamo);
+							stprestamo = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);
 							stcomponente=null;
 							stproducto=null;
 							stsubproducto=null;
 							break;
 						case 2: 
-							stcomponente = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);						 
-							estructuracolaborador.add(stcomponente);
+							stcomponente = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);
 							stproducto=null;
 							stsubproducto=null;
 							break;
 						case 3: 
-							stproducto = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);						 
-							estructuracolaborador.add(stproducto);
+							stproducto = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);
 							stsubproducto=null;
 							break;
 						case 4: 
-							stsubproducto = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);						 
-							estructuracolaborador.add(stsubproducto);
+							stsubproducto = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);
 							break;
 						case 5: 
 							Actividad objActividad = ActividadDAO.getActividadPorIdResponsable(objeto_id,  idColaboradores, "r");
+							
 							if (objActividad!=null){
 								stestructuracolaborador stactividad = construirItemPorColaborador(
 										objActividad.getNombre(), objActividad.getId(), 5, true,objActividad.getFechaInicio(),objActividad.getFechaFin());
@@ -243,12 +238,12 @@ public class SCargaTrabajo extends HttpServlet {
 								}
 							}
 							break;
-						}						
+						}		
+						
 					}
 					
 					ArrayList<stestructuracolaborador> tempestructrua = new ArrayList<>();
 					for (stestructuracolaborador temp:estructuracolaborador){
-						if(temp.mostrar==true)
 							tempestructrua.add(temp);
 					}
 					
@@ -277,7 +272,7 @@ public class SCargaTrabajo extends HttpServlet {
 				try{
 					Integer anio_inicio = Utils.String2Int(map.get("anio_inicio"));
 					Integer anio_fin = Utils.String2Int(map.get("anio_fin"));
-					String idPrestamos = map.get("idPrestamos") != null && map.get("idPrestamos").length() > 0? map.get("idPrestamos") : "0";
+					Integer idPrestamos = Utils.String2Int(map.get("idPrestamos"));
 					String idComponentes = map.get("idComponentes") != null && map.get("idComponentes").length() > 0 ? map.get("idComponentes") : "0";
 					String idProductos = map.get("idProductos") != null && map.get("idProductos").length() > 0 ? map.get("idProductos") : "0";
 					String idSubproductos = map.get("idSubproductos") != null && map.get("idSubproductos").length() > 0 ? map.get("idSubproductos") : "0";
@@ -298,7 +293,7 @@ public class SCargaTrabajo extends HttpServlet {
 				CPdf archivo = new CPdf("Carga de trabajo");
 				Integer anio_inicio = Utils.String2Int(map.get("anio_inicio"));
 				Integer anio_fin = Utils.String2Int(map.get("anio_fin"));
-				String idPrestamos = map.get("idPrestamos") != null && map.get("idPrestamos").length() > 0? map.get("idPrestamos") : "0";
+				Integer idPrestamos = Utils.String2Int(map.get("idPrestamos"));
 				String idComponentes = map.get("idComponentes") != null && map.get("idComponentes").length() > 0 ? map.get("idComponentes") : "0";
 				String idProductos = map.get("idProductos") != null && map.get("idProductos").length() > 0 ? map.get("idProductos") : "0";
 				String idSubproductos = map.get("idSubproductos") != null && map.get("idSubproductos").length() > 0 ? map.get("idSubproductos") : "0";
@@ -405,9 +400,9 @@ public class SCargaTrabajo extends HttpServlet {
 		}
 	}
 	
-	private List<stcargatrabajo> getCargaTrabajoPrestamo(String idPrestamos, String idComponentes, String idProductos, String idSubproductos, Integer anio_inicio, Integer anio_fin){
+	private List<stcargatrabajo> getCargaTrabajoPrestamo(Integer idPrestamos,  Integer anio_inicio, Integer anio_fin){
 		List<Actividad> actividades = ActividadDAO.getActividadsPorObjetos
-				(idPrestamos, idComponentes, idProductos, idSubproductos,anio_inicio,anio_fin);
+				(idPrestamos, anio_inicio,anio_fin);
 		
 		List<stcargatrabajo> cargas = new ArrayList<stcargatrabajo>();
 		
@@ -502,7 +497,7 @@ public class SCargaTrabajo extends HttpServlet {
 		}
 	}
 	
-	private byte[] exportarExcel(String idPrestamos, String idComponentes, String idProductos, String idSubproductos, Integer anio_inicio, Integer anio_fin, String usuario) throws IOException{
+	private byte[] exportarExcel(Integer idPrestamos, String idComponentes, String idProductos, String idSubproductos, Integer anio_inicio, Integer anio_fin, String usuario) throws IOException{
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -541,8 +536,8 @@ public class SCargaTrabajo extends HttpServlet {
 		return headers;
 	}
 	
-	public String[][] generarDatos(String idPrestamos, String idComponentes, String idProductos, String idSubproductos, Integer anio_inicio, Integer anio_fin, String usuario){
-		List<stcargatrabajo> cargas = getCargaTrabajoPrestamo(idPrestamos, idComponentes, idProductos, idSubproductos, anio_inicio, anio_fin);
+	public String[][] generarDatos(Integer idPrestamos, String idComponentes, String idProductos, String idSubproductos, Integer anio_inicio, Integer anio_fin, String usuario){
+		List<stcargatrabajo> cargas = getCargaTrabajoPrestamo(idPrestamos, anio_inicio, anio_fin);
 		String[][] datos = null;
 		
 		if (cargas != null && !cargas.isEmpty()){ 

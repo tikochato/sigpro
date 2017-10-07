@@ -19,7 +19,7 @@ public class ComponenteDAOTest {
 	
 	@Test
 	public void guardarComponenteTest(){
-		assertNotNull(ComponenteDAO.guardarComponente(new Componente()));
+		assertNotNull(ComponenteDAO.guardarComponente(new Componente(), true));
 	}
 	
 	@Test

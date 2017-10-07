@@ -243,6 +243,7 @@ function controlColaborador($scope, $routeParams, $route, $window, $location, $m
 			$http.post('/SColaborador', datos).then(
 					function(response) {
 						if (response.data.success) {
+							mi.colaborador.id = response.data.colaborador.id;
 							mi.data = response.data.colaboradores;
 							mi.colaborador.usuarioCreo =response.data.colaborador.usuarioCreo;
 							mi.colaborador.fechaCreacion= response.data.colaborador.fechaCreacion;
@@ -251,6 +252,7 @@ function controlColaborador($scope, $routeParams, $route, $window, $location, $m
 							mi.opcionesGrid.data = mi.data;
 							$utilidades.mensaje('success', 'Colaborador guardado con exito.');
 							mi.obtenerTotalColaboradores();
+							mi.esNuevo = false;
 						} else {
 							$utilidades.mensaje('danger','Error al guardar al Colaborador.');
 						}
@@ -586,6 +588,22 @@ function modalBuscarUnidadEjecutora($uibModalInstance, $scope, $http,
 
 	mi.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
+	};
+	
+	mi.cambioEjercicio= function(){
+		mi.cargarData(1,mi.ejercicio, mi.entidad.entidad);
+	}
+	
+	mi.cambioEntidad=function(selected){
+		if(selected!==undefined){
+			mi.entidad = selected.originalObject;
+			$http.post('/SUnidadEjecutora', {accion:"totalElementos", ejercicio: mi.entidad.ejercicio,entidad: mi.entidad.entidad,t:moment().unix()}).success(function(response) {
+				for ( var key in response) {
+					mi.totalElementos = response[key];
+				}
+				mi.cargarData(1,mi.ejercicio,mi.entidad.entidad);
+			});
+		}
 	};
 
 }

@@ -71,7 +71,7 @@ public class ComponenteDAO {
 		return ret;
 	}
 
-	public static boolean guardarComponente(Componente Componente){
+	public static boolean guardarComponente(Componente Componente, boolean calcular_valores_agregados){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -90,20 +90,25 @@ public class ComponenteDAO {
 				session.saveOrUpdate(cu_admin);
 			}
 			
-			Componente.setCosto(calcularCosto(Componente));
-			Date fechaMinima = calcularFechaMinima(Componente);
-			Date fechaMaxima = calcularFechaMaxima(Componente);
-			Integer duracion = Utils.getWorkingDays(fechaMinima, fechaMaxima);
-			
-			Componente.setFechaInicio(fechaMinima);
-			Componente.setFechaFin(fechaMaxima);
-			Componente.setDuracion(duracion.intValue());
-			session.saveOrUpdate(Componente);
-			session.getTransaction().commit();
-			session.close();
-			
-			ProyectoDAO.guardarProyecto(Componente.getProyecto());
-			
+			if(calcular_valores_agregados){
+				Componente.setCosto(calcularCosto(Componente));
+				Date fechaMinima = calcularFechaMinima(Componente);
+				Date fechaMaxima = calcularFechaMaxima(Componente);
+				Integer duracion = Utils.getWorkingDays(fechaMinima, fechaMaxima);
+				
+				Componente.setFechaInicio(fechaMinima);
+				Componente.setFechaFin(fechaMaxima);
+				Componente.setDuracion(duracion.intValue());
+				session.saveOrUpdate(Componente);
+				session.getTransaction().commit();
+				session.close();
+				
+				ProyectoDAO.guardarProyecto(Componente.getProyecto(), calcular_valores_agregados);
+			}
+			else{
+				session.getTransaction().commit();
+				session.close();
+			}
 			ret = true;
 		}
 		catch(Throwable e){
@@ -427,7 +432,7 @@ public class ComponenteDAO {
 		
 		return ret;
 	}
-	
+
 	public static Date calcularFechaMaxima(Componente componente){
 		Date ret = null;
 		try{
@@ -455,3 +460,7 @@ public class ComponenteDAO {
 		return ret;
 	}
 }
+
+
+
+

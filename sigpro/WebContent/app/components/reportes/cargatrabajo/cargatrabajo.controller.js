@@ -724,15 +724,14 @@ function modalEstructuraResponsable($uibModalInstance, $scope, $http, $interval,
 	
 	mi.model = [];
 	mi.idsResponsables = $idresponsable;
+	mi.buttonText = { buttonDefaultText: "Seleccione colaborador" };
 	
 	mi.settings = { 
 			keyboardControls: true, 
 			enableSearch: false, 
 			smartButtonMaxItems: 10,
 			showCheckAll: false,
-			showUncheckAll: false,
-			buttonDefaultText: "Seleccione colaborador"
-			
+			showUncheckAll: false
 	};
 	
 	$http.post('/SCargaTrabajo', {

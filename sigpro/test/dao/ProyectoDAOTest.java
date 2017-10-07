@@ -15,7 +15,7 @@ public class ProyectoDAOTest {
 	
 	@Test
 	public void guardarProyectoTest(){
-		assertEquals(ProyectoDAO.guardarProyecto(new Proyecto()),false);
+		assertEquals(ProyectoDAO.guardarProyecto(new Proyecto(), true),false);
 	}
 	
 	@Test

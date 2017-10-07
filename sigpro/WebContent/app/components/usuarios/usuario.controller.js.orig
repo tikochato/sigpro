@@ -153,12 +153,22 @@ app.controller('usuarioController', ['$scope', '$http', '$interval', '$q', 'i18n
 	mi.cancelar = function() {
 		mi.colaboradorSeleccionado=false;
 		mi.verAreaPermisos=false;
+//		mi.nombreUnidadEjecutora="";
+//		mi.nombreCooperante="";
+//		mi.tipoUsuario={id:"",nombre:"",grupo:""};
 		mi.isCollapsed = false;
 		mi.cambioPassword= false;
 		mi.mostrarCambioPassword = false;
 		mi.tieneColaborador=false;
 		mi.edicionPermisos=false;
 		mi.cargandoPermisos=false; 
+//		mi.prestamosAsignados=[];
+//		mi.unidadEjecutoraUsuario="";
+//		mi.cooperanteUsuario="";
+//		mi.rolUsuario="";
+//		mi.prestamosNuevos=[];
+//		mi.prestamosEliminados=[];
+//		mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:"", colaborador:""};
 	}
 
 	mi.verPermisos=function(){
@@ -228,7 +238,11 @@ app.controller('usuarioController', ['$scope', '$http', '$interval', '$q', 'i18n
 									function(data) {
 										if(data.success){
 											mi.paginaActual=1;
+<<<<<<< HEAD
+											$utilidades.mensaje('success','Usuario creado exitosamente');
+=======
 											$utilidades.mensaje('success',data.mensaje);
+>>>>>>> refs/remotes/origin/master
 											check_mess=true;
 											mi.cargarTabla(mi.paginaActual);
 											mi.nuevosPermisos=[];
@@ -237,17 +251,146 @@ app.controller('usuarioController', ['$scope', '$http', '$interval', '$q', 'i18n
 										}
 							});
 					}else{
-						$utilidades.mensaje('danger','El correo electrónico no es válido.');
+<<<<<<< HEAD
+						$utilidades.mensaje('danger','Las contraseñas no coinciden');
+=======
+						$utilidades.mensaje('danger','correo electrónico no válido.');
+>>>>>>> refs/remotes/origin/master
 					}
 				}else{
-					$utilidades.mensaje('danger','Las contraseñas no coinciden');
+<<<<<<< HEAD
+					$utilidades.mensaje('danger','Ingrese un correo electrónico válido');
+=======
+					$utilidades.mensaje('danger','No coinciden la contraseña y su confirmación.');
+>>>>>>> refs/remotes/origin/master
 				}
 			}else{
+<<<<<<< HEAD
 				$utilidades.mensaje('danger','Existen campos obligatorios vacíos');
+			}
+		}else{
+			if(mi.usuariosSelected.email!==""){
+				if(validarEmail(mi.usuariosSelected.email)){
+					if(usuarioMail===mi.usuariosSelected.email && passwordLocal=== mi.usuariosSelected.password && mi.prestamosNuevos.length==0 && mi.prestamosEliminados.length==0){
+						var str = mi.getChecksArbol(mi.treedata);
+							$http.post('/SUsuario',
+									{
+										accion: 'actualizarPermisos',
+										usuario:mi.usuariosSelected.usuario,
+										permisosNuevos:JSON.stringify(mi.nuevosPermisos),
+										permisosEliminados:JSON.stringify(mi.permisosEliminados),
+										estructuraAsignada: estructuras_permisos,
+										t: (new Date()).getTime()
+									}).success(
+										function(data) {
+											if(data.success){
+												mi.cargarTabla(mi.paginaActual);
+												mi.nuevosPermisos=[];
+												mi.permisosEliminados=[];
+												if(mi.usuariosSelected.password!==passwordLocal){
+													$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password, t: (new Date()).getTime()}).success(
+															function(response) {
+																if(response.success){
+																	 $utilidades.mensaje('success', 'Cambio de contraseña exitoso');
+																}else{
+																	$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
+																}
+													});
+												}
+												$utilidades.mensaje('success', 'Actualización de permisos exitosa');
+											}
+								});
+						
+
+					}else{
+						$http.post('/SUsuario',
+								{
+									accion: 'guardarUsuario',
+									usuario:mi.usuariosSelected.usuario,
+									email:mi.usuariosSelected.email,
+									estructuraAsignada:asignaciones ,
+									prestamosEliminados: JSON.stringify(mi.prestamosEliminados),
+									estructuraAsignada: estructuras_permisos,
+									t: new Date().getTime(),
+									esnuevo:false
+								}).success(
+									function(data) {
+										if(data.success){
+											if(mi.nuevosPermisos.length==0 && mi.permisosEliminados.length==0){
+												mi.cargarTabla(mi.paginaActual);
+												if(mi.usuariosSelected.password!==passwordLocal){
+													$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password, t: (new Date()).getTime()}).success(
+															function(response) {
+																if(response.success){
+																	 $utilidades.mensaje('success', 'Actualizacion de datos exitosa');
+																}else{
+																	$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña');
+																}
+													});
+												}
+												if(!check_mess){
+													$utilidades.mensaje('success', 'Usuario creado exitosamente');
+												}
+												
+											}else{
+												$http.post('/SUsuario',
+														{
+															accion: 'actualizarPermisos',
+															usuario:mi.usuariosSelected.usuario,
+															permisosNuevos:JSON.stringify(mi.nuevosPermisos),
+															permisosEliminados:JSON.stringify(mi.permisosEliminados),
+															estructuraAsignada: estructuras_permisos,
+															t: (new Date()).getTime()
+														}).success(
+															function(data) {
+																if(data.success){
+																	mi.nuevosPermisos=[];
+																	mi.permisosEliminados=[];
+																	if(mi.usuariosSelected.password!==passwordLocal){
+																		$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password, t: (new Date()).getTime()}).success(
+																				function(response) {
+																					if(response.success){
+																						mi.paginaActual=1;
+																						$utilidades.mensaje('success','Información actualizada exitosamente.');
+																						mi.isCollapsed = false;
+																						mi.cargarTabla(mi.paginaActual);
+																					}else{
+																						$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña');
+																					}
+																		});
+																	}else{
+																		$utilidades.mensaje('success','Información actualizada exitosamente');
+																	}
+
+																}
+													});
+
+											}
+										}else {
+											$utilidades.mensaje('danger','No se lograron realizar los cambios');
+										}
+
+							});
+
+					}
+				}else{
+					$utilidades.mensaje('warning','El correo electrónico no es válido');
+				}
+
+			}else{
+				$utilidades.mensaje('warning','Los campos no deben de quedar vacios');
+			}
+		}
+    if(mi.colaboradorSeleccionado && mi.tipoUsuario.id==4 &&validarEmail(mi.usuariosSelected.email) ){
+      mi.asignarColaborador();
+    }
+=======
+				$utilidades.mensaje('danger','Los campos obligatorios están vacíos.');
 			}	    
 		if(mi.colaboradorSeleccionado && mi.tipoUsuario.id==4 &&validarEmail(mi.usuariosSelected.email) ){
 			mi.asignarColaborador();
 	    }
+>>>>>>> refs/remotes/origin/master
   };
 
 

@@ -105,7 +105,7 @@ public class SubproductoDAO {
 		return ret;
 	}
 
-	public static boolean guardarSubproducto(Subproducto subproducto) {
+	public static boolean guardarSubproducto(Subproducto subproducto, boolean calcular_valores_agregados) {
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
@@ -126,20 +126,24 @@ public class SubproductoDAO {
 						, subproducto, usu, subproducto.getUsuarioCreo(), subproducto.getFechaCreacion());
 				session.saveOrUpdate(su_admin);
 			}
-			
-			subproducto.setCosto(calcularCosto(subproducto));
-			Date fechaMinima = calcularFechaMinima(subproducto);
-			Date fechaMaxima = calcularFechaMaxima(subproducto);
-			Integer duracion = Utils.getWorkingDays(fechaMinima, fechaMaxima);
-			
-			subproducto.setDuracion(duracion.intValue());
-			subproducto.setFechaInicio(fechaMinima);
-			subproducto.setFechaFin(fechaMaxima);
-			session.saveOrUpdate(subproducto);
-			session.getTransaction().commit();
-			session.close();
-			
-			ProductoDAO.guardarProducto(subproducto.getProducto());
+			if(calcular_valores_agregados){
+				subproducto.setCosto(calcularCosto(subproducto));
+				Date fechaMinima = calcularFechaMinima(subproducto);
+				Date fechaMaxima = calcularFechaMaxima(subproducto);
+				Integer duracion = Utils.getWorkingDays(fechaMinima, fechaMaxima);
+				
+				subproducto.setDuracion(duracion.intValue());
+				subproducto.setFechaInicio(fechaMinima);
+				subproducto.setFechaFin(fechaMaxima);
+				session.saveOrUpdate(subproducto);
+				session.getTransaction().commit();
+				session.close();
+				ProductoDAO.guardarProducto(subproducto.getProducto(), true);
+			}
+			else{
+				session.getTransaction().commit();
+				session.close();
+			}
 			ret = true;
 		} catch (Throwable e) {
 			CLogger.write("3", SubproductoDAO.class, e);

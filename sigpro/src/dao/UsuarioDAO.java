@@ -254,6 +254,7 @@ public class UsuarioDAO {
 				session.delete(pu);
 			}			
 			session.getTransaction().commit();
+			session.flush();
 			ret = true;
 		}catch(Throwable e){
 			CLogger.write("10", UsuarioDAO.class, e);
@@ -721,6 +722,7 @@ public class UsuarioDAO {
 			criteria_u.setParameter("usuario", usuario);
 			criteria_u.executeUpdate();
 			session.getTransaction().commit();
+			session.flush();
 			ret = true;
 		}catch(Throwable e){
 			CLogger.write("31", UsuarioDAO.class, e);
@@ -732,4 +734,24 @@ public class UsuarioDAO {
 		return ret;
 	}
 	
+	public static boolean desasignarPermisos(String usuario){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			Query<?> criteria = session.createQuery("delete UsuarioPermiso up where up.usuario.usuario=:usuario ");
+			criteria.setParameter("usuario", usuario);
+			criteria.executeUpdate();
+			session.getTransaction().commit();
+			//session.flush();
+			ret = true;
+		}catch(Throwable e){
+			CLogger.write("32", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return ret;
+	}
 }
