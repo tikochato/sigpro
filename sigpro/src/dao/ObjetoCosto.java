@@ -1,10 +1,9 @@
-package utilities;
+package dao;
 
 import java.math.BigDecimal;
-
 import org.joda.time.DateTime;
 
-public class CPrestamoCostos {
+public class ObjetoCosto {
 	String nombre;
 	Integer objeto_id;
 	int objeto_tipo;
@@ -20,22 +19,7 @@ public class CPrestamoCostos {
 	Integer actividad;
 	Integer obra;
 	
-	public class stpresupuesto{
-		public BigDecimal planificado;
-		public BigDecimal real;
-	}
-	
-	public class stanio{
-		public stpresupuesto[] mes = new stpresupuesto[12];
-		public Integer anio;
-		
-	}
-
-	public CPrestamoCostos(){
-		
-	}
-	
-	public CPrestamoCostos(String nombre, Integer objeto_id, int objeto_tipo, Integer nivel, DateTime fecha_inicial,
+	public ObjetoCosto(String nombre, Integer objeto_id, int objeto_tipo, Integer nivel, DateTime fecha_inicial,
 			DateTime fecha_final, stanio[] anios, Integer acumulacion_costoid, BigDecimal costo, Integer programa,
 			Integer subprograma, Integer proyecto, Integer actividad, Integer obra) {
 		super();
@@ -55,50 +39,11 @@ public class CPrestamoCostos {
 		this.obra = obra;
 	}
 
-	public Integer getPrograma() {
-		return programa;
-	}
-
-	public void setPrograma(Integer programa) {
-		this.programa = programa;
-	}
-
-	public Integer getSubprograma() {
-		return subprograma;
-	}
-
-	public void setSubprograma(Integer subprograma) {
-		this.subprograma = subprograma;
-	}
-
-	public Integer getProyecto() {
-		return proyecto;
-	}
-
-	public void setProyecto(Integer proyecto) {
-		this.proyecto = proyecto;
-	}
-
-	public Integer getActividad() {
-		return actividad;
-	}
-
-	public void setActividad(Integer actividad) {
-		this.actividad = actividad;
-	}
-
-	public Integer getObra() {
-		return obra;
-	}
-
-	public void setObra(Integer obra) {
-		this.obra = obra;
-	}
-
-	public stanio[] inicializarStanio (Integer anioInicial, Integer anioFinal){		
+	
+	public void inicializarStanio (Integer anioInicial, Integer anioFinal){		
 		int longitudArrelgo = anioFinal - anioInicial+1;
 		
-		stanio[] anios = new stanio[longitudArrelgo];
+		anios = new stanio[longitudArrelgo];
 		
 		for (int i = 0;i <longitudArrelgo; i++){
 			stanio temp = new stanio();
@@ -110,7 +55,17 @@ public class CPrestamoCostos {
 			temp.anio = anioInicial+i;
 			anios[i] = temp;
 		}
-		return anios;
+	}
+	
+	public class stpresupuesto{
+		public BigDecimal planificado;
+		public BigDecimal real;
+	}
+	
+	public class stanio{
+		public stpresupuesto[] mes = new stpresupuesto[12];
+		public Integer anio;
+		
 	}
 
 	public String getNombre() {
@@ -184,7 +139,44 @@ public class CPrestamoCostos {
 	public void setCosto(BigDecimal costo) {
 		this.costo = costo;
 	}
-	
-	
-	
+
+	public Integer getPrograma() {
+		return programa;
+	}
+
+	public void setPrograma(Integer programa) {
+		this.programa = programa;
+	}
+
+	public Integer getSubprograma() {
+		return subprograma;
+	}
+
+	public void setSubprograma(Integer subprograma) {
+		this.subprograma = subprograma;
+	}
+
+	public Integer getProyecto() {
+		return proyecto;
+	}
+
+	public void setProyecto(Integer proyecto) {
+		this.proyecto = proyecto;
+	}
+
+	public Integer getActividad() {
+		return actividad;
+	}
+
+	public void setActividad(Integer actividad) {
+		this.actividad = actividad;
+	}
+
+	public Integer getObra() {
+		return obra;
+	}
+
+	public void setObra(Integer obra) {
+		this.obra = obra;
+	}
 }

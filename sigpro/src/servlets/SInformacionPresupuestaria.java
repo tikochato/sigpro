@@ -26,12 +26,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import dao.EstructuraProyectoDAO;
+import dao.ObjetoCosto;
+import dao.ObjetoDAO;
 import utilities.CExcel;
 import utilities.CGraficaExcel;
 import utilities.CLogger;
 import utilities.CPdf;
-import utilities.CPrestamoCostos;
 import utilities.Utils;
 
 @WebServlet("/SInformacionPresupuestaria")
@@ -74,9 +74,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 				Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
 				Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
-				EstructuraProyectoDAO estructura = new EstructuraProyectoDAO();
-				List<CPrestamoCostos> lstPrestamo = estructura.getEstructuraConCostos(idPrestamo, anioInicial, anioFinal, usuario);
-				estructura = null;
+				List<ObjetoCosto> lstPrestamo = ObjetoDAO.getEstructuraConCosto(idPrestamo, anioInicial, anioFinal, true, true, usuario);
 				
 				if (null != lstPrestamo && !lstPrestamo.isEmpty()){
 					response_text=new GsonBuilder().serializeNulls().create().toJson(lstPrestamo);
@@ -119,9 +117,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				String headers[][];
 				String datosMetas[][];
 				headers = generarHeaders(anioInicial, anioFinal, agrupacion, tipoVisualizacion);
-				EstructuraProyectoDAO estructura = new EstructuraProyectoDAO();
-				List<CPrestamoCostos> lstPrestamo = estructura.getEstructuraConCostos(idPrestamo, anioInicial, anioFinal, usuario);
-				estructura = null;
+				List<ObjetoCosto> lstPrestamo = ObjetoDAO.getEstructuraConCosto(idPrestamo, anioInicial, anioFinal, true, true, usuario);
 				datosMetas = generarDatosReporte(lstPrestamo, anioInicial, anioFinal, agrupacion, tipoVisualizacion, headers[0].length, usuario);
 				String path = archivo.ExportarPdfEjecucionPresupuestaria(headers, datosMetas,tipoVisualizacion);
 				File file=new File(path);
@@ -182,9 +178,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
 			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
-			EstructuraProyectoDAO estructura = new EstructuraProyectoDAO();
-			List<CPrestamoCostos> lstPrestamo = estructura.getEstructuraConCostos(prestamoId, anioInicio, anioFin, usuario);
-			estructura = null;
+			List<ObjetoCosto> lstPrestamo = ObjetoDAO.getEstructuraConCosto(prestamoId, anioInicio, anioFin, true, true, usuario);
 			datosInforme = generarDatosReporte(lstPrestamo, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
 			CGraficaExcel grafica = generarGrafica(datosInforme, tipoVisualizacion, agrupacion, anioInicio, anioFin);
 			excel = new CExcel("Ejecucion presupuestaria", false, grafica);
@@ -316,7 +310,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		return headers;
 	}
 	
-	public String[][] generarDatosReporte(List<CPrestamoCostos> lstPrestamo, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, int columnasTotal, String usuario){
+	public String[][] generarDatosReporte(List<ObjetoCosto> lstPrestamo, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, int columnasTotal, String usuario){
 		String[][] datos = null;
 		int columna = 0;int factorVisualizacion=1;
 		if(tipoVisualizacion==2){
@@ -328,7 +322,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 			datos = new String[lstPrestamo.size()][columnasTotal];
 			for (int i=0; i<lstPrestamo.size(); i++){
 				columna = 0;
-				CPrestamoCostos prestamo = lstPrestamo.get(i);
+				ObjetoCosto prestamo = lstPrestamo.get(i);
 				String sangria;
 				switch (prestamo.getObjeto_tipo()){
 					case 1: sangria = ""; break;

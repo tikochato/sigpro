@@ -92,7 +92,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 				$location.path('/prestamometas/rv');
 		}
 	    
-	$window.document.title = $utilidades.sistema_nombre+' - Metas de Préstamo';
+	$window.document.title = $utilidades.sistema_nombre+' - Avance de Metas';
 	i18nService.setCurrentLang('es');
 		
 	mi.formatofecha = 'yyyy';
@@ -197,7 +197,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 						    anchor.attr({
 						         href: 'data:application/pdf;base64,' + response.data,
 						         target: '_blank',
-						         download: 'PrestamoMetas.pdf'
+						         download: 'AvanceDeMetas.pdf'
 						     })[0].click();
 						  }.bind(this), function errorCallback(response){
 						 	}
@@ -541,7 +541,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 						  anchor.attr({
 					         href: 'data:application/ms-excel;base64,' + response.data,
 					         target: '_blank',
-					         download: 'MetasPrestamo.xls'
+					         download: 'AvanceDeMetas.xls'
 						  })[0].click();
 					  }.bind(this), function errorCallback(response){
 				 	}
