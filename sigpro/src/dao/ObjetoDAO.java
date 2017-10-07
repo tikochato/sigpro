@@ -3,6 +3,7 @@ package dao;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -14,43 +15,81 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.joda.time.DateTime;
 
+import pojo.Prestamo;
 import utilities.CHibernateSession;
 import utilities.CLogger;
+import utilities.CMariaDB;
+import utilities.Utils;
 
 public class ObjetoDAO {
 
-	public static List<?> getCostoObjeto(Integer objetoId, Integer objetoTipo){
+	public static List<?> getConsultaEstructuraConCosto(Integer proyectoId){
 		List<?> ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query =
-					"select arbol.*, costo.total, costo.pago, pagos.* from ( "+
-					"select p.id, 1 objeto_tipo, p.costo, p.acumulacion_costoid "+
+					"select arbol.*, costo.total, costo.pago from ( "+
+					"select p.id, p.nombre, 1 objeto_tipo,  p.treePath, p.fecha_inicio, "+
+					"p.fecha_fin, p.duracion, p.duracion_dimension,p.costo,0, p.acumulacion_costoid,  "+
+					"p.programa, p.subprograma, p.proyecto, p.actividad, p.obra "+
 					"from proyecto p "+
-					"where p.id=?1 and ?2=1 and p.estado=1  "+
+					"where p.id= ?1 and p.estado=1  "+
 					"union "+
-					"select c.id, 2 objeto_tipo, c.costo, c.acumulacion_costoid "+
+					"select c.id, c.nombre, 2 objeto_tipo,  c.treePath, c.fecha_inicio, "+
+					"c.fecha_fin , c.duracion, c.duracion_dimension,c.costo,0,c.acumulacion_costoid, "+
+					"c.programa, c.subprograma, c.proyecto, c.actividad, c.obra "+
 					"from componente c "+
-					"where c.id=?1 and ?2=2 and c.estado=1 "+
+					"where c.proyectoid=?1 and c.estado=1  "+
 					"union "+
-					"select pr.id, 3 objeto_tipo,pr.costo,pr.acumulacion_costoid "+
+					"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
+					"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid, "+
+					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra "+
 					"from producto pr "+
-					"where pr.id= ?1 and ?2 = 3 and pr.estado=1 "+
+					"left outer join componente c on c.id=pr.componenteid "+
+					"left outer join proyecto p on p.id=c.proyectoid "+
+					"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1   "+
 					"union "+
-					"select sp.id, 4 objeto_tipo, sp.costo,sp.acumulacion_costoid "+
+					"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
+					"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid, "+
+					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra "+
 					"from subproducto sp "+
-					"where sp.id= ?1  and ?2 = 4 and sp.estado=1 "+
+					"left outer join producto pr on pr.id=sp.productoid "+
+					"left outer join componente c on c.id=pr.componenteid "+
+					"left outer join proyecto p on p.id=c.proyectoid "+
+					"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1 and sp.estado=1 and sp.id  "+
 					"union "+
-					"select a.id, 5 objeto_tipo, a.costo, a.acumulacion_costo acumulacion_costoid "+
+					"select a.id, a.nombre, 5 objeto_tipo,  a.treePath, a.fecha_inicio, "+
+					"a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id,a.acumulacion_costo acumulacion_costoid, "+
+					"a.programa, a.subprograma, a.proyecto, a.actividad, a.obra "+
 					"from actividad a "+
-					"where a.id=?1 and ?2=5 and a.estado=1 "+
+					"where a.estado=1 and  a.treepath like '"+(10000000+proyectoId)+"%'"+
 					") arbol "+
 					"left outer join ( "+
 					"select pa.id, pa.objeto_id, pa.objeto_tipo, SUM(pa.total) total, pp.pago pago from plan_adquisicion pa "+
 					"left outer join (select plan_adquisicionid id, SUM(pago) pago "+
 					"from plan_adquisicion_pago group by plan_adquisicionid) pp on pp.id = pa.id "+
 					"group by pa.objeto_id, pa.objeto_tipo) costo on costo.objeto_id = arbol.id and costo.objeto_tipo = arbol.objeto_tipo "+
-					"left outer join ( "+
+					"order by treePath  ";			
+				
+			Query<?> criteria = session.createNativeQuery(query);
+			criteria.setParameter("1", proyectoId);
+			ret = criteria.getResultList();
+			
+		}
+		catch(Throwable e){
+			CLogger.write("1", ObjetoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static List<?> getConsultaPagos(Integer objetoId, Integer objetoTipo, Integer anioInicial, Integer anioFinal){
+		List<?> ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query =
 					"select t1.ejercicio, t1.objeto_id objeto_id_pago, t1.objeto_tipo objeto_tipo_pago, "+
 					"SUM(case when t1.mes = 1 then t1.pago end) enero, "+
 					"SUM(case when t1.mes = 2 then t1.pago end) febrero, "+
@@ -70,19 +109,19 @@ public class ObjetoDAO {
 					"from plan_adquisicion_pago pp "+
 					"join plan_adquisicion pa on pp.plan_adquisicionid = pa.id "+
 					") t1 "+
-					"where t1.ejercicio between 2016 and 2017 "+
-					"group by t1.ejercicio "+
-					") pagos on pagos.objeto_id_pago = arbol.id and pagos.objeto_tipo_pago = arbol.objeto_tipo "+
-					"order by ejercicio asc ";			
+					"where t1.objeto_id = ?1 and t1.objeto_tipo = ?2 "+
+					"and t1.ejercicio between ?3 and ?4 "+
+					"group by t1.ejercicio  ";			
 				
 			Query<?> criteria = session.createNativeQuery(query);
 			criteria.setParameter("1", objetoId);
 			criteria.setParameter("2", objetoTipo);
-			ret = criteria.getResultList();
-			
+			criteria.setParameter("3", anioInicial);
+			criteria.setParameter("4", anioFinal);
+			ret = criteria.getResultList();			
 		}
 		catch(Throwable e){
-			CLogger.write("1", ObjetoDAO.class, e);
+			CLogger.write("2", ObjetoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -92,108 +131,127 @@ public class ObjetoDAO {
 	
 	public static List<ObjetoCosto> getEstructuraConCosto(int idPrestamo, int anioInicial, int anioFinal, boolean obtenerPlanificado, boolean obtenerReal, String usuario){
 		List<ObjetoCosto> lstPrestamo = new ArrayList<>();
-		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
-		
-		Iterator<?> iterador = estructuraProyecto.iterator();
-		while (iterador.hasNext()) {
-			Object objeto = iterador.next();
-			Object[] obj = (Object[]) objeto;
-			Integer nivel = ((String)obj[3]).length() / 8;
-			if(nivel != null){
-				Integer objeto_id = obj[0]!=null ? (Integer)obj[0] : null;
-				String nombre = obj[1]!=null ? (String)obj[1] : null;
-				Integer objeto_tipo = obj[2]!=null ? ((BigInteger) obj[2]).intValue() : null;
-				DateTime fecha_inicial = obj[4]!=null ? new DateTime((Timestamp)obj[4]) : null;
-				DateTime fecha_final = obj[5]!=null ? new DateTime((Timestamp)obj[5]) : null;
-				Integer acumulacion_costoid = obj[10]!=null ? Integer.valueOf(obj[10].toString()) : null;
-				BigDecimal costo = obj[8]!=null ? (BigDecimal)obj[8] : null;
-				Integer programa = obj[11]!=null ? (Integer)obj[11] : null;
-				Integer subprograma = obj[12]!=null ? (Integer)obj[12] : null;
-				Integer proyecto = obj[13]!=null ? (Integer)obj[13] : null;
-				Integer actividad = obj[14]!=null ? (Integer)obj[14] : null;
-				Integer obra = obj[15]!=null ? (Integer)obj[15] : null;
-				
-				ObjetoCosto objetoCosto =  new ObjetoCosto(nombre, objeto_id, objeto_tipo, nivel, fecha_inicial, fecha_final, null,
-						acumulacion_costoid, costo, programa, subprograma, proyecto, actividad, obra);
-				objetoCosto.inicializarStanio(anioInicial, anioFinal);
-				
-				if(obtenerPlanificado){
-					List<?> costoPlanificado = getCostoObjeto(objetoCosto.objeto_id, objetoCosto.objeto_tipo);
-					if(costoPlanificado!=null){
-						Iterator<?> iteradorCosto = costoPlanificado.iterator();
-						while (iteradorCosto.hasNext()) {
-							Object filaCosto = iteradorCosto.next();
-							Object[] objFila = (Object[]) filaCosto;
-							BigDecimal totalPagos = objFila[5]!=null ? (BigDecimal)objFila[5] : null;
-							if(totalPagos!=null && totalPagos.compareTo(BigDecimal.ZERO)==0){
-								Integer ejercicio = objFila[6]!=null ? (Integer)objFila[6] : null;
+		List<?> estructuraProyecto = getConsultaEstructuraConCosto(idPrestamo);
+			if(estructuraProyecto!=null){
+			Iterator<?> iterador = estructuraProyecto.iterator();
+			while (iterador.hasNext()) {
+				Object objeto = iterador.next();
+				Object[] obj = (Object[]) objeto;
+				Integer nivel = ((String)obj[3]).length() / 8;
+				if(nivel != null){
+					Integer objeto_id = obj[0]!=null ? (Integer)obj[0] : null;
+					String nombre = obj[1]!=null ? (String)obj[1] : null;
+					Integer objeto_tipo = obj[2]!=null ? ((BigInteger) obj[2]).intValue() : null;
+					DateTime fecha_inicial = obj[4]!=null ? new DateTime((Timestamp)obj[4]) : null;
+					DateTime fecha_final = obj[5]!=null ? new DateTime((Timestamp)obj[5]) : null;
+					Integer acumulacion_costoid = obj[10]!=null ? Integer.valueOf(obj[10].toString()) : null;
+					BigDecimal costo = obj[8]!=null ? (BigDecimal)obj[8] : null;
+					Integer programa = obj[11]!=null ? (Integer)obj[11] : null;
+					Integer subprograma = obj[12]!=null ? (Integer)obj[12] : null;
+					Integer proyecto = obj[13]!=null ? (Integer)obj[13] : null;
+					Integer actividad = obj[14]!=null ? (Integer)obj[14] : null;
+					Integer obra = obj[15]!=null ? (Integer)obj[15] : null;
+					
+					ObjetoCosto objetoCosto =  new ObjetoCosto(nombre, objeto_id, objeto_tipo, nivel, fecha_inicial, fecha_final, null,
+							acumulacion_costoid, costo, programa, subprograma, proyecto, actividad, obra);
+					objetoCosto.inicializarStanio(anioInicial, anioFinal);
+					
+					if(obtenerPlanificado){
+						BigDecimal totalPagos = obj[17]!=null ? (BigDecimal)obj[17] : null;					
+						if(totalPagos!=null && totalPagos.compareTo(BigDecimal.ZERO)!=0){
+							//obtener pagos
+							List<?> estructuraPagos = getConsultaPagos(objetoCosto.objeto_id, objetoCosto.objeto_tipo, anioInicial, anioFinal);
+							
+							Iterator<?> iteradorPagos = estructuraPagos.iterator();
+							while (iteradorPagos.hasNext()) {
+								Object objetoPago = iteradorPagos.next();
+								Object[] objPago = (Object[]) objetoPago;
+								Integer ejercicio = objPago[0]!=null ? (Integer)objPago[0] : null;
 								objetoCosto.anios[ejercicio-anioInicial].anio = ejercicio;
 								for(int m=0; m<12; m++){
-									objetoCosto.anios[ejercicio-anioInicial].mes[m].planificado = objFila[9+m]!=null ? (BigDecimal)objFila[9+m] : null;
+									objetoCosto.anios[ejercicio-anioInicial].mes[m].planificado = objPago[3+m]!=null ? (BigDecimal)objPago[3+m] : null;
 								}
-							}else{
-								for(int a=0; a<(anioFinal-anioInicial+1); a++){
-									objetoCosto.anios[a].anio=anioInicial+a;
-									ObjetoCosto.stanio anioObj = objetoCosto.anios[a];
-									int diaInicial = objetoCosto.getFecha_inicial().getDayOfMonth();
-									int mesInicial = objetoCosto.getFecha_inicial().getMonthOfYear() -1;
-									int anioInicialObj = objetoCosto.getFecha_inicial().getYear();
-									int diaFinal = objetoCosto.getFecha_final().getDayOfMonth();
-									int mesFinal = objetoCosto.getFecha_final().getMonthOfYear() -1;
-									int anioFinalObj = objetoCosto.getFecha_final().getYear();
-									if((anioInicial+a) >= anioInicialObj && (anioInicial+a)<=anioFinalObj){
-										if(objetoCosto.getAcumulacion_costoid() != null){
-											if(objetoCosto.getAcumulacion_costoid() == 1){						
-												if(anioInicialObj == (anioInicial+a)){
-													anioObj.mes[mesInicial].planificado =  objetoCosto.getCosto() != null ? objetoCosto.getCosto() : new BigDecimal(0);
-												}
-											}else if(objetoCosto.getAcumulacion_costoid() == 2){
-												int dias = (int)((objetoCosto.getFecha_final().getMillis() - objetoCosto.getFecha_inicial().getMillis())/(1000*60*60*24));
-												BigDecimal costoDiario = objetoCosto.getCosto() != null ? objetoCosto.getCosto().divide(new BigDecimal(dias),5, BigDecimal.ROUND_HALF_UP) : new BigDecimal(0);
-												int inicioActual = 0;
-												if(anioObj.anio == anioInicialObj){
-													inicioActual = mesInicial;
-												}
-												
-												int finMes = anioObj.anio==anioFinalObj ? mesFinal : 11;
-												for(int m=inicioActual; m<=finMes; m++){
-													if(anioObj.anio == anioInicialObj && m==mesInicial){
-														if(m==mesFinal){
-															int diasMes = diaFinal-diaInicial;
-															anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
-														}else{
-															Calendar cal = new GregorianCalendar(anioObj.anio, m, 1); 
-															int diasMes = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-															diasMes = diasMes-diaInicial;
-															anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
-														}
-													}else if(anioObj.anio == anioFinalObj && m== mesFinal){
-														anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diaFinal));
+							}	
+						}else{
+							//utilizar costo del objeto
+							for(int a=0; a<(anioFinal-anioInicial+1); a++){
+								objetoCosto.anios[a].anio=anioInicial+a;
+								ObjetoCosto.stanio anioObj = objetoCosto.anios[a];
+								int diaInicial = objetoCosto.getFecha_inicial().getDayOfMonth();
+								int mesInicial = objetoCosto.getFecha_inicial().getMonthOfYear() -1;
+								int anioInicialObj = objetoCosto.getFecha_inicial().getYear();
+								int diaFinal = objetoCosto.getFecha_final().getDayOfMonth();
+								int mesFinal = objetoCosto.getFecha_final().getMonthOfYear() -1;
+								int anioFinalObj = objetoCosto.getFecha_final().getYear();
+								if((anioInicial+a) >= anioInicialObj && (anioInicial+a)<=anioFinalObj){
+									if(objetoCosto.getAcumulacion_costoid() != null){
+										if(objetoCosto.getAcumulacion_costoid() == 1){						
+											if(anioInicialObj == (anioInicial+a)){
+												anioObj.mes[mesInicial].planificado =  objetoCosto.getCosto() != null ? objetoCosto.getCosto() : new BigDecimal(0);
+											}
+										}else if(objetoCosto.getAcumulacion_costoid() == 2){
+											int dias = (int)((objetoCosto.getFecha_final().getMillis() - objetoCosto.getFecha_inicial().getMillis())/(1000*60*60*24));
+											BigDecimal costoDiario = objetoCosto.getCosto() != null ? objetoCosto.getCosto().divide(new BigDecimal(dias),5, BigDecimal.ROUND_HALF_UP) : new BigDecimal(0);
+											int inicioActual = 0;
+											if(anioObj.anio == anioInicialObj){
+												inicioActual = mesInicial;
+											}
+											
+											int finMes = anioObj.anio==anioFinalObj ? mesFinal : 11;
+											for(int m=inicioActual; m<=finMes; m++){
+												if(anioObj.anio == anioInicialObj && m==mesInicial){
+													if(m==mesFinal){
+														int diasMes = diaFinal-diaInicial;
+														anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
 													}else{
 														Calendar cal = new GregorianCalendar(anioObj.anio, m, 1); 
 														int diasMes = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+														diasMes = diasMes-diaInicial;
 														anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
 													}
+												}else if(anioObj.anio == anioFinalObj && m== mesFinal){
+													anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diaFinal));
+												}else{
+													Calendar cal = new GregorianCalendar(anioObj.anio, m, 1); 
+													int diasMes = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+													anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
 												}
-											}else if(objetoCosto.getAcumulacion_costoid() ==3){
-												if(anioFinalObj == anioObj.anio){
-													anioObj.mes[mesFinal].planificado =  objetoCosto.getCosto() != null ? objetoCosto.getCosto() : new BigDecimal(0);
-												}
+											}
+										}else if(objetoCosto.getAcumulacion_costoid() ==3){
+											if(anioFinalObj == anioObj.anio){
+												anioObj.mes[mesFinal].planificado =  objetoCosto.getCosto() != null ? objetoCosto.getCosto() : new BigDecimal(0);
 											}
 										}
 									}
 								}
-							
 							}
 						}
 					}
-				}
-				
-				if(obtenerReal){
 					
+					if(obtenerReal){
+						try {
+							if(CMariaDB.connectAnalytic()){
+								Connection conn_analytic = CMariaDB.getConnection_analytic();
+								if(objetoCosto.getObjeto_tipo() == 1){
+								Prestamo objPrestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(objetoCosto.getObjeto_tipo(), 1);
+									if(objPrestamo != null ){
+										String codigoPresupuestario = Long.toString(objPrestamo.getCodigoPresupuestario());
+										if(codigoPresupuestario!=null && !codigoPresupuestario.isEmpty()){
+											Integer fuente = Utils.String2Int(codigoPresupuestario.substring(0,2));
+											Integer organismo = Utils.String2Int(codigoPresupuestario.substring(2,6));
+											Integer correlativo = Utils.String2Int(codigoPresupuestario.substring(6,10));
+											objetoCosto = getCostoReal(objetoCosto, fuente, organismo, correlativo, anioInicial, anioFinal, conn_analytic, usuario);
+										}
+									}
+								}
+								conn_analytic.close();
+							}
+						} catch (SQLException e) {
+							CLogger.write("1", ObjetoDAO.class, e);
+						}
+					}
+					lstPrestamo.add(objetoCosto);
 				}
-				
-				lstPrestamo.add(objetoCosto);
 			}
 		}
 		return lstPrestamo;
@@ -201,7 +259,7 @@ public class ObjetoDAO {
 	
 
 	
-	private ObjetoCosto getCostoReal(ObjetoCosto objetoCosto, Integer fuente, Integer organismo, Integer correlativo, Integer anioInicial, Integer anioFinal, Connection conn, String usuario){
+	private static ObjetoCosto getCostoReal(ObjetoCosto objetoCosto, Integer fuente, Integer organismo, Integer correlativo, Integer anioInicial, Integer anioFinal, Connection conn, String usuario){
 		ArrayList<ArrayList<BigDecimal>> presupuestoPrestamo = new ArrayList<ArrayList<BigDecimal>>();
 		
 			if(objetoCosto.getObjeto_tipo() == 1){
