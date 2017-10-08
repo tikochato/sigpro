@@ -549,7 +549,7 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 
 }]);
 
-app.directive('scrollespejo', ['$window', function($window) {
+app.directive('scrollespejoflujo', ['$window', function($window) {
 	return {
 		restrict: 'A',
 		link: function(scope, element, attrs) {

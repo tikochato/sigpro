@@ -551,7 +551,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 		
 }]);
 
-app.directive('scrollespejo', ['$window', function($window) {
+app.directive('scrollespejometas', ['$window', function($window) {
     return {
         restrict: 'A',
         link: function(scope, element, attrs) {
@@ -562,8 +562,8 @@ app.directive('scrollespejo', ['$window', function($window) {
       	            document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
       	            document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
       	          }else if(elemento.id == 'divTablaDatos'){
-      	        	if(Math.abs(scope.controller.scrollPosicion-element[0].scrollLeft)<scope.controller.tamanoCelda){//bloquear scroll horizontal
-                  		element[0].scrollLeft = scope.controller.scrollPosicion;
+      	        	if(Math.abs(scope.metasc.scrollPosicion-element[0].scrollLeft)<scope.metasc.tamanoCelda){//bloquear scroll horizontal
+                  		element[0].scrollLeft = scope.metasc.scrollPosicion;
                   	}
       	            document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
       	            document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
@@ -574,7 +574,7 @@ app.directive('scrollespejo', ['$window', function($window) {
       	        }
             });
             angular.element($window).bind('resize', function(){ 
-                scope.controller.calcularTamaniosCeldas();
+                scope.metasc.calcularTamaniosCeldas();
                 scope.$digest();
               });
             scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
