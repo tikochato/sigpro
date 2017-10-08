@@ -187,23 +187,6 @@
 									</div>
 								</div>
 							</div>
-							
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="form-group">
-										<input type="number"
-										 class="inputText "  
-										 ng-model="controller.proyecto.ejecucionFisicaReal"
-										 ng-value="controller.proyecto.ejecucionFisicaReal"
-										 onblur="this.setAttribute('value', this.value);"
-										 min="0" max="100"
-										 
-										 >
-										<label class="floating-label" >Ejecucion Física Real %</label>
-									</div>
-								</div>
-							</div>
-							
 							<div class="row">
 								<div class="col-sm-4">
 									<div class="form-group">    						
@@ -352,7 +335,19 @@
 									</div>
 								</div>
 							</div>
-					
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="form-group">
+										<input type="number"
+										 class="inputText "  
+										 ng-model="controller.proyecto.ejecucionFisicaReal"
+										 ng-value="controller.proyecto.ejecucionFisicaReal"
+										 onblur="this.setAttribute('value', this.value);"
+										 min="0" max="100">
+										<label class="floating-label" >Ejecucion Física Real %</label>
+									</div>
+								</div>
+							</div>
 					
 				</uib-tab>
 				</shiro:hasPermission>
@@ -1233,8 +1228,8 @@
 			</uib-tabset>
 			</form>
 		</div>
-		<div class="col-sm-12 operation_buttons" align="right">
-			<div align="center" class="label-form">Los campos marcados con * son obligatorios y las fechas deben tener formato de dd/mm/yyyy</div>
+		<div class="col-sm-12 operation_buttons" align="right" style="margin-top: 15px;">
+			<div align="center" class="label-form">Los campos marcados con * son obligatorios y las fechas deben tener formato de dd/mm/aaaa</div>
 			<br/>
 			<div class="btn-group" ng-disabled="!controller.botones">
 				<shiro:hasPermission name="24020">

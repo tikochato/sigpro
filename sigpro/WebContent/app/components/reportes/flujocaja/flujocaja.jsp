@@ -14,20 +14,21 @@
 		  	width: 300px; 
 			min-width: 300px; 
 			max-width:300px; 
-			overflow:hidden; 
+			overflow:hidden;
+			z-index: 1; 
 		}	
 		
 		.divPadreDatos{		
 			float: left; 
 			display: inline-block;
 			white-space: nowrap;	
-			overflow:hidden;		
+			overflow:hidden;	
+			z-index: 2;	
 		}
 			
 		.divTabla{
 			float: left;
-			margin-right: -15px;
-			overflow-y:hidden;
+			overflow-y: visible;
 			overflow-x:hidden;
 		}
 				
@@ -139,6 +140,10 @@
 			font-weight: bold;
 		}
 		
+		::-webkit-scrollbar {
+		 	display: none;
+		 }
+		
 	</style>
 
 <div ng-controller="flujocajaController as controller" class="maincontainer all_page" id="title">
@@ -223,7 +228,7 @@
 			    			<table class="table table-striped tablaDatos"  style="height: 100%">
 								<thead class="theadDatos">
 									<tr>
-				          				<th style="text-align: center; vertical-align: top; width:300px; height: 71px;" class="label-form">Nombre</th>
+				          				<th style="text-align: center; vertical-align: top; width:300px; height: 72px;" class="label-form">Nombre</th>
 				         			</tr>
 								</thead>
 								<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" style="max-height: 150px;" scrollespejo>
@@ -239,7 +244,7 @@
 							</table>
 		    			</div>
 	    			</div>
-		    		<div class="divPadreDatos" style="max-width: {{controller.tamanoTotal}}px; height: 100%">
+		    		<div class="divPadreDatos" style="max-width: {{controller.tamanoTotal}}px; height: 100%; margin-top: 3px;">
 	    				<div class="divTabla"  style="height: 100%">
 			    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos" 
 				    				style="max-width: {{controller.tamanoTotal}}px; height:100%;" >
@@ -267,7 +272,7 @@
 		    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos"  style="height: 100%">
 							<thead class="theadDatos">
 									<tr>
-			          					<th style="{{controller.estiloCelda}} text-align:center; vertical-align: top; height: 71px;" class="label-form">Total</th>
+			          					<th style="{{controller.estiloCelda}} text-align:center; vertical-align: top; height: 72px;" class="label-form">Total</th>
 							        </tr>
 								</thead>
 							<tbody class="cuerpoTablaTotales bordeIzquierda" id="divTotales" ng-mouseover="controller.activarScroll('divTotales')"  style="max-height: 150px;" scrollespejo>
@@ -355,31 +360,31 @@
 		    			<table class="table table-striped tablaDatos"  style="height: 100%">
 							<tbody class="cuerpoTablaTotales bordeIzquierda">
 								<tr>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalPlanificado | formatoMillones : controller.enMillones}}</span></td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}} height: 35px;"><span>{{controller.resumenTotales.totalPlanificado | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalPlanificadoAcumulado | formatoMillones : controller.enMillones}}</span></td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}} height: 35px;"><span>{{controller.resumenTotales.totalPlanificadoAcumulado | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalEjecutado | formatoMillones : controller.enMillones}}</span></td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}} height: 35px;"><span>{{controller.resumenTotales.totalEjecutado | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalEjecutadoAcumulado | formatoMillones : controller.enMillones}}</span></td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}} height: 35px;"><span>{{controller.resumenTotales.totalEjecutadoAcumulado | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalVariacion | formatoMillones : controller.enMillones}}</span></td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}} height: 35px;"><span>{{controller.resumenTotales.totalVariacion | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalVariacionPorcentaje | formatoMillones : controller.enMillones}}</span></td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}} height: 35px;"><span>{{controller.resumenTotales.totalVariacionPorcentaje | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalDesembolsosReal | formatoMillones : controller.enMillones}}</span></td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}} height: 35px;"><span>{{controller.resumenTotales.totalDesembolsosReal | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalDesembolsos | formatoMillones : controller.enMillones}}</span></td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}} height: 35px;"><span>{{controller.resumenTotales.totalDesembolsos | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}"><span>{{controller.resumenTotales.totalSaldo | formatoMillones : controller.enMillones}}</span></td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}} height: 35px;"><span>{{controller.resumenTotales.totalSaldo | formatoMillones : controller.enMillones}}</span></td>
 								</tr>
 							</tbody>
 						</table>

@@ -344,8 +344,8 @@
 				</form>
 			</div>
 			
-			<div class="col-sm-12 operation_buttons" align="right">
-				<div align="center" class="label-form">Los campos marcados con * son obligatorios y las fechas deben tener formato de dd/mm/yyyy</div>
+			<div class="col-sm-12 operation_buttons" align="right" style="margin-top: 15px;">
+				<div align="center" class="label-form">Los campos marcados con * son obligatorios y las fechas deben tener formato de dd/mm/aaaa</div>
 				<br/>
 				<div class="col-sm-12">
 					<div class="btn-group" ng-disabled="!componentec.botones">
