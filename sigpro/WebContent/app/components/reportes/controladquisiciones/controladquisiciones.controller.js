@@ -1,4 +1,4 @@
-var app = angular.module('controlAdquisicionesController', ['ngTouch','ngAnimate','ui.grid.edit', 'ui.grid.rowEdit','ui.utils.masks']);
+var app = angular.module('controlAdquisicionesController', ['ngTouch','ngAnimate','ui.utils.masks','vs-repeat']);
 app.controller('controlAdquisicionesController',['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q','dialogoConfirmacion', '$filter','$uibModal',
 	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion, $filter,$uibModal) {
 	var mi = this;
@@ -173,7 +173,7 @@ app.controller('controlAdquisicionesController',['$scope', '$http', '$interval',
         	row.c12 = !row.c12;
         	break;
         case 13:
-	        if(borrar)//prueba
+	        if(borrar)
 	        	row.realAdjudica = null;
         	row.c13 = !row.c13;
         	break;
@@ -1016,17 +1016,14 @@ app.directive('nextOnTab', function () {
     }
 })
 
-app.directive('scrollespejo', ['$window', function($window) {
+app.directive('scrollespejoctrl', ['$window', function($window) {
     return {
         restrict: 'A',
         link: function(scope, element, attrs) {
             element.bind('scroll', function() {
                 var elemento = element[0];
                 if (elemento.id == scope.divActivo){
-      	          if(elemento.id == 'divTablaNombres'){
-      	            document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
-      	          }else if(elemento.id == 'divTablaDatos'){
-      	            document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
+      	          if(elemento.id == 'divTablaDatos'){
       	            document.getElementById("divCabecerasDatos").scrollLeft = elemento.scrollLeft;
       	          }else{
       	            document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
@@ -1034,7 +1031,7 @@ app.directive('scrollespejo', ['$window', function($window) {
       	        }
             });
             angular.element($window).bind('resize', function(){ 
-                scope.controller.calcularTamanosPantalla();
+                scope.ctrladqui.calcularTamanosPantalla();
                 scope.$digest();
               });
             scope.$on('$destroy', function () { window.angular.element($window).off('resize');});

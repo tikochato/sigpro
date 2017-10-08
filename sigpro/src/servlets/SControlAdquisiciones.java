@@ -212,8 +212,7 @@ public class SControlAdquisiciones extends HttpServlet {
 				if(nivel != null){
 					temp = new stcontroladquisiciones();
 					temp.objetoId = (Integer)obj[0];
-					String tabs = "%"+nivel+"s";
-					temp.nombre = nivel != 0 ? String.format(tabs, (String)obj[1]).replace(' ', '\t') : (String)obj[1];
+					temp.nombre = (String)obj[1];
 					temp.objetoTipo = ((BigInteger)obj[2]).intValue();
 					temp.nivel = nivel;
 					List<PlanAdquisicion> adquisiciones = null;
