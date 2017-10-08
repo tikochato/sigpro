@@ -18,7 +18,6 @@
 		    opacity: 1;
 		    color: rgba(0,0,0,0.38) !important;
 		    font-weight: bold;
-		    border-right: 1px solid #ddd; 
 		}
 	.colorPlanificadoFondo{
 			background-color: #303f9e;
@@ -160,13 +159,19 @@
 			
 			
 			<br/>
+			<div>
+				
+			</div>
+			
 			<div style="width: 70%">
+				<label class="label-form"  ng-hide="!desembolsosc.mostrar">Desembolsos </label>
 				<canvas id="line" class="chart chart-line" chart-data="desembolsosc.desembolsosGrafica" ng-hide="!desembolsosc.mostrar"
 				chart-labels="desembolsosc.etiqutas" chart-series="desembolsosc.series" chart-options="desembolsosc.options"
 				chart-dataset-override="desembolsosc.datasetOverride" 
 				 chart-colors = "desembolsosc.radarColors" chart-legend="true">
 				</canvas>
 			</div>
+			
 			<br/><br/>
 			<div class="divTabla"  >
 			<table st-table="desembolsosc.desembolsos" class="table table-striped table-hover table-condensed table-responsive cuerpoTablaNombres "
