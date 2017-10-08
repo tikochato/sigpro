@@ -212,20 +212,20 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 			case 1:
 				totalItems = (mi.anio_fin - mi.anio_inicio +1) * 12;
 				
-				costoPlan.push ("Costo");
+				costoPlan.push ("Costo planificado");
 				costoPlan.push (...costo.slice());
 			
-				desembolsoPlanificado.push("Planificado");
+				desembolsoPlanificado.push("Desembolso Planificado");
 				desembolsoPlanificado.push(...planificado.slice());
 				
-				desembolsoReal.push("Real");
+				desembolsoReal.push("Desembolso Real");
 				desembolsoReal.push(...real.slice());
 				
-				desembolsoReald.push("Real ($)");
+				desembolsoReald.push("Desembolso Real ($)");
 				desembolsoReald.push(...reald.slice());
 				
-				variaciones.push("Variación");
-				porcentajeVariaciones.push("Porcentaje");
+				variaciones.push("Variación de desembolso");
+				porcentajeVariaciones.push("Porcentaje de variación");
 				
 				for (x = 1;x<=totalItems;x++){
 					totalPlanificado = totalPlanificado+ desembolsoPlanificado[x];
