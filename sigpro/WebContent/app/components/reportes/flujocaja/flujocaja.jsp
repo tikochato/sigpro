@@ -146,10 +146,10 @@
 		
 	</style>
 
-<div ng-controller="flujocajaController as controller" class="maincontainer all_page" id="title">
+<div ng-controller="flujocajaController as flujoc" class="maincontainer all_page" id="title">
 	
 	<shiro:lacksPermission name="30010">
-		<p ng-init="controller.redireccionSinPermisos()"></p>
+		<p ng-init="flujoc.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>		
 	<div class="col-sm-12" style="height: 100%;">
 		<div style="width: 100%; height: 100%">
@@ -161,50 +161,50 @@
 	    	<br>
 			<div class="row">
 					<div class="form-group col-sm-3">
-						<select  class="inputText" ng-model="controller.prestamo"
-							ng-options="a.text for a in controller.prestamos"
-							ng-change="controller.validar()"></select>
+						<select  class="inputText" ng-model="flujoc.prestamo"
+							ng-options="a.text for a in flujoc.prestamos"
+							ng-change="flujoc.validar()"></select>
 					</div>
 					
 					<div class="form-group col-sm-2">
-						<input type="text"  class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.fechaCorte" is-open="controller.isOpen"
-				            datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  
-				            ng-required="true" ng-change="controller.validar()"
-				            ng-value="controller.fechaCorte" onblur="this.setAttribute('value', this.value);"/>
-				            <span class="label-icon" ng-click="controller.abrirPopupFecha()">
+						<input type="text"  class="inputText" uib-datepicker-popup="{{flujoc.formatofecha}}" ng-model="flujoc.fechaCorte" is-open="flujoc.isOpen"
+				            datepicker-options="flujoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  
+				            ng-required="true" ng-change="flujoc.validar()"
+				            ng-value="flujoc.fechaCorte" onblur="this.setAttribute('value', this.value);"/>
+				            <span class="label-icon" ng-click="flujoc.abrirPopupFecha()">
 				              <i class="glyphicon glyphicon-calendar"></i>
 				            </span>
 					  	<label for="campo.id" class="floating-label">*Fecha Corte</label>
 					</div>
 					
-					<div class="col-sm-7" align="right" ng-hide="!controller.mostrarDescargar">
+					<div class="col-sm-7" align="right" ng-hide="!flujoc.mostrarDescargar">
 						<div class="form-group col-sm-1">
 						</div>
 						<div class="col-sm-11">
 							<div class="btn-group">
-								<label class="btn btn-default" ng-model="controller.enMillones" uib-btn-radio="true" ng-click="controller.calcularTamaniosCeldas(); controller.convertirMillones();" uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false">
+								<label class="btn btn-default" ng-model="flujoc.enMillones" uib-btn-radio="true" ng-click="flujoc.calcularTamaniosCeldas(); flujoc.convertirMillones();" uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false">
 								<span>MQ</span></label>
-								<label class="btn btn-default" ng-model="controller.enMillones" uib-btn-radio="false" ng-click="controller.calcularTamaniosCeldas(); controller.convertirMillones();" uib-tooltip="Quetzales" role="button" tabindex="1" aria-invalid="false">
+								<label class="btn btn-default" ng-model="flujoc.enMillones" uib-btn-radio="false" ng-click="flujoc.calcularTamaniosCeldas(); flujoc.convertirMillones();" uib-tooltip="Quetzales" role="button" tabindex="1" aria-invalid="false">
 								<span>Q</span></label>
 							</div>
 							<div class="btn-group" style="padding-left: 20px;">
-								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="1" ng-click="controller.cambiarAgrupacion(1)" uib-tooltip="Mes" role="button" tabindex="1" aria-invalid="false">
+								<label class="btn btn-default" ng-model="flujoc.agrupacionActual" uib-btn-radio="1" ng-click="flujoc.cambiarAgrupacion(1)" uib-tooltip="Mes" role="button" tabindex="1" aria-invalid="false">
 								<span>M</span></label>
-								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="2" ng-click="controller.cambiarAgrupacion(2)" uib-tooltip="Bimestre" role="button" tabindex="2" aria-invalid="false">
+								<label class="btn btn-default" ng-model="flujoc.agrupacionActual" uib-btn-radio="2" ng-click="flujoc.cambiarAgrupacion(2)" uib-tooltip="Bimestre" role="button" tabindex="2" aria-invalid="false">
 								<span>B</span></label>
-								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="3" ng-click="controller.cambiarAgrupacion(3)" uib-tooltip="Trimestre" role="button" tabindex="3" aria-invalid="false">
+								<label class="btn btn-default" ng-model="flujoc.agrupacionActual" uib-btn-radio="3" ng-click="flujoc.cambiarAgrupacion(3)" uib-tooltip="Trimestre" role="button" tabindex="3" aria-invalid="false">
 								<span>T</span></label>
-								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="4" ng-click="controller.cambiarAgrupacion(4)" uib-tooltip="Cuatrimestre" role="button" tabindex="4" aria-invalid="false">
+								<label class="btn btn-default" ng-model="flujoc.agrupacionActual" uib-btn-radio="4" ng-click="flujoc.cambiarAgrupacion(4)" uib-tooltip="Cuatrimestre" role="button" tabindex="4" aria-invalid="false">
 								<span>C</span></label>
-								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="5" ng-click="controller.cambiarAgrupacion(5)" uib-tooltip="Semestre" role="button" tabindex="5" aria-invalid="false">
+								<label class="btn btn-default" ng-model="flujoc.agrupacionActual" uib-btn-radio="5" ng-click="flujoc.cambiarAgrupacion(5)" uib-tooltip="Semestre" role="button" tabindex="5" aria-invalid="false">
 								<span>S</span></label>
-								<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="6" ng-click="controller.cambiarAgrupacion(6)" uib-tooltip="Año" role="button" tabindex="6" aria-invalid="false">
+								<label class="btn btn-default" ng-model="flujoc.agrupacionActual" uib-btn-radio="6" ng-click="flujoc.cambiarAgrupacion(6)" uib-tooltip="Año" role="button" tabindex="6" aria-invalid="false">
 								<span>A</span></label>
 							</div>
 							<div class="btn-group" style="padding-left: 20px;">
-								<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!controller.mostrarDescargar">
+								<label class="btn btn-default" ng-click="flujoc.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!flujoc.mostrarDescargar">
 								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-								<label class="btn btn-default" ng-click="controller.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="!controller.mostrarDescargar">
+								<label class="btn btn-default" ng-click="flujoc.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="!flujoc.mostrarDescargar">
 								<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 							</div>
 						</div>
@@ -213,7 +213,7 @@
 	    	</div>
 	    	<div style="width: 100%; height: 100%" id="reporte">
 	    		
-				<div class="grid_loading" ng-hide="!controller.mostrarCargando" style="height: calc(80% - 32px)">
+				<div class="grid_loading" ng-hide="!flujoc.mostrarCargando" style="height: calc(80% - 32px)">
 						<div class="msg">
 							<span><i class="fa fa-spinner fa-spin fa-4x"></i> 
 								<br />
@@ -221,7 +221,7 @@
 							</span>
 						</div>
 					</div>		
-		    	<div class="row" ng-hide="!controller.mostrarDescargar" >
+		    	<div class="row" ng-hide="!flujoc.mostrarDescargar" >
 		    				
 		    		<div class="divPadreNombres"  style="height: 100%">
 			    		<div class="divTabla"  style="height: 100%"> 
@@ -231,11 +231,11 @@
 				          				<th style="text-align: center; vertical-align: top; width:300px; height: 72px;" class="label-form">Nombre</th>
 				         			</tr>
 								</thead>
-								<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" style="max-height: 150px;" scrollespejo>
-									<tr ng-repeat="item in controller.data">
+								<tbody vs-repeat class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="flujoc.activarScroll('divTablaNombres')" style="max-height: 150px;" scrollespejo>
+									<tr ng-repeat="item in flujoc.data">
 							      		<td nowrap style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">
 							      			<p class="nombreFormat">
-							      				<span ng-class="controller.iconoObjetoTipo[item.objeto_tipo]" uib-tooltip="{{controller.tooltipObjetoTipo[item.objeto_tipo]}}" style="margin-left: {{item.nivel}}em"></span>
+							      				<span ng-class="flujoc.iconoObjetoTipo[item.objeto_tipo]" uib-tooltip="{{flujoc.tooltipObjetoTipo[item.objeto_tipo]}}" style="margin-left: {{item.nivel}}em"></span>
 							      				<span uib-tooltip="{{item.nombre}}">{{item.nombre}}</span>
 							      			</p>
 							      		</td>
@@ -244,23 +244,23 @@
 							</table>
 		    			</div>
 	    			</div>
-		    		<div class="divPadreDatos" style="max-width: {{controller.tamanoTotal}}px; height: 100%; margin-top: 3px;">
+		    		<div class="divPadreDatos" style="max-width: {{flujoc.tamanoTotal}}px; height: 100%; margin-top: 3px;">
 	    				<div class="divTabla"  style="height: 100%">
 			    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos" 
-				    				style="max-width: {{controller.tamanoTotal}}px; height:100%;" >
+				    				style="max-width: {{flujoc.tamanoTotal}}px; height:100%;" >
 								<thead id="divCabecerasDatos" class="theadDatos" style="margin-left: -15px;">
 									<tr>
-				         				<th colspan={{controller.colspan}} style="{{controller.estiloCabecera}}" ng-repeat="m in controller.objetoMostrar" class="label-form">{{m.nombreMes}}</th>
+				         				<th colspan={{flujoc.colspan}} style="{{flujoc.estiloCabecera}}" ng-repeat="m in flujoc.objetoMostrar" class="label-form">{{m.nombreMes}}</th>
 				          			</tr>
 				          			<tr>
-				          				<th ng-repeat="a in controller.aniosfinales" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}" class="label-form">{{a.anio}}</th>
+				          				<th ng-repeat="a in flujoc.aniosfinales" style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}}" class="label-form">{{a.anio}}</th>
 							        </tr>
 								</thead>
-								<tbody class="cuerpoTablaDatos" id="divTablaDatos" ng-mouseover="controller.activarScroll('divTablaDatos')" scrollespejo  style="max-height: 150px;">
-							      	<tr ng-repeat="item in controller.data" style="">
-								      		<td ng-repeat="posicion in controller.columnastotales track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}">
+								<tbody vs-repeat class="cuerpoTablaDatos" id="divTablaDatos" ng-mouseover="flujoc.activarScroll('divTablaDatos')" scrollespejo  style="max-height: 150px;">
+							      	<tr ng-repeat="item in flujoc.data" style="">
+								      		<td ng-repeat="posicion in flujoc.columnastotales track by $index" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}">
 								      			<div>
-												<span class="colorPlanificado">{{controller.getPlanificado($parent.$index,$index).planificado  | formatoMillones : controller.enMillones}}</span>
+												<span class="colorPlanificado">{{flujoc.getPlanificado($parent.$index,$index).planificado  | formatoMillones : flujoc.enMillones}}</span>
 								      			</div>
 								      		</td>
 							      	</tr>
@@ -272,14 +272,14 @@
 		    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos"  style="height: 100%">
 							<thead class="theadDatos">
 									<tr>
-			          					<th style="{{controller.estiloCelda}} text-align:center; vertical-align: top; height: 72px;" class="label-form">Total</th>
+			          					<th style="{{flujoc.estiloCelda}} text-align:center; vertical-align: top; height: 72px;" class="label-form">Total</th>
 							        </tr>
 								</thead>
-							<tbody class="cuerpoTablaTotales bordeIzquierda" id="divTotales" ng-mouseover="controller.activarScroll('divTotales')"  style="max-height: 150px;" scrollespejo>
-									<tr ng-repeat="totales in controller.totales track by $index" style="min-height:35px; height:35px;">
-										<td ng-repeat="total in totales.anio" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}">
+							<tbody vs-repeat class="cuerpoTablaTotales bordeIzquierda" id="divTotales" ng-mouseover="flujoc.activarScroll('divTotales')"  style="max-height: 150px;" scrollespejo>
+									<tr ng-repeat="totales in flujoc.totales track by $index" style="min-height:35px; height:35px;">
+										<td ng-repeat="total in totales.anio" style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}}">
 											<div>
-											<span class="colorPlanificado">{{total.valor.planificado | formatoMillones : controller.enMillones}}</span>
+											<span class="colorPlanificado">{{total.valor.planificado | formatoMillones : flujoc.enMillones}}</span>
 											</div>
 										</td>
 							      	</tr>
@@ -321,36 +321,36 @@
 							</table>
 		    			</div>
 	    			</div>
-		    		<div class="divPadreDatos" style="max-width: {{controller.tamanoTotal}}px; height: 100%">
+		    		<div class="divPadreDatos" style="max-width: {{flujoc.tamanoTotal}}px; height: 100%">
 	    				<div class="divTabla"  style="height: 100%">
-			    			<table class="table table-striped tablaDatos" style="max-width: {{controller.tamanoTotal}}px; height:100%;" >
+			    			<table class="table table-striped tablaDatos" style="max-width: {{flujoc.tamanoTotal}}px; height:100%;" >
 								<tbody class="cuerpoTablaDatos" id="cuerpoTotalesDatos">
 							      	<tr>
-							      		<td ng-repeat="posicion in controller.resumenTotales.filaPlanificado track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion | formatoMillones : controller.enMillones}} </td>
+							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaPlanificado track by $index" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>
 							      	</tr>
 							      	<tr>
-							      		<td ng-repeat="posicion in controller.resumenTotales.filaPlanificadoAcumulado track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion | formatoMillones : controller.enMillones}} </td>
+							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaPlanificadoAcumulado track by $index" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>
 							      	</tr>
 							      	<tr>
-							      		<td ng-repeat="posicion in controller.resumenTotales.filaEjecutado track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion | formatoMillones : controller.enMillones}} </td>
+							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaEjecutado track by $index" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>
 							      	</tr>
 							      	<tr>
-							      		<td ng-repeat="posicion in controller.resumenTotales.filaEjecutadoAcumulado track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion | formatoMillones : controller.enMillones}} </td>
+							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaEjecutadoAcumulado track by $index" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>
 							      	</tr>
 							      	<tr>
-							      		<td ng-repeat="posicion in controller.resumenTotales.filaVariacion track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion | formatoMillones : controller.enMillones}} </td>
+							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaVariacion track by $index" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>
 							      	</tr>
 							      	<tr>
-							      		<td ng-repeat="posicion in controller.resumenTotales.filaVariacionPorcentaje track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion}}%</td>
+							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaVariacionPorcentaje track by $index" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion}}%</td>
 							      	</tr>
 							      	<tr>
-							      		<td ng-repeat="posicion in controller.resumenTotales.filaDesembolsosReal track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion | formatoMillones : controller.enMillones}} </td>
+							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaDesembolsosReal track by $index" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>
 							      	</tr>
 							      	<tr>
-							      		<td ng-repeat="posicion in controller.resumenTotales.filaDesembolsos track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion | formatoMillones : controller.enMillones}} </td>
+							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaDesembolsos track by $index" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>
 							      	</tr>
 							      	<tr>
-							      		<td ng-repeat="posicion in controller.resumenTotales.filaSaldo track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}"> {{posicion | formatoMillones : controller.enMillones}} </td>
+							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaSaldo track by $index" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>
 							      	</tr>
 								</tbody>
 							</table>
@@ -360,31 +360,31 @@
 		    			<table class="table table-striped tablaDatos"  style="height: 100%">
 							<tbody class="cuerpoTablaTotales bordeIzquierda">
 								<tr>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}} height: 35px;"><span>{{controller.resumenTotales.totalPlanificado | formatoMillones : controller.enMillones}}</span></td>
+									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span>{{flujoc.resumenTotales.totalPlanificado | formatoMillones : flujoc.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}} height: 35px;"><span>{{controller.resumenTotales.totalPlanificadoAcumulado | formatoMillones : controller.enMillones}}</span></td>
+									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span>{{flujoc.resumenTotales.totalPlanificadoAcumulado | formatoMillones : flujoc.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}} height: 35px;"><span>{{controller.resumenTotales.totalEjecutado | formatoMillones : controller.enMillones}}</span></td>
+									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span>{{flujoc.resumenTotales.totalEjecutado | formatoMillones : flujoc.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}} height: 35px;"><span>{{controller.resumenTotales.totalEjecutadoAcumulado | formatoMillones : controller.enMillones}}</span></td>
+									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span>{{flujoc.resumenTotales.totalEjecutadoAcumulado | formatoMillones : flujoc.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}} height: 35px;"><span>{{controller.resumenTotales.totalVariacion | formatoMillones : controller.enMillones}}</span></td>
+									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span>{{flujoc.resumenTotales.totalVariacion | formatoMillones : flujoc.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}} height: 35px;"><span>{{controller.resumenTotales.totalVariacionPorcentaje | formatoMillones : controller.enMillones}}</span></td>
+									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span>{{flujoc.resumenTotales.totalVariacionPorcentaje | formatoMillones : flujoc.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}} height: 35px;"><span>{{controller.resumenTotales.totalDesembolsosReal | formatoMillones : controller.enMillones}}</span></td>
+									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span>{{flujoc.resumenTotales.totalDesembolsosReal | formatoMillones : flujoc.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}} height: 35px;"><span>{{controller.resumenTotales.totalDesembolsos | formatoMillones : controller.enMillones}}</span></td>
+									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span>{{flujoc.resumenTotales.totalDesembolsos | formatoMillones : flujoc.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}} height: 35px;"><span>{{controller.resumenTotales.totalSaldo | formatoMillones : controller.enMillones}}</span></td>
+									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span>{{flujoc.resumenTotales.totalSaldo | formatoMillones : flujoc.enMillones}}</span></td>
 								</tr>
 							</tbody>
 						</table>
@@ -392,17 +392,17 @@
 	    	<div class="row">
 					<div class="col-sm-3"></div>
 					<div class="col-sm-6" style="text-align: center;">
-						<label class="btn btn-default" ng-click="controller.anterior()" uib-tooltip="Anterior" ng-hide="!controller.movimiento" 
+						<label class="btn btn-default" ng-click="flujoc.anterior()" uib-tooltip="Anterior" ng-hide="!flujoc.movimiento" 
 								tooltip-placement="bottom">
 						<span class="glyphicon glyphicon-chevron-left"></span></label>
-						<label class="btn btn-default" ng-click="controller.siguiente()" uib-tooltip="Siguiente" ng-hide="!controller.movimiento"
+						<label class="btn btn-default" ng-click="flujoc.siguiente()" uib-tooltip="Siguiente" ng-hide="!flujoc.movimiento"
 								tooltip-placement="bottom">
 						<span class="glyphicon glyphicon-chevron-right"></span></label>
 					</div>
 					<div class="col-sm-3">
-			    		<ol class="leyendaTexto"  ng-hide="!controller.mostrarDescargar">
-							<li ng-show="controller.grupoMostrado.planificado"><span class="colorPlanificadoFondo"></span>Planificado</li>
-					        <li ng-show="controller.grupoMostrado.real"><span class="colorRealFondo"></span>Real</li>
+			    		<ol class="leyendaTexto"  ng-hide="!flujoc.mostrarDescargar">
+							<li ng-show="flujoc.grupoMostrado.planificado"><span class="colorPlanificadoFondo"></span>Planificado</li>
+					        <li ng-show="flujoc.grupoMostrado.real"><span class="colorRealFondo"></span>Real</li>
 						</ol>
 					</div>
 	    	</div>
