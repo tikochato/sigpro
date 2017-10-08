@@ -45,10 +45,10 @@
   <div class="row">
     <div class="col-sm-12">
     <label class="etiqueta">Responsables</label>
-    <div class = "row" style="padding: 0px 0px 10px 10px;">
+    <div class = "row" style="padding: 0px 0px 10px 10px; width: 100%">
     	<div ng-dropdown-multiselect="" options="estructura.responsables" translation-texts="estructura.buttonText" 
     	selected-model="estructura.model" extra-settings="estructura.settings"
-    	events="estructura.selectColaborador">
+    	events="estructura.selectColaborador" style="width: 100%"> 
     	</div>
     </div>
     <div class="row">
