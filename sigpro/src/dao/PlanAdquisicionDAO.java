@@ -58,7 +58,7 @@ public class PlanAdquisicionDAO {
 		return ret;
 	}
 	
-	public static List<PlanAdquisicion> getPlanAdquisicionByObjeto(int objetoTipo, int ObjetoId){
+	public static PlanAdquisicion getPlanAdquisicionByObjeto(int objetoTipo, int ObjetoId){
 		List<PlanAdquisicion> retList = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		
@@ -76,6 +76,27 @@ public class PlanAdquisicionDAO {
 			session.close();
 			retList = (retList.size()>0) ? retList : null;
 		}
+		return retList!=null ? retList.get(0) : null;
+	}
+	
+	public static List<PlanAdquisicion> getPlanAdquisicionesByObjeto(int objetoTipo, int ObjetoId){
+		List<PlanAdquisicion> retList = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		
+		try{
+			String query = "FROM PlanAdquisicion pa where pa.objetoId=:objetoId and pa.objetoTipo=:objetoTipo and pa.estado=1";
+			Query<PlanAdquisicion> criteria = session.createQuery(query, PlanAdquisicion.class);
+			criteria.setParameter("objetoId", ObjetoId);
+			criteria.setParameter("objetoTipo", objetoTipo);
+			retList = criteria.getResultList();
+			
+		}catch(Throwable e){
+			CLogger.write("4", PlanAdquisicionDAO.class, e);
+		}
+		finally{
+			session.close();
+			retList = (retList.size()>0) ? retList : null;
+		}
 		return retList;
 	}
 	
@@ -88,12 +109,35 @@ public class PlanAdquisicionDAO {
 			session.getTransaction().commit();
 			ret = true;
 		}catch(Throwable e){
-			CLogger.write("4", PlanAdquisicionDAO.class, e);
+			CLogger.write("5", PlanAdquisicionDAO.class, e);
 		}
 		finally{
 			session.close();
 		}
 		
+		return ret;
+	}
+	
+	public static boolean borrarTodosPlan(Integer objetoId, Integer objetoTipo){
+		boolean ret = false;
+		if(objetoId!=null){
+			List<PlanAdquisicion> planes = getPlanAdquisicionesByObjeto(objetoTipo, objetoId);
+			Session session = CHibernateSession.getSessionFactory().openSession();
+			try{
+				session.beginTransaction();
+				for(int i=0; i<planes.size();i++){
+					planes.get(i).setEstado(0);
+					session.saveOrUpdate(planes.get(i));
+				}
+				session.getTransaction().commit();
+				ret = true;
+			}catch(Throwable e){
+				CLogger.write("6", PlanAdquisicionDAO.class, e);
+			}
+			finally{
+				session.close();
+			}
+		}
 		return ret;
 	}
 	
@@ -114,7 +158,7 @@ public class PlanAdquisicionDAO {
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
-			CLogger.write("5", PlanAdquisicionDAO.class, e);
+			CLogger.write("7", PlanAdquisicionDAO.class, e);
 		}
 		finally{
 			session.close();

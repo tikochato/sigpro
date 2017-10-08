@@ -270,23 +270,22 @@
 				
 				<div class="divTabla" ng-hide="!racic.mostrarExport">
 	  			
-					<table st-table="racic.matrizRaci" class="table table-header-rotated  table-striped table-hover table-condensed" >
+					<table class="table table-header-rotated  table-striped table-hover table-condensed" >
 							<thead class="cabecera">
-							<tr >
+							<tr>
 								
-								<th  class="{{racic.claseHeader($index)}}"   ng-repeat="n in racic.encabezadoMatriz track by $index"
-								 >
-										<div><span>{{n.nombre}} </span></div>
+								<th  class="{{racic.claseHeader($index)}}"   ng-repeat="n in racic.encabezadoMatriz track by $index">
+										<div><span>{{ n.nombre}} </span></div>
 								</th>
 							</tr>
 							</thead>
-							<tbody >
-							<tr  ng-repeat="row in racic.matrizRaci track by $index " >
+							<tbody vs-repeat>
+							<tr  ng-repeat="row in racic.matrizRaci track by $index">
 								<td ng-repeat = "col in row track by $index" class="{{racic.claseBody(col)}}" 
 								ng-click="$index > 0 ? racic.mostrarColaborador(col) : ''" 
 								style="border-right: 2px solid #ddd;">
 								 	 <div ng-if="$index == 0" class="{{ $index == 0 ? racic.claseIcon(row) : ''}}" style="margin-left: {{col.nivel-1}}em"></div>
-								 	 <span>{{col.rol}}</span>
+								 	 <span>{{ col.rol}}</span>
 								 </td>
 							</tr>
 							</tbody>

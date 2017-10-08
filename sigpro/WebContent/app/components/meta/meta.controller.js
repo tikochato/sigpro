@@ -495,29 +495,38 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 				$window.location.href = '/main.jsp#!/forbidden';		
 			}			
 			
-			mi.guardar = function(child_scope, mensaje, mensaje_error){				
-				var metasArreglo = mi.metas.concat(mi.metasBorradas);
-				
-				var metasJson = JSON.stringify(metasArreglo);
-				
-				$http.post('/SMeta', {
-					accion: 'guardarMetasCompletas',
-					metas: metasJson,
-					objeto_id: mi.objeto_id,
-					objeto_tipo: mi.objeto_tipo,
-					t: (new Date()).getTime()
-				}).success(function(response){
-					if(response.success){
-						if(child_scope!=null)
-							child_scope.guardar(mensaje, mensaje_error);
-						else{
-							$utilidades.mensaje('success',mensaje);
-							mi.inicializarControlador();
+			mi.guardar = function(child_scope, mensaje, mensaje_error){	
+				if(mi.metas!=null && mi.metas.length>0){
+					var metasArreglo = mi.metas.concat(mi.metasBorradas);
+					
+					var metasJson = JSON.stringify(metasArreglo);
+					
+					$http.post('/SMeta', {
+						accion: 'guardarMetasCompletas',
+						metas: metasJson,
+						objeto_id: mi.objeto_id,
+						objeto_tipo: mi.objeto_tipo,
+						t: (new Date()).getTime()
+					}).success(function(response){
+						if(response.success){
+							if(child_scope!=null)
+								child_scope.guardar(mensaje, mensaje_error);
+							else{
+								$utilidades.mensaje('success',mensaje);
+								mi.inicializarControlador();
+							}
 						}
+						else
+							$utilidades.mensaje('danger',mensaje_error);
+					});
+				}
+				else{
+					if(child_scope!=null)
+						child_scope.guardar(mensaje, mensaje_error);
+					else{
+						$utilidades.mensaje('success',mensaje);
 					}
-					else
-						$utilidades.mensaje('danger',mensaje_error);
-				});
+				}
 			}
 			
 			mi.nuevaMeta = function() {

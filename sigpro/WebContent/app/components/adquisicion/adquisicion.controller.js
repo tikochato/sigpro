@@ -5,7 +5,6 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		mi.mostrarcargando=true;
 		mi.adquisiciones = [];
 		mi.adquisicion;
-		mi.mostraringreso=false;
 		mi.esnuevo = false;
 		mi.camposdinamicos = {};
 		mi.formatofecha = 'dd/MM/yyyy';
@@ -20,17 +19,19 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		
 		mi.parentController=null;
 		
+		mi.requerido=false;
+		
 		if($scope.$parent.producto){
 			$scope.$parent.producto.child_adquisiciones = $scope.adquisicionc;
 			mi.parentController = $scope.$parent.producto;
 			mi.objetoTipo = 3;
 			mi.objetoId = $scope.$parent.producto.producto.id;
 		}
-		if($scope.$parent.subproductoc){
-			$scope.$parent.subproductoc.child_adquisiciones = $scope.adquisicionc;
-			mi.parentController = $scope.$parent.subproductoc;
+		if($scope.$parent.subproducto){
+			$scope.$parent.subproducto.child_adquisiciones = $scope.adquisicionc;
+			mi.parentController = $scope.$parent.subproducto;
 			mi.objetoTipo = 4;
-			mi.objetoId = $scope.$parent.subproductoc.subproducto.id;
+			mi.objetoId = $scope.$parent.subproducto.subproducto.id;
 		}
 		if($scope.$parent.actividadc){
 			$scope.$parent.actividadc.child_adquisiciones = $scope.adquisicionc;
@@ -58,12 +59,14 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 				mi.adquisicion.tipoNombre="";
 				mi.adquisicion.tipoId="";
 			}
+			mi.actualizaObligatorios();
 		}
 		
 		mi.blurTipo=function(){
 			if(document.getElementById("tipo_value").defaultValue!=mi.adquisicion.tipoNombre){
 				$scope.$broadcast('angucomplete-alt:clearInput','tipo');
 			}
+			mi.actualizaObligatorios();
 		}
 		
 		mi.cambioCategoria=function(selected){
@@ -75,12 +78,14 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 				mi.adquisicion.categoriaNombre="";
 				mi.adquisicion.categoriaId="";
 			}
+			mi.actualizaObligatorios();
 		}
 		
 		mi.blurCategoria=function(){
 			if(document.getElementById("categoria_value").defaultValue!=mi.adquisicion.categoriaNombre){
 				$scope.$broadcast('angucomplete-alt:clearInput','categoria');
 			}
+			mi.actualizaObligatorios();
 		}
 		
 		mi.fechaOptions = {
@@ -94,38 +99,41 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 	        mi.editar();
 	    };
 	    
-		mi.cargarTabla = function(pagina){
-			mi.mostrarcargando=true;
+		mi.cargarAdquisicion = function(pagina){
 			$http.post('/SPlanAdquisicion', { accion: 'getPlanAdquisicionPorObjeto',  
 				objetoId: mi.objetoId, objetoTipo: mi.objetoTipo, t: (new Date()).getTime()
 				}).success(
 					function(response) {
-						mi.adquisiciones = response.adquisiciones;
-						mi.mostrarcargando = false;
-						for(var i=0; i<mi.adquisiciones.length; i++){
-							mi.adquisiciones[i].adjudicacionPlanificada = mi.adquisiciones[i].adjudicacionPlanificada!="" ? moment(mi.adquisiciones[i].adjudicacionPlanificada,'DD/MM/YYYY').toDate() : null;
-							mi.adquisiciones[i].adjudicacionReal = mi.adquisiciones[i].adjudicacionReal!="" ? moment(mi.adquisiciones[i].adjudicacionReal,'DD/MM/YYYY').toDate() : null;
-							mi.adquisiciones[i].firmaContratoPlanificada = mi.adquisiciones[i].firmaContratoPlanificada!="" ? moment(mi.adquisiciones[i].firmaContratoPlanificada,'DD/MM/YYYY').toDate() : null;
-							mi.adquisiciones[i].firmaContratoReal = mi.adquisiciones[i].firmaContratoReal!="" ? moment(mi.adquisiciones[i].firmaContratoReal,'DD/MM/YYYY').toDate() : null;
-							mi.adquisiciones[i].lanzamientoEventoPlanificada = mi.adquisiciones[i].lanzamientoEventoPlanificada!="" ? moment(mi.adquisiciones[i].lanzamientoEventoPlanificada,'DD/MM/YYYY').toDate() : null;
-							mi.adquisiciones[i].lanzamientoEventoReal = mi.adquisiciones[i].lanzamientoEventoReal!="" ? moment(mi.adquisiciones[i].lanzamientoEventoReal,'DD/MM/YYYY').toDate() : null;
-							mi.adquisiciones[i].preparacionDocumentosPlanificada = mi.adquisiciones[i].preparacionDocumentosPlanificada!="" ? moment(mi.adquisiciones[i].preparacionDocumentosPlanificada,'DD/MM/YYYY').toDate() : null;
-							mi.adquisiciones[i].preparacionDocumentosReal = mi.adquisiciones[i].preparacionDocumentosReal!="" ? moment(mi.adquisiciones[i].preparacionDocumentosReal,'DD/MM/YYYY').toDate() : null;
-							mi.adquisiciones[i].recepcionOfertasPlanificada = mi.adquisiciones[i].recepcionOfertasPlanificada!="" ? moment(mi.adquisiciones[i].recepcionOfertasPlanificada,'DD/MM/YYYY').toDate() : null;
-							mi.adquisiciones[i].recepcionOfertasReal = mi.adquisiciones[i].recepcionOfertasReal!="" ? moment(mi.adquisiciones[i].recepcionOfertasReal,'DD/MM/YYYY').toDate() : null;
-							if(mi.adquisiciones[i].pagos===undefined || mi.adquisiciones[i].pagos==null)
-								mi.adquisiciones[i].pagos=[];
+						if(response.adquisicion!=null){
+							mi.adquisicion = response.adquisicion;
+							mi.mostrarcargando = false;
+							
+							mi.adquisicion.adjudicacionPlanificada = mi.adquisicion.adjudicacionPlanificada!==undefined && mi.adquisicion.adjudicacionPlanificada!='' ? moment(mi.adquisicion.adjudicacionPlanificada,'DD/MM/YYYY').toDate() : null;
+							mi.adquisicion.adjudicacionReal = mi.adquisicion.adjudicacionReal!==undefined && mi.adquisicion.adjudicacionReal!='' ? moment(mi.adquisicion.adjudicacionReal,'DD/MM/YYYY').toDate() : null;
+							mi.adquisicion.firmaContratoPlanificada = mi.adquisicion.firmaContratoPlanificada!==undefined && mi.adquisicion.firmaContratoPlanificada!='' ? moment(mi.adquisicion.firmaContratoPlanificada,'DD/MM/YYYY').toDate() : null;
+							mi.adquisicion.firmaContratoReal = mi.adquisicion.firmaContratoReal!==undefined && mi.adquisicion.firmaContratoReal!='' ? moment(mi.adquisicion.firmaContratoReal,'DD/MM/YYYY').toDate() : null;
+							mi.adquisicion.lanzamientoEventoPlanificada = mi.adquisicion.lanzamientoEventoPlanificada!==undefined && mi.adquisicion.lanzamientoEventoPlanificada!='' ? moment(mi.adquisicion.lanzamientoEventoPlanificada,'DD/MM/YYYY').toDate() : null;
+							mi.adquisicion.lanzamientoEventoReal = mi.adquisicion.lanzamientoEventoReal!==undefined && mi.adquisicion.lanzamientoEventoReal!='' ? moment(mi.adquisicion.lanzamientoEventoReal,'DD/MM/YYYY').toDate() : null;
+							mi.adquisicion.preparacionDocumentosPlanificada = mi.adquisicion.preparacionDocumentosPlanificada!==undefined && mi.adquisicion.preparacionDocumentosPlanificada!='' ? moment(mi.adquisicion.preparacionDocumentosPlanificada,'DD/MM/YYYY').toDate() : null;
+							mi.adquisicion.preparacionDocumentosReal = mi.adquisicion.preparacionDocumentosReal!==undefined && mi.adquisicion.preparacionDocumentosReal!='' ? moment(mi.adquisicion.preparacionDocumentosReal,'DD/MM/YYYY').toDate() : null;
+							mi.adquisicion.recepcionOfertasPlanificada = mi.adquisicion.recepcionOfertasPlanificada!==undefined && mi.adquisicion.recepcionOfertasPlanificada!='' ? moment(mi.adquisicion.recepcionOfertasPlanificada,'DD/MM/YYYY').toDate() : null;
+							mi.adquisicion.recepcionOfertasReal = mi.adquisicion.recepcionOfertasReal!==undefined && mi.adquisicion.recepcionOfertasReal!='' ? moment(mi.adquisicion.recepcionOfertasReal,'DD/MM/YYYY').toDate() : null;
+							if(mi.adquisicion.pagos===undefined || mi.adquisicion.pagos==null)
+								mi.adquisicion.pagos=[];
 							else{
-								for(var j=0; j<mi.adquisiciones[i].pagos.length; j++){
-									mi.adquisiciones[i].pagos[j].fecha = mi.adquisiciones[i].pagos[j].fechaPago;
-									mi.adquisiciones[i].pagos[j].fechaPago = (mi.adquisiciones[i].pagos[j].fechaPago!=null && mi.adquisiciones[i].pagos[j].fechaPago!="") ? moment(mi.adquisiciones[i].pagos[j].fechaPago,'DD/MM/YYYY').toDate() : null;
+								for(var j=0; j<mi.adquisicion.pagos.length; j++){
+									mi.adquisicion.pagos[j].fecha = mi.adquisicion.pagos[j].fechaPago;
+									mi.adquisicion.pagos[j].fechaPago = (mi.adquisicion.pagos[j].fechaPago!=null && mi.adquisicion.pagos[j].fechaPago!="") ? moment(mi.adquisicion.pagos[j].fechaPago,'DD/MM/YYYY').toDate() : null;
 								}
 							}
+						}
+						else{
+							mi.nuevo();
 						}
 					});
 		}
 		
-		mi.cargarTabla();
+		mi.cargarAdquisicion();
 		
 		mi.redireccionSinPermisos=function(){
 			$window.location.href = '/main.jsp#!/forbidden';		
@@ -133,41 +141,68 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		
 		mi.guardar=function(mensaje_success, mensaje_error){
 			
-			if(mi.adquisiciones.length>0){
+			if(mi.adquisicion!=null && mi.adquisicion.medidaNombre!=null && mi.adquisicion.medidaNombre!=''){
 				$http.post('/SPlanAdquisicion', {
-					accion: 'guardarAdquisiciones',
-					adquisiciones: JSON.stringify(mi.adquisiciones),
+					accion: 'guardarAdquisicion',
 					objetoTipo: mi.objetoTipo,
 					objetoId: mi.objetoId,
+					adjudicacionPlanificada: mi.adquisicion.adjudicacionPlanificada,
+					adjudicacionReal: mi.adquisicion.adjudicacionReal,
+					cantidad: mi.adquisicion.cantidad,
+					categoriaId: mi.adquisicion.categoriaId,
+					firmaContratoPlanificada: mi.adquisicion.firmaContratoPlanificada,
+					firmaContratoReal: mi.adquisicion.firmaContratoReal,
+					id: mi.adquisicion.id,
+					lanzamientoEventoPlanificada: mi.adquisicion.lanzamientoEventoPlanificada,
+					lanzamientoEventoReal: mi.adquisicion.lanzamientoEventoReal,
+					montoContrato: mi.adquisicion.montoContrato,
+					nog: mi.adquisicion.nog,
+					numeroContrato: mi.adquisicion.numeroContrato,
+					precioUnitario: mi.adquisicion.precioUnitario,
+					preparacionDocumentosPlanificada: mi.adquisicion.preparacionDocumentosPlanificada,
+					preparacionDocumentosReal: mi.adquisicion.preparacionDocumentosReal,
+					recepcionOfertasPlanificada: mi.adquisicion.recepcionOfertasPlanificada,
+					recepcionOfertasReal: mi.adquisicion.recepcionOfertasReal,
+					tipoId: mi.adquisicion.tipoId,
+					total: mi.adquisicion.total,
+					medidaNombre: mi.adquisicion.medidaNombre,
+					pagos: JSON.stringify(mi.adquisicion.pagos),
 					t: (new Date()).getTime()
 				}).success(function(response){
 					if(response.success){
-						var sids = response.ids.length>0 ? response.ids.split(",") : [];
-						for(var i = 0; i<sids.length; i++)
-							mi.adquisiciones[i].id = parseInt(sids[i]);
-						mi.cargarTabla();
+						mi.adquisicion.id = response.id;
 						$utilidades.mensaje('success',mensaje_success);
 					}
 					else
 						$utilidades.mensaje('danger',mensaje_error);
 				});
 			}
-			else
-				$utilidades.mensaje('success',mensaje_success);
+			else{
+				$http.post('/SPlanAdquisicion', {
+					accion: 'borrarTodasAdquisiciones',
+					objetoId: mi.objetoId,
+					objetoTipo: mi.objetoTipo, 
+					t: (new Date()).getTime()
+				}).success(function(response){
+					if(response.success){
+						mi.adquisicion.id = response.id;
+						$utilidades.mensaje('success',mensaje_success);
+					}
+					else
+						$utilidades.mensaje('danger',mensaje_error);
+				});
+			}
 		};
 
 		mi.borrar = function(row) {
 				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 						, "Confirmación de Borrado"
-						, '¿Desea borrar la adquisición "'+mi.adquisicion.categoriaNombre+'"?'
+						, '¿Desea borrar la adquisición?'
 						, "Borrar"
 						, "Cancelar")
 				.result.then(function(data) {
 					if(data){
-						var index = mi.adquisiciones.indexOf(row);
-				        if (index !== -1) {
-				            mi.adquisiciones.splice(index, 1);
-				        }
+						mi.nuevo();
 					}
 				}, function(){
 					
@@ -175,7 +210,6 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		};
 
 		mi.nuevo = function() {
-			mi.mostraringreso=true;
 			mi.esnuevo = true;
 			mi.adquisicion = {
 					
@@ -185,80 +219,11 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 			$scope.$broadcast('angucomplete-alt:clearInput','tipo');
 		};
 
-		mi.editar = function(row) {
-			mi.adquisicion=row;
-			if(mi.adquisicion!=null){
-				mi.form_valid = null;
-				mi.mostraringreso = true;
-				mi.esnuevo = false;
-				$scope.$broadcast('angucomplete-alt:changeInput','categoria', mi.adquisicion.categoriaNombre);
-				$scope.$broadcast('angucomplete-alt:changeInput','tipo', mi.adquisicion.tipoNombre);
-				for (campos in mi.adquisicion.camposdinamicos) {
-					switch (mi.adquisicion.camposdinamicos[campos].tipo){
-						case 5:
-							mi.adquisicion.camposdinamicos[campos].valor = !(mi.adquisicion.camposdinamicos[campos].valor instanceof Date) ? moment(mi.adquisicion.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : mi.adquisicion.camposdinamicos[campos].valor ;
-							break;
-						case 1:
-							mi.adquisicion.camposdinamicos[campos].valor = (mi.adquisicion.camposdinamicos[campos].valor!='' && mi.adquisicion.camposdinamicos[campos].valor!=null) ? Number(mi.adquisicion.camposdinamicos[campos].valor) : null;
-							break;
-						case 2:
-							mi.adquisicion.camposdinamicos[campos].valor = (mi.adquisicion.camposdinamicos[campos].valor!='' &&mi.adquisicion.camposdinamicos[campos].valor!=null) ? Number(mi.adquisicion.camposdinamicos[campos].valor) : null;
-							break;
-					}
-				}
-				
-			}
-		}
-
-		mi.irATabla = function() {
-			if(mi.esnuevo){
-					if(mi.parentController.mForm.$valid || 
-							(mi.parentController.mForm.$error.required.length==1 && mi.parentController.mForm.$error.required[0].$name=='form_valid'))
-						mi.adquisiciones.push({
-							id: -1,
-							tipoNombre: mi.adquisicion.tipoNombre,
-							tipoId: mi.adquisicion.tipoId,
-							categoriaNombre: mi.adquisicion.categoriaNombre,
-							categoriaId: mi.adquisicion.categoriaId,
-							medidaNombre: mi.adquisicion.medidaNombre,
-							cantidad: mi.adquisicion.cantidad,
-							precioUnitario: mi.adquisicion.precioUnitario,
-							total: mi.adquisicion.total,
-							nog: mi.adquisicion.nog,
-							numeroContrato: mi.adquisicion.numeroContrato,
-							montoContrato: mi.adquisicion.montoContrato,
-							preparacionDocumentoPlanificado: mi.adquisicion.preparacionDocumentoPlanificado!=null ? moment(mi.adquisicion.preparacionDocumentoPlanifiado).format('DD/MM/YYY') : null,
-							preparacionDocumentoReal: mi.adquisicion.preparacionDocumentoReal!=null ? moment(mi.adquisicion.preparacionDocumentoReal).format('DD/MM/YYYY') : null,
-							lanzamientoEventoPlanificado: mi.adquisicion.lanzamientoEventoPlanificado!=null ? moment(mi.adquisicion.lanzamientoEventoPlanificado).format('DD/MM/YYYY') : null,
-							lanzamientoEventoReal:mi.adquisicion.lanzamientoEventoReal!=null ? moment(mi.adquisicion.lanzamientoEventoReal).format('DD/MM/YYYY') : null,
-							recepcionOfertasPlanificado: mi.adquisicion.recepcionOfertasPlanificado!=null ? moment(mi.adquisicion.recepcionOfertasPlanificado).format('DD/MM/YYYY') : null,
-							recepcionOfertasReal: mi.adquisicion.recepcionOfertasReal!=null ? moment(mi.adquisicion.recepcionOfertasReal).format('DD/MM/YYYY') : null,
-							adjudicacionPlanificado: mi.adquisicion.adjudicacionPlanificado!=null ? moment(mi.adquisicion.adjudicacionPlanificado).format('DD/MM/YYYY') : null,
-							adjudicacionReal: mi.adquisicion.adjudicacionReal!=null ? moment(mi.adquisicion.adjudicacionReal).format('DD/MM/YYYY') : null,
-							firmaContratoPlanificado: mi.adquisicion.firmaContratoPlanificado!=null ? moment(mi.adquisicion.firmaContratoPlanificado).format('DD/MM/YYYY') :null,
-							firmaContratoReal:  mi.adquisicion.firmaContratoReal!=null ? moment(mi.adquisicion.firmaContratoReal).format('DD/MM/YYYY') : null,
-							pagos: mi.adquisicion.pagos
-						});
-					mi.mostraringreso=false;
-					mi.esnuevo = false;
-					mi.form_valid = 1;
-				}
-				else if(mi.parentController.mForm.$valid || mi.parentController.mForm.$error.required[0].$name=='form_valid'){
-					mi.mostraringreso=false;
-					mi.esnuevo = false;
-					mi.form_valid = 1;
-				}
-				else if(!mi.parentController.mForm.$valid){
-					$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
-				}
-		}
-	
-		
 		mi.abrirPopupFecha = function(index) {
 			mi.popup_fechas[index]=true;
 		};
 		
-		mi.agregarPagos = function(row) {
+		mi.agregarPagos = function() {
 			var modalInstance = $uibModal.open({
 				animation : 'true',
 				ariaLabelledBy : 'modal-title',
@@ -270,7 +235,7 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 				size : 'md',
 				resolve: {
 				    pagos: function(){
-				    	return row.pagos;
+				    	return mi.adquisicion.pagos;
 				    }
 				  }
 			});
@@ -282,14 +247,56 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 
 		};
 		
+		mi.actualizaMontos=function(control){
+			switch(control){
+				case 'total':
+					if(mi.adquisicion.total>=0){
+						if(mi.adquisicion.cantidad>0)
+							mi.adquisicion.precioUnitario = mi.adquisicion.total / mi.adquisicion.cantidad;
+						else if(mi.adquisicion.precioUnitario>0)
+							mi.adquisicion.cantidad = mi.adquisicion.total / mi.adquisicion.precioUnitario;
+					}
+					break;
+				case 'cantidad':
+					if(mi.adquisicion.cantidad>=0){
+						if(mi.adquisicion.precioUnitario>=0)
+							mi.adquisicion.total = mi.adquisicion.cantidad*mi.adquisicion.precioUnitario;
+						else if(mi.adquisicion.total>=0 && mi.adquisicion.cantidad>0)
+							mi.adquisicion.precioUnitario = mi.adquisicion.total / mi.adquisicion.cantidad;
+					}
+					break;
+				case 'precio':
+					if(mi.adquisicion.precioUnitario>=0){
+						if(mi.adquisicion.cantidad>=0)
+							mi.adquisicion.total = mi.adquisicion.cantidad*mi.adquisicion.precioUnitario;
+						else if(mi.adquisicion.total>=0)
+							mi.adquisicion.cantidad = mi.adquisicion.total / mi.adquisicion.precioUnitario;
+					}
+					break;
+						
+			}
+			mi.actualizaObligatorios();
+		}
+		
+		mi.actualizaObligatorios=function(){
+			if(mi.adquisicion.categoriaNombre || 
+					mi.adquisicion.tipoNombre ||
+					mi.adquisicion.medidaNombre ||
+					mi.adquisicion.cantidad ||
+					mi.adquisicion.total)
+				mi.requerido=true;
+			else
+				mi.requerido=false;
+		}
+		
 			
 } ]);
 
 app.controller('modalPlanadquisicionPagos', [ '$uibModalInstance',
-	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$scope', '$http', '$interval',  'Utilidades',
 	'$timeout', '$log','dialogoConfirmacion', 'pagos', 
 	function ($uibModalInstance, $scope, $http, $interval,
-		i18nService, $utilidades, $timeout, $log,$dialogoConfirmacion, pagos, totalPagos) {
+		$utilidades, $timeout, $log,$dialogoConfirmacion, pagos, totalPagos) {
 	
 		var mi = this;
 		

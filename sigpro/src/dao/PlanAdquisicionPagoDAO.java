@@ -52,7 +52,8 @@ public class PlanAdquisicionPagoDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
-			session.delete(pago);
+			pago.setEstado(0);
+			session.saveOrUpdate(pago);
 			session.getTransaction().commit();
 			ret = true;
 		}catch(Throwable e){

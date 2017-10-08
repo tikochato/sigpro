@@ -197,7 +197,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 					List<List<Integer>> hijos = EstructuraProyectoDAO.getHijosCompleto((String)obj[3], estruturaProyecto);
 					
 					for(List<Integer> objetoHijo : hijos){
-						List<PlanAdquisicion> lstplan = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(objetoHijo.get(1), objetoHijo.get(0));
+						List<PlanAdquisicion> lstplan = PlanAdquisicionDAO.getPlanAdquisicionesByObjeto(objetoHijo.get(1), objetoHijo.get(0));
 						
 						if(lstplan != null && !lstplan.isEmpty()){
 							for(PlanAdquisicion plan : lstplan){

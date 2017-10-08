@@ -350,7 +350,7 @@
 				<%@include file="/app/components/meta/meta.jsp" %>
 			</div>
     	</uib-tab>
-    	<uib-tab index="2" heading="Adquisiciones" ng-click="producto.adquisicionesActivo()">
+    	<uib-tab index="2" heading="Adquisición" ng-click="producto.adquisicionesActivo()">
     		<div ng-if="producto.adquisicionesCargadas">
 				<%@include file="/app/components/adquisicion/adquisicion.jsp" %>
 			</div>

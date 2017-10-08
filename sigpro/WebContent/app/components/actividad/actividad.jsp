@@ -122,9 +122,10 @@
 					<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 				</div>
 			</div>
-			
 			<div class="col-sm-12">
 				<form name="actividadc.mForm">
+					<uib-tabset active="actividadc.activeTab">
+    					<uib-tab index="0" name="tproducto" heading="Actividad">
 						<div class="form-group">
 							<label for="id" class="floating-label id_class">ID {{actividadc.actividad.id }}</label>
 							<br/><br/>
@@ -435,8 +436,16 @@
 						</div>
 					</div>
 				</div>
-
+				</uib-tab>
+		    	<uib-tab index="1" heading="Adquisición" ng-click="actividadc.adquisicionesActivo()">
+		    		<div ng-if="actividadc.adquisicionesCargadas">
+						<%@include file="/app/components/adquisicion/adquisicion.jsp" %>
+					</div>
+			    </uib-tab>
+			  </uib-tabset>
+			  
 				</form>
+				
 			</div>
 		<div class="col-sm-12 operation_buttons" align="right" style="margin-top: 15px;">
 			<div align="center" class="label-form">Los campos marcados con * son obligatorios y las fechas deben tener formato de dd/mm/aaaa</div>
