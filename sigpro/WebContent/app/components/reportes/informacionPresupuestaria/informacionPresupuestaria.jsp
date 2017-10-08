@@ -241,7 +241,7 @@
 				          				<th class="label-form">.</th>
 				         			</tr>
 								</thead>
-								<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo style="max-height: 390px; margin-bottom: -15px;">
+								<tbody vs-repeat class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo style="max-height: 390px; margin-bottom: -15px;">
 									<tr ng-repeat="item in controller.data">
 							      		<td nowrap style="min-width:200px; min-height: 35px; height: 35px;">
 							      			<div uib-tooltip="{{item.nombre}}" class="nombreFormat">
@@ -267,7 +267,7 @@
 				          				<th ng-repeat="a in controller.aniosfinales" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}" class="label-form">{{a.anio}}</th>
 							        </tr>
 								</thead>
-								<tbody class="cuerpoTablaDatos" id="divTablaDatos" ng-mouseover="controller.activarScroll('divTablaDatos')" scrollespejo>
+								<tbody vs-repeat class="cuerpoTablaDatos" id="divTablaDatos" ng-mouseover="controller.activarScroll('divTablaDatos')" scrollespejo>
 							      	<tr ng-repeat="item in controller.data" style="">
 								      		<td ng-repeat="posicion in controller.columnastotales track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}">
 								      			<div style="{{controller.porcentajeCeldaValor}}">
@@ -296,7 +296,7 @@
 		          				<th ng-repeat="a in controller.aniosTotal" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};" class="label-form">{{a.anio}}</th>
 						        </tr>
 							</thead>
-							<tbody class="cuerpoTablaTotales bordeIzquierda" id="divTotales" ng-mouseover="controller.activarScroll('divTotales')" scrollespejo tot="{{mi.totales.length}}">
+							<tbody vs-repeat class="cuerpoTablaTotales bordeIzquierda" id="divTotales" ng-mouseover="controller.activarScroll('divTotales')" scrollespejo tot="{{mi.totales.length}}">
 								<tr ng-repeat="totales in controller.totales ">
 									<td ng-repeat="total in totales.anio" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};  min-height: 35px; height: 35px;">
 										<div style="{{controller.porcentajeCeldaValor}}">

@@ -60,6 +60,7 @@
 <script type="text/javascript" src="/assets/libs/angucomplete-alt.js"></script>
 <script type="text/javascript" src="/assets/libs/angular-tree-control.js"></script>
 <script type="text/javascript" src="/assets/libs/tri-state.js"></script>
+<script type="text/javascript" src="/assets/libs/angular-vs-repeat.min.js"></script>
 
 <script type="text/javascript" src="/app/components/meta/meta.controller.js"></script>
 <script type="text/javascript" src="/app/components/desembolso/desembolso.controller.js"></script>

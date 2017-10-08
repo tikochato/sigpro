@@ -1,4 +1,4 @@
-var app = angular.module('informacionPresupuestariaController',['ngAnimate', 'ngTouch', 'smart-table']);
+var app = angular.module('informacionPresupuestariaController',['ngAnimate', 'ngTouch', 'smart-table', 'vs-repeat']);
 
 app.controller('informacionPresupuestariaController', ['$scope', '$http', '$interval', 'Utilidades','i18nService','$timeout','$window', '$q','dialogoConfirmacion',
 	function($scope, $http, $interval, $utilidades,i18nService,$timeout,$window, $q, $dialogoConfirmacion){
