@@ -6,9 +6,7 @@
 	    <script type="text/ng-template" id="pago.jsp">
     		<%@ include file="/app/components/adquisicion/pago.jsp"%>
   	    </script>
-  	    <shiro:lacksPermission name="30010">
-			<span ng-init="adquisicionc.redireccionSinPermisos()"></span>
-		</shiro:lacksPermission>
+  	    
 		<br/>
 		<div class="row">
 			<div class="page-header">
