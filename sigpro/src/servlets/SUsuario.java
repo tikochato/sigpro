@@ -446,7 +446,7 @@ public class SUsuario extends HttpServlet {
 									UsuarioDAO.asignarPermisosUsuario(usuario, permisos, usuario_texto);
 								}
 								if(UsuarioDAO.editarUsuario(usuarioEdicion, sesionweb.getAttribute("usuario").toString())){
-									response_text = String.join("","{ \"success\": true, \"mensaje\":\"actualización de usuario exitosa.\" }");
+									response_text = String.join("","{ \"success\": true, \"mensaje\":\"actualizaciÃ³n de usuario exitosa.\" }");
 								}else{
 									response_text = String.join("","{ \"success\": false, \"error\":\"no se pudo actualizar al usuario. \" }");
 								}
