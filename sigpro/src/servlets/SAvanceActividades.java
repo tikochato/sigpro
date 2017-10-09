@@ -372,7 +372,7 @@ public class SAvanceActividades extends HttpServlet {
 					response.setContentType("application/ms-excel");
 					response.setContentLength(outArray.length);					
 					response.setHeader("Cache-Control", "no-cache"); 
-					response.setHeader("Content-Disposition", "attachment; Reporte_Avances_de_Actividades.xls");
+					response.setHeader("Content-Disposition", "attachment; Reporte_Avances_de_Actividades_e_Hitos.xls");
 					OutputStream outStream = response.getOutputStream();
 					outStream.write(outArray);
 					outStream.flush();
@@ -420,7 +420,7 @@ public class SAvanceActividades extends HttpServlet {
 					response.setContentType("application/pdf");
 					response.setContentLength(outArray.length);
 					response.setHeader("Cache-Control", "no-cache"); 
-					response.setHeader("Content-Disposition", "in-line; 'AvanceActividades.pdf'");
+					response.setHeader("Content-Disposition", "in-line; 'AvanceActividadeseHitos.pdf'");
 					OutputStream outStream = response.getOutputStream();
 					outStream.write(outArray);
 					outStream.flush();
@@ -927,7 +927,7 @@ public class SAvanceActividades extends HttpServlet {
 			headers = generarHeaders();
 			datos = generarDatos(idPrestamo, fechaCorte, usuario);
 			excel = new CExcel("Reporte de Avance", false, null);
-			wb=excel.generateExcelOfData(datos, "Reporte de Avance", headers, null, true, usuario);
+			wb=excel.generateExcelOfData(datos, "Reporte de Avance de Actividades e Hitos", headers, null, true, usuario);
 			wb.write(outByteStream);
 			outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
