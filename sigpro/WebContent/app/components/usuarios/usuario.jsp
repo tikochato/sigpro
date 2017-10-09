@@ -85,17 +85,17 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 					<shiro:hasPermission name="34020">
-						<label class="btn btn-success" ng-click="form.$valid ? usuarioc.guardarUsuario() : ''" 
-							ng-disabled="!form.$valid" uib-tooltip="Guardar">
+						<label class="btn btn-success" ng-click="usuarioc.mForm.$valid && usuarioc.botones ? usuarioc.guardarUsuario() : ''" 
+							ng-disabled="!usuarioc.mForm.$valid || !usuarioc.botones" uib-tooltip="Guardar">
 						<span class="glyphicon glyphicon-floppy-saved"></span>Guardar</label>
 					</shiro:hasPermission>
-			        <label class="btn btn-primary" ng-click="usuarioc.cancelar()"  uib-tooltip="Ir a Tabla">
+			        <label class="btn btn-primary" ng-click="usuarioc.mForm.$valid && usuarioc.botones ? usuarioc.cancelar() : ''"  uib-tooltip="Ir a Tabla" ng-disabled="!usuarioc.mForm.$valid || !usuarioc.botones">
 					<span class="glyphicon glyphicon-list-alt"></span>Ir a Tabla</label>
     			</div>
     		</div>
     		
     		<div class="col-sm-12">
-    			<form name="form">
+    			<form name="usuarioc.mForm">
     				<div class="row">
     					<div class="form-group">
 			 				<input type="text" class="inputText" ng-model="usuarioc.usuariosSelected.usuario" ng-required="true"
@@ -110,17 +110,18 @@
 						</div>
 						
 						<div class="form-group">
-		  					<input type="password" class="inputText" ng-model="usuarioc.usuariosSelected.password" ng-required="true"
+		  					<input type="password" class="inputText" ng-model="usuarioc.usuariosSelected.password" ng-required="usuarioc.esNuevo"
 		  						ng-value="usuarioc.usuariosSelected.password" onblur="this.setAttribute('value', this.value);">
 		  					<label class="floating-label">* Contraseña</label>
 						</div>
 						
 						<div class="form-group">
-	   						<input type="password" class="inputText" ng-model="usuarioc.usuariosSelected.password2" ng-required="true"
+	   						<input type="password" class="inputText" ng-model="usuarioc.usuariosSelected.password2" ng-required="usuarioc.esNuevo"
 	   							ng-value="usuarioc.usuariosSelected.password2" onblur="this.setAttribute('value', this.value);">
 	   						<label class="floating-label">* Vuelva a ingresar la contraseña</label>
 						</div>
     				</div>
+    			</form>
     				<br/>
     				<div class="row">
     					<div class="col-sm-6">
@@ -155,7 +156,7 @@
     				</div>
     				<br/>
     				<div class="row">
-    					<div class="col-sm-12">
+    					<div>
     						<div ng-show="usuarioc.isCollapsed">
 								<h3 style="margin-left: 15px;" ng-show="usuarioc.isCollapsed">Permisos</h3>
 								<div class="col-sm-12 operation_buttons" align="right"  ng-if="usuarioc.esNuevo">
@@ -179,13 +180,13 @@
 									</div>
 								</div>			
 								<br>
-								<table style="width: 97%; margin-left: 2%;overflow-y: scroll;height: 175px;display: block;"
+								<table style="width: 100%; overflow-y: scroll; height: 175px; margin-bottom: 20px;"
 								st-table="usuarioc.permisosAsignados"
 								class="table table-striped  table-bordered table-hover table-propiedades">
 									<thead >
 										<tr>
-											<th style="width: 5%;">Nombre</th>
-											<th>Descripción</th>
+											<th style="white-space: nowrap;">Nombre</th>
+											<th style="white-space: nowrap;">Descripción</th>
 											<th style="width: 30px;">Quitar</th>
 					
 										</tr>
@@ -193,8 +194,8 @@
 									<tbody>
 										<tr st-select-row="row"
 											ng-repeat="row in usuarioc.permisosAsignados">
-											<td>{{row.nombre}}</td>
-											<td>{{row.descripcion}}</td>
+											<td style="white-space: nowrap;">{{row.nombre}}</td>
+											<td style="white-space: nowrap;">{{row.descripcion}}</td>
 											<td>
 												<button type="button"
 													ng-click="usuarioc.eliminarPermiso(row)"
@@ -205,7 +206,6 @@
 										</tr>
 									</tbody>
 								</table>
-								
 								<div class="grid_loading" ng-if="usuarioc.cargandoPermisos" style="margin-top:80px; width: 96%; margin-left: 1%;">
 									<div class="msg">
 										<span><i class="fa fa-spinner fa-spin fa-4x"></i>
@@ -218,7 +218,6 @@
 							</div>
     					</div>
     				</div>
-    			</form>
     		</div>
 		</div>
 	</div>

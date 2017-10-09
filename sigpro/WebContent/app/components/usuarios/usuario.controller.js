@@ -45,6 +45,8 @@ app.controller('usuarioController', ['$scope', '$http', '$interval', '$q', 'i18n
 	mi.nombreCooperante="";
 	mi.rolUsuario=0;
 	
+	mi.botones = true;
+	
 	mi.treedata=[];
 	mi.expanded=[];
 	mi.nodo_seleccionado;
@@ -199,8 +201,7 @@ app.controller('usuarioController', ['$scope', '$http', '$interval', '$q', 'i18n
 	mi.guardarUsuario=function(){
 		var asignaciones =mi.getChecksArbol(mi.treedata);
 		var estructuras_permisos = mi.getChecksArbol(mi.treedata);
-		
-			if(mi.usuariosSelected.password!=="" && mi.usuariosSelected.password2!=="" && mi.usuariosSelected.usuario!=="" && mi.usuariosSelected.email!=="" && mi.nombreUnidadEjecutora!=="SIN UNIDAD EJECUTORA"){
+			if( mi.usuariosSelected.usuario!=="" && mi.usuariosSelected.email!=="" && mi.nombreUnidadEjecutora!=="SIN UNIDAD EJECUTORA"){
 				if(mi.usuariosSelected.password===mi.usuariosSelected.password2){
 					if(validarEmail(mi.usuariosSelected.email)){
 						var str = mi.getChecksArbol(mi.treedata);
@@ -210,7 +211,7 @@ app.controller('usuarioController', ['$scope', '$http', '$interval', '$q', 'i18n
 								mi.nuevosPermisos.push(mi.permisosAsignados[i].idPermiso);	
 							}							
 						}
-						
+						mi.botones=false;
 						$http.post('/SUsuario',
 								{
 									accion: 'guardarUsuario',
@@ -228,12 +229,13 @@ app.controller('usuarioController', ['$scope', '$http', '$interval', '$q', 'i18n
 									function(data) {
 										if(data.success){
 											mi.paginaActual=1;
-											$utilidades.mensaje('success',data.mensaje);
 											check_mess=true;
 											mi.cargarTabla(mi.paginaActual);
 											mi.nuevosPermisos=[];
 											mi.esNuevo=false;
 											mi.tipoUsuarioRol=mi.tipoUsuario.nombre;
+											$utilidades.mensaje('success',data.mensaje);
+											mi.botones=true;
 										}
 							});
 					}else{
@@ -260,6 +262,7 @@ app.controller('usuarioController', ['$scope', '$http', '$interval', '$q', 'i18n
 					, "Cancelar")
 			.result.then(function(data) {
 				if(data){
+					mi.botones=false;
 					$http.post('/SUsuario', {
 						accion: 'eliminarUsuario',
 						usuario: mi.usuariosSelected.usuario,
@@ -272,6 +275,7 @@ app.controller('usuarioController', ['$scope', '$http', '$interval', '$q', 'i18n
 						}
 						else
 							$utilidades.mensaje('danger','Error al eliminar el usuario');
+						mi.botones=true;
 					});
 				}
 			}, function(){
@@ -286,9 +290,6 @@ app.controller('usuarioController', ['$scope', '$http', '$interval', '$q', 'i18n
 	    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	    return re.test(email);
 	}
-	mi.mostrarPermisos=function(){
-		mi.edicionPermisos=true;
-	};
 	
 	mi.editarUsuario=function(){
 		mi.tipoUsuarioRol="";

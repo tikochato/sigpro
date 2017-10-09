@@ -22,6 +22,7 @@ public class PermisoDAO {
 			CriteriaQuery<Permiso> criteria = builder.createQuery(Permiso.class);
 			Root<Permiso> root = criteria.from(Permiso.class);
 			criteria.select( root ).where(builder.equal(root.get("estado"),1));
+			criteria.orderBy(builder.asc(root.get("nombre")));
 			ret = session.createQuery( criteria ).getResultList();
 		}
 		catch(Throwable e){
