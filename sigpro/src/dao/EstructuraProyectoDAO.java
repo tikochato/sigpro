@@ -288,19 +288,15 @@ public class EstructuraProyectoDAO {
 		return ret;
 	}
 	
-	public static List<List<Integer>> getHijosCompleto(String treePathPadre, List<?> estruturaProyecto){
-		ArrayList<List<Integer>> ret = new ArrayList<List<Integer>>();
-		for(Object objeto : estruturaProyecto){
-			Object[] obj = (Object[])objeto;
-			String treePath = (String)obj[3];
+	public static List<ObjetoCosto> getHijosCompleto(String treePathPadre, List<ObjetoCosto> estruturaProyecto){
+		ArrayList<ObjetoCosto> ret = new ArrayList<ObjetoCosto>();
+		for(ObjetoCosto objeto : estruturaProyecto){
+			String treePath = objeto.getTreePath();
 			if(treePath != null){
 				if(treePath.length() >= treePathPadre.length()+6){
 					String path = treePath.substring(0, treePathPadre.length()); 
 					if(path.equals(treePathPadre)){
-						List<Integer> valor = new ArrayList<Integer>();
-						valor.add((Integer)obj[0]);
-						valor.add(((BigInteger) obj[2]).intValue());
-						ret.add(valor);
+						ret.add(objeto);
 					}	
 				}	
 			}

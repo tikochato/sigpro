@@ -1,4 +1,4 @@
-var app = angular.module('planAdquisicionesController',['ngTouch','ngAnimate']);
+var app = angular.module('planAdquisicionesController',['ngTouch','ngAnimate','vs-repeat']);
 app.controller('planAdquisicionesController', [ '$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q',
 	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q){
 		var mi = this;
@@ -500,6 +500,11 @@ app.controller('planAdquisicionesController', [ '$scope', '$http', '$interval', 
 			if(item.anioPlan != null){
 				valor = item.anioPlan[anio].mes[mes];
 			}
+			
+			if(valor != undefined && valor.planificado == 0){
+				valor.planificado = null;
+			}
+			
 			return valor;
 		};
 		
@@ -511,6 +516,11 @@ app.controller('planAdquisicionesController', [ '$scope', '$http', '$interval', 
 			if(item.anioTotalPlan != null){
 				valor = item.anioTotalPlan[anio].total[0];
 			}
+			
+			if(valor != undefined && valor.planificado == 0){
+				valor.planificado = null;
+			}
+			
 			return valor;
 		};
 		
@@ -608,7 +618,7 @@ app.controller('planAdquisicionesController', [ '$scope', '$http', '$interval', 
 		
 }]);
 
-app.directive('scrollespejo', ['$window', function($window) {
+app.directive('scrollespejoplanadqui', ['$window', function($window) {
     return {
         restrict: 'A',
         link: function(scope, element, attrs) {
@@ -619,7 +629,7 @@ app.directive('scrollespejo', ['$window', function($window) {
       	            document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
       	            document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
       	          }else if(elemento.id == 'divTablaDatos'){
-      	        	if(Math.abs(scope.controller.scrollPosicion-element[0].scrollLeft)<scope.controller.tamanoCelda){//bloquear scroll horizontal
+      	        	if(Math.abs(scope.planadqui.scrollPosicion-element[0].scrollLeft)<scope.controller.tamanoCelda){//bloquear scroll horizontal
                   		element[0].scrollLeft = scope.controller.scrollPosicion;
                   	}
       	            document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
@@ -631,7 +641,7 @@ app.directive('scrollespejo', ['$window', function($window) {
       	        }
             });
             angular.element($window).bind('resize', function(){ 
-                scope.controller.calcularTamaniosCeldas();
+                scope.planadqui.calcularTamaniosCeldas();
                 scope.$digest();
               });
             scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
