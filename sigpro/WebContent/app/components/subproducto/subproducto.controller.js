@@ -14,6 +14,8 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 	mi.esTreeview = $rootScope.treeview;
 	mi.botones = true;
 	
+	mi.child_adquisiciones = null;
+	
 	if(!mi.esTreeview)
 		$window.document.title = $utilidades.sistema_nombre+' - Subroducto';
 	
@@ -53,22 +55,8 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 	mi.coordenadas = "";
 	
 	mi.botones =  true;
-
-/*	
-	$http.post('/SSubproducto', { accion: 'obtenerSubproductoPorId', id: $routeParams.subproducto_id, t: (new Date()).getTime() }).success(
-			function(response) {
-				mi.subproductoid = response.id;
-				mi.subproductoNombre = response.nombre;				
-	});
 	
-	$http.post('/SProducto', { accion: 'obtenerProductoPorId', id: $routeParams.producto_id , t: (new Date()).getTime()}).success(
-			function(response) {
-				mi.productoid = response.id;
-				mi.productoNombre = response.nombre;
-				mi.objetoTipoNombre = "Producto";
-				var fechaInicioPadre = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
-				mi.modificarFechaInicial(fechaInicioPadre);
-	});*/
+	mi.adquisicionesCargadas = false;
 	
 	
 	$http.post('/SAcumulacionCosto', { accion: 'getAcumulacionesCosto', t: (new Date()).getTime()}).success(
@@ -370,12 +358,16 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 						if (response.data.success) {
 							mi.data = response.data.subproductos;
 							mi.opcionesGrid.data = mi.data;
-							$utilidades.mensaje('success','Subproducto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 							mi.subproducto.id = response.data.id;
 							mi.subproducto.usuarioCreo = response.data.usuarioCreo;
 							mi.subproducto.fechaCreacion = response.data.fechaCreacion;
 							mi.subproducto.usuarioActualizo = response.data.usuarioactualizo;
 							mi.subproducto.fechaActualizacion = response.data.fechaactualizacion;
+							if(mi.child_adquisiciones!=null)
+								mi.child_adquisiciones.guardar('Subproducto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+									'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Subproducto');
+							else
+								$utilidades.mensaje('success','Subproducto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 							if(!mi.esTreeview)
 								mi.cargarTabla(mi.paginaActual);
 							else{

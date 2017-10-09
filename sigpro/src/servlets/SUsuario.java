@@ -168,9 +168,9 @@ public class SUsuario extends HttpServlet {
 						asigna_estructuras=true;
 					}
 					if(asignacion || eliminacion || asigna_estructuras){
-						response_text = String.join("","{ \"success\": true, \"mensaje\":\"actualización de permisos exitosa\" }");
+						response_text = String.join("","{ \"success\": true, \"mensaje\":\"Actualización de permisos exitosa\" }");
 					}else{
-						response_text = String.join("","{ \"success\": false, \"error\":\"no se actualizaron los permisos\" }");
+						response_text = String.join("","{ \"success\": false, \"error\":\"No se actualizaron los permisos\" }");
 					}
 				}
 			}else if(accion.compareTo("eliminarUsuario")==0){
@@ -191,10 +191,10 @@ public class SUsuario extends HttpServlet {
 					if(eliminarPermisos){
 						response_text = String.join("","{ \"success\": ",( UsuarioDAO.desactivarUsuario(usuario, usuarioActualizo) ? "true" : "false")," }");
 					}else{
-						response_text = String.join("","{ \"success\": false, \"error\":\"no se pudo eliminar el usuario\" }");
+						response_text = String.join("","{ \"success\": false, \"error\":\"No se pudo eliminar el usuario\" }");
 					}
 				}else{
-					response_text = String.join("","{ \"success\": false, \"error\":\"no se pudo eliminar el usuario\" }");
+					response_text = String.join("","{ \"success\": false, \"error\":\"No se pudo eliminar el usuario\" }");
 				}
 			}else if(accion.compareTo("obtenerPermisos")==0){
 				String usuario = map.get("usuario");
@@ -265,7 +265,7 @@ public class SUsuario extends HttpServlet {
 					usuariotmp.usuarioActualizo= usuario.getUsuarioActualizo();
 					usuariotmp.fechaCreacion=Utils.formatDate(usuario.getFechaCreacion());
 					usuariotmp.fechaActualizacion=Utils.formatDate(usuario.getFechaActualizacion());
-					usuariotmp.password=usuario.getPassword();
+					usuariotmp.password="";
 					Colaborador colaborador_tmp=UsuarioDAO.getColaborador(usuariotmp.usuario);
 					if(colaborador_tmp!=null){
 						usuariotmp.colaborador=colaborador_tmp.getPapellido()+", "+colaborador_tmp.getPnombre();
@@ -309,13 +309,13 @@ public class SUsuario extends HttpServlet {
 					}
 					
 					if(UsuarioDAO.cambiarPassword(usuario, nuevoPassword,usuarioActualizo)){
-						response_text = String.join("","{ \"success\": true, \"mensaje\":\"cambio de password exitoso.\" }");
+						response_text = String.join("","{ \"success\": true, \"mensaje\":\"Cambio de password exitoso.\" }");
 					}else{
-						response_text = String.join("","{ \"success\": false, \"error\":\"no se pudo cambiar el password.\" }");
+						response_text = String.join("","{ \"success\": false, \"error\":\"No se pudo cambiar el password.\" }");
 					}
 					
 				}else{
-					response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parámetros deseados.\" }");
+					response_text = String.join("","{ \"success\": false, \"error\":\"No se enviaron los parámetros deseados.\" }");
 				}
 			}else if(accion.compareTo("usuarioActual")==0){
 				HttpSession sesionweb = request.getSession();
@@ -325,7 +325,7 @@ public class SUsuario extends HttpServlet {
 				stusuario usuarioStr = new stusuario();
 				usuarioStr.email=usuarioActual.getEmail();
 				usuarioStr.usuario=usuarioActual.getUsuario();
-				usuarioStr.password=usuarioActual.getPassword();
+				usuarioStr.password="";
 				if(colaboradorActual!=null){
 					usuarioStr.cui=colaboradorActual.getCui();
 					usuarioStr.pnombre=colaboradorActual.getPnombre();
@@ -392,7 +392,7 @@ public class SUsuario extends HttpServlet {
 											List<Integer> permisos = entradaJson.fromJson(permisosAsignados, tipo);
 											response_text = String.join("","{ \"success\": ",(UsuarioDAO.asignarPermisosUsuario(nuevousuario, permisos, usuario_texto) ? "true ,  \"message\":\"Usuario creado y asignación de permisos exitosa\" " : "true, \"message\":\"Usuario creado, asignación de permisos no exitosa\""),"}");
 										}else{
-											response_text = String.join("", "{\"success\":true, \"message\":\"usuario creado exitosamente\" }");
+											response_text = String.join("", "{\"success\":true, \"message\":\"Usuario creado exitosamente\" }");
 										}
 										
 									}else{
@@ -411,6 +411,10 @@ public class SUsuario extends HttpServlet {
 					}else{
 						Usuario usuarioEdicion = UsuarioDAO.getUsuario(usuario);
 						if(usuarioEdicion!=null){
+							String password = map.get("password");
+							if(password!=null && password.length()>0 && !password.equals(usuarioEdicion.getPassword())){
+								usuarioEdicion = UsuarioDAO.setNuevoPassword(usuarioEdicion, password);
+							}
 							String email = map.get("email");
 							String permisosAsignados = map.get("permisos");
 							if(email!=null){
@@ -446,21 +450,21 @@ public class SUsuario extends HttpServlet {
 									UsuarioDAO.asignarPermisosUsuario(usuario, permisos, usuario_texto);
 								}
 								if(UsuarioDAO.editarUsuario(usuarioEdicion, sesionweb.getAttribute("usuario").toString())){
-									response_text = String.join("","{ \"success\": true, \"mensaje\":\"actualizaci�n de usuario exitosa.\" }");
+									response_text = String.join("","{ \"success\": true, \"mensaje\":\"Actualización de usuario exitosa.\" }");
 								}else{
-									response_text = String.join("","{ \"success\": false, \"error\":\"no se pudo actualizar al usuario. \" }");
+									response_text = String.join("","{ \"success\": false, \"error\":\"No se pudo actualizar al usuario. \" }");
 								}
 								
 							}else{
-								response_text = String.join("","{ \"success\": false, \"error\":\"no se encontró al usuario. \" }");
+								response_text = String.join("","{ \"success\": false, \"error\":\"No se encontró al usuario. \" }");
 							}
 						}else{
-							response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parámetros correctos \" }");
+							response_text = String.join("","{ \"success\": false, \"error\":\"No se enviaron los parámetros correctos \" }");
 						}
 						
 					}
 				}else{
-					response_text = String.join("","{ \"success\": false, \"error\":\"no se enviaron los parámetros correctos \" }");
+					response_text = String.join("","{ \"success\": false, \"error\":\"No se enviaron los parámetros correctos \" }");
 				}
 			}
 			else if(accion.compareTo("getColaboradores")==0){

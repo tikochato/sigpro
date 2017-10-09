@@ -250,7 +250,7 @@
 					
 					<div class="row" ng-hide="!planadqui.mostrarDescargar">
 						<div class="divPadreNombres">
-	    					<div class="divTabla" style="max-height: 375px;"> 
+	    					<div class="divTabla"> 
 	    						<table st-table="planadqui.displayedCollectionPrestamo" st-safe-src="planadqui.rowCollectionPrestamo" class="table table-striped tablaDatos">
 		    						<thead class="theadDatos">
 		    							<tr>
@@ -261,7 +261,7 @@
 					          				<th class="label-form">.</th>
 					         			</tr>
 		    						</thead>
-		    						<tbody vs-repeat class="cuerpoTablaNombres" style="height: 350px; max-height: 350px; min-height: 350px" id="divTablaNombres" ng-mouseover="planadqui.activarScroll('divTablaNombres')" scrollespejoplanadqui>
+		    						<tbody class="cuerpoTablaNombres" style="max-height: 315px; min-height: 315px" id="divTablaNombres" ng-mouseover="planadqui.activarScroll('divTablaNombres')" scrollespejoplanadqui>
 		    							<tr ng-repeat="row in planadqui.data" style="height: 35px; max-height: 35px; min-height: 35px">
 		    								<td nowrap style="min-width:200px; {{planadqui.padre(row)}}">
 				    							<div uib-tooltip="{{item.nombre}}" class="nombreFormat">
@@ -285,7 +285,7 @@
 				          					<th ng-repeat="a in planadqui.aniosfinales" style="{{planadqui.estiloCelda}} {{planadqui.estiloAlineacion}}" class="label-form">{{a.anio}}</th>
 							        	</tr>
 									</thead>
-									<tbody vs-repeat class="cuerpoTablaDatos" style="height: 350px; max-height: 350px; min-height: 350px" id="divTablaDatos" ng-mouseover="planadqui.activarScroll('divTablaDatos')" scrollespejoplanadqui>
+									<tbody vs-repeat class="cuerpoTablaDatos" style="max-height: 300px; min-height: 300px" id="divTablaDatos" ng-mouseover="planadqui.activarScroll('divTablaDatos')" scrollespejoplanadqui>
 								      	<tr ng-repeat="item in planadqui.data" style="height: 35px; max-height: 35px; min-height: 35px">
 								      		<td ng-repeat="posicion in planadqui.columnastotales track by $index" style="{{planadqui.estiloCelda}}; {{planadqui.estiloAlineacion}}">
 								      			<div style="{{planadqui.estiloCelda}}">
@@ -308,7 +308,7 @@
 			          					<th ng-repeat="a in planadqui.aniosTotal" style="{{planadqui.estiloCelda}} {{planadqui.estiloAlineacion}};" class="label-form">{{a.anio}}</th>
 							        </tr>
 								</thead>
-								<tbody vs-repeat class="cuerpoTablaTotales bordeIzquierda" style="height: 350px; max-height: 350px; min-height: 350px" id="divTotales" style="margin-right: 30px" ng-mouseover="planadqui.activarScroll('divTotales')" scrollespejoplanadqui tot="{{mi.totales.length}}">
+								<tbody vs-repeat class="cuerpoTablaTotales bordeIzquierda" style="max-height: 300px; min-height: 300px" id="divTotales" style="margin-right: 30px" ng-mouseover="planadqui.activarScroll('divTotales')" scrollespejoplanadqui tot="{{mi.totales.length}}">
 									<tr ng-repeat="item in planadqui.data" style="height: 35px; max-height: 35px; min-height: 35px">
 							      		<td ng-repeat="posicion in planadqui.aniosTotal track by $index" style="{{planadqui.estiloCelda}}; {{planadqui.estiloAlineacion}}">
 							      			<div style="{{planadqui.estiloCelda}}">

@@ -78,8 +78,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 		Integer categoriaId;
 		String nombre;
 		Integer adquisicionId;
-		ArrayList<ObjetoCosto> objCosto = new ArrayList<ObjetoCosto>();
-		ArrayList<List<Integer>> objetos = new ArrayList<List<Integer>>();
+		ArrayList<ObjetoCosto> objCosto = new ArrayList<ObjetoCosto>();		
 	}
 	
 	final int AGRUPACION_MES= 1;
@@ -188,27 +187,24 @@ public class SPlanAdquisiciones extends HttpServlet {
 					List<ObjetoCosto> hijos = EstructuraProyectoDAO.getHijosCompleto(objeto.getTreePath(), estructuraProyecto);
 
 					for(ObjetoCosto objetoHijo : hijos){
-						List<PlanAdquisicion> lstplan = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(objetoHijo.getObjeto_tipo(), objetoHijo.getObjeto_id());
+						PlanAdquisicion lstplan = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(objetoHijo.getObjeto_tipo(), objetoHijo.getObjeto_id());
 						
-						if(lstplan != null && !lstplan.isEmpty()){
-							for(PlanAdquisicion plan : lstplan){
-								for(stcategoria cat : lsttempCategorias){
-									if(cat.categoriaId == plan.getCategoriaAdquisicion().getId()){
-										List<Integer> objH = new ArrayList<Integer>();
-										objH.add(objetoHijo.getObjeto_id());
-										objH.add(objetoHijo.getObjeto_tipo());
-										objH.add(plan.getId());
-										cat.adquisicionId = plan.getId();
-										cat.objCosto.add(objetoHijo);
-										cat.objetos.add(objH);
-									}
+						if(lstplan != null){
+							for(stcategoria cat : lsttempCategorias){
+								if(cat.categoriaId == lstplan.getCategoriaAdquisicion().getId()){
+									List<Integer> objH = new ArrayList<Integer>();
+									objH.add(objetoHijo.getObjeto_id());
+									objH.add(objetoHijo.getObjeto_tipo());
+									objH.add(lstplan.getId());
+									cat.adquisicionId = lstplan.getId();
+									cat.objCosto.add(objetoHijo);
 								}
 							}
 						}
 					}
 					
 					for(stcategoria cat : lsttempCategorias){
-						if(!cat.objetos.isEmpty()){
+						if(!cat.objCosto.isEmpty()){
 							temp = new stcomponenteplanadquisicion();
 							temp.nombre = cat.nombre;
 							temp.nivel = 1;
@@ -242,7 +238,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 						}
 					}
 					
-					inicializarObjCategoria(lsttempCategorias);
+					//inicializarObjCategoria(lsttempCategorias);
 				}
 			}
 			for(stcomponenteplanadquisicion stprestamo : lstPrestamo){
@@ -297,11 +293,11 @@ public class SPlanAdquisiciones extends HttpServlet {
 		}
 	}
 	
-	private void inicializarObjCategoria(List<stcategoria> lsttempCategorias){
+	/*private void inicializarObjCategoria(List<stcategoria> lsttempCategorias){
 		for(stcategoria cat : lsttempCategorias){
 			cat.objetos = new ArrayList<List<Integer>>();
 		}
-	}
+	}*/
 	
 	
 	private sttotal[] inicializarStTotalPlan(Integer anioInicial, Integer anioFinal){		

@@ -137,7 +137,6 @@ public class UsuarioDAO {
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			//session.beginTransaction();
 			Usuario usuarioCambio= session.get(Usuario.class,usuario);
 			if(usuarioCambio!=null){
 				session.beginTransaction();
@@ -148,7 +147,7 @@ public class UsuarioDAO {
 				usuarioCambio.setSalt(salt.toString());
 				usuarioCambio.setUsuarioActualizo(usuarioActualizo);
 				usuarioCambio.setFechaActualizacion(new DateTime().toDate());
-				session.saveOrUpdate(usuarioCambio);
+				session.update(usuarioCambio);
 				session.getTransaction().commit();
 				ret = true;
 			} 
@@ -431,7 +430,7 @@ public class UsuarioDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
-			Query<UsuarioPermiso> criteria = session.createQuery("FROM UsuarioPermiso where usuariousuario=:usuario and estado = 1", UsuarioPermiso.class);
+			Query<UsuarioPermiso> criteria = session.createQuery("FROM UsuarioPermiso where usuariousuario=:usuario and estado = 1 ORDER BY permiso.nombre", UsuarioPermiso.class);
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getResultList();
 		}catch(Throwable e){
@@ -463,7 +462,7 @@ public class UsuarioDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
-			Query<Permiso> criteria = session.createQuery("FROM Permiso where id not in (Select permiso from UsuarioPermiso where usuariousuario =:usuario )", Permiso.class);
+			Query<Permiso> criteria = session.createQuery("FROM Permiso where id not in (Select permiso from UsuarioPermiso where usuariousuario =:usuario ) ORDER BY nombre", Permiso.class);
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getResultList();
 		}catch(Throwable e){
@@ -753,5 +752,25 @@ public class UsuarioDAO {
 		}
 		
 		return ret;
+	}
+	
+	
+	public static Usuario setNuevoPassword(Usuario usuario,String password){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			if(usuario!=null){
+				session.beginTransaction();
+				RandomNumberGenerator rng = new SecureRandomNumberGenerator();
+				Object salt = rng.nextBytes();
+				String hashedPasswordBase64 = new Sha256Hash(password, salt,1024).toBase64();
+				usuario.setPassword(hashedPasswordBase64);
+				usuario.setSalt(salt.toString());
+			} 
+		}catch(Throwable e){
+			CLogger.write("33", UsuarioDAO.class, e);
+		}finally{
+			session.close();
+		}
+		return usuario;
 	}
 }

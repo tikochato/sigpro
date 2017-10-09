@@ -705,7 +705,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 		
 }]);
 
-app.directive('scrollespejo', ['$window', function($window) {
+app.directive('scrollespejoejecucion', ['$window', function($window) {
     return {
         restrict: 'A',
         link: function(scope, element, attrs) {

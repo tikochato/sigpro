@@ -35,6 +35,9 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
 		mi.responsables=[];
 		
+		mi.child_adquisiciones = null;
+		mi.adquisicionesCargadas = false;
+		
 		mi.tipos=[];
 		mi.acumulacionCostos=[];
 		
@@ -369,7 +372,11 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 						}
 						mi.esnuevo = false;		
 						mi.esNuevoDocumento = false;
-						$utilidades.mensaje('success','Actividad '+(mi.esnuevo ? 'creada' : 'guardada')+' con éxito');
+						if(mi.child_adquisiciones!=null)
+							mi.child_adquisiciones.guardar('Actividad '+(mi.esNuevo ? 'creada' : 'guardada')+' con éxito',
+								'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' la Actividad');
+						else
+							$utilidades.mensaje('success','Actividad '+(mi.esNuevo ? 'creada' : 'guardada')+' con éxito');
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' la Actividad');
@@ -883,6 +890,12 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 		
 		mi.t_crearNodo=function(id,nombre,objeto_tipo,estado){
 			$rootScope.$emit("crearNodo",{ id: id, nombre: nombre, objeto_tipo: objeto_tipo, estado: estado })
+		}
+		
+		mi.adquisicionesActivo = function(){
+			if(!mi.adquisicionesCargadas){
+				mi.adquisicionesCargadas = true;
+			}
 		}
 } ]);
 

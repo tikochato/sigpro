@@ -226,7 +226,7 @@ public class SControlAdquisiciones extends HttpServlet {
 							
 							temp.hijos = EstructuraProyectoDAO.getHijos((String)obj[3], estruturaProyecto);
 							
-							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(temp.objetoTipo, proyectoId);
+							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionesByObjeto(temp.objetoTipo, proyectoId);
 							break;
 						case 2:
 							temp.objetoPredecesorTipo = 1;
@@ -235,7 +235,7 @@ public class SControlAdquisiciones extends HttpServlet {
 							
 							temp.hijos = EstructuraProyectoDAO.getHijos((String)obj[3], estruturaProyecto);
 							
-							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(temp.objetoTipo, componenteId);
+							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionesByObjeto(temp.objetoTipo, componenteId);
 						break;
 						case 3:
 							temp.objetoPredecesorTipo = 2;
@@ -244,7 +244,7 @@ public class SControlAdquisiciones extends HttpServlet {
 							
 							temp.hijos = EstructuraProyectoDAO.getHijos((String)obj[3], estruturaProyecto);
 							
-							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(temp.objetoTipo, productoId);
+							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionesByObjeto(temp.objetoTipo, productoId);
 						break;
 						case 4:
 							temp.objetoPredecesorTipo = 3;
@@ -252,7 +252,7 @@ public class SControlAdquisiciones extends HttpServlet {
 							temp.hijos = EstructuraProyectoDAO.getHijos((String)obj[3], estruturaProyecto);
 							subProductoId = temp.objetoId;
 							
-							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(temp.objetoTipo, subProductoId);
+							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionesByObjeto(temp.objetoTipo, subProductoId);
 						break;
 						case 5:
 							Actividad actividad = ActividadDAO.getActividadPorId(temp.objetoId);
@@ -262,7 +262,7 @@ public class SControlAdquisiciones extends HttpServlet {
 								temp.hijos = EstructuraProyectoDAO.getHijos((String)obj[3], estruturaProyecto);
 								actividadId = temp.objetoId;
 								
-								adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(temp.objetoTipo, actividadId);
+								adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionesByObjeto(temp.objetoTipo, actividadId);
 							}
 						break;
 					}

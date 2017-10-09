@@ -1,4 +1,4 @@
-var app = angular.module('planAdquisicionesController',['ngTouch','ngAnimate','vs-repeat']);
+var app = angular.module('planAdquisicionesController',['ngTouch','ngAnimate']);
 app.controller('planAdquisicionesController', [ '$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q',
 	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q){
 		var mi = this;
@@ -158,6 +158,7 @@ app.controller('planAdquisicionesController', [ '$scope', '$http', '$interval', 
 			if(mi.prestamo.value > 0){
 				mi.mostrarCargando = true;
 				mi.mostrarTablas = false;
+				mi.mostrarDescargar = false;
 				mi.idPrestamo = mi.prestamo.value;
 				$http.post('/SPlanAdquisiciones',{
 					accion: 'generarPlan',
@@ -629,8 +630,8 @@ app.directive('scrollespejoplanadqui', ['$window', function($window) {
       	            document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
       	            document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
       	          }else if(elemento.id == 'divTablaDatos'){
-      	        	if(Math.abs(scope.planadqui.scrollPosicion-element[0].scrollLeft)<scope.controller.tamanoCelda){//bloquear scroll horizontal
-                  		element[0].scrollLeft = scope.controller.scrollPosicion;
+      	        	if(Math.abs(scope.planadqui.scrollPosicion-element[0].scrollLeft)<scope.planadqui.tamanoCelda){//bloquear scroll horizontal
+                  		element[0].scrollLeft = scope.planadqui.scrollPosicion;
                   	}
       	            document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
       	            document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
