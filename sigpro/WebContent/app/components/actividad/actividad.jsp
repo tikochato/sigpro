@@ -51,7 +51,7 @@
 			    <label class="btn btn-primary" ng-click="actividadc.nuevo()" uib-tooltip="Nueva">
 			    <span class="glyphicon glyphicon-plus"></span> Nueva</label>
 			  </shiro:hasPermission>
-			  <shiro:hasPermission name="1010">
+			  <shiro:hasPermission name="1020">
 			    <label class="btn btn-primary" ng-click="actividadc.editar()" uib-tooltip="Editar">
 			    <span class="glyphicon glyphicon-pencil"></span> Editar</label>
 			  </shiro:hasPermission>
@@ -112,7 +112,7 @@
 					<span class="glyphicon glyphicon-warning-sign"></span></label>
 				</div>
 				<div class="btn-group" style="float: right;">
-					<shiro:hasPermission name="24020">
+					<shiro:hasPermission name="1020">
 						<label class="btn btn-success" ng-click="actividadc.mForm.$valid && actividadc.botones ? actividadc.guardar() : ''" ng-disabled="!actividadc.mForm.$valid || !actividadc.botones" uib-tooltip="Guardar" tooltip-placement="bottom">
 						<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 					</shiro:hasPermission>
@@ -451,7 +451,7 @@
 			<div align="center" class="label-form">Los campos marcados con * son obligatorios y las fechas deben tener formato de dd/mm/aaaa</div>
 			<br/>
 			<div class="btn-group">
-				<shiro:hasPermission name="24020">
+				<shiro:hasPermission name="1020">
 					<label class="btn btn-success" ng-click="actividadc.mForm.$valid && actividadc.botones ? actividadc.guardar() : ''" ng-disabled="!actividadc.mForm.$valid || !actividadc.botones" title="Guardar" uib-tooltip="Guardar" tooltip-placement="top">
 					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
