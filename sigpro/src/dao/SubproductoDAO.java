@@ -60,6 +60,7 @@ public class SubproductoDAO {
 		BigDecimal costo;
 		Integer acumulacionCosto;
 		String acumulacionCostoNombre;
+		boolean tieneHijos;
 	}
 
 	public static List<Subproducto> getSubproductos(String usuario) {
@@ -322,6 +323,7 @@ public class SubproductoDAO {
 				estructuraPojo.entidadnombre = pojo.getProducto().getUnidadEjecutora().getEntidad().getNombre();
 			}
 			
+			estructuraPojo.tieneHijos = ObjetoDAO.tieneHijos(estructuraPojo.id, 4);
 			listaEstructuraPojos.add(estructuraPojo);
 		}
 

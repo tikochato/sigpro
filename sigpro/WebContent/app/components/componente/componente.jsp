@@ -209,7 +209,8 @@
 						
 						<div class="form-group" >
 					       <input type="text" class="inputText" ng-model="componentec.componente.costo" ng-value="componentec.componente.costo" ui-number-mask="2"
-					       ng-required="componentec.componente.acumulacionCostoId > 0" onblur="this.setAttribute('value', this.value);" style="text-align: left" />
+					       ng-required="componentec.componente.acumulacionCostoId > 0" onblur="this.setAttribute('value', this.value);" style="text-align: left" 
+					       ng-readonly="componentec.componente.tieneHijos"/>
 					       <label for="iprog" class="floating-label">{{componentec.componente.acumulacionCostoId > 0 ? "* Costo" : "Costo"}}</label>
 						</div>
 						
@@ -225,7 +226,7 @@
 								<div class="form-group">
 									<select class="inputText" ng-model="componentec.duracionDimension"
 										ng-options="dim as dim.nombre for dim in componentec.dimensiones track by dim.value"
-										 ng-required="true">
+										 ng-required="true" ng-readonly="componentec.componente.tieneHijos">
 									</select>
 									<label for="nombre" class="floating-label">* Dimension</label>
 								</div>
@@ -236,7 +237,7 @@
 								   <input class="inputText"  type="number"
 								     ng-model="componentec.componente.duracion" ng-value="componentec.componente.duracion"   
 								     onblur="this.setAttribute('value', this.value);"  min="1" ng-required="true" 
-								     ng-readonly="componentec.duracionDimension.value != 0 ? false : true"
+								     ng-readonly="componentec.componente.tieneHijos != true ? (componentec.duracionDimension.value != 0 ? false : true) : componentec.componente.tieneHijos"
 								     ng-change="componentec.componente.fechaInicio != null && componentec.duracionDimension.value != 0 ? componentec.cambioDuracion(componentec.duracionDimension) : ''">
 								   <label class="floating-label">* Duración</label>
 								</div>	
@@ -246,8 +247,8 @@
 								<div class="form-group" >
 								  <input type="text"  class="inputText" uib-datepicker-popup="{{componentec.formatofecha}}" ng-model="componentec.componente.fechaInicio" is-open="componentec.fi_abierto"
 								            datepicker-options="componentec.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="componentec.cambioDuracion(componentec.duracionDimension);" ng-required="true"
-								            ng-value="componentec.componente.fechaInicio" onblur="this.setAttribute('value', this.value);">
-								            <span class="label-icon" ng-click="componentec.abrirPopupFecha(1000)">
+								            ng-value="componentec.componente.fechaInicio" onblur="this.setAttribute('value', this.value);" ng-readonly="componentec.componente.tieneHijos">
+								            <span class="label-icon" ng-click="componentec.componente.tieneHijos != true ? componentec.abrirPopupFecha(1000) : ''">
 								              <i class="glyphicon glyphicon-calendar"></i>
 								            </span>
 								  <label for="campo.id" class="floating-label">* Fecha de Inicio</label>
@@ -257,11 +258,11 @@
 							<div class="col-sm-6">
 								<div class="form-group" >
 								  <input type="text"  class="inputText" uib-datepicker-popup="{{componentec.formatofecha}}" ng-model="componentec.componente.fechaFin" is-open="componentec.ff_abierto"
-								            datepicker-options="componentec.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true" ng-click=""
-								            readonly="readonly"
+								            datepicker-options="componentec.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true"
+								            ng-readonly="componentec.componente.tieneHijos"
 								            ng-value="componentec.componente.fechaFin" onblur="this.setAttribute('value', this.value);"
 								            ng-readonly="true"/>
-								            <span class="label-icon" ng-click="componentec.abrirPopupFecha(1001)">
+								            <span class="label-icon" ng-click="componentec.componente.tieneHijos != true ? componentec.abrirPopupFecha(1001) : ''">
 								              <i class="glyphicon glyphicon-calendar"></i>
 								            </span>
 								  <label for="campo.id" class="floating-label">* Fecha de Fin</label>
