@@ -21,11 +21,11 @@
 			       		<label class="btn btn-primary" ng-click="metavc.nuevoValor()" title="Nuevo">
 						<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			       </shiro:hasPermission> 
-			       <shiro:hasPermission name="17010">
+			       <shiro:hasPermission name="17020">
 			       		<label class="btn btn-primary" ng-click="metavc.editar()" title="Editar">
 						<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 			       </shiro:hasPermission>	
-			       <shiro:hasPermission name="15030">
+			       <shiro:hasPermission name="17030">
 			       		<label class="btn btn-danger" ng-click="metavc.borrar()">
 			       		<span class="glyphicon glyphicon-trash"></span>Borrar
 			       		</label>

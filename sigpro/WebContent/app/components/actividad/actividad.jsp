@@ -51,7 +51,7 @@
 			    <label class="btn btn-primary" ng-click="actividadc.nuevo()" uib-tooltip="Nueva">
 			    <span class="glyphicon glyphicon-plus"></span> Nueva</label>
 			  </shiro:hasPermission>
-			  <shiro:hasPermission name="1010">
+			  <shiro:hasPermission name="1020">
 			    <label class="btn btn-primary" ng-click="actividadc.editar()" uib-tooltip="Editar">
 			    <span class="glyphicon glyphicon-pencil"></span> Editar</label>
 			  </shiro:hasPermission>
@@ -112,7 +112,7 @@
 					<span class="glyphicon glyphicon-warning-sign"></span></label>
 				</div>
 				<div class="btn-group" style="float: right;">
-					<shiro:hasPermission name="24020">
+					<shiro:hasPermission name="1020">
 						<label class="btn btn-success" ng-click="actividadc.mForm.$valid && actividadc.botones ? actividadc.guardar() : ''" ng-disabled="!actividadc.mForm.$valid || !actividadc.botones" uib-tooltip="Guardar" tooltip-placement="bottom">
 						<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 					</shiro:hasPermission>
@@ -195,8 +195,8 @@
 								   <input class="inputText"  type="number"
 								     ng-model="actividadc.actividad.duracion" ng-value="actividadc.actividad.duracion"   
 								     onblur="this.setAttribute('value', this.value);"  min="1" ng-required="true" 
-								     ng-readonly="actividadc.duracionDimension.value != 0 ? false : true"
-								     ng-change="actividadc.actividad.fechaInicio != null && actividadc.duracionDimension != '' ? actividadc.cambioDuracion(actividadc.duracionDimension) : ''">
+								     ng-change="actividadc.actividad.fechaInicio != null && actividadc.duracionDimension != '' ? actividadc.cambioDuracion(actividadc.duracionDimension) : ''"  
+								     ng-readonly="actividadc.actividad.tieneHijos">
 								   <label class="floating-label">* Duración</label>
 								</div>	
 							</div>
@@ -205,7 +205,8 @@
 								<div class="form-group" >
 								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaInicio" is-open="actividadc.fi_abierto"
 								            datepicker-options="actividadc.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafin(); actividadc.cambioDuracion(actividadc.duracionDimension);" ng-required="true"  
-								            ng-value="actividadc.actividad.fechaInicio" onblur="this.setAttribute('value', this.value);"/>
+								            ng-value="actividadc.actividad.fechaInicio" onblur="this.setAttribute('value', this.value);"
+								             ng-readonly="actividadc.actividad.tieneHijos"/>
 								            <span class="label-icon" ng-click="actividadc.abrirPopupFecha(1000)">
 								              <i class="glyphicon glyphicon-calendar"></i>
 								            </span>
@@ -237,7 +238,8 @@
 						
 						<div class="form-group" >
 					       <input type="text" class="inputText" ng-model="actividadc.actividad.costo" ng-value="actividadc.actividad.costo" ui-number-mask="2"
-					       	onblur="this.setAttribute('value', this.value);" style="text-align: left" ng-required="actividadc.actividad.acumulacionCostoId > 0"/>
+					       	onblur="this.setAttribute('value', this.value);" style="text-align: left" ng-required="actividadc.actividad.acumulacionCostoId > 0" 
+					       	ng-readonly="actividadc.actividad.tieneHijos"/>
 					       <label for="iprog" class="floating-label">{{actividadc.actividad.acumulacionCostoId > 0 ? "* Costo" : "Costo"}}</label>
 						</div>
 						<div class="form-group" >
@@ -451,7 +453,7 @@
 			<div align="center" class="label-form">Los campos marcados con * son obligatorios y las fechas deben tener formato de dd/mm/aaaa</div>
 			<br/>
 			<div class="btn-group">
-				<shiro:hasPermission name="24020">
+				<shiro:hasPermission name="1020">
 					<label class="btn btn-success" ng-click="actividadc.mForm.$valid && actividadc.botones ? actividadc.guardar() : ''" ng-disabled="!actividadc.mForm.$valid || !actividadc.botones" title="Guardar" uib-tooltip="Guardar" tooltip-placement="top">
 					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>

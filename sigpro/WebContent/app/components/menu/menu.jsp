@@ -21,7 +21,7 @@
 		    <div class="collapse navbar-collapse" id="navBar">
 	            <ul class="nav navbar-nav">
 	                <li>
-                    	<shiro:hasPermission name="24010"><a href="/main.jsp#!/programa"><span class="glyphicon" aria-hidden="true"></span> Programas</a></shiro:hasPermission>                       
+                    	<shiro:hasPermission name="37010"><a href="/main.jsp#!/programa"><span class="glyphicon" aria-hidden="true"></span> Programas</a></shiro:hasPermission>                       
                     </li>
                     <shiro:hasPermission name="24010">
 	                    <li uib-dropdown>
@@ -39,7 +39,7 @@
 	                    		<li class="dropdown-submenu">
 	                    			<a><span class="glyphicon" aria-hidden="true"></span> Catálogos</a>
 			                        <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
-			                         <shiro:hasPermission name="36010"><li role="menuitem"><a href="/main.jsp#!/programatipo">Tipo de Programa</a></li></shiro:hasPermission>
+			                         <shiro:hasPermission name="39010"><li role="menuitem"><a href="/main.jsp#!/programatipo">Tipo de Programa</a></li></shiro:hasPermission>
 			                         	<shiro:hasPermission name="3010"><li role="menuitem"><a href="/main.jsp#!/actividadtipo">Tipo de Actividad</a></li></shiro:hasPermission>                         	
 			                         	<shiro:hasPermission name="7010"><li role="menuitem"><a href="/main.jsp#!/componentetipo">Tipo de Componente</a></li></shiro:hasPermission>
 			                         	<shiro:hasPermission name="16010"><li role="menuitem"><a href="/main.jsp#!/hitotipo">Tipo de Hito</a></li></shiro:hasPermission>                         	
@@ -47,7 +47,7 @@
 				                        <shiro:hasPermission name="23010"><li role="menuitem"><a href="/main.jsp#!/productotipo">Tipo de Producto</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="36010"><li role="menuitem"><a href="/main.jsp#!/prestamotipo">Tipo de Prestamo</a></li></shiro:hasPermission>				                        
 				                        <shiro:hasPermission name="32010"><li role="menuitem"><a href="/main.jsp#!/riesgotipo">Tipo de Riesgo</a></li></shiro:hasPermission>
-				                        <shiro:hasPermission name="23010"><li role="menuitem"><a href="/main.jsp#!/subproductotipo">Tipo de Subproducto</a></li></shiro:hasPermission>
+				                        <shiro:hasPermission name="42010"><li role="menuitem"><a href="/main.jsp#!/subproductotipo">Tipo de Subproducto</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="19010"><li role="menuitem"><a href="/main.jsp#!/metaunidadmedida">Unidad de Medida para Metas</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="/main.jsp#!/categoriaadquisicion">Categoría de Adquisiciones</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="/main.jsp#!/tipoadquisicion">Tipo de Adquisiciones</a></li></shiro:hasPermission>
@@ -56,11 +56,11 @@
 	                    		<li class="dropdown-submenu">
 	                    			<a><span class="glyphicon" aria-hidden="true"></span> Propiedades</a>
 			                        <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
-			                         	<shiro:hasPermission name="25010"><li role="menuitem"><a href="/main.jsp#!/programapropiedad">Programa</a></li></shiro:hasPermission>
+			                         	<shiro:hasPermission name="38010"><li role="menuitem"><a href="/main.jsp#!/programapropiedad">Programa</a></li></shiro:hasPermission>
 			                         	<shiro:hasPermission name="2010"><li role="menuitem"><a href="/main.jsp#!/actividadpropiedad">Actividad</a></li></shiro:hasPermission>	                      
 				                        <shiro:hasPermission name="6010"> <li role="menuitem"><a href="/main.jsp#!/componentepropiedad">Componente</a></li></shiro:hasPermission>	                       
 				                        <shiro:hasPermission name="22010"> <li role="menuitem"><a href="/main.jsp#!/productopropiedad">Producto</a></li></shiro:hasPermission>
-				                        <shiro:hasPermission name="22010"> <li role="menuitem"><a href="/main.jsp#!/subproductopropiedad">Subproducto</a></li></shiro:hasPermission>	                       
+				                        <shiro:hasPermission name="41010"> <li role="menuitem"><a href="/main.jsp#!/subproductopropiedad">Subproducto</a></li></shiro:hasPermission>	                       
 				                        <shiro:hasPermission name="25010"><li role="menuitem"><a href="/main.jsp#!/prestamopropiedad">Préstamo</a></li></shiro:hasPermission>	                        				                        	                        
 				                        <shiro:hasPermission name="31010"> <li role="menuitem"><a href="/main.jsp#!/riesgopropiedad">Riesgo</a></li></shiro:hasPermission>	                       
 				                     </ul>

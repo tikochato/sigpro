@@ -43,7 +43,7 @@
 					<label class="btn btn-primary" ng-click="producto.nuevo()" uib-tooltip="Nuevo">
 				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 				</shiro:hasPermission>
-				<shiro:hasPermission name="21010">
+				<shiro:hasPermission name="21020">
 					<label class="btn btn-primary" ng-click="producto.editar()" uib-tooltip="Editar">
 				<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 				</shiro:hasPermission>
@@ -207,8 +207,8 @@
 					</div>
 			        <div class="form-group" >
 				       <input type="text" class="inputText" ng-model="producto.producto.costo" ng-value="producto.producto.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left"
-				       ng-required="producto.producto.acumulacionCostoNombre != null"
-										ui-number-mask="2" />
+				       		ng-required="producto.producto.acumulacionCostoNombre != null"
+							ui-number-mask="2" ng-readonly="producto.producto.tieneHijos"/>
 				       <label for="iprog" class="floating-label">{{producto.producto.acumulacionCostoNombre  != null ?"* Costo":"Costo"}}</label>
 					</div>
 						
@@ -235,8 +235,8 @@
 							   <input class="inputText"  type="number"
 							     ng-model="producto.producto.duracion" ng-value="producto.producto.duracion"   
 							     onblur="this.setAttribute('value', this.value);"  min="1" ng-required="true" 
-							     ng-readonly="producto.duracionDimension.value != 0 ? false : true"
-							     ng-change="producto.producto.fechaInicio != null && producto.duracionDimension.value != 0 ? producto.cambioDuracion(producto.duracionDimension) : ''">
+							     ng-change="producto.producto.fechaInicio != null && producto.duracionDimension.value != 0 ? producto.cambioDuracion(producto.duracionDimension) : ''"  
+							     ng-readonly="producto.producto.tieneHijos">
 							   <label class="floating-label">* Duración</label>
 							</div>	
 						</div>
@@ -245,7 +245,8 @@
 							<div class="form-group" >
 							  <input type="text"  class="inputText" uib-datepicker-popup="{{producto.formatofecha}}" min={{producto.fechaInicioPadre}} ng-model="producto.producto.fechaInicio" is-open="producto.fi_abierto"
 							            datepicker-options="producto.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="producto.cambioDuracion(producto.duracionDimension);" ng-required="true"  
-							            ng-value="producto.producto.fechaInicio" onblur="this.setAttribute('value', this.value);"/>
+							            ng-value="producto.producto.fechaInicio" onblur="this.setAttribute('value', this.value);" 
+							            ng-readonly="producto.producto.tieneHijos"/>
 							            <span class="label-icon" ng-click="producto.abrirPopupFecha(1000)">
 							              <i class="glyphicon glyphicon-calendar"></i>
 							            </span>

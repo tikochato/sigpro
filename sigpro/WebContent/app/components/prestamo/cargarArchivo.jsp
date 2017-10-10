@@ -42,8 +42,9 @@
 	    <div class="col-sm-12 operation_buttons" align="right" style="position:relative; z-index:2;">
 		    <div class="btn-group">
 		    
-		        <label  class="btn btn-success" ng-click="cargararchivoc.ok()"> &nbsp;&nbsp;&nbsp;&nbsp;Ok&nbsp;&nbsp;&nbsp;&nbsp;</label>
-				<label class="btn btn-primary" ng-click="cargararchivoc.cancel()">Cancelar</label>
+		        <label  class="btn btn-success" ng-click="!cargararchivoc.bloquearBotones ?  cargararchivoc.ok() : ''" ng-disabled="cargararchivoc.bloquearBotones"
+		        > &nbsp;&nbsp;&nbsp;&nbsp;Ok&nbsp;&nbsp;&nbsp;&nbsp;</label>
+				<label class="btn btn-primary" ng-click="!cargararchivoc.bloquearBotones ? cargararchivoc.cancel() : ''" ng-disabled="cargararchivoc.bloquearBotones">Cancelar</label>
 	    	</div>
 	      
 	    </div>
