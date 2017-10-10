@@ -15,7 +15,10 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.joda.time.DateTime;
 
+import pojo.Componente;
 import pojo.Prestamo;
+import pojo.Producto;
+import pojo.Proyecto;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 import utilities.CMariaDB;
@@ -277,5 +280,33 @@ public class ObjetoDAO {
 			}
 		}
 		return objetoCosto;
+	}
+	
+	public static boolean tieneHijos(int objetoId, int objetoTipo){
+		if(ActividadDAO.getActividadesPorObjeto(objetoId, objetoTipo)!=null && ActividadDAO.getActividadesPorObjeto(objetoId, objetoTipo).size()>0){
+			return true;
+		}
+		switch(objetoTipo){
+		case 1:
+			Proyecto proyecto = ProyectoDAO.getProyecto(objetoId);
+			if (proyecto.getComponentes()!=null && proyecto.getComponentes().size()>0){
+				return true;
+			}
+			return false;
+		case 2:
+			Componente componente = ComponenteDAO.getComponente(objetoId);
+			if (componente.getProductos()!=null && componente.getProductos().size()>0){
+				return true;
+			}
+			return false;
+		case 3:
+			Producto producto = ProductoDAO.getProductoPorId(objetoId);
+			if (producto.getSubproductos()!=null && producto.getSubproductos().size()>0){
+				return true;
+			}
+			return false;
+		default:
+			return false;
+		}
 	}
 }
