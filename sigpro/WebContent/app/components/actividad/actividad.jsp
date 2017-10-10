@@ -195,8 +195,8 @@
 								   <input class="inputText"  type="number"
 								     ng-model="actividadc.actividad.duracion" ng-value="actividadc.actividad.duracion"   
 								     onblur="this.setAttribute('value', this.value);"  min="1" ng-required="true" 
-								     ng-readonly="actividadc.duracionDimension.value != 0 ? false : true"
-								     ng-change="actividadc.actividad.fechaInicio != null && actividadc.duracionDimension != '' ? actividadc.cambioDuracion(actividadc.duracionDimension) : ''">
+								     ng-change="actividadc.actividad.fechaInicio != null && actividadc.duracionDimension != '' ? actividadc.cambioDuracion(actividadc.duracionDimension) : ''"  
+								     ng-readonly="actividadc.actividad.tieneHijos">
 								   <label class="floating-label">* Duración</label>
 								</div>	
 							</div>
@@ -205,7 +205,8 @@
 								<div class="form-group" >
 								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaInicio" is-open="actividadc.fi_abierto"
 								            datepicker-options="actividadc.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafin(); actividadc.cambioDuracion(actividadc.duracionDimension);" ng-required="true"  
-								            ng-value="actividadc.actividad.fechaInicio" onblur="this.setAttribute('value', this.value);"/>
+								            ng-value="actividadc.actividad.fechaInicio" onblur="this.setAttribute('value', this.value);"
+								             ng-readonly="actividadc.actividad.tieneHijos"/>
 								            <span class="label-icon" ng-click="actividadc.abrirPopupFecha(1000)">
 								              <i class="glyphicon glyphicon-calendar"></i>
 								            </span>
@@ -237,7 +238,8 @@
 						
 						<div class="form-group" >
 					       <input type="text" class="inputText" ng-model="actividadc.actividad.costo" ng-value="actividadc.actividad.costo" ui-number-mask="2"
-					       	onblur="this.setAttribute('value', this.value);" style="text-align: left" ng-required="actividadc.actividad.acumulacionCostoId > 0"/>
+					       	onblur="this.setAttribute('value', this.value);" style="text-align: left" ng-required="actividadc.actividad.acumulacionCostoId > 0" 
+					       	ng-readonly="actividadc.actividad.tieneHijos"/>
 					       <label for="iprog" class="floating-label">{{actividadc.actividad.acumulacionCostoId > 0 ? "* Costo" : "Costo"}}</label>
 						</div>
 						<div class="form-group" >

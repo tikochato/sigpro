@@ -205,7 +205,8 @@
 			          <label class="floating-label">Unidad Ejecutora</label>
 			        </div>
 			        <div class="form-group" >
-				       <input type="text" class="inputText" ng-model="subproducto.subproducto.costo" ng-value="subproducto.subproducto.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left" ui-number-mask="2"/>
+				       <input type="text" class="inputText" ng-model="subproducto.subproducto.costo" ng-value="subproducto.subproducto.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left" ui-number-mask="2"
+				        ng-readonly="subproducto.subproducto.tieneHijos"/>
 				       <label for="iprog" class="floating-label">Costo</label>
 					</div>
 					
@@ -232,8 +233,8 @@
 							   <input class="inputText"  type="number"
 							     ng-model="subproducto.subproducto.duracion" ng-value="subproducto.subproducto.duracion"   
 							     onblur="this.setAttribute('value', this.value);"  min="1" ng-required="true" 
-							     ng-readonly="subproducto.duracionDimension.value != 0 ? false : true"
-							     ng-change="subproducto.subproducto.fechaInicio != null && subproducto.duracionDimension != 0 ? subproducto.cambioDuracion(subproducto.duracionDimension) : ''">
+							     ng-change="subproducto.subproducto.fechaInicio != null && subproducto.duracionDimension != 0 ? subproducto.cambioDuracion(subproducto.duracionDimension) : ''"
+							      ng-readonly="subproducto.subproducto.tieneHijos">
 							   <label class="floating-label">* Duración</label>
 							</div>	
 						</div>
@@ -242,7 +243,8 @@
 							<div class="form-group" >
 							  <input type="text"  class="inputText" uib-datepicker-popup="{{subproducto.formatofecha}}" ng-model="subproducto.subproducto.fechaInicio" is-open="subproducto.fi_abierto"
 							            datepicker-options="subproducto.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="subproducto.cambioDuracion(subproducto.duracionDimension);" ng-required="true"  
-							            ng-value="subproducto.subproducto.fechaInicio" onblur="this.setAttribute('value', this.value);"/>
+							            ng-value="subproducto.subproducto.fechaInicio" onblur="this.setAttribute('value', this.value);"
+							            ng-readonly="subproducto.subproducto.tieneHijos"/>
 							            <span class="label-icon" ng-click="subproducto.abrirPopupFecha(1000)">
 							              <i class="glyphicon glyphicon-calendar"></i>
 							            </span>
