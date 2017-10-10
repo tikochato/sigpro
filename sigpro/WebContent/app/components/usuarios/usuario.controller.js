@@ -222,6 +222,7 @@ app.controller('usuarioController', ['$scope', '$http', '$interval', '$q', 'i18n
 									estructuraAsignada: estructuras_permisos,
 									rol: mi.tipoUsuario.id,
 									esnuevo: mi.esNuevo,
+									sistemaUsuario: mi.usuariosSelected.sistemaUsuario,
 									t: (new Date()).getTime()
 	
 								}

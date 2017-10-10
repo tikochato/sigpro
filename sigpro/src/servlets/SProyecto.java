@@ -27,6 +27,7 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.EntidadDAO;
 import dao.EstructuraProyectoDAO;
+import dao.EtiquetaDAO;
 import dao.Nodo;
 import dao.PrestamoDAO;
 import dao.ProyectoDAO;
@@ -93,7 +94,7 @@ public class SProyecto extends HttpServlet {
 		String visionGeneral;
 		stprestamo prestamo;
 		Integer ejecucionFisicaReal;
-
+		Integer proyectoClase;
 	};
 
 	class stdatadinamico {
@@ -264,6 +265,7 @@ public class SProyecto extends HttpServlet {
 										+ " " + proyecto.getColaborador().getPapellido()
 										+ " " + proyecto.getColaborador().getSapellido()) : null;
 				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
+				dato.proyectoClase = proyecto.getEtiqueta().getId();
 				datos_.add(dato);
 			}
 
@@ -321,6 +323,7 @@ public class SProyecto extends HttpServlet {
 										+ " " + proyecto.getColaborador().getPapellido()
 										+ " " + proyecto.getColaborador().getSapellido()) : null;
 				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
+				dato.proyectoClase = proyecto.getEtiqueta().getId();
 				datos_.add(dato);
 			}
 
@@ -381,6 +384,7 @@ public class SProyecto extends HttpServlet {
 
 				dato.prestamo = obtenerPrestamo(proyecto.getId(),1);
 				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
+				dato.proyectoClase = proyecto.getEtiqueta().getId();
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -438,6 +442,7 @@ public class SProyecto extends HttpServlet {
 										+ " " + proyecto.getColaborador().getPapellido()
 										+ " " + proyecto.getColaborador().getSapellido()) : null;
 				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
+				dato.proyectoClase = proyecto.getEtiqueta().getId();
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -473,8 +478,7 @@ public class SProyecto extends HttpServlet {
 				Integer entidad = (map.get("entidadid")!=null) ? Utils.String2Int(map.get("entidadid")) : null;
 				Integer ejecucionFisicaReal = Utils.String2Int(map.get("ejecucionFisicaReal"));
 				Integer proyectoClase = Utils.String2Int(map.get("proyectoClase"));
-				Etiqueta etiqueta = new Etiqueta();
-				etiqueta.setId(proyectoClase);
+				Etiqueta etiqueta = EtiquetaDAO.getEtiquetaPorId(proyectoClase);
 
 				AcumulacionCosto acumulacionCosto = null;
 				if (map.get("acumulacionCosto")!=null){
@@ -787,6 +791,7 @@ public class SProyecto extends HttpServlet {
 										+ " " + proyecto.getColaborador().getPapellido()
 										+ " " + proyecto.getColaborador().getSapellido()) : null;
 				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
+				dato.proyectoClase = proyecto.getEtiqueta().getId();
 
 				dato.prestamo = obtenerPrestamo(proyecto.getId(),1);
 			}
