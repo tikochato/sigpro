@@ -163,7 +163,7 @@ public class CProject {
 		Proyecto proyecto = new Proyecto(null,null,cooperante, etiqueta,proyectoTipo, unidadEjecturoa
 				, task.getName(), null, usuario, null, new Date(), null, 1
 				, null, null, null, null, null, null, null,null, null, null, null, null, null, null,null,
-				task.getStart(),task.getFinish(),(( Double ) task.getDuration().getDuration()).intValue()
+				Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
 				, task.getDuration().getUnits().getName()
 				,null,null,0,0,null,null,null,null,null,null,null,null,null);
 		
@@ -182,7 +182,7 @@ public class CProject {
 		
 		Componente componente = new Componente(null,componenteTipo, proyecto, unidadEjecutora, task.getName(), null, 
 				usuario, null, new Date(), null, 1, null, null, null, null, null, null, null, null, null,
-				null,null,task.getStart(),task.getFinish(),(( Double ) task.getDuration().getDuration()).intValue()
+				null,null,Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
 				, task.getDuration().getUnits().getName()
 				,null,null,1,null,null,null);
 		
@@ -199,7 +199,7 @@ public class CProject {
 				,task.getName() , null, usuario, null, new Date(), null,1, 
 				 null, null, null, null, null, null, null, 
 				null, null, null,null,null,
-				task.getStart(),task.getFinish(),(( Double ) task.getDuration().getDuration()).intValue()
+				Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
 				, task.getDuration().getUnits().getName(),
 				null,null,2,null,null,null);
 		
@@ -216,7 +216,7 @@ public class CProject {
 		Subproducto subproducto = new Subproducto(null,producto, subproductoTipo, unidadEjecutroa,task.getName(), 
 				null, usuario, null, new Date(), null, 1,null, null, null, null, null, null, null, null,
 				null,null,null,
-				task.getStart(),task.getFinish(),(( Double ) task.getDuration().getDuration()).intValue()
+				Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
 				, task.getDuration().getUnits().getName(),
 				null,null,3,null,null);
 		
@@ -237,7 +237,7 @@ public class CProject {
 		}
 		
 		
-		Actividad actividad = new Actividad(actividadTipo,null, task.getName(), null, task.getStart(), task.getFinish()
+		Actividad actividad = new Actividad(actividadTipo,null, task.getName(), null, Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish())
 				, 0, usuario, null, new Date(), 
 				null, 1, null, null, null,null, null, null, objetoId, objetoTipo, 
 				(( Double ) task.getDuration().getDuration()).intValue()

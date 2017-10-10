@@ -198,7 +198,7 @@ public class Utils {
 			try {
 				rdate = Calendar.getInstance();
 				rdate.setTime(sdf.parse(date));
-				rdate.set(Calendar.HOUR, 0);
+				rdate.set(Calendar.HOUR_OF_DAY, 0);
 				rdate.set(Calendar.MINUTE, 0);
 				rdate.set(Calendar.SECOND, 0);
 				rdate.set(Calendar.MILLISECOND, 0);
@@ -291,6 +291,17 @@ public class Utils {
 	    } while (startCal.getTimeInMillis() < endCal.getTimeInMillis()); //excluding end date
 
 	    return workDays + 1;
+	}
+	
+	public static Date setDateCeroHoras(Date fecha){
+		Calendar cfecha = Calendar.getInstance();
+		cfecha.setTime(fecha);
+		cfecha.set(Calendar.HOUR_OF_DAY, 0);
+		cfecha.set(Calendar.MINUTE, 0);
+		cfecha.set(Calendar.SECOND, 0);
+		cfecha.set(Calendar.MILLISECOND, 0);
+		return cfecha.getTime();
+		
 	}
 
 }
