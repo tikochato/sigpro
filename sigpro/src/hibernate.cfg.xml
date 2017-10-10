@@ -40,6 +40,7 @@
         <mapping class="pojo.Documento" />
         <mapping class="pojo.Entidad" />
         <mapping class="pojo.EstadoTabla" />
+        <mapping class="pojo.Etiqueta" />
         <mapping class="pojo.Formulario" />
         <mapping class="pojo.FormularioItem" />
         <mapping class="pojo.FormularioItemTipo" />

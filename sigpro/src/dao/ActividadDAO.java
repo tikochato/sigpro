@@ -772,4 +772,22 @@ public class ActividadDAO {
 	}
 	
 	
+	public static List<Actividad> obtenerActividadesHijas(Integer proyectoId){
+		List<Actividad> ret = new ArrayList<Actividad>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "SELECT a FROM Actividad a WHERE a.treePath like '" + (10000000 + proyectoId) +"%'  AND NOT EXISTS  (SELECT a1.id FROM Actividad a1 where a1.objetoId = a.id and a1.objetoTipo = 5)  ";
+			Query<Actividad> criteria = session.createQuery(query,Actividad.class);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("20", ActividadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return ret;
+	}
+	
 }

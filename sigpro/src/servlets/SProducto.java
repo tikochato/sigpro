@@ -235,8 +235,8 @@ public class SProducto extends HttpServlet {
 				Integer peso = Utils.String2Int(parametro.get("peso"), null);
 				BigDecimal costo = Utils.String2BigDecimal(parametro.get("costo"), null);
 				Integer acumulacionCostoid = Utils.String2Int(parametro.get("acumulacionCosto"), null);
-				Date fechaInicio = Utils.dateFromString(parametro.get("fechaInicio"));
-				Date fechaFin = Utils.dateFromString(parametro.get("fechaFin"));
+				Date fechaInicio = Utils.dateFromStringCeroHoras(parametro.get("fechaInicio"));
+				Date fechaFin = Utils.dateFromStringCeroHoras(parametro.get("fechaFin"));
 				Integer duracion = Utils.String2Int(parametro.get("duaracion"), null);
 				String duracionDimension = parametro.get("duracionDimension");
 				

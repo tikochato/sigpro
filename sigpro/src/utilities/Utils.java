@@ -191,6 +191,24 @@ public class Utils {
 		return rdate;
 	}
 	
+	public static Date dateFromStringCeroHoras(String date){
+		Calendar rdate=null;
+		if(date!=null && date.length()>0){
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			try {
+				rdate = Calendar.getInstance();
+				rdate.setTime(sdf.parse(date));
+				rdate.set(Calendar.HOUR, 0);
+				rdate.set(Calendar.MINUTE, 0);
+				rdate.set(Calendar.SECOND, 0);
+				rdate.set(Calendar.MILLISECOND, 0);
+			} catch (ParseException e) {
+				
+			}
+		}
+		return rdate.getTime();
+	}
+	
 	public static Timestamp stringToTimestamp(String date){
 		Timestamp ret=null;
 		if(date!=null && date.length()>0){
@@ -256,7 +274,7 @@ public class Utils {
 
 	    //Return 0 if start and end are the same
 	    if (startCal.getTimeInMillis() == endCal.getTimeInMillis()) {
-	        return 0;
+	        return 1;
 	    }
 
 	    if (startCal.getTimeInMillis() > endCal.getTimeInMillis()) {

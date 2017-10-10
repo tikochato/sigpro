@@ -273,8 +273,8 @@ public class SComponente extends HttpServlet {
 					String longitud = map.get("longitud");
 					BigDecimal costo = Utils.String2BigDecimal(map.get("costo") != null && map.get("costo").equals("0") ? null : map.get("costo"), null);
 					Integer acumulacionCostoid = Utils.String2Int(map.get("acumulacionCosto"), null);
-					Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
-					Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
+					Date fechaInicio = Utils.dateFromStringCeroHoras(map.get("fechaInicio"));
+					Date fechaFin = Utils.dateFromStringCeroHoras(map.get("fechaFin"));
 					Integer duracion = Utils.String2Int(map.get("duaracion"), null);
 					String duracionDimension = map.get("duracionDimension");
 					
@@ -367,11 +367,6 @@ public class SComponente extends HttpServlet {
 						}
 					}
 					
-					/*if(result){
-						COrden orden = new COrden();
-						result = orden.calcularOrdenObjetosSuperiores(componente.getProyecto().getId(), 1, usuario, COrden.getSessionCalculoOrden(),componente.getProyecto().getId(), null, null);
-					}*/
-					
 					response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 							+ "\"id\": " + componente.getId() , ","
 							, "\"usuarioCreo\": \"" , componente.getUsuarioCreo(),"\","
@@ -386,115 +381,6 @@ public class SComponente extends HttpServlet {
 			catch (Throwable e){
 				response_text = "{ \"success\": false }";
 			}
-		}
-		else if(accion.equals("guardarModal")){
-			try{
-				boolean result = false;
-				int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
-				boolean esnuevo = map.get("esnuevo").equals("true");
-				Integer proyectoId = Utils.String2Int(map.get("proyectoId"));
-				
-				
-				
-				Componente componente = null;
-				if(id>0 || esnuevo ){
-					String nombre = map.get("nombre");	
-					int componentetipoid = map.get("componentetipoid")!=null ? Integer.parseInt(map.get("componentetipoid")) : 0;	
-					int unidadEjecutoraId = map.get("unidadejecutoraid") !=null ? Integer.parseInt(map.get("unidadejecutoraid")) : 0;
-					int entidad = Utils.String2Int(map.get("entidad"),0);
-					int ejercicio = Utils.String2Int(map.get("ejercicio"),0);
-					Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
-					Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
-					Integer duracion = Utils.String2Int(map.get("duaracion"), null);
-					String duracionDimension = map.get("duracionDimension");
-					ComponenteTipo componenteTipo= new ComponenteTipo();
-					componenteTipo.setId(componentetipoid);
-					UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidad,unidadEjecutoraId);
-					
-					if (esnuevo){
-						Proyecto proyecto = new Proyecto();
-						proyecto.setId(proyectoId);
-						componente = new Componente(componenteTipo, proyecto,  nombre, usuario, 
-								new Date(), 1);
-						componente.setFechaInicio(fechaInicio);
-						componente.setFechaFin(fechaFin);
-						componente.setDuracion(duracion);
-						componente.setDuracionDimension(duracionDimension);
-						
-					}else {
-						componente = ComponenteDAO.getComponentePorId(id,usuario);
-						componente.setNombre(nombre);
-						componente.setComponenteTipo(componenteTipo);
-						componente.setUnidadEjecutora(unidadEjecutora);
-						componente.setUsuarioActualizo(usuario);
-						componente.setFechaActualizacion(new DateTime().toDate());
-						componente.setFechaInicio(fechaInicio);
-						componente.setFechaFin(fechaFin);
-						componente.setDuracion(duracion);
-						componente.setDuracionDimension(duracionDimension);
-						
-					}
-					result = ComponenteDAO.guardarComponente(componente, true);
-					/*COrden orden = new COrden();
-					orden.calcularOrdenObjetosSuperiores(componente.getProyecto().getId(), 1,  usuario, COrden.getSessionCalculoOrden(),componente.getProyecto().getId(), null, null);
-					*/
-				}
-				stcomponente temp = new stcomponente();
-				if (result){
-					temp.id = componente.getId();
-					temp.nombre = componente.getNombre();
-					temp.componentetipoid = componente.getComponenteTipo().getId();
-					temp.componentetiponombre = componente.getComponenteTipo().getNombre();
-					
-					if(componente.getUnidadEjecutora() != null){
-						temp.unidadejecutoraid = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
-						temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
-						temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
-						temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
-					}else{
-						Proyecto proyecto = ProyectoDAO.getProyecto(componente.getProyecto().getId());
-						temp.unidadejecutoraid = proyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
-						temp.ejercicio = proyecto.getUnidadEjecutora().getId().getEjercicio();
-						temp.entidadentidad = proyecto.getUnidadEjecutora().getId().getEntidadentidad();
-						temp.unidadejecutoranombre = proyecto.getUnidadEjecutora().getNombre();
-					}
-					
-					temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
-					temp.fechaInicio = Utils.formatDate(componente.getFechaInicio());
-					temp.fechaFin = Utils.formatDate(componente.getFechaFin());
-					temp.duracion = componente.getDuracion();
-					temp.duracionDimension = componente.getDuracionDimension();
-					response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
-			        response_text = String.join("", "\"componente\":",response_text);
-			        response_text = String.join("", "{\"success\":true,", response_text,"}");
-				}else{
-					response_text = "{ \"success\": false }";
-				}	
-			}
-			catch (Throwable e){
-				response_text = "{ \"success\": false }";
-			}
-		}
-		else if(accion.equals("borrarComponente")){
-			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
-			if(id>0){
-				Componente componente = ComponenteDAO.getComponentePorId(id,usuario);
-				componente.setUsuarioActualizo(usuario);
-				
-				/*Integer objetoId = componente.getProyecto().getId();
-				Integer objetoTipo = 1;*/
-				
-				boolean eliminado = ComponenteDAO.eliminarComponente(componente);
-				
-				/*if(eliminado){
-					COrden orden = new COrden();
-					orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, COrden.getSessionCalculoOrden(),objetoId, null, null);
-				}*/
-				
-				response_text = String.join("","{ \"success\": ",(eliminado ? "true" : "false")," }");
-			}
-			else
-				response_text = "{ \"success\": false }";
 		}
 		else if(accion.equals("numeroComponentes")){
 			response_text = String.join("","{ \"success\": true, \"totalcomponentes\":",ComponenteDAO.getTotalComponentes(usuario).toString()," }");

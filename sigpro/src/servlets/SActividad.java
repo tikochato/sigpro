@@ -248,8 +248,9 @@ public class SActividad extends HttpServlet {
 					String nombre = map.get("nombre");
 					String descripcion = map.get("descripcion");
 					int actividadtipoid =Utils.getParameterInteger(map, "actividadtipoid");
-					Date fechaInicio = Utils.dateFromString(map.get("fechainicio"));
-					Date fechaFin = Utils.dateFromString(map.get("fechafin"));
+					Date fechaInicio = Utils.dateFromStringCeroHoras(map.get("fechainicio"));
+					Date fechaFin = Utils.dateFromStringCeroHoras(map.get("fechafin"));
+					
 					Long snip = Utils.String2Long(map.get("snip"));
 					Integer programa= Utils.getParameterInteger(map, "programa");
 					Integer subprograma= Utils.getParameterInteger(map, "subprograma");
