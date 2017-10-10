@@ -274,7 +274,7 @@ public class Utils {
 
 	    //Return 0 if start and end are the same
 	    if (startCal.getTimeInMillis() == endCal.getTimeInMillis()) {
-	        return 0;
+	        return 1;
 	    }
 
 	    if (startCal.getTimeInMillis() > endCal.getTimeInMillis()) {

@@ -424,8 +424,39 @@ public class ComponenteDAO {
 							ret = fechaMinima;
 					}
 				}
-			}else
-				ret = componente.getFechaInicio();
+				
+				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(componente.getId(), 2);
+				if(actividades != null && actividades.size() > 0){
+					fechaMinima = new Date();
+					for(Actividad actividad : actividades){
+						if(ret == null)
+							ret = actividad.getFechaInicio();
+						else{
+							fechaMinima = actividad.getFechaInicio();
+							
+							if(ret.after(fechaMinima))
+								ret = fechaMinima;
+						}
+					}
+				}
+			}else{
+				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(componente.getId(), 2);
+				if(actividades != null && actividades.size() > 0){
+					Date fechaMinima = new Date();
+					for(Actividad actividad : actividades){
+						if(ret == null)
+							ret = actividad.getFechaInicio();
+						else{
+							fechaMinima = actividad.getFechaInicio();
+							
+							if(ret.after(fechaMinima))
+								ret = fechaMinima;
+						}
+					}
+				}else
+					ret = componente.getFechaInicio();
+			}
+				
 		}catch(Exception e){
 			CLogger.write("17", Proyecto.class, e);
 		}
@@ -451,8 +482,39 @@ public class ComponenteDAO {
 							ret = fechaMaxima;
 					}
 				}
-			}else
-				ret = componente.getFechaInicio();
+				
+				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(componente.getId(), 2);
+				if(actividades != null && actividades.size() > 0){
+					fechaMaxima = new Date();
+					for(Actividad actividad : actividades){
+						if(ret == null)
+							ret = actividad.getFechaFin();
+						else{
+							fechaMaxima = actividad.getFechaFin();
+							
+							if(ret.before(fechaMaxima))
+								ret = fechaMaxima;
+						}
+					}
+				}
+			}else{
+				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(componente.getId(), 2);
+				if(actividades != null && actividades.size() > 0){
+					Date fechaMaxima = new Date();
+					for(Actividad actividad : actividades){
+						if(ret == null)
+							ret = actividad.getFechaFin();
+						else{
+							fechaMaxima = actividad.getFechaFin();
+							
+							if(ret.before(fechaMaxima))
+								ret = fechaMaxima;
+						}
+					}
+				}else
+					ret = componente.getFechaFin();
+			}
+				
 		}catch(Exception e){
 			CLogger.write("17", Proyecto.class, e);
 		}
