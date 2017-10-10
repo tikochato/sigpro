@@ -276,14 +276,14 @@ public class CProject {
 		items = new HashMap<>();
 		boolean ret = false;
 		
-		Integer id = listaJerarquica(projectFile.getChildTasks().get(0),usuario,null,1,multiproyecto ? 0 : 1);
+		listaJerarquica(projectFile.getChildTasks().get(0),usuario,null,1,multiproyecto ? 0 : 1);
 		
 		
-		if (!multiproyecto){
+/*		if (!multiproyecto){
 			List<Actividad> actividades = ActividadDAO.obtenerActividadesHijas(id);
 			for (Actividad actividad : actividades)
 				ActividadDAO.guardarActividad(actividad, true);
-		}
+		} */
 		
 		ret = true;
 		
