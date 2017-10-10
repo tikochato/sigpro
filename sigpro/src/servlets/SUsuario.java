@@ -70,6 +70,7 @@ public class SUsuario extends HttpServlet {
 		Long cui;
 		String unidad_ejecutora;
 		int id;
+		int sistemaUsuario;
 	
 	}
 	
@@ -88,17 +89,10 @@ public class SUsuario extends HttpServlet {
 		String usuario;
 	}
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public SUsuario() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setHeader("Content-Encoding", "gzip");
@@ -266,6 +260,7 @@ public class SUsuario extends HttpServlet {
 					usuariotmp.fechaCreacion=Utils.formatDate(usuario.getFechaCreacion());
 					usuariotmp.fechaActualizacion=Utils.formatDate(usuario.getFechaActualizacion());
 					usuariotmp.password="";
+					usuariotmp.sistemaUsuario = usuario.getSistemaUsuario();
 					Colaborador colaborador_tmp=UsuarioDAO.getColaborador(usuariotmp.usuario);
 					if(colaborador_tmp!=null){
 						usuariotmp.colaborador=colaborador_tmp.getPapellido()+", "+colaborador_tmp.getPnombre();
@@ -326,6 +321,7 @@ public class SUsuario extends HttpServlet {
 				usuarioStr.email=usuarioActual.getEmail();
 				usuarioStr.usuario=usuarioActual.getUsuario();
 				usuarioStr.password="";
+				usuarioStr.sistemaUsuario = usuarioActual.getSistemaUsuario();
 				if(colaboradorActual!=null){
 					usuarioStr.cui=colaboradorActual.getCui();
 					usuarioStr.pnombre=colaboradorActual.getPnombre();
@@ -351,11 +347,12 @@ public class SUsuario extends HttpServlet {
 						String nuevomail = map.get("email").toLowerCase();
 						String permisosAsignados = map.get("permisos");
 						String prestamosAsignados=map.get("prestamos");
+						Integer sistemaUsuario= Utils.String2Int(map.get("sistemaUsuario"));
 						String rol =map.get("rol");
 						if(nuevousuario!=null && nuevopassword!=null && nuevomail != null && permisosAsignados!=null && rol!=null){
 							if(!UsuarioDAO.existeUsuario(nuevousuario)){
 								if(nuevousuario.compareTo("")!=0 && nuevopassword.compareTo("")!=0 && nuevomail.compareTo("")!=0){
-									boolean registro = UsuarioDAO.registroUsuario(nuevousuario, nuevomail, nuevopassword,usuario_texto);
+									boolean registro = UsuarioDAO.registroUsuario(nuevousuario, nuevomail, nuevopassword,usuario_texto, sistemaUsuario);
 									if(registro){
 										String estructura_permisos = map.get("estructuraAsignada");
 										String[] estructuras = estructura_permisos.split("\\|");
@@ -417,6 +414,8 @@ public class SUsuario extends HttpServlet {
 							}
 							String email = map.get("email");
 							String permisosAsignados = map.get("permisos");
+							Integer sistemaUsuario = Utils.String2Int("sistemaUsuario");
+							usuarioEdicion.setSistemaUsuario(sistemaUsuario);
 							if(email!=null){
 								usuarioEdicion.setEmail(email);
 								String estructura_permisos = map.get("estructuraAsignada");
@@ -489,6 +488,7 @@ public class SUsuario extends HttpServlet {
 						usuariotmp.usuarioActualizo= usuario.getUsuarioActualizo();
 						usuariotmp.fechaCreacion=Utils.formatDate(usuario.getFechaCreacion());
 						usuariotmp.fechaActualizacion=Utils.formatDate(usuario.getFechaActualizacion());
+						usuariotmp.sistemaUsuario = usuario.getSistemaUsuario();
 						stusuarios.add(usuariotmp);
 					}
 							

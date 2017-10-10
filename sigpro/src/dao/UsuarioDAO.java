@@ -105,7 +105,7 @@ public class UsuarioDAO {
 		return ret;
 	}
 	
-	public static boolean registroUsuario(String cadenausuario, String email, String passwordTextoPlano, String usuarioCreo){
+	public static boolean registroUsuario(String cadenausuario, String email, String passwordTextoPlano, String usuarioCreo, Integer sistemaUsuario){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -121,6 +121,7 @@ public class UsuarioDAO {
 			usuario.setFechaCreacion(new DateTime().toDate());
 			usuario.setUsuarioCreo(usuarioCreo);
 			usuario.setEstado(1);
+			usuario.setSistemaUsuario(sistemaUsuario);
 			session.save(usuario);
 			session.getTransaction().commit();
 			ret = true;
