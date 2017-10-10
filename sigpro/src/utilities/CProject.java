@@ -32,6 +32,7 @@ import pojo.ActividadTipo;
 import pojo.Componente;
 import pojo.ComponenteTipo;
 import pojo.Cooperante;
+import pojo.Etiqueta;
 import pojo.Producto;
 import pojo.ProductoTipo;
 import pojo.Programa;
@@ -74,6 +75,7 @@ public class CProject {
 	static int PRODUCTO_TIPO_ID_DEFECTO = 1;
 	static int SUBPRODUCTO_TIPO__ID_DEFECTO = 1;
 	static int ACTIVIDAD_ID_DEFECTO = 1;
+	static int PROYECTO_ETIQUETA_DEFECTO = 1;
 	
 	private static int OBJETO_ID_ACTIVIDAD= 5;
 
@@ -154,8 +156,11 @@ public class CProject {
 	public Proyecto crearProyecto(Task task,String usuario){
 		Cooperante cooperante =CooperanteDAO.getCooperantePorCodigo(COOPERANTE_ID_DEFECTO);
 		ProyectoTipo proyectoTipo = ProyectoTipoDAO.getProyectoTipoPorId(PROYECTO_TIPO_ID_DEFECTO);
+		Etiqueta etiqueta = new Etiqueta();
+		etiqueta.setId(PROYECTO_ETIQUETA_DEFECTO);
+		
 		UnidadEjecutora unidadEjecturoa = UnidadEjecutoraDAO.getUnidadEjecutora(new DateTime().getYear(),ENTIDAD_ID_DEFECTO,UNIDAD_EJECUTORA_ID_DEFECTO);
-		Proyecto proyecto = new Proyecto(null,null,cooperante, null,proyectoTipo, unidadEjecturoa
+		Proyecto proyecto = new Proyecto(null,null,cooperante, etiqueta,proyectoTipo, unidadEjecturoa
 				, task.getName(), null, usuario, null, new Date(), null, 1
 				, null, null, null, null, null, null, null,null, null, null, null, null, null, null,null,
 				task.getStart(),task.getFinish(),(( Double ) task.getDuration().getDuration()).intValue()
