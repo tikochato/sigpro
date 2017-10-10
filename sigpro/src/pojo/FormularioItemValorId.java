@@ -10,6 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class FormularioItemValorId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9204275031896061268L;
 	private int formularioItemid;
 	private int objetoFormularioformularioid;
 	private int objetoFormularioobjetoTipoid;

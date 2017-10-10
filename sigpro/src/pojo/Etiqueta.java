@@ -22,6 +22,10 @@ import javax.persistence.TemporalType;
 @Table(name = "etiqueta", catalog = "sipro")
 public class Etiqueta implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6290152555225217443L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;

@@ -191,8 +191,8 @@ public class SSubproducto extends HttpServlet {
 			String longitud = map.get("longitud");
 			BigDecimal costo = new BigDecimal(map.get("costo"));
 			Integer acumulacionCostoid = Utils.String2Int(map.get("acumulacionCostoId"), null);
-			Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
-			Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
+			Date fechaInicio = Utils.dateFromStringCeroHoras(map.get("fechaInicio"));
+			Date fechaFin = Utils.dateFromStringCeroHoras(map.get("fechaFin"));
 			Integer duracion = Utils.String2Int(map.get("duaracion"), null);
 			String duracionDimension = map.get("duracionDimension");
 			
@@ -284,12 +284,6 @@ public class SSubproducto extends HttpServlet {
 				}
 			}
 			
-			/*if(ret){
-				COrden orden = new COrden();
-				ret = orden.calcularOrdenObjetosSuperiores(subproducto.getProducto().getId(), 3, usuario, COrden.getSessionCalculoOrden(),
-						subproducto.getProducto().getComponente().getProyecto().getId(), null, null);
-			}*/
-			
 			resultadoJson = String.join("","{ \"success\": ",(ret ? "true" : "false"),", "
 					+ "\"id\": " + subproducto.getId().toString(), ","
 					, "\"usuarioCreo\": \"" , subproducto.getUsuarioCreo(),"\","
@@ -313,15 +307,8 @@ public class SSubproducto extends HttpServlet {
 	private void eliminar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
 		int codigo = Utils.String2Int(parametro.get("codigo"), -1);
 		
-		//Subproducto pojo = SubproductoDAO.getSubproductoPorId(codigo,usuario);
-		//Integer proyectoId = pojo.getProducto().getComponente().getProyecto().getId();
 		SubproductoDAO.eliminar(codigo, usuario);
-		/*if (eliminado) {
-			COrden orden = new COrden();
-			orden.calcularOrdenObjetosSuperiores(pojo.getProducto().getId(), 3, usuario, COrden.getSessionCalculoOrden(),proyectoId, null, null);
-			
-			listar(parametro, response);
-		}*/
+		
 	}
 
 	private void total(Map<String, String> parametro,HttpServletResponse response) throws IOException {

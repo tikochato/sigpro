@@ -10,6 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class MetaPlanificadoId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3841532910343893111L;
 	private int metaid;
 	private int ejercicio;
 

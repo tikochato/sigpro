@@ -132,19 +132,9 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		var columns = DlhSoft.Controls.GanttChartView.getDefaultColumns(items, settings);
 		
 		
-		columns.splice(0, 0, {
-		    header: 'Id', 
-		    width: 50,
-		    isReadOnly: true,
-		    cellStyle: 'text-align: right;',
-		    cellTemplate: function (item) {
-		    	//return DlhSoft.Controls.GanttChartView.numberInputColumnTemplateBase(document, 50, function(){ return item.index+1 }, function(value){ item.index=value+1 })
-		    	return DlhSoft.Controls.GanttChartView.textColumnTemplateBase(document,  function(){ return item.id })
-		        //return DlhSoft.Controls.GanttChartView.textColumnTemplateBase(document, function () { return mi.getStatus(item); });
-		    }
-		});
 		
-		columns.splice(1, 0, {
+		
+		columns.splice(0, 0, {
 		    header: 'Orden', 
 		    width: 50,
 		    isReadOnly: true,
@@ -157,7 +147,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		});
 		
 		
-		columns.splice(2, 0, {
+		columns.splice(1, 0, {
 		    header: 'Tipo', width: 40,
 		    cellTemplate: function (item) {
 		        var rectangle = document.createElement('div');
@@ -170,14 +160,14 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		});
 		
 		
-		columns.splice(4, 0, {
+		columns.splice(3, 0, {
 		    header: 'Estado', width: 120,
 		    cellTemplate: function (item) {
 		        return DlhSoft.Controls.GanttChartView.textColumnTemplateBase(document, function () { return mi.getStatus(item); });
 		    }
 		});
 		
-		columns.splice(4, 0, {
+		columns.splice(3, 0, {
 		    header: '', width: 30,
 		    cellTemplate: function (item) {
 		        /*var rectangle = document.createElement('div');
@@ -194,24 +184,20 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		
 		
 		
-		columns.splice(9,0);
-		columns[3].header = 'Nombre';
-		columns[3].width = 300;
-		columns[5].header = 'Estado';
+		columns.splice(7,0);
+		columns[2].header = 'Nombre';
+		columns[2].width = 300;
+		columns[3].header = 'Estado';
+		columns[3].width = 85;
+		columns[4].header = '';
+		columns[5].header = 'Inicio';
 		columns[5].width = 85;
-		columns[6].header = 'Inicio';
+		columns[6].header = 'Fin';
 		columns[6].width = 85;
-		columns[7].header = 'Fin';
-		columns[7].width = 85;
-		columns[8].header = 'Hito';
-		columns[8].width = 60;
-		columns[8].isReadOnly = true;
-		columns[9].header = 'Completada';
-		columns[10].header = 'Responsable';
-		columns[10].isReadOnly = true;
+		columns[7].header = 'Completada';
 		
 		//columns.splice(10, 0, { header: 'Duración (d)', width: 80, cellTemplate: DlhSoft.Controls.GanttChartView.getDurationColumnTemplate(64, 8) });
-		columns.splice(11, 0, {
+		columns.splice(8, 0, {
 		    header: 'Duración (d)', 
 		    width: 80,
 		    isReadOnly: true,
@@ -221,7 +207,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		
 		
 		//columns.push({ header: 'Costo Planificado (Q)', width: 110, cellTemplate: DlhSoft.Controls.GanttChartView.getCostColumnTemplate(84) });
-		columns.splice(12, 0, {
+		columns.splice(9, 0, {
 		    header: 'Costo Planificado (Q)', 
 		    width: 110,
 		    isReadOnly: true,

@@ -10,6 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class ObjetoPrestamoId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8321396599771425541L;
 	private int prestamoid;
 	private int objetoId;
 	private int objetoTipo;
