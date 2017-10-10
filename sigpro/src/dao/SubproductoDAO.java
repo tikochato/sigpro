@@ -32,7 +32,7 @@ public class SubproductoDAO {
 		Integer idProducto;
 		String producto;
 		Integer idSubproductoTipo;
-		String subproductoTipo;
+		String subProductoTipo;
 		Integer unidadEjectuora;
 		String nombreUnidadEjecutora;
 		String entidadnombre;
@@ -305,7 +305,7 @@ public class SubproductoDAO {
 
 			if (pojo.getSubproductoTipo() != null) {
 				estructuraPojo.idSubproductoTipo = pojo.getSubproductoTipo().getId();
-				estructuraPojo.subproductoTipo = pojo.getSubproductoTipo().getNombre();
+				estructuraPojo.subProductoTipo = pojo.getSubproductoTipo().getNombre();
 			}
 			
 			if (pojo.getUnidadEjecutora() != null){
