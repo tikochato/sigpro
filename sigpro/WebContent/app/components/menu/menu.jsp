@@ -25,7 +25,7 @@
                     </li>
                     <shiro:hasPermission name="24010">
 	                    <li uib-dropdown>
-	                    	<a href="#" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> ${proyecto}s <b class="caret"></b></a> 
+	                    	<a href="#" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> Préstamos <b class="caret"></b></a> 
 	                    	<ul class="dropdown-menu multi-level" role="menu" aria-labelledby="split-button">
 	                    		<li role="menuitem"><a href="/main_treeview.jsp">Árbol</a></li>
 	                    		<li role="menuitem"><a   href="/main.jsp#!/prestamo"><span class="glyphicon" aria-hidden="true"></span>Lista</a></li>
