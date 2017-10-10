@@ -25,6 +25,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ComponenteDAO;
+import dao.ObjetoDAO;
 import dao.ProductoDAO;
 import dao.ProductoPropiedadDAO;
 import dao.ProductoPropiedadValorDAO;
@@ -86,6 +87,7 @@ public class SProducto extends HttpServlet {
 		BigDecimal costo;
 		Integer acumulacionCostoId;
 		String acumulacionCostoNombre;
+		boolean tieneHijos;
 	}
 	
 	class stdatadinamico {
@@ -194,6 +196,7 @@ public class SProducto extends HttpServlet {
 					}
 				}
 
+				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 3);
 				listaProducto.add(temp);
 			}
 
@@ -434,6 +437,8 @@ public class SProducto extends HttpServlet {
 						}
 					}
 
+					temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 3);
+					
 					listaProducto.add(temp);
 				}
 
@@ -526,6 +531,8 @@ public class SProducto extends HttpServlet {
 					}
 				}
 
+				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 3);
+				
 				listaProducto.add(temp);
 			}
 
@@ -606,6 +613,8 @@ public class SProducto extends HttpServlet {
 					}
 				}
 
+				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 3);
+				
 				stproductos.add(temp);
 			}
 			
@@ -677,6 +686,8 @@ public class SProducto extends HttpServlet {
 				temp.usuarioactualizo = producto.getUsuarioActualizo();
 				temp.fechaCreacion = Utils.formatDateHour(producto.getFechaCreacion());
 				temp.fechaactualizacion = Utils.formatDateHour(producto.getFechaActualizacion());
+				
+				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 3);
 			}
 
 			response_text = new GsonBuilder().serializeNulls().create().toJson(temp);
@@ -770,6 +781,9 @@ public class SProducto extends HttpServlet {
 				temp.fechaFin = Utils.formatDate(producto.getFechaFin());
 				temp.duracion = producto.getDuracion();
 				temp.duracionDimension = producto.getDuracionDimension();
+				
+				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 3);
+				
 				response_text = new GsonBuilder().serializeNulls().create().toJson(temp);
 				response_text = String.join("", "\"producto\":",response_text);
 				response_text = String.join("", "{\"success\":true,", response_text,"}");
