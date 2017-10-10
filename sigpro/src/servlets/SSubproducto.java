@@ -23,6 +23,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ComponenteDAO;
+import dao.ObjetoDAO;
 import dao.ProductoDAO;
 import dao.SubproductoDAO;
 import dao.SubproductoPropiedadDAO;
@@ -92,6 +93,7 @@ public class SSubproducto extends HttpServlet {
 		BigDecimal costo;
 		Integer acumulacionCosto;
 		String acumulacionCostoNombre;
+		boolean tieneHijos;
 	}
 	
 	
@@ -416,6 +418,8 @@ public class SSubproducto extends HttpServlet {
 				temp.nombreUnidadEjecutora = subproducto.getProducto().getUnidadEjecutora().getNombre();
 			}
 			
+			temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 4);
+			
 			listaSubProducto.add(temp);
 		}
 		
@@ -508,6 +512,9 @@ public class SSubproducto extends HttpServlet {
 				temp.unidadEjecutora = subproducto.getProducto().getUnidadEjecutora().getId().getUnidadEjecutora();
 				temp.nombreUnidadEjecutora = subproducto.getProducto().getUnidadEjecutora().getNombre();
 			}
+			
+			temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 4);
+			
 			resultadoJson = new GsonBuilder().serializeNulls().create().toJson(temp);
 			resultadoJson = "{\"success\":true," +" \"subproducto\": " + resultadoJson + "}";	
 		}else{
