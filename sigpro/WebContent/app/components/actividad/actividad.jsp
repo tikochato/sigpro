@@ -207,7 +207,7 @@
 								            datepicker-options="actividadc.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafin(); actividadc.cambioDuracion(actividadc.duracionDimension);" ng-required="true"  
 								            ng-value="actividadc.actividad.fechaInicio" onblur="this.setAttribute('value', this.value);"
 								             ng-readonly="actividadc.actividad.tieneHijos"/>
-								            <span class="label-icon" ng-click="actividadc.abrirPopupFecha(1000)">
+								            <span class="label-icon" ng-click="actividadc.actividad.tieneHijos!=true ? actividadc.abrirPopupFecha(1000) : ''">
 								              <i class="glyphicon glyphicon-calendar"></i>
 								            </span>
 								  <label class="floating-label">*Fecha de Inicio</label>
@@ -221,7 +221,7 @@
 								            datepicker-options="actividadc.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafin()" ng-required="true"
 								            readonly="readonly"
 								            ng-value="actividadc.actividad.fechaFin" onblur="this.setAttribute('value', this.value);"/>
-								            <span class="label-icon" ng-click="actividadc.abrirPopupFecha(1001)">
+								            <span class="label-icon" >
 								              <i class="glyphicon glyphicon-calendar"></i>
 								            </span>
 								  <label class="floating-label">* Fecha de Fin</label>

@@ -245,7 +245,7 @@
 							            datepicker-options="subproducto.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="subproducto.cambioDuracion(subproducto.duracionDimension);" ng-required="true"  
 							            ng-value="subproducto.subproducto.fechaInicio" onblur="this.setAttribute('value', this.value);"
 							            ng-readonly="subproducto.subproducto.tieneHijos"/>
-							            <span class="label-icon" ng-click="subproducto.abrirPopupFecha(1000)">
+							            <span class="label-icon" ng-click="subproducto.subproducto.tieneHijos!=true ? subproducto.abrirPopupFecha(1000) : ''">
 							              <i class="glyphicon glyphicon-calendar"></i>
 							            </span>
 							  <label for="campo.id" class="floating-label">* Fecha de Inicio</label>
@@ -258,7 +258,7 @@
 							            datepicker-options="subproducto.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true" ng-click=""
 							            ng-value="subproducto.subproducto.fechaFin" onblur="this.setAttribute('value', this.value);"
 							            ng-readonly="true"/>
-							            <span class="label-icon" ng-click="subproducto.abrirPopupFecha(1001)">
+							            <span class="label-icon" >
 							              <i class="glyphicon glyphicon-calendar"></i>
 							            </span>
 							  <label for="campo.id" class="floating-label">* Fecha de Fin</label>
