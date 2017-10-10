@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 2, 2017 5:12:50 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 9, 2017 6:11:54 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -20,10 +20,6 @@ import javax.persistence.TemporalType;
 @Table(name = "usuario", catalog = "sipro")
 public class Usuario implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private String usuario;
 	private String password;
 	private String salt;
@@ -33,6 +29,7 @@ public class Usuario implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
+	private int sistemaUsuario;
 	private Set<Colaborador> colaboradors = new HashSet<Colaborador>(0);
 	private Set<ProductoUsuario> productoUsuarios = new HashSet<ProductoUsuario>(0);
 	private Set<ComponenteUsuario> componenteUsuarios = new HashSet<ComponenteUsuario>(0);
@@ -43,17 +40,19 @@ public class Usuario implements java.io.Serializable {
 	public Usuario() {
 	}
 
-	public Usuario(String usuario, String password, String salt, String email, Date fechaCreacion, int estado) {
+	public Usuario(String usuario, String password, String salt, String email, Date fechaCreacion, int estado,
+			int sistemaUsuario) {
 		this.usuario = usuario;
 		this.password = password;
 		this.salt = salt;
 		this.email = email;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
+		this.sistemaUsuario = sistemaUsuario;
 	}
 
 	public Usuario(String usuario, String password, String salt, String email, String usuarioCreo,
-			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
+			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, int sistemaUsuario,
 			Set<Colaborador> colaboradors, Set<ProductoUsuario> productoUsuarios,
 			Set<ComponenteUsuario> componenteUsuarios, Set<UsuarioPermiso> usuarioPermisos,
 			Set<ProyectoUsuario> proyectoUsuarios, Set<SubproductoUsuario> subproductoUsuarios) {
@@ -66,6 +65,7 @@ public class Usuario implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
+		this.sistemaUsuario = sistemaUsuario;
 		this.colaboradors = colaboradors;
 		this.productoUsuarios = productoUsuarios;
 		this.componenteUsuarios = componenteUsuarios;
@@ -157,6 +157,15 @@ public class Usuario implements java.io.Serializable {
 
 	public void setEstado(int estado) {
 		this.estado = estado;
+	}
+
+	@Column(name = "sistema_usuario", nullable = false)
+	public int getSistemaUsuario() {
+		return this.sistemaUsuario;
+	}
+
+	public void setSistemaUsuario(int sistemaUsuario) {
+		this.sistemaUsuario = sistemaUsuario;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usuario")

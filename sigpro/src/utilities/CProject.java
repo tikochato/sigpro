@@ -155,7 +155,7 @@ public class CProject {
 		Cooperante cooperante =CooperanteDAO.getCooperantePorCodigo(COOPERANTE_ID_DEFECTO);
 		ProyectoTipo proyectoTipo = ProyectoTipoDAO.getProyectoTipoPorId(PROYECTO_TIPO_ID_DEFECTO);
 		UnidadEjecutora unidadEjecturoa = UnidadEjecutoraDAO.getUnidadEjecutora(new DateTime().getYear(),ENTIDAD_ID_DEFECTO,UNIDAD_EJECUTORA_ID_DEFECTO);
-		Proyecto proyecto = new Proyecto(null,null,cooperante, proyectoTipo, unidadEjecturoa
+		Proyecto proyecto = new Proyecto(null,null,cooperante, null,proyectoTipo, unidadEjecturoa
 				, task.getName(), null, usuario, null, new Date(), null, 1
 				, null, null, null, null, null, null, null,null, null, null, null, null, null, null,null,
 				task.getStart(),task.getFinish(),(( Double ) task.getDuration().getDuration()).intValue()

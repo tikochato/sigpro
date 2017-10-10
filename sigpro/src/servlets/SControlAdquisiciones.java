@@ -58,7 +58,7 @@ public class SControlAdquisiciones extends HttpServlet {
 		Integer cantidad;
 		BigDecimal costo;
 		BigDecimal total;
-		Integer nog;
+		Long nog;
 		String planificadoDocs;
 		String realDocs;
 		String planificadoLanzamiento;

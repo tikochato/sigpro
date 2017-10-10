@@ -54,7 +54,7 @@ public class SPlanAdquisicion extends HttpServlet {
 		Integer cantidad;
 		BigDecimal precioUnitario;
 		BigDecimal total;
-		Integer nog;
+		Long nog;
 		String numeroContrato;
 		BigDecimal montoContrato;
 		String preparacionDocumentoPlanificada;
@@ -110,7 +110,7 @@ public class SPlanAdquisicion extends HttpServlet {
 					Date lanzamientoEventoPlanificado = map.get("lanzamientoEventoPlanificada")!=null ? Utils.stringToDateZ(map.get("lanzamientoEventoPlanificada").toString()) : null;
 					Date lanzamientoEventoReal = map.get("lanzamientoEventoReal")!=null ? Utils.stringToDateZ(map.get("lanzamientoEventoReal").toString()) : null;
 					BigDecimal montoContrato = map.get("montoContrato")!=null ? Utils.String2BigDecimal(map.get("montoContrato").toString(),null) : null;
-					Integer nog = map.get("nog")!=null ? Utils.String2Int(map.get("nog").toString()) : null;
+					Long nog = map.get("nog")!=null ? Utils.String2Long(map.get("nog").toString()) : null;
 					String numeroContrato =  map.get("numeroContrato")!=null ? map.get("numeroContrato").toString() : null;
 					BigDecimal precioUnitario =  map.get("precioUnitario")!=null ? Utils.String2BigDecimal(map.get("precioUnitario").toString(),null) : null;
 					Date preparacionDocPlanificado = map.get("preparacionDocumentosPlanificada")!=null ? Utils.stringToDateZ(map.get("preparacionDocumentosPlanificada").toString()) : null;

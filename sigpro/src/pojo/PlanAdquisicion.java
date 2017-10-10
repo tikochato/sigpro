@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 2, 2017 5:12:50 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 9, 2017 6:11:54 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,10 +25,6 @@ import javax.persistence.TemporalType;
 @Table(name = "plan_adquisicion", catalog = "sipro")
 public class PlanAdquisicion implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private CategoriaAdquisicion categoriaAdquisicion;
 	private TipoAdquisicion tipoAdquisicion;
@@ -56,17 +52,15 @@ public class PlanAdquisicion implements java.io.Serializable {
 	private Integer bloqueado;
 	private String numeroContrato;
 	private BigDecimal montoContrato;
-	private Integer nog;
+	private Long nog;
 	private Set<PlanAdquisicionPago> planAdquisicionPagos = new HashSet<PlanAdquisicionPago>(0);
 
 	public PlanAdquisicion() {
 	}
 
-	public PlanAdquisicion(CategoriaAdquisicion categoriaAdquisicion, TipoAdquisicion tipoAdquisicion,
-			String unidadMedida, int objetoId, int objetoTipo, String usuarioCreo, Date fechaCreacion, int estado) {
-		this.categoriaAdquisicion = categoriaAdquisicion;
+	public PlanAdquisicion(TipoAdquisicion tipoAdquisicion, int objetoId, int objetoTipo, String usuarioCreo,
+			Date fechaCreacion, int estado) {
 		this.tipoAdquisicion = tipoAdquisicion;
-		this.unidadMedida = unidadMedida;
 		this.objetoId = objetoId;
 		this.objetoTipo = objetoTipo;
 		this.usuarioCreo = usuarioCreo;
@@ -81,7 +75,7 @@ public class PlanAdquisicion implements java.io.Serializable {
 			Date adjudicacionPlanificado, Date adjudicacionReal, Date firmaContratoPlanificado, Date firmaContratoReal,
 			int objetoId, int objetoTipo, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, int estado, Integer bloqueado, String numeroContrato, BigDecimal montoContrato,
-			Integer nog, Set<PlanAdquisicionPago> planAdquisicionPagos) {
+			Long nog, Set<PlanAdquisicionPago> planAdquisicionPagos) {
 		this.categoriaAdquisicion = categoriaAdquisicion;
 		this.tipoAdquisicion = tipoAdquisicion;
 		this.unidadMedida = unidadMedida;
@@ -125,7 +119,7 @@ public class PlanAdquisicion implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "categoria_adquisicion", nullable = false)
+	@JoinColumn(name = "categoria_adquisicion")
 	public CategoriaAdquisicion getCategoriaAdquisicion() {
 		return this.categoriaAdquisicion;
 	}
@@ -144,7 +138,7 @@ public class PlanAdquisicion implements java.io.Serializable {
 		this.tipoAdquisicion = tipoAdquisicion;
 	}
 
-	@Column(name = "unidad_medida", nullable = false, length = 30)
+	@Column(name = "unidad_medida", length = 30)
 	public String getUnidadMedida() {
 		return this.unidadMedida;
 	}
@@ -373,11 +367,11 @@ public class PlanAdquisicion implements java.io.Serializable {
 	}
 
 	@Column(name = "nog")
-	public Integer getNog() {
+	public Long getNog() {
 		return this.nog;
 	}
 
-	public void setNog(Integer nog) {
+	public void setNog(Long nog) {
 		this.nog = nog;
 	}
 
