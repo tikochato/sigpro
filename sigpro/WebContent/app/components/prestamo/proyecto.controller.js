@@ -1474,6 +1474,7 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 	mi.nombreArchivo="";
 	mi.mostrarcargando=false;
 	mi.multiproyecto = false;
+	mi.bloquearBotones = false;
 	
 	$scope.cargarArchivo = function(event){
 		var resultado = $q.defer();
@@ -1499,6 +1500,7 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 	};
 	
 	mi.cargar=function(){
+		mi.bloquearBotones = true;
 		if (mi.archivos!=null && mi.arhivos != ''){
 			mi.mostrarcargando=true;
 			var formatData = new FormData();
@@ -1514,6 +1516,7 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 			
 				function(response) {
 					mi.mostrarcargando=false;
+					mi.bloquearBotones = false;
 					$uibModalInstance.close(response);
 				}
 			);

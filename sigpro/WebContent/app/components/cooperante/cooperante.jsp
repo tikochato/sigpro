@@ -22,7 +22,7 @@
 			    <label class="btn btn-primary" ng-click="cooperantec.nuevo()" uib-tooltip="Nuevo">
 			    <span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			  </shiro:hasPermission>
-			  <shiro:hasPermission name="8010">
+			  <shiro:hasPermission name="8020">
 			    <label class="btn btn-primary" ng-click="cooperantec.editar()" uib-tooltip="Editar">
 			    <span class="glyphicon glyphicon-pencil"></span> Editar</label>
 			  </shiro:hasPermission>

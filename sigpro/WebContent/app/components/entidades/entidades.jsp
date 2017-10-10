@@ -18,10 +18,10 @@
   <div class="row" align="center" ng-hide="entidad.esForma">
     <div class="col-sm-12 operation_buttons" align="right">
       <div class="btn-group">
-      	<shiro:hasPermission name="1040">
+      	<shiro:hasPermission name="10040">
       		<label class="btn btn-primary" ng-click="entidad.nueva()"><span class="glyphicon glyphicon-plus" uib-tooltip="Nuevo"></span>Nueva</label>
       	</shiro:hasPermission>
-      	<shiro:hasPermission name="1010">
+      	<shiro:hasPermission name="10020">
         	<label class="btn btn-primary" ng-click="entidad.editar()"><span class="glyphicon glyphicon-pencil" uib-tooltip="Editar"></span>Editar</label>
       	</shiro:hasPermission>
       </div>
