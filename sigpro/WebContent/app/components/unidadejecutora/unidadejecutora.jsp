@@ -21,11 +21,11 @@
 	        <label class="btn btn-primary" ng-click="unidad.nuevo()" uib-tooltip="Nuevo">
 	        <span class="glyphicon glyphicon-plus"></span> Nuevo</label>
       	</shiro:hasPermission> 
-      	<shiro:hasPermission name="33010">
+      	<shiro:hasPermission name="33020">
 	        <label class="btn btn-primary" ng-click="unidad.editar()"  uib-tooltip="Editar">
 			<span class="glyphicon glyphicon-pencil"></span> Editar</label>
       	</shiro:hasPermission>
-      	<shiro:hasPermission name="33010">
+      	<shiro:hasPermission name="33030">
 				<label class="btn btn-danger" ng-click="controller.borrar()" title="Borrar">
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</shiro:hasPermission>

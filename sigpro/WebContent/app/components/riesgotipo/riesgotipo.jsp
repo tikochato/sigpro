@@ -22,7 +22,7 @@
 					<label class="btn btn-primary" ng-click="riesgotipoc.nuevo()" uib-tooltip="Nuevo">
 					<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 				</shiro:hasPermission>
-				<shiro:hasPermission name="32010">
+				<shiro:hasPermission name="32020">
 					<label class="btn btn-primary" ng-click="riesgotipoc.editar()" uib-tooltip="Editar">
 					<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 				</shiro:hasPermission>

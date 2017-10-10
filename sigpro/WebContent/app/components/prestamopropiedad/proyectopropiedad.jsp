@@ -18,7 +18,7 @@
 			       		<label class="btn btn-primary" ng-click="proyectopropiedadc.nuevo()" uib-tooltip="Nuevo">
 				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			       </shiro:hasPermission>
-			       <shiro:hasPermission name="25010"><label class="btn btn-primary" ng-click="proyectopropiedadc.editar()"uib-tooltip="Editar">
+			       <shiro:hasPermission name="25020"><label class="btn btn-primary" ng-click="proyectopropiedadc.editar()"uib-tooltip="Editar">
 				<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 				</shiro:hasPermission>
 			       <shiro:hasPermission name="25030">

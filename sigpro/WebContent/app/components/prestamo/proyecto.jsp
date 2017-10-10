@@ -49,7 +49,7 @@
 				<label class="btn btn-primary" ng-click="controller.cargarArchivo()" uib-tooltip="Cargar desde project">   
 				<span class="glyphicon glyphicon glyphicon-file"></span>Project</label>
 			</shiro:hasPermission>
-			<shiro:hasPermission name="24010">
+			<shiro:hasPermission name="24020">
 				<label class="btn btn-primary" ng-click="controller.editar()" uib-tooltip="Editar">
 				<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 			</shiro:hasPermission>

@@ -499,7 +499,7 @@ public class SubproductoDAO {
 					if(ret == null)
 						ret = actividad.getFechaFin();
 					else{
-						fechaMaxima = actividad.getFechaInicio();
+						fechaMaxima = actividad.getFechaFin();
 						
 						if(ret.before(fechaMaxima))
 							ret = fechaMaxima;

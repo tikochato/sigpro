@@ -39,7 +39,7 @@
 					<label class="btn btn-primary" ng-click="subproducto.nuevo()" uib-tooltip="Nuevo">
 					<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 				</shiro:hasPermission>
-				<shiro:hasPermission name="40010">
+				<shiro:hasPermission name="40020">
 					<label class="btn btn-primary" ng-click="subproducto.editar()" uib-tooltip="Editar">
 					<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 				</shiro:hasPermission>
@@ -95,10 +95,8 @@
 		</div>
 		<div class="col-sm-12 operation_buttons" >
 			<div class="btn-group" ng-hide="subproducto.esNuevo" ng-if="!subproducto.esTreeview">
-				<label class="btn btn-default" ng-click="supbroducto.botones ? subproducto.irAActividades() : ''" uib-tooltip="Actividades" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-click="subproducto.botones ? subproducto.irAActividades() : ''" uib-tooltip="Actividades" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-th-list"></span></label>
-				<label class="btn btn-default" ng-click="subproducto.botones ? subproducto.irARiesgos() : ''" uib-tooltip="Riesgos" tooltip-placement="bottom">
-				<span class="glyphicon glyphicon-warning-sign"></span></label>
 			</div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="40020">

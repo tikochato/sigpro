@@ -167,9 +167,9 @@
 		
 	</style>
 
-	<div ng-controller="planAdquisicionesController as controller" class="maincontainer all_page" id="title" style="height: 100%">
+	<div style="width: 98%" ng-controller="planAdquisicionesController as planadqui" class="maincontainer all_page" id="title" style="height: 100%">
 		<shiro:lacksPermission name="24010">
-			<p ng-init="controller.redireccionSinPermisos()"></p>
+			<p ng-init="planadqui.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
 		
 		<div class="row" id="reporte" style="height: 100%" align="center">
@@ -177,58 +177,58 @@
 				<div class="row" style="height: 20%">
 					<div class="row" align="left">
 		    			<div class="panel panel-default">
-			  				<div class="panel-heading"><h3>Plan de adquisiciones AÑO FISCAL {{controller.anio}}</h3></div>
+			  				<div class="panel-heading"><h3>Plan de adquisiciones AÑO FISCAL {{planadqui.anio}}</h3></div>
 						</div>
 					</div>
 					<br>
 					<div class="row" style="width: 100%; height: 15%">
 						<div class="form-group col-sm-3" align="left">
-							<select  class="inputText" ng-model="controller.prestamo"
-								ng-options="a.text for a in controller.prestamos" 
-								ng-change="controller.validar(1)"></select>		
+							<select  class="inputText" ng-model="planadqui.prestamo"
+								ng-options="a.text for a in planadqui.prestamos" 
+								ng-change="planadqui.validar(1)"></select>		
 	    				</div>
 	    				
 	    				<div align="left" class="form-group col-sm-1">
-							<input type="number"  class="inputText" ng-model="controller.fechaInicio" maxlength="4" 
-							ng-value="controller.fechaInicio" onblur="this.setAttribute('value', this.value);"
-							ng-change="controller.validar(2)"/>
+							<input type="number"  class="inputText" ng-model="planadqui.fechaInicio" maxlength="4" 
+							ng-value="planadqui.fechaInicio" onblur="this.setAttribute('value', this.value);"
+							ng-change="planadqui.validar(2)"/>
 						  	<label for="campo.id" class="floating-label">*Año Inicial</label>
 						</div>
 				
 						<div align="left" class="form-group col-sm-1">
-							<input type="number"  class="inputText" ng-model="controller.fechaFin" maxlength="4" 
-							ng-value="controller.fechaFin" onblur="this.setAttribute('value', this.value);"
-							ng-change="controller.validar(3)"/>
+							<input type="number"  class="inputText" ng-model="planadqui.fechaFin" maxlength="4" 
+							ng-value="planadqui.fechaFin" onblur="this.setAttribute('value', this.value);"
+							ng-change="planadqui.validar(3)"/>
 						  	<label for="campo.id" class="floating-label">*Año Final</label>
 						</div>
-	    				<div class="col-sm-7" align="right" ng-hide="!controller.mostrarDescargar">
+	    				<div class="col-sm-7" align="right" ng-hide="!planadqui.mostrarDescargar">
 	    					<div class="form-group col-sm-1">
 							</div>
 							<div class="col-sm-11">
 								<div class="btn-group">
-									<label class="btn btn-default" ng-model="controller.enMillones" uib-btn-radio="true" ng-click="controller.calcularTamaniosCeldas(); controller.convertirMillones();" uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false">
+									<label class="btn btn-default" ng-model="planadqui.enMillones" uib-btn-radio="true" ng-click="planadqui.calcularTamaniosCeldas(); planadqui.convertirMillones();" uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false">
 									<span>MQ</span></label>
-									<label class="btn btn-default" ng-model="controller.enMillones" uib-btn-radio="false" ng-click="controller.calcularTamaniosCeldas(); controller.convertirMillones();" uib-tooltip="Quetzales" role="button" tabindex="1" aria-invalid="false">
+									<label class="btn btn-default" ng-model="planadqui.enMillones" uib-btn-radio="false" ng-click="planadqui.calcularTamaniosCeldas(); planadqui.convertirMillones();" uib-tooltip="Quetzales" role="button" tabindex="1" aria-invalid="false">
 									<span>Q</span></label>
 								</div>
 								<div class="btn-group" style="padding-left: 20px;">
-									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="1" ng-click="controller.cambiarAgrupacion(1)" uib-tooltip="Mes" role="button" tabindex="1" aria-invalid="false">
+									<label class="btn btn-default" ng-model="planadqui.agrupacionActual" uib-btn-radio="1" ng-click="planadqui.cambiarAgrupacion(1)" uib-tooltip="Mes" role="button" tabindex="1" aria-invalid="false">
 									<span>M</span></label>
-									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="2" ng-click="controller.cambiarAgrupacion(2)" uib-tooltip="Bimestre" role="button" tabindex="2" aria-invalid="false">
+									<label class="btn btn-default" ng-model="planadqui.agrupacionActual" uib-btn-radio="2" ng-click="planadqui.cambiarAgrupacion(2)" uib-tooltip="Bimestre" role="button" tabindex="2" aria-invalid="false">
 									<span>B</span></label>
-									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="3" ng-click="controller.cambiarAgrupacion(3)" uib-tooltip="Trimestre" role="button" tabindex="3" aria-invalid="false">
+									<label class="btn btn-default" ng-model="planadqui.agrupacionActual" uib-btn-radio="3" ng-click="planadqui.cambiarAgrupacion(3)" uib-tooltip="Trimestre" role="button" tabindex="3" aria-invalid="false">
 									<span>T</span></label>
-									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="4" ng-click="controller.cambiarAgrupacion(4)" uib-tooltip="Cuatrimestre" role="button" tabindex="4" aria-invalid="false">
+									<label class="btn btn-default" ng-model="planadqui.agrupacionActual" uib-btn-radio="4" ng-click="planadqui.cambiarAgrupacion(4)" uib-tooltip="Cuatrimestre" role="button" tabindex="4" aria-invalid="false">
 									<span>C</span></label>
-									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="5" ng-click="controller.cambiarAgrupacion(5)" uib-tooltip="Semestre" role="button" tabindex="5" aria-invalid="false">
+									<label class="btn btn-default" ng-model="planadqui.agrupacionActual" uib-btn-radio="5" ng-click="planadqui.cambiarAgrupacion(5)" uib-tooltip="Semestre" role="button" tabindex="5" aria-invalid="false">
 									<span>S</span></label>
-									<label class="btn btn-default" ng-model="controller.agrupacionActual" uib-btn-radio="6" ng-click="controller.cambiarAgrupacion(6)" uib-tooltip="Año" role="button" tabindex="6" aria-invalid="false">
+									<label class="btn btn-default" ng-model="planadqui.agrupacionActual" uib-btn-radio="6" ng-click="planadqui.cambiarAgrupacion(6)" uib-tooltip="Año" role="button" tabindex="6" aria-invalid="false">
 									<span>A</span></label>
 								</div>
 								<div class="btn-group" style="padding-left: 20px;">
-									<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar a Excel">
+									<label class="btn btn-default" ng-click="planadqui.exportarExcel()" uib-tooltip="Exportar a Excel">
 									<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-									<label class="btn btn-default" ng-click="controller.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="!controller.mostrarDescargar">
+									<label class="btn btn-default" ng-click="planadqui.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="!planadqui.mostrarDescargar">
 									<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 								</div>
 							</div>							
@@ -237,8 +237,8 @@
 	    		</div>	
 	    		<br/>			
 				<div class="row" style="height: 80%">
-					<div ng-hide="!controller.mostrarCargando" style="width: 100%; height: 95%">
-	    				<div class="grid_loading" ng-hide="!controller.mostrarCargando">
+					<div ng-hide="!planadqui.mostrarCargando" style="width: 100%;">
+	    				<div class="grid_loading" ng-hide="!planadqui.mostrarCargando">
 							<div class="msg">
 								<span><i class="fa fa-spinner fa-spin fa-4x"></i> 
 									<br />
@@ -248,10 +248,10 @@
 						</div>
 					</div>
 					
-					<div class="row" ng-hide="!controller.mostrarDescargar">
+					<div class="row" ng-hide="!planadqui.mostrarDescargar">
 						<div class="divPadreNombres">
-	    					<div class="divTabla" style="max-height: 375px;"> 
-	    						<table st-table="controller.displayedCollectionPrestamo" st-safe-src="controller.rowCollectionPrestamo" class="table table-striped tablaDatos">
+	    					<div class="divTabla"> 
+	    						<table st-table="planadqui.displayedCollectionPrestamo" st-safe-src="planadqui.rowCollectionPrestamo" class="table table-striped tablaDatos">
 		    						<thead class="theadDatos">
 		    							<tr>
 				    						<th style="min-width:300px;text-align: left;vertical-align: middle;" class="label-form" rowspan="2">Descripción de la Adquisición</th>
@@ -261,11 +261,11 @@
 					          				<th class="label-form">.</th>
 					         			</tr>
 		    						</thead>
-		    						<tbody class="cuerpoTablaNombres" style="height: 350px; max-height: 350px; min-height: 350px" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo>
-		    							<tr ng-repeat="row in controller.data" style="height: 35px; max-height: 35px; min-height: 35px">
-		    								<td nowrap style="min-width:200px; {{controller.padre(row)}}">
+		    						<tbody class="cuerpoTablaNombres" style="max-height: 315px; min-height: 315px" id="divTablaNombres" ng-mouseover="planadqui.activarScroll('divTablaNombres')" scrollespejoplanadqui>
+		    							<tr ng-repeat="row in planadqui.data" style="height: 35px; max-height: 35px; min-height: 35px">
+		    								<td nowrap style="min-width:200px; {{planadqui.padre(row)}}">
 				    							<div uib-tooltip="{{item.nombre}}" class="nombreFormat">
-				    								<div uib-tooltip="{{row.nombre}}"><span ng-class="row.objetoTipo == 2 ? controller.claseIcon(row) : ''" style="margin-left: {{row.nivel}}em" uib-tooltip="{{controller.tooltipObjetoTipo[row.objetoTipo-1]}}"></span>{{row.nombre}}</div>
+				    								<div uib-tooltip="{{row.nombre}}"><span ng-class="row.objetoTipo == 2 ? planadqui.claseIcon(row) : ''" style="margin-left: {{row.nivel}}em" uib-tooltip="{{planadqui.tooltipObjetoTipo[row.objetoTipo-1]}}"></span>{{row.nombre}}</div>
 				    							</div>
 				    						</td>
 		    							</tr>
@@ -273,23 +273,23 @@
 		    					</table>
 	    					</div>
 	    				</div>
-	    				<div class="divPadreDatos" style="max-width: {{controller.tamanoTotal}}px">
+	    				<div class="divPadreDatos" style="max-width: {{planadqui.tamanoTotal}}px">
 		    				<div class="divTabla">
-				    			<table st-table="controller.displayedCollectionPrestamo" st-safe-src="controller.rowCollectionPrestamo" class="table table-striped tablaDatos" 
-					    				style="max-width: {{controller.tamanoTotal}}px;">
+				    			<table st-table="planadqui.displayedCollectionPrestamo" st-safe-src="planadqui.rowCollectionPrestamo" class="table table-striped tablaDatos" 
+					    				style="max-width: {{planadqui.tamanoTotal}}px;">
 									<thead id="divCabecerasDatos" class="theadDatos">
 										<tr>
-					         				<th colspan={{controller.colspan}} style="{{controller.estiloCabecera}}" ng-repeat="m in controller.objetoMostrar" class="label-form">{{m.nombreMes}}</th>
+					         				<th colspan={{planadqui.colspan}} style="{{planadqui.estiloCabecera}}" ng-repeat="m in planadqui.objetoMostrar" class="label-form">{{m.nombreMes}}</th>
 					          			</tr>
 					          			<tr>
-				          					<th ng-repeat="a in controller.aniosfinales" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}" class="label-form">{{a.anio}}</th>
+				          					<th ng-repeat="a in planadqui.aniosfinales" style="{{planadqui.estiloCelda}} {{planadqui.estiloAlineacion}}" class="label-form">{{a.anio}}</th>
 							        	</tr>
 									</thead>
-									<tbody class="cuerpoTablaDatos" style="height: 350px; max-height: 350px; min-height: 350px" id="divTablaDatos" ng-mouseover="controller.activarScroll('divTablaDatos')" scrollespejo>
-								      	<tr ng-repeat="item in controller.data" style="height: 35px; max-height: 35px; min-height: 35px">
-								      		<td ng-repeat="posicion in controller.columnastotales track by $index" style="{{controller.estiloCelda}}; {{controller.estiloAlineacion}}">
-								      			<div style="{{controller.estiloCelda}}">
-												<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{controller.getPlanificado($parent.$index,$index).planificado | formatoMillones : controller.enMillones}}</span>
+									<tbody vs-repeat class="cuerpoTablaDatos" style="max-height: 300px; min-height: 300px" id="divTablaDatos" ng-mouseover="planadqui.activarScroll('divTablaDatos')" scrollespejoplanadqui>
+								      	<tr ng-repeat="item in planadqui.data" style="height: 35px; max-height: 35px; min-height: 35px">
+								      		<td ng-repeat="posicion in planadqui.columnastotales track by $index" style="{{planadqui.estiloCelda}}; {{planadqui.estiloAlineacion}}">
+								      			<div style="{{planadqui.estiloCelda}}">
+												<span ng-show="planadqui.grupoMostrado.planificado" class="colorPlanificado">{{planadqui.getPlanificado($parent.$index,$index).planificado | formatoMillones : planadqui.enMillones}}</span>
 								      			</div>
 								      		</td>
 								      	</tr>
@@ -301,23 +301,23 @@
 			    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos">
 								<thead class="theadDatos">
 									<tr>
-										<th nowrap colspan={{controller.colspan}} style="{{controller.estiloCelda}} text-align: center;" class="label-form">Total Anual</th>
-				          				<th rowspan="2" style="{{controller.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Costo Est. de Adquisición</th>
+										<th nowrap colspan={{planadqui.colspan}} style="{{planadqui.estiloCelda}} text-align: center;" class="label-form">Total Anual</th>
+				          				<th rowspan="2" style="{{planadqui.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Costo Est. de Adquisición</th>
 				          			</tr>
 				          			<tr>
-			          					<th ng-repeat="a in controller.aniosTotal" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};" class="label-form">{{a.anio}}</th>
+			          					<th ng-repeat="a in planadqui.aniosTotal" style="{{planadqui.estiloCelda}} {{planadqui.estiloAlineacion}};" class="label-form">{{a.anio}}</th>
 							        </tr>
 								</thead>
-								<tbody class="cuerpoTablaTotales bordeIzquierda" style="height: 350px; max-height: 350px; min-height: 350px" id="divTotales" style="margin-right: 30px" ng-mouseover="controller.activarScroll('divTotales')" scrollespejo tot="{{mi.totales.length}}">
-									<tr ng-repeat="item in controller.data" style="height: 35px; max-height: 35px; min-height: 35px">
-							      		<td ng-repeat="posicion in controller.aniosTotal track by $index" style="{{controller.estiloCelda}}; {{controller.estiloAlineacion}}">
-							      			<div style="{{controller.estiloCelda}}">
-											<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{controller.getTotalPlanificado($parent.$index,$index).planificado | formatoMillones : controller.enMillones}}</span>
+								<tbody vs-repeat class="cuerpoTablaTotales bordeIzquierda" style="max-height: 300px; min-height: 300px" id="divTotales" style="margin-right: 30px" ng-mouseover="planadqui.activarScroll('divTotales')" scrollespejoplanadqui tot="{{mi.totales.length}}">
+									<tr ng-repeat="item in planadqui.data" style="height: 35px; max-height: 35px; min-height: 35px">
+							      		<td ng-repeat="posicion in planadqui.aniosTotal track by $index" style="{{planadqui.estiloCelda}}; {{planadqui.estiloAlineacion}}">
+							      			<div style="{{planadqui.estiloCelda}}">
+											<span ng-show="planadqui.grupoMostrado.planificado" class="colorPlanificado">{{planadqui.getTotalPlanificado($parent.$index,$index).planificado | formatoMillones : planadqui.enMillones}}</span>
 							      			</div>
 							      		</td>
-							      		<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}">
-							      			<div style="{{controller.estiloCelda}} text-align: center;">
-							      				{{item.total | formatoMillones : controller.enMillones}}
+							      		<td style="{{planadqui.estiloCelda}} {{planadqui.estiloAlineacion}}">
+							      			<div style="{{planadqui.estiloCelda}} text-align: center;">
+							      				{{item.total == 0 ? null : item.total | formatoMillones : planadqui.enMillones}}
 							      			</div>
 							      		</td>
 							      	</tr>
@@ -325,7 +325,7 @@
 							</table>
 			    		</div>
 					</div>
-					<div class="row" ng-hide="!controller.mostrarDescargar">
+					<div class="row" ng-hide="!planadqui.mostrarDescargar">
 						<div class="divPadreNombres">
 	    					<div class="divTabla">
 								<table class="table table-striped tablaDatos">
@@ -339,14 +339,14 @@
 								</table>
 							</div>
 						</div>
-						<div class="divPadreDatos" style="max-width: {{controller.tamanoTotal}}px">
+						<div class="divPadreDatos" style="max-width: {{planadqui.tamanoTotal}}px">
 							<div class="divTabla">
-								<table class="table table-striped tablaDatos" style="max-width: {{controller.tamanoTotal}}px;">
-									<tbody class="cuerpoTablaDatos" id="divTablaDatosTot" ng-mouseover="controller.activarScroll('divTablaDatosTot')" scrollespejo>
+								<table class="table table-striped tablaDatos" style="max-width: {{planadqui.tamanoTotal}}px;">
+									<tbody class="cuerpoTablaDatos" id="divTablaDatosTot" ng-mouseover="planadqui.activarScroll('divTablaDatosTot')" scrollespejoplanadqui>
 										<tr>
-											<td ng-repeat="posicion in controller.columnastotales track by $index" style="font-weight: bold; {{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}">
-												<div style="{{controller.estiloCelda}}">
-													{{controller.getTotales($parent.$index, $index) | formatoMillones : controller.enMillones}}
+											<td ng-repeat="posicion in planadqui.columnastotales track by $index" style="font-weight: bold; {{planadqui.estiloCelda}} min-height: 35px; height: 35px; {{planadqui.estiloAlineacion}}">
+												<div style="{{planadqui.estiloCelda}}">
+													{{planadqui.getTotales($parent.$index, $index) | formatoMillones : planadqui.enMillones}}
 												</div>
 											<td>
 										</tr>
@@ -358,14 +358,14 @@
 							<table class="table table-striped tablaDatos">
 								<tbody class="cuerpoTablaTotal bordeIzquierda">
 									<tr style="height: 35px; max-height: 35px; min-height: 35px">
-							      		<td ng-repeat="posicion in controller.sumTotalesAnuales track by $index" style="font-weight: bold; {{controller.estiloCelda}}; {{controller.estiloAlineacion}}">
-							      			<div style="{{controller.estiloCelda}}">
-												{{controller.getTotalesAnuales($index) | formatoMillones : controller.enMillones}}
+							      		<td ng-repeat="posicion in planadqui.sumTotalesAnuales track by $index" style="font-weight: bold; {{planadqui.estiloCelda}}; {{planadqui.estiloAlineacion}}">
+							      			<div style="{{planadqui.estiloCelda}}">
+												{{planadqui.getTotalesAnuales($index) | formatoMillones : planadqui.enMillones}}
 							      			</div>
 							      		</td>
-							      		<td style="font-weight: bold; {{controller.estiloCelda}} {{controller.estiloAlineacion}}">
-							      			<div style="{{controller.estiloCelda}} text-align: center;">
-							      				{{controller.totalGeneral | formatoMillones : controller.enMillones}}
+							      		<td style="font-weight: bold; {{planadqui.estiloCelda}} {{planadqui.estiloAlineacion}}">
+							      			<div style="{{planadqui.estiloCelda}} text-align: center;">
+							      				{{planadqui.totalGeneral | formatoMillones : planadqui.enMillones}}
 							      			</div>
 							      		</td>
 							      	</tr>									
@@ -374,19 +374,19 @@
 						</div>									
 					</div>
 					<br>
-					<div class="row" ng-hide="!controller.mostrarDescargar">
+					<div class="row" ng-hide="!planadqui.mostrarDescargar">
 						<div class="col-sm-3"></div>
 						<div class="col-sm-6" style="text-align: center;">
-							<label class="btn btn-default" ng-click="controller.anterior()" uib-tooltip="Anterior" ng-hide="!controller.movimiento" 
+							<label class="btn btn-default" ng-click="planadqui.anterior()" uib-tooltip="Anterior" ng-hide="!planadqui.movimiento" 
 									tooltip-placement="bottom">
 							<span class="glyphicon glyphicon-chevron-left"></span></label>
-							<label class="btn btn-default" ng-click="controller.siguiente()" uib-tooltip="Siguiente" ng-hide="!controller.movimiento"
+							<label class="btn btn-default" ng-click="planadqui.siguiente()" uib-tooltip="Siguiente" ng-hide="!planadqui.movimiento"
 									tooltip-placement="bottom">
 							<span class="glyphicon glyphicon-chevron-right"></span></label>
 						</div>
 						<div class="col-sm-3">
-				    		<ol class="leyendaTexto"  ng-hide="!controller.mostrarDescargar">
-								<li ng-show="controller.grupoMostrado.planificado"><span class="colorPlanificadoFondo"></span>Planificado</li>					        
+				    		<ol class="leyendaTexto"  ng-hide="!planadqui.mostrarDescargar">
+								<li ng-show="planadqui.grupoMostrado.planificado"><span class="colorPlanificadoFondo"></span>Planificado</li>					        
 							</ol>
 						</div>
 			    	</div>

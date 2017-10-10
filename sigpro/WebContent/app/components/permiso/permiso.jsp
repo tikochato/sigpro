@@ -27,7 +27,7 @@
 						<label class="btn btn-primary" ng-click="permisosc.nuevoPermiso()" uib-tooltip="Nuevo">
 				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 					</shiro:hasPermission>
-					<shiro:hasPermission name="20010">
+					<shiro:hasPermission name="20020">
 						<label class="btn btn-primary" ng-click="permisosc.editarPermiso()" uib-tooltip="Editar">
 				<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 					</shiro:hasPermission>

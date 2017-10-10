@@ -18,10 +18,11 @@ public class ObjetoCosto {
 	Integer proyecto;
 	Integer actividad;
 	Integer obra;
+	String treePath;
 	
 	public ObjetoCosto(String nombre, Integer objeto_id, int objeto_tipo, Integer nivel, DateTime fecha_inicial,
 			DateTime fecha_final, stanio[] anios, Integer acumulacion_costoid, BigDecimal costo, Integer programa,
-			Integer subprograma, Integer proyecto, Integer actividad, Integer obra) {
+			Integer subprograma, Integer proyecto, Integer actividad, Integer obra, String treePath) {
 		super();
 		this.nombre = nombre;
 		this.objeto_id = objeto_id;
@@ -37,6 +38,7 @@ public class ObjetoCosto {
 		this.proyecto = proyecto;
 		this.actividad = actividad;
 		this.obra = obra;
+		this.treePath = treePath;
 	}
 
 	
@@ -178,5 +180,13 @@ public class ObjetoCosto {
 
 	public void setObra(Integer obra) {
 		this.obra = obra;
+	}
+	
+	public String getTreePath(){
+		return treePath;
+	}
+	
+	public void setTreePath(String treePath){
+		this.treePath = treePath;
 	}
 }

@@ -18,7 +18,7 @@
 			       			<span class="glyphicon glyphicon-plus"></span>Nuevo
 			       		</label>
 			       </shiro:hasPermission> 
-			       <shiro:hasPermission name="16010"><label class="btn btn-primary" ng-click="hitotipoc.editar()" uib-tooltip="Editar">
+			       <shiro:hasPermission name="16020"><label class="btn btn-primary" ng-click="hitotipoc.editar()" uib-tooltip="Editar">
 			       		<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 			       	</shiro:hasPermission>
 			       <shiro:hasPermission name="16030">

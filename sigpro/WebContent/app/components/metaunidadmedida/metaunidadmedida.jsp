@@ -19,7 +19,7 @@
 							<span class="glyphicon glyphicon-plus"></span> Nuevo
 						</label>
 			       </shiro:hasPermission> 
-			       <shiro:hasPermission name="19010">
+			       <shiro:hasPermission name="19020">
 			       		<label class="btn btn-primary" ng-click="metaunidadc.editar()"  uib-tooltip="Editar">
 			       		<span class="glyphicon glyphicon-pencil"></span> Editar
 			       		</label>

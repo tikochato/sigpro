@@ -397,8 +397,8 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 			mi.esForma = true;
 			mi.entityselected = null;
 			mi.esNuevo = false;
-			mi.tipo = mi.subproducto.subProductoTipoId;
-			mi.tipoNombre = mi.subproducto.subProductoTipo;
+			mi.tipo = mi.subproducto.idSubproductoTipo;
+			mi.tipoNombre = mi.subproducto.subproductoTipo;
 			
 			if(mi.subproducto.duracionDimension == 'd'){
 				mi.duracionDimension = mi.dimensiones[0];
@@ -482,7 +482,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 		});
 	};
 	
-	mi.irActividades=function(){
+	mi.irAActividades=function(){
 		if(mi.subproducto.id!=null){
 			$location.path('/actividad/'+ mi.subproducto.id +'/4' );
 		}

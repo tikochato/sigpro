@@ -16,10 +16,10 @@
   	<div class="operation_buttons" align="right">
 		<br/>
 		<div class="btn-group btn-group-sm">
-	       <shiro:hasPermission name="17040">
+	       
 	       		<label class="btn btn-default" ng-click="modalPagos.nuevoPago()" uib-tooltip="Nuevo Pago" tooltip-placement="left">
 				<span class="glyphicon glyphicon-plus"></span></label>
-	       </shiro:hasPermission> 
+	        
 	   	</div>				
 	</div>
   </div>
@@ -50,12 +50,12 @@
 							<input type="text" class="inputText input-money" ng-model="row.pago" style="width: 100%; text-align: rigth" ui-number-mask="2"></input>
 						</div>
 					</td>
-					<shiro:hasPermission name="17030">
+					
 						<td>
 				       		<label class="btn btn-default btn-xs" ng-click="modalPagos.borrarPago(row)" uib-tooltip="Borrar" tooltip-placement="left">
 							<span class="glyphicon glyphicon-trash"></span></label>
 						</td>
-			       </shiro:hasPermission>
+			       
 				</tr>
 				</tbody>
 			</table>

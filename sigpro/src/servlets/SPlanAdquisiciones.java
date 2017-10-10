@@ -6,11 +6,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -31,19 +28,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import dao.ActividadDAO;
 import dao.CategoriaAdquisicionDAO;
 import dao.EstructuraProyectoDAO;
+import dao.ObjetoCosto;
+import dao.ObjetoDAO;
 import dao.PlanAdquisicionDAO;
-import dao.PlanAdquisicionPagoDAO;
-import dao.ProductoDAO;
-import dao.SubproductoDAO;
-import pojo.Actividad;
 import pojo.CategoriaAdquisicion;
 import pojo.PlanAdquisicion;
-import pojo.PlanAdquisicionPago;
-import pojo.Producto;
-import pojo.Subproducto;
 import utilities.CExcel;
 import utilities.CLogger;
 import utilities.Utils;
@@ -78,7 +69,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 		DateTime fechaIncial;
 		DateTime fechaFinal;
 		BigDecimal costo;
-		stplan[] anioPlan;
+		Object anioPlan;
 		sttotal[] anioTotalPlan;
 		BigDecimal total;
 	}
@@ -86,7 +77,8 @@ public class SPlanAdquisiciones extends HttpServlet {
 	class stcategoria{
 		Integer categoriaId;
 		String nombre;
-		ArrayList<List<Integer>> objetos = new ArrayList<List<Integer>>();
+		Integer adquisicionId;
+		ArrayList<ObjetoCosto> objCosto = new ArrayList<ObjetoCosto>();		
 	}
 	
 	final int AGRUPACION_MES= 1;
@@ -168,7 +160,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 	private List<stcomponenteplanadquisicion> generarPlan(Integer idPrestamo, String usuario, Integer fechaInicial, Integer fechaFinal) throws Exception{
 		try{
 			List<stcomponenteplanadquisicion> lstPrestamo = new ArrayList<>();
-			List<?> estruturaProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
+			List<ObjetoCosto> estructuraProyecto = ObjetoDAO.getEstructuraConCosto(idPrestamo, fechaInicial, fechaFinal, true, false, usuario);
 			stcomponenteplanadquisicion temp = null;
 			
 			List<CategoriaAdquisicion> lstCategorias = CategoriaAdquisicionDAO.getCategoriaAdquisicion(); 
@@ -181,95 +173,63 @@ public class SPlanAdquisiciones extends HttpServlet {
 				lsttempCategorias.add(tempCategoria);
 			}
 			
-			for(Object objeto: estruturaProyecto){
+			for(ObjetoCosto objeto: estructuraProyecto){
 				temp = new stcomponenteplanadquisicion();
-				Object[] obj = (Object[])objeto;
-				BigInteger objetoTipo = (BigInteger)obj[2];
-				Integer tipo = objetoTipo.intValue();
-				if(tipo == 2){
-					Integer componenteid = (Integer)obj[0]; 
-					temp.objetoId = (Integer)obj[0];
-					temp.nombre = (String)obj[1];
+				Integer objetoTipo = objeto.getObjeto_tipo();
+				if(objetoTipo == 2){
+					Integer componenteid = objeto.getObjeto_id(); 
+					temp.objetoId = objeto.getObjeto_id();
+					temp.nombre = objeto.getNombre();
 					temp.nivel = 0;
-					temp.objetoTipo = tipo;
+					temp.objetoTipo = objetoTipo;
 					lstPrestamo.add(temp);
 					
-					List<List<Integer>> hijos = EstructuraProyectoDAO.getHijosCompleto((String)obj[3], estruturaProyecto);
-					
-					for(List<Integer> objetoHijo : hijos){
-						List<PlanAdquisicion> lstplan = PlanAdquisicionDAO.getPlanAdquisicionesByObjeto(objetoHijo.get(1), objetoHijo.get(0));
+					List<ObjetoCosto> hijos = EstructuraProyectoDAO.getHijosCompleto(objeto.getTreePath(), estructuraProyecto);
+
+					for(ObjetoCosto objetoHijo : hijos){
+						PlanAdquisicion lstplan = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(objetoHijo.getObjeto_tipo(), objetoHijo.getObjeto_id());
 						
-						if(lstplan != null && !lstplan.isEmpty()){
-							for(PlanAdquisicion plan : lstplan){
-								for(stcategoria cat : lsttempCategorias){
-									if(cat.categoriaId == plan.getCategoriaAdquisicion().getId()){
-										List<Integer> objH = new ArrayList<Integer>();
-										objH.add(objetoHijo.get(0));
-										objH.add(objetoHijo.get(1));
-										objH.add(plan.getId());
-										cat.objetos.add(objH);
-									}
+						if(lstplan != null){
+							for(stcategoria cat : lsttempCategorias){
+								if(cat.categoriaId == lstplan.getCategoriaAdquisicion().getId()){
+									List<Integer> objH = new ArrayList<Integer>();
+									objH.add(objetoHijo.getObjeto_id());
+									objH.add(objetoHijo.getObjeto_tipo());
+									objH.add(lstplan.getId());
+									cat.adquisicionId = lstplan.getId();
+									cat.objCosto.add(objetoHijo);
 								}
 							}
 						}
 					}
 					
 					for(stcategoria cat : lsttempCategorias){
-						if(!cat.objetos.isEmpty()){
+						if(!cat.objCosto.isEmpty()){
 							temp = new stcomponenteplanadquisicion();
 							temp.nombre = cat.nombre;
 							temp.nivel = 1;
 							lstPrestamo.add(temp);
 							
-							for(List<Integer> objCat : cat.objetos){
+							for(ObjetoCosto objCat2 : cat.objCosto){
 								temp = new stcomponenteplanadquisicion();
-								String nombre = null;
-								Date fechaInicio = new Date();
-								Date fechaFin = new Date();
-								Integer acumulacionCosto = 0;
-								BigDecimal costo = new BigDecimal(0);
-								
-								switch(objCat.get(1)){
-								case 3:
-									Producto producto = ProductoDAO.getProductoPorId(objCat.get(0));
-									costo = producto.getCosto();
-									nombre = producto.getNombre();
-									fechaInicio = producto.getFechaInicio();
-									fechaFin = producto.getFechaFin();
-									acumulacionCosto = producto.getAcumulacionCosto() != null ? producto.getAcumulacionCosto().getId() : 3;
-									break;
-								case 4:
-									Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objCat.get(0));
-									costo = subproducto.getCosto();
-									nombre = subproducto.getNombre();
-									fechaInicio = subproducto.getFechaInicio();
-									fechaFin = subproducto.getFechaFin();
-									acumulacionCosto = subproducto.getAcumulacionCosto() != null ? subproducto.getAcumulacionCosto().getId() : 3;
-									break;
-								case 5:
-									Actividad actividad = ActividadDAO.getActividadPorId(objCat.get(0));
-									costo = actividad.getCosto();
-									nombre = actividad.getNombre();
-									fechaInicio = actividad.getFechaInicio();
-									fechaFin = actividad.getFechaFin();
-									acumulacionCosto = actividad.getAcumulacionCosto() != null ? actividad.getAcumulacionCosto().getId() : 3;
-									break;
-								}
+								String nombre = objCat2.getNombre();
+								Date fechaInicio = objCat2.getFecha_inicial().toDate();
+								Date fechaFin = objCat2.getFecha_final().toDate();
+								Integer acumulacionCosto = objCat2.getAcumulacion_costoid();
+								BigDecimal costo = objCat2.getCosto();
 								
 								temp.nombre = nombre;
-								temp.objetoId = objCat.get(0);
-								temp.objetoTipo = objCat.get(1);
+								temp.objetoId = objCat2.getObjeto_id();
+								temp.objetoTipo = objCat2.getObjeto_tipo();
 								temp.nivel = 2;
-								temp.anioPlan = inicializarStplan(fechaInicial, fechaFinal);
+								temp.anioPlan = objCat2.getAnios();
 								temp.costo = costo;
 								temp.acumulacionCosto = acumulacionCosto;
 								temp.fechaIncial = new DateTime(fechaInicio);
 								temp.fechaFinal = new DateTime(fechaFin);
-								temp.planadquisicionId = objCat.get(2);
+								temp.planadquisicionId = cat.adquisicionId;
 								temp.objetoIdPadre = componenteid;
 								temp.objetoTipoPadre = 2;
-								
-								temp = getCostoPagos(temp);
 								
 								temp.fechaIncial = null;
 								temp.fechaFinal = null;
@@ -278,16 +238,17 @@ public class SPlanAdquisiciones extends HttpServlet {
 						}
 					}
 					
-					inicializarObjCategoria(lsttempCategorias);
+					//inicializarObjCategoria(lsttempCategorias);
 				}
 			}
 			for(stcomponenteplanadquisicion stprestamo : lstPrestamo){
 				sttotal[] sttotaltemp = inicializarStTotalPlan(fechaInicial, fechaFinal);
 				if(stprestamo.anioPlan != null){
-					for(int j = 0; j < stprestamo.anioPlan.length; j++){
-						for(int i = 0; i< stprestamo.anioPlan[j].mes.length; i++){
-							if(sttotaltemp[j].anio.equals(stprestamo.anioPlan[j].anio)){
-								sttotaltemp[j].total[0].planificado = sttotaltemp[j].total[0].planificado.add(stprestamo.anioPlan[j].mes[i].planificado);
+					ObjetoCosto.stanio[] anioPlan = (ObjetoCosto.stanio[])stprestamo.anioPlan;
+					for(int j = 0; j < anioPlan.length; j++){
+						for(int i = 0; i< anioPlan[j].mes.length; i++){
+							if(sttotaltemp[j].anio.equals(anioPlan[j].anio)){
+								sttotaltemp[j].total[0].planificado = sttotaltemp[j].total[0].planificado.add(anioPlan[j].mes[i].planificado != null ? anioPlan[j].mes[i].planificado : new BigDecimal(0));
 							}
 						}
 					}
@@ -332,96 +293,12 @@ public class SPlanAdquisiciones extends HttpServlet {
 		}
 	}
 	
-	private stcomponenteplanadquisicion getCostoPagos(stcomponenteplanadquisicion stcomponente){
-		PlanAdquisicion plan = PlanAdquisicionDAO.getPlanAdquisicionById(stcomponente.planadquisicionId);
-		Calendar fechaInicial = Calendar.getInstance();
-		for(stplan anioObj: stcomponente.anioPlan){
-			List<PlanAdquisicionPago> pagos = PlanAdquisicionPagoDAO.getPagosByPlan(plan.getId());
-			if(pagos != null && !pagos.isEmpty()){
-				for(PlanAdquisicionPago pago : pagos){
-					fechaInicial.setTime(pago.getFechaPago());
-					int mes = fechaInicial.get(Calendar.MONTH);
-					int anio = fechaInicial.get(Calendar.YEAR);					
-					if(anio == anioObj.anio){
-						anioObj.mes[mes].planificado = anioObj.mes[mes].planificado.add(pago.getPago());
-					}
-				}
-			}else{
-				int diaInicial = stcomponente.fechaIncial.getDayOfMonth();
-				int mesInicial = stcomponente.fechaIncial.getMonthOfYear() -1;
-				int anioInicial = stcomponente.fechaIncial.getYear();
-				int diaFinal = stcomponente.fechaFinal.getDayOfMonth();
-				int mesFinal = stcomponente.fechaFinal.getMonthOfYear() -1;
-				int anioFinal = stcomponente.fechaFinal.getYear();
-				
-				if(anioObj.anio >= anioInicial && anioObj.anio<=anioFinal){
-					if(stcomponente.acumulacionCosto != null){
-						if(stcomponente.acumulacionCosto == 1){						
-							if(anioInicial == anioObj.anio){
-								anioObj.mes[mesInicial].planificado =  stcomponente.costo != null ? stcomponente.costo : new BigDecimal(0);
-							}
-						}else if(stcomponente.acumulacionCosto == 2){
-							int dias = (int)((stcomponente.fechaFinal.getMillis() - stcomponente.fechaIncial.getMillis())/(1000*60*60*24));
-							BigDecimal costoDiario = stcomponente.costo != null ? stcomponente.costo.divide(new BigDecimal(dias),5, BigDecimal.ROUND_HALF_UP) : new BigDecimal(0);
-							int inicioActual = 0;
-							if(anioObj.anio == anioInicial){
-								inicioActual = mesInicial;
-							}
-							
-							int finMes = anioObj.anio==anioFinal ? mesFinal : 11;
-							for(int m=inicioActual; m<=finMes; m++){
-								if(anioObj.anio == anioInicial && m==mesInicial){
-									if(m==mesFinal){
-										int diasMes = diaFinal-diaInicial;
-										anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
-									}else{
-										Calendar cal = new GregorianCalendar(anioObj.anio, m, 1); 
-										int diasMes = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-										diasMes = diasMes-diaInicial;
-										anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
-									}
-								}else if(anioObj.anio == anioFinal && m== mesFinal){
-									anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diaFinal));
-								}else{
-									Calendar cal = new GregorianCalendar(anioObj.anio, m, 1); 
-									int diasMes = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-									anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
-								}
-							}
-						}else if(stcomponente.acumulacionCosto ==3){
-							if(anioFinal == anioObj.anio){
-								anioObj.mes[mesFinal].planificado =  stcomponente.costo != null ? stcomponente.costo : new BigDecimal(0);
-							}
-						}
-					}
-				}
-			}
-		}
-		return stcomponente;
-	}
-	
-	private void inicializarObjCategoria(List<stcategoria> lsttempCategorias){
+	/*private void inicializarObjCategoria(List<stcategoria> lsttempCategorias){
 		for(stcategoria cat : lsttempCategorias){
 			cat.objetos = new ArrayList<List<Integer>>();
 		}
-	}
+	}*/
 	
-	private stplan[] inicializarStplan(Integer anioInicial, Integer anioFinal){		
-		int longitudArrelgo = anioFinal - anioInicial+1;
-		
-		stplan[] anios = new stplan[longitudArrelgo];
-		
-		for (int i = 0;i <longitudArrelgo; i++){
-			stplan temp = new stplan();
-			for(int m=0; m<12; m++){
-				temp.mes[m]= new stpresupuestoPlan();
-				temp.mes[m].planificado = new BigDecimal(0);
-			}
-			temp.anio = anioInicial+i;
-			anios[i] = temp;
-		}
-		return anios;
-	}
 	
 	private sttotal[] inicializarStTotalPlan(Integer anioInicial, Integer anioFinal){		
 		int longitudArrelgo = anioFinal - anioInicial+1;
@@ -572,63 +449,64 @@ public class SPlanAdquisiciones extends HttpServlet {
 				//Valores planificado-real
 				
 				if(prestamo.anioPlan != null){
-					for(int a=0; a<prestamo.anioPlan.length; a++){
+					ObjetoCosto.stanio[] anioPlan = (ObjetoCosto.stanio[])prestamo.anioPlan; 
+					for(int a=0; a<anioPlan.length; a++){
 						posicion = columna + (a*factorVisualizacion);
 						
 						for(int m=0; m<12; m++){
-							prestamo.anioPlan[a].mes[m].planificado=(prestamo.anioPlan[a].mes[m].planificado==null) ? new BigDecimal(0) : prestamo.anioPlan[a].mes[m].planificado.setScale(2, BigDecimal.ROUND_DOWN);							
+							anioPlan[a].mes[m].planificado= (anioPlan[a].mes[m].planificado==null ? new BigDecimal(0) : anioPlan[a].mes[m].planificado.setScale(2, BigDecimal.ROUND_DOWN));							
 						}
 						
 						switch(agrupacion){
 							case AGRUPACION_MES:
 								if(tipoVisualizacion==0 || tipoVisualizacion==2){
-									datos[i][posicion]= prestamo.anioPlan[a].mes[0].planificado.toString();
-									datos[i][posicion+(1*sumaColumnas)]= prestamo.anioPlan[a].mes[1].planificado.toString();
-									datos[i][posicion+(2*sumaColumnas)]= prestamo.anioPlan[a].mes[2].planificado.toString();
-									datos[i][posicion+(3*sumaColumnas)]= prestamo.anioPlan[a].mes[3].planificado.toString();
-									datos[i][posicion+(4*sumaColumnas)]= prestamo.anioPlan[a].mes[4].planificado.toString();
-									datos[i][posicion+(5*sumaColumnas)]= prestamo.anioPlan[a].mes[5].planificado.toString();
-									datos[i][posicion+(6*sumaColumnas)]= prestamo.anioPlan[a].mes[6].planificado.toString();
-									datos[i][posicion+(7*sumaColumnas)]= prestamo.anioPlan[a].mes[7].planificado.toString();
-									datos[i][posicion+(8*sumaColumnas)]= prestamo.anioPlan[a].mes[8].planificado.toString();
-									datos[i][posicion+(9*sumaColumnas)]= prestamo.anioPlan[a].mes[9].planificado.toString();
-									datos[i][posicion+(10*sumaColumnas)]= prestamo.anioPlan[a].mes[10].planificado.toString();
-									datos[i][posicion+(11*sumaColumnas)]= prestamo.anioPlan[a].mes[11].planificado.toString();
+									datos[i][posicion]= anioPlan[a].mes[0].planificado.toString();
+									datos[i][posicion+(1*sumaColumnas)]= anioPlan[a].mes[1].planificado.toString();
+									datos[i][posicion+(2*sumaColumnas)]= anioPlan[a].mes[2].planificado.toString();
+									datos[i][posicion+(3*sumaColumnas)]= anioPlan[a].mes[3].planificado.toString();
+									datos[i][posicion+(4*sumaColumnas)]= anioPlan[a].mes[4].planificado.toString();
+									datos[i][posicion+(5*sumaColumnas)]= anioPlan[a].mes[5].planificado.toString();
+									datos[i][posicion+(6*sumaColumnas)]= anioPlan[a].mes[6].planificado.toString();
+									datos[i][posicion+(7*sumaColumnas)]= anioPlan[a].mes[7].planificado.toString();
+									datos[i][posicion+(8*sumaColumnas)]= anioPlan[a].mes[8].planificado.toString();
+									datos[i][posicion+(9*sumaColumnas)]= anioPlan[a].mes[9].planificado.toString();
+									datos[i][posicion+(10*sumaColumnas)]= anioPlan[a].mes[10].planificado.toString();
+									datos[i][posicion+(11*sumaColumnas)]= anioPlan[a].mes[11].planificado.toString();
 								}							
 								posicion = posicion+(12*sumaColumnas)+1;
 								break;
 							case AGRUPACION_BIMESTRE:
 								if(tipoVisualizacion==0 || tipoVisualizacion==2){
-									datos[i][posicion]= (prestamo.anioPlan[a].mes[0].planificado.add(prestamo.anioPlan[a].mes[1].planificado)).toString();
-									datos[i][posicion+(1*sumaColumnas)]= (prestamo.anioPlan[a].mes[2].planificado.add(prestamo.anioPlan[a].mes[3].planificado)).toString();
-									datos[i][posicion+(2*sumaColumnas)]= (prestamo.anioPlan[a].mes[4].planificado.add(prestamo.anioPlan[a].mes[5].planificado)).toString();
-									datos[i][posicion+(3*sumaColumnas)]= (prestamo.anioPlan[a].mes[6].planificado.add(prestamo.anioPlan[a].mes[7].planificado)).toString();
-									datos[i][posicion+(4*sumaColumnas)]= (prestamo.anioPlan[a].mes[8].planificado.add(prestamo.anioPlan[a].mes[9].planificado)).toString();
-									datos[i][posicion+(5*sumaColumnas)]= (prestamo.anioPlan[a].mes[10].planificado.add(prestamo.anioPlan[a].mes[11].planificado)).toString();
+									datos[i][posicion]= (anioPlan[a].mes[0].planificado.add(anioPlan[a].mes[1].planificado)).toString();
+									datos[i][posicion+(1*sumaColumnas)]= (anioPlan[a].mes[2].planificado.add(anioPlan[a].mes[3].planificado)).toString();
+									datos[i][posicion+(2*sumaColumnas)]= (anioPlan[a].mes[4].planificado.add(anioPlan[a].mes[5].planificado)).toString();
+									datos[i][posicion+(3*sumaColumnas)]= (anioPlan[a].mes[6].planificado.add(anioPlan[a].mes[7].planificado)).toString();
+									datos[i][posicion+(4*sumaColumnas)]= (anioPlan[a].mes[8].planificado.add(anioPlan[a].mes[9].planificado)).toString();
+									datos[i][posicion+(5*sumaColumnas)]= (anioPlan[a].mes[10].planificado.add(anioPlan[a].mes[11].planificado)).toString();
 								}
 								posicion = posicion+(6*sumaColumnas)+1;
 								break;
 							case AGRUPACION_TRIMESTRE:
 								if(tipoVisualizacion==0 || tipoVisualizacion==2){
-									datos[i][posicion]= (prestamo.anioPlan[a].mes[0].planificado.add(prestamo.anioPlan[a].mes[1].planificado.add(prestamo.anioPlan[a].mes[2].planificado))).toString();
-									datos[i][posicion+(1*sumaColumnas)]= (prestamo.anioPlan[a].mes[3].planificado.add(prestamo.anioPlan[a].mes[4].planificado.add(prestamo.anioPlan[a].mes[5].planificado))).toString();
-									datos[i][posicion+(2*sumaColumnas)]= (prestamo.anioPlan[a].mes[6].planificado.add(prestamo.anioPlan[a].mes[7].planificado.add(prestamo.anioPlan[a].mes[8].planificado))).toString();
-									datos[i][posicion+(3*sumaColumnas)]= (prestamo.anioPlan[a].mes[9].planificado.add(prestamo.anioPlan[a].mes[10].planificado.add(prestamo.anioPlan[a].mes[11].planificado))).toString();
+									datos[i][posicion]= (anioPlan[a].mes[0].planificado.add(anioPlan[a].mes[1].planificado.add(anioPlan[a].mes[2].planificado))).toString();
+									datos[i][posicion+(1*sumaColumnas)]= (anioPlan[a].mes[3].planificado.add(anioPlan[a].mes[4].planificado.add(anioPlan[a].mes[5].planificado))).toString();
+									datos[i][posicion+(2*sumaColumnas)]= (anioPlan[a].mes[6].planificado.add(anioPlan[a].mes[7].planificado.add(anioPlan[a].mes[8].planificado))).toString();
+									datos[i][posicion+(3*sumaColumnas)]= (anioPlan[a].mes[9].planificado.add(anioPlan[a].mes[10].planificado.add(anioPlan[a].mes[11].planificado))).toString();
 								}
 								posicion = posicion+(4*sumaColumnas)+1;
 								break;
 							case AGRUPACION_CUATRIMESTRE:
 								if(tipoVisualizacion==0 || tipoVisualizacion==2){
-									datos[i][posicion]= (prestamo.anioPlan[a].mes[0].planificado.add(prestamo.anioPlan[a].mes[1].planificado).add(prestamo.anioPlan[a].mes[2].planificado.add(prestamo.anioPlan[a].mes[3].planificado))).toString();
-									datos[i][posicion+(1*sumaColumnas)]= (prestamo.anioPlan[a].mes[4].planificado).add(prestamo.anioPlan[a].mes[5].planificado.add(prestamo.anioPlan[a].mes[6].planificado.add(prestamo.anioPlan[a].mes[7].planificado))).toString();
-									datos[i][posicion+(2*sumaColumnas)]= (prestamo.anioPlan[a].mes[8].planificado.add(prestamo.anioPlan[a].mes[9].planificado).add(prestamo.anioPlan[a].mes[10].planificado.add(prestamo.anioPlan[a].mes[11].planificado))).toString();
+									datos[i][posicion]= (anioPlan[a].mes[0].planificado.add(anioPlan[a].mes[1].planificado).add(anioPlan[a].mes[2].planificado.add(anioPlan[a].mes[3].planificado))).toString();
+									datos[i][posicion+(1*sumaColumnas)]= (anioPlan[a].mes[4].planificado).add(anioPlan[a].mes[5].planificado.add(anioPlan[a].mes[6].planificado.add(anioPlan[a].mes[7].planificado))).toString();
+									datos[i][posicion+(2*sumaColumnas)]= (anioPlan[a].mes[8].planificado.add(anioPlan[a].mes[9].planificado).add(anioPlan[a].mes[10].planificado.add(anioPlan[a].mes[11].planificado))).toString();
 								}
 								posicion = posicion+(3*sumaColumnas)+1;
 								break;
 							case AGRUPACION_SEMESTRE:
 								if(tipoVisualizacion==0 || tipoVisualizacion==2){
-									datos[i][posicion]= (prestamo.anioPlan[a].mes[0].planificado.add(prestamo.anioPlan[a].mes[1].planificado).add(prestamo.anioPlan[a].mes[2].planificado.add(prestamo.anioPlan[a].mes[3].planificado.add(prestamo.anioPlan[a].mes[4].planificado.add(prestamo.anioPlan[a].mes[5].planificado))))).toString();
-									datos[i][posicion+(1*sumaColumnas)]= (prestamo.anioPlan[a].mes[6].planificado.add(prestamo.anioPlan[a].mes[7].planificado).add(prestamo.anioPlan[a].mes[8].planificado.add(prestamo.anioPlan[a].mes[9].planificado.add(prestamo.anioPlan[a].mes[10].planificado.add(prestamo.anioPlan[a].mes[11].planificado))))).toString();
+									datos[i][posicion]= (anioPlan[a].mes[0].planificado.add(anioPlan[a].mes[1].planificado).add(anioPlan[a].mes[2].planificado.add(anioPlan[a].mes[3].planificado.add(anioPlan[a].mes[4].planificado.add(anioPlan[a].mes[5].planificado))))).toString();
+									datos[i][posicion+(1*sumaColumnas)]= (anioPlan[a].mes[6].planificado.add(anioPlan[a].mes[7].planificado).add(anioPlan[a].mes[8].planificado.add(anioPlan[a].mes[9].planificado.add(anioPlan[a].mes[10].planificado.add(anioPlan[a].mes[11].planificado))))).toString();
 								}
 								posicion = posicion+(2*sumaColumnas)+1;
 								break;
@@ -636,7 +514,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 								if(tipoVisualizacion==0 || tipoVisualizacion==2){
 									BigDecimal totalAnualP = new BigDecimal(0);
 									for(int m=0; m<12; m++){
-										totalAnualP = totalAnualP.add(prestamo.anioPlan[a].mes[m].planificado);						
+										totalAnualP = totalAnualP.add(anioPlan[a].mes[m].planificado);						
 									}
 									totalAniosP = totalAniosP.add(totalAnualP);
 									datos[i][posicion]= totalAnualP.toString();

@@ -15,8 +15,6 @@
 	<div class="panel panel-default">
 		<div class="panel-heading"><h3>Tipo de Actividad</h3></div>
 	</div>
-		
-
 
 	<div class="row" align="center" ng-if="!actividadtipoc.mostraringreso">
 		<div class="col-sm-12 operation_buttons" align="right">
@@ -25,7 +23,7 @@
 		    <label class="btn btn-primary" ng-click="actividadtipoc.nuevo()" uib-tooltip="Nueva">
 		    <span class="glyphicon glyphicon-plus"></span> Nueva</label>
 		  </shiro:hasPermission>
-		  <shiro:hasPermission name="3010">
+		  <shiro:hasPermission name="3020">
 		    <label class="btn btn-primary" ng-click="actividadtipoc.editar()" uib-tooltip="Editar">
 		    <span class="glyphicon glyphicon-pencil"></span> Editar</label>
 		  </shiro:hasPermission>
