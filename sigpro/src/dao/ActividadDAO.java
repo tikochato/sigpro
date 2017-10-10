@@ -776,8 +776,14 @@ public class ActividadDAO {
 		List<Actividad> ret = new ArrayList<Actividad>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String query = "SELECT a FROM Actividad a WHERE a.treePath like '" + (10000000 + proyectoId) +"%'  AND NOT EXISTS  (SELECT a1.id FROM Actividad a1 where a1.objetoId = a.id and a1.objetoTipo = 5)  ";
-			Query<Actividad> criteria = session.createQuery(query,Actividad.class);
+			String query = "SELECT * FROM actividad a where a.id IN (" +
+					"select min(a1.id) "+
+					"from actividad a1 " +
+					"where a1.treePath like '"+(10000000+proyectoId)+"%' "+
+					"and not exists (select * from actividad a2 where a2.objeto_id=a1.id and a2.objeto_tipo=5) " +
+					"group by left(a1.treePath,length(a1.treePath)-8) "
+					+ ")";
+			Query<Actividad> criteria = session.createNativeQuery(query,Actividad.class);
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){

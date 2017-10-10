@@ -202,7 +202,10 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		    width: 80,
 		    isReadOnly: true,
 		    cellStyle: 'text-align: right;',
-		    cellTemplate: DlhSoft.Controls.GanttChartView.getDurationColumnTemplate(64, 8)
+		    cellTemplate: function (item) {
+		    	return DlhSoft.Controls.GanttChartView.textColumnTemplateBase(document, function () { return Number(item.duracion) });
+	
+		    }
 		});
 		
 		
@@ -219,6 +222,8 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 
 		});		
 		
+		columns.splice(10,1);
+		columns.splice(10,1);
 		
 		
 		for(var i=0; i<columns.length;i++)
