@@ -477,7 +477,7 @@ public class SProyecto extends HttpServlet {
 				Integer unidad_ejecutora = (map.get("unidadejecutoraid")!=null) ? Utils.String2Int(map.get("unidadejecutoraid")) : null;
 				Integer entidad = (map.get("entidadid")!=null) ? Utils.String2Int(map.get("entidadid")) : null;
 				Integer ejecucionFisicaReal = Utils.String2Int(map.get("ejecucionFisicaReal"));
-				Integer proyectoClase = Utils.String2Int(map.get("proyectoClase"));
+				Integer proyectoClase = map.get("proyectoClase")!=null ? Utils.String2Int(map.get("proyectoClase")) : 1;
 				Etiqueta etiqueta = EtiquetaDAO.getEtiquetaPorId(proyectoClase);
 
 				AcumulacionCosto acumulacionCosto = null;
