@@ -144,6 +144,7 @@ public class ObjetoDAO {
 						Integer objeto_id = obj[0]!=null ? (Integer)obj[0] : null;
 						String nombre = obj[1]!=null ? (String)obj[1] : null;
 						Integer objeto_tipo = obj[2]!=null ? ((BigInteger) obj[2]).intValue() : null;
+						String treePath = obj[3] != null ? ((String) obj[3]) : null;
 						DateTime fecha_inicial = obj[4]!=null ? new DateTime((Timestamp)obj[4]) : null;
 						DateTime fecha_final = obj[5]!=null ? new DateTime((Timestamp)obj[5]) : null;
 						Integer acumulacion_costoid = obj[10]!=null ? Integer.valueOf(obj[10].toString()) : null;
@@ -155,7 +156,7 @@ public class ObjetoDAO {
 						Integer obra = obj[15]!=null ? (Integer)obj[15] : null;
 						
 						ObjetoCosto objetoCosto =  new ObjetoCosto(nombre, objeto_id, objeto_tipo, nivel, fecha_inicial, fecha_final, null,
-								acumulacion_costoid, costo, programa, subprograma, proyecto, actividad, obra);
+								acumulacion_costoid, costo, programa, subprograma, proyecto, actividad, obra, treePath);
 						objetoCosto.inicializarStanio(anioInicial, anioFinal);
 						
 						if(obtenerPlanificado){
