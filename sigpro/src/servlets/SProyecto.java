@@ -39,6 +39,7 @@ import pojo.AcumulacionCosto;
 import pojo.Colaborador;
 import pojo.Cooperante;
 import pojo.Entidad;
+import pojo.Etiqueta;
 import pojo.Prestamo;
 import pojo.Proyecto;
 import pojo.ProyectoImpacto;
@@ -471,6 +472,9 @@ public class SProyecto extends HttpServlet {
 				Integer unidad_ejecutora = (map.get("unidadejecutoraid")!=null) ? Utils.String2Int(map.get("unidadejecutoraid")) : null;
 				Integer entidad = (map.get("entidadid")!=null) ? Utils.String2Int(map.get("entidadid")) : null;
 				Integer ejecucionFisicaReal = Utils.String2Int(map.get("ejecucionFisicaReal"));
+				Integer proyectoClase = Utils.String2Int(map.get("proyectoClase"));
+				Etiqueta etiqueta = new Etiqueta();
+				etiqueta.setId(proyectoClase);
 
 				AcumulacionCosto acumulacionCosto = null;
 				if (map.get("acumulacionCosto")!=null){
@@ -501,7 +505,7 @@ public class SProyecto extends HttpServlet {
 				List<stdatadinamico> datos = gson.fromJson(map.get("datadinamica"), type);
 
 				if(esnuevo){
-					proyecto = new Proyecto(acumulacionCosto,directorProyecto, cooperante, proyectoTipo, unidadEjecutora, nombre, descripcion,
+					proyecto = new Proyecto(acumulacionCosto,directorProyecto, cooperante, etiqueta, proyectoTipo, unidadEjecutora, nombre, descripcion,
 							usuario, null, new DateTime().toDate(), null, 1, snip, programa, subPrograma, proyecto_, actividad, obra,latitud,
 							longitud, objetivo,enunciadoAlcance, costo, objetivoEspecifico,visionGeneral,renglon, ubicacionGeografica,
 							null, null, null, null,

@@ -177,4 +177,5 @@
 	<table-filter match-name="plan_adquisicion_pago"
 		match-catalog="sipro">
 	</table-filter>
+	<table-filter match-name="etiqueta" match-catalog="sipro"></table-filter>
 </hibernate-reverse-engineering>

@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 2, 2017 5:12:50 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 9, 2017 6:11:54 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,11 +29,12 @@ public class Proyecto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -8359491559066128507L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Colaborador colaborador;
 	private Cooperante cooperante;
+	private Etiqueta etiqueta;
 	private ProyectoTipo proyectoTipo;
 	private UnidadEjecutora unidadEjecutora;
 	private String nombre;
@@ -79,9 +80,10 @@ public class Proyecto implements java.io.Serializable {
 	public Proyecto() {
 	}
 
-	public Proyecto(Cooperante cooperante, ProyectoTipo proyectoTipo, String nombre, String usuarioCreo,
-			Date fechaCreacion, int estado) {
+	public Proyecto(Cooperante cooperante, Etiqueta etiqueta, ProyectoTipo proyectoTipo, String nombre,
+			String usuarioCreo, Date fechaCreacion, int estado) {
 		this.cooperante = cooperante;
+		this.etiqueta = etiqueta;
 		this.proyectoTipo = proyectoTipo;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
@@ -90,19 +92,21 @@ public class Proyecto implements java.io.Serializable {
 	}
 
 	public Proyecto(AcumulacionCosto acumulacionCosto, Colaborador colaborador, Cooperante cooperante,
-			ProyectoTipo proyectoTipo, UnidadEjecutora unidadEjecutora, String nombre, String descripcion,
-			String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
-			Long snip, Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra,
-			String latitud, String longitud, String objetivo, String enunciadoAlcance, BigDecimal costo,
-			String objetivoEspecifico, String visionGeneral, Integer renglon, Integer ubicacionGeografica,
-			Date fechaInicio, Date fechaFin, Integer duracion, String duracionDimension, Integer orden, String treePath,
-			Integer nivel, Integer ejecucionFisicaReal, Set<Desembolso> desembolsos, Set<Hito> hitos,
-			Set<ProgramaProyecto> programaProyectos, Set<MatrizRaci> matrizRacis, Set<ProyectoMiembro> proyectoMiembros,
-			Set<ProyectoImpacto> proyectoImpactos, Set<ProyectoPropiedadValor> proyectoPropiedadValors,
-			Set<ProyectoUsuario> proyectoUsuarios, Set<Componente> componentes) {
+			Etiqueta etiqueta, ProyectoTipo proyectoTipo, UnidadEjecutora unidadEjecutora, String nombre,
+			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
+			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma, Integer proyecto,
+			Integer actividad, Integer obra, String latitud, String longitud, String objetivo, String enunciadoAlcance,
+			BigDecimal costo, String objetivoEspecifico, String visionGeneral, Integer renglon,
+			Integer ubicacionGeografica, Date fechaInicio, Date fechaFin, Integer duracion, String duracionDimension,
+			Integer orden, String treePath, Integer nivel, Integer ejecucionFisicaReal, Set<Desembolso> desembolsos,
+			Set<Hito> hitos, Set<ProgramaProyecto> programaProyectos, Set<MatrizRaci> matrizRacis,
+			Set<ProyectoMiembro> proyectoMiembros, Set<ProyectoImpacto> proyectoImpactos,
+			Set<ProyectoPropiedadValor> proyectoPropiedadValors, Set<ProyectoUsuario> proyectoUsuarios,
+			Set<Componente> componentes) {
 		this.acumulacionCosto = acumulacionCosto;
 		this.colaborador = colaborador;
 		this.cooperante = cooperante;
+		this.etiqueta = etiqueta;
 		this.proyectoTipo = proyectoTipo;
 		this.unidadEjecutora = unidadEjecutora;
 		this.nombre = nombre;
@@ -186,6 +190,16 @@ public class Proyecto implements java.io.Serializable {
 
 	public void setCooperante(Cooperante cooperante) {
 		this.cooperante = cooperante;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "proyecto_clase", nullable = false)
+	public Etiqueta getEtiqueta() {
+		return this.etiqueta;
+	}
+
+	public void setEtiqueta(Etiqueta etiqueta) {
+		this.etiqueta = etiqueta;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
