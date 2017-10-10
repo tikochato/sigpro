@@ -29,6 +29,7 @@ import com.google.gson.reflect.TypeToken;
 import dao.ComponenteDAO;
 import dao.ComponentePropiedadDAO;
 import dao.ComponentePropiedadValorDAO;
+import dao.ObjetoDAO;
 import dao.ProyectoDAO;
 import dao.UnidadEjecutoraDAO;
 import pojo.AcumulacionCosto;
@@ -81,6 +82,7 @@ public class SComponente extends HttpServlet {
 		BigDecimal costo;
 		Integer acumulacionCostoId;
 		String acumulacionCostoNombre;
+		boolean tieneHijos;
 	}
 
 	class stdatadinamico {
@@ -175,6 +177,9 @@ public class SComponente extends HttpServlet {
 				temp.costo = componente.getCosto();
 				temp.acumulacionCostoId = componente.getAcumulacionCosto().getId();
 				temp.acumulacionCostoNombre = componente.getAcumulacionCosto().getNombre();
+				
+				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
+				
 				stcomponentes.add(temp);
 			}
 
@@ -231,6 +236,9 @@ public class SComponente extends HttpServlet {
 				temp.fechaFin = Utils.formatDate(componente.getFechaFin());
 				temp.duracion = componente.getDuracion();
 				temp.duracionDimension = componente.getDuracionDimension();
+				
+				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
+				
 				stcomponentes.add(temp);
 			}
 
@@ -556,6 +564,9 @@ public class SComponente extends HttpServlet {
 				temp.fechaFin = Utils.formatDate(componente.getFechaFin());
 				temp.duracion = componente.getDuracion();
 				temp.duracionDimension = componente.getDuracionDimension();
+				
+				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
+				
 				stcomponentes.add(temp);
 			}
 
@@ -618,6 +629,9 @@ public class SComponente extends HttpServlet {
 			temp.fechaFin = Utils.formatDate(componente.getFechaFin());
 			temp.duracion = componente.getDuracion();
 			temp.duracionDimension = componente.getDuracionDimension();
+			
+			temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
+			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"componente\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
