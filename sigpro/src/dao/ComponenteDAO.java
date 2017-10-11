@@ -11,6 +11,7 @@ import javax.persistence.NoResultException;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.joda.time.DateTime;
 
 import pojo.Actividad;
 import pojo.Componente;
@@ -272,7 +273,7 @@ public class ComponenteDAO {
 			
 			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		} catch(Throwable e){
-			CLogger.write("11", ComponenteDAO.class, e);
+			CLogger.write("10", ComponenteDAO.class, e);
 			session.getTransaction().rollback();
 			session.close();
 		}
@@ -295,7 +296,7 @@ public class ComponenteDAO {
 		}catch (NoResultException e){
 			
 		} catch(Throwable e){
-			CLogger.write("12", ComponenteDAO.class, e);
+			CLogger.write("11", ComponenteDAO.class, e);
 			session.getTransaction().rollback();
 			session.close();
 		}
@@ -312,7 +313,7 @@ public class ComponenteDAO {
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getResultList();
 		}catch(Throwable e){
-			CLogger.write("13", ComponenteDAO.class, e);
+			CLogger.write("12", ComponenteDAO.class, e);
 			session.getTransaction().rollback();
 			session.close();
 		}
@@ -330,7 +331,7 @@ public class ComponenteDAO {
 			 
 			 ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		} catch(Throwable e){
-			CLogger.write("14", ComponenteDAO.class, e);
+			CLogger.write("13", ComponenteDAO.class, e);
 			session.getTransaction().rollback();
 			session.close();
 		}
@@ -346,7 +347,7 @@ public class ComponenteDAO {
 			ret = true;
 		}
 		catch(Throwable e){
-			CLogger.write("15", ComponenteDAO.class, e);
+			CLogger.write("14", ComponenteDAO.class, e);
 			session.getTransaction().rollback();
 			session.close();
 		}
@@ -364,7 +365,7 @@ public class ComponenteDAO {
 			 
 			 ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		} catch(Throwable e){
-			CLogger.write("16", ComponenteDAO.class, e);
+			CLogger.write("15", ComponenteDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -400,129 +401,93 @@ public class ComponenteDAO {
 					costo = componente.getCosto() != null ? componente.getCosto() : new BigDecimal(0);
 			}
 		}catch(Exception e){
-			CLogger.write("17", Proyecto.class, e);
+			CLogger.write("16", Proyecto.class, e);
 		} 
 		
 		return costo;
 	}
 	
 	public static Date calcularFechaMinima(Componente componente){
-		Date ret = null;
+		DateTime fechaActual = null;
 		try{
+			List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(componente.getId(), 2);
+			if(actividades != null && actividades.size() > 0){
+				DateTime fechaMinima = new DateTime();
+				for(Actividad actividad : actividades){
+					if(fechaActual == null)
+						fechaActual = new DateTime(actividad.getFechaInicio());
+					else{
+						fechaMinima = new DateTime(actividad.getFechaInicio());
+						
+						if(fechaActual.isAfter(fechaMinima))
+							fechaActual = fechaMinima;
+					}
+				}
+			}
+			
 			Set<Producto> productos = componente.getProductos();
 			if(productos != null && productos.size() > 0){
 				Iterator<Producto> iterador = productos.iterator();
-				Date fechaMinima = new Date();
+				DateTime fechaMinima = new DateTime();
 				while(iterador.hasNext()){
 					Producto producto = iterador.next();
-					if(ret == null)
-						ret = producto.getFechaInicio();
+					if(fechaActual == null)
+						fechaActual = new DateTime(producto.getFechaInicio());
 					else{
-						fechaMinima = producto.getFechaInicio();
+						fechaMinima = new DateTime(producto.getFechaInicio());
 						
-						if(ret.after(fechaMinima))
-							ret = fechaMinima;
+						if(fechaActual.isAfter(fechaMinima))
+							fechaActual = fechaMinima;
 					}
 				}
-				
-				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(componente.getId(), 2);
-				if(actividades != null && actividades.size() > 0){
-					fechaMinima = new Date();
-					for(Actividad actividad : actividades){
-						if(ret == null)
-							ret = actividad.getFechaInicio();
-						else{
-							fechaMinima = actividad.getFechaInicio();
-							
-							if(ret.after(fechaMinima))
-								ret = fechaMinima;
-						}
-					}
-				}
-			}else{
-				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(componente.getId(), 2);
-				if(actividades != null && actividades.size() > 0){
-					Date fechaMinima = new Date();
-					for(Actividad actividad : actividades){
-						if(ret == null)
-							ret = actividad.getFechaInicio();
-						else{
-							fechaMinima = actividad.getFechaInicio();
-							
-							if(ret.after(fechaMinima))
-								ret = fechaMinima;
-						}
-					}
-				}else
-					ret = componente.getFechaInicio();
-			}
-				
+			}else if(fechaActual == null)
+				fechaActual = new DateTime(componente.getFechaInicio());
 		}catch(Exception e){
 			CLogger.write("17", Proyecto.class, e);
 		}
 		
-		return ret;
+		return fechaActual.toDate();
 	}
 
 	public static Date calcularFechaMaxima(Componente componente){
-		Date ret = null;
+		DateTime fechaActual = null;
 		try{
+			List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(componente.getId(), 2);
+			if(actividades != null && actividades.size() > 0){
+				DateTime fechaMaxima = new DateTime();
+				for(Actividad actividad : actividades){
+					if(fechaActual == null)
+						fechaActual = new DateTime(actividad.getFechaFin());
+					else{
+						fechaMaxima = new DateTime(actividad.getFechaFin());
+						
+						if(fechaActual.isBefore(fechaMaxima))
+							fechaActual = fechaMaxima;
+					}
+				}
+			}
+			
 			Set<Producto> productos = componente.getProductos();
 			if(productos != null && productos.size() > 0){
 				Iterator<Producto> iterador = productos.iterator();
-				Date fechaMaxima = new Date();
+				DateTime fechaMaxima = new DateTime();
 				while(iterador.hasNext()){
 					Producto producto = iterador.next();
-					if(ret == null)
-						ret = producto.getFechaFin();
+					if(fechaActual == null)
+						fechaActual = new DateTime(producto.getFechaFin());
 					else{
-						fechaMaxima = producto.getFechaFin();
+						fechaMaxima = new DateTime(producto.getFechaFin());
 						
-						if(ret.before(fechaMaxima))
-							ret = fechaMaxima;
+						if(fechaActual.isBefore(fechaMaxima))
+							fechaActual = fechaMaxima;
 					}
 				}
-				
-				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(componente.getId(), 2);
-				if(actividades != null && actividades.size() > 0){
-					fechaMaxima = new Date();
-					for(Actividad actividad : actividades){
-						if(ret == null)
-							ret = actividad.getFechaFin();
-						else{
-							fechaMaxima = actividad.getFechaFin();
-							
-							if(ret.before(fechaMaxima))
-								ret = fechaMaxima;
-						}
-					}
-				}
-			}else{
-				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(componente.getId(), 2);
-				if(actividades != null && actividades.size() > 0){
-					Date fechaMaxima = new Date();
-					for(Actividad actividad : actividades){
-						if(ret == null)
-							ret = actividad.getFechaFin();
-						else{
-							fechaMaxima = actividad.getFechaFin();
-							
-							if(ret.before(fechaMaxima))
-								ret = fechaMaxima;
-						}
-					}
-				}else
-					ret = componente.getFechaFin();
-			}
-				
+			}else if (fechaActual == null)
+				fechaActual = new DateTime(componente.getFechaFin());
 		}catch(Exception e){
-			CLogger.write("17", Proyecto.class, e);
+			CLogger.write("18", Proyecto.class, e);
 		}
 		
-		return ret;
+		return fechaActual.toDate();
 	}
 }
-
-
-
-
