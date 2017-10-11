@@ -297,7 +297,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				visionGeneral : mi.proyecto.visionGeneral,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
 				ejecucionFisicaReal: mi.proyecto.ejecucionFisicaReal,
-				proyectoClase: mi.proyecto.proyectoClase,
+				proyectoClase: $rootScope.etiquetas.id,
 				t:moment().unix()
 			};
 			$http.post('/SProyecto',param_data).then(

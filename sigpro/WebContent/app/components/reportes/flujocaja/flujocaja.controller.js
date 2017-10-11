@@ -93,7 +93,7 @@ app.controller('flujocajaController',['$scope','$rootScope','$http','$interval',
 		t:moment().unix()}).success(
 			function(response) {
 				mi.prestamos = [];
-				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione una opción'});
+				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un '+$rootScope.etiquetas.proyecto});
 				if (response.success){
 					for (var i = 0; i < response.entidades.length; i++){
 						mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});

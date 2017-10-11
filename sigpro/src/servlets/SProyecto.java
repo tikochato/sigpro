@@ -51,6 +51,7 @@ import pojo.ProyectoPropiedadValorId;
 import pojo.ProyectoPropiedad;
 import pojo.ProyectoTipo;
 import pojo.UnidadEjecutora;
+import utilities.CLogger;
 import utilities.Utils;
 
 @WebServlet("/SProyecto")
@@ -541,6 +542,7 @@ public class SProyecto extends HttpServlet {
 					proyecto.setObjetivoEspecifico(objetivoEspecifico);
 					proyecto.setVisionGeneral(visionGeneral);
 					proyecto.setEjecucionFisicaReal(ejecucionFisicaReal);
+					proyecto.setEtiqueta(etiqueta);
 
 				    List<ProyectoPropiedadValor> valores_temp = ProyectoPropiedadValorDAO.getProyectoPropiedadadesValoresPorProyecto(proyecto.getId());
 					proyecto.setProyectoPropiedadValors(null);
@@ -634,7 +636,7 @@ public class SProyecto extends HttpServlet {
 
 			}
 			catch (Throwable e){
-				e.printStackTrace();
+				CLogger.write("1", SProyecto.class, e);
 				response_text = "{ \"success\": false }";
 			}
 

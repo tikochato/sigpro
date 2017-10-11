@@ -73,7 +73,6 @@ public class SUsuario extends HttpServlet {
 		String unidad_ejecutora;
 		int id;
 		int sistemaUsuario;
-	
 	}
 	
 	class stpermiso{
@@ -356,7 +355,7 @@ public class SUsuario extends HttpServlet {
 						String nuevomail = map.get("email").toLowerCase();
 						String permisosAsignados = map.get("permisos");
 						String prestamosAsignados=map.get("prestamos");
-						Integer sistemaUsuario= Utils.String2Int(map.get("sistemaUsuario"));
+						Integer sistemaUsuario= Utils.String2Int(map.get("sistemaUsuario"), 1);
 						String rol =map.get("rol");
 						if(nuevousuario!=null && nuevopassword!=null && nuevomail != null && permisosAsignados!=null && rol!=null){
 							if(!UsuarioDAO.existeUsuario(nuevousuario)){
@@ -423,7 +422,7 @@ public class SUsuario extends HttpServlet {
 							}
 							String email = map.get("email");
 							String permisosAsignados = map.get("permisos");
-							Integer sistemaUsuario = Utils.String2Int("sistemaUsuario");
+							Integer sistemaUsuario = Utils.String2Int(map.get("sistemaUsuario"), 1);
 							usuarioEdicion.setSistemaUsuario(sistemaUsuario);
 							if(email!=null){
 								usuarioEdicion.setEmail(email);
@@ -565,6 +564,20 @@ public class SUsuario extends HttpServlet {
 				etiqueta.proyecto = etiquetaUsuario.getProyecto();
 				etiqueta.colorPrincipal = etiquetaUsuario.getColorPrincipal();
 				String respuesta = new GsonBuilder().serializeNulls().create().toJson(etiqueta);
+				response_text = String.join("", "\"etiquetas\": ",respuesta);
+				response_text = String.join("", "{\"success\":true,", response_text,"}");
+			}else if(accion.compareTo("getSistemasUsuario")==0){
+				List<Etiqueta> etiquetasUsuario = EtiquetaDAO.getEtiquetas();
+				List<stetiqueta> etiquetas = new ArrayList<stetiqueta>();
+				for(int i=0; i<etiquetasUsuario.size(); i++){
+					stetiqueta etiqueta = new stetiqueta();
+					etiqueta.id = etiquetasUsuario.get(i).getId();
+					etiqueta.claseNombre = etiquetasUsuario.get(i).getNombre();
+					etiqueta.proyecto = etiquetasUsuario.get(i).getProyecto();
+					etiqueta.colorPrincipal = etiquetasUsuario.get(i).getColorPrincipal();
+					etiquetas.add(etiqueta);
+				}
+				String respuesta = new GsonBuilder().serializeNulls().create().toJson(etiquetas);
 				response_text = String.join("", "\"etiquetas\": ",respuesta);
 				response_text = String.join("", "{\"success\":true,", response_text,"}");
 			}

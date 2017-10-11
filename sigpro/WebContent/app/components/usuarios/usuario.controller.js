@@ -44,6 +44,8 @@ app.controller('usuarioController', ['$scope','$rootScope', '$http', '$interval'
 	mi.nombreUnidadEjecutora="";
 	mi.nombreCooperante="";
 	mi.rolUsuario=0;
+	mi.sistemasUsuario=[];
+	mi.sistemaSeleccionado=null;
 	
 	mi.botones = true;
 	
@@ -56,6 +58,10 @@ app.controller('usuarioController', ['$scope','$rootScope', '$http', '$interval'
 				labelSelected: 'tree-node-noselected',
 			}
 		};			
+	
+	$http.post('/SUsuario', {accion : 'getSistemasUsuario', t: (new Date()).getTime()}).success(function(response) {
+		mi.sistemasUsuario = response.etiquetas;
+	});
 	
 	mi.editarElemento = function (event) {
         var filaId = angular.element(event.toElement).scope().rowRenderIndex;
@@ -178,6 +184,7 @@ app.controller('usuarioController', ['$scope','$rootScope', '$http', '$interval'
 		mi.isCollapsed = true;
 		mi.entityselected = null;
 		mi.esNuevo = true;
+		mi.sistemaSeleccionado=null;
 		$utilidades.setFocus(document.getElementById("mail"));
 		$http.post('/SProyecto',
 				{ accion: 'controlArbolTodosProyectos', usuario: '', t: (new Date()).getTime() }).success(
@@ -222,7 +229,7 @@ app.controller('usuarioController', ['$scope','$rootScope', '$http', '$interval'
 									estructuraAsignada: estructuras_permisos,
 									rol: mi.tipoUsuario.id,
 									esnuevo: mi.esNuevo,
-									sistemaUsuario: mi.usuariosSelected.sistemaUsuario,
+									sistemaUsuario: mi.sistemaSeleccionado.id,
 									t: (new Date()).getTime()
 	
 								}
@@ -299,6 +306,16 @@ app.controller('usuarioController', ['$scope','$rootScope', '$http', '$interval'
 			mi.modificar = true;
 			mi.treedata=[];
 			mi.expanded=[];
+			
+			for(s=0;s<mi.sistemasUsuario.length;s++){
+				if(mi.sistemasUsuario[s].id == mi.usuariosSelected.sistemaUsuario){
+					mi.sistemaSeleccionado = {
+							"id" : mi.sistemasUsuario[s].id,
+							"nombre" : mi.sistemasUsuario[s].claseNombre
+					}
+					break;
+				}
+			}
 			
 			mi.cargarArbol=false;
 			mi.isCollapsed = true;
