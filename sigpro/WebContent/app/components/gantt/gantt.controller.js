@@ -7,8 +7,8 @@ var GanttChartView = DlhSoft.Controls.GanttChartView;
 var queryString = window.location.search;
 var theme = queryString ? queryString.substr(1) : null;
 
-app.controller('ganttController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q) {
+app.controller('ganttController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q',
+	function($scope, $rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q) {
 
 		var mi=this;
 		mi.proyectoid = "";
@@ -468,7 +468,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 						$scope.items[index].content = resultado.nombre;
 						$utilidades.mensaje('success','Item modificado con éxito');
 					}else{
-						$utilidades.mensaje('danger', 'Error al guardar el item de prestamo');
+						$utilidades.mensaje('danger', 'Error al guardar el item de '+$rootScope.etiquetas.proyecto);
 					}
 
 				}, function() {
@@ -786,10 +786,10 @@ app.directive('customOnChange', function() {
 });
 
 app.controller('modalEditarPrestamo', [ '$uibModalInstance',
-	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$scope', '$rootScope', '$http', '$interval', 'i18nService', 'Utilidades',
 	'$timeout', '$log', '$uibModal', '$q', 'idprestamo', modalEditarPrestamo ]);
 
-function modalEditarPrestamo($uibModalInstance, $scope, $http, $interval,
+function modalEditarPrestamo($uibModalInstance, $scope, $rootScope, $http, $interval,
 	i18nService, $utilidades, $timeout, $log, $uibModal, $q, idprestamo) {
 
 	var mi = this;

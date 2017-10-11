@@ -1,8 +1,8 @@
 var app = angular.module('usuarioController', [ 'ngTouch', 'ui.grid.edit','indeterminate' ,'treeControl']);
 
-app.controller('usuarioController', ['$scope', '$http', '$interval', '$q', 'i18nService', 'Utilidades', '$routeParams', 'uiGridConstants', 
+app.controller('usuarioController', ['$scope','$rootScope', '$http', '$interval', '$q', 'i18nService', 'Utilidades', '$routeParams', 'uiGridConstants', 
 	'$mdDialog', '$window', '$location', '$route', '$q', '$uibModal', 'dialogoConfirmacion', 
-  function($scope, $http, $interval, $q,i18nService,$utilidades,$routeParams,uiGridConstants,$mdDialog, $window, $location, $route,$q,$uibModal, $dialogoConfirmacion) {
+  function($scope,$rootScope, $http, $interval, $q,i18nService,$utilidades,$routeParams,uiGridConstants,$mdDialog, $window, $location, $route,$q,$uibModal, $dialogoConfirmacion) {
 	var mi=this;
 	$window.document.title =$utilidades.sistema_nombre+' - Usuario';
 	mi.colaboradorSeleccionado =false;
@@ -389,7 +389,7 @@ app.controller('usuarioController', ['$scope', '$http', '$interval', '$q', 'i18n
 				mi.prestamosNuevos.push(data.id);
 				
 			}catch(err){
-				$utilidades.mensaje('warning', 'El préstamo ya se encuentra agregado');
+				$utilidades.mensaje('warning', 'El '+$rootScope.etiquetas.proyecto+' ya se encuentra agregado');
 			}
 		}, function() {
 		});
@@ -631,7 +631,7 @@ app.controller('usuarioController', ['$scope', '$http', '$interval', '$q', 'i18n
 	
 	
 	mi.showSelected=function(nodo){
-		//console.log(nodo);
+		
 	};
 	
 	mi.onChange = function(nodo){

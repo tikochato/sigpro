@@ -1,7 +1,7 @@
 var app = angular.module('desembolsosController', []);
 
-app.controller('desembolsosController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
+app.controller('desembolsosController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
+	function($scope, $rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
 	
 	var mi=this;
 	mi.proyectoid = "";
@@ -182,7 +182,7 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 						
 						
 				}else{
-					$utilidades.mensaje('warning','No se encontraron datos para el préstamo');
+					$utilidades.mensaje('warning','No se encontraron datos para el '+$rootScope.etiquetas.proyecto);
 					mi.mostrar = false;
 				}
 					

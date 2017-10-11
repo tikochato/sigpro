@@ -243,7 +243,7 @@
 								ng-readonly="true"
 								ng-required="true"
 								ng-change = "racic.generarMatriz()">
-								<option value="">Seleccione un préstamo</option>
+								<option value="">Seleccione un {{etiquetas.proyecto}}</option>
 								</select>
 		
 					</div>

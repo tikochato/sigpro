@@ -1,6 +1,6 @@
 var app = angular.module('controlAdquisicionesController', ['ngTouch','ngAnimate','ui.utils.masks','vs-repeat']);
-app.controller('controlAdquisicionesController',['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q','dialogoConfirmacion', '$filter','$uibModal',
-	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion, $filter,$uibModal) {
+app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q','dialogoConfirmacion', '$filter','$uibModal',
+	function($scope, $rootScope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion, $filter,$uibModal) {
 	var mi = this;
 	var anioFiscal = new Date();
 	mi.anio = anioFiscal.getFullYear();
@@ -10,7 +10,7 @@ app.controller('controlAdquisicionesController',['$scope', '$http', '$interval',
 	mi.enMillones = false;
 	mi.fechaSuscripcion = "";
 	mi.fechaCierre = "";
-	mi.tooltipObjetoTipo = ["Prestamo","Componente","Producto","Sub Producto","Actividad"];
+	mi.tooltipObjetoTipo = [$rootScope.etiquetas.proyecto,"Componente","Producto","Sub Producto","Actividad"];
 	mi.valoresInicializados = [0,0,0,0,0,"","","","","","","","","",""];
 	mi.ddlOpciones = [];
 	mi.ddlOpcionesTipos = [];
@@ -29,14 +29,14 @@ app.controller('controlAdquisicionesController',['$scope', '$http', '$interval',
     }
 	
 	mi.prestamos = [
-		{value: 0,text: "Seleccione un préstamo"}
+		{value: 0,text: "Seleccione un "+$rootScope.etiquetas.proyecto}
 	];	
 	mi.prestamo = mi.prestamos[0];
 	
 	$http.post('/SProyecto',{accion: 'getProyectos'}).success(
 		function(response) {
 			mi.prestamos = [];
-			mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un préstamo'});
+			mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un '+$rootScope.etiquetas.proyecto});
 			if (response.success){
 				for (var i = 0; i < response.entidades.length; i++){
 					mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});

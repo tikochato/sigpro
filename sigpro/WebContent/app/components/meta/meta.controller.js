@@ -1,7 +1,7 @@
 //var app = angular.module('metaController', []);
 
-app.controller('metaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','$mdDialog', '$uibModal', 'dialogoConfirmacion', 
-		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,$mdDialog, $uibModal, $dialogoConfirmacion) {
+app.controller('metaController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','$mdDialog', '$uibModal', 'dialogoConfirmacion', 
+		function($scope,$rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,$mdDialog, $uibModal, $dialogoConfirmacion) {
 			var mi=this;
 			
 			$window.document.title = $utilidades.sistema_nombre+' - Metas';
@@ -50,7 +50,7 @@ app.controller('metaController',['$scope','$http','$interval','i18nService','Uti
 				}
 				
 				switch(mi.objeto_tipo){
-				case "1": mi.nombreTipoPcp = "Préstamo"; break;
+				case "1": mi.nombreTipoPcp = $rootScope.etiquetas.proyecto; break;
 				case "2": mi.nombreTipoPcp = "Componente"; break;
 				case "3": mi.nombreTipoPcp = "Producto"; break;
 				case "4": mi.nombreTipoPcp = "Subproducto"; break;

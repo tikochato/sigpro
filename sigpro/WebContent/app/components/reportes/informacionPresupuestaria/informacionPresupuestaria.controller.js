@@ -1,7 +1,7 @@
 var app = angular.module('informacionPresupuestariaController',['ngAnimate', 'ngTouch', 'smart-table', 'vs-repeat']);
 
-app.controller('informacionPresupuestariaController', ['$scope', '$http', '$interval', 'Utilidades','i18nService','$timeout','$window', '$q','dialogoConfirmacion',
-	function($scope, $http, $interval, $utilidades,i18nService,$timeout,$window, $q, $dialogoConfirmacion){
+app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '$http', '$interval', 'Utilidades','i18nService','$timeout','$window', '$q','dialogoConfirmacion',
+	function($scope, $rootScope, $http, $interval, $utilidades,i18nService,$timeout,$window, $q, $dialogoConfirmacion){
 		var mi = this;
 		i18nService.setCurrentLang('es');
 		mi.fechaInicio = "";
@@ -105,7 +105,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 		$http.post('/SProyecto',{accion: 'getProyectos'}).success(
 			function(response) {
 				mi.prestamos = [];
-				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un préstamo'});
+				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un '+$rootScope.etiquetas.proyecto});
 				if (response.success){
 					for (var i = 0; i < response.entidades.length; i++){
 						mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
@@ -302,7 +302,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 				}else
 					$utilidades.mensaje('warning','Favor de ingresar un año inicial y final válido');
 			}else
-				$utilidades.mensaje('warning','Debe de seleccionar un préstamo');
+				$utilidades.mensaje('warning','Debe de seleccionar un '+$rootScope.etiquetas.proyecto);
 		}
 		
 		mi.agruparMeses = function(anio){
@@ -555,7 +555,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 				}else
 					$utilidades.mensaje('warning','Favor de ingresar un año inicial y final válido');
 			}else
-				$utilidades.mensaje('warning','Debe de seleccionar un préstamo');
+				$utilidades.mensaje('warning','Debe de seleccionar un '+$rootScope.etiquetas.proyecto);
 		}
 		
 		mi.renderizaTabla = function(){

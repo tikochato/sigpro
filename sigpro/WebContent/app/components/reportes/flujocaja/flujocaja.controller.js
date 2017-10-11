@@ -1,8 +1,8 @@
 var app = angular.module('flujocajaController', [ 'smart-table', 'vs-repeat']);
 
 
-app.controller('flujocajaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
+app.controller('flujocajaController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
+	function($scope, $rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
 
 	var mi = this;
 	mi.fechaCorte = null;
@@ -403,7 +403,7 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 			}else
 				$utilidades.mensaje('warning','Favor de ingresar una fecha válida');
 		}else
-			$utilidades.mensaje('warning','Debe de seleccionar un préstamo');
+			$utilidades.mensaje('warning','Debe de seleccionar un '+$rootScope.etiquetas.proyecto);
 	}
 
 	mi.generar = function(agrupacion){
@@ -419,7 +419,7 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 			}else
 				$utilidades.mensaje('warning','Favor de ingresar una fecha válida');
 		}else
-			$utilidades.mensaje('warning','Debe de seleccionar un préstamo');
+			$utilidades.mensaje('warning','Debe de seleccionar un '+$rootScope.etiquetas.proyecto);
 	}
 
 	mi.renderizaTabla = function(){

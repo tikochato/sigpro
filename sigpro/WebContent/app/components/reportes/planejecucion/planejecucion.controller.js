@@ -1,8 +1,8 @@
 var app = angular.module('planejecucionController', []);
 
 
-app.controller('planejecucionController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
+app.controller('planejecucionController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
+	function($scope, $rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
 	
 	var mi=this;
 	mi.proyectoid = "";
@@ -107,7 +107,7 @@ app.controller('planejecucionController',['$scope','$http','$interval','i18nServ
 							});
 						 
 						 }else{
-							 $utilidades.mensaje('warning','No se encontro datos del prestamo');
+							 $utilidades.mensaje('warning','No se encontro datos del {{etiquetas.proyecto}}');
 						 }
 					});		
 			});	

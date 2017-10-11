@@ -22,10 +22,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ColaboradorDAO;
+import dao.EtiquetaDAO;
 import dao.ProyectoDAO;
 import dao.RolDAO;
 import dao.UsuarioDAO;
 import pojo.Colaborador;
+import pojo.Etiqueta;
 import pojo.Permiso;
 import pojo.Usuario;
 import pojo.UsuarioPermiso;
@@ -87,6 +89,13 @@ public class SUsuario extends HttpServlet {
 		Integer id;
 		String nombre;
 		String usuario;
+	}
+	
+	class stetiqueta{
+		Integer id;
+		String claseNombre;
+		String proyecto;
+		String colorPrincipal;
 	}
        
     public SUsuario() {
@@ -543,6 +552,21 @@ public class SUsuario extends HttpServlet {
 					response_text = String.join("", "\"usuarios\": ",respuesta);
 					response_text = String.join("", "{\"success\":true,", response_text,"}");
 				}
+			}else if(accion.compareTo("getEtiquetasSistemaUsuario")==0){
+				HttpSession sesionweb = request.getSession();
+				Integer sistemaUsuario = Utils.String2Int(sesionweb.getAttribute("sistemausuario").toString());
+				Etiqueta etiquetaUsuario = EtiquetaDAO.getEtiquetaPorId(sistemaUsuario);
+				if(etiquetaUsuario==null){
+					etiquetaUsuario = EtiquetaDAO.getEtiquetaPorId(1);
+				}
+				stetiqueta etiqueta = new stetiqueta();
+				etiqueta.id = etiquetaUsuario.getId();
+				etiqueta.claseNombre = etiquetaUsuario.getNombre();
+				etiqueta.proyecto = etiquetaUsuario.getProyecto();
+				etiqueta.colorPrincipal = etiquetaUsuario.getColorPrincipal();
+				String respuesta = new GsonBuilder().serializeNulls().create().toJson(etiqueta);
+				response_text = String.join("", "\"etiquetas\": ",respuesta);
+				response_text = String.join("", "{\"success\":true,", response_text,"}");
 			}
 		}else{
 			response_text = String.join("","{ \"success\": false, \"error\":\"No se enviaron los parametros deseados\" }");

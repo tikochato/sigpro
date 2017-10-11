@@ -536,16 +536,30 @@ app.config(['uiGmapGoogleMapApiProvider',function(uiGmapGoogleMapApiProvider) {
     });
 }]);
 
-app.controller('MainController',['$scope','$document','deviceDetector','$rootScope','$location','$window','Utilidades', "$routeParams",
-   function($scope,$document,deviceDetector,$rootScope,$location,$window,$utilidades, $routeParams){
+app.controller('MainController',['$scope','$document','deviceDetector','$rootScope','$http','$location','$window','Utilidades', "$routeParams",
+   function($scope,$document,deviceDetector,$rootScope,$http,$location,$window,$utilidades, $routeParams){
 	$scope.lastscroll = 0;
 	$scope.hidebar = false;
 	
 	$rootScope.catalogo_entidades_anos=1;
 	$rootScope.treeview = false;
-
+	
 	numeral.language('es', numeral_language);
 	$window.document.title =  'MINFIN - '+$utilidades.sistema_nombre;
+	
+	$http.post('/SUsuario', { 
+	accion: 'getEtiquetasSistemaUsuario', 
+	t: (new Date()).getTime()}).success(								
+		function(response) {
+			$rootScope.etiquetas = {
+				id: response.etiquetas.id,
+				claseNombre: response.etiquetas.claseNombre,
+				proyecto: response.etiquetas.proyecto, 
+				colorPrincipal: response.etiquetas.colorPrincipal
+			}
+	});
+
+	
 	
 	$document.bind('scroll', function(){
 		if($document[0].body.scrollTop > 15){

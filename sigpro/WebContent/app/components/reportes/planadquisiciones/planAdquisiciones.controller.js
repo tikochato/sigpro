@@ -1,8 +1,8 @@
 var app = angular.module('planAdquisicionesController',['ngTouch','ngAnimate']);
-app.controller('planAdquisicionesController', [ '$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q',
-	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q){
+app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q',
+	function($scope, $rootScope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q){
 		var mi = this;
-		mi.tooltipObjetoTipo = ["Prestamo","Componente","Producto","Sub Producto","Actividad"];
+		mi.tooltipObjetoTipo = [$rootScope.etiquetas.proyecto,"Componente","Producto","Sub Producto","Actividad"];
 		var anioFiscal = new Date();
 		mi.anio = anioFiscal.getFullYear();
 		mi.enMillones = true;
@@ -144,7 +144,7 @@ app.controller('planAdquisicionesController', [ '$scope', '$http', '$interval', 
 		$http.post('/SProyecto',{accion: 'getProyectos'}).success(
 			function(response) {
 				mi.prestamos = [];
-				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un préstamo'});
+				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un '+$rootScope.etiquetas.proyecto});
 				if (response.success){
 					for (var i = 0; i < response.entidades.length; i++){
 						mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
@@ -375,7 +375,7 @@ app.controller('planAdquisicionesController', [ '$scope', '$http', '$interval', 
 					mi.calcularTotalColumnas();
 				}
 			}else
-				$utilidades.mensaje('warning','Debe de seleccionar un préstamo');
+				$utilidades.mensaje('warning','Debe de seleccionar un '+$rootScope.etiquetas.proyecto);
 		}
 		
 		mi.agruparMeses = function(anio){

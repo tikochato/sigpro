@@ -1,10 +1,10 @@
 var app = angular.module('proyectotipoController', [ 'ngTouch']);
 
-app.controller('proyectotipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$q','$uibModal', 'dialogoConfirmacion', 
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal, $dialogoConfirmacion) {
+app.controller('proyectotipoController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$q','$uibModal', 'dialogoConfirmacion', 
+	function($scope, $rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal, $dialogoConfirmacion) {
 		var mi=this;
 
-		$window.document.title = $utilidades.sistema_nombre+' - Tipo Préstamo';
+		$window.document.title = $utilidades.sistema_nombre+' - Tipo '+$rootScope.etiquetas.proyecto;
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.proyectotipos = [];
@@ -140,14 +140,14 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 					propiedades: idspropiedad
 				}).success(function(response){
 					if(response.success){
-						$utilidades.mensaje('success','Tipo de Préstamo '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
+						$utilidades.mensaje('success','Tipo de '+$rootScope.etiquetas.proyecto+' '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
 						mi.proyectotipo.id = response.id;
 						mi.obtenerTotalProyectotipos();
 
 					}
 					else
-						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' el Tipo de Préstamo');
+						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' el Tipo de '+$rootScope.etiquetas.proyecto);
 				});
 			}
 			else
@@ -162,7 +162,7 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 				$utilidades.setFocus(document.getElementById("nombre"));
 			}
 			else
-				$utilidades.mensaje('warning','Debe seleccionar el Tipo de Préstamo que desea editar');
+				$utilidades.mensaje('warning','Debe seleccionar el Tipo de '+$rootScope.etiquetas.proyecto+' que desea editar');
 		}
 
 
@@ -170,7 +170,7 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 			if(mi.proyectotipo!=null && mi.proyectotipo.id!=null){
 				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 						, "Confirmación de Borrado"
-						, '¿Desea borrar el tipo de préstamo "'+mi.proyectotipo.nombre+'"?'
+						, '¿Desea borrar el tipo de '+$rootScope.etiquetas.proyecto+' "'+mi.proyectotipo.nombre+'"?'
 						, "Borrar"
 						, "Cancelar")
 				.result.then(function(data) {
@@ -180,12 +180,12 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 							id: mi.proyectotipo.id
 						}).success(function(response){
 							if(response.success){
-								$utilidades.mensaje('success','Tipo de Préstamo borrado con éxito');
+								$utilidades.mensaje('success','Tipo de '+$rootScope.etiquetas.proyecto+' borrado con éxito');
 								mi.proyectotipo = null;
 								mi.obtenerTotalProyectotipos();
 							}
 							else
-								$utilidades.mensaje('danger','Error al borrar el Tipo Préstamo');
+								$utilidades.mensaje('danger','Error al borrar el Tipo '+$rootScope.etiquetas.proyecto);
 						});
 					}
 				}, function(){
@@ -193,7 +193,7 @@ app.controller('proyectotipoController',['$scope','$http','$interval','i18nServi
 				});
 			}
 			else
-				$utilidades.mensaje('warning','Debe seleccionar el Tipo de Préstamo que desea borrar');
+				$utilidades.mensaje('warning','Debe seleccionar el Tipo de '+$rootScope.etiquetas.proyecto+' que desea borrar');
 		};
 
 		mi.nuevo = function() {

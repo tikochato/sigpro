@@ -100,7 +100,7 @@
 							ng-required="true"
 							ng-change="desembolsosc.validarParametros()">
 							
-							<option value="">Seleccione una préstamo</option>
+							<option value="">Seleccione una {{etiquetas.proyecto}}</option>
 						</select>
 					</div>
 					<div class="form-group col-sm-1">
