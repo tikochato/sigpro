@@ -201,11 +201,11 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 					break;
 				}else if(fechaActual < mi.fechaSuscripcion){
 					row.planificadoDocs = "";
-					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
+					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del '+$rootScope.etiquetas.proyecto+' "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
 					break;
 				}else if(fechaActual > mi.fechaCierre){
 					row.planificadoDocs = "";
-					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
+					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del '+$rootScope.etiquetas.proyecto+' "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
 					break;
 				}
 				
@@ -219,11 +219,11 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 					break;
 				}else if(fechaActual < mi.fechaSuscripcion){
 					row.realDocs = "";
-					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
+					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del '+$rootScope.etiquetas.proyecto+' "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
 					break;
 				}else if(fechaActual > mi.fechaCierre){
 					row.realDocs = "";
-					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
+					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del '+$rootScope.etiquetas.proyecto+' "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
 					break;
 				}
 				
@@ -256,11 +256,11 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 				
 				if(fechaActual < mi.fechaSuscripcion){
 					row.planificadoLanzamiento = "";
-					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
+					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del '+$rootScope.etiquetas.proyecto+' "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
 					break;
 				}else if(fechaActual > mi.fechaCierre){
 					row.planificadoLanzamiento = "";
-					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
+					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del '+$rootScope.etiquetas.proyecto+' "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
 					break;
 				}
 				
@@ -291,11 +291,11 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 				
 				if(fechaActual < mi.fechaSuscripcion){
 					row.realLanzamiento = "";
-					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
+					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del '+$rootScope.etiquetas.proyecto+' "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
 					break;
 				}else if(fechaActual > mi.fechaCierre){
 					row.realLanzamiento = "";
-					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
+					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del '+$rootScope.etiquetas.proyecto+' "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
 					break;
 				}
 				
@@ -328,11 +328,11 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 				
 				if(fechaActual < mi.fechaSuscripcion){
 					row.planificadoRecepcionEval = "";
-					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
+					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del '+$rootScope.etiquetas.proyecto+' "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
 					break;
 				}else if(fechaActual > mi.fechaCierre){
 					row.planificadoRecepcionEval = "";
-					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
+					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del '+$rootScope.etiquetas.proyecto+' "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
 					break;
 				}
 				
@@ -362,11 +362,11 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 				
 				if(fechaActual < mi.fechaSuscripcion){
 					row.realRecepcionEval = "";
-					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
+					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del '+$rootScope.etiquetas.proyecto+' "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
 					break;
 				}else if(fechaActual > mi.fechaCierre){
 					row.realRecepcionEval = "";
-					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
+					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del '+$rootScope.etiquetas.proyecto+' "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
 					break;
 				}
 				
@@ -399,11 +399,11 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 				
 				if(fechaActual < mi.fechaSuscripcion){
 					row.planificadoAdjudica = "";
-					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
+					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del '+$rootScope.etiquetas.proyecto+' "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
 					break;
 				}else if(fechaActual > mi.fechaCierre){
 					row.planificadoAdjudica = "";
-					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
+					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del '+$rootScope.etiquetas.proyecto+' "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
 					break;
 				}
 				
@@ -433,11 +433,11 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 				
 				if(fechaActual < mi.fechaSuscripcion){
 					row.realAdjudica = "";
-					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
+					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del '+$rootScope.etiquetas.proyecto+' "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
 					break;
 				}else if(fechaActual > mi.fechaCierre){
 					row.realAdjudica = "";
-					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
+					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del '+$rootScope.etiquetas.proyecto+' "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
 					break;
 				}
 				
@@ -470,11 +470,11 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 				
 				if(fechaActual < mi.fechaSuscripcion){
 					row.planificadoFirma = "";
-					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
+					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del '+$rootScope.etiquetas.proyecto+' "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
 					break;
 				}else if(fechaActual > mi.fechaCierre){
 					row.planificadoFirma = "";
-					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
+					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del '+$rootScope.etiquetas.proyecto+' "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
 					break;
 				}
 				
@@ -504,11 +504,11 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 				
 				if(fechaActual < mi.fechaSuscripcion){
 					row.realFirma = "";
-					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del prestamo "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
+					$utilidades.mensaje('warning', 'No puede ser menor a la fecha de suscripcion del '+$rootScope.etiquetas.proyecto+' "' + moment(mi.fechaSuscripcion).format("DD/MM/YYYY") +'".');
 					break;
 				}else if(fechaActual > mi.fechaCierre){
 					row.realFirma = "";
-					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del prestamo "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
+					$utilidades.mensaje('warning', 'No puede ser mayor a la fecha de cierre del '+$rootScope.etiquetas.proyecto+' "' + moment(mi.fechaCierre).format("DD/MM/YYYY") +'".');
 					break;
 				}
 				

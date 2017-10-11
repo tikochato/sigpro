@@ -164,7 +164,7 @@
 									<div class="form-group">
 										<input type="text" class="inputText"  ng-model="controller.prestamo.numeroPrestamo" ng-required="true" 
 										ng-value="controller.prestamo.numeroPrestamo" onblur="this.setAttribute('value', this.value);">
-										<label class="floating-label" >* Número de prestamo</label>
+										<label class="floating-label" >* Número de {{etiquetas.proyecto}}</label>
 									</div>
 								</div>
 							</div>
