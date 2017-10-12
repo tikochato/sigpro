@@ -165,7 +165,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width:90%;" ng-keypress="grid.appScope.subproducto.filtrar($event,1)" ></input></div>'
 			}, 
 			{ displayName : 'Descripción', name : 'descripcion', cellClass : 'grid-align-left' },
-			{ displayName : 'Tipo', name : 'subproductoTipo', cellClass : 'grid-align-left', enableFiltering: false, enableSorting: false},  
+			{ displayName : 'Tipo', name : 'subProductoTipo', cellClass : 'grid-align-left', enableFiltering: false, enableSorting: false},  
 			{ displayName : 'Producto', name : 'producto', cellClass : 'grid-align-left', visible : false },
 			{ displayName : 'Subproducto', name : 'subproducto', cellClass : 'grid-align-left', visible : false },
 			{ name: 'usuarioCreo', displayName: 'Usuario Creación',cellClass: 'grid-align-left',
@@ -398,7 +398,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 			mi.entityselected = null;
 			mi.esNuevo = false;
 			mi.tipo = mi.subproducto.idSubproductoTipo;
-			mi.tipoNombre = mi.subproducto.subproductoTipo;
+			mi.tipoNombre = mi.subproducto.subProductoTipo;
 			
 			if(mi.subproducto.duracionDimension == 'd'){
 				mi.duracionDimension = mi.dimensiones[0];

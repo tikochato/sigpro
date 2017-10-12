@@ -12,6 +12,7 @@ import javax.persistence.NoResultException;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.joda.time.DateTime;
 
 import pojo.Actividad;
 import pojo.Componente;
@@ -393,125 +394,94 @@ public class ProyectoDAO implements java.io.Serializable  {
 					costo = proyecto.getCosto() != null ? proyecto.getCosto() : new BigDecimal(0);
 			}				
 		}catch(Exception e){
-			CLogger.write("16", Proyecto.class, e);
+			CLogger.write("14", Proyecto.class, e);
 		} 
 		
 		return costo;
 	}
 	
 	public static Date calcularFechaMinima(Proyecto proyecto){
-		Date ret = null;
+		DateTime fechaActual = null;
 		try{
+			List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(proyecto.getId(), 1);
+			if(actividades != null && actividades.size() > 0){
+				DateTime fechaMinima = new DateTime();
+				for(Actividad actividad : actividades){
+					if(fechaActual == null)
+						fechaActual = new DateTime(actividad.getFechaInicio());
+					else{
+						fechaMinima = new DateTime(actividad.getFechaInicio());
+						
+						if(fechaActual.isAfter(fechaMinima))
+							fechaActual = fechaMinima;
+					}
+				}
+			}
+			
 			Set<Componente> componentes = proyecto.getComponentes();
 			if(componentes != null && componentes.size() > 0){
 				Iterator<Componente> iterador = componentes.iterator();
-				Date fechaMinima = new Date();
+				DateTime fechaMinima = new DateTime();
 				while(iterador.hasNext()){
 					Componente componente = iterador.next();
-					if(ret == null)
-						ret = componente.getFechaInicio();
+					if(fechaActual == null)
+						fechaActual = new DateTime(componente.getFechaInicio());
 					else{
-						fechaMinima = componente.getFechaInicio();
+						fechaMinima = new DateTime(componente.getFechaInicio());
 						
-						if(ret.after(fechaMinima))
-							ret = fechaMinima;
+						if(fechaActual.isAfter(fechaMinima))
+							fechaActual = fechaMinima;
 					}
-				}
-				
-				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(proyecto.getId(), 1);
-				if(actividades != null && actividades.size() > 0){
-					fechaMinima = new Date();
-					for(Actividad actividad : actividades){
-						if(ret == null)
-							ret = actividad.getFechaInicio();
-						else{
-							fechaMinima = actividad.getFechaInicio();
-							
-							if(ret.after(fechaMinima))
-								ret = fechaMinima;
-						}
-					}
-				}
-			}else{
-				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(proyecto.getId(), 1);
-				if(actividades != null && actividades.size() > 0){
-					Date fechaMinima = new Date();
-					for(Actividad actividad : actividades){
-						if(ret == null)
-							ret = actividad.getFechaInicio();
-						else{
-							fechaMinima = actividad.getFechaInicio();
-							
-							if(ret.after(fechaMinima))
-								ret = fechaMinima;
-						}
-					}
-				}else
-					ret = proyecto.getFechaInicio();
-			}
-				
+				}	
+			}else if(fechaActual == null)
+				fechaActual = new DateTime(proyecto.getFechaInicio());	
 		}catch(Exception e){
-			CLogger.write("17", Proyecto.class, e);
+			CLogger.write("15", Proyecto.class, e);
 		}
 		
-		return ret;
+		return fechaActual.toDate();
 	}
 
 	public static Date calcularFechaMaxima(Proyecto proyecto){
-		Date ret = null;
+		DateTime fechaActual = null;
 		try{
+			List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(proyecto.getId(), 1);
+			if(actividades != null && actividades.size() > 0){
+				DateTime fechaMaxima = new DateTime();
+				for(Actividad actividad : actividades){
+					if(fechaActual == null)
+						fechaActual = new DateTime(actividad.getFechaFin());
+					else{
+						fechaMaxima = new DateTime(actividad.getFechaFin());
+						
+						if(fechaActual.isBefore(fechaMaxima))
+							fechaActual = fechaMaxima;
+					}
+				}
+			}
+			
 			Set<Componente> componentes = proyecto.getComponentes();
 			if(componentes != null && componentes.size() > 0){
 				Iterator<Componente> iterador = componentes.iterator();
-				Date fechaMaxima = new Date();
+				DateTime fechaMaxima = new DateTime();
 				while(iterador.hasNext()){
 					Componente componente = iterador.next();
-					if(ret == null)
-						ret = componente.getFechaFin();
+					if(fechaActual == null)
+						fechaActual = new DateTime(componente.getFechaFin());
 					else{
-						fechaMaxima = componente.getFechaFin();
+						fechaMaxima = new DateTime(componente.getFechaFin());
 						
-						if(ret.before(fechaMaxima))
-							ret = fechaMaxima;
+						if(fechaActual.isBefore(fechaMaxima))
+							fechaActual = fechaMaxima;
 					}
 				}
-				
-				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(proyecto.getId(), 1);
-				if(actividades != null && actividades.size() > 0){
-					fechaMaxima = new Date();
-					for(Actividad actividad : actividades){
-						if(ret == null)
-							ret = actividad.getFechaFin();
-						else{
-							fechaMaxima = actividad.getFechaFin();
-							
-							if(ret.before(fechaMaxima))
-								ret = fechaMaxima;
-						}
-					}
-				}
-			}else{
-				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(proyecto.getId(), 1);
-				if(actividades != null && actividades.size() > 0){
-					Date fechaMaxima = new Date();
-					for(Actividad actividad : actividades){
-						if(ret == null)
-							ret = actividad.getFechaFin();
-						else{
-							fechaMaxima = actividad.getFechaFin();
-							
-							if(ret.before(fechaMaxima))
-								ret = fechaMaxima;
-						}
-					}
-				}else
-					ret = proyecto.getFechaFin();
-			}
+			}else if(fechaActual == null)
+					fechaActual = new DateTime(proyecto.getFechaFin());
 				
 		}catch(Exception e){
-			CLogger.write("17", Proyecto.class, e);
+			CLogger.write("16", Proyecto.class, e);
 		}
 		
-		return ret;
+		return fechaActual.toDate();
 	}
 }
