@@ -30,10 +30,8 @@ import dao.ActividadDAO;
 import dao.ActividadPropiedadDAO;
 import dao.ActividadPropiedadValorDAO;
 import dao.AsignacionRaciDAO;
-import dao.ComponenteDAO;
 import dao.MatrizRaciDAO;
 import dao.ObjetoDAO;
-import dao.ProductoDAO;
 import dao.ProyectoDAO;
 import dao.SubproductoDAO;
 import pojo.Actividad;
@@ -44,9 +42,7 @@ import pojo.ActividadTipo;
 import pojo.AcumulacionCosto;
 import pojo.AsignacionRaci;
 import pojo.Colaborador;
-import pojo.Componente;
 import pojo.MatrizRaci;
-import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subproducto;
 import utilities.Utils;
@@ -356,32 +352,21 @@ public class SActividad extends HttpServlet {
 							}
 						}
 						
-						Integer proyectoId =null;
-						if(actividad.getProyectoBase()!=null)
-							proyectoId = actividad.getProyectoBase();
-						else if(actividad.getComponenteBase()!=null){
-							Componente c = ComponenteDAO.getComponente(actividad.getComponenteBase());
-							proyectoId = c.getProyecto().getId();
-						}
-						else if(actividad.getProductoBase()!=null){
-							Producto p = ProductoDAO.getProductoPorId(actividad.getProductoBase());
-							proyectoId = p.getComponente().getProyecto().getId();
-						}
-						MatrizRaci matrizRaci = AsignacionRaciDAO.getMatrizPorObjeto(proyectoId, 1);
-						if (matrizRaci == null){
-							matrizRaci = new MatrizRaci();
-							matrizRaci.setEstado(1);
-							matrizRaci.setFechaCreacion(new Date());
-							Proyecto proyTemp = ProyectoDAO.getProyecto(proyectoId);
-							matrizRaci.setProyecto(proyTemp);
-							matrizRaci.setUsuarioCreo(usuario);
-							MatrizRaciDAO.guardarMatrizRaci(matrizRaci);
-							
-						}
-						
 						String asignaciones_param = map.get("asignacionroles");
 						
 						if(!asignaciones_param.equals("")){
+							Integer proyectoId = (actividad.getTreePath()!=null) ? Integer.parseInt(actividad.getTreePath().substring(0,8))-10000000 : 0;
+							MatrizRaci matrizRaci = AsignacionRaciDAO.getMatrizPorObjeto(proyectoId, 1);
+							if (matrizRaci == null && proyectoId>0){
+								matrizRaci = new MatrizRaci();
+								matrizRaci.setEstado(1);
+								matrizRaci.setFechaCreacion(new Date());
+								Proyecto proyTemp = ProyectoDAO.getProyecto(proyectoId);
+								matrizRaci.setProyecto(proyTemp);
+								matrizRaci.setUsuarioCreo(usuario);
+								MatrizRaciDAO.guardarMatrizRaci(matrizRaci);
+								
+							}
 							String[] asignaciones = asignaciones_param.split("\\|");
 							if (asignaciones.length > 0){
 								for (String temp : asignaciones){

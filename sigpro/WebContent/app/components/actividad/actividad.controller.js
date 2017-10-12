@@ -180,7 +180,6 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 		if(!mi.esTreeview)
 			$http.post('/SObjeto', { accion: 'getObjetoPorId', id: $routeParams.objeto_id, tipo: mi.objetotipo, t: new Date().getTime()}).success(
 					function(response) {
-						mi.objetoid = response.id;
 						mi.objetoNombre = response.nombre;
 						mi.objetoTipoNombre = response.tiponombre;
 						var fechaInicioPadre = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
@@ -445,6 +444,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 				mi.actividadResponsable = "";
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
+				
 				
 				$scope.$broadcast('angucomplete-alt:changeInput','acumulacionTipo', mi.actividad.acumulacionTipoNombre);
 				$scope.$broadcast('angucomplete-alt:changeInput','tipoNombre', mi.actividad.actividadtiponombre);
