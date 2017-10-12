@@ -1112,7 +1112,7 @@ public class CPdf {
 					
 					PDPageContentStream contentStream = new PDPageContentStream(document, fpage, AppendMode.APPEND, true);
 					
-					PDStreamUtils.write(contentStream, "Ministerio de Finanzas PÃºblicas",
+					PDStreamUtils.write(contentStream, "Ministerio de Finanzas Públicas",
 		                    PDType1Font.HELVETICA_BOLD, 18, 50, 570, new Color(0, 0, 0));
 					
 					PDStreamUtils.write(contentStream, "SIPRO",
