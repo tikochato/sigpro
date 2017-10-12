@@ -1,3 +1,6 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ page import="servlets.SLogin.stetiqueta" %>
 var app = angular.module('sipro',['ngRoute','ui.bootstrap','chart.js', 'loadOnDemand','ngAnimate',
                                        'ui.grid', 'ui.grid.treeView', 'ui.grid.selection','ui.grid.moveColumns', 'ui.grid.resizeColumns', 'ui.grid.saveState','ui.grid.pinning',
                                        'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize','ngFlash','ngUtilidades','documentoAdjunto','dialogoConfirmacion',
@@ -125,8 +128,13 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	$rootScope.catalogo_entidades_anos=1;
 	$rootScope.treeview = true;
 
-	if(document.getElementById("etiquetasUsuario")){
-		$rootScope.etiquetas = JSON.parse(document.getElementById("etiquetasUsuario").innerHTML);
+	$rootScope.etiquetas={
+			proyecto: '<% 
+				if(session.getAttribute("sistemausuario")!=null){
+					stetiqueta etiquetas=((stetiqueta)session.getAttribute("sistemausuario"));
+					out.print(etiquetas.proyecto);
+				}
+			%>'
 	}
 	
 	numeral.language('es', numeral_language);
@@ -215,7 +223,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	});
 	
 	mi.setParentNode=function(nodo){
-		for(var i=0; i<nodo.children.length;i++){
+		for(var i=0; i < nodo.children.length;i++){
 			nodo.children[i].parent = nodo;
 			mi.setParentNode(nodo.children[i]);
 		}

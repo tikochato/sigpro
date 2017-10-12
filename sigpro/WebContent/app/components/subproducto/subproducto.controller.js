@@ -400,6 +400,8 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 			mi.tipo = mi.subproducto.subProductoTipoId; 
 			mi.tipoNombre = mi.subproducto.subProductoTipo;
 			
+			mi.productoId = mi.subproducto.idProducto;
+			
 			if(mi.subproducto.duracionDimension == 'd'){
 				mi.duracionDimension = mi.dimensiones[0];
 			}
