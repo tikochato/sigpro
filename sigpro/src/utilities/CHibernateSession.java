@@ -22,7 +22,7 @@ public class CHibernateSession {
 				try {
 					InitialContext context = new InitialContext();
 				    DataSource ds = (DataSource) context.lookup("java:comp/env/jdbc/sipro");
-			    	Connection conn = ds.getConnection();
+				    Connection conn = ds.getConnection();
 			    	conn.isClosed();
 			    	configuration.configure();
 			    	conn.close();
