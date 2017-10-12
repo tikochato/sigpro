@@ -210,7 +210,7 @@
 				    						<th class="label-form" style="text-align: center; min-width: 90px; max-width: 90px">Real</th>
 		    							</tr>
 		    						</thead>
-		    						<tbody vs-repeat class="cuerpoTablaDatos" id="divTablaDatos" ng-mouseover="ctrladqui.activarScroll('divTablaDatos')" scrollespejoctrl>
+		    						<tbody vs-repeat class="cuerpoTablaDatos" id="divTablaDatos" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)">
 		    							<tr ng-repeat="row in ctrladqui.rowCollectionPrestamo">
 		    								<td class="divisionColumna truncate" style="min-width:300px;max-width:300px;">
 				    							<div style="height: 25px;">
