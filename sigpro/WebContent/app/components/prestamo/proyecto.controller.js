@@ -406,7 +406,10 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 											}else
 												$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el '+$rootScope.etiquetas.proyecto);
 								});
-						} 
+						}
+						else{
+							$utilidades.mensaje('success',$rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+						}
 						
 						mi.esNuevo = false;
 						
