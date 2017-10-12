@@ -20,9 +20,9 @@ app.controller('loginController', [
 			if(this.username!='' && this.password!=''){
 				var data = { username: this.username, password: this.password};
 				$http.post('/SLogin', data).then(function(response){
-					if(response.data.success==true){
+					if(response.data.success==true)
 					   	window.location.href = '/main.jsp';
-					}else
+					else
 					    $scope.showerror = true;
 				 	}, function errorCallback(response){
 				 		$scope.showerror = true;
