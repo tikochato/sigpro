@@ -26,6 +26,7 @@ import dao.ComponenteDAO;
 import dao.ObjetoDAO;
 import dao.ProductoDAO;
 import dao.SubproductoDAO;
+import dao.SubproductoDAO.EstructuraPojo;
 import dao.SubproductoPropiedadDAO;
 import dao.SubproductoPropiedadValorDAO;
 import dao.SubproductoUsuarioDAO;
@@ -458,19 +459,19 @@ public class SSubproducto extends HttpServlet {
 		Subproducto subproducto = SubproductoDAO.getSubproductoPorId(id,usuario);
 		String resultadoJson="";
 		if (subproducto!=null){
-			stsubproducto temp = new stsubproducto();
+			EstructuraPojo temp = new EstructuraPojo();
 			temp.id = subproducto.getId();
 			temp.nombre = subproducto.getNombre();
 			temp.descripcion = subproducto.getDescripcion();
 			temp.usuarioCreo = subproducto.getUsuarioCreo();
-			temp.usuarioActualizo = subproducto.getUsuarioActualizo();
+			temp.usuarioactualizo = subproducto.getUsuarioActualizo();
 			temp.fechaCreacion = Utils.formatDateHour(subproducto.getFechaCreacion());
-			temp.fechaActualizacion = Utils.formatDateHour(subproducto.getFechaActualizacion());
+			temp.fechaactualizacion = Utils.formatDateHour(subproducto.getFechaActualizacion());
 			temp.estado = subproducto.getEstado();
 			temp.snip = subproducto.getSnip();
 			temp.programa = subproducto.getPrograma();
 			temp.subprograma = subproducto.getSubprograma();
-			temp.proyecto = subproducto.getProyecto();
+			temp.proyecto_ = subproducto.getProyecto();
 			temp.actividad = subproducto.getActividad();
 			temp.obra = subproducto.getObra();
 			temp.latitud = subproducto.getLatitud();
@@ -479,15 +480,14 @@ public class SSubproducto extends HttpServlet {
 			temp.fechaFin = Utils.formatDate(subproducto.getFechaFin());
 			temp.duracion = subproducto.getDuracion();
 			temp.duracionDimension = subproducto.getDuracionDimension();
-			temp.subProductoTipo = subproducto.getSubproductoTipo().getNombre();
-			temp.subProductoTipoId = subproducto.getSubproductoTipo().getId();
 			temp.costo = subproducto.getCosto();
 			temp.acumulacionCosto = subproducto.getAcumulacionCosto()!=null ? subproducto.getAcumulacionCosto().getId() : null;
 			temp.acumulacionCostoNombre = subproducto.getAcumulacionCosto()!=null ? subproducto.getAcumulacionCosto().getNombre() : null;
-			temp.producto = subproducto.getProducto();
+			temp.idProducto = subproducto.getProducto().getId();
+			
 			
 			if (subproducto.getSubproductoTipo() != null){
-				temp.subProductoTipoId = subproducto.getSubproductoTipo().getId();
+				temp.idSubproductoTipo = subproducto.getSubproductoTipo().getId();
 				temp.subProductoTipo = subproducto.getSubproductoTipo().getNombre();
 			}
 			
