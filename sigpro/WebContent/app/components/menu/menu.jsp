@@ -110,5 +110,6 @@
 		        	<i class='fa fa-chevron-down fa-12x isDown' id='toggle'></i>
 		    	</p>
 			</div>
+			<label id="etiquetasUsuario" hidden>${sistemausuario}</label>
 	    </div>
 	</nav>

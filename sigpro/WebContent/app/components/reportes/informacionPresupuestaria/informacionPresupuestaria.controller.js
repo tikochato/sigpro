@@ -638,7 +638,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 			mes = Math.floor((indice)/mi.aniosTotal.length);
 			anio = indice - (mes*mi.aniosTotal.length);
 			var item = mi.data[itemIndice];
-			var valor = item.anios[anio].mes[mes];
+			var valor = item.anios[anio].mes[mes]!=null ? item.anios[anio].mes[mes] : 0; 
 			return valor;
 		};
 		

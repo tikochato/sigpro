@@ -183,19 +183,20 @@ public class ObjetoDAO {
 								for(int a=0; a<(anioFinal-anioInicial+1); a++){
 									objetoCosto.anios[a].anio=anioInicial+a;
 									ObjetoCosto.stanio anioObj = objetoCosto.anios[a];
-									int diaInicial = objetoCosto.getFecha_inicial().getDayOfMonth();
-									int mesInicial = objetoCosto.getFecha_inicial().getMonthOfYear() -1;
-									int anioInicialObj = objetoCosto.getFecha_inicial().getYear();
-									int diaFinal = objetoCosto.getFecha_final().getDayOfMonth();
-									int mesFinal = objetoCosto.getFecha_final().getMonthOfYear() -1;
-									int anioFinalObj = objetoCosto.getFecha_final().getYear();
-									if((anioInicial+a) >= anioInicialObj && (anioInicial+a)<=anioFinalObj){
-										if(objetoCosto.getAcumulacion_costoid() != null){
-											if(objetoCosto.getAcumulacion_costoid() == 1){						
+									if(objetoCosto.getFecha_inicial()!=null && objetoCosto.getFecha_final()!=null){
+										int diaInicial = objetoCosto.getFecha_inicial().getDayOfMonth();
+										int mesInicial = objetoCosto.getFecha_inicial().getMonthOfYear() -1;
+										int anioInicialObj = objetoCosto.getFecha_inicial().getYear();
+										int diaFinal = objetoCosto.getFecha_final().getDayOfMonth();
+										int mesFinal = objetoCosto.getFecha_final().getMonthOfYear() -1;
+										int anioFinalObj = objetoCosto.getFecha_final().getYear();
+										if((anioInicial+a) >= anioInicialObj && (anioInicial+a)<=anioFinalObj){
+											Integer acumulacionCostoId = objetoCosto.getAcumulacion_costoid()!=null ? objetoCosto.getAcumulacion_costoid() : 3;
+											if(acumulacionCostoId.compareTo(1)==0){						
 												if(anioInicialObj == (anioInicial+a)){
 													anioObj.mes[mesInicial].planificado =  objetoCosto.getCosto() != null ? objetoCosto.getCosto() : new BigDecimal(0);
 												}
-											}else if(objetoCosto.getAcumulacion_costoid() == 2){
+											}else if(acumulacionCostoId.compareTo(2)==0){
 												int dias = (int)((objetoCosto.getFecha_final().getMillis() - objetoCosto.getFecha_inicial().getMillis())/(1000*60*60*24));
 												BigDecimal costoDiario = objetoCosto.getCosto() != null ? objetoCosto.getCosto().divide(new BigDecimal(dias),5, BigDecimal.ROUND_HALF_UP) : new BigDecimal(0);
 												int inicioActual = 0;
@@ -223,7 +224,7 @@ public class ObjetoDAO {
 														anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
 													}
 												}
-											}else if(objetoCosto.getAcumulacion_costoid() ==3){
+											}else{
 												if(anioFinalObj == anioObj.anio){
 													anioObj.mes[mesFinal].planificado =  objetoCosto.getCosto() != null ? objetoCosto.getCosto() : new BigDecimal(0);
 												}

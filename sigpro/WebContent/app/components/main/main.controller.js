@@ -546,20 +546,10 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	
 	numeral.language('es', numeral_language);
 	$window.document.title =  'MINFIN - '+$utilidades.sistema_nombre;
-	
-	$http.post('/SUsuario', { 
-	accion: 'getEtiquetasSistemaUsuario', 
-	t: (new Date()).getTime()}).success(								
-		function(response) {
-			$rootScope.etiquetas = {
-				id: response.etiquetas.id,
-				claseNombre: response.etiquetas.claseNombre,
-				proyecto: response.etiquetas.proyecto, 
-				colorPrincipal: response.etiquetas.colorPrincipal
-			}
-	});
-
-	
+		
+	if(document.getElementById("etiquetasUsuario")){
+		$rootScope.etiquetas = JSON.parse(document.getElementById("etiquetasUsuario").innerHTML);
+	}
 	
 	$document.bind('scroll', function(){
 		if($document[0].body.scrollTop > 15){
