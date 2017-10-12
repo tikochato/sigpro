@@ -573,6 +573,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 
 		resultado.then(function(itemSeleccionado) {
 			mi.tipo = itemSeleccionado.id;
+			
 			mi.tipoNombre = itemSeleccionado.nombre;
 			
 			var parametros = { 
