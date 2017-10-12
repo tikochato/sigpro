@@ -10,7 +10,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	mi.botones = true;
 	
 	if(!mi.esTreeview)
-		$window.document.title = $utilidades.sistema_nombre+' - Préstamos';
+		$window.document.title = $utilidades.sistema_nombre+' - '+$rootScope.etiquetas.proyecto+'s';
 		
 	mi.rowCollection = [];
 	mi.proyecto = null;
@@ -92,7 +92,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			{ name: 'nombre',  displayName: 'Nombre',cellClass: 'grid-align-left',
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'nombre\']" ng-keypress="grid.appScope.controller.filtrar($event)" style="width:175px;"></input></div>'
 			},
-			{ name : 'proyectotipo',    displayName : 'Caracterización préstamo' ,cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false },
+			{ name : 'proyectotipo',    displayName : 'Caracterización '+$rootScope.etiquetas.proyecto ,cellClass: 'grid-align-left', enableFiltering: false, enableSorting: false },
 			{ name : 'unidadejecutora',    displayName : 'Unidad ejecutora' ,cellClass: 'grid-align-left', enableFiltering: false , enableSorting: false },
 			{ name : 'cooperante',   displayName : 'Organismo financiero internacional' ,cellClass: 'grid-align-left',  enableFiltering: false , enableSorting: false },
 			{ name: 'usuarioCreo', width: 120, displayName: 'Usuario Creación',cellClass: 'grid-align-left',
@@ -297,7 +297,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				visionGeneral : mi.proyecto.visionGeneral,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
 				ejecucionFisicaReal: mi.proyecto.ejecucionFisicaReal,
-				proyectoClase: mi.proyecto.proyectoClase,
+				proyectoClase: $rootScope.etiquetas.id,
 				t:moment().unix()
 			};
 			$http.post('/SProyecto',param_data).then(
@@ -392,18 +392,18 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 													mi.obtenerTotalProyectos();
 												if(mi.child_desembolso!=null || mi.child_riesgo!=null){
 													if(mi.child_desembolso)
-														ret = mi.child_desembolso.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
-																'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo',
+														ret = mi.child_desembolso.guardar($rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+																'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el '+$rootScope.etiquetas.proyecto,
 																mi.child_riesgo!=null ? mi.child_riesgo.guardar :  null);
 													else if(mi.child_riesgo)
-														ret = mi.child_riesgo.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
-																'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
+														ret = mi.child_riesgo.guardar($rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+																'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el '+$rootScope.etiquetas.proyecto);
 												}
 												else
-													$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+													$utilidades.mensaje('success',$rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 													
 											}else
-												$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
+												$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el '+$rootScope.etiquetas.proyecto);
 								});
 						} 
 						
@@ -411,7 +411,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 						
 						
 					}else
-						$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
+						$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el '+$rootScope.etiquetas.proyecto);
 			});
 
 			mi.esNuevoDocumento = false;
@@ -423,7 +423,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 		if(mi.proyecto !=null && mi.proyecto.id!=null){
 			$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 					, "Confirmación de Borrado"
-					, '¿Desea borrar el Préstamo "'+mi.proyecto.nombre+'"?'
+					, '¿Desea borrar el '+$rootScope.etiquetas.proyecto+' "'+mi.proyecto.nombre+'"?'
 					, "Borrar"
 					, "Cancelar")
 			.result.then(function(data) {
@@ -434,12 +434,12 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 						t:moment().unix()
 					}).success(function(response){
 						if(response.success){
-							$utilidades.mensaje('success','Préstamo borrado con éxito');
+							$utilidades.mensaje('success',$rootScope.etiquetas.proyecto+' borrado con éxito');
 							mi.proyecto = null;
 							mi.obtenerTotalProyectos();
 						}
 						else
-							$utilidades.mensaje('danger','Error al borrar el Préstamo');
+							$utilidades.mensaje('danger','Error al borrar el '+$rootScope.etiquetas.proyecto);
 					});
 				}
 			}, function(){
@@ -447,7 +447,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			});
 		}
 		else
-			$utilidades.mensaje('warning','Debe seleccionar el Préstamo que desea borrar');
+			$utilidades.mensaje('warning','Debe seleccionar el '+$rootScope.etiquetas.proyecto+' que desea borrar');
 	};
 
 	mi.nuevo = function (){
@@ -579,7 +579,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			
 		}
 		else
-			$utilidades.mensaje('warning','Debe seleccionar el Préstamo que desea editar');
+			$utilidades.mensaje('warning','Debe seleccionar el '+$rootScope.etiquetas.proyecto+' que desea editar');
 	}
 
 	mi.adjuntarDocumentos = function(){
@@ -798,7 +798,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 
 
 	mi.buscarProyectoTipo = function() {
-		var resultado = mi.llamarModalBusqueda('Tipos de Préstamo','/SProyectoTipo', {
+		var resultado = mi.llamarModalBusqueda('Tipos de '+$rootScope.etiquetas.proyecto,'/SProyectoTipo', {
 			accion : 'numeroProyectoTipos',t:moment().unix()
 		}, function(pagina, elementosPorPagina) {
 			return {
@@ -919,9 +919,9 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			mi.mostrarcargando=false;
 			if (resultado.data.success){
 				mi.obtenerTotalProyectos();
-				$utilidades.mensaje('success','Préstamo creado con éxito');
+				$utilidades.mensaje('success',$rootScope.etiquetas.proyecto+' creado con éxito');
 			}else{
-				$utilidades.mensaje('danger','Error al crear el Préstamo');
+				$utilidades.mensaje('danger','Error al crear el '+$rootScope.etiquetas.proyecto);
 			}
 			
 		});
@@ -1233,7 +1233,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			if (mi.proyecto!=null && mi.proyecto.id!=null) {
 				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 						, "Confirmación de Borrado"
-						, '¿Desea borrar el préstamo "' + mi.proyecto.nombre + '"?'
+						, '¿Desea borrar el '+$rootScope.etiquetas.proyecto+' "' + mi.proyecto.nombre + '"?'
 						, "Borrar"
 						, "Cancelar")
 				.result.then(function(data) {
@@ -1247,12 +1247,12 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 									function(response) {
 										if (response.success) {
 											
-											$utilidades.mensaje('success','Préstamo borrado con éxito');
+											$utilidades.mensaje('success',$rootScope.etiquetas.proyecto+' borrado con éxito');
 											mi.proyecto = null;		
 											$rootScope.$emit("eliminarNodo", {});
 										} else{
 											$utilidades.mensaje('danger',
-													'Error al borrar el Préstamo');
+													'Error al borrar el '+$rootScope.etiquetas.proyecto);
 										}
 									});
 					}
@@ -1261,7 +1261,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				});
 			} else {
 				$utilidades.mensaje('warning',
-						'Debe seleccionar el préstamo que desee borrar');
+						'Debe seleccionar el '+$rootScope.etiquetas.proyecto+' que desee borrar');
 			}
 		};
 		

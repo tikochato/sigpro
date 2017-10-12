@@ -1,10 +1,10 @@
 var app = angular.module('proyectopropiedadController', []);
 
-app.controller('proyectopropiedadController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog', 'dialogoConfirmacion', 
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog, $dialogoConfirmacion) {
+app.controller('proyectopropiedadController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog', 'dialogoConfirmacion', 
+	function($scope,$rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog, $dialogoConfirmacion) {
 		var mi=this;
 		
-		$window.document.title = $utilidades.sistema_nombre+' - Propiedad Préstamo';
+		$window.document.title = $utilidades.sistema_nombre+' - Propiedad '+$rootScope.etiquetas.proyecto;
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.proyectopropiedades = [];
@@ -127,7 +127,7 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 					t: (new Date()).getTime()
 				}).success(function(response){
 					if(response.success){
-						$utilidades.mensaje('success','Propiedad de Préstamo '+(mi.esnuevo ? 'creada' : 'guardada')+' con éxito');
+						$utilidades.mensaje('success','Propiedad de '+$rootScope.etiquetas.proyecto+' '+(mi.esnuevo ? 'creada' : 'guardada')+' con éxito');
 						mi.proyectopropiedad.id = response.id;
 						mi.proyectopropiedad.usuarioCreo = response.usuarioCreo;
 						mi.proyectopropiedad.fechaCreacion = response.fechaCreacion;
@@ -137,7 +137,7 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 						mi.obtenerTotalProyectoPropiedades();
 					}
 					else
-						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' la Propiedad de Préstamo');
+						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' la Propiedad de '+$rootScope.etiquetas.proyecto);
 				});
 			}
 			else
@@ -148,7 +148,7 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 			if(mi.proyectopropiedad!=null && mi.proyectopropiedad.id!=null){
 				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 						, "Confirmación de Borrado"
-						, '¿Desea borrar la Propiedad de Préstamo "'+mi.proyectopropiedad.nombre+'"?'
+						, '¿Desea borrar la Propiedad de '+$rootScope.etiquetas.proyecto+' "'+mi.proyectopropiedad.nombre+'"?'
 						, "Borrar"
 						, "Cancelar")
 				.result.then(function(data) {
@@ -159,12 +159,12 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 							t: (new Date()).getTime()
 						}).success(function(response){
 							if(response.success){
-								$utilidades.mensaje('success','Propiedad de Préstamo borrado con éxito');
+								$utilidades.mensaje('success','Propiedad de '+$rootScope.etiquetas.proyecto+' borrado con éxito');
 								mi.proyectopropiedad = null;
 								mi.obtenerTotalProyectoPropiedades();
 							}
 							else
-								$utilidades.mensaje('danger','Error al borrar la Propiedad de Préstamo');
+								$utilidades.mensaje('danger','Error al borrar la Propiedad de '+$rootScope.etiquetas.proyecto);
 						});
 					}
 				}, function(){
@@ -172,7 +172,7 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 				});
 			}
 			else
-				$utilidades.mensaje('warning','Debe seleccionar la Propiedad de Préstamo que desea borrar');
+				$utilidades.mensaje('warning','Debe seleccionar la Propiedad de '+$rootScope.etiquetas.proyecto+' que desea borrar');
 		};
 	
 		mi.nuevo = function() {
@@ -195,7 +195,7 @@ app.controller('proyectopropiedadController',['$scope','$http','$interval','i18n
 				$utilidades.setFocus(document.getElementById("nombre"));
 			}
 			else
-				$utilidades.mensaje('warning','Debe seleccionar la Propiedad de Préstamo que desea editar');
+				$utilidades.mensaje('warning','Debe seleccionar la Propiedad de '+$rootScope.etiquetas.proyecto+' que desea editar');
 		}
 	
 		mi.irATabla = function() {

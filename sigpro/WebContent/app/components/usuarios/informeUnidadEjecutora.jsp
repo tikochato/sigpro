@@ -30,7 +30,7 @@
 			
 	    </div>
 	    <div class="second-main-form">
-			<h3>Préstamos</h3>
+			<h3>{{etiquetas.proyecto}}s</h3>
 			
 			<table style="width: 100%; overflow-y: scroll;height: 175px;display: block;"
 			st-table="controller.prestamos"  ng-show="!usuarioc.esNuevo"
@@ -66,7 +66,7 @@
 			</div> 
 			<br>
 				<div class="panel panel-default">
-					<div class="panel-heading label-form" style="text-align: center;">Roles por préstamo</div>
+					<div class="panel-heading label-form" style="text-align: center;">Roles por {{etiquetas.proyecto}}</div>
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6">

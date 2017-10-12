@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <div class="modal-header">
-     <h3 class="modal-title">Préstamo</h3>
+     <h3 class="modal-title">{{etiquetas.proyecto}}</h3>
  </div>
 <div class="modal-body" id="modal-body">
 	<div class="row">
@@ -21,7 +21,7 @@
 		            	<input type="text" class="inputText"  ng-model="prestamoc.proyectotiponombre" ng-value="prestamoc.proyectotiponombre" 
 		            		ng-click="prestamoc.buscarProyectoTipo()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
 		            	<span class="label-icon" ng-click="prestamoc.buscarProyectoTipo()"><i class="glyphicon glyphicon-search"></i></span>
-		          		<label  class="floating-label">* Categoría Préstamo</label>
+		          		<label  class="floating-label">* Categoría {{etiquetas.proyecto}}</label>
 		          	</div>
 		          	<div class="form-group">
 			            <input type="text" class="inputText"  ng-model="prestamoc.unidadejecutoranombre" ng-readonly="true" ng-required="true" 

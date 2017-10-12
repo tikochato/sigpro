@@ -722,7 +722,7 @@ public class UsuarioDAO {
 			criteria_u.setParameter("usuario", usuario);
 			criteria_u.executeUpdate();
 			session.getTransaction().commit();
-			session.flush();
+//			session.flush();
 			ret = true;
 		}catch(Throwable e){
 			CLogger.write("31", UsuarioDAO.class, e);

@@ -8,7 +8,7 @@
 		</shiro:lacksPermission>
 		
 		<div class="panel panel-default">
-			<div class="panel-heading"><h3>Propiedades de Préstamo</h3></div>
+			<div class="panel-heading"><h3>Propiedades de {{etiquetas.proyecto}}</h3></div>
 		</div>
 	
 		<div class="row" align="center" ng-hide="proyectopropiedadc.mostraringreso">

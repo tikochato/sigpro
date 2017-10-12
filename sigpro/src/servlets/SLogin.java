@@ -81,6 +81,7 @@ public class SLogin extends HttpServlet {
 				sesionweb.setAttribute("usuario", user.getUsuario());
 				CShiro.setAttribute("username", user.getUsuario());
 				CShiro.setAttribute("user",user);
+				sesionweb.setAttribute("sistemausuario", user.getSistemaUsuario());
 				response.getWriter().write("{ \"success\": true }");
 				UsuarioDAO.userLoginHistory(user.getUsuario());
 			} catch (UnknownAccountException uae) {

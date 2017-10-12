@@ -356,7 +356,7 @@ public class SPrestamoMetas extends HttpServlet {
 			excel = new CExcel("Avance de Metas", false, null);
 			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
 			datosMetas = generarDatosMetas(prestamoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
-			wb=excel.generateExcelOfData(datosMetas, "Avance de Metas - Préstamo "+ProyectoDAO.getProyecto(prestamoId).getNombre(), headers, null, true, usuario);
+			wb=excel.generateExcelOfData(datosMetas, "Avance de Metas - "+ProyectoDAO.getProyecto(prestamoId).getNombre(), headers, null, true, usuario);
 		
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());

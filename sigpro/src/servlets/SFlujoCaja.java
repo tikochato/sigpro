@@ -2,6 +2,8 @@ package servlets;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
@@ -39,6 +41,7 @@ import pojo.Prestamo;
 import utilities.CExcel;
 import utilities.CLogger;
 import utilities.CMariaDB;
+import utilities.CPdf;
 import utilities.Utils;
 
 @WebServlet("/SFlujoCaja")
@@ -149,57 +152,55 @@ public class SFlujoCaja extends HttpServlet {
 				CLogger.write("2", SFlujoCaja.class, e);
 			}
 		}else if(accion.equals("exportarPdf")){
-//			CPdf archivo = new CPdf("Flujo de Caja");
-//			int proyectoId = Utils.String2Int(map.get("proyectoid"), 0);
-//			int anioInicio = Utils.String2Int(map.get("fechaInicio"), 0);
-//			int anioFin = Utils.String2Int(map.get("fechaFin"), 0);
-//			int agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
-//			int tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
-//			String headers[][];
-//			String datosMetas[][];
-//			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
-//			datosMetas = generarDatosFlujoCaja(proyectoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
-////			String path = archivo.ExportPdfFlujoCaja(headers, datosMetas,tipoVisualizacion);
-//			String path="";
-//			File file=new File(path);
-//			if(file.exists()){
-//		        FileInputStream is = null;
-//		        try {
-//		        	is = new FileInputStream(file);
-//		        }
-//		        catch (Exception e) {
-//		        	
-//		        }
-//		        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
-//		        
-//		        int readByte = 0;
-//		        byte[] buffer = new byte[2024];
-//
-//                while(true)
-//                {
-//                    readByte = is.read(buffer);
-//                    if(readByte == -1)
-//                    {
-//                        break;
-//                    }
-//                    outByteStream.write(buffer);
-//                }
-//                
-//                file.delete();
-//                
-//                is.close();
-//                outByteStream.flush();
-//                outByteStream.close();
-//                
-//		        byte [] outArray = Base64.encode(outByteStream.toByteArray());
-//				response.setContentType("application/pdf");
-//				response.setContentLength(outArray.length);
-//				response.setHeader("Cache-Control", "no-cache");  
-//				response.setHeader("Content-Disposition", "in-line; 'Flujo_de_Caja.pdf'");
-//				OutputStream outStream = response.getOutputStream();
-//				outStream.write(outArray);
-//				outStream.flush();
-//			}
+			try{
+				int proyectoId = Utils.String2Int(map.get("proyectoid"), 0);
+				Date fechaCorte = Utils.dateFromString(map.get("fechaCorte"));
+				int agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
+	
+				CPdf archivo = new CPdf("Flujo de Caja");
+				String headers[][];
+				String datos[][];
+				headers = generarHeaders(fechaCorte, agrupacion);
+				datos = generarDatosFlujoCaja(proyectoId, fechaCorte, agrupacion, headers[0].length, usuario);
+				String path = archivo.ExportarPdfFlujoCaja(headers, datos, usuario);
+				File file=new File(path);
+				if(file.exists()){
+			        FileInputStream is = null;
+		        	is = new FileInputStream(file);
+			        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+			        
+			        int readByte = 0;
+			        byte[] buffer = new byte[2024];
+	
+	                while(true)
+	                {
+	                    readByte = is.read(buffer);
+	                    if(readByte == -1)
+	                    {
+	                        break;
+	                    }
+	                    outByteStream.write(buffer);
+	                }
+	                
+	                file.delete();
+	                
+	                is.close();
+	                outByteStream.flush();
+	                outByteStream.close();
+	                
+			        byte [] outArray = Base64.encode(outByteStream.toByteArray());
+					response.setContentType("application/pdf");
+					response.setContentLength(outArray.length);
+					response.setHeader("Cache-Control", "no-cache"); 
+					response.setHeader("Content-Disposition", "in-line; 'Flujo_Caja.pdf'");
+					OutputStream outStream = response.getOutputStream();
+					outStream.write(outArray);
+					outStream.flush();
+				}
+
+			}catch(Exception e){
+				CLogger.write("4", SFlujoCaja.class, e);
+			}
 			
 		}
 		else{
@@ -309,15 +310,15 @@ public class SFlujoCaja extends HttpServlet {
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
-		String datosMetas[][];
+		String datos[][];
 		
 		Workbook wb=null;
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{		
 			excel = new CExcel("Flujo de Caja", false, null);
 			headers = generarHeaders(fechaCorte, agrupacion);
-			datosMetas = generarDatosFlujoCaja(prestamoId, fechaCorte, agrupacion, headers[0].length, usuario);
-			wb=excel.generateExcelOfData(datosMetas, "Flujo de Caja - Préstamo "+ProyectoDAO.getProyecto(prestamoId).getNombre(), headers, null, true, usuario);
+			datos = generarDatosFlujoCaja(prestamoId, fechaCorte, agrupacion, headers[0].length, usuario);
+			wb=excel.generateExcelOfData(datos, "Flujo de Caja - "+ProyectoDAO.getProyecto(prestamoId).getNombre(), headers, null, true, usuario);
 		
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
@@ -329,7 +330,7 @@ public class SFlujoCaja extends HttpServlet {
 	
 	private String[][] generarHeaders(Date fechaCorte, int agrupacion){
 		String headers[][];
-		String[][] AgrupacionesTitulo = new String[][]{{"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"},
+		String[][] AgrupacionesTitulo = new String[][]{{"Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"},
 			{"Bimestre 1", "Bimestre 2","Bimestre 3","Bimestre 4","Bimestre 5","Bimestre 6"},
 			{"Trimestre 1", "Trimestre 2", "Trimestre 3", "Trimestre 4"},
 			{"Cuatrimestre 1", "Cuatrimestre 2", "Cuatrimestre 3"},

@@ -56,7 +56,6 @@ public class ProyectoDAO implements java.io.Serializable  {
 				session.flush();
 				proyecto.setTreePath((10000000+proyecto.getId())+"");
 			}
-			session.saveOrUpdate(proyecto);
 			Usuario usu = UsuarioDAO.getUsuario( proyecto.getUsuarioCreo());
 			ProyectoUsuario pu = new ProyectoUsuario(new ProyectoUsuarioId(proyecto.getId(),proyecto.getUsuarioCreo()), proyecto,usu);
 			session.saveOrUpdate(pu);
@@ -68,18 +67,17 @@ public class ProyectoDAO implements java.io.Serializable  {
 				proyecto.setCosto(ProyectoDAO.calcularCosto(proyecto));
 				Date fechaMinima = calcularFechaMinima(proyecto);
 				Date fechaMaxima = calcularFechaMaxima(proyecto);
-				Integer duracion = Utils.getWorkingDays(fechaMinima, fechaMaxima);
-				
+				if(fechaMinima!=null && fechaMaxima!=null){
+					Integer duracion = Utils.getWorkingDays(fechaMinima, fechaMaxima);
+					proyecto.setDuracion(duracion);
+				}
 				proyecto.setFechaInicio(fechaMinima);
 				proyecto.setFechaFin(fechaMaxima);
-				proyecto.setDuracion(duracion.intValue());
-				session.saveOrUpdate(proyecto);
-				session.getTransaction().commit();
-				session.close();
 			}
-			
+
 			session.saveOrUpdate(proyecto);
 			session.getTransaction().commit();
+			session.close();
 			ret = true;
 		}
 		catch(Throwable e){

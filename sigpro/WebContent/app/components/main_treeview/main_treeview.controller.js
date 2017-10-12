@@ -125,6 +125,18 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	$rootScope.catalogo_entidades_anos=1;
 	$rootScope.treeview = true;
 
+	$http.post('/SUsuario', { 
+		accion: 'getEtiquetasSistemaUsuario', 
+		t: (new Date()).getTime()}).success(								
+			function(response) {
+				$rootScope.etiquetas = {
+					id: response.etiquetas.id,
+					claseNombre: response.etiquetas.claseNombre,
+					proyecto: response.etiquetas.proyecto, 
+					colorPrincipal: response.etiquetas.colorPrincipal
+				}
+		});
+	
 	numeral.language('es', numeral_language);
 	$window.document.title =  'MINFIN - '+$utilidades.sistema_nombre;
 	

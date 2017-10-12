@@ -1,7 +1,7 @@
 var app = angular.module('mapaController', [ 'ngTouch','angularjs-dropdown-multiselect' ]);
 
-app.controller('mapaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','uiGmapGoogleMapApi',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,uiGmapGoogleMapApi) {
+app.controller('mapaController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','uiGmapGoogleMapApi',
+	function($scope, $rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,uiGmapGoogleMapApi) {
 
 	var mi = this;
 	
@@ -29,7 +29,7 @@ app.controller('mapaController',['$scope','$http','$interval','i18nService','Uti
 	$http.post('/SProyecto',{accion: 'getProyectos'}).success(
 		function(response) {
 			mi.prestamos = [];
-			mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un proyecto'});
+			mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un '+$rootScope.etiquetas.proyecto});
 			if (response.success){
 				for (var i = 0; i < response.entidades.length; i++){
 					mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
