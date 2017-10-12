@@ -397,7 +397,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 			mi.esForma = true;
 			mi.entityselected = null;
 			mi.esNuevo = false;
-			mi.tipo = mi.subproducto.subProductoTipoId;
+			mi.tipo = mi.subproducto.subProductoTipoId; 
 			mi.tipoNombre = mi.subproducto.subProductoTipo;
 			
 			if(mi.subproducto.duracionDimension == 'd'){
@@ -573,7 +573,6 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 
 		resultado.then(function(itemSeleccionado) {
 			mi.tipo = itemSeleccionado.id;
-			
 			mi.tipoNombre = itemSeleccionado.nombre;
 			
 			var parametros = { 
