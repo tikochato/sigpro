@@ -27,7 +27,6 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 	mi.seleccionada = false;
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
-	mi.productoid = "";
 	mi.productoNombre = "";
 	mi.objetoTipoNombre = "";
 	mi.entidad='';
@@ -397,10 +396,10 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 			mi.esForma = true;
 			mi.entityselected = null;
 			mi.esNuevo = false;
-			mi.tipo = mi.subproducto.subProductoTipoId; 
+			mi.tipo = mi.subproducto.idSubproductoTipo; 
 			mi.tipoNombre = mi.subproducto.subProductoTipo;
 			
-			mi.productoId = mi.subproducto.idProducto;
+			mi.productoid = mi.subproducto.idProducto;
 			
 			if(mi.subproducto.duracionDimension == 'd'){
 				mi.duracionDimension = mi.dimensiones[0];

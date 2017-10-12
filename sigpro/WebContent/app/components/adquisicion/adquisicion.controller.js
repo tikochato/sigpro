@@ -31,7 +31,7 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 			$scope.$parent.subproducto.child_adquisiciones = $scope.adquisicionc;
 			mi.parentController = $scope.$parent.subproducto;
 			mi.objetoTipo = 3;
-			mi.objetoId = $scope.$parent.subproducto.productoId;
+			mi.objetoId = $scope.$parent.subproducto.productoid;
 		}
 		if($scope.$parent.actividadc){
 			$scope.$parent.actividadc.child_adquisiciones = $scope.adquisicionc;

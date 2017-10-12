@@ -25,42 +25,42 @@ import utilities.Utils;
 public class SubproductoDAO {
 
 	
-	static class EstructuraPojo {
-		Integer id;
-		String nombre;
-		String descripcion;
-		Integer idProducto;
-		String producto;
-		Integer idSubproductoTipo;
-		String subProductoTipo;
-		Integer unidadEjectuora;
-		String nombreUnidadEjecutora;
-		String entidadnombre;
-		Integer entidadentidad;
-		Integer ejercicio;
-		Long snip;
-		Integer programa;
-		Integer subprograma;
-		Integer proyecto_;
-		Integer actividad;
-		Integer obra;
-		Integer renglon;
-		Integer ubicacionGeografica;
-		Integer duracion;
-		String duracionDimension;
-		String fechaInicio;
-		String fechaFin;
-		Integer estado;
-		String fechaCreacion;
-		String usuarioCreo;
-		String fechaactualizacion;
-		String usuarioactualizo;
-		String latitud;
-		String longitud;
-		BigDecimal costo;
-		Integer acumulacionCosto;
-		String acumulacionCostoNombre;
-		boolean tieneHijos;
+	public static class EstructuraPojo {
+		public Integer id;
+		public String nombre;
+		public String descripcion;
+		public Integer idProducto;
+		public String producto;
+		public Integer idSubproductoTipo;
+		public String subProductoTipo;
+		public Integer unidadEjecutora;
+		public String nombreUnidadEjecutora;
+		public String entidadnombre;
+		public Integer entidadentidad;
+		public Integer ejercicio;
+		public Long snip;
+		public Integer programa;
+		public Integer subprograma;
+		public Integer proyecto_;
+		public Integer actividad;
+		public Integer obra;
+		public Integer renglon;
+		public Integer ubicacionGeografica;
+		public Integer duracion;
+		public String duracionDimension;
+		public String fechaInicio;
+		public String fechaFin;
+		public Integer estado;
+		public String fechaCreacion;
+		public String usuarioCreo;
+		public String fechaactualizacion;
+		public String usuarioactualizo;
+		public String latitud;
+		public String longitud;
+		public BigDecimal costo;
+		public Integer acumulacionCosto;
+		public String acumulacionCostoNombre;
+		public boolean tieneHijos;
 	}
 
 	public static List<Subproducto> getSubproductos(String usuario) {
@@ -309,14 +309,14 @@ public class SubproductoDAO {
 			}
 			
 			if (pojo.getUnidadEjecutora() != null){
-				estructuraPojo.unidadEjectuora = pojo.getUnidadEjecutora().getId().getUnidadEjecutora();
+				estructuraPojo.unidadEjecutora = pojo.getUnidadEjecutora().getId().getUnidadEjecutora();
 				estructuraPojo.nombreUnidadEjecutora = pojo.getUnidadEjecutora().getNombre();
 				estructuraPojo.entidadentidad = pojo.getUnidadEjecutora().getId().getEntidadentidad();
 				estructuraPojo.ejercicio = pojo.getUnidadEjecutora().getId().getEjercicio();
 				estructuraPojo.entidadnombre = pojo.getUnidadEjecutora().getEntidad().getNombre();
 			}
 			else if(pojo.getProducto().getUnidadEjecutora()!=null){
-				estructuraPojo.unidadEjectuora = pojo.getProducto().getUnidadEjecutora().getId().getUnidadEjecutora();
+				estructuraPojo.unidadEjecutora = pojo.getProducto().getUnidadEjecutora().getId().getUnidadEjecutora();
 				estructuraPojo.nombreUnidadEjecutora = pojo.getProducto().getUnidadEjecutora().getNombre();
 				estructuraPojo.entidadentidad = pojo.getProducto().getUnidadEjecutora().getId().getEntidadentidad();
 				estructuraPojo.ejercicio = pojo.getProducto().getUnidadEjecutora().getId().getEjercicio();
