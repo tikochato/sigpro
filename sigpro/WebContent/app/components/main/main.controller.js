@@ -202,6 +202,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/flujocaja',{
             	template: '<div load-on-demand="\'flujocajaController\'" class="all_page"></div>'
             })
+            .when('/gestionadquisicion',{
+            	template: '<div load-on-demand="\'gestionAdquisicionController\'" class="all_page"></div>'
+            })
             .when("/:redireccion?",{
             	controller:"MainController"
             })
@@ -514,14 +517,21 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'planAdquisicionesController',
 	    	   script: '/app/components/reportes/planadquisiciones/planAdquisiciones.controller.js',
 	    	   template: '/app/components/reportes/planadquisiciones/planAdquisiciones.jsp'
-	       }, {
+	       }, 
+	       {
 	    	   name: 'flujocajaController',
 	    	   script: '/app/components/reportes/flujocaja/flujocaja.controller.js',
 	    	   template: '/app/components/reportes/flujocaja/flujocaja.jsp'
-	       } , {
+	       }, 
+	       {
 	    	   name: 'treePathController',
 	    	   script: '/app/components/utilidades/calcularTreePath.controller.js',
 	    	   template: '/app/components/utilidades/calcularTreePath.jsp'
+	       }, 
+	       {
+	    	   name: 'gestionAdquisicionController',
+	    	   script: '/app/components/reportes/gestionadquisicion/gestionAdquisicion.controller.js',
+	    	   template: '/app/components/reportes/gestionadquisicion/gestionAdquisicion.jsp'
 	       }
 
 	   ];
