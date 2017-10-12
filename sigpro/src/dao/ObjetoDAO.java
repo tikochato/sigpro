@@ -198,7 +198,7 @@ public class ObjetoDAO {
 												}
 											}else if(acumulacionCostoId.compareTo(2)==0){
 												int dias = (int)((objetoCosto.getFecha_final().getMillis() - objetoCosto.getFecha_inicial().getMillis())/(1000*60*60*24));
-												BigDecimal costoDiario = objetoCosto.getCosto() != null ? objetoCosto.getCosto().divide(new BigDecimal(dias),5, BigDecimal.ROUND_HALF_UP) : new BigDecimal(0);
+												BigDecimal costoDiario = objetoCosto.getCosto() != null && dias > 0 ? objetoCosto.getCosto().divide(new BigDecimal(dias),5, BigDecimal.ROUND_HALF_UP) : new BigDecimal(0);
 												int inicioActual = 0;
 												if(anioObj.anio == anioInicialObj){
 													inicioActual = mesInicial;

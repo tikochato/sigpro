@@ -422,6 +422,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			if(mi.producto.duracionDimension == 'd'){
 				mi.duracionDimension = mi.dimensiones[0];
 			}
+			
+			mi.componenteId = mi.producto.idComponente;
 
 			mi.productoPadre = mi.producto.idProducto;
 			mi.productoPadreNombre = mi.producto.producto;
