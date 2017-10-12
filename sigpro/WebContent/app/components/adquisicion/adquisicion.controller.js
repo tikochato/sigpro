@@ -24,20 +24,20 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		if($scope.$parent.producto){
 			$scope.$parent.producto.child_adquisiciones = $scope.adquisicionc;
 			mi.parentController = $scope.$parent.producto;
-			mi.objetoTipo = 3;
-			mi.objetoId = $scope.$parent.producto.producto.id;
+			mi.objetoTipo = 2;
+			mi.objetoId = $scope.$parent.producto.componenteId;
 		}
 		if($scope.$parent.subproducto){
 			$scope.$parent.subproducto.child_adquisiciones = $scope.adquisicionc;
 			mi.parentController = $scope.$parent.subproducto;
-			mi.objetoTipo = 4;
-			mi.objetoId = $scope.$parent.subproducto.subproducto.id;
+			mi.objetoTipo = 3;
+			mi.objetoId = $scope.$parent.subproducto.productoId;
 		}
 		if($scope.$parent.actividadc){
 			$scope.$parent.actividadc.child_adquisiciones = $scope.adquisicionc;
 			mi.parentController = $scope.$parent.actividadc;
-			mi.objetoTipo = 5;
-			mi.objetoId = $scope.$parent.actividadc.actividad.id;
+			mi.objetoTipo = $scope.$parent.actividadc.objetotipo;
+			mi.objetoId = $scope.$parent.actividadc.objetoid;
 		}
 		
 		$http.post('/STipoAdquisicion', { accion: 'getTipoAdquisicionPorObjeto', objetoId: mi.objetoId, objetoTipo: mi.objetoTipo, t: (new Date()).getTime()}).success(

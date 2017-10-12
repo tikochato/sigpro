@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
 <%@ include file="/app/shared/includes.jsp"%>
-<script src="/app/components/main_treeview/main_treeview.controller.js"></script>
+<script src="/app/components/main_treeview/main_treeview.controller.jsp"></script>
 <title></title>
 </head>
 <body ng-app="sipro" ng-controller="MainController as mainController">

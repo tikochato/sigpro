@@ -19,7 +19,6 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.EtiquetaDAO;
@@ -33,11 +32,9 @@ import shiro.utilities.CShiro;
  */
 @WebServlet("/SLogin")
 public class SLogin extends HttpServlet {
-	class stetiqueta{
-		Integer id;
-		String claseNombre;
-		String proyecto;
-		String colorPrincipal;
+	public class stetiqueta{
+		public String proyecto;
+		public String colorPrincipal;
 	}
 	
 	/**
@@ -94,12 +91,9 @@ public class SLogin extends HttpServlet {
 				Integer sistemaUsuario = user.getSistemaUsuario();
 				Etiqueta etiquetaUsuario = EtiquetaDAO.getEtiquetaPorId(sistemaUsuario);
 				stetiqueta etiqueta = new stetiqueta();
-				etiqueta.id = etiquetaUsuario.getId();
-				etiqueta.claseNombre = etiquetaUsuario.getNombre();
 				etiqueta.proyecto = etiquetaUsuario.getProyecto();
 				etiqueta.colorPrincipal = etiquetaUsuario.getColorPrincipal();
-				String respuesta = new GsonBuilder().serializeNulls().create().toJson(etiqueta);
-				sesionweb.setAttribute("sistemausuario", respuesta);
+				CShiro.setAttribute("sistemausuario", etiqueta);
 				response.getWriter().write("{ \"success\": true }");
 				UsuarioDAO.userLoginHistory(user.getUsuario());
 			} catch (UnknownAccountException uae) {

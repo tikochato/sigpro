@@ -1,3 +1,6 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ page import="servlets.SLogin.stetiqueta" %>
 var app = angular.module('sipro',['ngRoute','ui.bootstrap','chart.js', 'loadOnDemand','ngAnimate',
                                        'ui.grid', 'ui.grid.treeView', 'ui.grid.selection','ui.grid.moveColumns', 'ui.grid.resizeColumns', 'ui.grid.saveState','ui.grid.pinning',
                                        'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize','ngFlash','ngUtilidades','documentoAdjunto','dialogoConfirmacion',
@@ -547,8 +550,13 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	numeral.language('es', numeral_language);
 	$window.document.title =  'MINFIN - '+$utilidades.sistema_nombre;
 		
-	if(document.getElementById("etiquetasUsuario")){
-		$rootScope.etiquetas = JSON.parse(document.getElementById("etiquetasUsuario").innerHTML);
+	$rootScope.etiquetas={
+			proyecto: '<% 
+				if(session.getAttribute("sistemausuario")!=null){
+					stetiqueta etiquetas=((stetiqueta)session.getAttribute("sistemausuario"));
+					out.print(etiquetas.proyecto);
+				}
+			%>'
 	}
 	
 	$document.bind('scroll', function(){
@@ -577,7 +585,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	$rootScope.$on('$routeChangeSuccess', function (event, next) {
 	      
 		if($routeParams.redireccion=="forbidden"){
-			$utilidades.mensaje('danger','No tiene permiso de acceder a esta área');	
+			$utilidades.mensaje('danger','No tiene permiso de acceder a esta Ã¡rea');	
 		}
 		if (location.hostname !== "localhost" || location.hostname !== "127.0.0.1"){
 			$window.ga('create', 'UA-74443600-2', 'auto');

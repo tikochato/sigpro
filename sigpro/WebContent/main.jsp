@@ -7,7 +7,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
 <%@ include file="/app/shared/includes.jsp"%>
 
-<script src="/app/components/main/main.controller.js"></script>
+<script src="/app/components/main/main.controller.jsp"></script>
 <title></title>
 </head>
 <body ng-app="sipro" ng-controller="MainController as mainController">

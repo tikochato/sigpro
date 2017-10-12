@@ -460,7 +460,6 @@ public class SSubproducto extends HttpServlet {
 		if (subproducto!=null){
 			stsubproducto temp = new stsubproducto();
 			temp.id = subproducto.getId();
-			temp.producto = null;
 			temp.nombre = subproducto.getNombre();
 			temp.descripcion = subproducto.getDescripcion();
 			temp.usuarioCreo = subproducto.getUsuarioCreo();
@@ -485,6 +484,7 @@ public class SSubproducto extends HttpServlet {
 			temp.costo = subproducto.getCosto();
 			temp.acumulacionCosto = subproducto.getAcumulacionCosto()!=null ? subproducto.getAcumulacionCosto().getId() : null;
 			temp.acumulacionCostoNombre = subproducto.getAcumulacionCosto()!=null ? subproducto.getAcumulacionCosto().getNombre() : null;
+			temp.producto = subproducto.getProducto();
 			
 			if (subproducto.getSubproductoTipo() != null){
 				temp.subProductoTipoId = subproducto.getSubproductoTipo().getId();
@@ -558,12 +558,6 @@ public class SSubproducto extends HttpServlet {
 				
 				ret = SubproductoDAO.guardarSubproducto(subproducto, true);
 				
-				
-				
-				/*COrden orden = new COrden();
-				orden.calcularOrdenObjetosSuperiores(subproducto.getProducto().getId(), 3, usuario, COrden.getSessionCalculoOrden(),
-						subproducto.getProducto().getComponente().getProyecto().getId(), null, null);
-						*/
 				
 				
 				stsubproducto temp = new stsubproducto();
