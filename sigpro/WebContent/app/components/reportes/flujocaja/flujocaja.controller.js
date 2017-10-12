@@ -40,12 +40,6 @@ app.controller('flujocajaController',['$scope','$rootScope','$http','$interval',
 	var SEMESTRE_DISPLAY_NAME = ['Semestre 1','Semestre 2'];
 	var ANUAL_DISPLAY_NAME = ['Anual'];
 
-
-	$scope.divActivo = "";
-	mi.activarScroll = function(id){
-		$scope.divActivo = id;
-	}
-
 	mi.iconoObjetoTipo = {
 			1: "glyphicon glyphicon-record",
 			2: "glyphicon glyphicon-th",
@@ -553,24 +547,6 @@ app.directive('scrollespejoflujo', ['$window', function($window) {
 	return {
 		restrict: 'A',
 		link: function(scope, element, attrs) {
-			element.bind('scroll', function() {
-				var elemento = element[0];
-				if (elemento.id == scope.divActivo){
-					if(elemento.id == 'divTablaNombres'){
-						document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
-						document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
-					}else if(elemento.id == 'divTablaDatos'){
-						if(Math.abs(scope.flujoc.scrollPosicion-element[0].scrollLeft)<scope.flujoc.tamanoCelda){//bloquear scroll horizontal
-							element[0].scrollLeft = scope.flujoc.scrollPosicion;
-						}
-						document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
-						document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
-					}else{
-						document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
-						document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
-					}
-				}
-			});
 			angular.element($window).bind('resize', function(){ 
 				scope.flujoc.calcularTamaniosCeldas();
 				scope.$digest();
