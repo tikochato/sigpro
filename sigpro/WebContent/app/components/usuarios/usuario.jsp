@@ -99,7 +99,7 @@
     				<div class="row">
     					<div class="form-group">
 			 				<input type="text" class="inputText" ng-model="usuarioc.usuariosSelected.usuario" ng-required="true"
-			 					ng-value="usuarioc.usuariosSelected.usuario" onblur="this.setAttribute('value', this.value);" ng-readonly="usuarioc.modificar">
+			 					ng-value="usuarioc.usuariosSelected.usuario" onblur="this.setAttribute('value', this.value);" ng-readonly="!usuarioc.esNuevo">
 			 				<label class="floating-label">* Usuario</label>
 						</div>
 						
@@ -108,6 +108,15 @@
 		  						ng-value="usuarioc.usuariosSelected.email" onblur="this.setAttribute('value', this.value);">
 		  					<label class="floating-label">* Correo electrónico</label>
 						</div>
+						
+						<div class="form-group">   			
+			    			<select class="inputText" ng-model="usuarioc.sistemaSeleccionado" 
+			    			ng-options="tipo as tipo.claseNombre for tipo in usuarioc.sistemasUsuario track by tipo.id" 
+			    			ng-required="true">
+								<option disabled selected value>Seleccione Tipo</option>
+							</select>
+					        <label for="campo2" class="floating-label">* Sistema</label>  
+			    		 </div>
 						
 						<div class="form-group">
 		  					<input type="password" class="inputText" ng-model="usuarioc.usuariosSelected.password" ng-required="usuarioc.esNuevo"

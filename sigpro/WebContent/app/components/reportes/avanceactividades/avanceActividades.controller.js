@@ -9,8 +9,8 @@ app.filter('calculatePercentage', function () {
 	  };
 	});
 
-app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$window','$q','$uibModal',
-	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$window, $q,$uibModal){
+app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$window','$q','$uibModal',
+	function($scope, $rootScope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$window, $q,$uibModal){
 		var mi = this;
 		mi.mostrarCargando = false;
 		mi.mostrardiv=false;
@@ -42,7 +42,7 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 		mi.calcularTamanosPantalla();
 		
 		mi.prestamos = [
-			{'value' : 0, 'text' : 'Seleccione un préstamo'},
+			{'value' : 0, 'text' : 'Seleccione un '+$rootScope.etiquetas.proyecto},
 		];
 		
 		mi.validarFecha = function(fecha1){
@@ -56,7 +56,7 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 			$http.post('/SProyecto',{accion: 'getProyectos'}).success(
 				function(response) {
 					mi.prestamos = [];
-					mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un préstamo'});
+					mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un '+$rootScope.etiquetas.proyecto});
 					if (response.success){
 						for (var i = 0; i < response.entidades.length; i++){
 							mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
@@ -372,7 +372,7 @@ function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $u
 
 	if(objetoRow.objetoTipo == 1){
 		mi.mostrarcargando = true;
-		mi.nombre = "Actividades de préstamo";
+		mi.nombre = "Actividades de "+$rootScope.etiquetas.proyecto;
 		$http.post('/SAvanceActividades', {
 			accion: 'getActividadesProyecto',
 			idPrestamo: objetoRow.objetoId,
@@ -386,7 +386,7 @@ function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $u
 		});
 	}else if(objetoRow.objetoTipo == 10){
 		mi.mostrarcargando = true;
-		mi.nombre = "Hitos de préstamo";
+		mi.nombre = "Hitos de "+$rootScope.etiquetas.proyecto;
 		$http.post('/SAvanceActividades', {
 			accion: 'getHitos',
 			idPrestamo: objetoRow.objetoId,

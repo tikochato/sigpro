@@ -1,8 +1,8 @@
 var app = angular.module('prestamometasController', [ 'smart-table']);
 
 
-app.controller('prestamometasController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
+app.controller('prestamometasController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
+	function($scope, $rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
 	
 	var mi = this;
 	mi.fechaInicio = "";
@@ -47,10 +47,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	
 	
 	$scope.divActivo = "";
-	mi.activarScroll = function(id){
-		$scope.divActivo = id;
-    }
-	
+		
 	mi.iconoObjetoTipo = {
 			0: "glyphicon glyphicon-scale",
 			1: "glyphicon glyphicon-record",
@@ -118,7 +115,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	$http.post('/SProyecto',{accion: 'getProyectos'}).success(
 			function(response) {
 				mi.prestamos = [];
-				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione una opción'});
+				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un '+$rootScope.etiquetas.proyecto});
 				if (response.success){
 					for (var i = 0; i < response.entidades.length; i++){
 						mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
@@ -411,7 +408,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 				}else
 					$utilidades.mensaje('warning','Favor de ingresar un año inicial y final válido');
 			}else
-				$utilidades.mensaje('warning','Debe de seleccionar un préstamo');
+				$utilidades.mensaje('warning','Debe de seleccionar un '+$rootScope.etiquetas.proyecto);
 		}
 		
 		mi.generar = function(agrupacion){
@@ -430,7 +427,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 				}else
 					$utilidades.mensaje('warning','Favor de ingresar un año inicial y final válido');
 			}else
-				$utilidades.mensaje('warning','Debe de seleccionar un préstamo');
+				$utilidades.mensaje('warning','Debe de seleccionar un '+$rootScope.etiquetas.proyecto);
 		}
 		
 		mi.renderizaTabla = function(){
@@ -551,36 +548,6 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 		
 }]);
 
-app.directive('scrollespejometas', ['$window', function($window) {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-            element.bind('scroll', function() {
-                var elemento = element[0];
-                if (elemento.id == scope.divActivo){
-      	          if(elemento.id == 'divTablaNombres'){
-      	            document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
-      	            document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
-      	          }else if(elemento.id == 'divTablaDatos'){
-      	        	if(Math.abs(scope.metasc.scrollPosicion-element[0].scrollLeft)<scope.metasc.tamanoCelda){//bloquear scroll horizontal
-                  		element[0].scrollLeft = scope.metasc.scrollPosicion;
-                  	}
-      	            document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
-      	            document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
-      	          }else{
-      	            document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
-      	            document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
-      	          }
-      	        }
-            });
-            angular.element($window).bind('resize', function(){ 
-                scope.metasc.calcularTamaniosCeldas();
-                scope.$digest();
-              });
-            scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
-        }
-    };
-}])
 
-;
+
 		

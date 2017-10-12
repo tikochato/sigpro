@@ -25,7 +25,7 @@
                     </li>
                     <shiro:hasPermission name="24010">
 	                    <li uib-dropdown>
-	                    	<a href="#" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> Préstamos <b class="caret"></b></a> 
+	                    	<a href="#" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> {{etiquetas.proyecto}}s <b class="caret"></b></a> 
 	                    	<ul class="dropdown-menu multi-level" role="menu" aria-labelledby="split-button">
 	                    		<li role="menuitem"><a href="/main_treeview.jsp">Árbol</a></li>
 	                    		<li role="menuitem"><a   href="/main.jsp#!/prestamo"><span class="glyphicon" aria-hidden="true"></span>Lista</a></li>
@@ -45,7 +45,7 @@
 			                         	<shiro:hasPermission name="16010"><li role="menuitem"><a href="/main.jsp#!/hitotipo">Tipo de Hito</a></li></shiro:hasPermission>                         	
 			                         	<shiro:hasPermission name="18010"><li role="menuitem"><a href="/main.jsp#!/metatipo">Tipo de Meta</a></li></shiro:hasPermission>                         	
 				                        <shiro:hasPermission name="23010"><li role="menuitem"><a href="/main.jsp#!/productotipo">Tipo de Producto</a></li></shiro:hasPermission>
-				                        <shiro:hasPermission name="36010"><li role="menuitem"><a href="/main.jsp#!/prestamotipo">Tipo de Prestamo</a></li></shiro:hasPermission>				                        
+				                        <shiro:hasPermission name="36010"><li role="menuitem"><a href="/main.jsp#!/prestamotipo">Tipo de {{etiquetas.proyecto}}</a></li></shiro:hasPermission>				                        
 				                        <shiro:hasPermission name="32010"><li role="menuitem"><a href="/main.jsp#!/riesgotipo">Tipo de Riesgo</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="42010"><li role="menuitem"><a href="/main.jsp#!/subproductotipo">Tipo de Subproducto</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="19010"><li role="menuitem"><a href="/main.jsp#!/metaunidadmedida">Unidad de Medida para Metas</a></li></shiro:hasPermission>
@@ -61,7 +61,7 @@
 				                        <shiro:hasPermission name="6010"> <li role="menuitem"><a href="/main.jsp#!/componentepropiedad">Componente</a></li></shiro:hasPermission>	                       
 				                        <shiro:hasPermission name="22010"> <li role="menuitem"><a href="/main.jsp#!/productopropiedad">Producto</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="41010"> <li role="menuitem"><a href="/main.jsp#!/subproductopropiedad">Subproducto</a></li></shiro:hasPermission>	                       
-				                        <shiro:hasPermission name="25010"><li role="menuitem"><a href="/main.jsp#!/prestamopropiedad">Préstamo</a></li></shiro:hasPermission>	                        				                        	                        
+				                        <shiro:hasPermission name="25010"><li role="menuitem"><a href="/main.jsp#!/prestamopropiedad">{{etiquetas.proyecto}}</a></li></shiro:hasPermission>	                        				                        	                        
 				                        <shiro:hasPermission name="31010"> <li role="menuitem"><a href="/main.jsp#!/riesgopropiedad">Riesgo</a></li></shiro:hasPermission>	                       
 				                     </ul>
 	                    		</li>
@@ -110,5 +110,6 @@
 		        	<i class='fa fa-chevron-down fa-12x isDown' id='toggle'></i>
 		    	</p>
 			</div>
+			<label id="etiquetasUsuario" hidden>${sistemausuario}</label>
 	    </div>
 	</nav>

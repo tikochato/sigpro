@@ -36,7 +36,7 @@
 		<span ng-init="controller.cambioOrden()"></span>
 	</shiro:hasPermission>
 	<div class="panel panel-default" ng-if="!controller.esTreeview">
-	  <div class="panel-heading"><h3>Préstamos</h3></div>
+	  <div class="panel-heading"><h3>{{etiquetas.proyecto}}s</h3></div>
 	</div>
 	<div align="center" ng-hide="controller.esColapsado" ng-if="!controller.esTreeview">
 		<div class="col-sm-12 operation_buttons" align="right">
@@ -81,7 +81,7 @@
 				  </div>
 			</div>
 			<br/>
-			<div class="total-rows">Total de {{  controller.totalProyectos + (controller.totalProyectos == 1 ? " Préstamo" : " Préstamos" ) }}</div>
+			<div class="total-rows">Total de {{  controller.totalProyectos + (controller.totalProyectos == 1 ? " "+etiquetas.proyecto : " "+etiquetas.proyecto+"s" ) }}</div>
 				<ul uib-pagination total-items="controller.totalProyectos"
 						ng-model="controller.paginaActual"
 						max-size="controller.numeroMaximoPaginas"
@@ -101,8 +101,8 @@
 	</div>
 	<div class="row second-main-form" ng-show="controller.esColapsado || controller.esTreeview">
 		<div class="page-header">
-			<h2 ng-if="controller.esNuevo"><small>Nuevo Préstamo</small></h2>
-			<h2 ng-if="!controller.esNuevo"><small>Edición de Préstamo</small></h2>
+			<h2 ng-if="controller.esNuevo"><small>Nuevo {{etiquetas.proyecto}}</small></h2>
+			<h2 ng-if="!controller.esNuevo"><small>Edición de {{etiquetas.proyecto}}</small></h2>
 			</div>
 		<div class="operation_buttons">
 			<div class="btn-group" ng-hide="controller.esNuevo">
@@ -140,7 +140,7 @@
 			<form name="controller.mForm" style="margin-top: 10px;">
 			<uib-tabset active="controller.active">
 				<shiro:hasPermission name="43010">
-				<uib-tab ng-click="controller.getPorcentajes();" index="0" heading="Préstamo" >
+				<uib-tab ng-click="controller.getPorcentajes();" index="0" heading="{{etiquetas.proyecto}}" >
 					<br/>
 							<div class="row">
 								<div class="col-sm-12">
@@ -164,7 +164,7 @@
 									<div class="form-group">
 										<input type="text" class="inputText"  ng-model="controller.prestamo.numeroPrestamo" ng-required="true" 
 										ng-value="controller.prestamo.numeroPrestamo" onblur="this.setAttribute('value', this.value);">
-										<label class="floating-label" >* Número de prestamo</label>
+										<label class="floating-label" >* Número de {{etiquetas.proyecto}}</label>
 									</div>
 								</div>
 							</div>
@@ -398,7 +398,7 @@
 			            	<input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="controller.proyectotiponombre" ng-value="controller.proyectotiponombre" 
 			            		ng-click="controller.buscarProyectoTipo()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
 			            	<span class="label-icon" ng-click="controller.buscarProyectoTipo()"><i class="glyphicon glyphicon-search"></i></span>
-			          	<label for="campo3" class="floating-label">* Caracterización Préstamo</label>
+			          	<label for="campo3" class="floating-label">* Caracterización {{etiquetas.proyecto}}</label>
 					</div>
 					
 					<div class="form-group" ng-show="controller.unidadejecutoranombre.length>0"  >
@@ -626,8 +626,14 @@
 								
 								<div class="col-sm-6">
 									<div class="form-group">
-										<input type="number" class="inputText"  ng-model="controller.prestamo.mesesProrrogaUe" ng-required="true"
-										ng-value="controller.prestamo.mesesProrrogaUe" onblur="this.setAttribute('value', this.value);"/>
+										<input type="text" 
+										class="inputText input-money" 
+										ng-model="controller.prestamo.mesesProrrogaUe" 
+										ng-required="true"
+										ng-readonly="true"
+										ng-value="controller.prestamo.mesesProrrogaUe"
+										onblur="this.setAttribute('value', this.value);" 
+										ui-number-mask="2">
 										<label class="floating-label">* Meses de Prórroga</label>
 									</div>
 								</div>
@@ -683,7 +689,7 @@
 										ng-required="true" 
 										ng-value="controller.prestamo.montoAsignadoUeQtz" 
 										onblur="this.setAttribute('value', this.value);" 
-										ui-number-mask="0"
+										ui-number-mask="2"
 										>
 										<label class="floating-label">* Monto Asignado Q</label>
 									</div>

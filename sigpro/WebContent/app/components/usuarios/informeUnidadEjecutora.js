@@ -4,6 +4,7 @@ app.controller(
  'informeUnidadController',
  [
 	 '$scope',
+	  '$rootScope',
 	  '$http',
 	  '$interval',
 	  '$q',
@@ -18,7 +19,7 @@ app.controller(
 	  '$q',
 	  '$uibModal',
 	  'dialogoConfirmacion', 
-  function($scope, $http, $interval, $q,i18nService,$utilidades,$routeParams,uiGridConstants,$mdDialog, $window, $location, $route,$q,$uibModal, $dialogoConfirmacion) {
+  function($scope, $rootScope, $http, $interval, $q,i18nService,$utilidades,$routeParams,uiGridConstants,$mdDialog, $window, $location, $route,$q,$uibModal, $dialogoConfirmacion) {
 	var mi=this;
 	$window.document.title =$utilidades.sistema_nombre+' - Informe Unidad Ejecutora';
 	i18nService.setCurrentLang('es');

@@ -297,9 +297,9 @@
 						
 					</uib-tab>
 					
-					<uib-tab ng-click="programac.getPorcentajes();" index="1" heading="Datos del préstamo">
+					<uib-tab ng-click="programac.getPorcentajes();" index="1" heading="Datos del {{etiquetas.proyecto}}">
 						<div class="panel panel-default">
-							<div class="panel-heading label-form" style="text-align: center;">Información General del Préstamo</div>
+							<div class="panel-heading label-form" style="text-align: center;">Información General del {{etiquetas.proyecto}}</div>
 							<div class="panel-body">
 								<div class="row">
 									<div class="col-sm-12">
@@ -323,7 +323,7 @@
 										<div class="form-group">
 											<input type="text" class="inputText"  ng-model="programac.prestamo.numeroPrestamo" ng-required="true" 
 											ng-value="programac.prestamo.numeroPrestamo" onblur="this.setAttribute('value', this.value);">
-											<label class="floating-label" >* Número de prestamo</label>
+											<label class="floating-label" >* Número de {{etiquetas.proyecto}}</label>
 										</div>
 									</div>
 								</div>
@@ -534,7 +534,7 @@
 				
 				<uib-tab ng-click="programac.getPorcentajes();" index="2" heading="Datos Entidad Ejecutroa">
 					<div class="panel panel-default">
-						<div class="panel-heading label-form" style="text-align: center;">Información Específica del Préstamo en la Entidad Ejecutora</div>
+						<div class="panel-heading label-form" style="text-align: center;">Información Específica del {{etiquetas.proyecto}} en la Entidad Ejecutora</div>
 						<div class="panel-body">
 							<div class="row">
 								<div class="col-sm-6">

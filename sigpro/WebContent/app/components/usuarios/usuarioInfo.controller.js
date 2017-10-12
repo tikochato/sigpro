@@ -61,7 +61,6 @@ app.controller(
 								esnuevo:false
 							}).success(
 								function(data) {
-									console.log(data);
 									if(data.success){
 										mi.esoculto=!mi.esoculto;
 										$utilidades.mensaje('success','Cambios realizados correctamente.');
@@ -130,7 +129,6 @@ app.controller(
 		});
 		
 		modalInstance.result.then(function(password) {
-			console.log(password);
 			if(password.password!==""){
 				$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: password.usuario,	password:password.password}).success(
 						function(response) {

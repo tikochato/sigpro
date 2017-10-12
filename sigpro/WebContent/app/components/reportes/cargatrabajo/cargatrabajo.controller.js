@@ -3,8 +3,8 @@ var app = angular.module('cargatrabajoController', ['ngTouch','smart-table','ivh
 
 
 
-app.controller('cargatrabajoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter,ivhTreeviewMgr) {
+app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
+	function($scope, $rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter,ivhTreeviewMgr) {
 	var mi = this;
 	i18nService.setCurrentLang('es');
 	
@@ -109,7 +109,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 		t: new Date().getTime()}).success(
 		function(response) {
 			mi.prestamos = []; 
-			mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un préstamo'});
+			mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un '+$rootScope.etiquetas.proyecto});
 			if (response.success){
 				for (var i = 0; i < response.entidades.length; i++){
 					mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
@@ -121,7 +121,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
     
 	mi.tObjetos = [
 		{value: 0,text: "Seleccione una Opción"},
-		{value: 1,text: 'Préstamo'},
+		{value: 1,text: $rootScope.etiquetas.proyecto},
 		{value: 2,text: 'Componente'},
 		{value: 3,text: 'Producto'},
 		{value: 4,text: 'Sub Producto'}

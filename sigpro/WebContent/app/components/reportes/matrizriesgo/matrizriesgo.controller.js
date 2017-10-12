@@ -1,8 +1,8 @@
 var app = angular.module('matrizriesgoController', ['smart-table']);
 
 
-app.controller('matrizriesgoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
+app.controller('matrizriesgoController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
+	function($scope, $rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
 
 	var mi=this;
 	mi.proyectoId=[];
@@ -53,7 +53,7 @@ app.controller('matrizriesgoController',['$scope','$http','$interval','i18nServi
 				 }else{
 					 mi.mostrarTabla = false;
 					 if (mi.proyectoId.value>0)
-					 $utilidades.mensaje('warning','No se encontraron datos para el préstamo');
+					 $utilidades.mensaje('warning','No se encontraron datos para el '+$rootScope.etiquetas.proyecto);
 				 }
 			});
 		}

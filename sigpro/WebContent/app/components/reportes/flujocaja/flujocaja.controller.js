@@ -1,8 +1,8 @@
 var app = angular.module('flujocajaController', [ 'smart-table', 'vs-repeat']);
 
 
-app.controller('flujocajaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
+app.controller('flujocajaController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
+	function($scope, $rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
 
 	var mi = this;
 	mi.fechaCorte = null;
@@ -93,7 +93,7 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 		t:moment().unix()}).success(
 			function(response) {
 				mi.prestamos = [];
-				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione una opción'});
+				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un '+$rootScope.etiquetas.proyecto});
 				if (response.success){
 					for (var i = 0; i < response.entidades.length; i++){
 						mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
@@ -403,7 +403,7 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 			}else
 				$utilidades.mensaje('warning','Favor de ingresar una fecha válida');
 		}else
-			$utilidades.mensaje('warning','Debe de seleccionar un préstamo');
+			$utilidades.mensaje('warning','Debe de seleccionar un '+$rootScope.etiquetas.proyecto);
 	}
 
 	mi.generar = function(agrupacion){
@@ -419,7 +419,7 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 			}else
 				$utilidades.mensaje('warning','Favor de ingresar una fecha válida');
 		}else
-			$utilidades.mensaje('warning','Debe de seleccionar un préstamo');
+			$utilidades.mensaje('warning','Debe de seleccionar un '+$rootScope.etiquetas.proyecto);
 	}
 
 	mi.renderizaTabla = function(){
@@ -502,7 +502,7 @@ app.controller('flujocajaController',['$scope','$http','$interval','i18nService'
 		mes = Math.floor((indice)/mi.aniosTotal.length);
 		anio = indice - (mes*mi.aniosTotal.length);
 		var item = mi.data[itemIndice];
-		var valor = item.anios[anio].mes[mes];
+		var valor = item.anios[anio].mes[mes]!=null ? item.anios[anio].mes[mes] : 0;
 		return valor;
 	};
 

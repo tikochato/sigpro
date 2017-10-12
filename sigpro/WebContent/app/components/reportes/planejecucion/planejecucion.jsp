@@ -44,7 +44,7 @@
 							ng-readonly="true"
 							ng-required="true"
 							ng-change = "planc.generarReporte()">
-							<option value="">Seleccione una préstamo</option>
+							<option value="">Seleccione una {{etiquetas.proyecto}}</option>
 							</select>
 				</div>
 				<div class="col-sm-6 operation_buttons" style="text-align: right;"  >
@@ -119,7 +119,7 @@
 						<tbody>
       						<tr>
       							<td style="width: 20%">
-      								<label class="label-form1" >Número de Prestamo</label>
+      								<label class="label-form1" >Número de {{etiquetas.proyecto}}</label>
       							</td>
       							<td style="width: 35%">
       								<p>{{ planc.prestamo.numeroPrestamo }}</pl>
@@ -193,7 +193,7 @@
       						
       						<tr>
       							<td>
-      								<label  class="label-form1" >Moneda de prestamo</label>
+      								<label  class="label-form1" >Moneda de {{etiquetas.proyecto}}</label>
       							</td>
       							<td>
 				  					<p>{{ planc.prestamo.tipoMonedaNombre }}</p>

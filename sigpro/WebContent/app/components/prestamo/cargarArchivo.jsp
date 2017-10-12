@@ -16,18 +16,22 @@
     <div class="col-sm-12">
 		<div class="form-group" >
 				<label for="campo3">* Nombre del Archivo</label>
-	          	<div class="input-group">
-		          	<input  class="form-control" id="file" name="file" type="file" 
-		          	onchange="angular.element(this).scope().cargarArchivo(this)"
-				 	file-upload multiple style="display: none;"accept=".mpp"  >
-				 	
-	            	<input type="text" id="nombreArchivo" class="form-control" placeholder="Seleccione archivo" 
-	            	ng-model="cargararchivoc.nombreArchivo"  
-	            	ng-readonly="true" ng-required="true"/>
-	            	<span class="input-group-addon" >
-	            	<label class="glyphicon glyphicon-search" for="file" ></label>
-	            	</span>
-	          	</div>
+				
+				
+				<div class="input-group">
+	                <input type="text" class="form-control" readonly id="nombreArchivo" 
+	                ng-model="cargararchivoc.nombreArchivo"  
+	            	ng-readonly="true" ng-required="true">
+	            	<label class="input-group-btn">
+	                    <span class="btn btn-default">
+	                    	<span class="glyphicon glyphicon-search" for="file" ></span>
+	                        <input   id="file" name="file" type="file" 
+			          			onchange="angular.element(this).scope().cargarArchivo(this)"
+					 			file-upload multiple style="display: none;"accept=".mpp"  >
+	                    </span>
+	                </label>
+	            </div>
+				
 	          	<br/>
 	          	<div class="form-group">
 						<input type="checkbox"  ng-model="cargararchivoc.multiproyecto" />

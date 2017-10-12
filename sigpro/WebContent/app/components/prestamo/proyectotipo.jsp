@@ -13,7 +13,7 @@
 	</shiro:lacksPermission>
 
 	<div class="panel panel-default">
-		<div class="panel-heading"><h3>Tipo de Préstamo</h3></div>
+		<div class="panel-heading"><h3>Tipo de {{etiquetas.proyecto}}</h3></div>
 	</div>
 
 	<div class="row" align="center" ng-if="!proyectotipoc.mostraringreso">
@@ -58,7 +58,7 @@
 				</div>
 			</div>
 			<br/>
-			<div class="total-rows">Total de {{  proyectotipoc.totalProyectotipos + (proyectotipoc.totalProyectotipos == 1 ? " Tipo de Préstamo" : " Tipos de Préstamo" ) }}</div>
+			<div class="total-rows">Total de {{  proyectotipoc.totalProyectotipos + (proyectotipoc.totalProyectotipos == 1 ? " Tipo de "+etiquetas.proyecto : " Tipos de "+etiquetas.proyecto+"s" ) }}</div>
 			<ul uib-pagination total-items="proyectotipoc.totalProyectotipos"
 				ng-model="proyectotipoc.paginaActual"
 				max-size="proyectotipoc.numeroMaximoPaginas"
@@ -72,8 +72,8 @@
 
 	<div class="row second-main-form" ng-if="proyectotipoc.mostraringreso">
 		<div class="page-header">
-			<h2 ng-hide="!proyectotipoc.esnuevo">Nuevo tipo de préstamo</h2>
-			<h2 ng-hide="proyectotipoc.esnuevo">Edición tipo de préstamo</h2>
+			<h2 ng-hide="!proyectotipoc.esnuevo">Nuevo tipo de {{etiquetas.proyecto}}</h2>
+			<h2 ng-hide="proyectotipoc.esnuevo">Edición tipo de {{etiquetas.proyecto}}</h2>
 		</div>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">

@@ -125,6 +125,10 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	$rootScope.catalogo_entidades_anos=1;
 	$rootScope.treeview = true;
 
+	if(document.getElementById("etiquetasUsuario")){
+		$rootScope.etiquetas = JSON.parse(document.getElementById("etiquetasUsuario").innerHTML);
+	}
+	
 	numeral.language('es', numeral_language);
 	$window.document.title =  'MINFIN - '+$utilidades.sistema_nombre;
 	
