@@ -47,10 +47,7 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 	
 	
 	$scope.divActivo = "";
-	mi.activarScroll = function(id){
-		$scope.divActivo = id;
-    }
-	
+		
 	mi.iconoObjetoTipo = {
 			0: "glyphicon glyphicon-scale",
 			1: "glyphicon glyphicon-record",
@@ -551,36 +548,6 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 		
 }]);
 
-app.directive('scrollespejometas', ['$window', function($window) {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-            element.bind('scroll', function() {
-                var elemento = element[0];
-                if (elemento.id == scope.divActivo){
-      	          if(elemento.id == 'divTablaNombres'){
-      	            document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
-      	            document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
-      	          }else if(elemento.id == 'divTablaDatos'){
-      	        	if(Math.abs(scope.metasc.scrollPosicion-element[0].scrollLeft)<scope.metasc.tamanoCelda){//bloquear scroll horizontal
-                  		element[0].scrollLeft = scope.metasc.scrollPosicion;
-                  	}
-      	            document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
-      	            document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
-      	          }else{
-      	            document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
-      	            document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
-      	          }
-      	        }
-            });
-            angular.element($window).bind('resize', function(){ 
-                scope.metasc.calcularTamaniosCeldas();
-                scope.$digest();
-              });
-            scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
-        }
-    };
-}])
 
-;
+
 		
