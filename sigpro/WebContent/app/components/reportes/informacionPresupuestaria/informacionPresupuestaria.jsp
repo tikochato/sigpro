@@ -166,7 +166,7 @@
 						<input type="number"  class="inputText" ng-model="controller.fechaInicio" maxlength="4" 
 						ng-value="controller.fechaInicio" onblur="this.setAttribute('value', this.value);"
 						ng-change="controller.validar(2)"/>
-					  	<label for="campo.id" class="floating-label">*Año Inicial</label>
+					  	<label for="campo.id" class="floating-label" style="left: 0;">*Año Inicial</label>
 					</div>
 					
 					<div align="left" class="form-group col-sm-1">
@@ -241,7 +241,7 @@
 				          				<th class="label-form">.</th>
 				         			</tr>
 								</thead>
-								<tbody vs-repeat class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejoejecucion style="max-height: 390px; margin-bottom: -15px;">
+								<tbody vs-repeat class="cuerpoTablaNombres" id="divTablaNombres"  style="max-height: 390px; margin-bottom: -15px;" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)" scrollespejoejecucion>
 									<tr ng-repeat="item in controller.data">
 							      		<td nowrap style="min-width:200px; min-height: 35px; height: 35px;">
 							      			<div uib-tooltip="{{item.nombre}}" class="nombreFormat">
@@ -267,7 +267,7 @@
 				          				<th ng-repeat="a in controller.aniosfinales" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}" class="label-form">{{a.anio}}</th>
 							        </tr>
 								</thead>
-								<tbody vs-repeat class="cuerpoTablaDatos" id="divTablaDatos" ng-mouseover="controller.activarScroll('divTablaDatos')" scrollespejoejecucion>
+								<tbody vs-repeat class="cuerpoTablaDatos" id="divTablaDatos" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)" scrollespejoejecucion>
 							      	<tr ng-repeat="item in controller.data" style="">
 								      		<td ng-repeat="posicion in controller.columnastotales track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}">
 								      			<div style="{{controller.porcentajeCeldaValor}}">
@@ -296,7 +296,7 @@
 		          				<th ng-repeat="a in controller.aniosTotal" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};" class="label-form">{{a.anio}}</th>
 						        </tr>
 							</thead>
-							<tbody vs-repeat class="cuerpoTablaTotales bordeIzquierda" id="divTotales" ng-mouseover="controller.activarScroll('divTotales')" scrollespejoejecucion tot="{{mi.totales.length}}">
+							<tbody vs-repeat class="cuerpoTablaTotales bordeIzquierda" id="divTotales" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)" tot="{{mi.totales.length}}" scrollespejoejecucion>
 								<tr ng-repeat="totales in controller.totales ">
 									<td ng-repeat="total in totales.anio" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};  min-height: 35px; height: 35px;">
 										<div style="{{controller.porcentajeCeldaValor}}">

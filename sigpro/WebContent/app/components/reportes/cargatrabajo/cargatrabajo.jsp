@@ -57,7 +57,7 @@
 					<input type="number"  class="inputText" ng-model="controller.fechaInicio" maxlength="4" 
 					ng-value="controller.fechaInicio" onblur="this.setAttribute('value', this.value);"
 					ng-change="controller.getEstructura()"/>
-					  	<label for="campo.id" class="floating-label">*Año Inicial</label>
+					  	<label for="campo.id" class="floating-label" style="left: 0;">*Año Inicial</label>
 					</div>
 					
 					<div class="form-group col-sm-1">

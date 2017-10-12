@@ -43,11 +43,6 @@ app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http',
 			}
 		}
 		
-		$scope.divActivo = "";
-		mi.activarScroll = function(id){
-			$scope.divActivo = id;
-	    }
-		
 		mi.movimiento = false;
 		mi.agrupacionActual = 1
 		mi.columnasTotal = 1;
@@ -623,24 +618,6 @@ app.directive('scrollespejoplanadqui', ['$window', function($window) {
     return {
         restrict: 'A',
         link: function(scope, element, attrs) {
-            element.bind('scroll', function() {
-                var elemento = element[0];
-                if (elemento.id == scope.divActivo){
-      	          if(elemento.id == 'divTablaNombres'){
-      	            document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
-      	            document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
-      	          }else if(elemento.id == 'divTablaDatos'){
-      	        	if(Math.abs(scope.planadqui.scrollPosicion-element[0].scrollLeft)<scope.planadqui.tamanoCelda){//bloquear scroll horizontal
-                  		element[0].scrollLeft = scope.planadqui.scrollPosicion;
-                  	}
-      	            document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
-      	            document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
-      	          }else{
-      	            document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
-      	            document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
-      	          }
-      	        }
-            });
             angular.element($window).bind('resize', function(){ 
                 scope.planadqui.calcularTamaniosCeldas();
                 scope.$digest();

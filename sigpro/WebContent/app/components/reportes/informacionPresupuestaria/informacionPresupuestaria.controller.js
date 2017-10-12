@@ -42,12 +42,6 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 		var ANUAL_DISPLAY_NAME = ['Anual'];
 		
 		
-		$scope.divActivo = "";
-		mi.activarScroll = function(id){
-			$scope.divActivo = id;
-	    }
-				
-
 		mi.iconoObjetoTipo = {
 		    1: "glyphicon glyphicon-record",
 		    2: "glyphicon glyphicon-th",
@@ -709,24 +703,6 @@ app.directive('scrollespejoejecucion', ['$window', function($window) {
     return {
         restrict: 'A',
         link: function(scope, element, attrs) {
-            element.bind('scroll', function() {
-                var elemento = element[0];
-                if (elemento.id == scope.divActivo){
-      	          if(elemento.id == 'divTablaNombres'){
-      	            document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
-      	            document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
-      	          }else if(elemento.id == 'divTablaDatos'){
-      	        	if(Math.abs(scope.controller.scrollPosicion-element[0].scrollLeft)<scope.controller.tamanoCelda){//bloquear scroll horizontal
-                  		element[0].scrollLeft = scope.controller.scrollPosicion;
-                  	}
-      	            document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
-      	            document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
-      	          }else{
-      	            document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
-      	            document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
-      	          }
-      	        }
-            });
             angular.element($window).bind('resize', function(){ 
                 scope.controller.calcularTamaniosCeldas();
                 scope.$digest();

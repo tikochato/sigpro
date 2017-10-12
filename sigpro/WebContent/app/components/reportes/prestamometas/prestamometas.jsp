@@ -163,7 +163,7 @@
 						<input type="number"  class="inputText" ng-model="metasc.fechaInicio" maxlength="4" 
 						ng-value="metasc.fechaInicio" onblur="this.setAttribute('value', this.value);"
 						ng-change="metasc.validar(2)"/>
-					  	<label for="campo.id" class="floating-label">*Año Inicial</label>
+					  	<label for="campo.id" class="floating-label" style="left: 0;">*Año Inicial</label>
 					</div>
 					
 					<div class="form-group col-sm-1">
@@ -231,7 +231,7 @@
 				          				<th style="text-align: center; vertical-align: top; min-width:100px;" class="label-form">de Medida</th>
 				         			</tr>
 								</thead>
-								<tbody class="cuerpoTablaNombres" id="divTablaNombres" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)">
+								<tbody class="cuerpoTablaNombres" id="divTablaNombres" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)" scrollespejo>
 									<tr ng-repeat="item in metasc.data">
 							      		<td nowrap style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">
 							      			<p class="nombreFormat">
@@ -259,7 +259,7 @@
 				          				<th ng-repeat="a in metasc.aniosfinales" style="{{metasc.estiloCelda}} {{metasc.estiloAlineacion}}" class="label-form">{{a.anio}}</th>
 							        </tr>
 								</thead>
-								<tbody class="cuerpoTablaDatos" id="divTablaDatos" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)">
+								<tbody class="cuerpoTablaDatos" id="divTablaDatos" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)" scrollespejo>
 							      	<tr ng-repeat="item in metasc.data" style="">
 								      		<td ng-repeat="posicion in metasc.columnastotales track by $index" style="{{metasc.estiloCelda}} min-height: 35px; height: 35px; {{metasc.estiloAlineacion}}">
 								      			<div style="{{metasc.porcentajeCeldaValor}}">
@@ -290,7 +290,7 @@
 			          					<th ng-repeat="a in metasc.aniosTotal" style="{{metasc.estiloCelda}} {{metasc.estiloAlineacion}};" class="label-form">{{a.anio}}</th>
 							        </tr>
 								</thead>
-							<tbody class="cuerpoTablaTotales bordeIzquierda" id="divTotales" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)" tot="{{mi.totales.length}}">
+							<tbody class="cuerpoTablaTotales bordeIzquierda" id="divTotales" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)" tot="{{mi.totales.length}}" scrollespejo>
 									<tr ng-repeat="totales in metasc.totales track by $index" style="min-height:35px; height:35px;">
 										<td ng-repeat="total in totales.anio" style="{{metasc.estiloCelda}} {{metasc.estiloAlineacion}}">
 											<div style="{{metasc.porcentajeCeldaValor}}">
