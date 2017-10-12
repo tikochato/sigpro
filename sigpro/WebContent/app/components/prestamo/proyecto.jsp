@@ -626,8 +626,14 @@
 								
 								<div class="col-sm-6">
 									<div class="form-group">
-										<input type="number" class="inputText"  ng-model="controller.prestamo.mesesProrrogaUe" ng-required="true"
-										ng-value="controller.prestamo.mesesProrrogaUe" onblur="this.setAttribute('value', this.value);"/>
+										<input type="text" 
+										class="inputText input-money" 
+										ng-model="controller.prestamo.mesesProrrogaUe" 
+										ng-required="true"
+										ng-readonly="true"
+										ng-value="controller.prestamo.mesesProrrogaUe"
+										onblur="this.setAttribute('value', this.value);" 
+										ui-number-mask="2">
 										<label class="floating-label">* Meses de Prórroga</label>
 									</div>
 								</div>

@@ -242,6 +242,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				if (isNaN(n))
 					n = 0.00;
 				mi.prestamo.plazoEjecucionUe = Number(n.toFixed(2));
+				mi.prestamo.mesesProrrogaUe = moment(mi.prestamo.fechaCierreActualUe).diff(mi.prestamo.fechaCierreOrigianlUe,'months',true);
 			}
 			
 		}
@@ -536,7 +537,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				mi.prestamo.fechaCierreOrigianlUe = mi.prestamo.fechaCierreOrigianlUe != undefined ? moment (mi.prestamo.fechaCierreOrigianlUe,'DD/MM/YYYY').toDate() : undefined; 
 				mi.prestamo.fechaCierreActualUe = mi.prestamo.fechaCierreActualUe != undefined ? moment (mi.prestamo.fechaCierreActualUe,'DD/MM/YYYY').toDate() : undefined;
 				mi.prestamo.fechaVigencia = mi.prestamo.fechaVigencia != undefined ? moment(mi.prestamo.fechaVigencia,'DD/MM/YYYY').toDate() : undefined;
-				
+				mi.prestamo.mesesProrrogaUe = moment(mi.prestamo.fechaCierreActualUe).diff(mi.prestamo.fechaCierreOrigianlUe,'months',true);
 				mi.getPorcentajes();
 			}
 			
