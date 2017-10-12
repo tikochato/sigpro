@@ -176,6 +176,11 @@ public class SPlanAdquisiciones extends HttpServlet {
 			for(ObjetoCosto objeto: estructuraProyecto){
 				temp = new stcomponenteplanadquisicion();
 				Integer objetoTipo = objeto.getObjeto_tipo();
+				
+				for(stcategoria cat : lsttempCategorias){
+					cat.objCosto = new ArrayList<ObjetoCosto>();
+				}
+				
 				if(objetoTipo == 2){
 					Integer componenteid = objeto.getObjeto_id(); 
 					temp.objetoId = objeto.getObjeto_id();
@@ -192,10 +197,6 @@ public class SPlanAdquisiciones extends HttpServlet {
 						if(lstplan != null){
 							for(stcategoria cat : lsttempCategorias){
 								if(cat.categoriaId == lstplan.getCategoriaAdquisicion().getId()){
-									List<Integer> objH = new ArrayList<Integer>();
-									objH.add(objetoHijo.getObjeto_id());
-									objH.add(objetoHijo.getObjeto_tipo());
-									objH.add(lstplan.getId());
 									cat.adquisicionId = lstplan.getId();
 									cat.objCosto.add(objetoHijo);
 								}
@@ -237,8 +238,6 @@ public class SPlanAdquisiciones extends HttpServlet {
 							}
 						}
 					}
-					
-					//inicializarObjCategoria(lsttempCategorias);
 				}
 			}
 			for(stcomponenteplanadquisicion stprestamo : lstPrestamo){
@@ -292,13 +291,6 @@ public class SPlanAdquisiciones extends HttpServlet {
 			return null;
 		}
 	}
-	
-	/*private void inicializarObjCategoria(List<stcategoria> lsttempCategorias){
-		for(stcategoria cat : lsttempCategorias){
-			cat.objetos = new ArrayList<List<Integer>>();
-		}
-	}*/
-	
 	
 	private sttotal[] inicializarStTotalPlan(Integer anioInicial, Integer anioFinal){		
 		int longitudArrelgo = anioFinal - anioInicial+1;
