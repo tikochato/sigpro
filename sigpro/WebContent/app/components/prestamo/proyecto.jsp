@@ -683,7 +683,7 @@
 										ng-required="true" 
 										ng-value="controller.prestamo.montoAsignadoUeQtz" 
 										onblur="this.setAttribute('value', this.value);" 
-										ui-number-mask="0"
+										ui-number-mask="2"
 										>
 										<label class="floating-label">* Monto Asignado Q</label>
 									</div>
