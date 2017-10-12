@@ -499,6 +499,12 @@ app.controller('flujocajaController',['$scope','$rootScope','$http','$interval',
 		var valor = item.anios[anio].mes[mes]!=null ? item.anios[anio].mes[mes] : 0;
 		return valor;
 	};
+	
+	angular.element($window).bind('resize', function(){ 
+        mi.calcularTamaniosCeldas();
+        $scope.$digest();
+      });
+    $scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
 
 	mi.exportarExcel = function(){
 		$http.post('/SFlujoCaja', { 
@@ -543,17 +549,3 @@ app.controller('flujocajaController',['$scope','$rootScope','$http','$interval',
 
 }]);
 
-app.directive('scrollespejoflujo', ['$window', function($window) {
-	return {
-		restrict: 'A',
-		link: function(scope, element, attrs) {
-			angular.element($window).bind('resize', function(){ 
-				scope.flujoc.calcularTamaniosCeldas();
-				scope.$digest();
-			});
-			scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
-		}
-	};
-}])
-
-;

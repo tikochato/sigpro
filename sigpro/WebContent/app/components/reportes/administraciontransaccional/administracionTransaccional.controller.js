@@ -106,7 +106,8 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 		angular.element($window).bind('resize', function(){ 
             mi.calcularTamanosPantalla();
             $scope.$digest();
-        });
+        });		
+		$scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
 		
 		mi.calcularTamanosPantalla();
 		
