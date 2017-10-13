@@ -140,6 +140,10 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 
 
+	mi.actualizarCosto = function(costo){
+		mi.producto.costo = costo;
+	}
+
 	mi.editarElemento = function (event) {
         var filaId = angular.element(event.toElement).scope().rowRenderIndex;
         mi.gridApi.selection.selectRow(mi.opcionesGrid.data[filaId]);

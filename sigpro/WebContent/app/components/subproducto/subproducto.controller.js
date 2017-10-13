@@ -220,6 +220,10 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 		    }
 		}
 	}
+	
+	mi.actualizarCosto = function(costo){
+		mi.subproducto.costo = costo;
+	}
 
 	mi.guardarEstado = function() {
 		var estado = mi.gridApi.saveState.save();

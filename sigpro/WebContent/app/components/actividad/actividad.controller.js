@@ -79,6 +79,10 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 			}
 		}
 		
+		mi.actualizarCosto = function(costo){
+			mi.actividad.costo = costo;
+		}
+		
 		mi.blurAcumulacionCosto=function(){
 			if(document.getElementById("acumulacionCosto_value").defaultValue!=mi.actividad.acumulacionCostoNombre){
 				$scope.$broadcast('angucomplete-alt:clearInput','acumulacionCosto');
