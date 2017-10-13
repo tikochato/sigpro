@@ -592,14 +592,17 @@ public class InformacionPresupuestariaDAO {
 	                
 					if(obra != null){
 						pstm.setInt(pos, obra);	
+						pos++;
 					}
 					
 					if(reglon != null){
 						pstm.setInt(pos, reglon);
+						pos++;
 					}
 					
 					if(geografico != null){
 						pstm.setInt(pos, geografico);
+						pos++;
 					}
 	                
 	                ResultSet rs = pstm.executeQuery();
