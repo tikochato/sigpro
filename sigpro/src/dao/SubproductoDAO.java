@@ -13,6 +13,8 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import pojo.Actividad;
+import pojo.PlanAdquisicion;
+import pojo.PlanAdquisicionPago;
 import pojo.Proyecto;
 import pojo.Subproducto;
 import pojo.SubproductoUsuario;
@@ -457,8 +459,21 @@ public class SubproductoDAO {
 					costo = costo.add(actividad.getCosto() != null ? actividad.getCosto() : new BigDecimal(0));
 				}
 			}else{				
-				costo = subproducto.getCosto() != null ? subproducto.getCosto() : new BigDecimal(0);
+				PlanAdquisicion pa = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(4, subproducto.getId());
+				if(pa!=null){
+						if(pa.getPlanAdquisicionPagos()!=null && pa.getPlanAdquisicionPagos().size()>0){
+							BigDecimal pagos = new BigDecimal(0);
+							for(PlanAdquisicionPago pago: pa.getPlanAdquisicionPagos())
+								pagos.add(pago.getPago());
+							costo = pagos;
+						}
+						else
+							costo = pa.getMontoContrato();
+				}
+				else
+					costo = subproducto.getCosto();
 			}
+			
 		}catch(Exception e){
 			CLogger.write("14", Proyecto.class, e);
 		}

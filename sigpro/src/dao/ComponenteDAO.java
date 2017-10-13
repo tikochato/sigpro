@@ -17,6 +17,8 @@ import pojo.Actividad;
 import pojo.Componente;
 import pojo.ComponenteUsuario;
 import pojo.ComponenteUsuarioId;
+import pojo.PlanAdquisicion;
+import pojo.PlanAdquisicionPago;
 import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Usuario;
@@ -377,28 +379,36 @@ public class ComponenteDAO {
 		BigDecimal costo = new BigDecimal(0);
 		try{
 			Set<Producto> productos = componente.getProductos();
-			if(productos != null && productos.size() > 0){
-				Iterator<Producto> iterador = productos.iterator();
-				
-				while(iterador.hasNext()){
-					Producto producto = iterador.next();
-					costo = costo.add(producto.getCosto() != null ? producto.getCosto() : new BigDecimal(0));
+			List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(componente.getId(), 2);
+			if((productos != null && productos.size() > 0) || (actividades!=null && actividades.size()>0) ){
+				if(productos!=null){
+					Iterator<Producto> iterador = productos.iterator();
+					
+					while(iterador.hasNext()){
+						Producto producto = iterador.next();
+						costo = costo.add(producto.getCosto() != null ? producto.getCosto() : new BigDecimal(0));
+					}
 				}
 				
-				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(componente.getId(), 2);
 				if(actividades != null && actividades.size() > 0){
 					for(Actividad actividad : actividades){
 						costo = costo.add(actividad.getCosto() != null ? actividad.getCosto() : new BigDecimal(0));
 					}
 				}
 			}else{
-				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(componente.getId(), 2);
-				if(actividades != null && actividades.size() > 0){
-					for(Actividad actividad : actividades){
-						costo = costo.add(actividad.getCosto() != null ? actividad.getCosto() : new BigDecimal(0));
-					}
-				}else
-					costo = componente.getCosto() != null ? componente.getCosto() : new BigDecimal(0);
+				PlanAdquisicion pa = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(2, componente.getId());
+				if(pa!=null){
+						if(pa.getPlanAdquisicionPagos()!=null && pa.getPlanAdquisicionPagos().size()>0){
+							BigDecimal pagos = new BigDecimal(0);
+							for(PlanAdquisicionPago pago: pa.getPlanAdquisicionPagos())
+								pagos.add(pago.getPago());
+							costo = pagos;
+						}
+						else
+							costo = pa.getMontoContrato();
+				}
+				else
+					costo = componente.getCosto();
 			}
 		}catch(Exception e){
 			CLogger.write("16", Proyecto.class, e);

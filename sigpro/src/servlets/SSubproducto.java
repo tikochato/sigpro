@@ -474,6 +474,8 @@ public class SSubproducto extends HttpServlet {
 			temp.proyecto_ = subproducto.getProyecto();
 			temp.actividad = subproducto.getActividad();
 			temp.obra = subproducto.getObra();
+			temp.renglon = subproducto.getRenglon();
+			temp.ubicacionGeografica = subproducto.getUbicacionGeografica();
 			temp.latitud = subproducto.getLatitud();
 			temp.longitud = subproducto.getLongitud();
 			temp.fechaInicio = Utils.formatDate(subproducto.getFechaInicio());

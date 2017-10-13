@@ -144,7 +144,7 @@
 						  				<label for="isubprog" class="floating-label">Subprograma</label>
 									</td>
 									<td style="width: 14%; padding-right:5px;">
-										<input type="number" class="inputText" ng-model="subproducto.subproducto.proyecto_" ng-value="subproducto.subproducto.proyecto" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+										<input type="number" class="inputText" ng-model="subproducto.subproducto.proyecto_" ng-value="subproducto.subproducto.proyecto_" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
 						  				<label for="iproy_" class="floating-label">Proyecto</label>
 									</td>
 									<td style="width: 14%; padding-right:5px;">

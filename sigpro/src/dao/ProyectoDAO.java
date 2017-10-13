@@ -370,7 +370,9 @@ public class ProyectoDAO implements java.io.Serializable  {
 		BigDecimal costo = new BigDecimal(0);
 		try{
 			Set<Componente> componentes = proyecto.getComponentes();
-			if(componentes != null && componentes.size() > 0){
+			List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(proyecto.getId(), 1);
+			
+			if((componentes != null && componentes.size() > 0) || (actividades!=null && actividades.size()>0)){
 				Iterator<Componente> iterador = componentes.iterator();
 				
 				while(iterador.hasNext()){
@@ -378,20 +380,13 @@ public class ProyectoDAO implements java.io.Serializable  {
 					costo = costo.add(componente.getCosto() != null ? componente.getCosto() : new BigDecimal(0));
 				}
 					
-				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(proyecto.getId(), 1);
 				if(actividades != null && actividades.size() > 0){
 					for(Actividad actividad : actividades){
 						costo = costo.add(actividad.getCosto() != null ? actividad.getCosto() : new BigDecimal(0));
 					}
 				}			
 			}else{
-				List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(proyecto.getId(), 1);
-				if(actividades != null && actividades.size() > 0){
-					for(Actividad actividad : actividades){
-						costo = costo.add(actividad.getCosto() != null ? actividad.getCosto() : new BigDecimal(0));
-					}
-				}else
-					costo = proyecto.getCosto() != null ? proyecto.getCosto() : new BigDecimal(0);
+				costo = proyecto.getCosto();
 			}				
 		}catch(Exception e){
 			CLogger.write("14", Proyecto.class, e);

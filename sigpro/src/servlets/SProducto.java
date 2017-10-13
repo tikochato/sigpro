@@ -686,6 +686,13 @@ public class SProducto extends HttpServlet {
 				temp.usuarioactualizo = producto.getUsuarioActualizo();
 				temp.fechaCreacion = Utils.formatDateHour(producto.getFechaCreacion());
 				temp.fechaactualizacion = Utils.formatDateHour(producto.getFechaActualizacion());
+				temp.programa = producto.getPrograma();
+				temp.subprograma = producto.getSubprograma();
+				temp.proyecto_ = producto.getProyecto();
+				temp.actividad = producto.getActividad();
+				temp.obra = producto.getObra();
+				temp.renglon = producto.getRenglon();
+				temp.ubicacionGeografica = producto.getUbicacionGeografica();
 				
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 3);
 			}
