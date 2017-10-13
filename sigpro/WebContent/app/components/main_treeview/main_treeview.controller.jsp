@@ -223,7 +223,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	});
 	
 	mi.setParentNode=function(nodo){
-		for(var i=0; i<nodo.children.length;i++){
+		for(var i=0; i < nodo.children.length;i++){
 			nodo.children[i].parent = nodo;
 			mi.setParentNode(nodo.children[i]);
 		}

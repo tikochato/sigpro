@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +29,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.AdministracionTransaccionalDAO;
-import dao.ColaboradorDAO;
+import dao.ProyectoDAO;
+import dao.UsuarioDAO;
+import pojo.Proyecto;
+import pojo.Usuario;
 import utilities.CExcel;
 import utilities.CGraficaExcel;
 import utilities.CLogger;
@@ -51,25 +53,28 @@ public class SAdministracionTransaccional extends HttpServlet {
 		String fecha_creacion;
 		String fecha_modificacion;
 		String estado;
+		Integer nivel;
+		stusuario transacciones = new stusuario();
 	}
 	
 	class stusuario{
 		String usuario;
-		BigDecimal creados;
-		BigDecimal actualizados;
-		BigDecimal eliminados;
+		Integer creados;
+		Integer actualizados;
+		Integer eliminados;
 	}
 	
 	class stusuariodetalle{
 		String usuario;
 		String objetoNombre;
-		String objetoTipo;
+		Integer objetoTipo;
+		String objetoTipoDesc;
 		String estado;
 		String fecha;
 	}
 	
 	class stanio{
-		BigDecimal[] mes = new BigDecimal[12];
+		Integer[] mes = new Integer[12];
 		Integer anio;
 		
 	}
@@ -108,65 +113,88 @@ public class SAdministracionTransaccional extends HttpServlet {
 		Map<String, String> map = gson.fromJson(sb.toString(), type);
 		String accion = map.get("accion");
 		String response_text="";
+		
 		if(accion.equals("getTransacciones")){
-			Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
-			Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
-			
-			DateTime nuevaFechaFin = new DateTime(fechaFin);
-			nuevaFechaFin = nuevaFechaFin.plusHours(23);
-			nuevaFechaFin = nuevaFechaFin.plusMinutes(59);
-			nuevaFechaFin = nuevaFechaFin.plusSeconds(59);
-			
-			List<stusuario> lstusuarios = getAdministracionTransaccional(fechaInicio, nuevaFechaFin.toDate());
-			
-			List<stagrupacion> lstcreados = getTransaccionesCreadas(fechaInicio, fechaFin);
-			List<stagrupacion> lstactualizados = getTransaccionesActualizadas(fechaInicio, fechaFin);
-			List<stagrupacion> lsteliminados = getTransaccionesEliminadas(fechaInicio, fechaFin);
-			
-			response_text= new GsonBuilder().serializeNulls().create().toJson(lstusuarios);
-	        response_text = String.join("", "\"usuarios\":",response_text);
-	        response_text = String.join("", "{\"success\":true,", response_text);
-	        
-	        String transacciones_text = new GsonBuilder().serializeNulls().create().toJson(lstcreados);
-	        transacciones_text = String.join("", ",\"creados\":", transacciones_text);
-	        response_text = String.join("",response_text, transacciones_text);
-	        
-	        transacciones_text = new GsonBuilder().serializeNulls().create().toJson(lstactualizados);
-	        transacciones_text = String.join("", ",\"actualizados\":",transacciones_text);
-	        response_text = String.join("",response_text, transacciones_text);
-	        
-	        transacciones_text = new GsonBuilder().serializeNulls().create().toJson(lsteliminados);
-	        transacciones_text = String.join("", ",\"eliminados\":",transacciones_text);
-	        response_text = String.join("",response_text, transacciones_text, "}");
-	        
-			response.setHeader("Content-Encoding", "gzip");
-			response.setCharacterEncoding("UTF-8");
+			try{
+				Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
+				Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
+				
+				DateTime nuevaFechaFin = new DateTime(fechaFin);
+				nuevaFechaFin = nuevaFechaFin.plusHours(23);
+				nuevaFechaFin = nuevaFechaFin.plusMinutes(59);
+				nuevaFechaFin = nuevaFechaFin.plusSeconds(59);
+				
+				List<Proyecto> lstprestamos = ProyectoDAO.getTodosProyectos();
+				List<Usuario> lstUsuarios = UsuarioDAO.getUsuariosDisponibles();
+				
+				List<sttransaccion> lstcounttransacciones = getAdministracionTransaccional(fechaInicio, nuevaFechaFin.toDate(), lstprestamos, lstUsuarios);
+				
+				List<stagrupacion> lstcreados = getTransaccionesCreadas(fechaInicio, nuevaFechaFin.toDate(), lstprestamos, lstUsuarios);
+				List<stagrupacion> lstactualizados = getTransaccionesActualizadas(fechaInicio, nuevaFechaFin.toDate(), lstprestamos, lstUsuarios);
+				List<stagrupacion> lsteliminados = getTransaccionesEliminadas(fechaInicio, nuevaFechaFin.toDate(), lstprestamos, lstUsuarios);
+				
+				response_text= new GsonBuilder().serializeNulls().create().toJson(lstcounttransacciones);
+		        response_text = String.join("", "\"usuarios\":",response_text);
+		        response_text = String.join("", "{\"success\":true,", response_text);
+		        
+		        String transacciones_text = new GsonBuilder().serializeNulls().create().toJson(lstcreados);
+		        transacciones_text = String.join("", ",\"creados\":", transacciones_text);
+		        response_text = String.join("",response_text, transacciones_text);
+		        
+		        transacciones_text = new GsonBuilder().serializeNulls().create().toJson(lstactualizados);
+		        transacciones_text = String.join("", ",\"actualizados\":",transacciones_text);
+		        response_text = String.join("",response_text, transacciones_text);
+		        
+		        transacciones_text = new GsonBuilder().serializeNulls().create().toJson(lsteliminados);
+		        transacciones_text = String.join("", ",\"eliminados\":",transacciones_text);
+		        response_text = String.join("",response_text, transacciones_text, "}");
+		        
+				response.setHeader("Content-Encoding", "gzip");
+				response.setCharacterEncoding("UTF-8");
 
-	        OutputStream output = response.getOutputStream();
-			GZIPOutputStream gz = new GZIPOutputStream(output);
-	        gz.write(response_text.getBytes("UTF-8"));
-	        gz.close();
-	        output.close();
-
+		        OutputStream output = response.getOutputStream();
+				GZIPOutputStream gz = new GZIPOutputStream(output);
+		        gz.write(response_text.getBytes("UTF-8"));
+		        gz.close();
+		        output.close();
+			}catch(Exception e){
+				CLogger.write("1", SAdministracionTransaccional.class, e);
+			}
 		}else if(accion.equals("exportarExcelDetalle")){
-			String usuarioDetalle = map.get("usuarioDetalle");
-			Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
-			Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
-			
-			byte[] outArray = exportarExcelDetalle(usuarioDetalle, fechaInicio, fechaFin);
-			
-			response.setContentType("application/ms-excel");
-			response.setContentLength(outArray.length);
-			response.setHeader("Cache-Control", "no-cache"); 
-			response.setHeader("Content-Disposition", "attachment; Administraci贸n_Transaccional.xls");
-			OutputStream outStream = response.getOutputStream();
-			outStream.write(outArray);
-			outStream.flush();
+			try{
+				Integer proyectoId = Utils.String2Int(map.get("proyectoId"));
+				String proyectoNombre = map.get("proyectoNombre");
+				Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
+				Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
+				
+				DateTime nuevaFechaFin = new DateTime(fechaFin);
+				nuevaFechaFin = nuevaFechaFin.plusHours(23);
+				nuevaFechaFin = nuevaFechaFin.plusMinutes(59);
+				nuevaFechaFin = nuevaFechaFin.plusSeconds(59);
+				
+				byte[] outArray = exportarExcelDetalle(proyectoId, proyectoNombre, fechaInicio, nuevaFechaFin.toDate(), usuario);
+				
+				response.setContentType("application/ms-excel");
+				response.setContentLength(outArray.length);
+				response.setHeader("Cache-Control", "no-cache"); 
+				response.setHeader("Content-Disposition", "attachment; Administraci贸n_Transaccional.xls");
+				OutputStream outStream = response.getOutputStream();
+				outStream.write(outArray);
+				outStream.flush();
+			}catch(Exception e){
+				CLogger.write("2", SAdministracionTransaccional.class, e);
+			}
 		}else if (accion.equals("exportarExcel")){
 			try{
 				Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
 				Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
-		        byte [] outArray = exportarExcel(usuario, fechaInicio, fechaFin);
+				
+				DateTime nuevaFechaFin = new DateTime(fechaFin);
+				nuevaFechaFin = nuevaFechaFin.plusHours(23);
+				nuevaFechaFin = nuevaFechaFin.plusMinutes(59);
+				nuevaFechaFin = nuevaFechaFin.plusSeconds(59);
+				
+		        byte [] outArray = exportarExcel(usuario, fechaInicio, nuevaFechaFin.toDate());
 			
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
@@ -176,19 +204,25 @@ public class SAdministracionTransaccional extends HttpServlet {
 				outStream.write(outArray);
 				outStream.flush();
 			}catch(Exception e){
-				CLogger.write("1", SAdministracionTransaccional.class, e);
+				CLogger.write("3", SAdministracionTransaccional.class, e);
 			}
 		}else if(accion.equals("exportarPdfDetalle")){
 			try{
-				String usuarioDetalle = map.get("usuarioDetalle");
-				String colaborador = ColaboradorDAO.getColaboradorByUsuario(usuarioDetalle);
+				Integer proyectoId = Utils.String2Int(map.get("proyectoId"));
+				String proyectoNombre = map.get("proyectoNombre");
 				Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
 				Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
-				CPdf archivo = new CPdf("Detalle Administraci贸n Transaccional del " + (!colaborador.equals("") ? "colaborador " : "usuario ") + colaborador + "("+usuarioDetalle+")");
+				
+				DateTime nuevaFechaFin = new DateTime(fechaFin);
+				nuevaFechaFin = nuevaFechaFin.plusHours(23);
+				nuevaFechaFin = nuevaFechaFin.plusMinutes(59);
+				nuevaFechaFin = nuevaFechaFin.plusSeconds(59);
+				
+				CPdf archivo = new CPdf("Detalle Administraci髇 Transaccional del Prestamo " + proyectoNombre);
 				String headers[][];
 				String datos[][];
 				headers = generarHeadersDetalle();
-				datos = generarDatosDetalle(usuarioDetalle, fechaInicio, fechaFin);
+				datos = generarDatosDetalle(proyectoId, fechaInicio, nuevaFechaFin.toDate());
 				String path = archivo.ExportarPdfAdministracionTransaccionalDetalle(headers, datos,usuario);
 				File file=new File(path);
 				if(file.exists()){
@@ -197,7 +231,7 @@ public class SAdministracionTransaccional extends HttpServlet {
 			        	is = new FileInputStream(file);
 			        }
 			        catch (Exception e) {
-						CLogger.write("5", SAdministracionTransaccional.class, e);
+						CLogger.write("4", SAdministracionTransaccional.class, e);
 			        }
 			        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 			        
@@ -235,11 +269,21 @@ public class SAdministracionTransaccional extends HttpServlet {
 		}else if(accion.equals("exportarPdf")){
 			Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
 			Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
-			CPdf archivo = new CPdf("Administraci贸n Transaccional");
+			
+			DateTime nuevaFechaFin = new DateTime(fechaFin);
+			nuevaFechaFin = nuevaFechaFin.plusHours(23);
+			nuevaFechaFin = nuevaFechaFin.plusMinutes(59);
+			nuevaFechaFin = nuevaFechaFin.plusSeconds(59);
+			
+			CPdf archivo = new CPdf("Administraci髇 Transaccional");
 			String headers[][];
 			String datos[][];
 			headers = generarHeaders();
-			datos = generarDatos(fechaInicio, fechaFin);
+			
+			List<Proyecto> lstprestamos = ProyectoDAO.getTodosProyectos();
+			List<Usuario> lstUsuarios = UsuarioDAO.getUsuariosDisponibles();
+			
+			datos = generarDatos(fechaInicio, nuevaFechaFin.toDate(),lstprestamos,lstUsuarios);
 			String path = archivo.ExportarPdfAdministracionTransaccional(headers, datos,usuario);
 			File file=new File(path);
 			if(file.exists()){
@@ -296,106 +340,135 @@ public class SAdministracionTransaccional extends HttpServlet {
 		}		
 	}
 	
-	private List<stusuario> getAdministracionTransaccional(Date fechaInicio, Date fechaFin){
-		List<stusuario> lstusuarios = new ArrayList<stusuario>();
+	private List<sttransaccion> getAdministracionTransaccional(Date fechaInicio, Date fechaFin, List<Proyecto> lstprestamos, List<Usuario> lstUsuarios){
+		List<sttransaccion> lsttransaccion = new ArrayList<sttransaccion>();
 		try {
-			List<?> usuarios = AdministracionTransaccionalDAO.obtenerTotalesPorUsuarios(fechaInicio, fechaFin);
-			
-			stusuario temp = null;
-			for(Object user : usuarios){
-				Object[] obj = (Object[]) user;
-				temp = new stusuario();
-				temp.usuario = (String)obj[0];
-				temp.creados = (BigDecimal)obj[1];
-				temp.actualizados = (BigDecimal)obj[2];
-				temp.eliminados = (BigDecimal)obj[3];
-				lstusuarios.add(temp);
-			}
+			sttransaccion temp = new sttransaccion();
+			for(Proyecto proyecto : lstprestamos){
+				temp.nombre = proyecto.getNombre();
+				temp.objeto_id = proyecto.getId();
+				temp.objeto_tipo = 1;
+				temp.nivel = 0;
+				lsttransaccion.add(temp);
+				
+				for(Usuario usuario : lstUsuarios){
+					temp =  new sttransaccion();
+					
+					stusuario userRes = new stusuario();
+					Integer creadas = AdministracionTransaccionalDAO.obtenerCreadosProyectoUsuario(fechaInicio, fechaFin, proyecto.getId(), usuario.getUsuario());
+					Integer actualizadas = AdministracionTransaccionalDAO.obtenerActualizadosProyectoUsuario(fechaInicio, fechaFin, proyecto.getId(), usuario.getUsuario());
+					Integer eliminadas = AdministracionTransaccionalDAO.obtenerEliminadosProyectoUsuario(fechaInicio, fechaFin, proyecto.getId(), usuario.getUsuario());
+					
+					if(creadas == 0 && actualizadas == 0 && eliminadas == 0){
+						
+					}else{
+						temp.nombre = usuario.getUsuario();
+						temp.nivel = 1;
+						userRes.creados = creadas;
+						userRes.actualizados = actualizadas;
+						userRes.eliminados = eliminadas;
+						
+						temp.transacciones = userRes;
+						
+						lsttransaccion.add(temp);
+					}				
+				}
+			}			
 		} catch (Exception e) {
-			CLogger.write("1", SAdministracionTransaccional.class, e);
+			CLogger.write("6", SAdministracionTransaccional.class, e);
 		}
-		return lstusuarios;
+		return lsttransaccion;
 	}
 	
-	private List<stagrupacion> getTransaccionesEliminadas(Date fechaInicio, Date fechaFin){
+	private List<stagrupacion> getTransaccionesEliminadas(Date fechaInicio, Date fechaFin, List<Proyecto> lstprestamos, List<Usuario> lstUsuarios){
 		List<stagrupacion> lstusuarios = new ArrayList<stagrupacion>();
 		try {
-			List<?> usuarios = AdministracionTransaccionalDAO.obtenerTransaccionesEliminadas(fechaInicio, fechaFin);
-			
 			DateTime time = new DateTime(fechaInicio);
 			Integer anoInicial = time.getYear();
 			time = new DateTime(fechaFin);
 			Integer anoFinal = time.getYear();
 			stanio[] tempAnio = inicializarStanio(anoInicial, anoFinal);
-			
 			stagrupacion temp = new stagrupacion();
-			for(Object user : usuarios){
-				Object[] obj = (Object[]) user;
-				for(int i= 0; i<tempAnio.length;i++){
-					if(tempAnio[i].anio.equals((Integer)obj[2])){
-						tempAnio[i].mes[(Integer)obj[1] -1] = (BigDecimal)obj[0];
+			for(Proyecto proyecto : lstprestamos){
+				for(Usuario usuario : lstUsuarios){
+					List<?> creadas = AdministracionTransaccionalDAO.obtenerTransaccionesEliminadasProyectoUsuario(fechaInicio, fechaFin, proyecto.getId(), usuario.getUsuario());
+					for(int i = 0; i<tempAnio.length;i++){
+						for(int j = 0; j< creadas.size(); j++){
+							Object[] obj = (Object[])creadas.get(j);
+							if(tempAnio[i].anio.equals((Integer)obj[1])){
+								tempAnio[i].mes[(Integer)obj[0] -1] += 1;
+							}
+						}
 					}
 				}
 			}
+			
 			temp.anios = tempAnio;
 			lstusuarios.add(temp);
 		} catch (Exception e) {
-			CLogger.write("1", SAdministracionTransaccional.class, e);
+			CLogger.write("7", SAdministracionTransaccional.class, e);
 		}
 		return lstusuarios;
 	}
 	
-	private List<stagrupacion> getTransaccionesActualizadas(Date fechaInicio, Date fechaFin){
+	private List<stagrupacion> getTransaccionesActualizadas(Date fechaInicio, Date fechaFin, List<Proyecto> lstprestamos, List<Usuario> lstUsuarios){
 		List<stagrupacion> lstusuarios = new ArrayList<stagrupacion>();
 		try {
-			List<?> usuarios = AdministracionTransaccionalDAO.obtenerTransaccionesActualizadas(fechaInicio, fechaFin);
 			DateTime time = new DateTime(fechaInicio);
 			Integer anoInicial = time.getYear();
 			time = new DateTime(fechaFin);
 			Integer anoFinal = time.getYear();
 			stanio[] tempAnio = inicializarStanio(anoInicial, anoFinal);
-			
 			stagrupacion temp = new stagrupacion();
-			for(Object user : usuarios){
-				Object[] obj = (Object[]) user;
-				for(int i= 0; i<tempAnio.length;i++){
-					if(tempAnio[i].anio.equals((Integer)obj[2])){
-						tempAnio[i].mes[(Integer)obj[1] -1] = (BigDecimal)obj[0];
+			for(Proyecto proyecto : lstprestamos){
+				for(Usuario usuario : lstUsuarios){
+					List<?> creadas = AdministracionTransaccionalDAO.obtenerTransaccionesActualizadosProyectoUsuario(fechaInicio, fechaFin, proyecto.getId(), usuario.getUsuario());
+					for(int i = 0; i<tempAnio.length;i++){
+						for(int j = 0; j< creadas.size(); j++){
+							Object[] obj = (Object[])creadas.get(j);
+							if(tempAnio[i].anio.equals((Integer)obj[1])){
+								tempAnio[i].mes[(Integer)obj[0] -1] += 1;
+							}
+						}
 					}
 				}
 			}
+			
 			temp.anios = tempAnio;
 			lstusuarios.add(temp);
 		} catch (Exception e) {
-			CLogger.write("1", SAdministracionTransaccional.class, e);
+			CLogger.write("8", SAdministracionTransaccional.class, e);
 		}
 		return lstusuarios;
 	}
 	
-	private List<stagrupacion> getTransaccionesCreadas(Date fechaInicio, Date fechaFin){
+	private List<stagrupacion> getTransaccionesCreadas(Date fechaInicio, Date fechaFin, List<Proyecto> lstprestamos, List<Usuario> lstUsuarios){
 		List<stagrupacion> lstusuarios = new ArrayList<stagrupacion>();
-		try {
-			List<?> usuarios = AdministracionTransaccionalDAO.obtenerTransaccionesCreadas(fechaInicio, fechaFin);
-			
+		try {			
 			DateTime time = new DateTime(fechaInicio);
 			Integer anoInicial = time.getYear();
 			time = new DateTime(fechaFin);
 			Integer anoFinal = time.getYear();
 			stanio[] tempAnio = inicializarStanio(anoInicial, anoFinal);
-			
 			stagrupacion temp = new stagrupacion();
-			for(Object user : usuarios){
-				Object[] obj = (Object[]) user;
-				for(int i= 0; i<tempAnio.length;i++){
-					if(tempAnio[i].anio.equals((Integer)obj[2])){
-						tempAnio[i].mes[(Integer)obj[1] -1] = (BigDecimal)obj[0];
+			for(Proyecto proyecto : lstprestamos){
+				for(Usuario usuario : lstUsuarios){
+					List<?> creadas = AdministracionTransaccionalDAO.obtenerTransaccionesCreadosProyectoUsuario(fechaInicio, fechaFin, proyecto.getId(), usuario.getUsuario());
+					for(int i = 0; i<tempAnio.length;i++){
+						for(int j = 0; j< creadas.size(); j++){
+							Object[] obj = (Object[])creadas.get(j);
+							if(tempAnio[i].anio.equals((Integer)obj[1])){
+								tempAnio[i].mes[(Integer)obj[0] -1] += 1;
+							}
+						}
 					}
 				}
 			}
+			
 			temp.anios = tempAnio;
 			lstusuarios.add(temp);
 		} catch (Exception e) {
-			CLogger.write("1", SAdministracionTransaccional.class, e);
+			CLogger.write("9", SAdministracionTransaccional.class, e);
 		}
 		return lstusuarios;
 	}
@@ -408,7 +481,7 @@ public class SAdministracionTransaccional extends HttpServlet {
 		for (int i = 0;i <longitudArrelgo; i++){
 			stanio temp = new stanio();
 			for(int m=0; m<12; m++){
-				temp.mes[m] = new BigDecimal(0);
+				temp.mes[m] = 0;
 			}
 			temp.anio = anioInicial+i;
 			anios[i] = temp;
@@ -416,23 +489,32 @@ public class SAdministracionTransaccional extends HttpServlet {
 		return anios;
 	}
 	
-	private List<stusuariodetalle> getAdministracionTransaccionalDetalle(String usuarioDetalle , Date fechaInicio, Date fechaFin){
+	private List<stusuariodetalle> getAdministracionTransaccionalDetalle(Integer proyectoId, Date fechaInicio, Date fechaFin){
 		List<stusuariodetalle> lstusuarios = new ArrayList<stusuariodetalle>();
 		try {
-			List<?> usuarios = AdministracionTransaccionalDAO.obtenerTransaccionesPorUsuario(usuarioDetalle, fechaInicio, fechaFin);
+			List<?> creadas = AdministracionTransaccionalDAO.obtenerTransaccionesCreadosProyectoUsuario(fechaInicio, fechaFin, proyectoId, null);
+			List<?> actualizadas = AdministracionTransaccionalDAO.obtenerTransaccionesActualizadosProyectoUsuario(fechaInicio, fechaFin, proyectoId, null);
+			List<?> eliminadas = AdministracionTransaccionalDAO.obtenerTransaccionesEliminadasProyectoUsuario(fechaInicio, fechaFin, proyectoId, null);
+			
+			List<Object> lstPrestamo = new ArrayList<Object>();
+			lstPrestamo.addAll(creadas);
+			lstPrestamo.addAll(actualizadas);
+			lstPrestamo.addAll(eliminadas);
+			
 			stusuariodetalle temp = null;
-			for(Object user : usuarios){
+			for(Object user : lstPrestamo){
 				Object[] obj = (Object[]) user;
 				 temp = new stusuariodetalle();
-				 temp.usuario = (String)obj[0];
-				 temp.objetoNombre = (String)obj[1];
-				 temp.objetoTipo = (String)obj[2];
-				 temp.estado = (String)obj[3];
-				 temp.fecha = Utils.formatDateHour((Date)obj[4]);
+				 temp.objetoNombre = (String)obj[2];
+				 temp.objetoTipo = (Integer)obj[3];
+				 temp.usuario = (String)obj[4];
+				 temp.objetoTipoDesc = (String)obj[5];
+				 temp.estado = (String)obj[6];
+				 temp.fecha = Utils.formatDateHour((Date)obj[7]);
 				 lstusuarios.add(temp);
 			}
 		} catch (Exception e) {
-			CLogger.write("1", SAdministracionTransaccional.class, e);
+			CLogger.write("10", SAdministracionTransaccional.class, e);
 		}
 		return lstusuarios;
 	}
@@ -447,20 +529,24 @@ public class SAdministracionTransaccional extends HttpServlet {
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
 			headers = generarHeaders();
-			datos = generarDatos(fechaInicio, fechaFin);
-			CGraficaExcel grafica = generarGrafica(datos, fechaInicio, fechaFin);
+			
+			List<Proyecto> lstprestamos = ProyectoDAO.getTodosProyectos();
+			List<Usuario> lstUsuarios = UsuarioDAO.getUsuariosDisponibles();
+			
+			datos = generarDatos(fechaInicio, fechaFin, lstprestamos, lstUsuarios);
+			CGraficaExcel grafica = generarGrafica(datos, fechaInicio, fechaFin, lstprestamos, lstUsuarios);
 			excel = new CExcel("Administraci贸n Transaccional", false, grafica);
 			wb=excel.generateExcelOfData(datos, "Administraci贸n Transaccional", headers, null, true, usuario);
 		
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
-			CLogger.write("2", SAdministracionTransaccional.class, e);
+			CLogger.write("11", SAdministracionTransaccional.class, e);
 		}
 		return outArray;
 	}
 	
-	private byte[] exportarExcelDetalle(String usuario, Date fechaInicio, Date fechaFin){
+	private byte[] exportarExcelDetalle(Integer proyectoId, String proyectoNombre, Date fechaInicio, Date fechaFin, String usuario){
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -470,15 +556,14 @@ public class SAdministracionTransaccional extends HttpServlet {
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
 			headers = generarHeadersDetalle();
-			datos = generarDatosDetalle(usuario, fechaInicio, fechaFin);
-			String colaborador = ColaboradorDAO.getColaboradorByUsuario(usuario);
-			excel = new CExcel("Detalle Administraci贸n Transaccional del " + (!colaborador.equals("") ? "colaborador " : "usuario ") + colaborador + "("+ usuario + ")", false, null);
-			wb=excel.generateExcelOfData(datos, "Detalle Administraci贸n Transaccional del " + (!colaborador.equals("") ? "colaborador " : "usuario ") +  colaborador + "("+ usuario + ")", headers, null, true, usuario);
+			datos = generarDatosDetalle(proyectoId, fechaInicio, fechaFin);
+			excel = new CExcel("Detalle Administraci髇 Transaccional del Pr閟tamo " + proyectoNombre, false, null);
+			wb=excel.generateExcelOfData(datos, "Detalle Administraci髇 Transaccional del Prestamo " + proyectoNombre, headers, null, true, usuario);
 		
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
-			CLogger.write("2", SAdministracionTransaccional.class, e);
+			CLogger.write("12", SAdministracionTransaccional.class, e);
 		}
 		return outArray;
 	}
@@ -487,7 +572,7 @@ public class SAdministracionTransaccional extends HttpServlet {
 		String headers[][];
 		
 		headers = new String[][]{
-			{"Usuario", "Creados", "Actualizados", "Eliminados"},  //titulos
+			{"Nombre", "Creados", "Actualizados", "Eliminados"},  //titulos
 			null, //mapeo
 			{"string", "int", "int", "int"}, //tipo dato
 			{"", "sum", "sum", "sum"}, //operaciones columnas
@@ -504,7 +589,7 @@ public class SAdministracionTransaccional extends HttpServlet {
 		String headers[][];
 		
 		headers = new String[][]{
-			{"Usuario", "Nombre", "Tipo", "Estado", "Fecha"},  //titulos
+			{"Nombre", "Tipo", "Estado", "Fecha", "Usuario"},  //titulos
 			null, //mapeo
 			{"string", "string", "string", "string", "string"}, //tipo dato
 			{"", "", "", "", ""}, //operaciones columnas
@@ -517,55 +602,65 @@ public class SAdministracionTransaccional extends HttpServlet {
 		return headers;
 	}
 	
-	public String[][] generarDatosDetalle(String usuario, Date fechaInicio, Date fechaFin){
+	public String[][] generarDatosDetalle(Integer proyectoId, Date fechaInicio, Date fechaFin){
 		String[][] datos = null;
 		try{
-			List<stusuariodetalle> detalleUsuario = getAdministracionTransaccionalDetalle(usuario, fechaInicio, fechaFin);
+			List<stusuariodetalle> detalleUsuario = getAdministracionTransaccionalDetalle(proyectoId, fechaInicio, fechaFin);
 			
 			if (detalleUsuario != null && !detalleUsuario.isEmpty()){
 				datos = new String[detalleUsuario.size()][5];
 				for(int i=0; i < detalleUsuario.size(); i++){
 					stusuariodetalle temp = detalleUsuario.get(i);
-					datos[i][0] = temp.usuario;
-					datos[i][1] = temp.objetoNombre;
-					datos[i][2] = temp.objetoTipo;
-					datos[i][3] = temp.estado;
-					datos[i][4] = temp.fecha;
+					if(temp.objetoTipo == null)
+						datos[i][0] = "		" + temp.objetoNombre;	
+					else
+						datos[i][0] = temp.objetoNombre;					
+					datos[i][1] = temp.objetoTipoDesc;
+					datos[i][2] = temp.estado;
+					datos[i][3] = temp.fecha;
+					datos[i][4] = temp.usuario;
+
 				}
 			}
 		}catch(Exception e){
-			CLogger.write("3", SAdministracionTransaccional.class, e);
+			CLogger.write("13", SAdministracionTransaccional.class, e);
 		}
 		
 		return datos;
 	}
 	
-	public String[][] generarDatos(Date fechaInicio, Date fechaFin){
-		List<stusuario> lstusuarios = getAdministracionTransaccional(fechaInicio, fechaFin);
+	public String[][] generarDatos(Date fechaInicio, Date fechaFin, List<Proyecto> lstprestamos, List<Usuario> lstUsuarios){		
+		List<sttransaccion> transacciones = getAdministracionTransaccional(fechaInicio, fechaFin, lstprestamos, lstUsuarios);
+		
 		String[][] datos = null;
 		totalCreados = 0;
 		totalActualizados = 0;
 		totalEliminados = 0;
-		if (lstusuarios != null && !lstusuarios.isEmpty()){ 
-			datos = new String[lstusuarios.size()][4];
-			for (int i=0; i<lstusuarios.size(); i++){
-				datos[i][0]=lstusuarios.get(i).usuario;
-				datos[i][1]=lstusuarios.get(i).creados.toString();
-				datos[i][2]=lstusuarios.get(i).actualizados.toString();
-				datos[i][3]=lstusuarios.get(i).eliminados.toString();
-				totalCreados += lstusuarios.get(i).creados.intValue();
-				totalActualizados += lstusuarios.get(i).actualizados.intValue();
-				totalEliminados += lstusuarios.get(i).eliminados.intValue();
+		
+		if(transacciones != null && !transacciones.isEmpty()){
+			datos = new String[transacciones.size()][4];
+			for(int i=0; i<transacciones.size(); i++){
+				if(transacciones.get(i).objeto_tipo == null)
+					datos[i][0] = "      " + transacciones.get(i).nombre;	
+				else
+					datos[i][0] = transacciones.get(i).nombre;
+				
+				datos[i][1]=transacciones.get(i).transacciones.creados != null ? transacciones.get(i).transacciones.creados.toString() : null;
+				datos[i][2]=transacciones.get(i).transacciones.actualizados != null ? transacciones.get(i).transacciones.actualizados.toString() : null;
+				datos[i][3]=transacciones.get(i).transacciones.eliminados != null ? transacciones.get(i).transacciones.eliminados.toString() : null;
+				totalCreados += transacciones.get(i).transacciones.creados != null ? transacciones.get(i).transacciones.creados : 0;
+				totalActualizados += transacciones.get(i).transacciones.actualizados != null ? transacciones.get(i).transacciones.actualizados : 0;
+				totalEliminados += transacciones.get(i).transacciones.eliminados != null ? transacciones.get(i).transacciones.eliminados : 0;
 			}
 		}
-			
+		
 		return datos;
 	}
 	
-	public CGraficaExcel generarGrafica(String[][] datosTabla, Date fechaInicio, Date fechaFin){
-		List<stagrupacion> creados = getTransaccionesCreadas(fechaInicio, fechaFin);
-		List<stagrupacion> actualizados = getTransaccionesActualizadas(fechaInicio, fechaFin);
-		List<stagrupacion> eliminados = getTransaccionesEliminadas(fechaInicio, fechaFin);
+	public CGraficaExcel generarGrafica(String[][] datosTabla, Date fechaInicio, Date fechaFin, List<Proyecto> lstprestamos, List<Usuario> lstUsuarios){
+		List<stagrupacion> creados = getTransaccionesCreadas(fechaInicio, fechaFin, lstprestamos, lstUsuarios);
+		List<stagrupacion> actualizados = getTransaccionesActualizadas(fechaInicio, fechaFin, lstprestamos, lstUsuarios);
+		List<stagrupacion> eliminados = getTransaccionesEliminadas(fechaInicio, fechaFin, lstprestamos, lstUsuarios);
 		DateTime inicio = new DateTime(fechaInicio);
 		DateTime fin = new DateTime(fechaFin);
 		int total = (fin.getYear() - inicio.getYear() + 1) * 12;
@@ -603,7 +698,7 @@ public class SAdministracionTransaccional extends HttpServlet {
 				tipoData[i] = "int";
 		}
 		
-		CGraficaExcel grafica = new CGraficaExcel("Administraci贸n Transaccional", CGraficaExcel.EXCEL_CHART_AREA2, "Meses", "Creados", datos, tipoData, null);
+		CGraficaExcel grafica = new CGraficaExcel("Administraci髇 Transaccional", CGraficaExcel.EXCEL_CHART_AREA2, "Meses", "Creados", datos, tipoData, null);
 	
 		return grafica;
 	}

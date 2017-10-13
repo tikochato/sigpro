@@ -200,14 +200,19 @@ public class SPlanAdquisicion extends HttpServlet {
 						temp.tipoNombre = adquisicion.getTipoAdquisicion().getNombre();
 						temp.total = adquisicion.getTotal()!= null ? adquisicion.getTotal() : new BigDecimal(0);
 						if(adquisicion.getPlanAdquisicionPagos()!=null && adquisicion.getPlanAdquisicionPagos().size()>0){
-							stpago[] pagos = new stpago[adquisicion.getPlanAdquisicionPagos().size()];
+							ArrayList<stpago> pagos = new ArrayList<stpago>();
+							stpago pago = null;
+
 							ArrayList<PlanAdquisicionPago> apagos = new ArrayList<PlanAdquisicionPago>(adquisicion.getPlanAdquisicionPagos());
 							for(int i=0; i<apagos.size();i++){
-								pagos[i] = new stpago();
-								pagos[i].fechaPago = Utils.formatDate(apagos.get(i).getFechaPago());
-								pagos[i].pago = apagos.get(i).getPago();
+								if(apagos.get(i).getEstado() == 1){
+									pago = new stpago();
+									pago.fechaPago = Utils.formatDate(apagos.get(i).getFechaPago());
+									pago.pago = apagos.get(i).getPago();
+									pagos.add(pago);	
+								}
 							}
-							temp.pagos = pagos;
+							temp.pagos = pagos.toArray(new stpago[pagos.size()]);
 						}
 						
 						response_text = new GsonBuilder().serializeNulls().create().toJson(temp);
