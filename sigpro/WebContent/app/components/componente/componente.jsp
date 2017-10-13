@@ -126,7 +126,7 @@
 						<div class="form-group">
 						   <input type="text" name="nombre" class="inputText" id="nombre" 
 						     ng-model="componentec.componente.nombre" ng-value="componentec.componente.nombre"   
-						     onblur="this.setAttribute('value', this.value);" ng-required="true">
+						     onblur="this.setAttribute('value', this.value);" ng-required="true" ng-readonly="componentec.componente.esDeSigade">
 						   <label class="floating-label">* Nombre</label>
 						</div>
 						
@@ -210,13 +210,21 @@
 						<div class="form-group" >
 					       <input type="text" class="inputText" ng-model="componentec.componente.costo" ng-value="componentec.componente.costo" ui-number-mask="2"
 					       ng-required="componentec.componente.acumulacionCostoId > 0" onblur="this.setAttribute('value', this.value);" style="text-align: left" 
-					       ng-readonly="componentec.componente.tieneHijos"/>
+					       ng-readonly="componentec.componente.tieneHijos" />
 					       <label for="iprog" class="floating-label">{{componentec.componente.acumulacionCostoId > 0 ? "* Costo" : "Costo"}}</label>
+						</div>
+						
+						<div class="form-group" >
+					       <input type="text" class="inputText" ng-model="componentec.componente.costoTecho" ng-value="componentec.componente.costoTecho" ui-number-mask="2"
+					        onblur="this.setAttribute('value', this.value);" style="text-align: left" 
+					       ng-readonly="componentec.componente.esDeSigade" />
+					       <label for="iprog" class="floating-label">Costo Techo</label>
 						</div>
 						
 						<div class="form-group">
 		            		<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="componentec.cambioAcumulacionCosto"
-							  local-data="componentec.acumulacionesCosto" search-fields="nombre" title-field="nombre" field-required="componentec.mostraringreso" field-label="* Tipo Acumulación de Costo"
+							  local-data="componentec.acumulacionesCosto" search-fields="nombre" title-field="nombre" field-required="componentec.componente.costo!=null && componentec.componente.costo>0" 
+						  field-label="{{componentec.componente.costo!=null && componentec.componente.costo>0 ? '* ':''}}Tipo de Acumulación Costo"
 							  minlength="1" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
 							  initial-value="componentec.componente.acumulacionCostoNombre" focus-out="componentec.blurCategoria()" input-name="acumulacionCosto"></div>
 						</div>

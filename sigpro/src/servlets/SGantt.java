@@ -198,7 +198,7 @@ public class SGantt extends HttpServlet {
 
 				CProject project = new CProject(directorioTemporal + "/temp_"+ time.toString());
 
-				boolean creado = project.imporatarArchivo(project.getProject(),usuario,multiproyecto);
+				boolean creado = project.imporatarArchivo(project.getProject(),usuario,multiproyecto,0);
 
 				if (file.exists())
 				{

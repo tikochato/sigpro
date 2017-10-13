@@ -84,7 +84,11 @@ public class CProject {
 	ProjectFile project;
 	String itemsProject;
 	boolean multiproyecto;
+	private int marcarCargado;
 	
+	
+
+
 	int contComponente = 0;
 	int contProducto = 0;
 	int contSubproducto = 0;
@@ -119,11 +123,21 @@ public class CProject {
 		this.project = project;
 	}
 	
+
 	
-	public boolean imporatarArchivo(ProjectFile projectFile, String usuario,boolean multiproyecto){
+	public int getMarcarCargado() {
+		return marcarCargado;
+	}
+
+	public void setMarcarCargado(int marcarCargado) {
+		this.marcarCargado = marcarCargado;
+	}
+
+	public boolean imporatarArchivo(ProjectFile projectFile, String usuario,boolean multiproyecto,int marcarCargado){
 		itemsProject = "";
 		items = new HashMap<>();
 		this.multiproyecto = multiproyecto; 
+		this.marcarCargado = marcarCargado;
 		return getTask(projectFile,usuario);
 	}
 	
@@ -161,11 +175,11 @@ public class CProject {
 		
 		UnidadEjecutora unidadEjecturoa = UnidadEjecutoraDAO.getUnidadEjecutora(new DateTime().getYear(),ENTIDAD_ID_DEFECTO,UNIDAD_EJECUTORA_ID_DEFECTO);
 		Proyecto proyecto = new Proyecto(null,null,cooperante, etiqueta,proyectoTipo, unidadEjecturoa
-				, task.getName(), null, usuario, null, new Date(), null, 1
-				, null, null, null, null, null, null, null,null, null, null, null, null, null, null,null,
-				Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
-				, task.getDuration().getUnits().getName()
-				,null,null,0,0,null,null,null,null,null,null,null,null,null);
+				, task.getName(), null, usuario, null, new Date(), null, 1, null, null, null, null, 
+				null, null, null,null, null, null, new BigDecimal(task.getCost().toString()),null, null, null,null,
+				Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish()),
+				(( Double ) task.getDuration().getDuration()).intValue(), task.getDuration().getUnits().getName()
+				,null,null,0,0,getMarcarCargado(), null,null,null,null,null,null,null,null,null);
 		
 		return ProyectoDAO.guardarProyecto(proyecto, false) ? proyecto : null;
 	}
@@ -180,11 +194,11 @@ public class CProject {
 		
 		
 		
-		Componente componente = new Componente(null,componenteTipo, proyecto, unidadEjecutora, task.getName(), null, 
-				usuario, null, new Date(), null, 1, null, null, null, null, null, null, null, null, null,
-				null,null,Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
-				, task.getDuration().getUnits().getName()
-				,null,null,1,null,null,null);
+		Componente componente = new Componente(null,componenteTipo, proyecto, unidadEjecutora, task.getName()
+				, null,usuario, null, new Date(), null, 1, null, null, null, null, null, null, null, null, 
+				new BigDecimal(task.getCost().toString()),null,null,Utils.setDateCeroHoras(task.getStart()),
+				Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
+				, task.getDuration().getUnits().getName(),null,null,1,0,null,null,null,null);
 		
 		return ComponenteDAO.guardarComponente(componente, false) ? componente : null;
 	}
@@ -198,7 +212,7 @@ public class CProject {
 		Producto producto = new Producto(null,componente, productoTipo, unidadEjecutora
 				,task.getName() , null, usuario, null, new Date(), null,1, 
 				 null, null, null, null, null, null, null, 
-				null, null, null,null,null,
+				null, null, new BigDecimal(task.getCost().toString()),null,null,
 				Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
 				, task.getDuration().getUnits().getName(),
 				null,null,2,null,null,null);
@@ -215,7 +229,7 @@ public class CProject {
 		
 		Subproducto subproducto = new Subproducto(null,producto, subproductoTipo, unidadEjecutroa,task.getName(), 
 				null, usuario, null, new Date(), null, 1,null, null, null, null, null, null, null, null,
-				null,null,null,
+				new BigDecimal(task.getCost().toString()),null,null,
 				Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
 				, task.getDuration().getUnits().getName(),
 				null,null,3,null,null);
@@ -244,7 +258,8 @@ public class CProject {
 				, task.getDuration().getUnits().getName()
 				,itemPredecesor!=null ? itemPredecesor.objetoId : null
 				, itemPredecesor != null ? itemPredecesor.objetoTipo : null
-				, null, null, new BigDecimal(task.getCost().toString()),null,null,null,null,nivel,proyectoBase,componenteBase,productoBase,
+				, null, null, new BigDecimal(task.getCost().toString()),null,null,null,null,
+				nivel,proyectoBase,componenteBase,productoBase,
 				null,null
 				);
 		
@@ -274,9 +289,6 @@ public class CProject {
 		
 		itemsProject = "";
 		items = new HashMap<>();
-		boolean ret = false;
-		
-		listaJerarquica(projectFile.getChildTasks().get(0),usuario,null,1,multiproyecto ? 0 : 1);
 		
 		
 /*		if (!multiproyecto){
@@ -285,10 +297,8 @@ public class CProject {
 				ActividadDAO.guardarActividad(actividad, true);
 		} */
 		
-		ret = true;
 		
-		
-		return ret;
+		return listaJerarquica(projectFile.getChildTasks().get(0),usuario,null,1,multiproyecto ? 0 : 1) != null;
 	}
 	
 	

@@ -388,6 +388,8 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 											if (response.data.success) {
 												if(mi.esTreeview){
 													mi.t_cambiarNombreNodo();
+													
+													
 												}
 												else
 													mi.obtenerTotalProyectos();
@@ -1271,6 +1273,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 		
 		mi.t_cambiarNombreNodo = function(ev){
 			$rootScope.$emit("cambiarNombreNodo",mi.proyecto.nombre);
+			$rootScope.$emit("recargarArbol",mi.proyecto.id);
 		}
 		
 } ]);

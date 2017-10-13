@@ -212,7 +212,8 @@
 					
 					<div class="form-group">
 	            		<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="subproducto.cambioAcumulacionCosto"
-						  local-data="subproducto.acumulacionesCosto" search-fields="nombre" title-field="nombre" field-required="subproducto.mostraringreso" field-label="* Tipo Acumulación de Costo"
+						  local-data="subproducto.acumulacionesCosto" search-fields="nombre" title-field="nombre" field-required="subproducto.subproducto.costo!=null && subproducto.subproducto.costo>0" 
+						  field-label="{{subproducto.subproducto.costo!=null && subproducto.subproducto.costo>0 ? '* ':''}}Tipo Acumulación de Costo"
 						  minlength="1" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
 						  initial-value="subproducto.subproducto.acumulacionCostoNombre" focus-out="subproducto.blurCategoria()" input-name="acumulacionCosto"></div>
 					</div>
