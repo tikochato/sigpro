@@ -625,7 +625,6 @@ public class InformacionPresupuestariaDAO {
 	                
 	                rs.close();
 	                pstm.close();
-	                conn.close();
 				}
 			}
 		}
