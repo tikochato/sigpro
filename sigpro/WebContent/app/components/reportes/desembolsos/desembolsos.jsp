@@ -117,9 +117,7 @@
 					</div>
 					
 					<div class="col-sm-6" align="right" ng-hide="!desembolsosc.mostrar" >
-						<div class="form-group col-sm-1">
-							</div>
-								<div class="col-sm-11">
+								<div class="">
 									<div class="btn-group">
 										<label class="btn btn-default" ng-model="desembolsosc.enMillones" uib-btn-radio="true"  uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false"
 										ng-click="desembolsosc.convertirMillones()">

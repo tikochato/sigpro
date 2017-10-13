@@ -231,7 +231,7 @@
 				          				<th style="text-align: center; vertical-align: top; width:300px; height: 72px;" class="label-form">Nombre</th>
 				         			</tr>
 								</thead>
-								<tbody vs-repeat class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="flujoc.activarScroll('divTablaNombres')" style="max-height: 300px;" scrollespejoflujo>
+								<tbody vs-repeat class="cuerpoTablaNombres" id="divTablaNombres" style="max-height: 300px;" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)">
 									<tr ng-repeat="item in flujoc.data">
 							      		<td nowrap style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">
 							      			<p class="nombreFormat">
@@ -256,7 +256,7 @@
 				          				<th ng-repeat="a in flujoc.aniosfinales" style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}}" class="label-form">{{a.anio}}</th>
 							        </tr>
 								</thead>
-								<tbody vs-repeat class="cuerpoTablaDatos" id="divTablaDatos" ng-mouseover="flujoc.activarScroll('divTablaDatos')" scrollespejoflujo  style="max-height: 300px;">
+								<tbody vs-repeat class="cuerpoTablaDatos" id="divTablaDatos" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)" style="max-height: 300px;">
 							      	<tr ng-repeat="item in flujoc.data" style="">
 								      		<td ng-repeat="posicion in flujoc.columnastotales track by $index" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}">
 								      			<div>
@@ -275,7 +275,7 @@
 			          					<th style="{{flujoc.estiloCelda}} text-align:center; vertical-align: top; height: 72px;" class="label-form">Total</th>
 							        </tr>
 								</thead>
-							<tbody vs-repeat class="cuerpoTablaTotales bordeIzquierda" id="divTotales" ng-mouseover="flujoc.activarScroll('divTotales')"  style="max-height: 300px;" scrollespejoflujo>
+							<tbody vs-repeat class="cuerpoTablaTotales bordeIzquierda" id="divTotales" style="max-height: 300px;" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)">
 									<tr ng-repeat="totales in flujoc.totales track by $index" style="min-height:35px; height:35px;">
 										<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}}">
 											<div>

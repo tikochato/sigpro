@@ -192,7 +192,7 @@
 							<input type="number"  class="inputText" ng-model="planadqui.fechaInicio" maxlength="4" 
 							ng-value="planadqui.fechaInicio" onblur="this.setAttribute('value', this.value);"
 							ng-change="planadqui.validar(2)"/>
-						  	<label for="campo.id" class="floating-label">*Año Inicial</label>
+						  	<label for="campo.id" class="floating-label" style="left: 0;">*Año Inicial</label>
 						</div>
 				
 						<div align="left" class="form-group col-sm-1">
@@ -261,7 +261,7 @@
 					          				<th class="label-form">.</th>
 					         			</tr>
 		    						</thead>
-		    						<tbody class="cuerpoTablaNombres" style="max-height: 315px; min-height: 315px" id="divTablaNombres" ng-mouseover="planadqui.activarScroll('divTablaNombres')" scrollespejoplanadqui>
+		    						<tbody class="cuerpoTablaNombres" style="max-height: 315px; min-height: 315px" id="divTablaNombres" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)">
 		    							<tr ng-repeat="row in planadqui.data" style="height: 35px; max-height: 35px; min-height: 35px">
 		    								<td nowrap style="min-width:200px; {{planadqui.padre(row)}}">
 				    							<div uib-tooltip="{{item.nombre}}" class="nombreFormat">
@@ -285,7 +285,7 @@
 				          					<th ng-repeat="a in planadqui.aniosfinales" style="{{planadqui.estiloCelda}} {{planadqui.estiloAlineacion}}" class="label-form">{{a.anio}}</th>
 							        	</tr>
 									</thead>
-									<tbody vs-repeat class="cuerpoTablaDatos" style="max-height: 300px; min-height: 300px" id="divTablaDatos" ng-mouseover="planadqui.activarScroll('divTablaDatos')" scrollespejoplanadqui>
+									<tbody vs-repeat class="cuerpoTablaDatos" style="max-height: 300px; min-height: 300px" id="divTablaDatos" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)">
 								      	<tr ng-repeat="item in planadqui.data" style="height: 35px; max-height: 35px; min-height: 35px">
 								      		<td ng-repeat="posicion in planadqui.columnastotales track by $index" style="{{planadqui.estiloCelda}}; {{planadqui.estiloAlineacion}}">
 								      			<div style="{{planadqui.estiloCelda}}">
@@ -308,7 +308,7 @@
 			          					<th ng-repeat="a in planadqui.aniosTotal" style="{{planadqui.estiloCelda}} {{planadqui.estiloAlineacion}};" class="label-form">{{a.anio}}</th>
 							        </tr>
 								</thead>
-								<tbody vs-repeat class="cuerpoTablaTotales bordeIzquierda" style="max-height: 300px; min-height: 300px" id="divTotales" style="margin-right: 30px" ng-mouseover="planadqui.activarScroll('divTotales')" scrollespejoplanadqui tot="{{mi.totales.length}}">
+								<tbody vs-repeat class="cuerpoTablaTotales bordeIzquierda" style="max-height: 300px; min-height: 300px" id="divTotales" style="margin-right: 30px" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)" tot="{{mi.totales.length}}">
 									<tr ng-repeat="item in planadqui.data" style="height: 35px; max-height: 35px; min-height: 35px">
 							      		<td ng-repeat="posicion in planadqui.aniosTotal track by $index" style="{{planadqui.estiloCelda}}; {{planadqui.estiloAlineacion}}">
 							      			<div style="{{planadqui.estiloCelda}}">
@@ -342,7 +342,7 @@
 						<div class="divPadreDatos" style="max-width: {{planadqui.tamanoTotal}}px">
 							<div class="divTabla">
 								<table class="table table-striped tablaDatos" style="max-width: {{planadqui.tamanoTotal}}px;">
-									<tbody class="cuerpoTablaDatos" id="divTablaDatosTot" ng-mouseover="planadqui.activarScroll('divTablaDatosTot')" scrollespejoplanadqui>
+									<tbody class="cuerpoTablaDatos" id="divTablaDatosTot" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)">
 										<tr>
 											<td ng-repeat="posicion in planadqui.columnastotales track by $index" style="font-weight: bold; {{planadqui.estiloCelda}} min-height: 35px; height: 35px; {{planadqui.estiloAlineacion}}">
 												<div style="{{planadqui.estiloCelda}}">

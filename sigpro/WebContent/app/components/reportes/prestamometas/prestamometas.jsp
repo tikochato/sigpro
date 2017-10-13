@@ -163,7 +163,7 @@
 						<input type="number"  class="inputText" ng-model="metasc.fechaInicio" maxlength="4" 
 						ng-value="metasc.fechaInicio" onblur="this.setAttribute('value', this.value);"
 						ng-change="metasc.validar(2)"/>
-					  	<label for="campo.id" class="floating-label">*Año Inicial</label>
+					  	<label for="campo.id" class="floating-label" style="left: 0;">*Año Inicial</label>
 					</div>
 					
 					<div class="form-group col-sm-1">

@@ -1,6 +1,6 @@
 var app = angular.module('controlAdquisicionesController', ['ngTouch','ngAnimate','ui.utils.masks','vs-repeat']);
-app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q','dialogoConfirmacion', '$filter','$uibModal',
-	function($scope, $rootScope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion, $filter,$uibModal) {
+app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http', '$window', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q','dialogoConfirmacion', '$filter','$uibModal',
+	function($scope, $rootScope, $http, $window, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion, $filter,$uibModal) {
 	var mi = this;
 	var anioFiscal = new Date();
 	mi.anio = anioFiscal.getFullYear();
@@ -111,6 +111,12 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 	            return 'glyphicon glyphicon-th-list';
 	    }
 	};
+	
+	angular.element($window).bind('resize', function(){ 
+        mi.calcularTamanosPantalla();
+        $scope.$digest();
+      });
+    $scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
 	
 	mi.calcularTotal = function(row){
 		row['total'] = row['costo'] * row['cantidad'];
@@ -1015,27 +1021,4 @@ app.directive('nextOnTab', function () {
         }
     }
 })
-
-app.directive('scrollespejoctrl', ['$window', function($window) {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-            element.bind('scroll', function() {
-                var elemento = element[0];
-                if (elemento.id == scope.divActivo){
-      	          if(elemento.id == 'divTablaDatos'){
-      	            document.getElementById("divCabecerasDatos").scrollLeft = elemento.scrollLeft;
-      	          }else{
-      	            document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
-      	          }
-      	        }
-            });
-            angular.element($window).bind('resize', function(){ 
-                scope.ctrladqui.calcularTamanosPantalla();
-                scope.$digest();
-              });
-            scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
-        }
-    };
-}])
 ;
