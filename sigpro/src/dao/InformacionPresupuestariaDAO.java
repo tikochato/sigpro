@@ -499,7 +499,7 @@ public class InformacionPresupuestariaDAO {
 		try{
 			if(!conn.isClosed()){
 				if(programa != null && programa >=0){
-					String str_Query = String.join(" ", "select enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre, ejercicio from mv_ep_estructura",
+					String str_Query = String.join(" ", "select sum(enero) enero, sum(febrero) febrero, sum(marzo) marzo, sum(abril) abril, sum(mayo) mayo, sum(junio) junio, sum(julio) julio, sum(agosto) agosto, sum(septiembre) septiembre, sum(octubre) octubre, sum(noviembre) noviembre, sum(diciembre) diciembre, ejercicio from mv_ep_estructura",
 						"where ejercicio between ? and ?");
 					
 					if(fuente != null){
