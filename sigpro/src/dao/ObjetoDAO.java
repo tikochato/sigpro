@@ -136,6 +136,9 @@ public class ObjetoDAO {
 	
 	public static List<ObjetoCosto> getEstructuraConCosto(int idPrestamo, int anioInicial, int anioFinal, boolean obtenerPlanificado, boolean obtenerReal, String usuario) throws SQLException{
 		List<ObjetoCosto> lstPrestamo = new ArrayList<>();
+		Integer fuente=0;
+		Integer organismo=0;
+		Integer correlativo=0;
 		if(CMariaDB.connectAnalytic()){
 			Connection conn_analytic = CMariaDB.getConnection_analytic();
 			List<?> estructuraProyecto = getConsultaEstructuraConCosto(idPrestamo);
@@ -248,12 +251,14 @@ public class ObjetoDAO {
 								if(objPrestamo != null ){
 									String codigoPresupuestario = Long.toString(objPrestamo.getCodigoPresupuestario());
 									if(codigoPresupuestario!=null && !codigoPresupuestario.isEmpty()){
-										Integer fuente = Utils.String2Int(codigoPresupuestario.substring(0,2));
-										Integer organismo = Utils.String2Int(codigoPresupuestario.substring(2,6));
-										Integer correlativo = Utils.String2Int(codigoPresupuestario.substring(6,10));
+										fuente = Utils.String2Int(codigoPresupuestario.substring(0,2));
+										organismo = Utils.String2Int(codigoPresupuestario.substring(2,6));
+										correlativo = Utils.String2Int(codigoPresupuestario.substring(6,10));
 										objetoCosto = getCostoReal(objetoCosto, fuente, organismo, correlativo, anioInicial, anioFinal, conn_analytic, usuario);
 									}
 								}
+							}else{
+								objetoCosto = getCostoReal(objetoCosto, fuente, organismo, correlativo, anioInicial, anioFinal, conn_analytic, usuario);
 							}
 						}
 						lstPrestamo.add(objetoCosto);
