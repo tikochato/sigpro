@@ -169,5 +169,25 @@ public class DataSigadeDAO {
 		return ret;
 	}
 	
+	public static List<?> getComponentes(String codigo_presupuestario){
+		List<?> ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		
+		try{
+			String query ="select * from sipro_analytic.dtm_avance_fisfinan_cmp " +
+						"where codigo_presupuestario = ?1 " +
+						"order by numero_componente asc";
+			Query<?> criteria = session.createNativeQuery(query);
+			criteria.setParameter("1", codigo_presupuestario);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("5", DataSigadeDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 
 }
