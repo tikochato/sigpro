@@ -574,7 +574,7 @@ function modalBuscarUnidadEjecutora($uibModalInstance, $scope, $http,
 	};
 
 	mi.cambioPagina = function() {
-		mi.cargarData(mi.paginaActual);
+		mi.cargarData(mi.paginaActual, mi.ejercicio, mi.entidad.entidad);
 	}
 
 	mi.ok = function() {
