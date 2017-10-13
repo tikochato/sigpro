@@ -602,7 +602,6 @@ public class InformacionPresupuestariaDAO {
 					
 					if(geografico != null){
 						pstm.setInt(pos, geografico);
-						pos++;
 					}
 	                
 	                ResultSet rs = pstm.executeQuery();
