@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
@@ -26,12 +27,18 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
+import dao.ActividadDAO;
 import dao.CategoriaAdquisicionDAO;
 import dao.PlanAdquisicionDAO;
 import dao.PlanAdquisicionPagoDAO;
+import dao.ProductoDAO;
+import dao.SubproductoDAO;
 import dao.TipoAdquisicionDAO;
+import pojo.Actividad;
 import pojo.PlanAdquisicion;
 import pojo.PlanAdquisicionPago;
+import pojo.Producto;
+import pojo.Subproducto;
 import utilities.CLogger;
 import utilities.Utils;
 
@@ -158,6 +165,7 @@ public class SPlanAdquisicion extends HttpServlet {
 						PlanAdquisicionPagoDAO.eliminarPagos(new ArrayList<PlanAdquisicionPago>(pa.getPlanAdquisicionPagos()));
 					}
 					PlanAdquisicionDAO.guardarPlanAdquisicion(pa);
+					BigDecimal bpagos = new BigDecimal(-1);
 					if(map.get("pagos")!=null){
 						JsonParser parser = new JsonParser();
 						JsonArray pagos = parser.parse(map.get("pagos").toString()).getAsJsonArray();
@@ -167,7 +175,42 @@ public class SPlanAdquisicion extends HttpServlet {
 							BigDecimal dpago = objeto_pago.get("pago").isJsonNull() ? null : objeto_pago.get("pago").getAsBigDecimal();
 							PlanAdquisicionPago pago = new PlanAdquisicionPago(pa, fechaPago, dpago, "", usuario, null, new DateTime().toDate(), null, 1);
 							PlanAdquisicionPagoDAO.guardarPago(pago);
+							bpagos.add(dpago);
 						}
+					}
+					List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(objetoId, objetoTipo);
+					switch(objetoTipo){
+						case 3:
+							Producto producto = ProductoDAO.getProductoPorId(objetoId);
+							if(!(producto.getSubproductos()==null && producto.getSubproductos().size()>0) &&
+									!(actividades!=null && actividades.size()>0)){
+								if(bpagos.compareTo(new BigDecimal(-1))>0)
+									producto.setCosto(bpagos);
+								else
+									producto.setCosto(pa.getMontoContrato());
+								ProductoDAO.guardarProducto(producto, false);
+							}	
+							break;
+						case 4:
+							Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId);
+							if(!(actividades!=null && actividades.size()>0)){
+								if(bpagos.compareTo(new BigDecimal(-1))>0)
+									subproducto.setCosto(bpagos);
+								else
+									subproducto.setCosto(pa.getMontoContrato());
+								SubproductoDAO.guardarSubproducto(subproducto, false);
+							}	
+							break;
+						case 5:
+							Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
+							if(!(actividades!=null && actividades.size()>0)){
+								if(bpagos.compareTo(new BigDecimal(-1))>0)
+									actividad.setCosto(bpagos);
+								else
+									actividad.setCosto(pa.getMontoContrato());
+								ActividadDAO.guardarActividad(actividad, false);
+							}	
+							break;
 					}
 				response_text = String.join("","{ \"success\": true, \"id\": "+pa.getId()+" }");
 			}
