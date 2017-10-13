@@ -493,7 +493,7 @@ public class InformacionPresupuestariaDAO {
 	}
     
     public static ArrayList<ArrayList<BigDecimal>> getPresupuestoPorObjeto(Integer fuente, Integer organismo, Integer correlativo, Integer anoInicial, Integer anoFinal, Integer programa, Integer subprograma, 
-    		Integer proyecto, Integer actividad, Integer obra, Connection conn){
+    		Integer proyecto, Integer actividad, Integer obra, Integer reglon, Integer geografico, Connection conn){
     	ArrayList<ArrayList<BigDecimal>> result = new ArrayList<ArrayList<BigDecimal>>();
 		//Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -532,6 +532,14 @@ public class InformacionPresupuestariaDAO {
 					
 					if(obra != null){
 						str_Query = String.join(" ", str_Query, "and obra=?");	
+					}
+					
+					if(reglon != null){
+						str_Query = String.join(" ",str_Query, "and reglon=?");
+					}
+					
+					if(geografico != null){
+						str_Query = String.join(" ",str_Query, "and geografico=?");
 					}
 					
 					PreparedStatement pstm  = conn.prepareStatement(str_Query);
@@ -584,6 +592,14 @@ public class InformacionPresupuestariaDAO {
 	                
 					if(obra != null){
 						pstm.setInt(pos, obra);	
+					}
+					
+					if(reglon != null){
+						pstm.setInt(pos, reglon);
+					}
+					
+					if(geografico != null){
+						pstm.setInt(pos, geografico);
 					}
 	                
 	                ResultSet rs = pstm.executeQuery();
