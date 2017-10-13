@@ -221,13 +221,9 @@ public class EstructuraProyectoDAO {
 					"a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id,a.acumulacion_costo acumulacion_costoid,",
 					"a.porcentaje_avance", 
 					"from actividad a", 
-					"where a.estado=1 and ((a.proyecto_base= ?1)", 
-					"OR (a.componente_base in (select id from componente where proyectoid= ?1))", 
-					"OR (a.producto_base in (select p.id from producto p, componente c where p.componenteid=c.id and c.proyectoid= ?1))",
-					")");
+					"where a.estado=1 and a.treepath like '"+(10000000+prestamoId)+"%'");
 			
-			Query<?> criteria = session.createNativeQuery(str_Query);
-			criteria.setParameter("1", prestamoId);
+			Query<?> criteria = session.createNativeQuery(str_Query);			
 			ret = criteria.getResultList();
 		}catch(Exception e){
 			CLogger.write("4", EstructuraProyectoDAO.class, e);
