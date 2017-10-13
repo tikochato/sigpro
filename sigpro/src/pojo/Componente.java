@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 9, 2017 6:11:54 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 13, 2017 9:03:33 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class Componente implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3189626742356496633L;
+	private static final long serialVersionUID = -3413760242676228643L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private ComponenteTipo componenteTipo;
@@ -60,6 +60,8 @@ public class Componente implements java.io.Serializable {
 	private Integer orden;
 	private String treePath;
 	private Integer nivel;
+	private Integer esDeSigade;
+	private BigDecimal costoTecho;
 	private Set<ComponenteUsuario> componenteUsuarios = new HashSet<ComponenteUsuario>(0);
 	private Set<Producto> productos = new HashSet<Producto>(0);
 	private Set<ComponentePropiedadValor> componentePropiedadValors = new HashSet<ComponentePropiedadValor>(0);
@@ -83,8 +85,8 @@ public class Componente implements java.io.Serializable {
 			Integer programa, Integer subprograma, Integer proyecto_1, Integer actividad, Integer obra, String latitud,
 			String longitud, BigDecimal costo, Integer renglon, Integer ubicacionGeografica, Date fechaInicio,
 			Date fechaFin, Integer duracion, String duracionDimension, Integer orden, String treePath, Integer nivel,
-			Set<ComponenteUsuario> componenteUsuarios, Set<Producto> productos,
-			Set<ComponentePropiedadValor> componentePropiedadValors) {
+			Integer esDeSigade, BigDecimal costoTecho, Set<ComponenteUsuario> componenteUsuarios,
+			Set<Producto> productos, Set<ComponentePropiedadValor> componentePropiedadValors) {
 		this.acumulacionCosto = acumulacionCosto;
 		this.componenteTipo = componenteTipo;
 		this.proyecto = proyecto;
@@ -114,6 +116,8 @@ public class Componente implements java.io.Serializable {
 		this.orden = orden;
 		this.treePath = treePath;
 		this.nivel = nivel;
+		this.esDeSigade = esDeSigade;
+		this.costoTecho = costoTecho;
 		this.componenteUsuarios = componenteUsuarios;
 		this.productos = productos;
 		this.componentePropiedadValors = componentePropiedadValors;
@@ -400,6 +404,24 @@ public class Componente implements java.io.Serializable {
 
 	public void setNivel(Integer nivel) {
 		this.nivel = nivel;
+	}
+
+	@Column(name = "es_de_sigade")
+	public Integer getEsDeSigade() {
+		return this.esDeSigade;
+	}
+
+	public void setEsDeSigade(Integer esDeSigade) {
+		this.esDeSigade = esDeSigade;
+	}
+
+	@Column(name = "costo_techo", precision = 15)
+	public BigDecimal getCostoTecho() {
+		return this.costoTecho;
+	}
+
+	public void setCostoTecho(BigDecimal costoTecho) {
+		this.costoTecho = costoTecho;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "componente")

@@ -222,6 +222,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 					longitud: mi.componente.longitud,
 					latitud : mi.componente.latitud,
 					costo: mi.componente.costo == null ? null : mi.componente.costo,
+					costoTecho: mi.componente.costoTecho != null ?  mi.componente.costoTecho : null,
 					acumulacionCosto: mi.componente.acumulacionCostoId == null ? null : mi.componente.acumulacionCostoId,
 					fechaInicio: moment(mi.componente.fechaInicio).format('DD/MM/YYYY'),
 					fechaFin: moment(mi.componente.fechaFin).format('DD/MM/YYYY'),

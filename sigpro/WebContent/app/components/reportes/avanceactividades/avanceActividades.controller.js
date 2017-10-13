@@ -365,9 +365,9 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 
 app.controller('modalAvance', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log', 'objetoRow','fechaCorte',modalAvance ]);
+	'$timeout', '$log', 'objetoRow','fechaCorte','$rootScope', modalAvance ]);
 
-function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $utilidades, $timeout, $log, objetoRow, fechaCorte) {
+function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $utilidades, $timeout, $log, objetoRow, fechaCorte, $rootScope) {
 	var mi = this;	
 
 	if(objetoRow.objetoTipo == 1){
