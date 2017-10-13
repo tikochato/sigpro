@@ -100,7 +100,7 @@ function controlColaborador($scope, $routeParams, $route, $window, $location, $m
 			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.colaborador.filtros[\'cui\']" ng-keypress="grid.appScope.colaborador.filtrar($event)"></input></div>'
 		},{
 			displayName : 'Nombre Unidad Ejecutora',
-			name : 'nombreUnidadEjecutora',
+			name : 'unidadejecutoranombre',
 			cellClass : 'grid-align-left',
 			filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.colaborador.filtros[\'unidad_ejecutora\']" ng-keypress="grid.appScope.colaborador.filtrar($event)"></input></div>'
 		}],
