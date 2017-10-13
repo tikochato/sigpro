@@ -20,6 +20,7 @@ public class PrestamoDAO {
 					+ "INNER JOIN p.objetoPrestamos op "
 					+ " where op.id.objetoId = :objId "
 					+ " and op.id.objetoTipo = :objTipo "
+					+ " and p.id=op.prestamo.id"
 					+ " and p.estado = 1 ", Prestamo.class);
 			criteria.setParameter("objId", objetoId);
 			criteria.setParameter("objTipo", objetoTipo);
