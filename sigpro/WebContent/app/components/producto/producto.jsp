@@ -214,7 +214,8 @@
 						
 				    <div class="form-group">
 	            		<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="producto.cambioAcumulacionCosto"
-						  local-data="producto.acumulacionesCosto" search-fields="nombre" title-field="nombre" field-required="producto.mostraringreso" field-label="* Tipo Acumulación de Costo"
+						  local-data="producto.acumulacionesCosto" search-fields="nombre" title-field="nombre" field-required="producto.producto.costo!=null && producto.producto.costo>0" 
+						  field-label="{{producto.producto.costo!=null && producto.producto.costo>0 ? '* ':''}}Tipo de Acumulación Costo"
 						  minlength="1" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
 						  initial-value="producto.producto.acumulacionCostoNombre" focus-out="producto.blurCategoria()" input-name="acumulacionCosto"></div>
 					</div>
