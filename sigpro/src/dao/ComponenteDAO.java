@@ -490,4 +490,21 @@ public class ComponenteDAO {
 		
 		return fechaActual.toDate();
 	}
+	
+	public static List<Componente> getComponentesPorProyecto(Integer proyectoId){
+		List<Componente> ret = new ArrayList<Componente>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<Componente> criteria = session.createQuery("FROM Componente c where estado = 1 and c.proyecto.id = :proyectoId order by c.id asc", Componente.class);
+			criteria.setParameter("proyectoId", proyectoId);
+			ret =   criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("1", ComponenteDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 }

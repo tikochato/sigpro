@@ -126,7 +126,7 @@
 						<div class="form-group">
 						   <input type="text" name="nombre" class="inputText" id="nombre" 
 						     ng-model="componentec.componente.nombre" ng-value="componentec.componente.nombre"   
-						     onblur="this.setAttribute('value', this.value);" ng-required="true">
+						     onblur="this.setAttribute('value', this.value);" ng-required="true" ng-readonly="componentec.componente.esDeSigade">
 						   <label class="floating-label">* Nombre</label>
 						</div>
 						
@@ -210,8 +210,15 @@
 						<div class="form-group" >
 					       <input type="text" class="inputText" ng-model="componentec.componente.costo" ng-value="componentec.componente.costo" ui-number-mask="2"
 					       ng-required="componentec.componente.acumulacionCostoId > 0" onblur="this.setAttribute('value', this.value);" style="text-align: left" 
-					       ng-readonly="componentec.componente.tieneHijos"/>
+					       ng-readonly="componentec.componente.tieneHijos" />
 					       <label for="iprog" class="floating-label">{{componentec.componente.acumulacionCostoId > 0 ? "* Costo" : "Costo"}}</label>
+						</div>
+						
+						<div class="form-group" >
+					       <input type="text" class="inputText" ng-model="componentec.componente.costoTecho" ng-value="componentec.componente.costoTecho" ui-number-mask="2"
+					        onblur="this.setAttribute('value', this.value);" style="text-align: left" 
+					       ng-readonly="componentec.componente.esDeSigade" />
+					       <label for="iprog" class="floating-label">Costo Techo</label>
 						</div>
 						
 						<div class="form-group">
