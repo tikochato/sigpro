@@ -14,6 +14,8 @@ import pojo.Actividad;
 import pojo.ActividadUsuario;
 import pojo.ActividadUsuarioId;
 import pojo.Componente;
+import pojo.PlanAdquisicion;
+import pojo.PlanAdquisicionPago;
 import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subproducto;
@@ -707,7 +709,19 @@ public class ActividadDAO {
 				costo = costo.add(costoHija!=null ? costoHija : new BigDecimal(0));
 			}
 		}else{
-			costo = actividad.getCosto();
+			PlanAdquisicion pa = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(5, actividad.getId());
+			if(pa!=null){
+					if(pa.getPlanAdquisicionPagos()!=null && pa.getPlanAdquisicionPagos().size()>0){
+						BigDecimal pagos = new BigDecimal(0);
+						for(PlanAdquisicionPago pago: pa.getPlanAdquisicionPagos())
+							pagos.add(pago.getPago());
+						costo = pagos;
+					}
+					else
+						costo = pa.getMontoContrato();
+			}
+			else
+				costo = actividad.getCosto();
 			costo = costo!=null ? costo : new BigDecimal(0);
 		}
 		return costo;

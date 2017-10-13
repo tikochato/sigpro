@@ -1,6 +1,6 @@
 var app = angular.module('planAdquisicionesController',['ngTouch','ngAnimate']);
-app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q',
-	function($scope, $rootScope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q){
+app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http','$window', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q',
+	function($scope, $rootScope, $http, $window, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q){
 		var mi = this;
 		mi.tooltipObjetoTipo = [$rootScope.etiquetas.proyecto,"Componente","Producto","Sub Producto","Actividad"];
 		var anioFiscal = new Date();
@@ -85,7 +85,7 @@ app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http',
 			}else{
 				if(elemento.scrollLeft > 0){
 					elemento.scrollLeft -= mi.tamanoCabecera;
-					elemento2.scrollLeft -= mi.tamanoCelda;
+					elemento2.scrollLeft -= mi.tamanoCabecera;
 					document.getElementById("divCabecerasDatos").scrollLeft -= mi.tamanoCabecera;
 					mi.SiguienteActivo = true;
 					if(elemento.scrollLeft <= 0){
@@ -590,6 +590,12 @@ app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http',
 		    }
 		};
 		
+		angular.element($window).bind('resize', function(){ 
+            mi.calcularTamaniosCeldas();
+            $scope.$digest();
+          });
+        $scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
+
 		mi.exportarExcel = function(){
 			$http.post('/SPlanAdquisiciones', { 
 				accion: 'exportarExcel', 
@@ -614,15 +620,3 @@ app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http',
 		
 }]);
 
-app.directive('scrollespejoplanadqui', ['$window', function($window) {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-            angular.element($window).bind('resize', function(){ 
-                scope.planadqui.calcularTamaniosCeldas();
-                scope.$digest();
-              });
-            scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
-        }
-    };
-}]);

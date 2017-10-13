@@ -15,8 +15,19 @@ function scrollEspejo(elemento) {
         	if(Math.abs(scrollPosicion-elemento.scrollLeft)<10){//bloquear scroll horizontal
         		elemento.scrollLeft = scrollPosicion;
         	}
-            document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
-            document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
+        	if(document.getElementById("divCabecerasDatos")){
+        		document.getElementById("divCabecerasDatos").scrollLeft = elemento.scrollLeft;
+        	}
+        	if(document.getElementById("divTablaNombres")){
+        		document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
+        	}
+        	if(document.getElementById("divTotales")){
+        		document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
+        	}
+          }else if(elemento.id == 'divTablaDatosTot'){
+        	  if(Math.abs(scrollPosicion-elemento.scrollLeft)<10){//bloquear scroll horizontal
+          		elemento.scrollLeft = scrollPosicion;
+          	}
           }else{
             document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
             document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;

@@ -517,6 +517,12 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 			return valor[tipoMeta];
 		};
 		
+		angular.element($window).bind('resize', function(){ 
+            mi.calcularTamaniosCeldas();
+            $scope.$digest();
+          });
+        $scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
+		
 		mi.exportarExcel = function(){
 			 var tipoVisualizacion = 0;
 			 if (mi.grupoMostrado.planificado && mi.grupoMostrado.real){
@@ -548,18 +554,4 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 		
 }]);
 
-app.directive('scrollespejo', ['$window', function($window) {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-            angular.element($window).bind('resize', function(){ 
-                scope.metasc.calcularTamaniosCeldas();
-                scope.$digest();
-              });
-            scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
-        }
-    };
-}])
-
-;
 		
