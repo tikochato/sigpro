@@ -96,6 +96,7 @@ public class SProyecto extends HttpServlet {
 		stprestamo prestamo;
 		Integer ejecucionFisicaReal;
 		Integer proyectoClase;
+		Integer projectCargado;
 	};
 
 	class stdatadinamico {
@@ -267,6 +268,7 @@ public class SProyecto extends HttpServlet {
 										+ " " + proyecto.getColaborador().getSapellido()) : null;
 				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
 				dato.proyectoClase = proyecto.getEtiqueta().getId();
+				dato.projectCargado = proyecto.getProjectCargado();
 				datos_.add(dato);
 			}
 
@@ -325,6 +327,7 @@ public class SProyecto extends HttpServlet {
 										+ " " + proyecto.getColaborador().getSapellido()) : null;
 				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
 				dato.proyectoClase = proyecto.getEtiqueta().getId();
+				dato.projectCargado = proyecto.getProjectCargado();
 				datos_.add(dato);
 			}
 
@@ -386,6 +389,7 @@ public class SProyecto extends HttpServlet {
 				dato.prestamo = obtenerPrestamo(proyecto.getId(),1);
 				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
 				dato.proyectoClase = proyecto.getEtiqueta().getId();
+				dato.projectCargado = proyecto.getProjectCargado();
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -444,6 +448,7 @@ public class SProyecto extends HttpServlet {
 										+ " " + proyecto.getColaborador().getSapellido()) : null;
 				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
 				dato.proyectoClase = proyecto.getEtiqueta().getId();
+				dato.projectCargado = proyecto.getProjectCargado();
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -480,6 +485,7 @@ public class SProyecto extends HttpServlet {
 				Integer ejecucionFisicaReal = Utils.String2Int(map.get("ejecucionFisicaReal"));
 				Integer proyectoClase = map.get("proyectoClase")!=null ? Utils.String2Int(map.get("proyectoClase")) : 1;
 				Etiqueta etiqueta = EtiquetaDAO.getEtiquetaPorId(proyectoClase);
+				Integer projectCargado = Utils.String2Int(map.get("projectCargado"), 0);
 
 				AcumulacionCosto acumulacionCosto = null;
 				if (map.get("acumulacionCosto")!=null){
@@ -510,11 +516,11 @@ public class SProyecto extends HttpServlet {
 				List<stdatadinamico> datos = gson.fromJson(map.get("datadinamica"), type);
 
 				if(esnuevo){
-					proyecto = new Proyecto(acumulacionCosto,directorProyecto, cooperante, etiqueta, proyectoTipo, unidadEjecutora, nombre, descripcion,
-							usuario, null, new DateTime().toDate(), null, 1, snip, programa, subPrograma, proyecto_, actividad, obra,latitud,
-							longitud, objetivo,enunciadoAlcance, costo, objetivoEspecifico,visionGeneral,renglon, ubicacionGeografica,
-							null, null, null, null,
-							null, null, null, ejecucionFisicaReal,null, null, null, null,null,null,null,null,null);
+					proyecto = new Proyecto(acumulacionCosto,directorProyecto, cooperante, etiqueta, proyectoTipo, unidadEjecutora, nombre, 
+							descripcion, usuario, null, new DateTime().toDate(), null, 1, snip, programa, subPrograma, proyecto_, actividad, 
+							obra,latitud,longitud, objetivo,enunciadoAlcance, costo, objetivoEspecifico,visionGeneral,renglon, 
+							ubicacionGeografica,null, null, null, null, null, null, null, ejecucionFisicaReal,projectCargado,null, null, 
+							null, null,null,null,null,null,null);
 
 
 				}else{
@@ -543,6 +549,7 @@ public class SProyecto extends HttpServlet {
 					proyecto.setVisionGeneral(visionGeneral);
 					proyecto.setEjecucionFisicaReal(ejecucionFisicaReal);
 					proyecto.setEtiqueta(etiqueta);
+					proyecto.setProjectCargado(projectCargado);
 
 				    List<ProyectoPropiedadValor> valores_temp = ProyectoPropiedadValorDAO.getProyectoPropiedadadesValoresPorProyecto(proyecto.getId());
 					proyecto.setProyectoPropiedadValors(null);

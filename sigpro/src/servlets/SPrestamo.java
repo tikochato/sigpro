@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPOutputStream;
@@ -18,19 +19,28 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.joda.time.DateTime;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import dao.ComponenteDAO;
+import dao.ComponenteTipoDAO;
+import dao.DataSigadeDAO;
 import dao.PrestamoDAO;
+import dao.ProyectoDAO;
 import dao.UnidadEjecutoraDAO;
 import pojo.AutorizacionTipo;
+import pojo.Componente;
+import pojo.ComponenteTipo;
 import pojo.Cooperante;
 import pojo.EjecucionEstado;
 import pojo.InteresTipo;
 import pojo.ObjetoPrestamo;
 import pojo.ObjetoPrestamoId;
 import pojo.Prestamo;
+import pojo.Proyecto;
 import pojo.TipoMoneda;
 import pojo.UnidadEjecutora;
 import utilities.Utils;
@@ -370,6 +380,7 @@ public class SPrestamo extends HttpServlet {
 				Set <ObjetoPrestamo> objetoPrestamos = new HashSet<>();
 				objetoPrestamos.add(objetoPrestamo);
 				result = PrestamoDAO.guardarPrestamo(prestamo, objetoPrestamo);
+				
 			}else{
 				prestamo.setAmortizado(amortizado);
 				prestamo.setAniosGracia(aniosGracia);
@@ -437,7 +448,11 @@ public class SPrestamo extends HttpServlet {
 				prestamo.setMontoPorDesembolsarUeUsd(montoPorDesembolsarUeUsd);
 				prestamo.setCooperante(cooperanteUe);
 				result = PrestamoDAO.guardarPrestamo(prestamo, PrestamoDAO.getObjetoPrestamo(prestamo.getId()));
+				
 			}
+			/*if (result && objetoTipo == 1)
+				result = guardarComponentes(codigoPresupuestario.toString(), objetoId, usuario);*/
+			
 			response_text = String.join("","{ \"success\": ",(result ? "true" : "false")," }");
 		}else
 			response_text = "{ \"success\": false }";
@@ -450,6 +465,50 @@ public class SPrestamo extends HttpServlet {
         gz.write(response_text.getBytes("UTF-8"));
         gz.close();
         output.close();
+	}
+	
+	private boolean guardarComponentes(String codigoPresupuestario, Integer proyectoId,String usuario){
+		boolean ret = true;
+		Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
+		List<?> componentesSigade = DataSigadeDAO.getComponentes(codigoPresupuestario);
+		List<Componente> componentesSipro = ComponenteDAO.getComponentesPorProyecto(proyectoId);
+		
+		for(int i=0; i<componentesSigade.size(); i++){
+			Object[] componenteSigade = (Object[]) componentesSigade.get(i);
+			if(i < componentesSipro.size() ){
+				Componente componente = componentesSipro.get(i);
+				componente.setNombre((String)componenteSigade[2]);
+				componente.setCostoTecho((BigDecimal) componenteSigade[4]);
+				componente.setEsDeSigade(1);
+				componente.setUsuarioActualizo(usuario);
+				componente.setFechaActualizacion(new Date());
+				ret = ret && ComponenteDAO.guardarComponente(componente, false);
+			}else{
+				ComponenteTipo componenteTipo = ComponenteTipoDAO.getComponenteTipoPorId(1);
+				
+				int year = new DateTime().getYear();
+				UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(year, 0, 0);
+				
+				Componente componente = new Componente(null,componenteTipo, proyecto, unidadEjecutora,
+						(String)componenteSigade[2], null, usuario, null, new Date(), null, 1, null, null, 
+						null, null, null, null, null, null, null,null,null,null,null,null, 
+						null,null,null,1,1,(BigDecimal) componenteSigade[4],null,null,null);
+				
+				ret = ret && ComponenteDAO.guardarComponente(componente, true);
+			}
+		}
+		
+		if (componentesSipro.size() > componentesSigade.size()){
+			for (int i = componentesSigade.size(); i< componentesSipro.size() ;i ++){
+				Componente componente = componentesSipro.get(i);
+				componente.setEsDeSigade(1);
+				componente.setUsuarioActualizo(usuario);
+				componente.setFechaActualizacion(new Date());
+				componente.setEstado(0);
+				ret = ret && ComponenteDAO.guardarComponente(componente, false);
+			}
+		}
+		return ret;
 	}
 
 }
