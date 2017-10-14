@@ -450,8 +450,8 @@ public class SPrestamo extends HttpServlet {
 				result = PrestamoDAO.guardarPrestamo(prestamo, PrestamoDAO.getObjetoPrestamo(prestamo.getId()));
 				
 			}
-			/*if (result && objetoTipo == 1)
-				result = guardarComponentes(codigoPresupuestario.toString(), objetoId, usuario);*/
+			if (result && objetoTipo == 1)
+				result = guardarComponentes(codigoPresupuestario.toString(), objetoId, usuario);
 			
 			response_text = String.join("","{ \"success\": ",(result ? "true" : "false")," }");
 		}else
