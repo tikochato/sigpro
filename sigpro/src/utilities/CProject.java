@@ -74,11 +74,8 @@ public class CProject {
 	static int COMPONENTE_TIPO_ID_DEFECTO = 1;
 	static int PRODUCTO_TIPO_ID_DEFECTO = 1;
 	static int SUBPRODUCTO_TIPO__ID_DEFECTO = 1;
-	static int ACTIVIDAD_ID_DEFECTO = 1;
+	static int ACTIVIDAD_TIPO_ID_DEFECTO = 1;
 	static int PROYECTO_ETIQUETA_DEFECTO = 1;
-	
-	private static int OBJETO_ID_ACTIVIDAD= 5;
-
 	
 	ProjectReader reader;
 	ProjectFile project;
@@ -254,7 +251,7 @@ public class CProject {
 			int nivel, String path,Integer proyectoBase, Integer componenteBase, Integer productoBase){
 		
 		ActividadTipo actividadTipo = new ActividadTipo();
-		actividadTipo.setId(ACTIVIDAD_ID_DEFECTO);
+		actividadTipo.setId(ACTIVIDAD_TIPO_ID_DEFECTO);
 		
 		Integer [] predecesores  = getListaPredecesores(task.getPredecessors());
 		
@@ -263,11 +260,12 @@ public class CProject {
 			 itemPredecesor =  items.get(predecesores[0]);	
 		}
 		
+		int duracion = (( Double ) task.getDuration().getDuration()).intValue();
 		
 		Actividad actividad = new Actividad(actividadTipo,null, task.getName(), null, Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish())
-				, 0, usuario, null, new Date(), 
+				, task.getPercentageComplete().intValue(), usuario, null, new Date(), 
 				null, 1, null, null, null,null, null, null, objetoId, objetoTipo, 
-				(( Double ) task.getDuration().getDuration()).intValue()
+				duracion>0 ? duracion : 1
 				, task.getDuration().getUnits().getName()
 				,itemPredecesor!=null ? itemPredecesor.objetoId : null
 				, itemPredecesor != null ? itemPredecesor.objetoTipo : null
@@ -337,7 +335,6 @@ public class CProject {
 					if (objeto != null){
 						crearProgramaProyecto(proyecto,(Programa)objeto, usuario);
 						objetoTipoTemp=1;
-						//cargarItem(task,proyecto.getId(), OBJETO_ID_PROYECTO,1);
 					}
 					ret = proyecto.getId();
 					objeto_temp=(Object)proyecto;
@@ -346,7 +343,6 @@ public class CProject {
 					if(tieneHijos){
 						objetoTipoTemp=2;
 						Componente componente =  crearComponente(task, (Proyecto) objeto, usuario);
-						//cargarItem(task,componente.getId(), OBJETO_ID_COMPONENTE,2);
 						ret = componente.getId();
 						objeto_temp = (Object)componente;
 					}
@@ -355,7 +351,7 @@ public class CProject {
 						Proyecto objeto_padre = ((Proyecto) objeto);
 						Actividad actividad = crearActividad(task, usuario,objeto_padre.getId(),1 
 							,2,objeto_padre.getTreePath(),objeto_padre.getId(),null,null);
-						cargarItem(task,actividad.getId(), OBJETO_ID_ACTIVIDAD,2);
+						cargarItem(task,actividad.getId(), 5,2);
 						ret = actividad.getId();
 						objeto_temp = (Object)actividad;
 					}
@@ -364,7 +360,6 @@ public class CProject {
 					if(tieneHijos){
 						objetoTipoTemp=3;
 						Producto producto =  crearProducto(task, (Componente) objeto, usuario);
-						//cargarItem(task,producto.getId(), OBJETO_ID_PRODUCTO,3);
 						ret = producto.getId();
 						objeto_temp = (Object)producto;
 					}
@@ -372,7 +367,7 @@ public class CProject {
 						objetoTipoTemp=5;
 						Actividad actividad = crearActividad(task, usuario, (Integer)getId.invoke(objeto),objetoTipo 
 							,3, (String)getTreePath.invoke(objeto), null,null,null);
-						cargarItem(task,actividad.getId(), OBJETO_ID_ACTIVIDAD,3);
+						cargarItem(task,actividad.getId(), 5,3);
 						ret = actividad.getId();
 						objeto_temp = (Object)actividad;
 					}
@@ -381,7 +376,6 @@ public class CProject {
 					if(tieneHijos){
 						objetoTipoTemp=4;
 						Subproducto subproducto =  crearSubproducto(task, (Producto) objeto, usuario);
-						//cargarItem(task,subproducto.getId(), OBJETO_ID_SUBPRODUCTO,4);
 						ret = subproducto.getId();
 						objeto_temp = (Object)subproducto;
 					}
@@ -389,7 +383,7 @@ public class CProject {
 						objetoTipoTemp=5;
 						Actividad actividad = crearActividad(task, usuario, (Integer)getId.invoke(objeto),objetoTipo 
 							,4, (String)getTreePath.invoke(objeto), null,null,null);
-						cargarItem(task,actividad.getId(), OBJETO_ID_ACTIVIDAD,4);
+						cargarItem(task,actividad.getId(), 5,4);
 						ret = actividad.getId();
 						objeto_temp = (Object)actividad;
 					}
@@ -398,7 +392,7 @@ public class CProject {
 						objetoTipoTemp=5;
 						Actividad actividad = crearActividad(task, usuario, (Integer)getId.invoke(objeto),objetoTipo 
 							,nivel, (String)getTreePath.invoke(objeto), null,null,null);
-						cargarItem(task,actividad.getId(), OBJETO_ID_ACTIVIDAD,nivel);
+						cargarItem(task,actividad.getId(), 5,nivel);
 						ret = actividad.getId();
 						objeto_temp = (Object)actividad;
 					break;
