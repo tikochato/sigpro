@@ -833,6 +833,10 @@ public class SProyecto extends HttpServlet {
 	        response_text = String.join("", "\"proyectos\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
+		else if(accion.equals("calcularCostosFechas")){
+			Integer proyectoId = Integer.parseInt(map.get("proyectoId"));
+			ProyectoDAO.calcularCostoyFechas(proyectoId, usuario);
+		}
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");
 
