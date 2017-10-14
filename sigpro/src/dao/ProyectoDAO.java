@@ -483,7 +483,8 @@ public class ProyectoDAO implements java.io.Serializable  {
 		return fechaActual.toDate();
 	}
 	
-	public static void calcularCostoyFechas(Integer proyectoId, String usuario){
+	public static boolean calcularCostoyFechas(Integer proyectoId, String usuario){
+		boolean ret = false;
 		ArrayList<ArrayList<Nodo>> listas = EstructuraProyectoDAO.getEstructuraProyectoArbolCalculos(proyectoId, usuario);
 		for(int i=listas.size()-2; i>=0; i--){
 			for(int j=0; j<listas.get(i).size(); j++){
@@ -504,8 +505,10 @@ public class ProyectoDAO implements java.io.Serializable  {
 				nodo.objeto = ObjetoDAO.getObjetoPorIdyTipo(nodo.id, nodo.objeto_tipo);
 				setDatosCalculados(nodo.objeto,nodo.fecha_inicio,nodo.fecha_fin,nodo.costo);
 			}
+			ret = true;
 		}
-		guardarProyectoBatch(listas);	
+		ret= ret && guardarProyectoBatch(listas);	
+		return ret;
 	}
 	
 	private static void setDatosCalculados(Object objeto,Timestamp fecha_inicio, Timestamp fecha_fin, Double costo){
@@ -525,7 +528,8 @@ public class ProyectoDAO implements java.io.Serializable  {
 		
 	}
 	
-	private static void guardarProyectoBatch(ArrayList<ArrayList<Nodo>> listas){
+	private static boolean guardarProyectoBatch(ArrayList<ArrayList<Nodo>> listas){
+		boolean ret = true;
 		try{
 			Session session = CHibernateSession.getSessionFactory().openSession();
 			Transaction tx = session.beginTransaction();
@@ -543,7 +547,9 @@ public class ProyectoDAO implements java.io.Serializable  {
 			session.close();
 		}
 		catch(Throwable e){
+			ret = false;
 			CLogger.write("18", ProyectoDAO.class, e);
 		}
+		return ret;
 	}
 }
