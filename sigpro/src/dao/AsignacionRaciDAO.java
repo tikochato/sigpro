@@ -70,13 +70,13 @@ public class AsignacionRaciDAO {
 			String query = String.join(" ", "select a from AsignacionRaci a",
 							"where a.objetoId = :objId",
 							"and a.objetoTipo = :objTipo",
-							"and a.rolRaci = :rol",
+							"and lower(a.rolRaci) = :rol",
 							"and a.estado = 1");
 			
 			Query<AsignacionRaci> criteria = session.createQuery(query, AsignacionRaci.class);
 			criteria.setParameter("objId", objetoId);
 			criteria.setParameter("objTipo", objetoTipo);
-			criteria.setParameter("rol", rol);
+			criteria.setParameter("rol", rol.toLowerCase());
 			
 			listRet = criteria.getResultList();
 			
