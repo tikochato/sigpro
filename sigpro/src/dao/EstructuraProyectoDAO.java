@@ -1,6 +1,8 @@
 package dao;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -316,4 +318,64 @@ public class EstructuraProyectoDAO {
 		
 		return ret;
 	}
+	
+	public static ArrayList<ArrayList<Nodo>> getEstructuraProyectoArbolCalculos(int id, String usuario){
+		ArrayList<ArrayList<Nodo>> ret = new ArrayList<ArrayList<Nodo>>();
+		Nodo root = null;
+		List<?> estructuras = EstructuraProyectoDAO.getEstructuraProyecto(id, usuario);
+		if(estructuras.size()>0){
+			try{
+				int nivel_maximo = 0;
+				Object[] dato = (Object[]) estructuras.get(0);
+				int id_ = dato[0]!=null ? (Integer)dato[0] : 0;
+				int objeto_tipo = dato[2]!=null ? ((BigInteger)dato[2]).intValue() : 0;
+				String nombre = dato[1]!=null ? (String)dato[1] : null;
+				int nivel = (dato[3]!=null) ? ((String)dato[3]).length()/8 : 0;
+				Timestamp fecha_inicio = (dato[4]!=null) ? new Timestamp(((Date)dato[4]).getTime()) : null;
+				Timestamp fecha_fin = (dato[5]!=null) ? new Timestamp(((Date)dato[5]).getTime()) : null;
+				Double costo = (dato[8]!=null) ? ((BigDecimal)dato[8]).doubleValue() : 0;
+				root = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, false, fecha_inicio, fecha_fin, costo);
+				Nodo nivel_actual_estructura = root;
+				ret.add(new ArrayList<Nodo>());
+				ret.get(0).add(root);
+				for(int i=1; i<estructuras.size(); i++){
+					dato = (Object[]) estructuras.get(i);
+					id_ = dato[0]!=null ? (Integer)dato[0] : 0;
+					objeto_tipo = dato[2]!=null ? ((BigInteger)dato[2]).intValue() : 0;
+					nombre = dato[1]!=null ? (String)dato[1] : null;
+					nivel = (dato[3]!=null) ? ((String)dato[3]).length()/8 : 0;
+					fecha_inicio = (dato[4]!=null) ? new Timestamp(((Date)dato[4]).getTime()) : null;
+					fecha_fin = (dato[5]!=null) ? new Timestamp(((Date)dato[5]).getTime()) : null;
+					costo = (dato[8]!=null) ? ((BigDecimal)dato[8]).doubleValue() : 0;
+					nivel_maximo = nivel_maximo <  nivel ? nivel : nivel_maximo;
+					Nodo nodo = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, false, fecha_inicio, fecha_fin, costo);
+					if(nodo.nivel!=nivel_actual_estructura.nivel+1){
+						if(nodo.nivel>nivel_actual_estructura.nivel){
+							nivel_actual_estructura = nivel_actual_estructura.children.get(nivel_actual_estructura.children.size()-1);
+						}
+						else{
+							int retornar = nivel_actual_estructura.nivel-nodo.nivel+1;
+							for(int j=0; j<retornar; j++)
+								nivel_actual_estructura=nivel_actual_estructura.parent;
+						}
+					}
+					nodo.parent = nivel_actual_estructura;
+					nivel_actual_estructura.children.add(nodo);
+					if(ret.size()<nivel){
+						ret.add(new ArrayList<Nodo>());
+						ret.get(ret.size()-1).add(nodo);
+					}
+					else{
+						ret.get(nivel-1).add(nodo);
+					}
+				}
+			}
+			catch(Throwable e){
+				root = null;
+				CLogger.write("2", EstructuraProyectoDAO.class, e);
+			}
+		}
+		return ret;
+	}
+	
 }

@@ -424,4 +424,16 @@ public class ObjetoDAO {
 		
 		return hojas;
 	}
+	
+	public static Object getObjetoPorIdyTipo(Integer id, Integer tipo){
+		Object ret=null;
+		switch(tipo){
+			case 1: ret = (Object)ProyectoDAO.getProyecto(id); break;
+			case 2: ret = (Object)ComponenteDAO.getComponente(id); break;
+			case 3: ret = (Object)ProductoDAO.getProductoPorId(id); break;
+			case 4: ret = (Object)SubproductoDAO.getSubproductoPorId(id); break;
+			case 5: ret = (Object)ActividadDAO.getActividadPorId(id); break;
+		}
+		return ret;
+	}
 }

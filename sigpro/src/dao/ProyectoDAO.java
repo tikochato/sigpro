@@ -1,6 +1,8 @@
 package dao;
 
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -11,6 +13,7 @@ import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.joda.time.DateTime;
 
@@ -478,5 +481,69 @@ public class ProyectoDAO implements java.io.Serializable  {
 		}
 		
 		return fechaActual.toDate();
+	}
+	
+	public static void calcularCostoyFechas(Integer proyectoId, String usuario){
+		ArrayList<ArrayList<Nodo>> listas = EstructuraProyectoDAO.getEstructuraProyectoArbolCalculos(proyectoId, usuario);
+		for(int i=listas.size()-2; i>=0; i--){
+			for(int j=0; j<listas.get(i).size(); j++){
+				Nodo nodo = listas.get(i).get(j);
+				Double costo=0.0d;
+				Timestamp fecha_maxima=new Timestamp(0);
+				Timestamp fecha_minima=new Timestamp((new DateTime(2999,12,31,23,59,59)).getMillis());
+				for(Nodo nodo_hijo:nodo.children){
+					costo += nodo_hijo.costo;
+					fecha_minima = (nodo_hijo.fecha_inicio.getTime()<fecha_minima.getTime()) ? nodo_hijo.fecha_inicio : fecha_minima;
+					fecha_maxima = (nodo_hijo.fecha_fin.getTime()>fecha_maxima.getTime()) ? nodo_hijo.fecha_fin : fecha_maxima;
+				}
+				if(nodo.children!=null && nodo.children.size()>0){
+					nodo.fecha_inicio = fecha_minima;
+					nodo.fecha_fin = fecha_maxima;
+					nodo.costo = costo;
+				}
+				nodo.objeto = ObjetoDAO.getObjetoPorIdyTipo(nodo.id, nodo.objeto_tipo);
+				setDatosCalculados(nodo.objeto,nodo.fecha_inicio,nodo.fecha_fin,nodo.costo);
+			}
+		}
+		guardarProyectoBatch(listas);	
+	}
+	
+	private static void setDatosCalculados(Object objeto,Timestamp fecha_inicio, Timestamp fecha_fin, Double costo){
+		try{
+			if(objeto!=null){
+				Method setFechaInicio =objeto.getClass().getMethod("setFechaInicio");
+				Method setFechaFin =  objeto.getClass().getMethod("setFechaFin");
+				Method setCosto = objeto.getClass().getMethod("setCosto");
+				setFechaInicio.invoke(objeto, new Date(fecha_inicio.getTime()));
+				setFechaFin.invoke(objeto, new Date(fecha_fin.getTime()));
+				setCosto.invoke(objeto, new BigDecimal(costo));
+			}
+		}
+		catch(Throwable e){
+			CLogger.write("17", ProyectoDAO.class, e);
+		}
+		
+	}
+	
+	private static void guardarProyectoBatch(ArrayList<ArrayList<Nodo>> listas){
+		try{
+			Session session = CHibernateSession.getSessionFactory().openSession();
+			Transaction tx = session.beginTransaction();
+			int count=0;
+			for(int i=0; i<listas.size()-2; i++){
+				for(int j=0; j<listas.get(i).size();j++){
+					session.saveOrUpdate(listas.get(i).get(j).objeto);
+					if ( ++count % 500 == 0 ) {
+				        session.flush();
+				        session.clear();
+				    }
+				}
+			}
+			tx.commit();
+			session.close();
+		}
+		catch(Throwable e){
+			CLogger.write("18", ProyectoDAO.class, e);
+		}
 	}
 }
