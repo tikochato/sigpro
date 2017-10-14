@@ -260,7 +260,7 @@
 							      	<tr ng-repeat="item in flujoc.data" style="">
 								      		<td ng-repeat="posicion in flujoc.columnastotales track by $index" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}">
 								      			<div>
-												<span class="colorPlanificado">{{flujoc.getPlanificado($parent.$index,$index).planificado  | formatoMillones : flujoc.enMillones}}</span>
+												<span class="colorPlanificado">{{flujoc.getPlanificado(item,$index).planificado  | formatoMillones : flujoc.enMillones}}</span>
 								      			</div>
 								      		</td>
 							      	</tr>
@@ -276,7 +276,7 @@
 							        </tr>
 								</thead>
 							<tbody vs-repeat class="cuerpoTablaTotales bordeIzquierda" id="divTotales" style="max-height: 300px;" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)">
-									<tr ng-repeat="totales in flujoc.totales track by $index" style="min-height:35px; height:35px;">
+									<tr ng-repeat="totales in flujoc.totales" style="min-height:35px; height:35px;">
 										<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}}">
 											<div>
 											<span class="colorPlanificado">{{totales.anio[0].valor.planificado | formatoMillones : flujoc.enMillones}}</span>

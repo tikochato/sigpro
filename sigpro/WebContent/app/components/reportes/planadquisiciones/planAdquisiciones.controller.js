@@ -488,10 +488,9 @@ app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http',
 			}
 		}
 
-		mi.getPlanificado = function(itemIndice, indice){
+		mi.getPlanificado = function(item, indice){
 			mes = Math.floor((indice)/mi.aniosTotal.length);
 			anio = indice - (mes*mi.aniosTotal.length);
-			var item = mi.data[itemIndice];
 			var valor;
 			if(item.anioPlan != null){
 				valor = item.anioPlan[anio].mes[mes];
@@ -504,10 +503,9 @@ app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http',
 			return valor;
 		};
 		
-		mi.getTotalPlanificado = function(itemIndice, indice){
+		mi.getTotalPlanificado = function(item, indice){
 			mes = Math.floor((indice)/mi.aniosTotal.length);
 			anio = indice - (mes*mi.aniosTotal.length);
-			var item = mi.data[itemIndice];
 			var valor;
 			if(item.anioTotalPlan != null){
 				valor = item.anioTotalPlan[anio].total[0];

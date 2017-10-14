@@ -289,7 +289,7 @@
 								      	<tr ng-repeat="item in planadqui.data" style="height: 35px; max-height: 35px; min-height: 35px">
 								      		<td ng-repeat="posicion in planadqui.columnastotales track by $index" style="{{planadqui.estiloCelda}}; {{planadqui.estiloAlineacion}}">
 								      			<div style="{{planadqui.estiloCelda}}">
-												<span ng-show="planadqui.grupoMostrado.planificado" class="colorPlanificado">{{planadqui.getPlanificado($parent.$index,$index).planificado | formatoMillones : planadqui.enMillones}}</span>
+												<span ng-show="planadqui.grupoMostrado.planificado" class="colorPlanificado">{{planadqui.getPlanificado(item,$index).planificado | formatoMillones : planadqui.enMillones}}</span>
 								      			</div>
 								      		</td>
 								      	</tr>
@@ -312,7 +312,7 @@
 									<tr ng-repeat="item in planadqui.data" style="height: 35px; max-height: 35px; min-height: 35px">
 							      		<td ng-repeat="posicion in planadqui.aniosTotal track by $index" style="{{planadqui.estiloCelda}}; {{planadqui.estiloAlineacion}}">
 							      			<div style="{{planadqui.estiloCelda}}">
-											<span ng-show="planadqui.grupoMostrado.planificado" class="colorPlanificado">{{planadqui.getTotalPlanificado($parent.$index,$index).planificado | formatoMillones : planadqui.enMillones}}</span>
+											<span ng-show="planadqui.grupoMostrado.planificado" class="colorPlanificado">{{planadqui.getTotalPlanificado(item,$index).planificado | formatoMillones : planadqui.enMillones}}</span>
 							      			</div>
 							      		</td>
 							      		<td style="{{planadqui.estiloCelda}} {{planadqui.estiloAlineacion}}">
