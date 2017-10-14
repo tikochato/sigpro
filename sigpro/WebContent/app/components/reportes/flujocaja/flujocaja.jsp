@@ -269,7 +269,7 @@
 						</div>
 						</div>
 			    		<div class="divTabla"  style="height: 100%">
-		    			<table class="table table-striped tablaDatos"  style="height: 100%">
+		    			<table class="table table-striped tablaDatos" style="max-width: {{flujoc.tamanoTotal}}px; height:100%;" >
 							<thead class="theadDatos">
 									<tr>
 			          					<th style="{{flujoc.estiloCelda}} text-align:center; vertical-align: top; height: 72px;" class="label-form">Total</th>
@@ -286,6 +286,8 @@
 								</tbody>
 							</table>
 			    		</div>
+	    		</div>
+	    		<div class="row" ng-hide="!flujoc.mostrarDescargar" >
 			    		<div class="divPadreNombres"  style="height: 100%">
 			    		<div class="divTabla"  style="height: 100%"> 
 			    			<table class="table table-striped tablaDatos"  style="height: 100%">
@@ -357,7 +359,7 @@
 						</div>
 						</div>
 			    		<div class="divTabla"  style="height: 100%">
-		    			<table class="table table-striped tablaDatos"  style="height: 100%">
+		    			<table class="table table-striped tablaDatos" style="max-width: {{flujoc.tamanoTotal}}px; height:100%;" >
 							<tbody class="cuerpoTablaTotales bordeIzquierda">
 								<tr>
 									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span>{{flujoc.resumenTotales.totalPlanificado | formatoMillones : flujoc.enMillones}}</span></td>
