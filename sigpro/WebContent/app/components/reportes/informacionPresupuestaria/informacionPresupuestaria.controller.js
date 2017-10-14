@@ -628,10 +628,9 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 			}
 		}
 		
-		mi.getPlanificado=function(itemIndice, indice){
+		mi.getPlanificado=function(item, indice){
 			mes = Math.floor((indice)/mi.aniosTotal.length);
 			anio = indice - (mes*mi.aniosTotal.length);
-			var item = mi.data[itemIndice];
 			if(item.anios[anio].mes[mes].planificado == null){
 				item.anios[anio].mes[mes].planificado = 0;
 			}

@@ -269,13 +269,13 @@
 							      	<tr ng-repeat="item in controller.data" style="">
 								      		<td ng-repeat="posicion in controller.columnastotales track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}">
 								      			<div style="{{controller.porcentajeCeldaValor}}">
-												<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{controller.getPlanificado($parent.$index,$index).planificado | formatoMillones : controller.enMillones}}</span>
+												<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{controller.getPlanificado(item,$index).planificado | formatoMillones : controller.enMillones}}</span>
 								      			</div>
 								      			<div style="{{controller.porcentajeCeldaPipe}}">
-												<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real && controller.getPlanificado($parent.$index,$index)" > | </span>
+												<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real && controller.getPlanificado(item,$index)" > | </span>
 								      			</div>
 								      			<div style="{{controller.porcentajeCeldaValor}}">
-												<span ng-show="controller.grupoMostrado.real" class="colorReal">{{controller.getPlanificado($parent.$index,$index).real | formatoMillones : controller.enMillones}}</span>
+												<span ng-show="controller.grupoMostrado.real" class="colorReal">{{controller.getPlanificado(item,$index).real | formatoMillones : controller.enMillones}}</span>
 												</div>
 								      		</td>
 							      	</tr>
