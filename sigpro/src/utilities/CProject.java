@@ -85,6 +85,8 @@ public class CProject {
 	String itemsProject;
 	boolean multiproyecto;
 	private int marcarCargado;
+	private Long proyectoId;
+	
 	
 	
 
@@ -131,6 +133,17 @@ public class CProject {
 
 	public void setMarcarCargado(int marcarCargado) {
 		this.marcarCargado = marcarCargado;
+	}
+	
+	
+	
+
+	public Long getProyectoId() {
+		return proyectoId;
+	}
+
+	public void setProyectoId(Long proyectoId) {
+		this.proyectoId = proyectoId;
 	}
 
 	public boolean imporatarArchivo(ProjectFile projectFile, String usuario,boolean multiproyecto,int marcarCargado){
@@ -298,7 +311,10 @@ public class CProject {
 		} */
 		
 		
-		return listaJerarquica(projectFile.getChildTasks().get(0),usuario,null,1,multiproyecto ? 0 : 1) != null;
+		Integer ret = listaJerarquica(projectFile.getChildTasks().get(0),usuario,null,1,multiproyecto ? 0 : 1);
+		ProyectoDAO.calcularCostoyFechas(ret, usuario);
+		return ret > 0;
+		
 	}
 	
 	
