@@ -165,7 +165,8 @@ public class SPlanAdquisicion extends HttpServlet {
 						PlanAdquisicionPagoDAO.eliminarPagos(new ArrayList<PlanAdquisicionPago>(pa.getPlanAdquisicionPagos()));
 					}
 					PlanAdquisicionDAO.guardarPlanAdquisicion(pa);
-					BigDecimal bpagos = new BigDecimal(-1);
+					BigDecimal bpagos = new BigDecimal(0);
+					boolean tiene_pagos = false;
 					if(map.get("pagos")!=null){
 						JsonParser parser = new JsonParser();
 						JsonArray pagos = parser.parse(map.get("pagos").toString()).getAsJsonArray();
@@ -175,40 +176,41 @@ public class SPlanAdquisicion extends HttpServlet {
 							BigDecimal dpago = objeto_pago.get("pago").isJsonNull() ? null : objeto_pago.get("pago").getAsBigDecimal();
 							PlanAdquisicionPago pago = new PlanAdquisicionPago(pa, fechaPago, dpago, "", usuario, null, new DateTime().toDate(), null, 1);
 							PlanAdquisicionPagoDAO.guardarPago(pago);
-							bpagos.add(dpago);
+							bpagos = bpagos.add(dpago);
+							tiene_pagos=true;
 						}
 					}
 					List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(objetoId, objetoTipo);
 					switch(objetoTipo){
 						case 3:
 							Producto producto = ProductoDAO.getProductoPorId(objetoId);
-							if(!(producto.getSubproductos()==null && producto.getSubproductos().size()>0) &&
+							if(!(producto.getSubproductos()!=null && producto.getSubproductos().size()>0) &&
 									!(actividades!=null && actividades.size()>0)){
-								if(bpagos.compareTo(new BigDecimal(-1))>0)
+								if(tiene_pagos)
 									producto.setCosto(bpagos);
 								else
-									producto.setCosto(pa.getMontoContrato());
-								ProductoDAO.guardarProducto(producto, false);
+									producto.setCosto(pa.getTotal());
+								ProductoDAO.guardarProducto(producto, true);
 							}	
 							break;
 						case 4:
 							Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId);
 							if(!(actividades!=null && actividades.size()>0)){
-								if(bpagos.compareTo(new BigDecimal(-1))>0)
+								if(tiene_pagos)
 									subproducto.setCosto(bpagos);
 								else
-									subproducto.setCosto(pa.getMontoContrato());
-								SubproductoDAO.guardarSubproducto(subproducto, false);
+									subproducto.setCosto(pa.getTotal());
+								SubproductoDAO.guardarSubproducto(subproducto, true);
 							}	
 							break;
 						case 5:
 							Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
 							if(!(actividades!=null && actividades.size()>0)){
-								if(bpagos.compareTo(new BigDecimal(-1))>0)
+								if(tiene_pagos)
 									actividad.setCosto(bpagos);
 								else
-									actividad.setCosto(pa.getMontoContrato());
-								ActividadDAO.guardarActividad(actividad, false);
+									actividad.setCosto(pa.getTotal());
+								ActividadDAO.guardarActividad(actividad, true);
 							}	
 							break;
 					}

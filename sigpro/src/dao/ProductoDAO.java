@@ -416,11 +416,11 @@ public class ProductoDAO {
 							if(pa.getPlanAdquisicionPagos()!=null && pa.getPlanAdquisicionPagos().size()>0){
 								BigDecimal pagos = new BigDecimal(0);
 								for(PlanAdquisicionPago pago: pa.getPlanAdquisicionPagos())
-									pagos.add(pago.getPago());
+									pagos=pagos.add(pago.getPago());
 								costo = pagos;
 							}
 							else
-								costo = pa.getMontoContrato();
+								costo = pa.getTotal();
 					}
 					else
 						costo = producto.getCosto();

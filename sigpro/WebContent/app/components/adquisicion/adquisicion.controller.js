@@ -11,6 +11,8 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		
 		mi.objetoTipo = 0;
 		mi.objetoId = 0;
+		mi.id = 0;
+		mi.tipo = 0;
 		
 		mi.categorias=[];
 		mi.tipos=[];
@@ -20,24 +22,38 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		mi.parentController=null;
 		
 		mi.requerido=false;
+		mi.tieneHijos = false;
+		mi.actualizarCosto=null;
 		
 		if($scope.$parent.producto){
 			$scope.$parent.producto.child_adquisiciones = $scope.adquisicionc;
 			mi.parentController = $scope.$parent.producto;
 			mi.objetoTipo = 2;
 			mi.objetoId = $scope.$parent.producto.componenteId;
+			mi.id = $scope.$parent.producto.producto.id;
+			mi.tipo = 3;
+			mi.tieneHijos = $scope.$parent.producto.tieneHijos;
+			mi.actualizarCosto = $scope.$parent.producto.actualizarCosto;
 		}
 		if($scope.$parent.subproducto){
 			$scope.$parent.subproducto.child_adquisiciones = $scope.adquisicionc;
 			mi.parentController = $scope.$parent.subproducto;
 			mi.objetoTipo = 3;
 			mi.objetoId = $scope.$parent.subproducto.productoid;
+			mi.id = $scope.$parent.subproducto.subproducto.id;
+			mi.tipo = 4;
+			mi.tieneHijos = $scope.$parent.subproducto.tieneHijos;
+			mi.actualizarCosto = $scope.$parent.subproducto.actualizarCosto;
 		}
 		if($scope.$parent.actividadc){
 			$scope.$parent.actividadc.child_adquisiciones = $scope.adquisicionc;
 			mi.parentController = $scope.$parent.actividadc;
 			mi.objetoTipo = $scope.$parent.actividadc.objetotipo;
 			mi.objetoId = $scope.$parent.actividadc.objetoid;
+			mi.id = $scope.$parent.actividadc.actividad.id;
+			mi.tipo = 5;
+			mi.tieneHijos = $scope.$parent.actividadc.tieneHijos;
+			mi.actualizarCosto = $scope.$parent.actividadc.actualizarCosto;
 		}
 		
 		$http.post('/STipoAdquisicion', { accion: 'getTipoAdquisicionPorObjeto', objetoId: mi.objetoId, objetoTipo: mi.objetoTipo, t: (new Date()).getTime()}).success(
@@ -101,7 +117,7 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 	    
 		mi.cargarAdquisicion = function(pagina){
 			$http.post('/SPlanAdquisicion', { accion: 'getPlanAdquisicionPorObjeto',  
-				objetoId: mi.objetoId, objetoTipo: mi.objetoTipo, t: (new Date()).getTime()
+				objetoId: mi.id, objetoTipo: mi.tipo, t: (new Date()).getTime()
 				}).success(
 					function(response) {
 						if(response.adquisicion!=null){
@@ -144,8 +160,8 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 			if(mi.adquisicion!=null && mi.adquisicion.medidaNombre!=null && mi.adquisicion.medidaNombre!=''){
 				$http.post('/SPlanAdquisicion', {
 					accion: 'guardarAdquisicion',
-					objetoTipo: mi.objetoTipo,
-					objetoId: mi.objetoId,
+					objetoTipo: mi.tipo,
+					objetoId: mi.id,
 					adjudicacionPlanificada: mi.adquisicion.adjudicacionPlanificada,
 					adjudicacionReal: mi.adquisicion.adjudicacionReal,
 					cantidad: mi.adquisicion.cantidad,
@@ -171,6 +187,14 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 				}).success(function(response){
 					if(response.success){
 						mi.adquisicion.id = response.id;
+						if(mi.adquisicion.pagos!=null && mi.adquisicion.pagos!==undefined && mi.adquisicion.pagos.length>0){
+							var pagos = 0;
+							for(var i=0; i<mi.adquisicion.pagos.length; i++)
+								pagos = mi.adquiscion.pagos[i].pago;
+							mi.actualizarCosto(pagos);
+						}
+						else
+							mi.actualizarCosto(mi.adquisicion.total);
 						$utilidades.mensaje('success',mensaje_success);
 					}
 					else
