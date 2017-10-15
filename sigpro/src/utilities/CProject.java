@@ -306,7 +306,7 @@ public class CProject {
 		
 		Integer ret = listaJerarquica(projectFile.getChildTasks().get(0),usuario,null,1,multiproyecto ? 0 : 1,
 				proyecto,  componentes,marcarCargado,0);
-		ProyectoDAO.calcularCostoyFechas(ret, usuario);
+		ProyectoDAO.calcularCostoyFechas(ret);
 		return ret > 0;
 		
 	}

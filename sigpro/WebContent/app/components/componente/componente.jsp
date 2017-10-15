@@ -111,11 +111,13 @@
 			    </shiro:hasPermission>
 			    <label ng-if="!componentec.esTreeview" class="btn btn-primary" ng-click="componentec.botones ? componentec.irATabla() : ''" title="Ir a Tabla" ng-disabled="!componentec.botones">
 			    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
-			    <label ng-if="componentec.esTreeview" class="btn btn-danger" ng-click=" componentec.botones && componentec.componente.id>0 ? componentec.t_borrar() : ''" ng-disabled="!(componentec.componente.id>0) || !componentec.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
+			    <label ng-if="componentec.esTreeview && !componentec.componente.esDeSigade" class="btn btn-danger" ng-click=" componentec.botones && componentec.componente.id>0 ? componentec.t_borrar() : ''" ng-disabled="!(componentec.componente.id>0) || !componentec.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			  </div>
 			</div>
-
+			<div class="col-sm-12">
+				<div class="componente_sigade">Componente SIGADE</div>
+			</div>
 			<div class="col-sm-12">
 				<form name="componentec.mForm">
 						<div class="form-group">
@@ -364,7 +366,7 @@
 						    </shiro:hasPermission>
 						    <label ng-if="!componentec.esTreeview" class="btn btn-primary" ng-click="componentec.botones ? componentec.irATabla() :''" title="Ir a Tabla" ng-disabled="!componentec.botones" uib-tooltip="Ir a Tabla" tooltip-placement="top">
 						    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
-						    <label ng-if="componentec.esTreeview" class="btn btn-danger" ng-click=" componentec.botones && componentec.componente.id>0  ? componentec.t_borrar() : ''" ng-disabled="!(componentec.componente.id>0) || !componentec.botones" uib-tooltip="Borrar" tooltip-placement="top">
+						    <label ng-if="componentec.esTreeview && !componentec.componente.esDeSigade" class="btn btn-danger" ng-click=" componentec.botones && componentec.componente.id>0  ? componentec.t_borrar() : ''" ng-disabled="!(componentec.componente.id>0) || !componentec.botones" uib-tooltip="Borrar" tooltip-placement="top">
 							<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 	    			</div>
 	    		</div>

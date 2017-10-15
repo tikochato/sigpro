@@ -451,7 +451,7 @@ public class SPrestamo extends HttpServlet {
 				
 			}
 			if (result && objetoTipo == 1)
-				result = guardarComponentes(codigoPresupuestario.toString(), objetoId, usuario);
+				result = guardarComponentes(codigoPresupuestario.toString(), objetoId, usuario,prestamo.getFechaSuscripcion());
 			
 			response_text = String.join("","{ \"success\": ",(result ? "true" : "false")," }");
 		}else
@@ -467,46 +467,48 @@ public class SPrestamo extends HttpServlet {
         output.close();
 	}
 	
-	private boolean guardarComponentes(String codigoPresupuestario, Integer proyectoId,String usuario){
+	private boolean guardarComponentes(String codigoPresupuestario, Integer proyectoId,String usuario, Date fechaSuscripcion){
 		boolean ret = true;
 		Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
 		if (proyecto.getProjectCargado() == null || !proyecto.getProjectCargado().equals(1)){
 			List<?> componentesSigade = DataSigadeDAO.getComponentes(codigoPresupuestario);
 			List<Componente> componentesSipro = ComponenteDAO.getComponentesPorProyecto(proyectoId);
 			
-			for(int i=0; i<componentesSigade.size(); i++){
-				Object[] componenteSigade = (Object[]) componentesSigade.get(i);
-				if(i < componentesSipro.size() ){
-					Componente componente = componentesSipro.get(i);
-					componente.setNombre((String)componenteSigade[2]);
-					componente.setCostoTecho((BigDecimal) componenteSigade[4]);
-					componente.setEsDeSigade(1);
-					componente.setUsuarioActualizo(usuario);
-					componente.setFechaActualizacion(new Date());
-					ret = ret && ComponenteDAO.guardarComponente(componente, false);
-				}else{
-					ComponenteTipo componenteTipo = ComponenteTipoDAO.getComponenteTipoPorId(1);
-					
-					int year = new DateTime().getYear();
-					UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(year, 0, 0);
-					
-					Componente componente = new Componente(null,componenteTipo, proyecto, unidadEjecutora,
-							(String)componenteSigade[2], null, usuario, null, new Date(), null, 1, null, null, 
-							null, null, null, null, null, null, null,null,null,null,null,0, 
-							null,null,null,1,1,(BigDecimal) componenteSigade[4],null,null,null);
-					
-					ret = ret && ComponenteDAO.guardarComponente(componente, true);
+			if(componentesSigade!=null && componentesSigade.size()>0){
+				for(int i=0; i<componentesSigade.size(); i++){
+					Object[] componenteSigade = (Object[]) componentesSigade.get(i);
+					if(i < componentesSipro.size() ){
+						Componente componente = componentesSipro.get(i);
+						componente.setNombre((String)componenteSigade[2]);
+						componente.setCostoTecho((BigDecimal) componenteSigade[4]);
+						componente.setEsDeSigade(1);
+						componente.setUsuarioActualizo(usuario);
+						componente.setFechaActualizacion(new Date());
+						ret = ret && ComponenteDAO.guardarComponente(componente, false);
+					}else{
+						ComponenteTipo componenteTipo = ComponenteTipoDAO.getComponenteTipoPorId(1);
+						
+						int year = new DateTime().getYear();
+						UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(year, 0, 0);
+						
+						Componente componente = new Componente(null,componenteTipo, proyecto, unidadEjecutora,
+								(String)componenteSigade[2], null, usuario, null, new Date(), null, 1, null, null, 
+								null, null, null, null, null, null, null,null,null,fechaSuscripcion,fechaSuscripcion,1, 
+								null,null,null,1,1,(BigDecimal) componenteSigade[4],null,null,null);
+						
+						ret = ret && ComponenteDAO.guardarComponente(componente, true);
+					}
 				}
-			}
-			
-			if (componentesSipro.size() > componentesSigade.size()){
-				for (int i = componentesSigade.size(); i< componentesSipro.size() ;i ++){
-					Componente componente = componentesSipro.get(i);
-					componente.setEsDeSigade(1);
-					componente.setUsuarioActualizo(usuario);
-					componente.setFechaActualizacion(new Date());
-					componente.setEstado(0);
-					ret = ret && ComponenteDAO.guardarComponente(componente, false);
+				
+				if (componentesSipro.size() > componentesSigade.size()){
+					for (int i = componentesSigade.size(); i< componentesSipro.size() ;i ++){
+						Componente componente = componentesSipro.get(i);
+						componente.setEsDeSigade(1);
+						componente.setUsuarioActualizo(usuario);
+						componente.setFechaActualizacion(new Date());
+						componente.setEstado(0);
+						ret = ret && ComponenteDAO.guardarComponente(componente, false);
+					}
 				}
 			}
 		}

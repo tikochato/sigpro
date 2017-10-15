@@ -122,6 +122,9 @@
 				<span class="glyphicon glyphicon-calendar"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAMatrizRiesgos(controller.proyecto.id) : ''" uib-tooltip="Matriz de Riesgos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-list-alt"></span></label>
+				<label class="btn btn-default" ng-click="controller.botones  ? controller.completarConArchivo(controller.proyecto.id) : ''"
+					ng-if="controller.proyecto.projectCargado!=1" uib-tooltip="Importar PEP desde Project" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-copy"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.calcularCostoFecha(controller.proyecto.id) : ''" uib-tooltip="Cálculo de costos y fechas" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-wrench"></span></label>
 		</div>

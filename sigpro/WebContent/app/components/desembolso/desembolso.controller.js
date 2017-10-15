@@ -62,11 +62,17 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 						if(response.success){
 							if(call_chain!=null)
 								call_chain(mensaje_success, mensaje_error);
-							else
+							else{
 								$utilidades.mensaje('success',mensaje_success);
+								if($scope.$parent.controller)
+									$scope.$parent.controller.botones=true;
+							}
 						}
-						else
+						else{
 							$utilidades.mensaje('danger',mensaje_error);
+							if($scope.$parent.controller)
+								$scope.$parent.controller.botones=true;
+						}
 					});
 				}
 				else

@@ -86,7 +86,7 @@
 		    		</div>
 	    		</div>
 		    </div>
-		    <div class="col-sm-12">
+		    <div class="col-sm-12" style="margin-top: 20px;">
 	    		<div ng-hide="!controller.mostrarCargando" style="width: 100%; height: 400px;">
 		    		<div class="grid_loading" ng-hide="!controller.mostrarCargando">
 						<div class="msg">
@@ -98,7 +98,7 @@
 					</div>	
 	    		</div>
 		    	<div style="width: 100%; height: 85%;" ng-hide="!controller.mostrardiv">
-		    		<div class="row">
+		    		<div class="row" style="width: 90%;">
 		    			<div class="row">
 			    			<div class="col-sm-12">
 				    			<div style="height: 5%; width: 100%">
@@ -156,22 +156,26 @@
 			    				<div style="text-align: center" >
 					    			<label class="label-form2">Estado de Actividades</label>
 					    		</div>
+					    		<div style="width: 400px;">
 		    					<canvas id="pie" class="chart chart-pie"
   									chart-data="controller.dataPieProyecto" chart-labels="controller.labelsPieProyecto" 
   									chart-options="controller.optionsPieProyecto" chart-colors = "controller.pieColors" >
 								</canvas> 
+								</div>
 		    				</div>
 			    			<div class="form-group col-sm-6" align="center">
 			    				<div style="text-align: center" >
 		    						<label class="label-form2">Totales</label>
 		    					</div>
+		    					<div style="width: 400px;">
    								<canvas id="bar" class="chart chart-bar" chart-data="controller.dataBarraProyecto" chart-labels="controller.labelsBarProyecto" 
    									chart-options="controller.charOptions" chart-colors = "controller.pieColors" chart-series="controller.labelsPieProyecto">
    								</canvas>
+   								</div>
 		    				</div>
 		    			</div>
-		    			<br>
-		    			<div class="row">
+		    			<hr />
+		    			<div class="row" style="width: 90%;">
 			    			<div class="col-sm-12">
 				    			<div style="height: 5%; width: 100%">
 									<div><h4><b>Hitos</b></h4></div>
@@ -220,7 +224,7 @@
 								</div>
 				    		</div>
 		    			</div>
-		    			<br/>
+		    			<hr />
 		    			<div class="row" ng-hide="!controller.mostrarHitos">
 			    			<div class="form-group col-sm-6" align="center">
 			    				<div style="text-align: center" >
@@ -241,7 +245,7 @@
 		    				</div>
 		    			</div>
 		    			<br/>
-			    		<div class="row">
+			    		<div class="row" style="width: 90%;">
 				    		<div class="col-sm-12">
 								<div style="height: 5%; width: 100%">
 									<div><h4><b>Productos</b></h4></div>
