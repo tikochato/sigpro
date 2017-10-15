@@ -841,6 +841,10 @@ public class SProyecto extends HttpServlet {
 		    	 response_text = String.join("", "{\"success\":false,", response_text,"}");
 		
 		}
+		else if(accion.equals("calcularCostoFecha")){
+			Integer proyectoId = Utils.String2Int(map.get("proyectoId"));
+			response_text = String.join("", "{\"success\":", ProyectoDAO.calcularCostoyFechas(proyectoId, usuario) ? "true" : "false","}");
+		}
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");
 
