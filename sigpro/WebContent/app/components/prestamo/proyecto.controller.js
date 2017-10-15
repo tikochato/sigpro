@@ -962,7 +962,8 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 		resultado.then(function(resultado) {
 			mi.mostrarcargando=false;
 			if (resultado.data.success){
-				mi.proyecto.projectCargado = true;
+				mi.proyecto.projectCargado = 1;
+				mi.obtenerTotalProyectos();
 				$utilidades.mensaje('success',$rootScope.etiquetas.proyecto+' completado con éxito');
 			}else{
 				$utilidades.mensaje('danger','Error al crear el '+$rootScope.etiquetas.proyecto);

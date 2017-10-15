@@ -451,7 +451,7 @@ public class SPrestamo extends HttpServlet {
 				
 			}
 			if (result && objetoTipo == 1)
-				result = guardarComponentes(codigoPresupuestario.toString(), objetoId, usuario);
+				result = guardarComponentes(codigoPresupuestario.toString(), objetoId, usuario,prestamo.getFechaSuscripcion());
 			
 			response_text = String.join("","{ \"success\": ",(result ? "true" : "false")," }");
 		}else
@@ -467,7 +467,7 @@ public class SPrestamo extends HttpServlet {
         output.close();
 	}
 	
-	private boolean guardarComponentes(String codigoPresupuestario, Integer proyectoId,String usuario){
+	private boolean guardarComponentes(String codigoPresupuestario, Integer proyectoId,String usuario, Date fechaSuscripcion){
 		boolean ret = true;
 		Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
 		if (proyecto.getProjectCargado() == null || !proyecto.getProjectCargado().equals(1)){
@@ -493,7 +493,7 @@ public class SPrestamo extends HttpServlet {
 						
 						Componente componente = new Componente(null,componenteTipo, proyecto, unidadEjecutora,
 								(String)componenteSigade[2], null, usuario, null, new Date(), null, 1, null, null, 
-								null, null, null, null, null, null, null,null,null,null,null,0, 
+								null, null, null, null, null, null, null,null,null,fechaSuscripcion,fechaSuscripcion,1, 
 								null,null,null,1,1,(BigDecimal) componenteSigade[4],null,null,null);
 						
 						ret = ret && ComponenteDAO.guardarComponente(componente, true);
