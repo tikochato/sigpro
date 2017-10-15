@@ -18,11 +18,9 @@ import org.joda.time.DateTime;
 
 import pojo.Actividad;
 import pojo.Componente;
-import pojo.Producto;
 import pojo.Proyecto;
 import pojo.ProyectoUsuario;
 import pojo.ProyectoUsuarioId;
-import pojo.Subproducto;
 import pojo.Usuario;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -497,13 +495,8 @@ public class ProyectoDAO implements java.io.Serializable  {
 					nodo.fecha_fin = fecha_maxima;
 					nodo.costo = costo;
 				}
-				else{
-					switch(nodo.objeto_tipo){
-						case 3: nodo.costo = ProductoDAO.calcularCosto((Producto)nodo.objeto).doubleValue(); break; 
-						case 4: nodo.costo = SubproductoDAO.calcularCosto((Subproducto)nodo.objeto).doubleValue(); break;
-						case 5: nodo.costo = ActividadDAO.calcularActividadCosto((Actividad)nodo.objeto).doubleValue(); break;
-					}
-				}
+				else
+					nodo.costo = ObjetoDAO.calcularCostoPlan(nodo.objeto, nodo.objeto_tipo).doubleValue();
 				nodo.duracion = Utils.getWorkingDays(new DateTime(nodo.fecha_inicio), new DateTime(nodo.fecha_fin));
 				setDatosCalculados(nodo.objeto,nodo.fecha_inicio,nodo.fecha_fin,nodo.costo, nodo.duracion);
 			}
