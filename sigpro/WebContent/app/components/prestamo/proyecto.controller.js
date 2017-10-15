@@ -68,7 +68,18 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			startingDay : 1
 	};
 
-
+	mi.calcularCostoFecha = function(proyectoId){
+		$http.post('SProyecto',{
+			accion: 'calcularCostoFecha',
+			proyectoId: proyectoId
+		}).then(function(response) {
+			if(response.data.success)
+				$utilidades.mensaje('success','Costos y fechas calculados exitosamente');
+			else
+				$utilidades.mensaje('danger','Error al calcular costos y fechas');
+		});
+	}
+	
 	mi.editarElemento = function (event) {
         var filaId = angular.element(event.toElement).scope().rowRenderIndex;
         mi.gridApi.selection.selectRow(mi.gridOpciones.data[filaId]);
@@ -299,6 +310,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				datadinamica : JSON.stringify(mi.camposdinamicos),
 				ejecucionFisicaReal: mi.proyecto.ejecucionFisicaReal,
 				proyectoClase: $rootScope.etiquetas.id,
+				projectCargado: mi.proyecto.projectCargado,
 				t:moment().unix()
 			};
 			$http.post('/SProyecto',param_data).then(
@@ -899,7 +911,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	
 	
 	
-	mi.llamarModalArchivo = function() {
+	mi.llamarModalArchivo = function(proyectoId, completadoSigade) {
 		var resultado = $q.defer();
 		var modalInstance = $uibModal.open({
 			animation : 'true',
@@ -910,6 +922,16 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			controllerAs : 'cargararchivoc',
 			backdrop : 'static',
 			size : 'md',
+			resolve : {
+				$proyectoId : function() {
+					return proyectoId;
+				},
+				$completadoSigade : function() {
+					return completadoSigade;
+				},
+				
+				
+			}
 		});
 
 		modalInstance.result.then(function(respuesta) {
@@ -919,7 +941,8 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	};
 	
 	mi.cargarArchivo = function() {
-		var resultado = mi.llamarModalArchivo();
+		var resultado = mi.llamarModalArchivo(mi.proyecto!=null && mi.proyecto != undefined ? mi.proyecto.id : 0, 
+				mi.proyecto!=null && mi.proyecto != undefined ? mi.proyecto.projectCargado: 1);
 
 		resultado.then(function(resultado) {
 			mi.mostrarcargando=false;
@@ -1472,10 +1495,10 @@ app.directive('rightClick', function($parse) {
 
 app.controller('cargararchivoController', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log','$q', cargararchivoController ]);
+	'$timeout', '$log','$q','$proyectoId','$completadoSigade', cargararchivoController ]);
 
 function cargararchivoController($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log,$q) {
+	i18nService, $utilidades, $timeout, $log,$q,$proyectoId,$completadoSigade) {
 
 	var mi = this;
 	mi.mostrar = true;
@@ -1483,6 +1506,8 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 	mi.mostrarcargando=false;
 	mi.multiproyecto = false;
 	mi.bloquearBotones = false;
+	mi.completarsigade = false;
+	mi.yaCompletadosigade = $completadoSigade == 1 || $completadoSigade == undefined;
 	
 	$scope.cargarArchivo = function(event){
 		var resultado = $q.defer();
@@ -1507,6 +1532,16 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 		$uibModalInstance.dismiss('cancel');
 	};
 	
+	mi.seleccionCompletarSigade = function(){
+		if (mi.completarsigade)
+			mi.multiproyecto = false;
+	}
+	
+	mi.seleccionMultiProyecto = function (){
+		if (mi.multiproyecto)
+			mi.completarsigade = false;
+	}
+	
 	mi.cargar=function(){
 		mi.bloquearBotones = true;
 		if (mi.archivos!=null && mi.arhivos != ''){
@@ -1515,6 +1550,8 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 			formatData.append("file",mi.archivos);  
 			formatData.append("accion",'importar');
 			formatData.append("multiproyecto",mi.multiproyecto ? 1 : 0);
+			formatData.append("marcarCargado",mi.completarsigade  ? 1 : 0);
+			formatData.append("proyecto_id",$proyectoId);
 			formatData.append("t",moment().unix());
 			
 			$http.post('/SGantt',formatData, {

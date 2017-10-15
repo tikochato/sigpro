@@ -268,20 +268,13 @@ public class Utils {
 	}
 	
 	public static int getWorkingDays(DateTime fecha_inicio, DateTime fecha_fin) {
-		int fecha_inicio_dia_semana = fecha_inicio.getDayOfWeek();
-	    int fecha_fin_dia_semana = fecha_fin.getDayOfWeek();
 
 	    int dias_sin_fines_de_semana = 5 * Weeks.weeksBetween(
-	            fecha_inicio.withDayOfWeek(DateTimeConstants.MONDAY), fecha_fin).getWeeks();
+	            fecha_inicio.withDayOfWeek(DateTimeConstants.MONDAY), fecha_fin.withDayOfWeek(DateTimeConstants.MONDAY)).getWeeks();
 
-	    if (fecha_inicio_dia_semana == DateTimeConstants.SUNDAY) {
-	    	fecha_inicio_dia_semana = DateTimeConstants.SATURDAY;
-	    }
-	    if (fecha_fin_dia_semana == DateTimeConstants.SUNDAY) {
-	    	fecha_fin_dia_semana = DateTimeConstants.SATURDAY;
-	    }
-
-	    return dias_sin_fines_de_semana - (fecha_inicio_dia_semana - fecha_fin_dia_semana);
+	    return dias_sin_fines_de_semana -
+	    		(fecha_inicio.getDayOfWeek()>5 ? 5 : fecha_inicio.getDayOfWeek()) + 
+	    		(fecha_fin.getDayOfWeek()>5 ? 5 :  fecha_fin.getDayOfWeek()) + 1;
 	}
 	
 	public static Date setDateCeroHoras(Date fecha){

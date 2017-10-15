@@ -519,7 +519,7 @@ public class SProyecto extends HttpServlet {
 					proyecto = new Proyecto(acumulacionCosto,directorProyecto, cooperante, etiqueta, proyectoTipo, unidadEjecutora, nombre, 
 							descripcion, usuario, null, new DateTime().toDate(), null, 1, snip, programa, subPrograma, proyecto_, actividad, 
 							obra,latitud,longitud, objetivo,enunciadoAlcance, costo, objetivoEspecifico,visionGeneral,renglon, 
-							ubicacionGeografica,null, null, null, null, null, null, null, ejecucionFisicaReal,projectCargado,null, null, 
+							ubicacionGeografica,null, null, 0, null, null, null, null, ejecucionFisicaReal,projectCargado,null, null, 
 							null, null,null,null,null,null,null);
 
 
@@ -801,6 +801,7 @@ public class SProyecto extends HttpServlet {
 										+ " " + proyecto.getColaborador().getSapellido()) : null;
 				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
 				dato.proyectoClase = proyecto.getEtiqueta().getId();
+				dato.projectCargado = proyecto.getProjectCargado();
 
 				dato.prestamo = obtenerPrestamo(proyecto.getId(),1);
 			}
@@ -840,6 +841,10 @@ public class SProyecto extends HttpServlet {
 		    else
 		    	 response_text = String.join("", "{\"success\":false,", response_text,"}");
 		
+		}
+		else if(accion.equals("calcularCostoFecha")){
+			Integer proyectoId = Utils.String2Int(map.get("proyectoId"));
+			response_text = String.join("", "{\"success\":", ProyectoDAO.calcularCostoyFechas(proyectoId, usuario) ? "true" : "false","}");
 		}
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");

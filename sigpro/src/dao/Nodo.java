@@ -25,7 +25,7 @@ public class Nodo {
 	@Expose(serialize = false)
 	public Timestamp fecha_fin;
 	@Expose(serialize = false)
-	public Integer duracion;
+	public int duracion;
 	@Expose(serialize = false)
 	public Double costo;
 	@Expose(serialize = false)
@@ -43,7 +43,7 @@ public class Nodo {
 	}
 	
 	public Nodo(int id, int objeto_tipo, String nombre, int nivel, ArrayList<Nodo> children, Nodo parent, boolean estado, Timestamp fecha_inicio,
-			Timestamp fecha_fin, Double costo, Integer duracion) {
+			Timestamp fecha_fin, Double costo, int duracion) {
 		super();
 		this.id = id;
 		this.objeto_tipo = objeto_tipo;

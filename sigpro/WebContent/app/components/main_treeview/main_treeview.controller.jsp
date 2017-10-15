@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ page import="servlets.SLogin.stetiqueta" %>
+<script type="text/javascript">
 var app = angular.module('sipro',['ngRoute','ui.bootstrap','chart.js', 'loadOnDemand','ngAnimate',
                                        'ui.grid', 'ui.grid.treeView', 'ui.grid.selection','ui.grid.moveColumns', 'ui.grid.resizeColumns', 'ui.grid.saveState','ui.grid.pinning',
                                        'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize','ngFlash','ngUtilidades','documentoAdjunto','dialogoConfirmacion',
@@ -8,18 +9,9 @@ var app = angular.module('sipro',['ngRoute','ui.bootstrap','chart.js', 'loadOnDe
 
 app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($routeProvider, $locationProvider,FlashProvider) {
 	   $locationProvider.hashPrefix('!');
-	   //$locationProvider.html5Mode(true);
 	   
-	   $routeProvider
-	   		/*.when('/main',{
-        		templateUrl : '',
-        		resolve:{
-        			main: function main(){
-        				window.location.href = '/main.jsp';
-        			}
-        		}
-        	})*/
-		   .when('/prestamo/:id',{
+	$routeProvider
+	   		.when('/prestamo/:id',{
 	       		template: '<div load-on-demand="\'proyectoController\'" class="all_page"></div>'
 	       })
 	       .when('/componente/:proyecto_id/:id/:nuevo?',{
@@ -303,3 +295,5 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	}
 	
 }]);
+
+</script>
