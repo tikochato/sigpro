@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 13, 2017 9:03:33 AM by Hibernate Tools 5.2.3.Final
+// Generated Oct 14, 2017 6:45:19 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class Proyecto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -539884712869421155L;
+	private static final long serialVersionUID = 949671685974121626L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Colaborador colaborador;
@@ -61,7 +61,7 @@ public class Proyecto implements java.io.Serializable {
 	private Integer ubicacionGeografica;
 	private Date fechaInicio;
 	private Date fechaFin;
-	private Integer duracion;
+	private int duracion;
 	private String duracionDimension;
 	private Integer orden;
 	private String treePath;
@@ -82,7 +82,7 @@ public class Proyecto implements java.io.Serializable {
 	}
 
 	public Proyecto(Cooperante cooperante, Etiqueta etiqueta, ProyectoTipo proyectoTipo, String nombre,
-			String usuarioCreo, Date fechaCreacion, int estado) {
+			String usuarioCreo, Date fechaCreacion, int estado, int duracion) {
 		this.cooperante = cooperante;
 		this.etiqueta = etiqueta;
 		this.proyectoTipo = proyectoTipo;
@@ -90,6 +90,7 @@ public class Proyecto implements java.io.Serializable {
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
+		this.duracion = duracion;
 	}
 
 	public Proyecto(AcumulacionCosto acumulacionCosto, Colaborador colaborador, Cooperante cooperante,
@@ -98,7 +99,7 @@ public class Proyecto implements java.io.Serializable {
 			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma, Integer proyecto,
 			Integer actividad, Integer obra, String latitud, String longitud, String objetivo, String enunciadoAlcance,
 			BigDecimal costo, String objetivoEspecifico, String visionGeneral, Integer renglon,
-			Integer ubicacionGeografica, Date fechaInicio, Date fechaFin, Integer duracion, String duracionDimension,
+			Integer ubicacionGeografica, Date fechaInicio, Date fechaFin, int duracion, String duracionDimension,
 			Integer orden, String treePath, Integer nivel, Integer ejecucionFisicaReal, Integer projectCargado,
 			Set<Desembolso> desembolsos, Set<Hito> hitos, Set<ProgramaProyecto> programaProyectos,
 			Set<MatrizRaci> matrizRacis, Set<ProyectoMiembro> proyectoMiembros, Set<ProyectoImpacto> proyectoImpactos,
@@ -446,12 +447,12 @@ public class Proyecto implements java.io.Serializable {
 		this.fechaFin = fechaFin;
 	}
 
-	@Column(name = "duracion")
-	public Integer getDuracion() {
+	@Column(name = "duracion", nullable = false)
+	public int getDuracion() {
 		return this.duracion;
 	}
 
-	public void setDuracion(Integer duracion) {
+	public void setDuracion(int duracion) {
 		this.duracion = duracion;
 	}
 

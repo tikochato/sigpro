@@ -492,7 +492,7 @@ public class SPrestamo extends HttpServlet {
 					
 					Componente componente = new Componente(null,componenteTipo, proyecto, unidadEjecutora,
 							(String)componenteSigade[2], null, usuario, null, new Date(), null, 1, null, null, 
-							null, null, null, null, null, null, null,null,null,null,null,null, 
+							null, null, null, null, null, null, null,null,null,null,null,0, 
 							null,null,null,1,1,(BigDecimal) componenteSigade[4],null,null,null);
 					
 					ret = ret && ComponenteDAO.guardarComponente(componente, true);
