@@ -490,7 +490,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 				Nodo nodo = listas.get(i).get(j);
 				Double costo=0.0d;
 				Timestamp fecha_maxima=new Timestamp(0);
-				Timestamp fecha_minima=new Timestamp((new DateTime(2999,12,31,23,59,59)).getMillis());
+				Timestamp fecha_minima=new Timestamp((new DateTime(2999,12,31,0,0,0)).getMillis());
 				for(Nodo nodo_hijo:nodo.children){
 					costo += nodo_hijo.costo;
 					fecha_minima = (nodo_hijo.fecha_inicio.getTime()<fecha_minima.getTime()) ? nodo_hijo.fecha_inicio : fecha_minima;
@@ -500,8 +500,8 @@ public class ProyectoDAO implements java.io.Serializable  {
 					nodo.fecha_inicio = fecha_minima;
 					nodo.fecha_fin = fecha_maxima;
 					nodo.costo = costo;
-					nodo.duracion = Utils.getWorkingDays(new DateTime(nodo.fecha_inicio), new DateTime(nodo.fecha_fin));
 				}
+				nodo.duracion = Utils.getWorkingDays(new DateTime(nodo.fecha_inicio), new DateTime(nodo.fecha_fin));
 				nodo.objeto = ObjetoDAO.getObjetoPorIdyTipo(nodo.id, nodo.objeto_tipo);
 				setDatosCalculados(nodo.objeto,nodo.fecha_inicio,nodo.fecha_fin,nodo.costo, nodo.duracion);
 			}
@@ -511,7 +511,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 		return ret;
 	}
 	
-	private static void setDatosCalculados(Object objeto,Timestamp fecha_inicio, Timestamp fecha_fin, Double costo, Integer duracion){
+	private static void setDatosCalculados(Object objeto,Timestamp fecha_inicio, Timestamp fecha_fin, Double costo, int duracion){
 		try{
 			if(objeto!=null){
 				Method setFechaInicio =objeto.getClass().getMethod("setFechaInicio",Date.class);
@@ -536,7 +536,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 			Session session = CHibernateSession.getSessionFactory().openSession();
 			session.beginTransaction();
 			int count=0;
-			for(int i=listas.size()-2; i>=0; i--){
+			for(int i=0; i<listas.size()-2; i++){
 				for(int j=0; j<listas.get(i).size();j++){
 					session.saveOrUpdate(listas.get(i).get(j).objeto);
 					if ( ++count % 20 == 0 ) {

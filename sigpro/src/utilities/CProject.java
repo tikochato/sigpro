@@ -315,7 +315,8 @@ public class CProject {
 	
 	private Integer listaJerarquica(Task task,String usuario,Object objeto,int objetoTipo, int nivel,
 			Proyecto proyecto_, List<Componente> componentes, boolean marcarCargado, int posicionComponente){
-		Integer ret = null;
+		Integer ret = 1;
+		Integer ret_hijos=1;
 		try{
 			boolean tieneHijos = task.getChildTasks()!=null && task.getChildTasks().size()>0;
 			Object objeto_temp=null;
@@ -419,14 +420,15 @@ public class CProject {
 					break;
 			}
 			for (Task child : task.getChildTasks())
-			listaJerarquica(child,usuario,objeto_temp,objetoTipoTemp,nivel+1,
-					proyecto_,componentes, marcarCargado, posicionComponente++);
+				ret_hijos=ret_hijos>0 ? listaJerarquica(child,usuario,objeto_temp,objetoTipoTemp,nivel+1,
+						proyecto_,componentes, marcarCargado, posicionComponente++) : -1;
 			
 		}
 		catch(Exception e){
 			CLogger.write("1", CProject.class, e);
+			ret=-1;
 		}
-		return ret;
+		return ret>0 && ret_hijos>0 ? ret : -1;
 	}
 	
 	private Integer [] getListaPredecesores(List<Relation> predecesores){
@@ -481,6 +483,8 @@ public class CProject {
 							task5.setName(actividad.getNombre());
 							task5.setStart(actividad.getFechaInicio());
 							task5.setFinish(actividad.getFechaFin()); 
+							task5.setCost(actividad.getCosto());
+							task5.setPercentageComplete(actividad.getPorcentajeAvance());
 						}	
 					}
 					
@@ -492,6 +496,8 @@ public class CProject {
 						task4.setName(actividad.getNombre());
 						task4.setStart(actividad.getFechaInicio());
 						task4.setFinish(actividad.getFechaFin()); 
+						task4.setCost(actividad.getCosto());
+						task4.setPercentageComplete(actividad.getPorcentajeAvance());
 					} 
 				}
 				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componente.getId(), 2, 
@@ -502,7 +508,18 @@ public class CProject {
 					task3.setName(actividad.getNombre());
 					task3.setStart(actividad.getFechaInicio());
 					task3.setFinish(actividad.getFechaFin()); 
+					task3.setCost(actividad.getCosto());
+					task3.setPercentageComplete(actividad.getPorcentajeAvance());
 				}
+			}
+			List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(proyecto.getId(), 1);
+			for (Actividad actividad : actividades){
+				Task t = task1.addTask();
+				t.setName(actividad.getNombre());
+				t.setStart(actividad.getFechaInicio());
+				t.setFinish(actividad.getFechaFin()); 
+				t.setCost(actividad.getCosto());
+				t.setPercentageComplete(actividad.getPorcentajeAvance());
 			}
 			
 			ProjectWriter writer = new MPXWriter();
@@ -511,8 +528,4 @@ public class CProject {
 		}
 		return path;
 	}	
-	
-	
-	
-
 }
