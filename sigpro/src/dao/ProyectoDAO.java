@@ -18,9 +18,11 @@ import org.joda.time.DateTime;
 
 import pojo.Actividad;
 import pojo.Componente;
+import pojo.Producto;
 import pojo.Proyecto;
 import pojo.ProyectoUsuario;
 import pojo.ProyectoUsuarioId;
+import pojo.Subproducto;
 import pojo.Usuario;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -478,7 +480,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 	public static boolean calcularCostoyFechas(Integer proyectoId){
 		boolean ret = false;
 		ArrayList<ArrayList<Nodo>> listas = EstructuraProyectoDAO.getEstructuraProyectoArbolCalculos(proyectoId);
-		for(int i=listas.size()-2; i>=0; i--){
+		for(int i=listas.size()-1; i>=0; i--){
 			for(int j=0; j<listas.get(i).size(); j++){
 				Nodo nodo = listas.get(i).get(j);
 				Double costo=0.0d;
@@ -489,13 +491,20 @@ public class ProyectoDAO implements java.io.Serializable  {
 					fecha_minima = (nodo_hijo.fecha_inicio.getTime()<fecha_minima.getTime()) ? nodo_hijo.fecha_inicio : fecha_minima;
 					fecha_maxima = (nodo_hijo.fecha_fin.getTime()>fecha_maxima.getTime()) ? nodo_hijo.fecha_fin : fecha_maxima;
 				}
+				nodo.objeto = ObjetoDAO.getObjetoPorIdyTipo(nodo.id, nodo.objeto_tipo);
 				if(nodo.children!=null && nodo.children.size()>0){
 					nodo.fecha_inicio = fecha_minima;
 					nodo.fecha_fin = fecha_maxima;
 					nodo.costo = costo;
 				}
+				else{
+					switch(nodo.objeto_tipo){
+						case 3: nodo.costo = ProductoDAO.calcularCosto((Producto)nodo.objeto).doubleValue(); break; 
+						case 4: nodo.costo = SubproductoDAO.calcularCosto((Subproducto)nodo.objeto).doubleValue(); break;
+						case 5: nodo.costo = ActividadDAO.calcularActividadCosto((Actividad)nodo.objeto).doubleValue(); break;
+					}
+				}
 				nodo.duracion = Utils.getWorkingDays(new DateTime(nodo.fecha_inicio), new DateTime(nodo.fecha_fin));
-				nodo.objeto = ObjetoDAO.getObjetoPorIdyTipo(nodo.id, nodo.objeto_tipo);
 				setDatosCalculados(nodo.objeto,nodo.fecha_inicio,nodo.fecha_fin,nodo.costo, nodo.duracion);
 			}
 			ret = true;
