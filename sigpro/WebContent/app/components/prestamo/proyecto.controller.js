@@ -264,6 +264,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	}
 	
 	mi.guardar = function(esvalido){
+		mi.botones=false;
 		for (campos in mi.camposdinamicos) {
 			if (mi.camposdinamicos[campos].tipo === 'fecha') {
 				mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
@@ -400,8 +401,6 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 											if (response.data.success) {
 												if(mi.esTreeview){
 													mi.t_cambiarNombreNodo();
-													
-													
 												}
 												else
 													mi.obtenerTotalProyectos();
@@ -414,11 +413,15 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 														ret = mi.child_riesgo.guardar($rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
 																'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el '+$rootScope.etiquetas.proyecto);
 												}
-												else
+												else{
 													$utilidades.mensaje('success',$rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+													mi.botones=true;
+												}
 													
-											}else
+											}else{
 												$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el '+$rootScope.etiquetas.proyecto);
+												mi.botones=true;
+											}
 								});
 						}
 						else{
