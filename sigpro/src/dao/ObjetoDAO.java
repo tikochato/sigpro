@@ -1,5 +1,6 @@
 package dao;
 
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Connection;
@@ -17,6 +18,8 @@ import org.joda.time.DateTime;
 
 import pojo.Actividad;
 import pojo.Componente;
+import pojo.PlanAdquisicion;
+import pojo.PlanAdquisicionPago;
 import pojo.Prestamo;
 import pojo.Producto;
 import pojo.Proyecto;
@@ -435,5 +438,30 @@ public class ObjetoDAO {
 			case 5: ret = (Object)ActividadDAO.getActividadPorId(id); break;
 		}
 		return ret;
+	}
+	
+	public static BigDecimal calcularCostoPlan(Object objeto, Integer objetoTipo){
+		BigDecimal costo = new BigDecimal(0);
+		try{
+			Method getId = objeto.getClass().getMethod("getId");
+			Method getCosto = objeto.getClass().getMethod("getCosto");
+			PlanAdquisicion pa = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(objetoTipo, (Integer)getId.invoke(objeto));
+			if(pa!=null){
+				if(pa.getPlanAdquisicionPagos()!=null && pa.getPlanAdquisicionPagos().size()>0){
+					BigDecimal pagos = new BigDecimal(0);
+					for(PlanAdquisicionPago pago: pa.getPlanAdquisicionPagos())
+						pagos=pagos.add(pago.getPago());
+					costo = pagos;
+				}
+				else
+					costo = pa.getTotal();
+			}
+			else
+				costo = (BigDecimal)getCosto.invoke(objeto);
+		}catch(Exception e){
+			CLogger.write("3", Proyecto.class, e);
+		}
+		
+		return costo;
 	}
 }
