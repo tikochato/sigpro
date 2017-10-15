@@ -1,6 +1,8 @@
 package dao;
 
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -94,27 +96,13 @@ public class ProductoDAO {
 						, producto.getUsuarioCreo(), null, new Date(), null);
 				session.saveOrUpdate(pu_admin);
 			}
+			session.getTransaction().commit();
+			session.close();
 			
 			if(calcular_valores_agregados){
-				producto.setCosto(calcularCosto(producto));
-				Date fechaMinima = calcularFechaMinima(producto);
-				Date fechaMaxima = calcularFechaMaxima(producto);
-				Integer duracion = Utils.getWorkingDays(new DateTime(fechaMinima), new DateTime(fechaMaxima));
-				
-				producto.setFechaInicio(fechaMinima);
-				producto.setFechaFin(fechaMaxima);
-				producto.setDuracion(duracion.intValue());
-				session.saveOrUpdate(producto);
-				session.saveOrUpdate(producto);
-				session.getTransaction().commit();
-				session.close();
-				
-				ComponenteDAO.guardarComponente(producto.getComponente(),calcular_valores_agregados);
+				ProyectoDAO.calcularCostoyFechas(Integer.parseInt(producto.getTreePath().substring(0,8))-10000000);
 			}
-			else{
-				session.getTransaction().commit();
-				session.close();
-			}
+			
 			ret = true;
 		} catch (Throwable e) {
 			CLogger.write("3", ProductoDAO.class, e);
@@ -432,87 +420,79 @@ public class ProductoDAO {
 		return costo;
 	}
 	
-	public static Date calcularFechaMinima(Producto producto){
-		DateTime fechaActual = null;
-		try{
-			List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(producto.getId(), 3);
-			if(actividades != null && actividades.size() > 0){
-				DateTime fechaMinima = new DateTime();
-				for(Actividad actividad : actividades){
-					if(fechaActual == null)
-						fechaActual = new DateTime(actividad.getFechaInicio());
-					else{
-						fechaMinima = new DateTime(actividad.getFechaInicio());
-						
-						if(fechaActual.isAfter(fechaMinima))
-							fechaActual = fechaMinima;
-					}
+	public static boolean calcularCostoyFechas(Integer productoId){
+		boolean ret = false;
+		ArrayList<ArrayList<Nodo>> listas = EstructuraProyectoDAO.getEstructuraObjetoArbolCalculos(productoId, 3);
+		for(int i=listas.size()-2; i>=0; i--){
+			for(int j=0; j<listas.get(i).size(); j++){
+				Nodo nodo = listas.get(i).get(j);
+				Double costo=0.0d;
+				Timestamp fecha_maxima=new Timestamp(0);
+				Timestamp fecha_minima=new Timestamp((new DateTime(2999,12,31,0,0,0)).getMillis());
+				for(Nodo nodo_hijo:nodo.children){
+					costo += nodo_hijo.costo;
+					fecha_minima = (nodo_hijo.fecha_inicio.getTime()<fecha_minima.getTime()) ? nodo_hijo.fecha_inicio : fecha_minima;
+					fecha_maxima = (nodo_hijo.fecha_fin.getTime()>fecha_maxima.getTime()) ? nodo_hijo.fecha_fin : fecha_maxima;
 				}
+				nodo.objeto = ObjetoDAO.getObjetoPorIdyTipo(nodo.id, nodo.objeto_tipo);
+				if(nodo.children!=null && nodo.children.size()>0){
+					nodo.fecha_inicio = fecha_minima;
+					nodo.fecha_fin = fecha_maxima;
+					nodo.costo = costo;
+				}
+				else
+					nodo.costo = calcularCosto((Producto)nodo.objeto).doubleValue();
+				nodo.duracion = Utils.getWorkingDays(new DateTime(nodo.fecha_inicio), new DateTime(nodo.fecha_fin));
+				setDatosCalculados(nodo.objeto,nodo.fecha_inicio,nodo.fecha_fin,nodo.costo, nodo.duracion);
 			}
-			
-			Set<Subproducto> subproductos = producto.getSubproductos();
-			if(subproductos != null && subproductos.size() > 0){
-				Iterator<Subproducto> iterador = subproductos.iterator();
-				DateTime fechaMinima = new DateTime();
-				while(iterador.hasNext()){
-					Subproducto subproducto = iterador.next();
-					if(fechaActual == null)
-						fechaActual = new DateTime(subproducto.getFechaInicio());
-					else{
-						fechaMinima = new DateTime(subproducto.getFechaInicio());
-						
-						if(fechaActual.isAfter(fechaMinima))
-							fechaActual = fechaMinima;
-					}
-				}
-			}else if(fechaActual == null)
-				fechaActual = new DateTime(producto.getFechaInicio());
-		}catch(Exception e){
-			CLogger.write("17", Proyecto.class, e);
+			ret = true;
 		}
-		
-		return fechaActual.toDate();
+		ret= ret && guardarProductoBatch(listas);	
+		return ret;
 	}
 	
-	public static Date calcularFechaMaxima(Producto producto){
-		DateTime fechaActual = null;
+	private static void setDatosCalculados(Object objeto,Timestamp fecha_inicio, Timestamp fecha_fin, Double costo, int duracion){
 		try{
-			List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(producto.getId(), 3);
-			if(actividades != null && actividades.size() > 0){
-				DateTime fechaMaxima = new DateTime();
-				for(Actividad actividad : actividades){
-					if(fechaActual == null)
-						fechaActual = new DateTime(actividad.getFechaFin());
-					else{
-						fechaMaxima = new DateTime(actividad.getFechaFin());
-						
-						if(fechaActual.isBefore(fechaMaxima))
-							fechaActual = fechaMaxima;
-					}
-				}
+			if(objeto!=null){
+				Method setFechaInicio =objeto.getClass().getMethod("setFechaInicio",Date.class);
+				Method setFechaFin =  objeto.getClass().getMethod("setFechaFin",Date.class);
+				Method setCosto = objeto.getClass().getMethod("setCosto",BigDecimal.class);
+				Method setDuracion = objeto.getClass().getMethod("setDuracion", int.class);
+				setFechaInicio.invoke(objeto, new Date(fecha_inicio.getTime()));
+				setFechaFin.invoke(objeto, new Date(fecha_fin.getTime()));
+				setCosto.invoke(objeto, new BigDecimal(costo));
+				setDuracion.invoke(objeto, duracion);
 			}
-			
-			Set<Subproducto> subproductos = producto.getSubproductos();
-			if(subproductos != null && subproductos.size() > 0){
-				Iterator<Subproducto> iterador = subproductos.iterator();
-				DateTime fechaMaxima = new DateTime();
-				while(iterador.hasNext()){
-					Subproducto subproducto = iterador.next();
-					if(fechaActual == null)
-						fechaActual = new DateTime(subproducto.getFechaFin());
-					else{
-						fechaMaxima = new DateTime(subproducto.getFechaFin());
-						
-						if(fechaActual.isBefore(fechaMaxima))
-							fechaActual = fechaMaxima;
-					}
-				}
-			}else if(fechaActual == null)
-				fechaActual = new DateTime(producto.getFechaFin());
-		}catch(Exception e){
-			CLogger.write("18", Proyecto.class, e);
+		}
+		catch(Throwable e){
+			CLogger.write("19", ProductoDAO.class, e);
 		}
 		
-		return fechaActual.toDate();
+	}
+	
+	private static boolean guardarProductoBatch(ArrayList<ArrayList<Nodo>> listas){
+		boolean ret = true;
+		try{
+			Session session = CHibernateSession.getSessionFactory().openSession();
+			session.beginTransaction();
+			int count=0;
+			for(int i=0; i<listas.size()-1; i++){
+				for(int j=0; j<listas.get(i).size();j++){
+					session.saveOrUpdate(listas.get(i).get(j).objeto);
+					if ( ++count % 20 == 0 ) {
+				        session.flush();
+				        session.clear();
+				    }
+				}
+			}
+			session.flush();
+			session.getTransaction().commit();
+			session.close();
+		}
+		catch(Throwable e){
+			ret = false;
+			CLogger.write("20", ProductoDAO.class, e);
+		}
+		return ret;
 	}
 }

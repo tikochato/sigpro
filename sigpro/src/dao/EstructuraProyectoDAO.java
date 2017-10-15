@@ -10,7 +10,11 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import pojo.Actividad;
+import pojo.Componente;
+import pojo.Producto;
 import pojo.Proyecto;
+import pojo.Subproducto;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
@@ -319,10 +323,10 @@ public class EstructuraProyectoDAO {
 		return ret;
 	}
 	
-	public static ArrayList<ArrayList<Nodo>> getEstructuraProyectoArbolCalculos(int id, String usuario){
+	public static ArrayList<ArrayList<Nodo>> getEstructuraProyectoArbolCalculos(int id){
 		ArrayList<ArrayList<Nodo>> ret = new ArrayList<ArrayList<Nodo>>();
 		Nodo root = null;
-		List<?> estructuras = EstructuraProyectoDAO.getEstructuraProyecto(id, usuario);
+		List<?> estructuras = EstructuraProyectoDAO.getEstructuraProyecto(id);
 		if(estructuras.size()>0){
 			try{
 				int nivel_maximo = 0;
@@ -372,7 +376,132 @@ public class EstructuraProyectoDAO {
 			}
 			catch(Throwable e){
 				root = null;
-				CLogger.write("2", EstructuraProyectoDAO.class, e);
+				CLogger.write("6", EstructuraProyectoDAO.class, e);
+			}
+		}
+		return ret;
+	}
+	
+	public static List<?> getEstructuraObjeto(Integer objetoId, Integer objetoTipo){
+		List<?> ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		String treePath_inicio="";
+		switch(objetoTipo){
+			case 1: Proyecto proyecto = ProyectoDAO.getProyecto(objetoId); treePath_inicio = (proyecto!=null) ? proyecto.getTreePath() : null; break;
+			case 2: Componente componente = ComponenteDAO.getComponente(objetoId); treePath_inicio = (componente!=null) ? componente.getTreePath() : null; break;
+			case 3: Producto producto = ProductoDAO.getProductoPorId(objetoId); treePath_inicio = (producto!=null) ? producto.getTreePath() : null; break;
+			case 4: Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId); treePath_inicio = (subproducto!=null) ? subproducto.getTreePath() : null; break;
+			case 5: Actividad actividad = ActividadDAO.getActividadPorId(objetoId); treePath_inicio = (actividad!=null) ? actividad.getTreePath() : null; break;
+		}
+		try{
+
+			String query =
+					"select * from ( "+
+					( objetoTipo<=1 ? 
+					"select p.id, p.nombre, 1 objeto_tipo,  p.treePath, p.fecha_inicio, "+
+					"p.fecha_fin, p.duracion, p.duracion_dimension,p.costo,0, p.acumulacion_costoid,  "+
+					"p.programa, p.subprograma, p.proyecto, p.actividad, p.obra "+
+					"from proyecto p "+
+					"where p.id= ?1 and p.estado=1  "+
+					"union " : "" ) +
+					( objetoTipo<=2 ? 
+					"select c.id, c.nombre, 2 objeto_tipo,  c.treePath, c.fecha_inicio, "+
+					"c.fecha_fin , c.duracion, c.duracion_dimension,c.costo,0,c.acumulacion_costoid, "+
+					"c.programa, c.subprograma, c.proyecto, c.actividad, c.obra "+
+					"from componente c "+
+					"where c.proyectoid=?1 and c.estado=1  "+
+					"union " : "" ) +
+					( objetoTipo<=3 ? "select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
+					"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid, "+
+					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra "+
+					"from producto pr "+
+					"left outer join componente c on c.id=pr.componenteid "+
+					"left outer join proyecto p on p.id=c.proyectoid "+
+					"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1   "+
+					"union " : "")+
+					( objetoTipo<=4 ? "select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
+					"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid, "+
+					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra "+
+					"from subproducto sp "+
+					"left outer join producto pr on pr.id=sp.productoid "+
+					"left outer join componente c on c.id=pr.componenteid "+
+					"left outer join proyecto p on p.id=c.proyectoid "+
+					"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1 and sp.estado=1 and sp.id  "+
+					"union " : "") +
+					"select a.id, a.nombre, 5 objeto_tipo,  a.treePath, a.fecha_inicio, "+
+					"a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id,a.acumulacion_costo acumulacion_costoid, "+
+					"a.programa, a.subprograma, a.proyecto, a.actividad, a.obra "+
+					"from actividad a "+
+					"where a.estado=1 and  a.treepath like '"+treePath_inicio+"%'"+
+					") arbol "+
+					"order by treePath ";			
+				
+			Query<?> criteria = session.createNativeQuery(query);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("7", EstructuraProyectoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static ArrayList<ArrayList<Nodo>> getEstructuraObjetoArbolCalculos(Integer objetoId,Integer objetoTipo){
+		ArrayList<ArrayList<Nodo>> ret = new ArrayList<ArrayList<Nodo>>();
+		Nodo root = null;
+		List<?> estructuras = EstructuraProyectoDAO.getEstructuraObjeto(objetoId,objetoTipo);
+		if(estructuras.size()>0){
+			try{
+				int nivel_maximo = 0;
+				Object[] dato = (Object[]) estructuras.get(0);
+				int id_ = dato[0]!=null ? (Integer)dato[0] : 0;
+				int objeto_tipo = dato[2]!=null ? ((BigInteger)dato[2]).intValue() : 0;
+				String nombre = dato[1]!=null ? (String)dato[1] : null;
+				int nivel = (dato[3]!=null) ? ((String)dato[3]).length()/8 : 0;
+				Timestamp fecha_inicio = (dato[4]!=null) ? new Timestamp(((Date)dato[4]).getTime()) : null;
+				Timestamp fecha_fin = (dato[5]!=null) ? new Timestamp(((Date)dato[5]).getTime()) : null;
+				Double costo = (dato[8]!=null) ? ((BigDecimal)dato[8]).doubleValue() : 0;
+				root = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, false, fecha_inicio, fecha_fin, costo,0);
+				Nodo nivel_actual_estructura = root;
+				ret.add(new ArrayList<Nodo>());
+				ret.get(0).add(root);
+				for(int i=1; i<estructuras.size(); i++){
+					dato = (Object[]) estructuras.get(i);
+					id_ = dato[0]!=null ? (Integer)dato[0] : 0;
+					objeto_tipo = dato[2]!=null ? ((BigInteger)dato[2]).intValue() : 0;
+					nombre = dato[1]!=null ? (String)dato[1] : null;
+					nivel = (dato[3]!=null) ? ((String)dato[3]).length()/8 : 0;
+					fecha_inicio = (dato[4]!=null) ? new Timestamp(((Date)dato[4]).getTime()) : null;
+					fecha_fin = (dato[5]!=null) ? new Timestamp(((Date)dato[5]).getTime()) : null;
+					costo = (dato[8]!=null) ? ((BigDecimal)dato[8]).doubleValue() : 0;
+					nivel_maximo = nivel_maximo <  nivel ? nivel : nivel_maximo;
+					Nodo nodo = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, false, fecha_inicio, fecha_fin, costo,0);
+					if(nodo.nivel!=nivel_actual_estructura.nivel+1){
+						if(nodo.nivel>nivel_actual_estructura.nivel){
+							nivel_actual_estructura = nivel_actual_estructura.children.get(nivel_actual_estructura.children.size()-1);
+						}
+						else{
+							int retornar = nivel_actual_estructura.nivel-nodo.nivel+1;
+							for(int j=0; j<retornar; j++)
+								nivel_actual_estructura=nivel_actual_estructura.parent;
+						}
+					}
+					nodo.parent = nivel_actual_estructura;
+					nivel_actual_estructura.children.add(nodo);
+					if(ret.size()<nivel){
+						ret.add(new ArrayList<Nodo>());
+						ret.get(ret.size()-1).add(nodo);
+					}
+					else{
+						ret.get(nivel-1).add(nodo);
+					}
+				}
+			}
+			catch(Throwable e){
+				root = null;
+				CLogger.write("8", EstructuraProyectoDAO.class, e);
 			}
 		}
 		return ret;
