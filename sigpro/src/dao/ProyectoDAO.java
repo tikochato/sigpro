@@ -495,8 +495,10 @@ public class ProyectoDAO implements java.io.Serializable  {
 					nodo.fecha_fin = fecha_maxima;
 					nodo.costo = costo;
 				}
-				else
-					nodo.costo = ObjetoDAO.calcularCostoPlan(nodo.objeto, nodo.objeto_tipo).doubleValue();
+				else{
+					BigDecimal costo_temp= ObjetoDAO.calcularCostoPlan(nodo.objeto, nodo.objeto_tipo);
+					nodo.costo = (costo_temp!=null) ? costo_temp.doubleValue(): 0;
+				}
 				nodo.duracion = Utils.getWorkingDays(new DateTime(nodo.fecha_inicio), new DateTime(nodo.fecha_fin));
 				setDatosCalculados(nodo.objeto,nodo.fecha_inicio,nodo.fecha_fin,nodo.costo, nodo.duracion);
 			}
