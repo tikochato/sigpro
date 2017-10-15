@@ -801,6 +801,7 @@ public class SProyecto extends HttpServlet {
 										+ " " + proyecto.getColaborador().getSapellido()) : null;
 				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
 				dato.proyectoClase = proyecto.getEtiqueta().getId();
+				dato.projectCargado = proyecto.getProjectCargado();
 
 				dato.prestamo = obtenerPrestamo(proyecto.getId(),1);
 			}
