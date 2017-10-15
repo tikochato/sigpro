@@ -76,13 +76,21 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 							mi.riesgos[i].id = parseInt(sids[i]);
 						mi.cargarTabla();
 						$utilidades.mensaje('success',mensaje_success);
+						if($scope.$parent.controller)
+							$scope.$parent.controller.botones=true;
 					}
-					else
+					else{
 						$utilidades.mensaje('danger',mensaje_error);
+						if($scope.$parent.controller)
+							$scope.$parent.controller.botones=true;
+					}
 				});
 			}
-			else
+			else{
 				$utilidades.mensaje('success',mensaje_success);
+				if($scope.$parent.controller)
+					$scope.$parent.controller.botones=true;
+			}
 		};
 
 		mi.borrar = function(index) {
