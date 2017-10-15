@@ -81,7 +81,6 @@ public class CProject {
 	ProjectFile project;
 	String itemsProject;
 	boolean multiproyecto;
-	private int marcarCargado;
 	private Long proyectoId;
 	
 	
@@ -121,19 +120,6 @@ public class CProject {
 	public void setProject(ProjectFile project) {
 		this.project = project;
 	}
-	
-
-	
-	public int getMarcarCargado() {
-		return marcarCargado;
-	}
-
-	public void setMarcarCargado(int marcarCargado) {
-		this.marcarCargado = marcarCargado;
-	}
-	
-	
-	
 
 	public Long getProyectoId() {
 		return proyectoId;
@@ -143,12 +129,13 @@ public class CProject {
 		this.proyectoId = proyectoId;
 	}
 
-	public boolean imporatarArchivo(ProjectFile projectFile, String usuario,boolean multiproyecto,int marcarCargado){
+	public boolean imporatarArchivo(ProjectFile projectFile, String usuario,boolean multiproyecto,
+			Integer proyectoId, boolean marcarCargado){
 		itemsProject = "";
 		items = new HashMap<>();
 		this.multiproyecto = multiproyecto; 
-		this.marcarCargado = marcarCargado;
-		return getTask(projectFile,usuario);
+		
+		return getTask(projectFile,usuario, proyectoId, marcarCargado);
 	}
 	
 	public Programa crearPrograma(Task task,String usuario){
@@ -189,7 +176,7 @@ public class CProject {
 				null, null, null,null, null, null, new BigDecimal(task.getCost().toString()),null, null, null,null,
 				Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish()),
 				(( Double ) task.getDuration().getDuration()).intValue(), task.getDuration().getUnits().getName()
-				,null,null,0,0,getMarcarCargado(), null,null,null,null,null,null,null,null,null);
+				,null,null,0,0,0, null,null,null,null,null,null,null,null,null);
 		
 		return ProyectoDAO.guardarProyecto(proyecto, false) ? proyecto : null;
 	}
@@ -295,7 +282,7 @@ public class CProject {
 	}
 	
 
-	public  boolean getTask(ProjectFile projectFile,String usuario){
+	public  boolean getTask(ProjectFile projectFile,String usuario,Integer proyectoId, boolean marcarCargado){
 		
 		
 		itemsProject = "";
@@ -308,8 +295,16 @@ public class CProject {
 				ActividadDAO.guardarActividad(actividad, true);
 		} */
 		
+		Proyecto proyecto = null;
+		List<Componente> componentes = null;
+		if (marcarCargado){
+			proyecto = ProyectoDAO.getProyecto(proyectoId);
+			componentes = ComponenteDAO.getComponentesPorProyecto(proyectoId);
+			
+		}
 		
-		Integer ret = listaJerarquica(projectFile.getChildTasks().get(0),usuario,null,1,multiproyecto ? 0 : 1);
+		Integer ret = listaJerarquica(projectFile.getChildTasks().get(0),usuario,null,1,multiproyecto ? 0 : 1,
+				proyecto,  componentes,marcarCargado,0);
 		ProyectoDAO.calcularCostoyFechas(ret, usuario);
 		return ret > 0;
 		
@@ -317,7 +312,8 @@ public class CProject {
 	
 	
 	
-	private Integer listaJerarquica(Task task,String usuario,Object objeto,int objetoTipo, int nivel){
+	private Integer listaJerarquica(Task task,String usuario,Object objeto,int objetoTipo, int nivel,
+			Proyecto proyecto_, List<Componente> componentes, boolean marcarCargado, int posicionComponente){
 		Integer ret = null;
 		try{
 			boolean tieneHijos = task.getChildTasks()!=null && task.getChildTasks().size()>0;
@@ -331,7 +327,15 @@ public class CProject {
 					ret = ((Programa) objeto_temp).getId();
 					break;
 				case 1:
-					Proyecto proyecto =  crearProyecto(task, usuario);
+					Proyecto proyecto;
+					if (marcarCargado){
+						proyecto =  proyecto_ ;
+						proyecto.setProjectCargado(1);
+						ProyectoDAO.guardarProyecto(proyecto, false);
+					}else{
+						proyecto =  crearProyecto(task, usuario);
+					}
+					
 					if (objeto != null){
 						crearProgramaProyecto(proyecto,(Programa)objeto, usuario);
 						objetoTipoTemp=1;
@@ -341,64 +345,81 @@ public class CProject {
 					break;
 				case 2:
 					if(tieneHijos){
+						
 						objetoTipoTemp=2;
-						Componente componente =  crearComponente(task, (Proyecto) objeto, usuario);
+						Componente componente = null;
+						if (marcarCargado){
+							 componente =  componentes.size() > posicionComponente 
+									? componentes.get(posicionComponente) : null;
+						}else{
+							componente =  crearComponente(task, (Proyecto) objeto, usuario);
+						}
+						
 						ret = componente.getId();
 						objeto_temp = (Object)componente;
 					}
 					else{
-						objetoTipoTemp=5;
-						Proyecto objeto_padre = ((Proyecto) objeto);
-						Actividad actividad = crearActividad(task, usuario,objeto_padre.getId(),1 
-							,2,objeto_padre.getTreePath(),objeto_padre.getId(),null,null);
-						cargarItem(task,actividad.getId(), 5,2);
-						ret = actividad.getId();
-						objeto_temp = (Object)actividad;
+						if (objeto != null){
+							objetoTipoTemp=5;
+							Proyecto objeto_padre = ((Proyecto) objeto);
+							Actividad actividad = crearActividad(task, usuario,objeto_padre.getId(),1 
+								,2,objeto_padre.getTreePath(),objeto_padre.getId(),null,null);
+							cargarItem(task,actividad.getId(), 5,2);
+							ret = actividad.getId();
+							objeto_temp = (Object)actividad;
+						}
 					}
 					break;
 				case 3:
-					if(tieneHijos){
-						objetoTipoTemp=3;
-						Producto producto =  crearProducto(task, (Componente) objeto, usuario);
-						ret = producto.getId();
-						objeto_temp = (Object)producto;
-					}
-					else{
-						objetoTipoTemp=5;
-						Actividad actividad = crearActividad(task, usuario, (Integer)getId.invoke(objeto),objetoTipo 
-							,3, (String)getTreePath.invoke(objeto), null,null,null);
-						cargarItem(task,actividad.getId(), 5,3);
-						ret = actividad.getId();
-						objeto_temp = (Object)actividad;
+					if (objeto != null){
+						if(tieneHijos){
+							objetoTipoTemp=3;
+							Producto producto =  crearProducto(task, (Componente) objeto, usuario);
+							ret = producto.getId();
+							objeto_temp = (Object)producto;
+						}
+						else{
+							objetoTipoTemp=5;
+							Actividad actividad = crearActividad(task, usuario, (Integer)getId.invoke(objeto),objetoTipo 
+								,3, (String)getTreePath.invoke(objeto), null,null,null);
+							cargarItem(task,actividad.getId(), 5,3);
+							ret = actividad.getId();
+							objeto_temp = (Object)actividad;
+						}
 					}
 					break;
 				case 4:
-					if(tieneHijos){
-						objetoTipoTemp=4;
-						Subproducto subproducto =  crearSubproducto(task, (Producto) objeto, usuario);
-						ret = subproducto.getId();
-						objeto_temp = (Object)subproducto;
-					}
-					else{
-						objetoTipoTemp=5;
-						Actividad actividad = crearActividad(task, usuario, (Integer)getId.invoke(objeto),objetoTipo 
-							,4, (String)getTreePath.invoke(objeto), null,null,null);
-						cargarItem(task,actividad.getId(), 5,4);
-						ret = actividad.getId();
-						objeto_temp = (Object)actividad;
+					if (objeto != null){
+						if(tieneHijos){
+							objetoTipoTemp=4;
+							Subproducto subproducto =  crearSubproducto(task, (Producto) objeto, usuario);
+							ret = subproducto.getId();
+							objeto_temp = (Object)subproducto;
+						}
+						else{
+							objetoTipoTemp=5;
+							Actividad actividad = crearActividad(task, usuario, (Integer)getId.invoke(objeto),objetoTipo 
+								,4, (String)getTreePath.invoke(objeto), null,null,null);
+							cargarItem(task,actividad.getId(), 5,4);
+							ret = actividad.getId();
+							objeto_temp = (Object)actividad;
+						}
 					}
 					break;
 				default:
+					if (objeto != null){
 						objetoTipoTemp=5;
 						Actividad actividad = crearActividad(task, usuario, (Integer)getId.invoke(objeto),objetoTipo 
 							,nivel, (String)getTreePath.invoke(objeto), null,null,null);
 						cargarItem(task,actividad.getId(), 5,nivel);
 						ret = actividad.getId();
 						objeto_temp = (Object)actividad;
+					}
 					break;
 			}
 			for (Task child : task.getChildTasks())
-			listaJerarquica(child,usuario,objeto_temp,objetoTipoTemp,nivel+1);
+			listaJerarquica(child,usuario,objeto_temp,objetoTipoTemp,nivel+1,
+					proyecto_,componentes, marcarCargado, posicionComponente++);
 			
 		}
 		catch(Exception e){

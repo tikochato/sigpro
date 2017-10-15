@@ -4,7 +4,7 @@
 </div>
 <div class="modal-body" id="modal-body">
 <form name="form">
-	<div class="grid_loading" ng-hide="!cargararchivoc.mostrarcargando" style="position:relative; z-index:4; top: 30px;">
+	<div class="grid_loading" ng-hide="!cargararchivoc.mostrarcargando" style="position:relative; z-index:4; top: 30px; width: 130px">
 				  	<div class="msg">
 				      <span><i class="fa fa-spinner fa-spin fa-4x"></i>
 						  <br /><br />
@@ -33,10 +33,17 @@
 	            </div>
 				
 	          	<br/>
+	          	<div class="form-group" ng-hide= "cargararchivoc.yaCompletadosigade" >
+						<input type="checkbox"  ng-model="cargararchivoc.completarsigade" 
+						ng-change = "cargararchivoc.seleccionCompletarSigade()"/>
+						<label  class="floating-label">Compoletar estructura</label>
+				</div>
 	          	<div class="form-group">
-						<input type="checkbox"  ng-model="cargararchivoc.multiproyecto" />
+						<input type="checkbox"  ng-model="cargararchivoc.multiproyecto" 
+						ng-change = "cargararchivoc.seleccionMultiProyecto()"/>
 						<label  class="floating-label">Multiproyecto</label>
 				</div>
+				
 		</div>
     </div>
     
