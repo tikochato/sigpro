@@ -234,6 +234,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 					if(mi.treedata.id==0){
 						mi.nodos_expandidos.push(mi.treedata.children[0]);
 						mi.setParentNode(mi.treedata);
+						mi.nodo_seleccionado = mi.treedata.children[0];
 						$location.path('/prestamo/'+mi.proyecto.id); 
 					}
 				});

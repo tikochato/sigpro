@@ -536,7 +536,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 			Session session = CHibernateSession.getSessionFactory().openSession();
 			session.beginTransaction();
 			int count=0;
-			for(int i=0; i<listas.size()-2; i++){
+			for(int i=0; i<listas.size()-1; i++){
 				for(int j=0; j<listas.get(i).size();j++){
 					session.saveOrUpdate(listas.get(i).get(j).objeto);
 					if ( ++count % 20 == 0 ) {

@@ -33,13 +33,13 @@
 		<div class="row">
 			<div style="margin: 10px 0px 0px 15px; float: left; width: 250px; text-align: right;" class="horizontal-collapse" uib-collapse="mainController.hideTree" horizontal>
 				<div class="btn-group btn-group-sm" ng-switch="mainController.nodo_seleccionado.objeto_tipo">
-				       		<label ng-switch-when="1" class="btn btn-default" ng-click="mainController.nuevoObjeto(1)" uib-tooltip="Nuevo Componente" role="button" tabindex="0">
+				       		<label ng-switch-when="1" class="btn btn-default" ng-click="mainController.nuevoObjeto(1)" uib-tooltip="Nuevo Componente" role="button">
 							<span class="glyphicon glyphicon-th"></span></label>
-							<label ng-switch-when="2" class="btn btn-default" ng-click="mainController.nuevoObjeto(2)" uib-tooltip="Nuevo Producto" role="button" tabindex="0">
+							<label ng-switch-when="2" class="btn btn-default" ng-click="mainController.nuevoObjeto(2)" uib-tooltip="Nuevo Producto" role="button">
 							<span class="glyphicon glyphicon-certificate"></span></label>
-							<label ng-switch-when="3" class="btn btn-default" ng-click="mainController.nuevoObjeto(3)" uib-tooltip="Nuevo Subproducto" role="button" tabindex="0">
+							<label ng-switch-when="3" class="btn btn-default" ng-click="mainController.nuevoObjeto(3)" uib-tooltip="Nuevo Subproducto" role="button">
 							<span class="glyphicon glyphicon-link"></span></label>
-				       		<label ng-if="mainController.nodo_seleccionado" class="btn btn-default" ng-click="mainController.nuevoObjeto(4)" uib-tooltip="Nueva Actividad" role="button" tabindex="1">
+				       		<label ng-if="mainController.nodo_seleccionado" class="btn btn-default" ng-click="mainController.nuevoObjeto(4)" uib-tooltip="Nueva Actividad" role="button">
 							<span class="glyphicon glyphicon-th-list"></span></label>
 				</div>
 			</div>
