@@ -941,14 +941,29 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	};
 	
 	mi.cargarArchivo = function() {
-		var resultado = mi.llamarModalArchivo(mi.proyecto!=null && mi.proyecto != undefined ? mi.proyecto.id : 0, 
-				mi.proyecto!=null && mi.proyecto != undefined ? mi.proyecto.projectCargado: 1);
+		var resultado = mi.llamarModalArchivo( 0, 1);
 
 		resultado.then(function(resultado) {
 			mi.mostrarcargando=false;
 			if (resultado.data.success){
 				mi.obtenerTotalProyectos();
 				$utilidades.mensaje('success',$rootScope.etiquetas.proyecto+' creado con éxito');
+			}else{
+				$utilidades.mensaje('danger','Error al crear el '+$rootScope.etiquetas.proyecto);
+			}
+			
+		});
+	};
+	
+	mi.completarConArchivo = function() {
+		var resultado = mi.llamarModalArchivo(mi.proyecto!=null && mi.proyecto != undefined ? mi.proyecto.id : 0, 
+				mi.proyecto!=null && mi.proyecto != undefined ? mi.proyecto.projectCargado: 1);
+
+		resultado.then(function(resultado) {
+			mi.mostrarcargando=false;
+			if (resultado.data.success){
+				mi.proyecto.projectCargado = true;
+				$utilidades.mensaje('success',$rootScope.etiquetas.proyecto+' completado con éxito');
 			}else{
 				$utilidades.mensaje('danger','Error al crear el '+$rootScope.etiquetas.proyecto);
 			}
@@ -1506,8 +1521,8 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 	mi.mostrarcargando=false;
 	mi.multiproyecto = false;
 	mi.bloquearBotones = false;
-	mi.completarsigade = false;
 	mi.yaCompletadosigade = $completadoSigade == 1 || $completadoSigade == undefined;
+	mi.proyectoId = $proyectoId;
 	
 	$scope.cargarArchivo = function(event){
 		var resultado = $q.defer();
@@ -1550,7 +1565,7 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 			formatData.append("file",mi.archivos);  
 			formatData.append("accion",'importar');
 			formatData.append("multiproyecto",mi.multiproyecto ? 1 : 0);
-			formatData.append("marcarCargado",mi.completarsigade  ? 1 : 0);
+			formatData.append("marcarCargado",mi.proyectoId > 0  ? 1 : 0);
 			formatData.append("proyecto_id",$proyectoId);
 			formatData.append("t",moment().unix());
 			
@@ -1562,6 +1577,7 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 				function(response) {
 					mi.mostrarcargando=false;
 					mi.bloquearBotones = false;
+					
 					$uibModalInstance.close(response);
 				}
 			);
