@@ -46,7 +46,7 @@
 				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="24040">
-				<label class="btn btn-primary" ng-click="controller.cargarArchivo()" uib-tooltip="Cargar desde project">   
+				<label class="btn btn-primary" ng-click="controller.cargarArchivo()" uib-tooltip="Importar PEP desde project">   
 				<span class="glyphicon glyphicon glyphicon-file"></span>Project</label>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="24020">
