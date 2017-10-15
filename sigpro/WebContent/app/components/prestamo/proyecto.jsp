@@ -126,7 +126,8 @@
 				ng-hide="controller.proyecto.projectCargado == 1" 
 				uib-tooltip="Completar con Project" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-copy"></span></label>
-			
+				<label class="btn btn-default" ng-click="controller.botones ? controller.calcularCostoFecha(controller.proyecto.id) : ''" uib-tooltip="Cálculo de costos y fechas" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-wrench"></span></label>
 		</div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="24020">

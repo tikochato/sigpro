@@ -68,7 +68,18 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			startingDay : 1
 	};
 
-
+	mi.calcularCostoFecha = function(proyectoId){
+		$http.post('SProyecto',{
+			accion: 'calcularCostoFecha',
+			proyectoId: proyectoId
+		}).then(function(response) {
+			if(response.data.success)
+				$utilidades.mensaje('success','Costos y fechas calculados exitosamente');
+			else
+				$utilidades.mensaje('danger','Error al calcular costos y fechas');
+		});
+	}
+	
 	mi.editarElemento = function (event) {
         var filaId = angular.element(event.toElement).scope().rowRenderIndex;
         mi.gridApi.selection.selectRow(mi.gridOpciones.data[filaId]);
