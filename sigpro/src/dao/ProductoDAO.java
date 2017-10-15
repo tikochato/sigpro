@@ -99,7 +99,7 @@ public class ProductoDAO {
 				producto.setCosto(calcularCosto(producto));
 				Date fechaMinima = calcularFechaMinima(producto);
 				Date fechaMaxima = calcularFechaMaxima(producto);
-				Integer duracion = Utils.getWorkingDays(fechaMinima, fechaMaxima);
+				Integer duracion = Utils.getWorkingDays(new DateTime(fechaMinima), new DateTime(fechaMaxima));
 				
 				producto.setFechaInicio(fechaMinima);
 				producto.setFechaFin(fechaMaxima);

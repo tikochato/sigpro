@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 13, 2017 9:03:33 AM by Hibernate Tools 5.2.3.Final
+// Generated Oct 14, 2017 6:45:19 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class Componente implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3413760242676228643L;
+	private static final long serialVersionUID = -6837596349993374422L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private ComponenteTipo componenteTipo;
@@ -55,7 +55,7 @@ public class Componente implements java.io.Serializable {
 	private Integer ubicacionGeografica;
 	private Date fechaInicio;
 	private Date fechaFin;
-	private Integer duracion;
+	private int duracion;
 	private String duracionDimension;
 	private Integer orden;
 	private String treePath;
@@ -70,13 +70,14 @@ public class Componente implements java.io.Serializable {
 	}
 
 	public Componente(ComponenteTipo componenteTipo, Proyecto proyecto, String nombre, String usuarioCreo,
-			Date fechaCreacion, int estado) {
+			Date fechaCreacion, int estado, int duracion) {
 		this.componenteTipo = componenteTipo;
 		this.proyecto = proyecto;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
+		this.duracion = duracion;
 	}
 
 	public Componente(AcumulacionCosto acumulacionCosto, ComponenteTipo componenteTipo, Proyecto proyecto,
@@ -84,7 +85,7 @@ public class Componente implements java.io.Serializable {
 			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, Long snip,
 			Integer programa, Integer subprograma, Integer proyecto_1, Integer actividad, Integer obra, String latitud,
 			String longitud, BigDecimal costo, Integer renglon, Integer ubicacionGeografica, Date fechaInicio,
-			Date fechaFin, Integer duracion, String duracionDimension, Integer orden, String treePath, Integer nivel,
+			Date fechaFin, int duracion, String duracionDimension, Integer orden, String treePath, Integer nivel,
 			Integer esDeSigade, BigDecimal costoTecho, Set<ComponenteUsuario> componenteUsuarios,
 			Set<Producto> productos, Set<ComponentePropiedadValor> componentePropiedadValors) {
 		this.acumulacionCosto = acumulacionCosto;
@@ -361,12 +362,12 @@ public class Componente implements java.io.Serializable {
 		this.fechaFin = fechaFin;
 	}
 
-	@Column(name = "duracion")
-	public Integer getDuracion() {
+	@Column(name = "duracion", nullable = false)
+	public int getDuracion() {
 		return this.duracion;
 	}
 
-	public void setDuracion(Integer duracion) {
+	public void setDuracion(int duracion) {
 		this.duracion = duracion;
 	}
 

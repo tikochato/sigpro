@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 13, 2017 9:03:33 AM by Hibernate Tools 5.2.3.Final
+// Generated Oct 14, 2017 6:45:19 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class Producto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5623254536495238633L;
+	private static final long serialVersionUID = -7895445349151355697L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Componente componente;
@@ -56,7 +56,7 @@ public class Producto implements java.io.Serializable {
 	private Integer ubicacionGeografica;
 	private Date fechaInicio;
 	private Date fechaFin;
-	private Integer duracion;
+	private int duracion;
 	private String duracionDimension;
 	private Integer orden;
 	private String treePath;
@@ -69,12 +69,13 @@ public class Producto implements java.io.Serializable {
 	}
 
 	public Producto(Componente componente, ProductoTipo productoTipo, String nombre, String usuarioCreo,
-			Date fechaCreacion) {
+			Date fechaCreacion, int duracion) {
 		this.componente = componente;
 		this.productoTipo = productoTipo;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
+		this.duracion = duracion;
 	}
 
 	public Producto(AcumulacionCosto acumulacionCosto, Componente componente, ProductoTipo productoTipo,
@@ -82,7 +83,7 @@ public class Producto implements java.io.Serializable {
 			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, Integer estado, Long snip,
 			Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra, String latitud,
 			String longitud, Integer peso, BigDecimal costo, Integer renglon, Integer ubicacionGeografica,
-			Date fechaInicio, Date fechaFin, Integer duracion, String duracionDimension, Integer orden, String treePath,
+			Date fechaInicio, Date fechaFin, int duracion, String duracionDimension, Integer orden, String treePath,
 			Integer nivel, Set<ProductoUsuario> productoUsuarios, Set<Subproducto> subproductos,
 			Set<ProductoPropiedadValor> productoPropiedadValors) {
 		this.acumulacionCosto = acumulacionCosto;
@@ -367,12 +368,12 @@ public class Producto implements java.io.Serializable {
 		this.fechaFin = fechaFin;
 	}
 
-	@Column(name = "duracion")
-	public Integer getDuracion() {
+	@Column(name = "duracion", nullable = false)
+	public int getDuracion() {
 		return this.duracion;
 	}
 
-	public void setDuracion(Integer duracion) {
+	public void setDuracion(int duracion) {
 		this.duracion = duracion;
 	}
 

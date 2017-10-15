@@ -17,6 +17,10 @@ import java.util.zip.GZIPOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.Weeks;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -263,34 +267,14 @@ public class Utils {
 		return "";
 	}
 	
-	public static int getWorkingDays(Date startDate, Date endDate) {
-	    Calendar startCal = Calendar.getInstance();
-	    startCal.setTime(startDate);        
+	public static int getWorkingDays(DateTime fecha_inicio, DateTime fecha_fin) {
 
-	    Calendar endCal = Calendar.getInstance();
-	    endCal.setTime(endDate);
+	    int dias_sin_fines_de_semana = 5 * Weeks.weeksBetween(
+	            fecha_inicio.withDayOfWeek(DateTimeConstants.MONDAY), fecha_fin.withDayOfWeek(DateTimeConstants.MONDAY)).getWeeks();
 
-	    int workDays = 0;
-
-	    //Return 0 if start and end are the same
-	    if (startCal.getTimeInMillis() == endCal.getTimeInMillis()) {
-	        return 1;
-	    }
-
-	    if (startCal.getTimeInMillis() > endCal.getTimeInMillis()) {
-	        startCal.setTime(endDate);
-	        endCal.setTime(startDate);
-	    }
-
-	    do {
-	       //excluding start date
-	        startCal.add(Calendar.DAY_OF_MONTH, 1);
-	        if (startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
-	            ++workDays;
-	        }
-	    } while (startCal.getTimeInMillis() < endCal.getTimeInMillis()); //excluding end date
-
-	    return workDays + 1;
+	    return dias_sin_fines_de_semana -
+	    		(fecha_inicio.getDayOfWeek()>5 ? 5 : fecha_inicio.getDayOfWeek()) + 
+	    		(fecha_fin.getDayOfWeek()>5 ? 5 :  fecha_fin.getDayOfWeek()) + 1;
 	}
 	
 	public static Date setDateCeroHoras(Date fecha){

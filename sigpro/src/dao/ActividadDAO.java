@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.joda.time.DateTime;
 
 import pojo.Actividad;
 import pojo.ActividadUsuario;
@@ -148,7 +149,7 @@ public class ActividadDAO {
 				Actividad.setCosto(calcularActividadCosto(Actividad));
 				Date fechaMinima = calcularFechaMinima(Actividad);
 				Date fechaMaxima = calcularFechaMaxima(Actividad);
-				Integer duracion = Utils.getWorkingDays(fechaMinima, fechaMaxima);
+				Integer duracion = Utils.getWorkingDays(new DateTime(fechaMinima), new DateTime(fechaMaxima));
 				Actividad.setFechaInicio(fechaMinima);
 				Actividad.setFechaFin(fechaMaxima);
 				Actividad.setDuracion(duracion);

@@ -334,7 +334,7 @@ public class EstructuraProyectoDAO {
 				Timestamp fecha_inicio = (dato[4]!=null) ? new Timestamp(((Date)dato[4]).getTime()) : null;
 				Timestamp fecha_fin = (dato[5]!=null) ? new Timestamp(((Date)dato[5]).getTime()) : null;
 				Double costo = (dato[8]!=null) ? ((BigDecimal)dato[8]).doubleValue() : 0;
-				root = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, false, fecha_inicio, fecha_fin, costo);
+				root = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, false, fecha_inicio, fecha_fin, costo,0);
 				Nodo nivel_actual_estructura = root;
 				ret.add(new ArrayList<Nodo>());
 				ret.get(0).add(root);
@@ -348,7 +348,7 @@ public class EstructuraProyectoDAO {
 					fecha_fin = (dato[5]!=null) ? new Timestamp(((Date)dato[5]).getTime()) : null;
 					costo = (dato[8]!=null) ? ((BigDecimal)dato[8]).doubleValue() : 0;
 					nivel_maximo = nivel_maximo <  nivel ? nivel : nivel_maximo;
-					Nodo nodo = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, false, fecha_inicio, fecha_fin, costo);
+					Nodo nodo = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, false, fecha_inicio, fecha_fin, costo,0);
 					if(nodo.nivel!=nivel_actual_estructura.nivel+1){
 						if(nodo.nivel>nivel_actual_estructura.nivel){
 							nivel_actual_estructura = nivel_actual_estructura.children.get(nivel_actual_estructura.children.size()-1);

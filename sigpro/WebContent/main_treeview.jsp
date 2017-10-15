@@ -6,7 +6,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
 <%@ include file="/app/shared/includes.jsp"%>
-<script src="/app/components/main_treeview/main_treeview.controller.jsp"></script>
+
+<%@ include file="/app/components/main_treeview/main_treeview.controller.jsp"%>
 <title></title>
 </head>
 <body ng-app="sipro" ng-controller="MainController as mainController">
@@ -45,7 +46,7 @@
 			<div style="margin-top: 10px; height: 30px; width: 10px;"></div>
 		</div>
 		<div class="row cols_treeview">
-			<div class="cols_treeview horizontal-collapse div_tree" uib-collapse="mainController.hideTree" horizontal>
+			<div class="cols_treeview div_tree" resizable r-directions="['right']" r-flex="false" style="height: 100% !important;">
 					<div style="border: thin solid #c3c3c3; border-radius: 4px; overflow: auto; height: 100%;">
 						<div treecontrol="" class="tree-light" tree-model="mainController.treedata" options="mainController.tree_options"  selected-node="mainController.nodo_seleccionado"
 								expanded-nodes="mainController.nodos_expandidos" on-selection="mainController.showSelected(node)" style="width: 1000px; margin: 10px 0px 0px -5px;">
@@ -59,12 +60,7 @@
 						</div>
 	 				</div>
  			</div>
- 			<div class="cols_treeview" style="float: left; margin-top: 10px; display: table;">
- 				<div style="display: table-cell; vertical-align: middle; width:100%;" ng-click="mainController.hideTree=!mainController.hideTree">
- 					<span ng-class="!mainController.hideTree ? 'glyphicon glyphicon-chevron-left' : 'glyphicon glyphicon-chevron-right'"></span>
- 				</div>
- 			</div>
-			<div class="cols_treeview" style="margin: 10px 15px 0px 15px;">
+ 			<div class="cols_treeview" style="margin: 10px 15px 0px 15px; height: 100% !important;">
 				<div style="border: thin solid #c3c3c3; border-radius: 4px; height: 100%; overflow-y: scroll;">
 					<div ng-view class="objeto"></div>
 				</div>
