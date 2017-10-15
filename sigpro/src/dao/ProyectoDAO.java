@@ -491,18 +491,16 @@ public class ProyectoDAO implements java.io.Serializable  {
 				Double costo=0.0d;
 				Timestamp fecha_maxima=new Timestamp(0);
 				Timestamp fecha_minima=new Timestamp((new DateTime(2999,12,31,23,59,59)).getMillis());
-				Integer duracion=0;
 				for(Nodo nodo_hijo:nodo.children){
 					costo += nodo_hijo.costo;
 					fecha_minima = (nodo_hijo.fecha_inicio.getTime()<fecha_minima.getTime()) ? nodo_hijo.fecha_inicio : fecha_minima;
 					fecha_maxima = (nodo_hijo.fecha_fin.getTime()>fecha_maxima.getTime()) ? nodo_hijo.fecha_fin : fecha_maxima;
-					duracion = Utils.getWorkingDays(new DateTime(fecha_minima), new DateTime(fecha_maxima));
 				}
 				if(nodo.children!=null && nodo.children.size()>0){
 					nodo.fecha_inicio = fecha_minima;
 					nodo.fecha_fin = fecha_maxima;
 					nodo.costo = costo;
-					nodo.duracion = duracion;
+					nodo.duracion = Utils.getWorkingDays(new DateTime(nodo.fecha_inicio), new DateTime(nodo.fecha_fin));
 				}
 				nodo.objeto = ObjetoDAO.getObjetoPorIdyTipo(nodo.id, nodo.objeto_tipo);
 				setDatosCalculados(nodo.objeto,nodo.fecha_inicio,nodo.fecha_fin,nodo.costo, nodo.duracion);
@@ -519,7 +517,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 				Method setFechaInicio =objeto.getClass().getMethod("setFechaInicio",Date.class);
 				Method setFechaFin =  objeto.getClass().getMethod("setFechaFin",Date.class);
 				Method setCosto = objeto.getClass().getMethod("setCosto",BigDecimal.class);
-				Method setDuracion = objeto.getClass().getMethod("setDuracion",Integer.class);
+				Method setDuracion = objeto.getClass().getMethod("setDuracion", int.class);
 				setFechaInicio.invoke(objeto, new Date(fecha_inicio.getTime()));
 				setFechaFin.invoke(objeto, new Date(fecha_fin.getTime()));
 				setCosto.invoke(objeto, new BigDecimal(costo));

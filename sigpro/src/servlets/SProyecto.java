@@ -519,7 +519,7 @@ public class SProyecto extends HttpServlet {
 					proyecto = new Proyecto(acumulacionCosto,directorProyecto, cooperante, etiqueta, proyectoTipo, unidadEjecutora, nombre, 
 							descripcion, usuario, null, new DateTime().toDate(), null, 1, snip, programa, subPrograma, proyecto_, actividad, 
 							obra,latitud,longitud, objetivo,enunciadoAlcance, costo, objetivoEspecifico,visionGeneral,renglon, 
-							ubicacionGeografica,null, null, null, null, null, null, null, ejecucionFisicaReal,projectCargado,null, null, 
+							ubicacionGeografica,null, null, 0, null, null, null, null, ejecucionFisicaReal,projectCargado,null, null, 
 							null, null,null,null,null,null,null);
 
 

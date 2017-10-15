@@ -261,11 +261,12 @@ public class CProject {
 		}
 		
 		int duracion = (( Double ) task.getDuration().getDuration()).intValue();
+		duracion = duracion>0 ? duracion : 1; 
 		
 		Actividad actividad = new Actividad(actividadTipo,null, task.getName(), null, Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish())
 				, task.getPercentageComplete().intValue(), usuario, null, new Date(), 
 				null, 1, null, null, null,null, null, null, objetoId, objetoTipo, 
-				duracion>0 ? duracion : 1
+				duracion
 				, task.getDuration().getUnits().getName()
 				,itemPredecesor!=null ? itemPredecesor.objetoId : null
 				, itemPredecesor != null ? itemPredecesor.objetoTipo : null
