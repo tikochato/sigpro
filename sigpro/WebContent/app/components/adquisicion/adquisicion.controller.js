@@ -190,7 +190,7 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 						if(mi.adquisicion.pagos!=null && mi.adquisicion.pagos!==undefined && mi.adquisicion.pagos.length>0){
 							var pagos = 0;
 							for(var i=0; i<mi.adquisicion.pagos.length; i++)
-								pagos = mi.adquiscion.pagos[i].pago;
+								pagos = mi.adquisicion.pagos[i].pago;
 							mi.actualizarCosto(pagos);
 						}
 						else
