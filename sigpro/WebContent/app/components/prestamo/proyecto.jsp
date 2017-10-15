@@ -122,6 +122,10 @@
 				<span class="glyphicon glyphicon-calendar"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAMatrizRiesgos(controller.proyecto.id) : ''" uib-tooltip="Matriz de Riesgos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-list-alt"></span></label>
+				<label class="btn btn-default" ng-click="controller.botones  ? controller.completarConArchivo(controller.proyecto.id) : ''"
+				ng-hide="controller.proyecto.projectCargado == 1" 
+				uib-tooltip="Completar con Project" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-copy"></span></label>
 			
 		</div>
 			<div class="btn-group" style="float: right;">

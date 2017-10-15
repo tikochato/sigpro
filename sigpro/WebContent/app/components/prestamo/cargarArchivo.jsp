@@ -1,19 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <div class="modal-header">
-<h3 class="modal-title">Cargar desde Project</h3>
+<h3 class="modal-title">{{ cargararchivoc.proyectoId > 0 ? 'Completar' : 'Cargar' }} desde Project</h3>
 </div>
 <div class="modal-body" id="modal-body">
 <form name="form">
-	<div class="grid_loading" ng-hide="!cargararchivoc.mostrarcargando" style="position:relative; z-index:4; top: 30px; width: 130px">
-				  	<div class="msg">
-				      <span><i class="fa fa-spinner fa-spin fa-4x"></i>
-						  <br /><br />
-						  <b>Cargando, por favor espere...</b>
-					  </span>
-					</div>
-				</div>
+
+	
   <div class="row">
     <div class="col-sm-12">
+	    <div class="grid_loading" ng-hide="!cargararchivoc.mostrarcargando" style="position:relative; z-index:4; top: 30px; ">
+					  	<div class="msg">
+					      <span><i class="fa fa-spinner fa-spin fa-4x"></i>
+							  <br /><br />
+							  <b>Cargando, por favor espere...</b>
+						  </span>
+						</div>
+		</div>
 		<div class="form-group" >
 				<label for="campo3">* Nombre del Archivo</label>
 				
@@ -33,12 +35,8 @@
 	            </div>
 				
 	          	<br/>
-	          	<div class="form-group" ng-hide= "cargararchivoc.yaCompletadosigade" >
-						<input type="checkbox"  ng-model="cargararchivoc.completarsigade" 
-						ng-change = "cargararchivoc.seleccionCompletarSigade()"/>
-						<label  class="floating-label">Compoletar estructura</label>
-				</div>
-	          	<div class="form-group">
+	          	
+	          	<div class="form-group" ng-hide="cargararchivoc.proyectoId > 0">
 						<input type="checkbox"  ng-model="cargararchivoc.multiproyecto" 
 						ng-change = "cargararchivoc.seleccionMultiProyecto()"/>
 						<label  class="floating-label">Multiproyecto</label>
