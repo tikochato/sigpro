@@ -125,9 +125,11 @@ public class PlanAdquisicionDAO {
 			Session session = CHibernateSession.getSessionFactory().openSession();
 			try{
 				session.beginTransaction();
-				for(int i=0; i<planes.size();i++){
-					planes.get(i).setEstado(0);
-					session.saveOrUpdate(planes.get(i));
+				if(planes!=null){
+					for(int i=0; i<planes.size();i++){
+						planes.get(i).setEstado(0);
+						session.saveOrUpdate(planes.get(i));
+					}
 				}
 				session.getTransaction().commit();
 				ret = true;
