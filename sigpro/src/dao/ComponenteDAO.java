@@ -97,7 +97,7 @@ public class ComponenteDAO {
 				Componente.setCosto(calcularCosto(Componente));
 				Date fechaMinima = calcularFechaMinima(Componente);
 				Date fechaMaxima = calcularFechaMaxima(Componente);
-				Integer duracion = Utils.getWorkingDays(fechaMinima, fechaMaxima);
+				Integer duracion = Utils.getWorkingDays(new DateTime(fechaMinima), new DateTime(fechaMaxima));
 				
 				Componente.setFechaInicio(fechaMinima);
 				Componente.setFechaFin(fechaMaxima);

@@ -13,7 +13,6 @@ import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.joda.time.DateTime;
 
@@ -71,7 +70,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 				Date fechaMinima = calcularFechaMinima(proyecto);
 				Date fechaMaxima = calcularFechaMaxima(proyecto);
 				if(fechaMinima!=null && fechaMaxima!=null){
-					Integer duracion = Utils.getWorkingDays(fechaMinima, fechaMaxima);
+					Integer duracion = Utils.getWorkingDays(new DateTime(fechaMinima), new DateTime(fechaMaxima));
 					proyecto.setDuracion(duracion);
 				}
 				proyecto.setFechaInicio(fechaMinima);
@@ -492,18 +491,21 @@ public class ProyectoDAO implements java.io.Serializable  {
 				Double costo=0.0d;
 				Timestamp fecha_maxima=new Timestamp(0);
 				Timestamp fecha_minima=new Timestamp((new DateTime(2999,12,31,23,59,59)).getMillis());
+				Integer duracion=0;
 				for(Nodo nodo_hijo:nodo.children){
 					costo += nodo_hijo.costo;
 					fecha_minima = (nodo_hijo.fecha_inicio.getTime()<fecha_minima.getTime()) ? nodo_hijo.fecha_inicio : fecha_minima;
 					fecha_maxima = (nodo_hijo.fecha_fin.getTime()>fecha_maxima.getTime()) ? nodo_hijo.fecha_fin : fecha_maxima;
+					duracion = Utils.getWorkingDays(new DateTime(fecha_minima), new DateTime(fecha_maxima));
 				}
 				if(nodo.children!=null && nodo.children.size()>0){
 					nodo.fecha_inicio = fecha_minima;
 					nodo.fecha_fin = fecha_maxima;
 					nodo.costo = costo;
+					nodo.duracion = duracion;
 				}
 				nodo.objeto = ObjetoDAO.getObjetoPorIdyTipo(nodo.id, nodo.objeto_tipo);
-				setDatosCalculados(nodo.objeto,nodo.fecha_inicio,nodo.fecha_fin,nodo.costo);
+				setDatosCalculados(nodo.objeto,nodo.fecha_inicio,nodo.fecha_fin,nodo.costo, nodo.duracion);
 			}
 			ret = true;
 		}
@@ -511,15 +513,17 @@ public class ProyectoDAO implements java.io.Serializable  {
 		return ret;
 	}
 	
-	private static void setDatosCalculados(Object objeto,Timestamp fecha_inicio, Timestamp fecha_fin, Double costo){
+	private static void setDatosCalculados(Object objeto,Timestamp fecha_inicio, Timestamp fecha_fin, Double costo, Integer duracion){
 		try{
 			if(objeto!=null){
-				Method setFechaInicio =objeto.getClass().getMethod("setFechaInicio");
-				Method setFechaFin =  objeto.getClass().getMethod("setFechaFin");
-				Method setCosto = objeto.getClass().getMethod("setCosto");
+				Method setFechaInicio =objeto.getClass().getMethod("setFechaInicio",Date.class);
+				Method setFechaFin =  objeto.getClass().getMethod("setFechaFin",Date.class);
+				Method setCosto = objeto.getClass().getMethod("setCosto",BigDecimal.class);
+				Method setDuracion = objeto.getClass().getMethod("setDuracion",Integer.class);
 				setFechaInicio.invoke(objeto, new Date(fecha_inicio.getTime()));
 				setFechaFin.invoke(objeto, new Date(fecha_fin.getTime()));
 				setCosto.invoke(objeto, new BigDecimal(costo));
+				setDuracion.invoke(objeto, duracion);
 			}
 		}
 		catch(Throwable e){
@@ -532,18 +536,19 @@ public class ProyectoDAO implements java.io.Serializable  {
 		boolean ret = true;
 		try{
 			Session session = CHibernateSession.getSessionFactory().openSession();
-			Transaction tx = session.beginTransaction();
+			session.beginTransaction();
 			int count=0;
-			for(int i=0; i<listas.size()-2; i++){
+			for(int i=listas.size()-2; i>=0; i--){
 				for(int j=0; j<listas.get(i).size();j++){
 					session.saveOrUpdate(listas.get(i).get(j).objeto);
-					if ( ++count % 500 == 0 ) {
+					if ( ++count % 20 == 0 ) {
 				        session.flush();
 				        session.clear();
 				    }
 				}
 			}
-			tx.commit();
+			session.flush();
+			session.getTransaction().commit();
 			session.close();
 		}
 		catch(Throwable e){

@@ -11,6 +11,7 @@ import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.joda.time.DateTime;
 
 import pojo.Actividad;
 import pojo.PlanAdquisicion;
@@ -133,7 +134,7 @@ public class SubproductoDAO {
 				subproducto.setCosto(calcularCosto(subproducto));
 				Date fechaMinima = calcularFechaMinima(subproducto);
 				Date fechaMaxima = calcularFechaMaxima(subproducto);
-				Integer duracion = Utils.getWorkingDays(fechaMinima, fechaMaxima);
+				Integer duracion = Utils.getWorkingDays(new DateTime(fechaMinima), new DateTime(fechaMaxima));
 				
 				subproducto.setDuracion(duracion.intValue());
 				subproducto.setFechaInicio(fechaMinima);
