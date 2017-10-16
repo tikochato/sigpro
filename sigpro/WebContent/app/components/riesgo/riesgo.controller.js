@@ -93,10 +93,10 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			}
 		};
 
-		mi.borrar = function(index) {
+		mi.borrar = function(row) {
 				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 						, "Confirmación de Borrado"
-						, '¿Desea borrar el Riesgo "'+mi.riesgo.nombre+'"?'
+						, '¿Desea borrar el Riesgo "'+row.nombre+'"?'
 						, "Borrar"
 						, "Cancelar")
 				.result.then(function(data) {
