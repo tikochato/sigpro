@@ -584,7 +584,7 @@ app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http',
 		        case 4:
 		            return 'glyphicon glyphicon-link';
 		        case 5:
-		            return 'glyphicon glyphicon-th-list';
+		            return 'glyphicon glyphicon-time';
 		    }
 		};
 		

@@ -76,7 +76,7 @@ app.controller('ganttController',['$scope','$rootScope','$http','$interval','i18
 		        case '4':
 		            return 'glyphicon glyphicon-link';
 		        case '5':
-		            return 'glyphicon glyphicon-th-list';
+		            return 'glyphicon glyphicon-time';
 		    }
 		};
 		
@@ -754,7 +754,7 @@ app.controller('ganttController',['$scope','$rootScope','$http','$interval','i18
         }, function() {
             return mi.objetoTipo==3; 
         }],
-        ['<div class="glyphicon glyphicon-th-list"></div><span>&nbsp;Nueva actividad</span>', function () {
+        ['<div class="glyphicon glyphicon-time"></div><span>&nbsp;Nueva actividad</span>', function () {
         	if (mi.objetoId != null && mi.objetoTipo != null){
         		
         		mi.nuevaActividad (mi.objetoId,mi.objetoTipo);

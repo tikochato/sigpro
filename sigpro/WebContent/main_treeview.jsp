@@ -40,7 +40,7 @@
 							<label ng-switch-when="3" class="btn btn-default" ng-click="mainController.nuevoObjeto(3)" uib-tooltip="Nuevo Subproducto" role="button">
 							<span class="glyphicon glyphicon-link"></span></label>
 				       		<label ng-if="mainController.nodo_seleccionado" class="btn btn-default" ng-click="mainController.nuevoObjeto(4)" uib-tooltip="Nueva Actividad" role="button">
-							<span class="glyphicon glyphicon-th-list"></span></label>
+							<span class="glyphicon glyphicon-time"></span></label>
 				</div>
 			</div>
 			<div style="margin-top: 10px; height: 30px; width: 10px;"></div>
@@ -55,7 +55,7 @@
 							             <span ng-switch-when="2" class="glyphicon glyphicon-th" aria-hidden="true" style="color: #4169E1;"></span>
 							             <span ng-switch-when="3" class="glyphicon glyphicon-certificate" aria-hidden="true" style="color: #4169E1;"></span>
 							             <span ng-switch-when="4" class="glyphicon glyphicon-link" aria-hidden="true" style="color: #4169E1;"></span>
-							             <span ng-switch-when="5" class="glyphicon glyphicon-th-list" aria-hidden="true" style="color: #4169E1;"></span>
+							             <span ng-switch-when="5" class="glyphicon glyphicon-time" aria-hidden="true" style="color: #4169E1;"></span>
 							        </span>{{node.nombre}}
 						</div>
 	 				</div>

@@ -87,7 +87,7 @@ app.controller('agendaController',['$scope','$rootScope','$http','$interval','i1
 			        case 4:
 			            return 'glyphicon glyphicon-link';
 			        case 5:
-			            return 'glyphicon glyphicon-th-list';
+			            return 'glyphicon glyphicon-time';
 			    }
 			   
 			};

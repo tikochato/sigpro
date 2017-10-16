@@ -101,7 +101,7 @@
 				<label class="btn btn-default" ng-click="componentec.botones ? componentec.irAProductos(componentec.componente.id) : ''" uib-tooltip="Productos" tooltip-placement="bottom" ng-disabled="!componentec.botones">
 				<span class="glyphicon glyphicon-certificate"></span></label>
 				<label class="btn btn-default" ng-click="componentec.botones ? componentec.irAActividades(componentec.componente.id) : ''" uib-tooltip="Actividades" tooltip-placement="bottom" ng-disabled="!componentec.botones">
-				<span class="glyphicon glyphicon-th-list"></span></label>
+				<span class="glyphicon glyphicon-time"></span></label>
 			
 		      </div>
 			  <div class="btn-group" style="float: right;">

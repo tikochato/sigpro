@@ -111,7 +111,7 @@
 				<label class="btn btn-default" ng-if="!controller.esTreeview" ng-click="controller.botones ? controller.irAHitos(controller.proyecto.id) : ''" uib-tooltip="Hitos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-screenshot"></span></label>
 				<label class="btn btn-default" ng-if="!controller.esTreeview" ng-click="controller.botones ? controller.irAActividades(controller.proyecto.id) : ''" uib-tooltip="Actividades" tooltip-placement="bottom">
-				<span class="glyphicon glyphicon-th-list"></span></label>
+				<span class="glyphicon glyphicon-time"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAMapa(controller.proyecto.id) : ''" uib-tooltip="Mapa" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-globe"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAGantt(controller.proyecto.id) : ''" uib-tooltip="Gantt" tooltip-placement="bottom">
