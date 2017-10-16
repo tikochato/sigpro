@@ -102,7 +102,7 @@
 				<label class="btn btn-default" ng-click="producto.botones ? producto.irASubproductos() : ''" uib-tooltip="Subproductos" tooltip-placement="bottom" ng-disabled="!producto.botones">
 				<span class="glyphicon glyphicon-link"></span></label>
 				<label class="btn btn-default" ng-click="producto.botones ? producto.irAActividades() : ''" uib-tooltip="Actividades" tooltip-placement="bottom" ng-disabled="!producto.botones">
-				<span class="glyphicon glyphicon-th-list"></span></label>
+				<span class="glyphicon glyphicon-time"></span></label>
 			</div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="21020">
@@ -357,6 +357,9 @@
 				<%@include file="/app/components/adquisicion/adquisicion.jsp" %>
 			</div>
 	    </uib-tab>
+	    <uib-tab index="3" heading="Riesgos" ng-click="producto.riesgosActivo()" >
+			<div ng-if="producto.riesgos"><%@include file="/app/components/riesgo/riesgo.jsp" %></div>
+		</uib-tab>
 	  </uib-tabset>
 	  </form>
 	</div>	

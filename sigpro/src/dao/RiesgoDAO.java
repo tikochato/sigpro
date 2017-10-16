@@ -258,4 +258,29 @@ public class RiesgoDAO {
 		}
 		return ret;
 	}
+	
+	public static void eliminarTodosRiesgos(Integer objetoId, Integer objetoTipo){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "SELECT r FROM Riesgo as r inner join r.objetoRiesgos o "
+					+ "WHERE r.estado = 1 "
+					+ "and o.id.objetoId = :objid "
+					+ "and o.id.objetoTipo = :objetoTipo ";
+			
+			Query<Riesgo> criteria = session.createQuery(query,Riesgo.class);
+			criteria.setParameter("objid", objetoId);
+			criteria.setParameter("objetoTipo", objetoTipo);
+			List<Riesgo> ret = criteria.getResultList();
+			session.close();
+			for(Riesgo riesgo:ret)
+				eliminarRiesgo(riesgo);
+		}
+		catch(Throwable e){
+			CLogger.write("11", RiesgoDAO.class, e);
+		}
+		finally{
+			if(session.isOpen())
+				session.close();
+		}
+	}
 }

@@ -45,7 +45,7 @@ app.controller('flujocajaController',['$scope','$rootScope','$http','$interval',
 			2: "glyphicon glyphicon-th",
 			3: "glyphicon glyphicon-certificate",
 			4: "glyphicon glyphicon-link",
-			5: "glyphicon glyphicon-th-list",
+			5: "glyphicon glyphicon-time",
 	};
 
 	mi.tooltipObjetoTipo = {

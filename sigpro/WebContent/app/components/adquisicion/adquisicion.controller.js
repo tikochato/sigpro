@@ -155,7 +155,7 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 			$window.location.href = '/main.jsp#!/forbidden';		
 		}
 		
-		mi.guardar=function(mensaje_success, mensaje_error){
+		mi.guardar=function(call_chain, mensaje_success, mensaje_error){
 			
 			if(mi.adquisicion!=null && mi.adquisicion.medidaNombre!=null && mi.adquisicion.medidaNombre!=''){
 				$http.post('/SPlanAdquisicion', {
@@ -195,7 +195,10 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 						}
 						else
 							mi.actualizarCosto(mi.adquisicion.total);
-						$utilidades.mensaje('success',mensaje_success);
+						if(call_chain!=null)
+							call_chain(mensaje_success, mensaje_error);
+						else
+							$utilidades.mensaje('success',mensaje_success);
 					}
 					else
 						$utilidades.mensaje('danger',mensaje_error);
@@ -209,8 +212,11 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 					t: (new Date()).getTime()
 				}).success(function(response){
 					if(response.success){
-						mi.adquisicion.id = response.id;
-						$utilidades.mensaje('success',mensaje_success);
+						if(call_chain!=null){
+							call_chain(mensaje_success, mensaje_error);
+						}
+						else
+							$utilidades.mensaje('success',mensaje_success);
 					}
 					else
 						$utilidades.mensaje('danger',mensaje_error);

@@ -834,17 +834,9 @@ public class SProyecto extends HttpServlet {
 	        response_text = String.join("", "\"proyectos\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
-		else if(accion.equals("calcularCostosFechas")){
-			Integer proyectoId = Integer.parseInt(map.get("proyectoId"));
-			if(ProyectoDAO.calcularCostoyFechas(proyectoId, usuario))
-				 response_text = String.join("", "{\"success\":true,", response_text,"}");
-		    else
-		    	 response_text = String.join("", "{\"success\":false,", response_text,"}");
-		
-		}
 		else if(accion.equals("calcularCostoFecha")){
 			Integer proyectoId = Utils.String2Int(map.get("proyectoId"));
-			response_text = String.join("", "{\"success\":", ProyectoDAO.calcularCostoyFechas(proyectoId, usuario) ? "true" : "false","}");
+			response_text = String.join("", "{\"success\":", ProyectoDAO.calcularCostoyFechas(proyectoId) ? "true" : "false","}");
 		}
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");

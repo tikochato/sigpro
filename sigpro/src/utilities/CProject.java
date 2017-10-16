@@ -11,6 +11,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 
 import dao.ActividadDAO;
+import dao.AcumulacionCostoDAO;
 import dao.ComponenteDAO;
 import dao.ComponenteTipoDAO;
 import dao.CooperanteDAO;
@@ -29,6 +30,7 @@ import net.sf.mpxj.reader.ProjectReader;
 import net.sf.mpxj.writer.ProjectWriter;
 import pojo.Actividad;
 import pojo.ActividadTipo;
+import pojo.AcumulacionCosto;
 import pojo.Componente;
 import pojo.ComponenteTipo;
 import pojo.Cooperante;
@@ -169,9 +171,10 @@ public class CProject {
 		ProyectoTipo proyectoTipo = ProyectoTipoDAO.getProyectoTipoPorId(PROYECTO_TIPO_ID_DEFECTO);
 		Etiqueta etiqueta = new Etiqueta();
 		etiqueta.setId(PROYECTO_ETIQUETA_DEFECTO);
+		AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
 		
 		UnidadEjecutora unidadEjecturoa = UnidadEjecutoraDAO.getUnidadEjecutora(new DateTime().getYear(),ENTIDAD_ID_DEFECTO,UNIDAD_EJECUTORA_ID_DEFECTO);
-		Proyecto proyecto = new Proyecto(null,null,cooperante, etiqueta,proyectoTipo, unidadEjecturoa
+		Proyecto proyecto = new Proyecto(acumulacionCosto,null,cooperante, etiqueta,proyectoTipo, unidadEjecturoa
 				, task.getName(), null, usuario, null, new Date(), null, 1, null, null, null, null, 
 				null, null, null,null, null, null, new BigDecimal(task.getCost().toString()),null, null, null,null,
 				Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish()),
@@ -188,10 +191,10 @@ public class CProject {
 		
 		int year = new DateTime().getYear();
 		UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(year, ENTIDAD_ID_DEFECTO, UNIDAD_EJECUTORA_ID_DEFECTO);
+		AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
 		
 		
-		
-		Componente componente = new Componente(null,componenteTipo, proyecto, unidadEjecutora, task.getName()
+		Componente componente = new Componente(acumulacionCosto,componenteTipo, proyecto, unidadEjecutora, task.getName()
 				, null,usuario, null, new Date(), null, 1, null, null, null, null, null, null, null, null, 
 				new BigDecimal(task.getCost().toString()),null,null,Utils.setDateCeroHoras(task.getStart()),
 				Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
@@ -205,8 +208,9 @@ public class CProject {
 		ProductoTipo productoTipo = new ProductoTipo();
 		productoTipo.setId(PRODUCTO_TIPO_ID_DEFECTO);
 		UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(new DateTime().getYear(), ENTIDAD_ID_DEFECTO, UNIDAD_EJECUTORA_ID_DEFECTO);
+		AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
 		
-		Producto producto = new Producto(null,componente, productoTipo, unidadEjecutora
+		Producto producto = new Producto(acumulacionCosto,componente, productoTipo, unidadEjecutora
 				,task.getName() , null, usuario, null, new Date(), null,1, 
 				 null, null, null, null, null, null, null, 
 				null, null, new BigDecimal(task.getCost().toString()),null,null,
@@ -223,8 +227,9 @@ public class CProject {
 		subproductoTipo.setId(SUBPRODUCTO_TIPO__ID_DEFECTO);
 		
 		UnidadEjecutora unidadEjecutroa = UnidadEjecutoraDAO.getUnidadEjecutora(new DateTime().getYear(), ENTIDAD_ID_DEFECTO, UNIDAD_EJECUTORA_ID_DEFECTO);
+		AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
 		
-		Subproducto subproducto = new Subproducto(null,producto, subproductoTipo, unidadEjecutroa,task.getName(), 
+		Subproducto subproducto = new Subproducto(acumulacionCosto,producto, subproductoTipo, unidadEjecutroa,task.getName(), 
 				null, usuario, null, new Date(), null, 1,null, null, null, null, null, null, null, null,
 				new BigDecimal(task.getCost().toString()),null,null,
 				Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
@@ -247,10 +252,12 @@ public class CProject {
 			 itemPredecesor =  items.get(predecesores[0]);	
 		}
 		
+		AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
+		
 		int duracion = (( Double ) task.getDuration().getDuration()).intValue();
 		duracion = duracion>0 ? duracion : 1; 
 		
-		Actividad actividad = new Actividad(actividadTipo,null, task.getName(), null, Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish())
+		Actividad actividad = new Actividad(actividadTipo,acumulacionCosto, task.getName(), null, Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish())
 				, task.getPercentageComplete().intValue(), usuario, null, new Date(), 
 				null, 1, null, null, null,null, null, null, objetoId, objetoTipo, 
 				duracion
@@ -306,7 +313,7 @@ public class CProject {
 		
 		Integer ret = listaJerarquica(projectFile.getChildTasks().get(0),usuario,null,1,multiproyecto ? 0 : 1,
 				proyecto,  componentes,marcarCargado,0);
-		ProyectoDAO.calcularCostoyFechas(ret, usuario);
+		ProyectoDAO.calcularCostoyFechas(ret);
 		return ret > 0;
 		
 	}

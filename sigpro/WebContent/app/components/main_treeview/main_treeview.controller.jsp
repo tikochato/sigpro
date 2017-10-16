@@ -234,11 +234,29 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 					if(mi.treedata.id==0){
 						mi.nodos_expandidos.push(mi.treedata.children[0]);
 						mi.setParentNode(mi.treedata);
+						mi.nodo_seleccionado = mi.treedata.children[0];
 						$location.path('/prestamo/'+mi.proyecto.id); 
 					}
 				});
 		}
 	};
+	
+	mi.recargarArbol=function(){
+		mi.treedata=[];
+		mi.nodos_expandidos=[];
+		mi.nodo_seleccionado=null;
+		$http.post('/SProyecto',
+				{ accion: 'controlArbol', id: mi.proyecto.id }).success(
+			function(response) {
+				mi.treedata=response.proyecto;
+				if(mi.treedata.id==0){
+					mi.nodos_expandidos.push(mi.treedata.children[0]);
+					mi.setParentNode(mi.treedata);
+					mi.nodo_seleccionado = mi.treedata.children[0];
+					$location.path('/prestamo/'+mi.proyecto.id); 
+				}
+			});
+	}
 	
 	mi.nuevoObjeto=function(tipo){
 		switch(tipo){
@@ -263,6 +281,10 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	
 	$rootScope.$on("crearNodo", function($evt, datos){
 		mi.crearNodo(datos.id, datos.nombre, datos.objeto_tipo, datos.estado);
+	});
+	
+	$rootScope.$on("recargarArbol", function($evt,datos){
+		mi.recargarArbol();
 	});
 	
 	mi.eliminaNodo=function(){

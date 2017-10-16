@@ -101,7 +101,7 @@
 				<label class="btn btn-default" ng-click="componentec.botones ? componentec.irAProductos(componentec.componente.id) : ''" uib-tooltip="Productos" tooltip-placement="bottom" ng-disabled="!componentec.botones">
 				<span class="glyphicon glyphicon-certificate"></span></label>
 				<label class="btn btn-default" ng-click="componentec.botones ? componentec.irAActividades(componentec.componente.id) : ''" uib-tooltip="Actividades" tooltip-placement="bottom" ng-disabled="!componentec.botones">
-				<span class="glyphicon glyphicon-th-list"></span></label>
+				<span class="glyphicon glyphicon-time"></span></label>
 			
 		      </div>
 			  <div class="btn-group" style="float: right;">
@@ -111,13 +111,17 @@
 			    </shiro:hasPermission>
 			    <label ng-if="!componentec.esTreeview" class="btn btn-primary" ng-click="componentec.botones ? componentec.irATabla() : ''" title="Ir a Tabla" ng-disabled="!componentec.botones">
 			    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
-			    <label ng-if="componentec.esTreeview" class="btn btn-danger" ng-click=" componentec.botones && componentec.componente.id>0 ? componentec.t_borrar() : ''" ng-disabled="!(componentec.componente.id>0) || !componentec.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
+			    <label ng-if="componentec.esTreeview && !componentec.componente.esDeSigade" class="btn btn-danger" ng-click=" componentec.botones && componentec.componente.id>0 ? componentec.t_borrar() : ''" ng-disabled="!(componentec.componente.id>0) || !componentec.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			  </div>
 			</div>
-
+			<div class="col-sm-12" ng-if="componentec.componente.esDeSigade">
+				<div class="componente_sigade">Componente SIGADE</div>
+			</div>
 			<div class="col-sm-12">
 				<form name="componentec.mForm">
+					<uib-tabset active="componentec.active">
+					<uib-tab index="0" heading="{{etiquetas.proyecto}}" >
 						<div class="form-group">
 						  <label for="id" class="floating-label id_class">ID {{ componentec.componente.id }}</label>
 						  <br/><br/>
@@ -350,6 +354,10 @@
 								</div>
 							</div>
 						</div>
+					</uib-tab>
+					<uib-tab index="2" heading="Riesgos" ng-click="componentec.riesgos=true" >
+					<div ng-if="componentec.riesgos !== undefined"><%@include file="/app/components/riesgo/riesgo.jsp" %></div>
+				</uib-tab>
 				</form>
 			</div>
 			
@@ -364,7 +372,7 @@
 						    </shiro:hasPermission>
 						    <label ng-if="!componentec.esTreeview" class="btn btn-primary" ng-click="componentec.botones ? componentec.irATabla() :''" title="Ir a Tabla" ng-disabled="!componentec.botones" uib-tooltip="Ir a Tabla" tooltip-placement="top">
 						    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
-						    <label ng-if="componentec.esTreeview" class="btn btn-danger" ng-click=" componentec.botones && componentec.componente.id>0  ? componentec.t_borrar() : ''" ng-disabled="!(componentec.componente.id>0) || !componentec.botones" uib-tooltip="Borrar" tooltip-placement="top">
+						    <label ng-if="componentec.esTreeview && !componentec.componente.esDeSigade" class="btn btn-danger" ng-click=" componentec.botones && componentec.componente.id>0  ? componentec.t_borrar() : ''" ng-disabled="!(componentec.componente.id>0) || !componentec.botones" uib-tooltip="Borrar" tooltip-placement="top">
 							<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 	    			</div>
 	    		</div>

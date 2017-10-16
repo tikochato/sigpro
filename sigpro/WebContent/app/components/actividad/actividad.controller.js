@@ -377,7 +377,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 						mi.esNuevoDocumento = false;
 						if(mi.child_adquisiciones!=null)
 							mi.child_adquisiciones.guardar('Actividad '+(mi.esNuevo ? 'creada' : 'guardada')+' con éxito',
-								'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' la Actividad');
+								'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' la Actividad', null);
 						else
 							$utilidades.mensaje('success','Actividad '+(mi.esNuevo ? 'creada' : 'guardada')+' con éxito');
 					}

@@ -65,21 +65,14 @@ public class ProyectoDAO implements java.io.Serializable  {
 				ProyectoUsuario pu_admin = new ProyectoUsuario(new ProyectoUsuarioId(proyecto.getId(),"admin"), proyecto,usu);
 				session.saveOrUpdate(pu_admin);
 			}
-			if(calcular_valores_agregados){
-				proyecto.setCosto(ProyectoDAO.calcularCosto(proyecto));
-				Date fechaMinima = calcularFechaMinima(proyecto);
-				Date fechaMaxima = calcularFechaMaxima(proyecto);
-				if(fechaMinima!=null && fechaMaxima!=null){
-					Integer duracion = Utils.getWorkingDays(new DateTime(fechaMinima), new DateTime(fechaMaxima));
-					proyecto.setDuracion(duracion);
-				}
-				proyecto.setFechaInicio(fechaMinima);
-				proyecto.setFechaFin(fechaMaxima);
-			}
-
 			session.saveOrUpdate(proyecto);
 			session.getTransaction().commit();
 			session.close();
+			
+			if(calcular_valores_agregados){
+				calcularCostoyFechas(proyecto.getId());
+			}
+
 			ret = true;
 		}
 		catch(Throwable e){
@@ -482,10 +475,10 @@ public class ProyectoDAO implements java.io.Serializable  {
 		return fechaActual.toDate();
 	}
 	
-	public static boolean calcularCostoyFechas(Integer proyectoId, String usuario){
+	public static boolean calcularCostoyFechas(Integer proyectoId){
 		boolean ret = false;
-		ArrayList<ArrayList<Nodo>> listas = EstructuraProyectoDAO.getEstructuraProyectoArbolCalculos(proyectoId, usuario);
-		for(int i=listas.size()-2; i>=0; i--){
+		ArrayList<ArrayList<Nodo>> listas = EstructuraProyectoDAO.getEstructuraProyectoArbolCalculos(proyectoId);
+		for(int i=listas.size()-1; i>=0; i--){
 			for(int j=0; j<listas.get(i).size(); j++){
 				Nodo nodo = listas.get(i).get(j);
 				Double costo=0.0d;
@@ -496,13 +489,17 @@ public class ProyectoDAO implements java.io.Serializable  {
 					fecha_minima = (nodo_hijo.fecha_inicio.getTime()<fecha_minima.getTime()) ? nodo_hijo.fecha_inicio : fecha_minima;
 					fecha_maxima = (nodo_hijo.fecha_fin.getTime()>fecha_maxima.getTime()) ? nodo_hijo.fecha_fin : fecha_maxima;
 				}
+				nodo.objeto = ObjetoDAO.getObjetoPorIdyTipo(nodo.id, nodo.objeto_tipo);
 				if(nodo.children!=null && nodo.children.size()>0){
 					nodo.fecha_inicio = fecha_minima;
 					nodo.fecha_fin = fecha_maxima;
 					nodo.costo = costo;
 				}
+				else{
+					BigDecimal costo_temp= ObjetoDAO.calcularCostoPlan(nodo.objeto, nodo.objeto_tipo);
+					nodo.costo = (costo_temp!=null) ? costo_temp.doubleValue(): 0;
+				}
 				nodo.duracion = Utils.getWorkingDays(new DateTime(nodo.fecha_inicio), new DateTime(nodo.fecha_fin));
-				nodo.objeto = ObjetoDAO.getObjetoPorIdyTipo(nodo.id, nodo.objeto_tipo);
 				setDatosCalculados(nodo.objeto,nodo.fecha_inicio,nodo.fecha_fin,nodo.costo, nodo.duracion);
 			}
 			ret = true;
@@ -518,9 +515,12 @@ public class ProyectoDAO implements java.io.Serializable  {
 				Method setFechaFin =  objeto.getClass().getMethod("setFechaFin",Date.class);
 				Method setCosto = objeto.getClass().getMethod("setCosto",BigDecimal.class);
 				Method setDuracion = objeto.getClass().getMethod("setDuracion", int.class);
-				setFechaInicio.invoke(objeto, new Date(fecha_inicio.getTime()));
-				setFechaFin.invoke(objeto, new Date(fecha_fin.getTime()));
-				setCosto.invoke(objeto, new BigDecimal(costo));
+				if(fecha_inicio!=null)
+					setFechaInicio.invoke(objeto, new Date(fecha_inicio.getTime()));
+				if(fecha_fin!=null)
+					setFechaFin.invoke(objeto, new Date(fecha_fin.getTime()));
+				if(costo!=null)
+					setCosto.invoke(objeto, new BigDecimal(costo));
 				setDuracion.invoke(objeto, duracion);
 			}
 		}
@@ -536,7 +536,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 			Session session = CHibernateSession.getSessionFactory().openSession();
 			session.beginTransaction();
 			int count=0;
-			for(int i=0; i<listas.size()-2; i++){
+			for(int i=0; i<listas.size()-1; i++){
 				for(int j=0; j<listas.get(i).size();j++){
 					session.saveOrUpdate(listas.get(i).get(j).objeto);
 					if ( ++count % 20 == 0 ) {

@@ -46,7 +46,7 @@
 				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="24040">
-				<label class="btn btn-primary" ng-click="controller.cargarArchivo()" uib-tooltip="Cargar desde project">   
+				<label class="btn btn-primary" ng-click="controller.cargarArchivo()" uib-tooltip="Importar PEP desde project">   
 				<span class="glyphicon glyphicon glyphicon-file"></span>Project</label>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="24020">
@@ -106,14 +106,12 @@
 			</div>
 		<div class="operation_buttons">
 			<div class="btn-group" ng-hide="controller.esNuevo">
-				<label class="btn btn-default" ng-click="controller.botones ? controller.calcularCostoFecha(controller.proyecto.id) : ''" uib-tooltip="Cálculo de costos y fechas" tooltip-placement="bottom">
-				<span class="glyphicon glyphicon-wrench"></span></label>
 				<label class="btn btn-default" ng-if="!controller.esTreeview" ng-click="controller.botones ? controller.irAComponentes(controller.proyecto.id) : ''" uib-tooltip="Componentes" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-th"></span></label>
 				<label class="btn btn-default" ng-if="!controller.esTreeview" ng-click="controller.botones ? controller.irAHitos(controller.proyecto.id) : ''" uib-tooltip="Hitos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-screenshot"></span></label>
 				<label class="btn btn-default" ng-if="!controller.esTreeview" ng-click="controller.botones ? controller.irAActividades(controller.proyecto.id) : ''" uib-tooltip="Actividades" tooltip-placement="bottom">
-				<span class="glyphicon glyphicon-th-list"></span></label>
+				<span class="glyphicon glyphicon-time"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAMapa(controller.proyecto.id) : ''" uib-tooltip="Mapa" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-globe"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAGantt(controller.proyecto.id) : ''" uib-tooltip="Gantt" tooltip-placement="bottom">
@@ -124,7 +122,11 @@
 				<span class="glyphicon glyphicon-calendar"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAMatrizRiesgos(controller.proyecto.id) : ''" uib-tooltip="Matriz de Riesgos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-list-alt"></span></label>
-			
+				<label class="btn btn-default" ng-click="controller.botones  ? controller.completarConArchivo(controller.proyecto.id) : ''"
+					ng-if="controller.proyecto.projectCargado!=1" uib-tooltip="Importar PEP desde Project" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-copy"></span></label>
+				<label class="btn btn-default" ng-click="controller.botones ? controller.calcularCostoFecha(controller.proyecto.id) : ''" uib-tooltip="Cálculo de costos y fechas" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-wrench"></span></label>
 		</div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="24020">
@@ -137,6 +139,9 @@
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>
+		<div class="col-sm-12" ng-if="controller.proyecto.projectCargado==1">
+				<div class="componente_sigade">Estructura importada desde un archivo de Project</div>
+			</div>
 		<br>
 		<div class="col-sm-12">
 			<form name="controller.mForm" style="margin-top: 10px;">
@@ -158,9 +163,6 @@
 									</div>
 								</div>
 							</div>
-							
-							
-							
 							<div class="row">
 								<div class="col-sm-12">
 									<div class="form-group">
@@ -1135,9 +1137,6 @@
 			            <span class="label-icon" ng-click="controller.buscarDirecotorProyecto()"><i class="glyphicon glyphicon-search"></i></span>
 			          	<label for="campo3" class="floating-label">* Director del Proyecto</label>
 					</div>
-					
-					
-					
 					<div align="center">
 						<h5 class="label-form">Impacto en gobierno </h5>
 						<div style="height: 35px; width: 90%">

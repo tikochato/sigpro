@@ -33,14 +33,14 @@
 		<div class="row">
 			<div style="margin: 10px 0px 0px 15px; float: left; width: 250px; text-align: right;" class="horizontal-collapse" uib-collapse="mainController.hideTree" horizontal>
 				<div class="btn-group btn-group-sm" ng-switch="mainController.nodo_seleccionado.objeto_tipo">
-				       		<label ng-switch-when="1" class="btn btn-default" ng-click="mainController.nuevoObjeto(1)" uib-tooltip="Nuevo Componente" role="button" tabindex="0">
+				       		<label ng-switch-when="1" class="btn btn-default" ng-click="mainController.nuevoObjeto(1)" uib-tooltip="Nuevo Componente" role="button">
 							<span class="glyphicon glyphicon-th"></span></label>
-							<label ng-switch-when="2" class="btn btn-default" ng-click="mainController.nuevoObjeto(2)" uib-tooltip="Nuevo Producto" role="button" tabindex="0">
+							<label ng-switch-when="2" class="btn btn-default" ng-click="mainController.nuevoObjeto(2)" uib-tooltip="Nuevo Producto" role="button">
 							<span class="glyphicon glyphicon-certificate"></span></label>
-							<label ng-switch-when="3" class="btn btn-default" ng-click="mainController.nuevoObjeto(3)" uib-tooltip="Nuevo Subproducto" role="button" tabindex="0">
+							<label ng-switch-when="3" class="btn btn-default" ng-click="mainController.nuevoObjeto(3)" uib-tooltip="Nuevo Subproducto" role="button">
 							<span class="glyphicon glyphicon-link"></span></label>
-				       		<label ng-if="mainController.nodo_seleccionado" class="btn btn-default" ng-click="mainController.nuevoObjeto(4)" uib-tooltip="Nueva Actividad" role="button" tabindex="1">
-							<span class="glyphicon glyphicon-th-list"></span></label>
+				       		<label ng-if="mainController.nodo_seleccionado" class="btn btn-default" ng-click="mainController.nuevoObjeto(4)" uib-tooltip="Nueva Actividad" role="button">
+							<span class="glyphicon glyphicon-time"></span></label>
 				</div>
 			</div>
 			<div style="margin-top: 10px; height: 30px; width: 10px;"></div>
@@ -55,7 +55,7 @@
 							             <span ng-switch-when="2" class="glyphicon glyphicon-th" aria-hidden="true" style="color: #4169E1;"></span>
 							             <span ng-switch-when="3" class="glyphicon glyphicon-certificate" aria-hidden="true" style="color: #4169E1;"></span>
 							             <span ng-switch-when="4" class="glyphicon glyphicon-link" aria-hidden="true" style="color: #4169E1;"></span>
-							             <span ng-switch-when="5" class="glyphicon glyphicon-th-list" aria-hidden="true" style="color: #4169E1;"></span>
+							             <span ng-switch-when="5" class="glyphicon glyphicon-time" aria-hidden="true" style="color: #4169E1;"></span>
 							        </span>{{node.nombre}}
 						</div>
 	 				</div>

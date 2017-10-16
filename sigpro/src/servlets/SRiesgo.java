@@ -241,7 +241,7 @@ public class SRiesgo extends HttpServlet {
 		}
 		else if(accion.equals("guardarRiesgos")){
 			try{
-				boolean result = false;
+				boolean result = true;
 				int objetoId = Utils.String2Int(map.get("objetoId"));
 				int objetoTipo = Utils.String2Int(map.get("objetoTipo"));
 				String sriesgos = map.get("riesgos");
@@ -328,10 +328,13 @@ public class SRiesgo extends HttpServlet {
 						}
 					}
 				}
-				List<Riesgo> delete_riesgos = RiesgoDAO.getRiesgosNotIn(objetoId, objetoTipo, ids);
-				for(Riesgo driesgo : delete_riesgos){
-					RiesgoDAO.eliminarRiesgo(driesgo);
+				if(ids!=null && ids.size()>0){
+					List<Riesgo> delete_riesgos = RiesgoDAO.getRiesgosNotIn(objetoId, objetoTipo, ids);
+					for(Riesgo driesgo : delete_riesgos)
+						RiesgoDAO.eliminarRiesgo(driesgo);
 				}
+				else
+					RiesgoDAO.eliminarTodosRiesgos(objetoId,objetoTipo);
 				String sids="";
 				for(int i=0; i<ids.size(); i++)
 					sids = sids + "," +ids.get(i);
