@@ -25,12 +25,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import dao.AcumulacionCostoDAO;
 import dao.ComponenteDAO;
 import dao.ComponenteTipoDAO;
 import dao.DataSigadeDAO;
 import dao.PrestamoDAO;
 import dao.ProyectoDAO;
 import dao.UnidadEjecutoraDAO;
+import pojo.AcumulacionCosto;
 import pojo.AutorizacionTipo;
 import pojo.Componente;
 import pojo.ComponenteTipo;
@@ -490,8 +492,9 @@ public class SPrestamo extends HttpServlet {
 						
 						int year = new DateTime().getYear();
 						UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(year, 0, 0);
+						AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
 						
-						Componente componente = new Componente(null,componenteTipo, proyecto, unidadEjecutora,
+						Componente componente = new Componente(acumulacionCosto,componenteTipo, proyecto, unidadEjecutora,
 								(String)componenteSigade[2], null, usuario, null, new Date(), null, 1, null, null, 
 								null, null, null, null, null, null, null,null,null,fechaSuscripcion,fechaSuscripcion,1, 
 								null,null,null,1,1,(BigDecimal) componenteSigade[4],null,null,null);
