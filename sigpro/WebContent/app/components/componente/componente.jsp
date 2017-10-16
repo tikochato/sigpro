@@ -115,7 +115,7 @@
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			  </div>
 			</div>
-			<div class="col-sm-12">
+			<div class="col-sm-12" ng-if="componentec.componente.esDeSigade">
 				<div class="componente_sigade">Componente SIGADE</div>
 			</div>
 			<div class="col-sm-12">

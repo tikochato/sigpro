@@ -971,7 +971,9 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			}else{
 				$utilidades.mensaje('danger','Error al crear el '+$rootScope.etiquetas.proyecto);
 			}
-			
+			if(mi.esTreeview){
+				$rootScope.$emit("recargarArbol",{});
+			}
 		});
 	};
 	
