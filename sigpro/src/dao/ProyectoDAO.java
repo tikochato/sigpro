@@ -515,9 +515,12 @@ public class ProyectoDAO implements java.io.Serializable  {
 				Method setFechaFin =  objeto.getClass().getMethod("setFechaFin",Date.class);
 				Method setCosto = objeto.getClass().getMethod("setCosto",BigDecimal.class);
 				Method setDuracion = objeto.getClass().getMethod("setDuracion", int.class);
-				setFechaInicio.invoke(objeto, new Date(fecha_inicio.getTime()));
-				setFechaFin.invoke(objeto, new Date(fecha_fin.getTime()));
-				setCosto.invoke(objeto, new BigDecimal(costo));
+				if(fecha_inicio!=null)
+					setFechaInicio.invoke(objeto, new Date(fecha_inicio.getTime()));
+				if(fecha_fin!=null)
+					setFechaFin.invoke(objeto, new Date(fecha_fin.getTime()));
+				if(costo!=null)
+					setCosto.invoke(objeto, new BigDecimal(costo));
 				setDuracion.invoke(objeto, duracion);
 			}
 		}
