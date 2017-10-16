@@ -473,7 +473,7 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 				$window.location.href = '/main.jsp#!/forbidden';		
 			}			
 			
-			mi.guardar = function(child_scope, mensaje, mensaje_error){	
+			mi.guardar = function(child_scope,call_chain, mensaje, mensaje_error){	
 				if(mi.metas!=null && mi.metas.length>0){
 					var metasArreglo = mi.metas.concat(mi.metasBorradas);
 					
@@ -488,7 +488,7 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 					}).success(function(response){
 						if(response.success){
 							if(child_scope!=null)
-								child_scope.guardar(mensaje, mensaje_error);
+								child_scope(call_chain,mensaje, mensaje_error);
 							else{
 								$utilidades.mensaje('success',mensaje);
 								mi.inicializarControlador();

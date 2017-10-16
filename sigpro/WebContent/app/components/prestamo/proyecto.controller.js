@@ -59,7 +59,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	mi.active = 0;
 	
 	mi.child_desembolso = null;
-	mi.child_riesgo = null;
+	mi.child_riesgos = null;
 
 	mi.fechaOptions = {
 			formatYear : 'yy',
@@ -404,7 +404,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 												}
 												else
 													mi.obtenerTotalProyectos();
-												if(mi.child_desembolso!=null || mi.child_riesgo!=null){
+												if(mi.child_desembolso!=null || mi.child_riesgos!=null){
 													if(mi.child_desembolso)
 														ret = mi.child_desembolso.guardar($rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
 																'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el '+$rootScope.etiquetas.proyecto,
@@ -519,6 +519,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			$http.post('/SProyectoPropiedad', parametros).then(function(response){
 				mi.camposdinamicos = response.data.proyectopropiedades;
 				mi.desembolsos = undefined;
+				mi.riesgos = undefined;
 				mi.active = 0;
 				for (campos in mi.camposdinamicos) {
 					switch (mi.camposdinamicos[campos].tipo){

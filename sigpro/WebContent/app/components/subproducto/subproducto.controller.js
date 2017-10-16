@@ -15,6 +15,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 	mi.botones = true;
 	
 	mi.child_adquisiciones = null;
+	mi.child_riesgos =  null;
 	
 	if(!mi.esTreeview)
 		$window.document.title = $utilidades.sistema_nombre+' - Subroducto';
@@ -56,6 +57,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 	mi.botones =  true;
 	
 	mi.adquisicionesCargadas = false;
+	mi.riesgos = false;
 	
 	
 	$http.post('/SAcumulacionCosto', { accion: 'getAcumulacionesCosto', t: (new Date()).getTime()}).success(
@@ -367,10 +369,16 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 							mi.subproducto.usuarioActualizo = response.data.usuarioactualizo;
 							mi.subproducto.fechaActualizacion = response.data.fechaactualizacion;
 							if(mi.child_adquisiciones!=null)
-								mi.child_adquisiciones.guardar('Subproducto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+								mi.child_adquisiciones.guardar(mi.child_riesgos.guardar,'Subproducto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
 									'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Subproducto');
-							else
-								$utilidades.mensaje('success','Subproducto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+							else{
+								if(mi.child_riesgos){
+									mi.child_riesgos.guardar('Subproducto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+											'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Subproducto');
+								}
+								else
+									$utilidades.mensaje('success','Subproducto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+							}
 							if(!mi.esTreeview)
 								mi.cargarTabla(mi.paginaActual);
 							else{
@@ -434,7 +442,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 					t: (new Date()).getTime()
 			}
 			$http.post('/SSubproductoPropiedad', parametros).then(function(response){
-				mi.camposdinamicos = response.data.subproductopropiedades
+				mi.camposdinamicos = response.data.subproductopropiedades;
 				for (campos in mi.camposdinamicos) {
 					switch (mi.camposdinamicos[campos].tipo){
 						case "fecha":
@@ -448,6 +456,11 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 							break;
 					}
 				}
+				
+				mi.adquisicionesCargadas = false;
+				mi.riesgos = false;
+				
+				mi.activeTab = 0;
 			});
 		} else {
 			$utilidades.mensaje('warning', 'Debe seleccionar un subproducto');
@@ -780,6 +793,12 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 		mi.adquisicionesActivo = function(){
 			if(!mi.adquisicionesCargadas){
 				mi.adquisicionesCargadas = true;
+			}
+		}
+		
+		mi.riesgosActivo = function(){
+			if(!mi.riesgos){
+				mi.riesgos = true;
 			}
 		}
 }
