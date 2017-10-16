@@ -28,4 +28,23 @@ public class AcumulacionCostoDAO {
 		}
 		return ret;
 	}
+	
+	public static AcumulacionCosto getAcumulacionCostoById(Integer id){
+		AcumulacionCosto ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		List<AcumulacionCosto> lstret = null;
+		try{
+			Query<AcumulacionCosto> criteria = session.createQuery("FROM AcumulacionCosto ac where ac.id= " + id, AcumulacionCosto.class);
+			lstret = criteria.getResultList();
+			if(lstret != null && lstret.size() > 0){
+				ret = lstret.get(0);
+			}
+		}catch(Throwable e){
+			CLogger.write("2", AcumulacionCosto.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 }
