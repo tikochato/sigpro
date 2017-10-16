@@ -139,6 +139,9 @@
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>
+		<div class="col-sm-12" ng-if="controller.proyecto.projectCargado==1">
+				<div class="componente_sigade">Estructura importada desde un archivo de Project</div>
+			</div>
 		<br>
 		<div class="col-sm-12">
 			<form name="controller.mForm" style="margin-top: 10px;">
