@@ -163,9 +163,6 @@
 									</div>
 								</div>
 							</div>
-							
-							
-							
 							<div class="row">
 								<div class="col-sm-12">
 									<div class="form-group">
@@ -1140,9 +1137,6 @@
 			            <span class="label-icon" ng-click="controller.buscarDirecotorProyecto()"><i class="glyphicon glyphicon-search"></i></span>
 			          	<label for="campo3" class="floating-label">* Director del Proyecto</label>
 					</div>
-					
-					
-					
 					<div align="center">
 						<h5 class="label-form">Impacto en gobierno </h5>
 						<div style="height: 35px; width: 90%">

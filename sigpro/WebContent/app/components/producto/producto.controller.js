@@ -19,6 +19,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		$window.document.title = $utilidades.sistema_nombre+' - Producto';
 	mi.child_metas = null;
 	mi.child_adquisiciones = null;
+	mi.child_riesgos = null;
 	
 	mi.componenteid = $routeParams.componente_id;
 	mi.esForma = false;
@@ -46,6 +47,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	
 	mi.metasCargadas = false;
 	mi.adquisicionesCargadas = false;
+	mi.riesgos = false;
 	
 	mi.dimensiones = [
 		{value:1,nombre:'Dias',sigla:'d'}
@@ -278,6 +280,9 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			mi.camposdinamicos[campos].valor = null;
 		}
 		mi.metasCargadas = false;
+		mi.adquisicionesCargadas = false;
+		mi.riesgos = false;
+		
 		mi.activeTab = 0;
 		$utilidades.setFocus(document.getElementById("nombre"));
 	}
@@ -381,14 +386,19 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 							mi.producto.usuarioactualizo = response.data.usuarioactualizo;
 							mi.producto.fechaactualizacion = response.data.fechaactualizacion;
 							if(mi.child_metas!=null)
-								mi.child_metas.guardar(mi.child_adquisiciones,'Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+								mi.child_metas.guardar(mi.child_adquisiciones.guardar, mi.child_riesgos.guardar,'Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
 										'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Producto');
 							else{
 								if(mi.child_adquisiciones!=null)
-									mi.child_adquisiciones.guardar('Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+									mi.child_adquisiciones.guardar(mi.child_riesgos.guardar,'Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
 										'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Producto');
-								else
-									$utilidades.mensaje('success','Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+								else{
+									if(mi.child_riesgos!=null)
+										mi.child_riesgos.guardar('Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+												'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Producto');
+									else
+										$utilidades.mensaje('success','Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+								}
 							}
 							if(!mi.esTreeview)
 								mi.obtenerTotalProductos();
@@ -463,6 +473,9 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 					}
 				}
 				mi.metasCargadas = false;
+				mi.adquisicionesCargadas = false;
+				mi.riesgos = false;
+				
 				mi.activeTab = 0;
 				$utilidades.setFocus(document.getElementById("nombre"));
 			});
@@ -825,6 +838,12 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		mi.adquisicionesActivo = function(){
 			if(!mi.adquisicionesCargadas){
 				mi.adquisicionesCargadas = true;
+			}
+		}
+		
+		mi.riesgosActivo = function(){
+			if(!mi.riesgos){
+				mi.riesgos = true;
 			}
 		}
 	  

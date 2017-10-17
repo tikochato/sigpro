@@ -1,4 +1,4 @@
-var app = angular.module('componenteController', []);
+var app = angular.module('componenteController', ['smart-table']);
 
 app.controller('componenteController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q', 'dialogoConfirmacion', 
 	function($scope,$rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion) {
@@ -41,6 +41,10 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 		mi.coordenadas = "";
 		mi.entidad='';
 		mi.ejercicio = '';
+		
+		mi.riesgos=undefined;
+		mi.active=0;
+		mi.child_riesgos=null;
 
 		mi.dimensiones = [
 			{value:1,nombre:'Dias',sigla:'d'}
@@ -244,8 +248,13 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 							else
 								mi.t_crearNodo(mi.componente.id,mi.componente.nombre,2,true);
 						}
+						if(mi.child_riesgos!=null){
+							ret = mi.child_riesgos.guardar('Componente '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+									'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Componente');
+						}
+						else
+							$utilidades.mensaje('success','Componente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
-						$utilidades.mensaje('success','Componente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el Componente');
@@ -303,6 +312,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 			if(!mi.esTreeview)
 				mi.gridApi.selection.clearSelectedRows();
 			$utilidades.setFocus(document.getElementById("nombre"));
+			mi.active=0;
 		};
 
 		mi.editar = function() {
@@ -336,6 +346,8 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 
 				$http.post('/SComponentePropiedad', parametros).then(function(response){
 					mi.camposdinamicos = response.data.componentepropiedades;
+					mi.riesgos=undefined;
+					mi.active=0;
 					for (campos in mi.camposdinamicos) {
 						switch (mi.camposdinamicos[campos].tipo){
 							case "fecha":
@@ -352,7 +364,6 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 								break;
 						}
 					}
-					
 					$utilidades.setFocus(document.getElementById("nombre"));
 				});
 			}

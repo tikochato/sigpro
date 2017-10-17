@@ -28,7 +28,34 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		mi.orden = null;
 		mi.probabilidades = [{valor:1, nombre:"Bajo"},{valor:2,nombre:"Medio"},{valor:3,nombre:"Alto"}];
 		
-		$scope.$parent.controller.child_riesgo = $scope.riesgoc;
+		mi.objetoId=null;
+		mi.objetoTipo=null;
+		mi.parentController=null;
+		
+		if($scope.$parent.controller && $scope.$parent.controller.proyecto){
+			$scope.$parent.controller.child_riesgos = $scope.riesgoc;
+			mi.objetoId = $scope.$parent.controller.proyecto.id;
+			mi.objetoTipo=1;
+			mi.parentController=$scope.$parent.controller;
+		}
+		else if($scope.$parent.componentec && $scope.$parent.componentec.componente){
+			$scope.$parent.componentec.child_riesgos = $scope.riesgoc;
+			mi.objetoId = $scope.$parent.componentec.componente.id;
+			mi.objetoTipo=2;
+			mi.parentController=$scope.$parent.componentec;
+		}
+		else if( $scope.$parent.producto && $scope.$parent.producto.producto){
+			$scope.$parent.producto.child_riesgos = $scope.riesgoc;
+			mi.objetoId = $scope.$parent.producto.producto.id;
+			mi.objetoTipo=3;
+			mi.parentController=$scope.$parent.producto;
+		}
+		else if($scope.$parent.subproducto && $scope.$parent.subproducto.subproducto){
+			$scope.$parent.subproducto.child_riesgos = $scope.riesgoc;
+			mi.objetoId = $scope.$parent.subproducto.subproducto.id;
+			mi.objetoTipo=4;
+			mi.parentController=$scope.$parent.subproducto;
+		}
 		
 		mi.fechaOptions = {
 				formatYear : 'yy',
@@ -44,7 +71,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
 			$http.post('/SRiesgo', { accion: 'getRiesgosPorObjeto',  
-				objetoid: $scope.$parent.controller.proyecto.id, objetotipo: 1, t: (new Date()).getTime()
+				objetoid: mi.objetoId, objetotipo: mi.objetoTipo, t: (new Date()).getTime()
 				}).success(
 					function(response) {
 						mi.riesgos = response.riesgos;
@@ -62,12 +89,11 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		
 		mi.guardar=function(mensaje_success, mensaje_error){
 			
-			if(mi.riesgos.length>0){
 				$http.post('/SRiesgo', {
 					accion: 'guardarRiesgos',
 					riesgos: JSON.stringify(mi.riesgos),
-					objetoTipo: 1,
-					objetoId: $scope.$parent.controller.proyecto.id,
+					objetoTipo: mi.objetoTipo,
+					objetoId: mi.objetoId,
 					t: (new Date()).getTime()
 				}).success(function(response){
 					if(response.success){
@@ -76,27 +102,22 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 							mi.riesgos[i].id = parseInt(sids[i]);
 						mi.cargarTabla();
 						$utilidades.mensaje('success',mensaje_success);
-						if($scope.$parent.controller)
-							$scope.$parent.controller.botones=true;
+						if(mi.parentController)
+							mi.parentController.botones=true;
 					}
 					else{
 						$utilidades.mensaje('danger',mensaje_error);
-						if($scope.$parent.controller)
-							$scope.$parent.controller.botones=true;
+						if(mi.parentController)
+							mi.parentController.botones=true;
 					}
 				});
-			}
-			else{
-				$utilidades.mensaje('success',mensaje_success);
-				if($scope.$parent.controller)
-					$scope.$parent.controller.botones=true;
-			}
+			
 		};
 
-		mi.borrar = function(index) {
+		mi.borrar = function(row) {
 				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 						, "Confirmación de Borrado"
-						, '¿Desea borrar el Riesgo "'+mi.riesgo.nombre+'"?'
+						, '¿Desea borrar el Riesgo "'+row.nombre+'"?'
 						, "Borrar"
 						, "Cancelar")
 				.result.then(function(data) {
@@ -171,8 +192,8 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 
 		mi.irATabla = function() {
 			if(mi.esnuevo){
-					if($scope.$parent.controller.mForm.$valid || 
-							($scope.$parent.controller.mForm.$error.required.length==1 && $scope.$parent.controller.mForm.$error.required[0].$name=='form_valid'))
+					if(mi.parentController.mForm.$valid || 
+							(mi.parentController.mForm.$error.required.length==1 && mi.parentController.mForm.$error.required[0].$name=='form_valid'))
 						mi.riesgos.push({
 							colaboradorNombre: mi.colaboradorNombre,
 							colaboradorid: mi.colaboradorid,
@@ -201,7 +222,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 					mi.esnuevo = false;
 					mi.form_valid = 1;
 				}
-				else if($scope.$parent.controller.mForm.$valid || $scope.$parent.controller.mForm.$error.required[0].$name=='form_valid'){
+				else if(mi.parentController.mForm.$valid || mi.parentController.mForm.$error.required[0].$name=='form_valid'){
 					mi.riesgo.colaboradorNombre = mi.colbaoradorNombre;
 					mi.riesgo.colaboradorid = mi.colaboradorid;
 					mi.riesgo.ejecutado = mi.ejecutado ? 1 : 0;
@@ -213,7 +234,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 					mi.esnuevo = false;
 					mi.form_valid = 1;
 				}
-				else if(!$scope.$parent.controller.mForm.$valid){
+				else if(!mi.parentController.mForm.$valid){
 					$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
 				}
 		}

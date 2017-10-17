@@ -346,6 +346,9 @@
 					<%@include file="/app/components/adquisicion/adquisicion.jsp" %>
 				</div>
 		    </uib-tab>
+		    <uib-tab index="3" heading="Riesgos" ng-click="subproducto.riesgosActivo()" >
+					<div ng-if="subproducto.riesgos"><%@include file="/app/components/riesgo/riesgo.jsp" %></div>
+				</uib-tab>
 		</uib-tabset>
 		</form>
 		<div class="col-sm-12 operation_buttons" align="right"  style="margin-top: 15px;">

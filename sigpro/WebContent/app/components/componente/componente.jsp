@@ -120,6 +120,8 @@
 			</div>
 			<div class="col-sm-12">
 				<form name="componentec.mForm">
+					<uib-tabset active="componentec.active">
+					<uib-tab index="0" heading="{{etiquetas.proyecto}}" >
 						<div class="form-group">
 						  <label for="id" class="floating-label id_class">ID {{ componentec.componente.id }}</label>
 						  <br/><br/>
@@ -352,6 +354,10 @@
 								</div>
 							</div>
 						</div>
+					</uib-tab>
+					<uib-tab index="2" heading="Riesgos" ng-click="componentec.riesgos=true" >
+					<div ng-if="componentec.riesgos !== undefined"><%@include file="/app/components/riesgo/riesgo.jsp" %></div>
+				</uib-tab>
 				</form>
 			</div>
 			
