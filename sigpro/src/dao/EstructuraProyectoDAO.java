@@ -159,10 +159,7 @@ public class EstructuraProyectoDAO {
 						else{
 							int retornar = nivel_actual_estructura.nivel-nodo.nivel+1;
 							for(int j=0; j<retornar; j++)
-							{
-								if(nivel_actual_estructura.parent != null)
-									nivel_actual_estructura=nivel_actual_estructura.parent;
-							}
+								nivel_actual_estructura=nivel_actual_estructura.parent;
 						}
 					}
 					nodo.parent = nivel_actual_estructura;
