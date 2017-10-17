@@ -29,6 +29,7 @@ import dao.AcumulacionCostoDAO;
 import dao.ComponenteDAO;
 import dao.ComponenteTipoDAO;
 import dao.DataSigadeDAO;
+import dao.ObjetoDAO;
 import dao.PrestamoDAO;
 import dao.ProyectoDAO;
 import dao.UnidadEjecutoraDAO;
@@ -506,11 +507,7 @@ public class SPrestamo extends HttpServlet {
 				if (componentesSipro.size() > componentesSigade.size()){
 					for (int i = componentesSigade.size(); i< componentesSipro.size() ;i ++){
 						Componente componente = componentesSipro.get(i);
-						componente.setEsDeSigade(1);
-						componente.setUsuarioActualizo(usuario);
-						componente.setFechaActualizacion(new Date());
-						componente.setEstado(0);
-						ret = ret && ComponenteDAO.guardarComponente(componente, false);
+						ret = ret && ObjetoDAO.borrarHijos(componente.getTreePath(), 2, usuario);				
 					}
 				}
 			}

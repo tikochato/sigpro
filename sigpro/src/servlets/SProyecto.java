@@ -29,6 +29,7 @@ import dao.EntidadDAO;
 import dao.EstructuraProyectoDAO;
 import dao.EtiquetaDAO;
 import dao.Nodo;
+import dao.ObjetoDAO;
 import dao.PrestamoDAO;
 import dao.ProyectoDAO;
 import dao.ProyectoImpactoDAO;
@@ -575,7 +576,7 @@ public class SProyecto extends HttpServlet {
 							ProyectoMiembroDAO.eliminarProyectoMiembro(pm);
 					}
 				}
-				result = ProyectoDAO.guardarProyecto(proyecto, true);
+				result = ProyectoDAO.guardarProyecto(proyecto, false);
 				if (result){
 					for (stdatadinamico data : datos) {
 						if (data.valor!=null && data.valor.length()>0 && data.valor.compareTo("null")!=0){
@@ -676,7 +677,7 @@ public class SProyecto extends HttpServlet {
 				proyecto.setUsuarioActualizo(usuario);
 				proyecto.setFechaActualizacion(new DateTime().toDate());
 
-				ProyectoDAO.guardarProyecto(proyecto, true);
+				ProyectoDAO.guardarProyecto(proyecto, false);
 
 				datos temp = new datos();
 				temp.id = proyecto.getId();
@@ -704,7 +705,7 @@ public class SProyecto extends HttpServlet {
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0){
 				Proyecto proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
-
+				
 				List<ProyectoPropiedadValor> valores_temp = ProyectoPropiedadValorDAO.getProyectoPropiedadadesValoresPorProyecto(proyecto.getId());
 				if (valores_temp!=null){
 					for (ProyectoPropiedadValor valor : valores_temp){
@@ -713,7 +714,7 @@ public class SProyecto extends HttpServlet {
 						ProyectoPropiedadValorDAO.eliminarProyectoPropiedadValor(valor);
 					}
 				}
-				response_text = String.join("","{ \"success\": ",(ProyectoDAO.eliminarProyecto(proyecto) ? "true" : "false")," }");
+				response_text = String.join("","{ \"success\": ",(ObjetoDAO.borrarHijos(proyecto.getTreePath(), 1, usuario) ? "true" : "false")," }");
 			}
 			else
 				response_text = "{ \"success\": false }";
