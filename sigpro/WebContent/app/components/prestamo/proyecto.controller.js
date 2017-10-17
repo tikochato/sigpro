@@ -1289,8 +1289,8 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				.result.then(function(data) {
 					if(data){
 						var datos = {
-								accion : 'borrar',
-								codigo : mi.proyecto.id,
+								accion : 'borrarProyecto',
+								id : mi.proyecto.id,
 								t: (new Date()).getTime()
 							};
 							$http.post('/SProyecto', datos).success(
