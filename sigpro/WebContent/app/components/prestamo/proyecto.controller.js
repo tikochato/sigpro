@@ -408,9 +408,9 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 													if(mi.child_desembolso)
 														ret = mi.child_desembolso.guardar($rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
 																'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el '+$rootScope.etiquetas.proyecto,
-																mi.child_riesgo!=null ? mi.child_riesgo.guardar :  null);
-													else if(mi.child_riesgo)
-														ret = mi.child_riesgo.guardar($rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+																mi.child_riesgos!=null ? mi.child_riesgos.guardar :  null);
+													else if(mi.child_riesgos)
+														ret = mi.child_riesgos.guardar($rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
 																'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el '+$rootScope.etiquetas.proyecto);
 												}
 												else{
