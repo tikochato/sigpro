@@ -18,7 +18,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
-import dao.ComponenteDAO;
+import dao.SubComponenteDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
 import dao.SubproductoDAO;
@@ -89,11 +89,11 @@ public class SObjeto extends HttpServlet {
 						nombre = (proyecto!=null) ? proyecto.getNombre() : "";
 						fechaInicio = (proyecto!=null) ? Utils.formatDate(proyecto.getFechaInicio()) : "";
 						break;
-					case 2: //Componente;
-						tiponombre = "Componente";
-						Componente componente = ComponenteDAO.getComponentePorId(objetoId,usuario);
-						nombre = (componente!=null) ? componente.getNombre() : "";
-						fechaInicio = (componente!=null) ? Utils.formatDate(componente.getFechaInicio()) : "";
+					case 2: //SubComponente;
+						tiponombre = "SubComponente";
+						Componente subcomponente = SubComponenteDAO.getSubComponentePorId(objetoId,usuario);
+						nombre = (subcomponente!=null) ? subcomponente.getNombre() : "";
+						fechaInicio = (subcomponente!=null) ? Utils.formatDate(subcomponente.getFechaInicio()) : "";
 						break;
 					case 3: //Producto
 						tiponombre = "Producto";

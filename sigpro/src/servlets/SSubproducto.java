@@ -22,7 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import dao.ComponenteDAO;
+import dao.SubComponenteDAO;
 import dao.ObjetoDAO;
 import dao.ProductoDAO;
 import dao.SubproductoDAO;
@@ -429,7 +429,7 @@ public class SSubproducto extends HttpServlet {
 
 		String resultadoJson = "";
 		
-		resultadoJson = Utils.getJSonString("subproductos", ComponenteDAO.getComponentesPagina(pagina, registros,usuario));
+		resultadoJson = Utils.getJSonString("subproductos", SubComponenteDAO.getSubComponentesPagina(pagina, registros,usuario));
 
 		if (Utils.isNullOrEmpty(resultadoJson)) {
 			resultadoJson = "{\"success\":false}";

@@ -29,7 +29,7 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
 import dao.AsignacionRaciDAO;
-import dao.ComponenteDAO;
+import dao.SubComponenteDAO;
 import dao.EstructuraProyectoDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
@@ -165,8 +165,8 @@ public class SMatrizRACI extends HttpServlet {
 				informacion.nombreTarea = proyecto.getNombre();
 			break;
 			case 2:
-				Componente componente = ComponenteDAO.getComponentePorId(objetoId, usuario);
-				informacion.nombreTarea = componente.getNombre();
+				Componente subcomponente = SubComponenteDAO.getSubComponentePorId(objetoId, usuario);
+				informacion.nombreTarea = subcomponente.getNombre();
 			break;
 			case 3:
 				Producto producto = ProductoDAO.getProductoPorId(objetoId, usuario);

@@ -388,7 +388,7 @@ public class EstructuraProyectoDAO {
 		String treePath_inicio="";
 		switch(objetoTipo){
 			case 1: Proyecto proyecto = ProyectoDAO.getProyecto(objetoId); treePath_inicio = (proyecto!=null) ? proyecto.getTreePath() : null; break;
-			case 2: Componente componente = ComponenteDAO.getComponente(objetoId); treePath_inicio = (componente!=null) ? componente.getTreePath() : null; break;
+			case 2: Componente componente = SubComponenteDAO.getSubComponente(objetoId); treePath_inicio = (componente!=null) ? componente.getTreePath() : null; break;
 			case 3: Producto producto = ProductoDAO.getProductoPorId(objetoId); treePath_inicio = (producto!=null) ? producto.getTreePath() : null; break;
 			case 4: Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId); treePath_inicio = (subproducto!=null) ? subproducto.getTreePath() : null; break;
 			case 5: Actividad actividad = ActividadDAO.getActividadPorId(objetoId); treePath_inicio = (actividad!=null) ? actividad.getTreePath() : null; break;

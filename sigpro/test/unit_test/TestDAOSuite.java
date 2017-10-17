@@ -17,7 +17,7 @@ import dao.*;
 	EstadoTablaDAOTest.class
 	,PermisoDAOTest.class
 	,DatoTipoDAOTest.class 
-	,ComponenteTipoDAOTest.class
+	,SubComponenteTipoDAOTest.class
 	,DesembolsoTipoDAOTest.class
 	,HitoTipoDAOTest.class
 	,MetaTipoDAOTest.class
@@ -25,8 +25,8 @@ import dao.*;
 	,ProyectoTipoDAOTest.class
 	,RiesgoTipoDAOTest.class
 	,ColaboradorDAOTest.class
-	,ComponenteDAOTest.class
-	,ComponentePropiedadDAOTest.class
+	,SubComponenteDAOTest.class
+	,SubComponentePropiedadDAOTest.class
 	,CooperanteDAOTest.class
 	,CTipoPropiedadDAOTest.class
 	,DesembolsoDAOTest.class

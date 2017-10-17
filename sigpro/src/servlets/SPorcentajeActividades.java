@@ -22,7 +22,7 @@ import javax.servlet.http.HttpSession;
 
 
 import dao.ActividadDAO;
-import dao.ComponenteDAO;
+import dao.SubComponenteDAO;
 import dao.ProductoDAO;
 import dao.SubproductoDAO;
 import pojo.Actividad;
@@ -38,7 +38,7 @@ public class SPorcentajeActividades extends HttpServlet {
 	
 	
 	private static int OBJETO_ID_PROYECTO = 1;
-	private static int OBJETO_ID_COMPONENTE = 2;
+	private static int OBJETO_ID_SUBCOMPONENTE = 2;
 	private static int OBJETO_ID_PRODUCTO = 3;
 	private static int OBJETO_ID_SUBPRODUCTO = 4;
 	private static int OBJETO_ID_SUBACTIVIDAD = 5;
@@ -77,9 +77,9 @@ public class SPorcentajeActividades extends HttpServlet {
 		if(accion.equals("getKanban")){
 			items = "";
 			Integer proyectoId = Utils.String2Int(map.get("proyecto_id"),0);
-			List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyectoId,
+			List<Componente> subcomponentes = SubComponenteDAO.getSubComponentesPaginaPorProyecto(0, 0, proyectoId,
 					null, null, null, null, null, usuario);
-			for (Componente componente : componentes){
+			for (Componente componente : subcomponentes){
 				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
 						null, null, null, null, null, usuario);
 				for (Producto producto : productos){
@@ -99,7 +99,7 @@ public class SPorcentajeActividades extends HttpServlet {
 					}
 
 				}
-				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componente.getId(), OBJETO_ID_COMPONENTE,
+				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componente.getId(), OBJETO_ID_SUBCOMPONENTE,
 						null, null, null, null, null, usuario);
 				for (Actividad actividad : actividades ){
 					items = ObtenerActividades(actividad,usuario, items);
@@ -135,7 +135,7 @@ public class SPorcentajeActividades extends HttpServlet {
 
 			}
 			
-			List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componenteId, OBJETO_ID_COMPONENTE,
+			List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componenteId, OBJETO_ID_SUBCOMPONENTE,
 					null, null, null, null, null, usuario);
 			for (Actividad actividad : actividades ){
 				items = ObtenerActividades(actividad,usuario, items);

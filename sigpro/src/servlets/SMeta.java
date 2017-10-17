@@ -30,7 +30,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
-import dao.ComponenteDAO;
+import dao.SubComponenteDAO;
 import dao.DatoTipoDAO;
 import dao.MetaDAO;
 import dao.MetaTipoDAO;
@@ -700,10 +700,10 @@ public class SMeta extends HttpServlet {
 					fechaInicio = (proyecto!=null && proyecto.getFechaInicio()!=null) ? Utils.formatDate(proyecto.getFechaInicio()): "";
 					fechaFin = (proyecto!=null && proyecto.getFechaFin()!=null) ? Utils.formatDate(proyecto.getFechaFin()): "";
 					break;
-				case 2: Componente componente = ComponenteDAO.getComponentePorId(id,usuario); 
-					nombre = (componente!=null) ? componente.getNombre() : ""; 
-					fechaInicio = (componente!=null && componente.getFechaInicio()!=null) ? Utils.formatDate(componente.getFechaInicio()): "";
-					fechaFin = (componente!=null && componente.getFechaFin()!=null) ? Utils.formatDate(componente.getFechaFin()): "";
+				case 2: Componente subcomponente = SubComponenteDAO.getSubComponentePorId(id,usuario); 
+					nombre = (subcomponente!=null) ? subcomponente.getNombre() : ""; 
+					fechaInicio = (subcomponente!=null && subcomponente.getFechaInicio()!=null) ? Utils.formatDate(subcomponente.getFechaInicio()): "";
+					fechaFin = (subcomponente!=null && subcomponente.getFechaFin()!=null) ? Utils.formatDate(subcomponente.getFechaFin()): "";
 					break;
 				case 3: Producto producto = ProductoDAO.getProductoPorId(id,usuario); 
 					nombre = (producto!=null) ? producto.getNombre() : ""; 

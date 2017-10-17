@@ -612,7 +612,7 @@ public class UsuarioDAO {
 			session.beginTransaction();
 			
 			for(int i =0; i<componentes.size();i++){
-				Componente componente = ComponenteDAO.getComponente(componentes.get(i));
+				Componente componente = SubComponenteDAO.getSubComponente(componentes.get(i));
 				ComponenteUsuario cu = new ComponenteUsuario(new ComponenteUsuarioId(componentes.get(i), usuario), componente, UsuarioDAO.getUsuario(componente.getUsuarioCreo()));
 				cu.setComponente(componente);
 				session.save(cu);

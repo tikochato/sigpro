@@ -189,8 +189,6 @@ public class ObjetoDAO {
 										objetoCosto.anios[ejercicio-anioInicial].mes[m].planificado = objPago[3+m]!=null ? (BigDecimal)objPago[3+m] : null;
 									}
 								}	
-							}else if(totalPlan!=null && totalPlan.compareTo(BigDecimal.ZERO)!=0){
-								//utilizar costo de la adquisicion
 							}else{
 								//utilizar costo del objeto
 								for(int a=0; a<(anioFinal-anioInicial+1); a++){
@@ -309,7 +307,7 @@ public class ObjetoDAO {
 			}
 			return false;
 		case 2:
-			Componente componente = ComponenteDAO.getComponente(objetoId);
+			Componente componente = SubComponenteDAO.getSubComponente(objetoId);
 			if (componente.getProductos()!=null && componente.getProductos().size()>0){
 				return true;
 			}
@@ -363,7 +361,7 @@ public class ObjetoDAO {
 			Componente componente = null;
 			for(Object obj : resultados){
 				Producto producto = (Producto)obj;
-				componente = ComponenteDAO.getComponente(producto.getComponente().getId());
+				componente = SubComponenteDAO.getSubComponente(producto.getComponente().getId());
 				temp = new ObjetoHoja(3, obj, 2, componente);
 				hojas.add(temp);
 			}
@@ -401,7 +399,7 @@ public class ObjetoDAO {
 					temp = new ObjetoHoja(5, obj, 1, proyecto);
 					break;
 				case 2:
-					componente = ComponenteDAO.getComponente(actividad.getObjetoId());
+					componente = SubComponenteDAO.getSubComponente(actividad.getObjetoId());
 					temp = new ObjetoHoja(5, obj, 2, componente);
 					break;
 				case 3:
@@ -432,7 +430,7 @@ public class ObjetoDAO {
 		Object ret=null;
 		switch(tipo){
 			case 1: ret = (Object)ProyectoDAO.getProyecto(id); break;
-			case 2: ret = (Object)ComponenteDAO.getComponente(id); break;
+			case 2: ret = (Object)SubComponenteDAO.getSubComponente(id); break;
 			case 3: ret = (Object)ProductoDAO.getProductoPorId(id); break;
 			case 4: ret = (Object)SubproductoDAO.getSubproductoPorId(id); break;
 			case 5: ret = (Object)ActividadDAO.getActividadPorId(id); break;

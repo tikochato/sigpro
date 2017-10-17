@@ -126,7 +126,7 @@ public class ActividadDAO {
 						Actividad.setTreePath(proyecto.getTreePath()+""+(10000000+Actividad.getId()));
 						break;
 					case 2:
-						Componente componente = ComponenteDAO.getComponente(Actividad.getObjetoId());
+						Componente componente = SubComponenteDAO.getSubComponente(Actividad.getObjetoId());
 						Actividad.setTreePath(componente.getTreePath()+""+(10000000+Actividad.getId()));
 						break;
 					case 3:

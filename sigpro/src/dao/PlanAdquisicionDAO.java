@@ -195,7 +195,7 @@ public class PlanAdquisicionDAO {
 				proyecto.setCosto(ret);
 				session.saveOrUpdate(proyecto);
 				break;
-			case 2: Componente componente = ComponenteDAO.getComponente(objetoId);
+			case 2: Componente componente = SubComponenteDAO.getSubComponente(objetoId);
 				if(componente.getProductos()==null || componente.getProductos().size()==0){
 					if(pa.getPlanAdquisicionPagos()!=null && pa.getPlanAdquisicionPagos().size()>0){
 						Iterator<PlanAdquisicionPago> iPagos = pa.getPlanAdquisicionPagos().iterator();

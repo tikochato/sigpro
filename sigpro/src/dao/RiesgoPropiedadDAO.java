@@ -139,7 +139,7 @@ public class RiesgoPropiedadDAO {
 			ret = true;
 		}
 		catch(Throwable e){
-			CLogger.write("7", ComponentePropiedadDAO.class, e);
+			CLogger.write("7", SubComponentePropiedadDAO.class, e);
 		}
 		finally{
 			session.close();

@@ -12,8 +12,8 @@ import org.joda.time.DateTime;
 
 import dao.ActividadDAO;
 import dao.AcumulacionCostoDAO;
-import dao.ComponenteDAO;
-import dao.ComponenteTipoDAO;
+import dao.SubComponenteDAO;
+import dao.SubComponenteTipoDAO;
 import dao.CooperanteDAO;
 import dao.ProductoDAO;
 import dao.ProgramaDAO;
@@ -184,23 +184,23 @@ public class CProject {
 		return ProyectoDAO.guardarProyecto(proyecto, false) ? proyecto : null;
 	}
 	
-	public Componente crearComponente(Task task,Proyecto proyecto ,String usuario){
+	public Componente crearSubComponente(Task task,Proyecto proyecto ,String usuario){
 		
 		
-		ComponenteTipo componenteTipo = ComponenteTipoDAO.getComponenteTipoPorId(COMPONENTE_TIPO_ID_DEFECTO);
+		ComponenteTipo componenteTipo = SubComponenteTipoDAO.getSubComponenteTipoPorId(COMPONENTE_TIPO_ID_DEFECTO);
 		
 		int year = new DateTime().getYear();
 		UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(year, ENTIDAD_ID_DEFECTO, UNIDAD_EJECUTORA_ID_DEFECTO);
 		AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
 		
 		
-		Componente componente = new Componente(acumulacionCosto,componenteTipo, proyecto, unidadEjecutora, task.getName()
+		Componente subcomponente = new Componente(acumulacionCosto,componenteTipo, proyecto, unidadEjecutora, task.getName()
 				, null,usuario, null, new Date(), null, 1, null, null, null, null, null, null, null, null, 
 				new BigDecimal(task.getCost().toString()),null,null,Utils.setDateCeroHoras(task.getStart()),
 				Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
 				, task.getDuration().getUnits().getName(),null,null,1,0,null,null,null,null);
 		
-		return ComponenteDAO.guardarComponente(componente, false) ? componente : null;
+		return SubComponenteDAO.guardarSubComponente(subcomponente, false) ? subcomponente : null;
 	}
 	
 	public Producto crearProducto (Task task, Componente componente,String usuario){
@@ -307,7 +307,7 @@ public class CProject {
 		List<Componente> componentes = null;
 		if (marcarCargado){
 			proyecto = ProyectoDAO.getProyecto(proyectoId);
-			componentes = ComponenteDAO.getComponentesPorProyecto(proyectoId);
+			componentes = SubComponenteDAO.getSubComponentesPorProyecto(proyectoId);
 			
 		}
 		
@@ -361,7 +361,7 @@ public class CProject {
 							 componente =  componentes.size() > posicionComponente 
 									? componentes.get(posicionComponente) : null;
 						}else{
-							componente =  crearComponente(task, (Proyecto) objeto, usuario);
+							componente =  crearSubComponente(task, (Proyecto) objeto, usuario);
 						}
 						
 						ret = componente.getId();
@@ -462,9 +462,9 @@ public class CProject {
 			Task task1 = project.addTask();
 			task1.setName(proyecto.getNombre());
 			
-			List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyecto.getId(),
+			List<Componente> subcomponentes = SubComponenteDAO.getSubComponentesPaginaPorProyecto(0, 0, proyecto.getId(),
 					null, null, null, null, null, usuario);
-			for (Componente componente :componentes){
+			for (Componente componente :subcomponentes){
 				Task task2 = task1.addTask();
 				task2.setName(componente.getNombre());
 				

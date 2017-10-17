@@ -28,7 +28,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
-import dao.ComponenteDAO;
+import dao.SubComponenteDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
 import dao.SubproductoDAO;
@@ -191,10 +191,10 @@ public class SAgenda extends HttpServlet {
 			agenda.fechaFin = "";
 			lstagenda.add(agenda);
 		}
-		List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyectoId,
+		List<Componente> subcomponentes = SubComponenteDAO.getSubComponentesPaginaPorProyecto(0, 0, proyectoId,
 				null, null, null, null, null, usuario);
 		int edtComponente = 1;
-		for (Componente componente : componentes){
+		for (Componente componente : subcomponentes){
 			stagenda agenda = new stagenda();
 			agenda.objetoTipo = OBJETO_ID_COMPONENTE;
 			agenda.objetoTipoNombre = "Componente";
