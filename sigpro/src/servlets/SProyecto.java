@@ -576,7 +576,7 @@ public class SProyecto extends HttpServlet {
 							ProyectoMiembroDAO.eliminarProyectoMiembro(pm);
 					}
 				}
-				result = ProyectoDAO.guardarProyecto(proyecto, true);
+				result = ProyectoDAO.guardarProyecto(proyecto, false);
 				if (result){
 					for (stdatadinamico data : datos) {
 						if (data.valor!=null && data.valor.length()>0 && data.valor.compareTo("null")!=0){
@@ -677,7 +677,7 @@ public class SProyecto extends HttpServlet {
 				proyecto.setUsuarioActualizo(usuario);
 				proyecto.setFechaActualizacion(new DateTime().toDate());
 
-				ProyectoDAO.guardarProyecto(proyecto, true);
+				ProyectoDAO.guardarProyecto(proyecto, false);
 
 				datos temp = new datos();
 				temp.id = proyecto.getId();
