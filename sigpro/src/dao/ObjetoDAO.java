@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
@@ -461,5 +462,75 @@ public class ObjetoDAO {
 		}
 		
 		return costo;
+	}
+	
+	public static boolean borrarHijos(String treePathPadre, Integer objetoTipo, String usuarioActualiza){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		boolean ret = false;
+		List<Object> objetos = new ArrayList<Object>();
+		List<?> objetos_nuevos=new ArrayList<Object>();
+		try{
+			String query = "";
+			Query<?> criteria = null;
+			
+			query = "FROM Actividad a where a.treePath like '" + treePathPadre + "%' and a.estado=1";
+			criteria = session.createQuery(query);
+			objetos.addAll(criteria.getResultList());
+			
+			if (objetoTipo < 5){
+				query = "FROM Subproducto s where s.treePath like '" + treePathPadre + "%' and s.estado=1";
+				criteria = session.createQuery(query);
+				objetos_nuevos=criteria.getResultList();
+				objetos.addAll(objetos_nuevos);
+			}
+			if (objetoTipo < 4){
+				query = "FROM Producto p where p.treePath like '" + treePathPadre + "%' and p.estado=1";
+				criteria = session.createQuery(query);
+				objetos_nuevos=criteria.getResultList();
+				objetos.addAll(objetos_nuevos);
+			}
+			if (objetoTipo < 3){
+				query = "FROM Componente c where c.treePath like '" + treePathPadre + "%' and c.estado=1";
+				criteria = session.createQuery(query);
+				objetos_nuevos=criteria.getResultList();
+				objetos.addAll(objetos_nuevos);
+			}
+			if (objetoTipo < 2){
+				query = "FROM Proyecto p where p.treePath = '" + treePathPadre + "' and p.estado=1";
+				criteria = session.createQuery(query);
+				objetos_nuevos=criteria.getResultList();
+				objetos.addAll(objetos_nuevos);
+			}
+			
+			for (Object objeto : objetos) {
+				Method setEstado = objeto.getClass().getMethod("setEstado", int.class);
+				Method setUsuarioActualiza = objeto.getClass().getMethod("setUsuarioActualizo", String.class);
+				Method setFechaActualizacion = objeto.getClass().getMethod("setFechaActualizacion", Date.class);
+				setEstado.invoke(objeto, 0);
+				setUsuarioActualiza.invoke(objeto, usuarioActualiza);
+				setFechaActualizacion.invoke(objeto, new Date());
+			}
+			
+			session.beginTransaction();
+			int count=0;
+			for(int i=0; i<objetos.size()-1; i++){
+				session.saveOrUpdate(objetos.get(i));
+				if ( ++count % 20 == 0 ) {
+			        session.flush();
+			        session.clear();
+			    }
+
+			}
+			session.flush();
+			session.getTransaction().commit();
+			session.close();
+			
+			ret = true;
+		}catch(Throwable e){
+			CLogger.write("4", ObjetoDAO.class, e);
+			ret = false;
+		}
+		
+		return ret;
 	}
 }

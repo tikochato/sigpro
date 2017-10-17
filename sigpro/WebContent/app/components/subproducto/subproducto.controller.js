@@ -369,7 +369,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 							mi.subproducto.usuarioActualizo = response.data.usuarioactualizo;
 							mi.subproducto.fechaActualizacion = response.data.fechaactualizacion;
 							if(mi.child_adquisiciones!=null)
-								mi.child_adquisiciones.guardar(mi.child_riesgos.guardar,'Subproducto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+								mi.child_adquisiciones.guardar((mi.child_riesgos!=null) ? mi.child_riesgos.guardar : null,'Subproducto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
 									'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Subproducto');
 							else{
 								if(mi.child_riesgos){

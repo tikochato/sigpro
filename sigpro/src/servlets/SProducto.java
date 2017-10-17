@@ -357,8 +357,8 @@ public class SProducto extends HttpServlet {
 		} else if (accion.equals("borrar")) {
 			int codigo = Utils.String2Int(parametro.get("codigo"), -1);
 			
-			//Producto pojo = ProductoDAO.getProductoPorId(codigo,usuario);
-			boolean eliminado = ProductoDAO.eliminar(codigo, usuario);
+			Producto pojo = ProductoDAO.getProductoPorId(codigo,usuario);
+			boolean eliminado = ObjetoDAO.borrarHijos(pojo.getTreePath(), 3, usuario);//ProductoDAO.eliminar(codigo, usuario);
 			
 			if (eliminado) {
 				/*COrden orden = new COrden();

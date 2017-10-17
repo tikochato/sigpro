@@ -308,7 +308,11 @@ public class SSubproducto extends HttpServlet {
 	private void eliminar(Map<String, String> parametro, HttpServletResponse response) throws IOException {
 		int codigo = Utils.String2Int(parametro.get("codigo"), -1);
 		
-		SubproductoDAO.eliminar(codigo, usuario);
+		Subproducto subproducto = SubproductoDAO.getSubproductoPorId(codigo);
+		
+		ObjetoDAO.borrarHijos(subproducto.getTreePath(), 4, usuario);
+		
+		//SubproductoDAO.eliminar(codigo, usuario);
 		
 	}
 

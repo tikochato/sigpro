@@ -26,9 +26,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.AcumulacionCostoDAO;
-import dao.SubComponenteDAO;
-import dao.SubComponenteTipoDAO;
+import dao.ComponenteDAO;
+import dao.ComponenteTipoDAO;
 import dao.DataSigadeDAO;
+import dao.ObjetoDAO;
 import dao.PrestamoDAO;
 import dao.ProyectoDAO;
 import dao.UnidadEjecutoraDAO;
@@ -474,7 +475,7 @@ public class SPrestamo extends HttpServlet {
 		Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
 		if (proyecto.getProjectCargado() == null || !proyecto.getProjectCargado().equals(1)){
 			List<?> componentesSigade = DataSigadeDAO.getComponentes(codigoPresupuestario);
-			List<Componente> componentesSipro = SubComponenteDAO.getSubComponentesPorProyecto(proyectoId);
+			List<Componente> componentesSipro = ComponenteDAO.getComponentesPorProyecto(proyectoId);
 			
 			if(componentesSigade!=null && componentesSigade.size()>0){
 				for(int i=0; i<componentesSigade.size(); i++){
@@ -486,9 +487,9 @@ public class SPrestamo extends HttpServlet {
 						componente.setEsDeSigade(1);
 						componente.setUsuarioActualizo(usuario);
 						componente.setFechaActualizacion(new Date());
-						ret = ret && SubComponenteDAO.guardarSubComponente(componente, false);
+						ret = ret && ComponenteDAO.guardarComponente(componente, false);
 					}else{
-						ComponenteTipo componenteTipo = SubComponenteTipoDAO.getSubComponenteTipoPorId(1);
+						ComponenteTipo componenteTipo = ComponenteTipoDAO.getComponenteTipoPorId(1);
 						
 						int year = new DateTime().getYear();
 						UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(year, 0, 0);
@@ -499,18 +500,14 @@ public class SPrestamo extends HttpServlet {
 								null, null, null, null, null, null, null,null,null,fechaSuscripcion,fechaSuscripcion,1, 
 								null,null,null,1,1,(BigDecimal) componenteSigade[4],null,null,null);
 						
-						ret = ret && SubComponenteDAO.guardarSubComponente(componente, true);
+						ret = ret && ComponenteDAO.guardarComponente(componente, true);
 					}
 				}
 				
 				if (componentesSipro.size() > componentesSigade.size()){
 					for (int i = componentesSigade.size(); i< componentesSipro.size() ;i ++){
 						Componente componente = componentesSipro.get(i);
-						componente.setEsDeSigade(1);
-						componente.setUsuarioActualizo(usuario);
-						componente.setFechaActualizacion(new Date());
-						componente.setEstado(0);
-						ret = ret && SubComponenteDAO.guardarSubComponente(componente, false);
+						ret = ret && ObjetoDAO.borrarHijos(componente.getTreePath(), 2, usuario);				
 					}
 				}
 			}

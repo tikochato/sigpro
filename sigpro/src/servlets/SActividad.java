@@ -446,14 +446,8 @@ public class SActividad extends HttpServlet {
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0){
 				Actividad actividad = ActividadDAO.getActividadPorId(id);
-
-				actividad.setUsuarioActualizo(usuario);
-				boolean result = false;
-				actividad.setUsuarioActualizo(usuario);
-				actividad.setFechaActualizacion(new Date());
-				result=ActividadDAO.eliminarActividad(actividad);
 				
-				response_text = String.join("","{ \"success\": ",( result ? "true" : "false")," }");
+				response_text = String.join("","{ \"success\": ",( ObjetoDAO.borrarHijos(actividad.getTreePath(), 5, usuario) ? "true" : "false")," }");
 			}
 			else
 				response_text = "{ \"success\": false }";
