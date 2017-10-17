@@ -41,7 +41,7 @@ public class Producto implements java.io.Serializable {
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
-	private Integer estado;
+	private int estado;
 	private Long snip;
 	private Integer programa;
 	private Integer subprograma;
@@ -80,7 +80,7 @@ public class Producto implements java.io.Serializable {
 
 	public Producto(AcumulacionCosto acumulacionCosto, Componente componente, ProductoTipo productoTipo,
 			UnidadEjecutora unidadEjecutora, String nombre, String descripcion, String usuarioCreo,
-			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, Integer estado, Long snip,
+			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, Long snip,
 			Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra, String latitud,
 			String longitud, Integer peso, BigDecimal costo, Integer renglon, Integer ubicacionGeografica,
 			Date fechaInicio, Date fechaFin, int duracion, String duracionDimension, Integer orden, String treePath,
@@ -232,11 +232,11 @@ public class Producto implements java.io.Serializable {
 	}
 
 	@Column(name = "estado")
-	public Integer getEstado() {
+	public int getEstado() {
 		return this.estado;
 	}
 
-	public void setEstado(Integer estado) {
+	public void setEstado(int estado) {
 		this.estado = estado;
 	}
 
