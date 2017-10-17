@@ -391,14 +391,14 @@ public class SSubComponente extends HttpServlet {
 			}
 		}
 		else if(accion.equals("numeroSubComponentes")){
-			response_text = String.join("","{ \"success\": true, \"totalcomponentes\":",SubComponenteDAO.getTotalSubComponentes(usuario).toString()," }");
+			response_text = String.join("","{ \"success\": true, \"totalsubcomponentes\":",SubComponenteDAO.getTotalSubComponentes(usuario).toString()," }");
 		}
 		else if(accion.equals("numeroSubComponentesPorProyecto")){
 			String filtro_nombre = map.get("filtro_nombre");
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			int proyectoId = map.get("proyectoid")!=null  ? Integer.parseInt(map.get("proyectoid")) : 0;
-			response_text = String.join("","{ \"success\": true, \"totalcomponentes\":",SubComponenteDAO.getTotalSubComponentesPorProyecto(proyectoId, filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion,usuario).toString()," }");
+			response_text = String.join("","{ \"success\": true, \"totalsubcomponentes\":",SubComponenteDAO.getTotalSubComponentesPorProyecto(proyectoId, filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion,usuario).toString()," }");
 		}
 		else if(accion.equals("getSubComponentesPaginaPorProyecto")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
