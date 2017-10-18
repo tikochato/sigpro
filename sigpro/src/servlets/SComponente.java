@@ -241,7 +241,6 @@ public class SComponente extends HttpServlet {
 				temp.duracionDimension = componente.getDuracionDimension();
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
 				temp.esDeSigade = componente.getEsDeSigade().equals(1);
-				temp.costoTecho = componente.getCostoTecho();
 				
 				stcomponentes.add(temp);
 			}
@@ -282,7 +281,6 @@ public class SComponente extends HttpServlet {
 					Integer duracion = Utils.String2Int(map.get("duaracion"), null);
 					String duracionDimension = map.get("duracionDimension");
 					Integer esDeSigade = Utils.String2Boolean("true",0);
-					BigDecimal costoTecho = Utils.String2BigDecimal(map.get("costoTecho")!= null ? map.get("costoTecho") : null, null);
 					
 					AcumulacionCosto acumulacionCosto = null;
 					if(acumulacionCostoid != null){
@@ -304,11 +302,11 @@ public class SComponente extends HttpServlet {
 					Componente componente;
 					if(esnuevo){
 						
-						componente = new Componente(acumulacionCosto,componenteTipo, proyecto, unidadEjecutora_, nombre,
+						componente = new Componente(acumulacionCosto,null,componenteTipo, proyecto, unidadEjecutora_, nombre,
 								descripcion, usuario, null, new DateTime().toDate(), null, 1,
 								snip, programa, subPrograma, proyecto_, actividad,obra, latitud,longitud, costo, renglon, 
-								ubicacionGeografica, fechaInicio, fechaFin, duracion, duracionDimension, null,null,null,esDeSigade,costoTecho,
-								null,null,null);
+								ubicacionGeografica, fechaInicio, fechaFin, duracion, duracionDimension, null,null,null,esDeSigade,
+								null,null,null, null,null,null);
 					}
 					else{
 						componente = ComponenteDAO.getComponentePorId(id,usuario);
@@ -334,7 +332,6 @@ public class SComponente extends HttpServlet {
 						componente.setDuracionDimension(duracionDimension);
 						componente.setUnidadEjecutora(unidadEjecutora_);
 						componente.setComponenteTipo(componenteTipo);
-						componente.setCostoTecho(costoTecho);
 					}
 					result = ComponenteDAO.guardarComponente(componente, true);
 					
@@ -461,7 +458,6 @@ public class SComponente extends HttpServlet {
 				
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
 				temp.esDeSigade = componente.getEsDeSigade().equals(1);
-				temp.costoTecho = componente.getCostoTecho();
 				
 				stcomponentes.add(temp);
 			}
@@ -528,7 +524,6 @@ public class SComponente extends HttpServlet {
 			
 			temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
 			temp.esDeSigade = componente.getEsDeSigade().equals(1);
-			temp.costoTecho = componente.getCostoTecho();
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"componente\":",response_text);

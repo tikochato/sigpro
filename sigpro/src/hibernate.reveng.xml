@@ -178,4 +178,7 @@
 		match-catalog="sipro">
 	</table-filter>
 	<table-filter match-name="etiqueta" match-catalog="sipro"></table-filter>
+	<table-filter match-name="componente_sigade"
+		match-catalog="sipro">
+	</table-filter>
 </hibernate-reverse-engineering>

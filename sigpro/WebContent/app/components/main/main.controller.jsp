@@ -158,7 +158,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             	template: '<div load-on-demand="\'programatipoController\'" class="all_page"></div>'
             })
             .when('/programa/:reiniciar_vista?',{
-            	template: '<div load-on-demand="\'programaController\'" class="all_page"></div>'
+            	template: '<div load-on-demand="\'prestamoController\'" class="all_page"></div>'
             })
             .when('/mapa/:proyecto_id?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'mapaController\'" class="all_page"></div>'
@@ -461,9 +461,9 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   template: '/app/components/programatipo/programatipo.jsp'
 	       },
 	       {
-	    	   name: 'programaController',
-	    	   script: '/app/components/programa/programa.controller.js',
-	    	   template: '/app/components/programa/programa.jsp'
+	    	   name: 'prestamoController',
+	    	   script: '/app/components/programa/prestamo.controller.js',
+	    	   template: '/app/components/programa/prestamo.jsp'
 	       },
 	       {
 	    	   name: 'mapaController',
