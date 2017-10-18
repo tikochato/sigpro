@@ -571,6 +571,14 @@ public class SPrestamo extends HttpServlet {
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			
 			response_text = String.join("","{ \"success\": true, \"totalprestamos\":",PrestamoDAO.getTotalPrestamos(filtro_nombre, filtro_codigo_presupuestario, filtro_numero_prestamo, filtro_usuario_creo, filtro_fecha_creacion, usuario).toString()," }");
+		}else if(accion.equals("borrarPrestamo")){
+			Integer prestamoId = Utils.String2Int(map.get("prestamoId"));
+			Prestamo prestamo = PrestamoDAO.getPrestamoById(prestamoId);
+			prestamo.setUsuarioActualizo(usuario);
+			prestamo.setFechaActualizacion(new Date());
+			
+			boolean eliminado = PrestamoDAO.borrarPrestamo(prestamo);
+			response_text = String.join("","{ \"success\": ", eliminado == true ? "true" : "false"," }");			
 		}else
 			response_text = "{ \"success\": false }";
 		
