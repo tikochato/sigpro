@@ -174,8 +174,7 @@ public class ObjetoDAO {
 						objetoCosto.inicializarStanio(anioInicial, anioFinal);
 						
 						if(obtenerPlanificado){
-							BigDecimal totalPagos = obj[19]!=null ? (BigDecimal)obj[19] : null;					
-							BigDecimal totalPlan = obj[18]!= null ? (BigDecimal)obj[18] : null;
+							BigDecimal totalPagos = obj[19]!=null ? (BigDecimal)obj[19] : null;		
 							if(totalPagos!=null && totalPagos.compareTo(BigDecimal.ZERO)!=0){
 								//obtener pagos
 								List<?> estructuraPagos = getConsultaPagos(objetoCosto.objeto_id, objetoCosto.objeto_tipo, anioInicial, anioFinal);

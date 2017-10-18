@@ -37,7 +37,7 @@ import utilities.Utils;
 /**
  * Servlet implementation class SComponenteTipo
  */
-@WebServlet("/SComponenteTipo")
+@WebServlet("/SSubComponenteTipo")
 public class SSubComponenteTipo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	class stcomponentetipo{

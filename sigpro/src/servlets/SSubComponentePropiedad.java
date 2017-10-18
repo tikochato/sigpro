@@ -34,7 +34,7 @@ import utilities.Utils;
 /**
  * Servlet implementation class SComponentePropiedad
  */
-@WebServlet("/SComponentePropiedad")
+@WebServlet("/SSubComponentePropiedad")
 public class SSubComponentePropiedad extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
