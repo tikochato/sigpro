@@ -13,7 +13,7 @@
 	
 	Integer days = Utils.getWorkingDays(new DateTime(2016,5,2,0,0,0,0), new DateTime(2017,10,16,0,0,0,0));
 	out.print(days);
-	//mi cambio
+	out.print(days);
 %>
 </body>
 </html>
