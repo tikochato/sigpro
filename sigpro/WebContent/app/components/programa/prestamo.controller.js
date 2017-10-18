@@ -681,52 +681,6 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		return resultado.promise;
 	};
 
-
-	mi.buscarProyectoTipo = function() {
-		var resultado = mi.llamarModalBusqueda('Tipos de '+$rootScope.etiquetas.proyecto,'/SProyectoTipo', {
-			accion : 'numeroProyectoTipos',t:moment().unix()
-		}, function(pagina, elementosPorPagina) {
-			return {
-				accion : 'getProyectoTipoPagina',
-				pagina : pagina,
-				numeroproyectotipo : elementosPorPagina,
-				t:moment().unix()
-			};
-		},'id','nombre',false, null);
-
-		resultado.then(function(itemSeleccionado) {
-			mi.poryectotipoid= itemSeleccionado.id;
-			mi.prestamotiponombre = itemSeleccionado.nombre;
-
-			var parametros = {
-					accion: 'getProyectoPropiedadPorTipo',
-					idProyecto: mi.prestamo!=''?mi.poryectotipoid.id:0,
-					idProyectoTipo: itemSeleccionado.id,
-					t:moment().unix()
-			}
-
-			$http.post('/SProyectoPropiedad', parametros).then(function(response){
-				mi.camposdinamicos = response.data.proyectopropiedades;
-				for (campos in mi.camposdinamicos) {
-					switch (mi.camposdinamicos[campos].tipo){
-						case "fecha":
-							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
-							break;
-						case "entero":
-							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? Number(mi.camposdinamicos[campos].valor) : null;
-							break;
-						case "decimal":
-							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? Number(mi.camposdinamicos[campos].valor) : null;
-							break;
-						case "booleano":
-							mi.camposdinamicos[campos].valor = mi.camposdinamicos[campos].valor == 'true' ? true : false;
-							break;
-					}
-				}
-			});
-		});
-	};
-
 	mi.buscarUnidadEjecutora = function() {
 		var resultado = mi.llamarModalBusqueda('Unidades Ejecutoras','/SUnidadEjecutora', {
 			accion : 'totalElementos',
