@@ -84,7 +84,7 @@ public class PrestamoDAO {
 		return ret;
 	}
 	
-	public static List<Prestamo> getPrestamosPagina(Integer pagina, String filtro_nombre, Long filtro_codigo_presupuestario, 
+	public static List<Prestamo> getPrestamosPagina(Integer pagina, Integer elementosPorPagina, String filtro_nombre, Long filtro_codigo_presupuestario, 
 			String filtro_numero_prestamo, String filtro_usuario_creo, String filtro_fecha_creacion, String columna_ordenada,
 			String orden_direccion, String usuario){
 		List<Prestamo> ret = null;
@@ -110,6 +110,7 @@ public class PrestamoDAO {
 				String.join(" ", query, "ORDER BY fecha_creacion ASC");
 			
 			Query<Prestamo> criteria = session.createQuery(query, Prestamo.class);
+			criteria.setFirstResult(((pagina-1)*(elementosPorPagina)));
 //			if(usuario != null){
 //				criteria.setParameter("usuario", usuario);
 //			}

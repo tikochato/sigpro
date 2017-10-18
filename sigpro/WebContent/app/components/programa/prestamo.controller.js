@@ -13,7 +13,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		$window.document.title = $utilidades.sistema_nombre+' - '+$rootScope.etiquetas.proyecto+'s';
 		
 	mi.rowCollection = [];
-	mi.proyecto = null;
+	mi.prestamo = null;
 	mi.esNuevo = false;
 	mi.esNuevoDocumento = true;
 	mi.campos = {};
@@ -21,10 +21,10 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	mi.mostrarcargando= (mi.esTreeview) ? false : true;
 	mi.paginaActual = 1;
 	mi.cooperantes = [];
-	mi.proyectotipos = [];
+	mi.prestamotipos = [];
 	mi.unidadesejecutoras = [];
 	mi.poryectotipoid = "";
-	mi.proyectotiponombre="";
+	mi.prestamotiponombre="";
 	mi.unidadejecutoraid="";
 	mi.entidad="";
 	mi.ejercicio="";
@@ -97,8 +97,6 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			{ name : 'numeroPrestamo',    displayName : 'Número de Préstamo' ,cellClass: 'grid-align-left', 
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'numero_prestamo\']" ng-keypress="grid.appScope.controller.filtrar($event)" style="width:175px;"></input></div>',
 			},
-			{ name : 'fechaSuscripcion',   displayName : 'Fecha de Suscripción' ,cellClass: 'grid-align-left',  enableFiltering: false , enableSorting: false },
-			{ name : 'fechaVigencia',   displayName : 'Fecha de vigencia' ,cellClass: 'grid-align-left',  enableFiltering: false , enableSorting: false },
 			{ name: 'usuarioCreo', width: 120, displayName: 'Usuario Creación',cellClass: 'grid-align-left',
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text"style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'usuario_creo\']"  ng-keypress="grid.appScope.controller.filtrar($event)" style="width:90px;"></input></div>'
 			},
@@ -109,7 +107,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		onRegisterApi: function(gridApi) {
 			mi.gridApi = gridApi;
 			gridApi.selection.on.rowSelectionChanged($scope,function(row) {
-				mi.proyecto = row.entity;
+				mi.prestamo = row.entity;
 			});
 
 			gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
@@ -160,8 +158,21 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t:moment().unix()
 			}).success(
 				function(response) {
-					mi.entidades = response.prestamos;
-					mi.gridOpciones.data = mi.entidades;
+					for(x in response.prestamos){
+						response.prestamos[x].fechaDecreto = response.prestamos[x].fechaDecreto != null ? moment(response.prestamos[x].fechaDecreto,'DD/MM/YYYY').toDate() : undefined;
+						response.prestamos[x].fechaSuscripcion = response.prestamos[x].fechaSuscripcion != null ? moment(response.prestamos[x].fechaSuscripcion,'DD/MM/YYYY').toDate() : undefined;
+						response.prestamos[x].fechaElegibilidadUe = response.prestamos[x].fechaElegibilidadUe != null ? moment(response.prestamos[x].fechaElegibilidadUe,'DD/MM/YYYY').toDate() : undefined;
+						response.prestamos[x].fechaCierreOrigianlUe = response.prestamos[x].fechaCierreOrigianlUe != null ? moment(response.prestamos[x].fechaCierreOrigianlUe,'DD/MM/YYYY').toDate() : undefined;
+						response.prestamos[x].fechaCierreActualUe = response.prestamos[x].fechaCierreActualUe != null ? moment(response.prestamos[x].fechaCierreActualUe,'DD/MM/YYYY').toDate() : undefined;
+						response.prestamos[x].fechaVigencia = response.prestamos[x].fechaVigencia != null ? moment(response.prestamos[x].fechaVigencia,'DD/MM/YYYY').toDate() : undefined;
+						response.prestamos[x].fechaCorte = response.prestamos[x].fechaCorte != null ? moment(response.prestamos[x].fechaCorte,'DD/MM/YYYY').toDate() : undefined;
+						response.prestamos[x].fechaFirma = response.prestamos[x].fechaFirma != null ? moment(response.prestamos[x].fechaFirma,'DD/MM/YYYY').toDate() : undefined;
+						response.prestamos[x].fechaAutorizacion = response.prestamos[x].fechaAutorizacion != null ? moment(response.prestamos[x].fechaAutorizacion,'DD/MM/YYYY').toDate() : undefined;
+						response.prestamos[x].fechaFinEjecucion = response.prestamos[x].fechaFinEjecucion != null ? moment(response.prestamos[x].fechaFinEjecucion,'DD/MM/YYYY').toDate() : undefined;
+					}
+					
+					mi.prestamos = response.prestamos;
+					mi.gridOpciones.data = mi.prestamos;
 					mi.mostrarcargando = false;
 				});
 	};
@@ -258,199 +269,128 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	}
 	
 	mi.guardar = function(esvalido){
-		mi.botones=false;
-		for (campos in mi.camposdinamicos) {
-			if (mi.camposdinamicos[campos].tipo === 'fecha') {
-				mi.camposdinamicos[campos].valor_f = mi.camposdinamicos[campos].valor!=null ? moment(mi.camposdinamicos[campos].valor).format('DD/MM/YYYY') : "";
-			}
-		}
-
-		var listaImpactos = "";
-		for (impacto in mi.impactos){
-			listaImpactos = listaImpactos + (listaImpactos.length>0 ? "~" : "")+
-			mi.impactos[impacto].entidadId + "," + mi.impactos[impacto].impacto; 
-		}
-		var miembros = "";
-		for (m in mi.miembros){
-			miembros = miembros + (miembros.length > 0 ? "," : "") + mi.miembros[m].id; 
-		}
-		
-		if(mi.proyecto!=null && mi.proyecto.nombre!=null){
+		if (mi.prestamo!=null && mi.prestamo.codigoPresupuestario !=null && mi.prestamo.codigoPresupuestario != ''){
 			var param_data = {
-				accion : 'guardar',
-				id: mi.proyecto.id,
-				nombre: mi.proyecto.nombre,
-				snip: mi.proyecto.snip,
-				objetivo: mi.proyecto.objetivo,
-				descripcion:mi.proyecto.descripcion,
-				proyectotipoid: mi.poryectotipoid,
-				ejercicio: mi.ejercicio,
-				entidadid: mi.entidad,
-				unidadejecutoraid: mi.unidadejecutoraid,
-				cooperanteid: mi.cooperanteid,
-				programa: mi.proyecto.programa,
-				subprograma: mi.proyecto.subprograma,
-				proyecto_: mi.proyecto.proyecto,
-				obra:mi.proyecto.obra,
-				actividad: mi.proyecto.actividad,
-				fuente: mi.proyecto.fuente,
-				esnuevo: mi.esNuevo,
-				longitud: mi.proyecto.longitud,
-				latitud : mi.proyecto.latitud,
-				directorProyecto: mi.directorProyectoId,
-				impactos : listaImpactos,
-				miembros: miembros,
-				objetoivoEspecifico: mi.proyecto.objetivoEspecifico,
-				visionGeneral : mi.proyecto.visionGeneral,
-				datadinamica : JSON.stringify(mi.camposdinamicos),
-				ejecucionFisicaReal: mi.proyecto.ejecucionFisicaReal,
-				proyectoClase: $rootScope.etiquetas.id,
-				projectCargado: mi.proyecto.projectCargado,
-				t:moment().unix()
-			};
-			$http.post('/SProyecto',param_data).then(
-				function(response) {
-					if (response.data.success) {
-						mi.proyecto.id = response.data.id;
-						mi.proyecto.usuarioCreo = response.data.usuarioCreo;
-						mi.proyecto.fechaCreacion = response.data.fechaCreacion;
-						mi.proyecto.usuarioactualizo = response.data.usuarioactualizo;
-						mi.proyecto.fechaactualizacion = response.data.fechaactualizacion;
-						
-						if (mi.prestamo!=null && mi.prestamo.codigoPresupuestario !=null && mi.prestamo.codigoPresupuestario != ''){
-							var param_data = {
-									accion: "gurdarPrestamo",
-									objetoId: mi.proyecto.id,
-									objetoTipo: 1,
-									codigoPresupuestario: mi.prestamo.codigoPresupuestario,
-									numeroPrestamo: mi.prestamo.numeroPrestamo,
-									proyetoPrograma: mi.prestamo.proyectoPrograma,
-									unidadEjecutora: mi.unidadejecutoraid,
-									entidad: mi.entidad, 
-									ejercicio: mi.ejercicio,
-									cooperanteUeId: mi.prestamo.cooperanteid,
-									fechaDecreto: moment(mi.prestamo.fechaDecreto).format('DD/MM/YYYY'),
-									fechaSuscripcion: moment(mi.prestamo.fechaSuscripcion).format('DD/MM/YYYY'),
-									fechaVigencia: moment(mi.prestamo.fechaVigencia).format('DD/MM/YYYY'),
-									tipoMonedaId: mi.prestamo.tipoMonedaId,
-									montoContratado: mi.prestamo.montoContratado,
-									montoContratadoUsd: mi.prestamo.montoContratadoUsd,
-									montoContratadoQtz: mi.prestamo.montoContratadoQtz,
-									desembolsoAFechaUsd: mi.prestamo.desembolsoAFechaUsd,
-									montoPorDesembolsarUsd: mi.prestamo.montoPorDesembolsarUsd,
-									fechaElegibilidad: moment(mi.prestamo.fechaElegibilidadUe).format('DD/MM/YYYY'),
-									fechaCierreOriginal:  moment(mi.prestamo.fechaCierreOrigianlUe).format('DD/MM/YYYY'),
-									fechaCierreActual: moment(mi.prestamo.fechaCierreActualUe).format('DD/MM/YYYY'),
-									mesesProrroga: mi.prestamo.mesesProrrogaUe,
-									montoAisignadoUe: mi.prestamo.montoAsignadoUe,
-									desembolsoAFechaUe: mi.prestamo.desembolsoAFechaUe,
-									montoPorDesembolsarUe: mi.prestamo.montoPorDesembolsarUe,
-									montoAsignadoUeUsd: mi.prestamo.montoAsignadoUeUsd,
-									montoAsignadoUeQtz: mi.prestamo.montoAsignadoUeQtz,
-									desembolsoAFechaUeUsd: mi.prestamo.desembolsoAFechaUeUsd,
-									montoPorDesembolsarUeUsd: mi.prestamo.montoPorDesembolsarUeUsd,
-									destino : mi.prestamo.destino,
-									sectorEconomico: mi.prestamo.sectorEconomico,
-									fechaFimra: mi.prestamo.fechaFirma != undefined ? moment(mi.prestamo.fechaFirma).format('DD/MM/YYYY') : undefined,
-									tipoAutorizacionId : mi.prestamo.tipoAutorizacionId,
-									numeroAutorizacion: mi.prestamo.numeroAutorizacion,
-									fechaAutorizacion: mi.prestamo.fechaAutorizacion != undefined ? moment(mi.prestamo.fechaAutorizacion).format('DD/MM/YYYY') : undefined,
-									aniosPlazo: mi.prestamo.aniosPlazo != undefined ? mi.prestamo.aniosPlazo : undefined,
-									aniosGracia: mi.prestamo.aniosGracia,
-									fechaFinEjecucion: mi.prestamo.fechaFinEjecucion != undefined ? moment(mi.prestamo.fechaFinEjecucion).format('DD/MM/YYYY') : undefined,
-									periodoEjecucion: mi.prestamo.periodoEjecucion != "" ? mi.prestamo.periodoEjecucion : undefined,
-									tipoInteresId: mi.prestamo.tipoInteresId,
-									porcentajeInteres: mi.prestamo.porcentajeInteres,
-									porcentajeComisionCompra: mi.prestamo.porcentajeComisionCompra,
-									amortizado: mi.prestamo.amortizado,
-									porAmortizar: mi.prestamo.porAmortizar,
-									principalAnio: mi.prestamo.principalAnio,
-									interesesAnio : mi.prestamo.interesesAnio,
-									comisionCompromisoAnio: mi.prestamo.comisionCompromisoAnio,
-									otrosGastos: mi.prestamo.otrosGastos,
-									principalAcumulado: mi.prestamo.principalAcumulado,
-									interesesAcumulados: mi.prestamo.interesesAcumulados,
-									comisionCompromisoAcumulado: mi.prestamo.comisionCompromisoAcumulado,
-									otrosCargosAcumulados: mi.prestamo.otrosCargosAcumulados,
-									presupuestoAsignadoFuncionamiento: mi.prestamo.presupuestoAsignadoFuncionamiento,
-									presupuestoAsignadoInversion: mi.prestamo.presupuestoAsignadoInversion,
-									presupuestoModificadoFuncionamiento: mi.prestamo.presupuestoModificadoFun,
-									presupuestoModificadoInversion: mi.prestamo.presupuestoModificadoInv,
-									presupuestoVigenteFuncionamiento: mi.prestamo.presupuestoVigenteFun,
-									presupuestoVigenteInversion: mi.prestamo.presupuestoVigenteInv,
-									presupuestoDevengadoFunconamiento:mi.prestamo.presupuestoDevengadoFun,
-									presupuestoDevengadoInversion:mi.prestamo.presupuestoDevengadoInv,
-									presupuestoPagadoFuncionamiento: mi.prestamo.presupuestoPagadoFun,
-									presupuestoPagadoInversion: mi.prestamo.presupuestoPagadoInv,
-									saldoCuentas: mi.prestamo.saldoCuentas,
-									desembolsoReal: mi.prestamo.desembolsoReal,
-									ejecucionEstadoId: mi.prestamo.ejecucionEstadoId != undefined ? mi.prestamo.ejecucionEstadoId : undefined,
-									fechaCorte : mi.prestamo.fechaCorte != undefined ? moment(mi.prestamo.fechaCorte).format('DD/MM/YYYY') : undefined,
-									t:moment().unix()
-								};
-								
-							
-								$http.post('/SPrestamo',param_data).then(
-										function(response) {
-											if (response.data.success) {
-												if(mi.esTreeview){
-													mi.t_cambiarNombreNodo();
-												}
-												else
-													mi.obtenerTotalProyectos();
-												if(mi.child_desembolso!=null || mi.child_riesgos!=null){
-													if(mi.child_desembolso)
-														ret = mi.child_desembolso.guardar($rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
-																'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el '+$rootScope.etiquetas.proyecto,
-																mi.child_riesgo!=null ? mi.child_riesgo.guardar :  null);
-													else if(mi.child_riesgo)
-														ret = mi.child_riesgo.guardar($rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
-																'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el '+$rootScope.etiquetas.proyecto);
-												}
-												else{
-													$utilidades.mensaje('success',$rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
-													mi.botones=true;
-												}
-													
-											}else{
-												$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el '+$rootScope.etiquetas.proyecto);
-												mi.botones=true;
-											}
-								});
-						}
-						else{
-							$utilidades.mensaje('success',$rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
-						}
-						
-						mi.esNuevo = false;
-						
-						
-					}else
-						$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el '+$rootScope.etiquetas.proyecto);
-			});
-
-			mi.esNuevoDocumento = false;
-		}else
+					accion: "guardarPrestamo",
+					objetoId: mi.prestamo.id,
+					objetoTipo: 1,
+					codigoPresupuestario: mi.prestamo.codigoPresupuestario,
+					numeroPrestamo: mi.prestamo.numeroPrestamo,
+					proyetoPrograma: mi.prestamo.proyectoPrograma,
+					unidadEjecutora: mi.unidadejecutoraid,
+					entidad: mi.entidad, 
+					ejercicio: mi.ejercicio,
+					cooperanteUeId: mi.prestamo.cooperanteid,
+					fechaDecreto: moment(mi.prestamo.fechaDecreto).format('DD/MM/YYYY'),
+					fechaSuscripcion: moment(mi.prestamo.fechaSuscripcion).format('DD/MM/YYYY'),
+					fechaVigencia: moment(mi.prestamo.fechaVigencia).format('DD/MM/YYYY'),
+					tipoMonedaId: mi.prestamo.tipoMonedaId,
+					montoContratado: mi.prestamo.montoContratado,
+					montoContratadoUsd: mi.prestamo.montoContratadoUsd,
+					montoContratadoQtz: mi.prestamo.montoContratadoQtz,
+					desembolsoAFechaUsd: mi.prestamo.desembolsoAFechaUsd,
+					montoPorDesembolsarUsd: mi.prestamo.montoPorDesembolsarUsd,
+					fechaElegibilidad: moment(mi.prestamo.fechaElegibilidadUe).format('DD/MM/YYYY'),
+					fechaCierreOriginal:  moment(mi.prestamo.fechaCierreOrigianlUe).format('DD/MM/YYYY'),
+					fechaCierreActual: moment(mi.prestamo.fechaCierreActualUe).format('DD/MM/YYYY'),
+					mesesProrroga: mi.prestamo.mesesProrrogaUe,
+					montoAisignadoUe: mi.prestamo.montoAsignadoUe,
+					desembolsoAFechaUe: mi.prestamo.desembolsoAFechaUe,
+					montoPorDesembolsarUe: mi.prestamo.montoPorDesembolsarUe,
+					montoAsignadoUeUsd: mi.prestamo.montoAsignadoUeUsd,
+					montoAsignadoUeQtz: mi.prestamo.montoAsignadoUeQtz,
+					desembolsoAFechaUeUsd: mi.prestamo.desembolsoAFechaUeUsd,
+					montoPorDesembolsarUeUsd: mi.prestamo.montoPorDesembolsarUeUsd,
+					destino : mi.prestamo.destino,
+					sectorEconomico: mi.prestamo.sectorEconomico,
+					fechaFimra: mi.prestamo.fechaFirma != undefined ? moment(mi.prestamo.fechaFirma).format('DD/MM/YYYY') : undefined,
+					tipoAutorizacionId : mi.prestamo.tipoAutorizacionId,
+					numeroAutorizacion: mi.prestamo.numeroAutorizacion,
+					fechaAutorizacion: mi.prestamo.fechaAutorizacion != undefined ? moment(mi.prestamo.fechaAutorizacion).format('DD/MM/YYYY') : undefined,
+					aniosPlazo: mi.prestamo.aniosPlazo != undefined ? mi.prestamo.aniosPlazo : undefined,
+					aniosGracia: mi.prestamo.aniosGracia,
+					fechaFinEjecucion: mi.prestamo.fechaFinEjecucion != undefined ? moment(mi.prestamo.fechaFinEjecucion).format('DD/MM/YYYY') : undefined,
+					periodoEjecucion: mi.prestamo.periodoEjecucion != "" ? mi.prestamo.periodoEjecucion : undefined,
+					tipoInteresId: mi.prestamo.tipoInteresId,
+					porcentajeInteres: mi.prestamo.porcentajeInteres,
+					porcentajeComisionCompra: mi.prestamo.porcentajeComisionCompra,
+					amortizado: mi.prestamo.amortizado,
+					porAmortizar: mi.prestamo.porAmortizar,
+					principalAnio: mi.prestamo.principalAnio,
+					interesesAnio : mi.prestamo.interesesAnio,
+					comisionCompromisoAnio: mi.prestamo.comisionCompromisoAnio,
+					otrosGastos: mi.prestamo.otrosGastos,
+					principalAcumulado: mi.prestamo.principalAcumulado,
+					interesesAcumulados: mi.prestamo.interesesAcumulados,
+					comisionCompromisoAcumulado: mi.prestamo.comisionCompromisoAcumulado,
+					otrosCargosAcumulados: mi.prestamo.otrosCargosAcumulados,
+					presupuestoAsignadoFuncionamiento: mi.prestamo.presupuestoAsignadoFuncionamiento,
+					presupuestoAsignadoInversion: mi.prestamo.presupuestoAsignadoInversion,
+					presupuestoModificadoFuncionamiento: mi.prestamo.presupuestoModificadoFun,
+					presupuestoModificadoInversion: mi.prestamo.presupuestoModificadoInv,
+					presupuestoVigenteFuncionamiento: mi.prestamo.presupuestoVigenteFun,
+					presupuestoVigenteInversion: mi.prestamo.presupuestoVigenteInv,
+					presupuestoDevengadoFunconamiento:mi.prestamo.presupuestoDevengadoFun,
+					presupuestoDevengadoInversion:mi.prestamo.presupuestoDevengadoInv,
+					presupuestoPagadoFuncionamiento: mi.prestamo.presupuestoPagadoFun,
+					presupuestoPagadoInversion: mi.prestamo.presupuestoPagadoInv,
+					saldoCuentas: mi.prestamo.saldoCuentas,
+					desembolsoReal: mi.prestamo.desembolsoReal,
+					ejecucionEstadoId: mi.prestamo.ejecucionEstadoId != undefined ? mi.prestamo.ejecucionEstadoId : undefined,
+					fechaCorte : mi.prestamo.fechaCorte != undefined ? moment(mi.prestamo.fechaCorte).format('DD/MM/YYYY') : undefined,
+					t:moment().unix()
+				};
+				
+			
+				$http.post('/SPrestamo',param_data).then(
+						function(response) {
+							if (response.data.success) {
+								if(mi.esTreeview){
+									mi.t_cambiarNombreNodo();
+								}
+								else
+									mi.obtenerTotalPrestamos();
+								if(mi.child_desembolso!=null || mi.child_riesgos!=null){
+									if(mi.child_desembolso)
+										ret = mi.child_desembolso.guardar($rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+												'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el '+$rootScope.etiquetas.proyecto,
+												mi.child_riesgo!=null ? mi.child_riesgo.guardar :  null);
+									else if(mi.child_riesgo)
+										ret = mi.child_riesgo.guardar($rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+												'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el '+$rootScope.etiquetas.proyecto);
+								}
+								else{
+									$utilidades.mensaje('success',$rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+									mi.botones=true;
+								}
+									
+							}else{
+								$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el '+$rootScope.etiquetas.proyecto);
+								mi.botones=true;
+							}
+				});
+		}
+		else
 			$utilidades.mensaje('warning','Debe de llenar todos los campos obligatorios');
 	 }
 
 	mi.borrar = function(ev) {
-		if(mi.proyecto !=null && mi.proyecto.id!=null){
+		if(mi.prestamo !=null && mi.prestamo.id!=null){
 			$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 					, "Confirmación de Borrado"
-					, '¿Desea borrar el '+$rootScope.etiquetas.proyecto+' "'+mi.proyecto.nombre+'"?'
+					, '¿Desea borrar el '+$rootScope.etiquetas.proyecto+' "'+mi.prestamo.nombre+'"?'
 					, "Borrar"
 					, "Cancelar")
 			.result.then(function(data) {
 				if(data){
 					$http.post('/SProyecto', {
 						accion: 'borrarProyecto',
-						id: mi.proyecto.id,
+						id: mi.prestamo.id,
 						t:moment().unix()
 					}).success(function(response){
 						if(response.success){
 							$utilidades.mensaje('success',$rootScope.etiquetas.proyecto+' borrado con éxito');
-							mi.proyecto = null;
+							mi.prestamo = null;
 							mi.obtenerTotalProstamos();
 						}
 						else
@@ -468,13 +408,13 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	mi.nuevo = function (){
 		mi.esNuevoDocumento = true;		
 		mi.poryectotipoid = "";
-		mi.proyectotiponombre="";
+		mi.prestamotiponombre="";
 		mi.unidadejecutoraid="";
 		mi.unidadejecutoranombre="";
 		mi.cooperanteid="";
 		mi.cooperantenombre="";
 		mi.esColapsado = true;
-		mi.proyecto = {};
+		mi.prestamo = {};
 		mi.esNuevo = true;
 		mi.camposdinamicos = {};
 		mi.coordenadas = "";
@@ -484,29 +424,29 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	};
 
 	mi.editar = function() {
-		if(mi.proyecto!=null && mi.proyecto.id!=null){
+		if(mi.prestamo!=null && mi.prestamo.id!=null){
 			
 			mi.esNuevoDocumento = false;
-			mi.poryectotipoid = mi.proyecto.proyectotipoid;
-			mi.proyectotiponombre=mi.proyecto.proyectotipo;
-			mi.unidadejecutoraid=mi.proyecto.unidadejecutoraid;
-			mi.unidadejecutoranombre=mi.proyecto.unidadejecutora;
-			mi.entidadnombre = mi.proyecto.entidadnombre;
-			mi.ejercicio = mi.proyecto.ejercicio;
-			mi.entidad = mi.proyecto.entidadentidad;
-			mi.cooperanteid=mi.proyecto.cooperanteid;
-			mi.cooperantenombre=mi.proyecto.cooperante;
-			mi.directorProyectoNombre = mi.proyecto.directorProyectoNmbre;
-			mi.directorProyectoId = mi.proyecto.directorProyectoId;
+			mi.poryectotipoid = mi.prestamo.proyectotipoid;
+			mi.prestamotiponombre=mi.prestamo.proyectotipo;
+			mi.unidadejecutoraid=mi.prestamo.unidadejecutoraid;
+			mi.unidadejecutoranombre=mi.prestamo.unidadejecutora;
+			mi.entidadnombre = mi.prestamo.entidadnombre;
+			mi.ejercicio = mi.prestamo.ejercicio;
+			mi.entidad = mi.prestamo.entidadentidad;
+			mi.cooperanteid=mi.prestamo.cooperanteid;
+			mi.cooperantenombre=mi.prestamo.cooperante;
+			mi.directorProyectoNombre = mi.prestamo.directorProyectoNmbre;
+			mi.directorProyectoId = mi.prestamo.directorProyectoId;
 			mi.esColapsado = true;
 			mi.esNuevo = false;
-			mi.coordenadas = (mi.proyecto.latitud !=null ?  mi.proyecto.latitud : '') +
-			(mi.proyecto.latitud!=null ? ', ' : '') + (mi.proyecto.longitud!=null ? mi.proyecto.longitud : '');
+			mi.coordenadas = (mi.prestamo.latitud !=null ?  mi.prestamo.latitud : '') +
+			(mi.prestamo.latitud!=null ? ', ' : '') + (mi.prestamo.longitud!=null ? mi.prestamo.longitud : '');
 			mi.impactos =[];
 			mi.miembros = [];
 			var parametros = {
 					accion: 'getProyectoPropiedadPorTipo',
-					idProyecto: mi.proyecto!=''?mi.proyecto.id:0,
+					idProyecto: mi.prestamo!=''?mi.prestamo.id:0,
 				    idProyectoTipo: mi.poryectotipoid,
 				    t:moment().unix()
 			}
@@ -535,41 +475,30 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			
 			parametros = {
 					accion: 'getPrestamo',
-					objetoId: mi.proyecto.id,
+					objetoId: mi.prestamo.id,
 				    objetoTipo : 1,
 				    t:moment().unix()
 			}
 			
-			if (mi.proyecto.prestamo !=null){
-				mi.prestamo = JSON.parse( JSON.stringify( mi.proyecto.prestamo ) ); 
-				mi.prestamo.fechaCorte = mi.prestamo.fechaCorte != undefined ?  moment(mi.prestamo.fechaCorte,'DD/MM/YYYY').toDate() : undefined;
-				mi.prestamo.fechaFirma = mi.prestamo.fechaFirma != undefined ? moment (mi.prestamo.fechaFirma,'DD/MM/YYYY').toDate() : undefined;
-				mi.prestamo.fechaAutorizacion = mi.prestamo.fechaAutorizacion != undefined ? moment(mi.prestamo.fechaAutorizacion,'DD/MM/YYYY').toDate() : undefined;
-				mi.prestamo.fechaFinEjecucion = mi.prestamo.fechaFinEjecucion != undefined ? moment (mi.prestamo.fechaFinEjecucion,'DD/MM/YYYY').toDate() : undefined;
-				mi.prestamo.fechaDecreto = mi.prestamo.fechaDecreto != undefined ? moment (mi.prestamo.fechaDecreto,'DD/MM/YYYY').toDate() : undefined;
-				mi.prestamo.fechaSuscripcion = mi.prestamo.fechaSuscripcion != undefined ? moment(mi.prestamo.fechaSuscripcion,'DD/MM/YYYY').toDate() : undefined;
-				mi.prestamo.fechaElegibilidadUe = mi.prestamo.fechaElegibilidadUe != undefined ? moment(mi.prestamo.fechaElegibilidadUe,'DD/MM/YYYY').toDate() : undefined;
-				mi.prestamo.fechaCierreOrigianlUe = mi.prestamo.fechaCierreOrigianlUe != undefined ? moment (mi.prestamo.fechaCierreOrigianlUe,'DD/MM/YYYY').toDate() : undefined; 
-				mi.prestamo.fechaCierreActualUe = mi.prestamo.fechaCierreActualUe != undefined ? moment (mi.prestamo.fechaCierreActualUe,'DD/MM/YYYY').toDate() : undefined;
-				mi.prestamo.fechaVigencia = mi.prestamo.fechaVigencia != undefined ? moment(mi.prestamo.fechaVigencia,'DD/MM/YYYY').toDate() : undefined;
+			if (mi.prestamo !=null){
 				mi.prestamo.mesesProrrogaUe = moment(mi.prestamo.fechaCierreActualUe).diff(mi.prestamo.fechaCierreOrigianlUe,'months',true);
 				mi.getPorcentajes();
 			}
 			
 			parametros = {
 					accion: 'obtenerProyectosPorPrograma',
-					idPrograma: mi.proyecto!=''? mi.proyecto.id:0,
+					idPrograma: mi.prestamo!=''? mi.prestamo.id:0,
 				    t:moment().unix()
 			}
 			
 			$http.post('/SProyecto', parametros).then(function(response){
-				mi.proyectos = response.data.proyectos;
+				mi.prestamos = response.data.proyectos;
 				
 			});
 			
 			parametros = {
 					accion: 'getMiembrosPorProyect',
-					proyectoId: mi.proyecto!=''? mi.proyecto.id:0,
+					proyectoId: mi.prestamo!=''? mi.prestamo.id:0,
 				    t:moment().unix()
 			}
 			$http.post('/SProyectoMiembro', parametros).then(function(response){
@@ -579,7 +508,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			
 			parametros = {
 					accion: 'getImpactosPorProyect',
-					proyectoId: mi.proyecto!=''? mi.proyecto.id:0,
+					proyectoId: mi.prestamo!=''? mi.prestamo.id:0,
 				    t:moment().unix()
 			}
 			$http.post('/SProyectoImpacto', parametros).then(function(response){
@@ -589,7 +518,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			
 			
 
-			mi.getDocumentosAdjuntos(1, mi.proyecto.id);
+			mi.getDocumentosAdjuntos(1, mi.prestamo.id);
 			$scope.active = 0;
 			
 			
@@ -599,7 +528,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	}
 
 	mi.adjuntarDocumentos = function(){
-		$documentoAdjunto.getModalDocumento($scope, 1, mi.proyecto.id)
+		$documentoAdjunto.getModalDocumento($scope, 1, mi.prestamo.id)
 		.result.then(function(data) {
 			if (data != ""){
 				mi.rowCollection = [];
@@ -645,7 +574,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			       mi.rowCollection.splice(indice, 1);		       
 			    }
 				mi.rowCollection = [];
-				mi.getDocumentosAdjuntos(1, mi.proyecto.id);
+				mi.getDocumentosAdjuntos(1, mi.prestamo.id);
 			}
 		});
 	};
@@ -681,17 +610,17 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	}
 
 	mi.reiniciarVista=function(){
-		if($location.path()=='/prestamo/rv')
+		if($location.path()=='/programa/rv')
 			$route.reload();
 		else
-			$location.path('/prestamo/rv');
+			$location.path('/programa/rv');
 	}
 
 	mi.filtrar = function(evt){
 		if(evt.keyCode==13){
 			mi.obtenerTotalPrestamos();
 			mi.gridApi.selection.clearSelectedRows();
-			mi.proyecto = null;
+			mi.prestamo = null;
 		}
 	};
 
@@ -767,11 +696,11 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 
 		resultado.then(function(itemSeleccionado) {
 			mi.poryectotipoid= itemSeleccionado.id;
-			mi.proyectotiponombre = itemSeleccionado.nombre;
+			mi.prestamotiponombre = itemSeleccionado.nombre;
 
 			var parametros = {
 					accion: 'getProyectoPropiedadPorTipo',
-					idProyecto: mi.proyecto!=''?mi.poryectotipoid.id:0,
+					idProyecto: mi.prestamo!=''?mi.poryectotipoid.id:0,
 					idProyectoTipo: itemSeleccionado.id,
 					t:moment().unix()
 			}
@@ -990,12 +919,12 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	    modalInstance.result.then(function(coordenadas) {
 	    	if (coordenadas !=undefined){
 		    	mi.coordenadas = coordenadas.latitude + ", " + coordenadas.longitude;
-		    	mi.proyecto.latitud= coordenadas.latitude;
-				mi.proyecto.longitud = coordenadas.longitude;
+		    	mi.prestamo.latitud= coordenadas.latitude;
+				mi.prestamo.longitud = coordenadas.longitude;
 	    	}else{
 	    		mi.coordenadas = "";
-		    	mi.proyecto.latitud= null
-				mi.proyecto.longitud = null;
+		    	mi.prestamo.latitud= null
+				mi.prestamo.longitud = null;
 	    	}
 	    }, function() {
 	    	
@@ -1016,8 +945,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 					mi.prestamo.fechaDecreto = moment(response.data.prestamo.fechaDecreto,'DD/MM/YYYY').toDate()
 					mi.prestamo.fechaSuscripcion = moment(response.data.prestamo.fechaSuscripcion,'DD/MM/YYYY').toDate();
 					mi.prestamo.fechaVigencia = moment(response.data.prestamo.fechaVigencia,'DD/MM/YYYY').toDate();
-					mi.proyecto.nombre = mi.proyecto.nombre == null || mi.proyecto.nombre == undefined || mi.proyecto.nombre == '' ?
-							mi.prestamo.proyectoPrograma : mi.proyecto.nombre;
+					mi.prestamo.nombre = mi.prestamo.nombre == null || mi.prestamo.nombre == undefined || mi.prestamo.nombre == '' ?
+							mi.prestamo.proyectoPrograma : mi.prestamo.nombre;
 					mi.cooperanteid = mi.prestamo.cooperanteid;
 					
 					mi.getPorcentajes();
@@ -1139,28 +1068,28 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		if(mi.esTreeview){
 			  $http.post('/SProyecto', { accion : 'getProyectoPorId', id: $routeParams.id, t: (new Date()).getTime() }).then(function(response) {
 						if (response.data.success) {
-							mi.proyecto = response.data.proyecto;
-							if(mi.proyecto.fechaInicio != "")
-								mi.proyecto.fechaInicio = moment(mi.proyecto.fechaInicio, 'DD/MM/YYYY').toDate();
-							if(mi.proyecto.fechaFin != "")
-								mi.proyecto.fechaFin = moment(mi.proyecto.fechaFin, 'DD/MM/YYYY').toDate();
+							mi.prestamo = response.data.proyecto;
+							if(mi.prestamo.fechaInicio != "")
+								mi.prestamo.fechaInicio = moment(mi.prestamo.fechaInicio, 'DD/MM/YYYY').toDate();
+							if(mi.prestamo.fechaFin != "")
+								mi.prestamo.fechaFin = moment(mi.prestamo.fechaFin, 'DD/MM/YYYY').toDate();
 							mi.editar();
 						}
 					});
 		  }
 		
 		mi.t_borrar = function(ev) {
-			if (mi.proyecto!=null && mi.proyecto.id!=null) {
+			if (mi.prestamo!=null && mi.prestamo.id!=null) {
 				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 						, "Confirmación de Borrado"
-						, '¿Desea borrar el '+$rootScope.etiquetas.proyecto+' "' + mi.proyecto.nombre + '"?'
+						, '¿Desea borrar el '+$rootScope.etiquetas.proyecto+' "' + mi.prestamo.nombre + '"?'
 						, "Borrar"
 						, "Cancelar")
 				.result.then(function(data) {
 					if(data){
 						var datos = {
 								accion : 'borrarProyecto',
-								id : mi.proyecto.id,
+								id : mi.prestamo.id,
 								t: (new Date()).getTime()
 							};
 							$http.post('/SProyecto', datos).success(
@@ -1168,7 +1097,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 										if (response.success) {
 											
 											$utilidades.mensaje('success',$rootScope.etiquetas.proyecto+' borrado con éxito');
-											mi.proyecto = null;		
+											mi.prestamo = null;		
 											$rootScope.$emit("eliminarNodo", {});
 										} else{
 											$utilidades.mensaje('danger',
@@ -1186,8 +1115,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		};
 		
 		mi.t_cambiarNombreNodo = function(ev){
-			$rootScope.$emit("cambiarNombreNodo",mi.proyecto.nombre);
-			$rootScope.$emit("recargarArbol",mi.proyecto.id);
+			$rootScope.$emit("cambiarNombreNodo",mi.prestamo.nombre);
+			$rootScope.$emit("recargarArbol",mi.prestamo.id);
 		}
 		
 } ]);
@@ -1215,7 +1144,7 @@ function buscarPorPrestamo($uibModalInstance, $rootScope,$scope, $http, $interva
 	
 	mi.showfilters = $showfilters;
 	mi.ejercicios = [];
-	mi.entidades = [];
+	mi.prestamos = [];
 	mi.titulo = $titulo;
 	
 	if(mi.showfilters){
@@ -1226,9 +1155,9 @@ function buscarPorPrestamo($uibModalInstance, $rootScope,$scope, $http, $interva
 			mi.ejercicios.push(i);
 		mi.ejercicio = (mi.ejercicio == "" || mi.ejercicio == null) ? current_year : mi.ejercicio;
 		$http.post('SEntidad', { accion: 'entidadesporejercicio', ejercicio: mi.ejercicio,t:moment().unix()}).success(function(response) {
-			mi.entidades = response.entidades;
-			if(mi.entidades.length>0){
-				mi.entidad = (mi.entidad.entidad == null || mi.entidad===undefined || mi.entidad.entidad== "") ? mi.entidades[0] : mi.entidad;
+			mi.prestamos = response.entidades;
+			if(mi.prestamos.length>0){
+				mi.entidad = (mi.entidad.entidad == null || mi.entidad===undefined || mi.entidad.entidad== "") ? mi.prestamos[0] : mi.entidad;
 				$accionServlet.ejercicio = mi.ejercicio;
 				$accionServlet.entidad = mi.entidad.entidad;
 				$http.post($servlet, $accionServlet).success(function(response) {
