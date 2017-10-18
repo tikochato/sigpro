@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 14, 2017 6:45:19 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 18, 2017 4:40:30 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class Producto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7895445349151355697L;
+	private static final long serialVersionUID = -5960094765780436524L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Componente componente;
@@ -69,12 +69,13 @@ public class Producto implements java.io.Serializable {
 	}
 
 	public Producto(Componente componente, ProductoTipo productoTipo, String nombre, String usuarioCreo,
-			Date fechaCreacion, int duracion) {
+			Date fechaCreacion, int estado, int duracion) {
 		this.componente = componente;
 		this.productoTipo = productoTipo;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
+		this.estado = estado;
 		this.duracion = duracion;
 	}
 
@@ -231,7 +232,7 @@ public class Producto implements java.io.Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 	}
 
-	@Column(name = "estado")
+	@Column(name = "estado", nullable = false)
 	public int getEstado() {
 		return this.estado;
 	}

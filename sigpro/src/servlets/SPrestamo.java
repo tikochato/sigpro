@@ -597,7 +597,6 @@ public class SPrestamo extends HttpServlet {
 					if(i < componentesSipro.size() ){
 						Componente componente = componentesSipro.get(i);
 						componente.setNombre((String)componenteSigade[2]);
-						componente.setCostoTecho((BigDecimal) componenteSigade[4]);
 						componente.setEsDeSigade(1);
 						componente.setUsuarioActualizo(usuario);
 						componente.setFechaActualizacion(new Date());
@@ -609,10 +608,10 @@ public class SPrestamo extends HttpServlet {
 						UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(year, 0, 0);
 						AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
 						
-						Componente componente = new Componente(acumulacionCosto,componenteTipo, proyecto, unidadEjecutora,
+						Componente componente = new Componente(acumulacionCosto,null,componenteTipo, proyecto, unidadEjecutora,
 								(String)componenteSigade[2], null, usuario, null, new Date(), null, 1, null, null, 
 								null, null, null, null, null, null, null,null,null,fechaSuscripcion,fechaSuscripcion,1, 
-								null,null,null,1,1,(BigDecimal) componenteSigade[4],null,null,null);
+								null,null,null,1,1,null,null,null,null,null,null);
 						
 						ret = ret && ComponenteDAO.guardarComponente(componente, true);
 					}

@@ -194,11 +194,11 @@ public class CProject {
 		AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
 		
 		
-		Componente componente = new Componente(acumulacionCosto,componenteTipo, proyecto, unidadEjecutora, task.getName()
+		Componente componente = new Componente(acumulacionCosto,null,componenteTipo, proyecto, unidadEjecutora, task.getName()
 				, null,usuario, null, new Date(), null, 1, null, null, null, null, null, null, null, null, 
 				new BigDecimal(task.getCost().toString()),null,null,Utils.setDateCeroHoras(task.getStart()),
 				Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
-				, task.getDuration().getUnits().getName(),null,null,1,0,null,null,null,null);
+				, task.getDuration().getUnits().getName(),null,null,1,0,null,null,null,null,null,null);
 		
 		return ComponenteDAO.guardarComponente(componente, false) ? componente : null;
 	}

@@ -726,8 +726,7 @@ public class SProducto extends HttpServlet {
 				if(esnuevo){
 					Componente componente = new Componente();
 					componente.setId(componenteId);
-					producto = new Producto(componente, productoTipo,  nombre, usuario, new Date(),0);
-					producto.setEstado(1);
+					producto = new Producto(componente, productoTipo,  nombre, usuario, new Date(),1,0);
 					producto.setFechaInicio(fechaInicio);
 					producto.setFechaFin(fechaFin);
 					producto.setDuracion(duracion);
