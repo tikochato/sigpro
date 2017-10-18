@@ -146,6 +146,11 @@ public class ActividadDAO {
 			session.saveOrUpdate(Actividad);
 			ActividadUsuario au = new ActividadUsuario(new ActividadUsuarioId(Actividad.getId(), Actividad.getUsuarioCreo()),Actividad);
 			session.saveOrUpdate(au);
+			if(!Actividad.getUsuarioCreo().equals("admin")){
+				ActividadUsuario au_admin = 
+						new ActividadUsuario(new ActividadUsuarioId(Actividad.getId(), "admin"), Actividad, "admin",null,new Date(),null);
+				session.saveOrUpdate(au_admin);
+			}
 			session.getTransaction().commit();
 			session.close();
 			
