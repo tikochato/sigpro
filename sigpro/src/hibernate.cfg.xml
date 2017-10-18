@@ -31,6 +31,7 @@
         <mapping class="pojo.Componente" />
         <mapping class="pojo.ComponentePropiedad" />
         <mapping class="pojo.ComponentePropiedadValor" />
+        <mapping class="pojo.ComponenteSigade" />
         <mapping class="pojo.ComponenteTipo" />
         <mapping class="pojo.Cooperante" />
         <mapping class="pojo.CtipoPropiedad" />
