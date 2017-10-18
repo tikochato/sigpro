@@ -189,5 +189,27 @@ public class DataSigadeDAO {
 		}
 		return ret;
 	}
+	
+	public static List<?> getUnidadesEjecutoras(String codigo_presupuestario,int ejercicio){
+		List<?> ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		
+		try{
+			String query ="select * from sipro_analytic.dtm_avance_fisfinan_enp " +
+						"where codigo_presupuestario = ?1 "
+						+ "and ejercicio_fiscal = ?2 ";
+			Query<?> criteria = session.createNativeQuery(query);
+			criteria.setParameter("1", codigo_presupuestario);
+			criteria.setParameter("2", ejercicio);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("5", DataSigadeDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 
 }
