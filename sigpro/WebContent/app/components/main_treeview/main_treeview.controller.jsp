@@ -17,7 +17,10 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
 	       .when('/componente/:proyecto_id/:id/:nuevo?',{
             	template: '<div load-on-demand="\'componenteController\'" class="all_page"></div>'
             })
-	   		.when('/producto/:componente_id/:id/:nuevo?',{
+            .when('/subcomponente/:componente_id/:id/:nuevo?',{
+            	template: '<div load-on-demand="\'subcomponenteController\'" class="all_page"></div>'
+            })
+	   		.when('/producto/:objeto_id/:objeto_tipo/:id/:nuevo?',{
             	template: '<div load-on-demand="\'moduloProducto\'" class="all_page"></div>'
             })
             .when('/subproducto/:producto_id/:id/:nuevo?',{
@@ -78,6 +81,10 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'componenteController',
 	    	   script: '/app/components/componente/componente.controller.js',
 	    	   template: '/app/components/componente/componente.jsp'
+	       }, {
+	    	   name: 'subcomponenteController',
+	    	   script: '/app/components/subcomponente/subcomponente.controller.js',
+	    	   template: '/app/components/subcomponente/subcomponente.jsp'
 	       }, {
 	    	   name: 'hitoController',
 	    	   script: '/app/components/hito/hito.controller.js',
@@ -177,12 +184,14 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	mi.showSelected=function(nodo){
 		mi.nodo_seleccionado = nodo;
 		switch(nodo.objeto_tipo){
-			case 1:
+			case 0:
 				$location.path('/prestamo/'+nodo.id); break;
-			case 2:
+			case 1:
 				$location.path('/componente/'+nodo.parent.id+'/'+nodo.id); break;
+			case 2:
+				$location.path('/subcomponente/'+nodo.parent.id+'/'+nodo.id); break;
 			case 3:
-				$location.path('/producto/'+nodo.parent.id+'/'+nodo.id); break;
+				$location.path('/producto/'+nodo.parent.id+'/'+nodo.parent.objeto_tipo+'/'+nodo.id); break;
 			case 4:
 				$location.path('/subproducto/'+nodo.parent.id+'/'+nodo.id); break;
 			case 5:
@@ -260,10 +269,10 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	
 	mi.nuevoObjeto=function(tipo){
 		switch(tipo){
-			case 1: //componente
-				$location.path('/componente/'+mi.nodo_seleccionado.id+'/0/1'); break;
+			case 1: //subcomponente
+				$location.path('/subcomponente/'+mi.nodo_seleccionado.id+'/0/1'); break;
 			case 2: //producto
-				$location.path('/producto/'+mi.nodo_seleccionado.id+'/0/1'); break;
+				$location.path('/producto/'+mi.nodo_seleccionado.id+'/'+mi.nodo_seleccionado.objeto_tipo+'/0/1'); break;
 			case 3: //subproducto
 				$location.path('/subproducto/'+mi.nodo_seleccionado.id+'/0/1'); break;
 			case 4: //actividad
