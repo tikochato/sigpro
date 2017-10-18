@@ -109,7 +109,7 @@
 			<form name="controller.mForm" style="margin-top: 10px;">
 			<uib-tabset active="controller.active">
 				<shiro:hasPermission name="43010">
-				<uib-tab ng-click="controller.getPorcentajes();" index="0" heading="{{etiquetas.proyecto}}" >
+				<uib-tab ng-click="controller.getPorcentajes();" index="0" heading="Préstamo" >
 					<br/>
 							<div class="row">
 								<div class="col-sm-12">

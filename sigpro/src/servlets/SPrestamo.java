@@ -54,6 +54,7 @@ import utilities.Utils;
 public class SPrestamo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	class stprestamo{
+		Integer id;
 		String fechaCorte;
 		Long codigoPresupuestario;
 		String numeroPrestamo; 
@@ -166,6 +167,7 @@ public class SPrestamo extends HttpServlet {
 				Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(objetoId, objetoTipo);
 				if (prestamo !=null){
 				stprestamo temp =  new stprestamo();
+				temp.id = prestamo.getId();
 				temp.fechaCorte = prestamo.getFechaCorte() == null ? null : Utils.formatDate(prestamo.getFechaCorte());
 				temp.codigoPresupuestario = prestamo.getCodigoPresupuestario();
 				temp.numeroPrestamo = prestamo.getNumeroPrestamo(); 
@@ -257,7 +259,7 @@ public class SPrestamo extends HttpServlet {
 			catch(Throwable e){
 				response_text = "{ \"success\": false }";
 			}	
-		}else if (accion.equals("gurdarPrestamo")) {
+		}else if (accion.equals("guardarPrestamo")) {
 			boolean result = false;
 			Integer objetoId = Utils.String2Int(map.get("objetoId"), null);
 			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"),null);
@@ -469,13 +471,14 @@ public class SPrestamo extends HttpServlet {
 			String columna_ordenada = map.get("columna_ordenada");
 			String orden_direccion = map.get("orden_direccion");
 			
-			List<Prestamo> lstprestamos = PrestamoDAO.getPrestamosPagina(pagina, filtro_nombre, filtro_codigo_presupuestario, filtro_numero_prestamo, 
+			List<Prestamo> lstprestamos = PrestamoDAO.getPrestamosPagina(pagina, elementosPorPagina,filtro_nombre, filtro_codigo_presupuestario, filtro_numero_prestamo, 
 					filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion, usuario);
 			
 			List<stprestamo> lstprestamo = new ArrayList<stprestamo>();
 			stprestamo temp = null;
 			for(Prestamo prestamo : lstprestamos){
 				temp = new stprestamo();
+				temp.id = prestamo.getId();
 				temp.fechaCorte = prestamo.getFechaCorte() == null ? null : Utils.formatDate(prestamo.getFechaCorte());
 				temp.codigoPresupuestario = prestamo.getCodigoPresupuestario();
 				temp.numeroPrestamo = prestamo.getNumeroPrestamo(); 
