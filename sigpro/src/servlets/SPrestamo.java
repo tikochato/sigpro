@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 import java.math.BigDecimal;
+import java.time.Year;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -602,6 +603,14 @@ public class SPrestamo extends HttpServlet {
 			response_text=new GsonBuilder().serializeNulls().create().toJson(lstcomponentes);
 			response_text = String.join("", "\"componentes\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+		}else if(accion.equals("getUnidadesEjecutoras")){
+			String codigoPresupuestario = map.get("codigoPresupuestario");
+			int ejercicio = Year.now().getValue();
+			
+			List<?> unidadesEjecutoras = DataSigadeDAO.getUnidadesEjecutoras(codigoPresupuestario, ejercicio);
+			for(Object objEU : unidadesEjecutoras){
+				
+			}
 		}else
 			response_text = "{ \"success\": false }";
 		

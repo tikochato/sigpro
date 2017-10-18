@@ -435,6 +435,15 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 					mi.displayedCollectionComponentes = [].concat(mi.rowCollectionComponentes);
 				}
 			})
+			
+			$http.post('/SPrestamo',{
+				accion: 'getUnidadesEjecutoras',
+				codigoPresupuestario : mi.prestamo.codigoPresupuestario
+			}).then(function(response){
+				mi.unidadesEjecutoras = response.data.unidadesEjecutoras;
+				mi.rowCollectionUE = mi.unidadesEjecutoras;
+				mi.displayCollectionUE = [].concat(mi.rowCollectionUE);
+			})
 		}
 		else
 			$utilidades.mensaje('warning','Debe seleccionar el préstamo que desea editar');
