@@ -19,7 +19,6 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 		mi.mostraringreso=false;
 		mi.esnuevo = false;
 		mi.totalSubComponentes = 0;
-		mi.proyectoid = $routeParams.proyecto_id;
 		mi.proyectoNombre="";
 		mi.objetoTipoNombre = ""
 		mi.paginaActual = 1;
@@ -29,7 +28,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 		mi.subcomponentenombre = "";
 		mi.unidadejecutoraid="";
 		mi.unidadejecutoranombre="";
-		mi.proyectoid = $routeParams.proyecto_id;
+		mi.proyectoid = $routeParams.componente_id;
 		mi.formatofecha = 'dd/MM/yyyy';
 		mi.camposdinamicos = {};
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;

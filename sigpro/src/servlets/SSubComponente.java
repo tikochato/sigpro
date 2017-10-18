@@ -84,7 +84,6 @@ public class SSubComponente extends HttpServlet {
 		String acumulacionCostoNombre;
 		BigDecimal costoTecho;
 		boolean tieneHijos;
-		boolean esDeSigade;
 	}
 
 	class stdatadinamico {
@@ -181,7 +180,6 @@ public class SSubComponente extends HttpServlet {
 				temp.acumulacionCostoNombre = subcomponente.getAcumulacionCosto().getNombre();
 				
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
-				temp.esDeSigade = subcomponente.getEsDeSigade().equals(1);
 				
 				stsubcomponentes.add(temp);
 			}
@@ -240,7 +238,6 @@ public class SSubComponente extends HttpServlet {
 				temp.duracion = subcomponente.getDuracion();
 				temp.duracionDimension = subcomponente.getDuracionDimension();
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
-				temp.esDeSigade = subcomponente.getEsDeSigade().equals(1);
 				temp.costoTecho = subcomponente.getCostoTecho();
 				
 				stsubcomponentes.add(temp);
@@ -460,7 +457,6 @@ public class SSubComponente extends HttpServlet {
 				temp.duracionDimension = subcomponente.getDuracionDimension();
 				
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
-				temp.esDeSigade = subcomponente.getEsDeSigade().equals(1);
 				temp.costoTecho = subcomponente.getCostoTecho();
 				
 				stsubcomponentes.add(temp);
@@ -527,7 +523,6 @@ public class SSubComponente extends HttpServlet {
 			temp.duracionDimension = subcomponente.getDuracionDimension();
 			
 			temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
-			temp.esDeSigade = subcomponente.getEsDeSigade().equals(1);
 			temp.costoTecho = subcomponente.getCostoTecho();
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
