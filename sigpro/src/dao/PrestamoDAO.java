@@ -157,5 +157,43 @@ public class PrestamoDAO {
 		}
 		return ret;
 	}
+	
+	public static boolean borrarPrestamo(Prestamo prestamo){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			prestamo.setEstado(0);
+			session.beginTransaction();
+			session.saveOrUpdate(prestamo);
+			session.getTransaction().commit();
+			ret = true;
+		}catch(Exception e){
+			CLogger.write("6", PrestamoDAO.class, e);
+		}finally {
+			session.close();
+		}
+		
+		return ret;
+	}
+	
+	public static Prestamo getPrestamoById(Integer idPrestamo){
+		Prestamo ret = null;
+		List<Prestamo> lstret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<Prestamo> criteria = session.createQuery("FROM Prestamo p where p.id=:idPrestamo", Prestamo.class);
+			criteria.setParameter("idPrestamo", idPrestamo);
+			lstret = criteria.getResultList();
+			if(lstret != null && !lstret.isEmpty()){
+				ret = lstret.get(0);
+			}
+		}catch(Exception e){
+			CLogger.write("7", PrestamoDAO.class, e);
+		}finally {
+			session.close();
+		}
+		
+		return ret;
+	}
 
 }
