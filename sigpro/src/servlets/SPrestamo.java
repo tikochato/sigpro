@@ -132,7 +132,12 @@ public class SPrestamo extends HttpServlet {
 		
 	}
        
-    
+    class stcomponentessigade{
+    	Integer id;
+    	String nombre;
+    	String tipoMoneda;
+    	BigDecimal techo;
+    }
     public SPrestamo() {
         super();
     }
@@ -579,6 +584,24 @@ public class SPrestamo extends HttpServlet {
 			
 			boolean eliminado = PrestamoDAO.borrarPrestamo(prestamo);
 			response_text = String.join("","{ \"success\": ", eliminado == true ? "true" : "false"," }");			
+		}else if(accion.equals("getComponentesSigade")){
+			String codigoPresupuestario = map.get("codigoPresupuestario");
+			List<?> componentesSigade = DataSigadeDAO.getComponentes(codigoPresupuestario);
+			List<stcomponentessigade> lstcomponentes = new ArrayList<stcomponentessigade>();
+			stcomponentessigade temp = null;
+			for(Object objComponente : componentesSigade){
+				Object[] componente = (Object[])objComponente;
+				temp = new stcomponentessigade();
+				temp.id = (Integer)componente[1];
+				temp.nombre = (String)componente[2];
+				temp.tipoMoneda = (String)componente[3];
+				temp.techo = (BigDecimal)componente[4];
+				lstcomponentes.add(temp);
+			}
+			
+			response_text=new GsonBuilder().serializeNulls().create().toJson(lstcomponentes);
+			response_text = String.join("", "\"componentes\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}else
 			response_text = "{ \"success\": false }";
 		

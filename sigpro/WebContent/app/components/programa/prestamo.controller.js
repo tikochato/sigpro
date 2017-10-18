@@ -10,7 +10,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	mi.botones = true;
 	
 	if(!mi.esTreeview)
-		$window.document.title = $utilidades.sistema_nombre+' - '+$rootScope.etiquetas.proyecto+'s';
+		$window.document.title = 'Préstamos';
 		
 	mi.rowCollection = [];
 	mi.prestamo = null;
@@ -44,6 +44,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	mi.filtros = [];
 	mi.orden = null;
 	mi.prestamo = [];
+	mi.componentes = [];
 	
 	mi.prestamo.desembolsoAFechaUsdP = "";
 	mi.prestamo.montoPorDesembolsarUsdP = "";
@@ -85,7 +86,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	    paginationPageSize: $utilidades.elementosPorPagina,
 	    useExternalFiltering: true,
 	    useExternalSorting: true,
-	    rowTemplate: '<div ng-dblclick="grid.appScope.controller.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
+	    rowTemplate: '<div ng-dblclick="grid.appScope.prestamoc.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
 		columnDefs : [
 			{ name: 'id', width: 60, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 			{ name: 'proyectoPrograma',  displayName: 'Nombre',cellClass: 'grid-align-left',
@@ -177,13 +178,6 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 					mi.mostrarcargando = false;
 				});
 	};
-	
-	/*$http.post('/SCooperante', { accion: 'getCooperantes', t:moment().unix()
-		}).success(
-			function(response) {
-				mi.cooperantes = response.cooperantes;
-			}
-	);*/
 	
 	mi.cambioCooperante=function(selected){
 		if(selected!== undefined){
@@ -353,20 +347,20 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 									mi.obtenerTotalPrestamos();
 								if(mi.child_desembolso!=null || mi.child_riesgos!=null){
 									if(mi.child_desembolso)
-										ret = mi.child_desembolso.guardar($rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
-												'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el '+$rootScope.etiquetas.proyecto,
+										ret = mi.child_desembolso.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+												'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo',
 												mi.child_riesgo!=null ? mi.child_riesgo.guardar :  null);
 									else if(mi.child_riesgo)
-										ret = mi.child_riesgo.guardar($rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
-												'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el '+$rootScope.etiquetas.proyecto);
+										ret = mi.child_riesgo.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+												'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo');
 								}
 								else{
-									$utilidades.mensaje('success',$rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+									$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 									mi.botones=true;
 								}
 									
 							}else{
-								$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el '+$rootScope.etiquetas.proyecto);
+								$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo');
 								mi.botones=true;
 							}
 				});
@@ -429,7 +423,18 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			mi.esColapsado = true;
 			mi.esNuevo = false;
 			mi.esNuevoDocumento = false;
-			$scope.active = 0;
+			mi.active = 0;
+			
+			$http.post('/SPrestamo', {
+				accion: 'getComponentesSigade',
+				codigoPresupuestario : mi.prestamo.codigoPresupuestario
+			}).then(function(response){
+				if(response.data.success){
+					mi.componentes = response.data.componentes;
+					mi.rowCollectionComponentes = mi.componentes;
+					mi.displayedCollectionComponentes = [].concat(mi.rowCollectionComponentes);
+				}
+			})
 		}
 		else
 			$utilidades.mensaje('warning','Debe seleccionar el préstamo que desea editar');

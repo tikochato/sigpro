@@ -30,7 +30,7 @@
 		<span ng-init="prestamoc.cambioOrden()"></span>
 	</shiro:hasPermission>
 	<div class="panel panel-default" ng-if="!prestamoc.esTreeview">
-	  <div class="panel-heading"><h3>{{etiquetas.proyecto}}s</h3></div>
+	  <div class="panel-heading"><h3>Préstamos</h3></div>
 	</div>
 	<div align="center" ng-hide="prestamoc.esColapsado" ng-if="!prestamoc.esTreeview">
 		<div class="col-sm-12 operation_buttons" align="right">
@@ -867,6 +867,7 @@
 						<thead>
 							<tr>
 								<th class="label-form" style="text-align: center; min-width:300px; max-width:300px;">Nombre</th>
+								<th class="label-form" style="text-align: center; min-width:30px; max-width:30px;">Tipo de moneda</th>
 								<th class="label-form" style="text-align: center; min-width: 140px; max-width: 140px">Techo</th>
 							</tr>
 						</thead>
@@ -874,12 +875,17 @@
 							<tr ng-repeat="row in prestamoc.rowCollectionComponentes">
 								<td class="divisionColumna truncate" style="min-width:300px;max-width:300px;">
 	    							<div style="height: 25px;">
-	    								<div style="text-align: left" uib-tooltip="{{row.nombre}}">{{row.nombre}}</div>
+	    								<div style="text-align: left">{{row.nombre}}</div>
+	    							</div>
+	    						</td>
+	    						<td class="divisionColumna truncate" style="min-width:300px;max-width:300px;">
+	    							<div style="height: 25px;">
+	    								<div style="text-align: center">{{row.tipoMoneda}}</div>
 	    							</div>
 	    						</td>
 	    						<td>
 	    							<div style="height: 25px;">
-	    								<div style="text-align: left" uib-tooltip="{{row.techo}}">{{row.techo}}</div>
+	    								<div style="text-align: left">{{row.techo | formatoMillones : controller.enMillones}}</div>
 	    							</div>
 	    						</td>
 							</tr>
