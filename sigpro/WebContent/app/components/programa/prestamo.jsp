@@ -886,25 +886,19 @@
 						<thead>
 							<tr>
 								<th class="label-form" style="text-align: center; min-width:300px; max-width:300px;">Nombre</th>
-								<th class="label-form" style="text-align: center; min-width:30px; max-width:30px;">Tipo de moneda</th>
 								<th class="label-form" style="text-align: center; min-width: 140px; max-width: 140px">Techo</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr ng-repeat="row in prestamoc.rowCollectionComponentes">
-								<td class="divisionColumna truncate" style="min-width:300px;max-width:300px;">
+								<td style="min-width:300px;max-width:300px;">
 	    							<div style="height: 25px;">
 	    								<div style="text-align: left">{{row.nombre}}</div>
 	    							</div>
 	    						</td>
-	    						<td class="divisionColumna truncate" style="min-width:30px;max-width:300px;">
-	    							<div style="height: 25px;">
-	    								<div style="text-align: center">{{row.tipoMoneda}}</div>
-	    							</div>
-	    						</td>
 	    						<td>
 	    							<div style="height: 25px;">
-	    								<div style="text-align: left">{{row.techo | formatoMillones : controller.enMillones}}</div>
+	    								<div style="text-align: right">{{row.techo | formatoMillonesDolares : controller.enMillones}}</div>
 	    							</div>
 	    						</td>
 							</tr>
