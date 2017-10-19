@@ -71,7 +71,7 @@
 				  </div>
 			</div>
 			<br/>
-			<div class="total-rows">Total de {{  prestamoc.totalProyectos + (prestamoc.totalProyectos == 1 ? "Prestamo" : " Prestamos" ) }}</div>
+			<div class="total-rows">Total de {{  prestamoc.totalProyectos + (prestamoc.totalProyectos == 1 ? "Préstamo" : " Préstamos" ) }}</div>
 				<ul uib-pagination total-items="prestamoc.totalProyectos"
 						ng-model="prestamoc.paginaActual"
 						max-size="prestamoc.numeroMaximoPaginas"
