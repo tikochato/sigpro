@@ -10,21 +10,21 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import pojo.ComponenteTipo;
+import pojo.SubcomponenteTipo;
 import pojo.CtipoPropiedad;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
 public class SubComponenteTipoDAO {
 
-	public static List<ComponenteTipo> getComponenteTipos(){
-		List<ComponenteTipo> ret = new ArrayList<ComponenteTipo>();
+	public static List<SubcomponenteTipo> getSubComponenteTipos(){
+		List<SubcomponenteTipo> ret = new ArrayList<SubcomponenteTipo>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 
-			CriteriaQuery<ComponenteTipo> criteria = builder.createQuery(ComponenteTipo.class);
-			Root<ComponenteTipo> root = criteria.from(ComponenteTipo.class);
+			CriteriaQuery<SubcomponenteTipo> criteria = builder.createQuery(SubcomponenteTipo.class);
+			Root<SubcomponenteTipo> root = criteria.from(SubcomponenteTipo.class);
 			criteria.select( root ).where(builder.equal(root.get("estado"),1));
 			ret = session.createQuery( criteria ).getResultList();
 		}
@@ -39,15 +39,15 @@ public class SubComponenteTipoDAO {
 		
 
 	
-	public static ComponenteTipo getSubComponenteTipoPorId(int id){
+	public static SubcomponenteTipo getSubComponenteTipoPorId(int id){
 		Session session = CHibernateSession.getSessionFactory().openSession();
-		ComponenteTipo ret = null;
-		List<ComponenteTipo> listRet = null;
+		SubcomponenteTipo ret = null;
+		List<SubcomponenteTipo> listRet = null;
 		try{
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 
-			CriteriaQuery<ComponenteTipo> criteria = builder.createQuery(ComponenteTipo.class);
-			Root<ComponenteTipo> root = criteria.from(ComponenteTipo.class);
+			CriteriaQuery<SubcomponenteTipo> criteria = builder.createQuery(SubcomponenteTipo.class);
+			Root<SubcomponenteTipo> root = criteria.from(SubcomponenteTipo.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id ),builder.equal(root.get("estado"), 1)));
 			listRet = session.createQuery( criteria ).getResultList();
@@ -62,16 +62,16 @@ public class SubComponenteTipoDAO {
 		return ret;
 	}
 	
-	public static boolean guardarComponenteTipo(ComponenteTipo componenteTipo){
+	public static boolean guardarSubComponenteTipo(SubcomponenteTipo subcomponenteTipo){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
-			session.saveOrUpdate(componenteTipo);
+			session.saveOrUpdate(subcomponenteTipo);
 			session.flush();
 			
-			if (componenteTipo.getCtipoPropiedads()!=null && componenteTipo.getCtipoPropiedads().size()>0){
-				for (CtipoPropiedad propiedad : componenteTipo.getCtipoPropiedads()){
+			if (subcomponenteTipo.getCtipoPropiedads()!=null && subcomponenteTipo.getCtipoPropiedads().size()>0){
+				for (CtipoPropiedad propiedad : subcomponenteTipo.getCtipoPropiedads()){
 					session.saveOrUpdate(propiedad);	
 				}
 			}
@@ -93,7 +93,7 @@ public class SubComponenteTipoDAO {
 	
 	
 	
-	public static boolean eliminarComponenteTipo(ComponenteTipo componenteTipo){
+	public static boolean eliminarComponenteTipo(SubcomponenteTipo componenteTipo){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -115,7 +115,7 @@ public class SubComponenteTipoDAO {
 	
 	
 	
-	public static boolean eliminarTotalComponenteTipo(ComponenteTipo componenteTipo){
+	public static boolean eliminarTotalComponenteTipo(SubcomponenteTipo componenteTipo){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -134,14 +134,14 @@ public class SubComponenteTipoDAO {
 	}
 	
 	
-	public static List<ComponenteTipo> getComponenteTiposPagina(int pagina, int numerocomponentestipo 
+	public static List<SubcomponenteTipo> getComponenteTiposPagina(int pagina, int numerocomponentestipo 
 			,String filtro_nombre, String filtro_usuario_creo, 
 			String filtro_fecha_creacion, String columna_ordenada, String orden_direccion){
-		List<ComponenteTipo> ret = new ArrayList<ComponenteTipo>();
+		List<SubcomponenteTipo> ret = new ArrayList<SubcomponenteTipo>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			
-			String query = "SELECT c FROM ComponenteTipo c WHERE c.estado = 1 ";
+			String query = "SELECT c FROM SubcomponenteTipo c WHERE c.estado = 1 ";
 			String query_a="";
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
 				query_a = String.join("",query_a, " c.nombre LIKE '%",filtro_nombre,"%' ");
@@ -152,7 +152,7 @@ public class SubComponenteTipoDAO {
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
 			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
 			
-			Query<ComponenteTipo> criteria = session.createQuery(query,ComponenteTipo.class);
+			Query<SubcomponenteTipo> criteria = session.createQuery(query,SubcomponenteTipo.class);
 			criteria.setFirstResult(((pagina-1)*(numerocomponentestipo)));
 			criteria.setMaxResults(numerocomponentestipo);
 			ret = criteria.getResultList();
@@ -172,7 +172,7 @@ public class SubComponenteTipoDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			
-			String query = "SELECT count(c.id) FROM ComponenteTipo c WHERE c.estado=1 ";
+			String query = "SELECT count(c.id) FROM SubcomponenteTipo c WHERE c.estado=1 ";
 			String query_a="";
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
 				query_a = String.join("",query_a, " c.nombre LIKE '%",filtro_nombre,"%' ");

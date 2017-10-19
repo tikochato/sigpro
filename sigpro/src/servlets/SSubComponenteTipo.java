@@ -160,7 +160,7 @@ public class SSubComponenteTipo extends HttpServlet {
 					}
 				}
 				
-				result = SubComponenteTipoDAO.guardarComponenteTipo(componenteTipo);
+				result = SubComponenteTipoDAO.guardarSubComponenteTipo(componenteTipo);
 				
 				String[] idsPropiedades =  map.get("propiedades") != null ? map.get("propiedades").toString().split(",") : null;
 				if (idsPropiedades !=null && idsPropiedades.length>0){
@@ -182,7 +182,7 @@ public class SSubComponenteTipo extends HttpServlet {
 					}
 				}
 				
-				result = SubComponenteTipoDAO.guardarComponenteTipo(componenteTipo);
+				result = SubComponenteTipoDAO.guardarSubComponenteTipo(componenteTipo);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 						+ "\"id\": " + componenteTipo.getId() , ","
 						, "\"usuarioCreo\": \"" , componenteTipo.getUsuarioCreo(),"\","

@@ -12,7 +12,7 @@ public class SubComponenteTipoDAOTest {
 	
 	@Test
 	public void getComponenteTiposTest(){
-		assertNotNull(SubComponenteTipoDAO.getComponenteTipos());
+		assertNotNull(SubComponenteTipoDAO.getSubComponenteTipos());
 	}
 	
 	@Test
@@ -22,7 +22,7 @@ public class SubComponenteTipoDAOTest {
 	
 	@Test
 	public void guardarComponenteTipoTest(){
-		assertEquals(SubComponenteTipoDAO.guardarComponenteTipo(new ComponenteTipo()),false);
+		assertEquals(SubComponenteTipoDAO.guardarSubComponenteTipo(new ComponenteTipo()),false);
 	}
 	
 	@Test

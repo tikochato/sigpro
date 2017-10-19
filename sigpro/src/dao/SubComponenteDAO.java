@@ -151,7 +151,7 @@ public class SubComponenteDAO {
 		List<Subcomponente> ret = new ArrayList<Subcomponente>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Subcomponente> criteria = session.createQuery("SELECT c FROM Subcomponente c WHERE estado = 1 AND c.id in (SELECT u.id.componenteid from ComponenteUsuario u where u.id.usuario=:usuario )",Subcomponente.class);
+			Query<Subcomponente> criteria = session.createQuery("SELECT c FROM Subcomponente c WHERE estado = 1 AND c.id in (SELECT u.id.subcomponenteid from SubcomponenteUsuario u where u.id.usuario=:usuario )",Subcomponente.class);
 			criteria.setParameter("usuario", usuario);
 			criteria.setFirstResult(((pagina-1)*(numeroSubComponentes)));
 			criteria.setMaxResults(numeroSubComponentes);
@@ -170,7 +170,7 @@ public class SubComponenteDAO {
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Long> conteo = session.createQuery("SELECT count(c.id) FROM Subcomponente c WHERE c.estado=1 AND  c.id in (SELECT u.id.componenteid from ComponenteUsuario u where u.id.usuario=:usuario )",Long.class);
+			Query<Long> conteo = session.createQuery("SELECT count(c.id) FROM Subcomponente c WHERE c.estado=1 AND  c.id in (SELECT u.id.subcomponenteid from SubcomponenteUsuario u where u.id.usuario=:usuario )",Long.class);
 			conteo.setParameter("usuario", usuario);
 			ret = conteo.getSingleResult();
 		} catch(Throwable e){
@@ -182,14 +182,14 @@ public class SubComponenteDAO {
 		return ret;
 	}
 
-	public static List<Subcomponente> getSubComponentesPaginaPorProyecto(int pagina, int numeroSubComponentes, int proyectoId,
+	public static List<Subcomponente> getSubComponentesPaginaPorComponente(int pagina, int numeroSubComponentes, int componenteId,
 			String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion, String columna_ordenada, String orden_direccion, String usuario){
 
 		List<Subcomponente> ret = new ArrayList<Subcomponente>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 
-			String query = "SELECT c FROM Subcomponente c WHERE estado = 1 AND c.proyecto.id = :proyId ";
+			String query = "SELECT c FROM Subcomponente c WHERE estado = 1 AND c.componente.id = :compId ";
 			String query_a="";
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
 				query_a = String.join("",query_a, " c.nombre LIKE '%",filtro_nombre,"%' ");
@@ -198,10 +198,10 @@ public class SubComponenteDAO {
 			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
 				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(c.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
-			query =String.join("",query," AND  c.id in (SELECT u.id.componenteid from ComponenteUsuario u where u.id.usuario=:usuario ) ");
+			query =String.join("",query," AND  c.id in (SELECT u.id.subcomponenteid from SubcomponenteUsuario u where u.id.usuario=:usuario ) ");
 			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
 			Query<Subcomponente> criteria = session.createQuery(query,Subcomponente.class);
-			criteria.setParameter("proyId", proyectoId);
+			criteria.setParameter("compId", componenteId);
 			criteria.setParameter("usuario", usuario);
 			criteria.setFirstResult(((pagina-1)*(numeroSubComponentes)));
 			criteria.setMaxResults(numeroSubComponentes);
@@ -217,14 +217,14 @@ public class SubComponenteDAO {
 	}
 
 
-	public static Long getTotalSubComponentesPorProyecto(int proyectoId,
+	public static Long getTotalSubComponentesPorComponente(int componenteId,
 			String filtro_nombre,String filtro_usuario_creo,
 			String filtro_fecha_creacion, String usuario){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 
-			String query = "SELECT count(c.id) FROM Subcomponente c WHERE c.estado=1 AND c.proyecto.id = :proyId ";
+			String query = "SELECT count(c.id) FROM Subcomponente c WHERE c.estado=1 AND c.componente.id = :compId ";
 			String query_a="";
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
 				query_a = String.join("",query_a, " c.nombre LIKE '%",filtro_nombre,"%' ");
@@ -233,9 +233,9 @@ public class SubComponenteDAO {
 			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
 				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(c.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
-			query = String.join("", query, " AND  c.id in (SELECT u.id.componenteid from ComponenteUsuario u where u.id.usuario=:usuario )");
+			query = String.join("", query, " AND  c.id in (SELECT u.id.subcomponenteid from SubcomponenteUsuario u where u.id.usuario=:usuario )");
 			Query<Long> conteo = session.createQuery(query,Long.class);
-			conteo.setParameter("proyId", proyectoId);
+			conteo.setParameter("compId", componenteId);
 			conteo.setParameter("usuario", usuario);
 			ret = conteo.getSingleResult();
 		}catch (NoResultException e){
@@ -249,13 +249,13 @@ public class SubComponenteDAO {
 		return ret;
 	}
 	
-	public static Subcomponente getSubComponenteInicial(Integer proyectoId, String usuario, Session session){
+	public static Subcomponente getSubComponenteInicial(Integer componenteId, String usuario, Session session){
 		Subcomponente ret = null;
 		List<Subcomponente> listRet = null;
 		try{
-			String query = "FROM Subcomponente c where c.estado=1 and c.orden=1 and c.proyecto.id=:proyectoId and c.usuarioCreo=:usuario";
+			String query = "FROM Subcomponente c where c.estado=1 and c.orden=1 and c.componente.id=:componenteId and c.usuarioCreo=:usuario";
 			Query<Subcomponente> criteria = session.createQuery(query, Subcomponente.class);
-			criteria.setParameter("proyectoId", proyectoId);
+			criteria.setParameter("componenteId", componenteId);
 			criteria.setParameter("usuario", usuario);
 			listRet = criteria.getResultList();
 			
@@ -268,14 +268,14 @@ public class SubComponenteDAO {
 		return ret;
 	}
 	
-	public static Subcomponente getSubComponenteFechaMaxima(Integer proyectoId, String usuario, Session session){
+	public static Subcomponente getSubComponenteFechaMaxima(Integer componenteId, String usuario, Session session){
 		Subcomponente ret = null;
 		List<Subcomponente> listRet = null;
 		try{
-			String query = "FROM Subcomponente c where c.estado=1 and c.proyecto.id=:proyectoId and c.usuarioCreo=:usuario order by c.fechaFin desc";
+			String query = "FROM Subcomponente c where c.estado=1 and c.componente.id=:componenteId and c.usuarioCreo=:usuario order by c.fechaFin desc";
 			Query<Subcomponente> criteria = session.createQuery(query, Subcomponente.class);
 			criteria.setMaxResults(1);
-			criteria.setParameter("proyectoId", proyectoId);
+			criteria.setParameter("componenteId", componenteId);
 			criteria.setParameter("usuario", usuario);
 			
 			listRet = criteria.getResultList();
@@ -291,13 +291,13 @@ public class SubComponenteDAO {
 		return ret;
 	}
 	
-	public static List<Subcomponente> getSubComponentesOrden(Integer proyectoId, String usuario, Session session){
+	public static List<Subcomponente> getSubComponentesOrden(Integer componenteId, String usuario, Session session){
 		List<Subcomponente> ret = null;
 		try{
-			String query = String.join(" ", "SELECT c FROM Subcomponente c where c.estado=1 and c.proyecto.id=:proyectoId");
-			query = String.join(" ", query, "AND c.id in (SELECT u.id.componenteid from ComponenteUsuario u where u.id.usuario=:usuario)");
+			String query = String.join(" ", "SELECT c FROM Subcomponente c where c.estado=1 and c.componente.id=:componenteId");
+			query = String.join(" ", query, "AND c.id in (SELECT u.id.subcomponenteid from SubcomponenteUsuario u where u.id.usuario=:usuario)");
 			Query<Subcomponente> criteria = session.createQuery(query,Subcomponente.class);
-			criteria.setParameter("proyectoId", proyectoId);
+			criteria.setParameter("componenteId", componenteId);
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getResultList();
 		}catch(Throwable e){
@@ -312,7 +312,7 @@ public class SubComponenteDAO {
 		Subcomponente ret = null;
 		List<Subcomponente> listRet = null;
 		try{
-			Query<Subcomponente> criteria = session.createQuery("FROM Subcomponente where id=:id AND id in (SELECT u.id.componenteid from ComponenteUsuario u where u.id.usuario=:usuario )", Subcomponente.class);
+			Query<Subcomponente> criteria = session.createQuery("FROM Subcomponente where id=:id AND id in (SELECT u.id.subcomponenteid from SubcomponenteUsuario u where u.id.usuario=:usuario )", Subcomponente.class);
 			criteria.setParameter("id", id);
 			criteria.setParameter("usuario", usuario);
 			listRet = criteria.getResultList();
@@ -403,12 +403,12 @@ public class SubComponenteDAO {
 		return costo;
 	}
 	
-	public static List<Subcomponente> getSubComponentesPorProyecto(Integer proyectoId){
+	public static List<Subcomponente> getSubComponentesPorComponente(Integer componenteId){
 		List<Subcomponente> ret = new ArrayList<Subcomponente>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Subcomponente> criteria = session.createQuery("FROM Subcomponente c where estado = 1 and c.proyecto.id = :proyectoId order by c.id asc", Subcomponente.class);
-			criteria.setParameter("proyectoId", proyectoId);
+			Query<Subcomponente> criteria = session.createQuery("FROM Subcomponente c where estado = 1 and c.componente.id = :componenteId order by c.id asc", Subcomponente.class);
+			criteria.setParameter("componenteId", componenteId);
 			ret =   criteria.getResultList();
 		}
 		catch(Throwable e){
