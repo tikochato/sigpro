@@ -899,7 +899,7 @@
 	    								<div style="text-align: left">{{row.nombre}}</div>
 	    							</div>
 	    						</td>
-	    						<td class="divisionColumna truncate" style="min-width:300px;max-width:300px;">
+	    						<td class="divisionColumna truncate" style="min-width:30px;max-width:300px;">
 	    							<div style="height: 25px;">
 	    								<div style="text-align: center">{{row.tipoMoneda}}</div>
 	    							</div>
