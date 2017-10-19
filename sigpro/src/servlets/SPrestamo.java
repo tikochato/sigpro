@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 import java.math.BigDecimal;
+import java.time.Year;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -138,6 +139,13 @@ public class SPrestamo extends HttpServlet {
     	String tipoMoneda;
     	BigDecimal techo;
     }
+    
+    class stunidadejecutora{
+    	Integer id;
+    	String nombre;
+    	String entidad;
+    }
+    
     public SPrestamo() {
         super();
     }
@@ -601,6 +609,28 @@ public class SPrestamo extends HttpServlet {
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(lstcomponentes);
 			response_text = String.join("", "\"componentes\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+		}else if(accion.equals("getUnidadesEjecutoras")){
+			String codigoPresupuestario = map.get("codigoPresupuestario");
+			int ejercicio = Year.now().getValue();
+			
+			List<?> unidadesEjecutoras = DataSigadeDAO.getUnidadesEjecutoras(codigoPresupuestario, ejercicio);
+			List<stunidadejecutora> lstunidadesejecutoras = new ArrayList<stunidadejecutora>();
+			stunidadejecutora temp = null;
+			for(Object unidadEjecutora : unidadesEjecutoras){
+				temp = new stunidadejecutora();
+				Object[] objEU = (Object[])unidadEjecutora;
+				
+				UnidadEjecutora EU = UnidadEjecutoraDAO.getUnidadEjecutora((Integer)objEU[1], (Integer)objEU[2], (Integer)objEU[3]);
+				if(EU != null){
+					temp.id = EU.getId().getEjercicio();
+					temp.entidad = EU.getEntidad().getNombre();
+					temp.nombre = EU.getNombre();
+					lstunidadesejecutoras.add(temp);
+				}
+			}
+			response_text=new GsonBuilder().serializeNulls().create().toJson(lstunidadesejecutoras);
+			response_text = String.join("", "\"unidadesEjecutoras\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}else
 			response_text = "{ \"success\": false }";
