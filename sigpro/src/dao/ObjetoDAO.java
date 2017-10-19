@@ -328,15 +328,13 @@ public class ObjetoDAO {
 			if (componente.getProductos()!=null && componente.getProductos().size()>0){
 				return true;
 			}
+			if (componente.getSubcomponentes()!=null && componente.getSubcomponentes().size()>0){
+				return true;
+			}
 			return false;
 		case 2:
-//			Subcomponente subcomponente = SubComponenteDAO.getSubComponente(objetoId);
-//			if (subcomponente.getProductos()!=null && subcomponente.getProductos().size()>0){
-//				return true;
-//			}
-//			return false;
-			componente = ComponenteDAO.getComponente(objetoId);
-			if (componente.getProductos()!=null && componente.getProductos().size()>0){
+			Subcomponente subcomponente = SubComponenteDAO.getSubComponente(objetoId);
+			if (subcomponente.getProductos()!=null && subcomponente.getProductos().size()>0){
 				return true;
 			}
 			return false;

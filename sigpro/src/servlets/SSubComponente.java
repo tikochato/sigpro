@@ -403,7 +403,7 @@ public class SSubComponente extends HttpServlet {
 
 			List<Subcomponente> subcomponentes = SubComponenteDAO.getSubComponentesPaginaPorComponente(pagina, numeroSubComponentes, 
 					componenteId, filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, 
-					orden_direccion, filtro_usuario_creo);
+					orden_direccion, usuario);
 			List<stsubcomponente> stsubcomponentes=new ArrayList<stsubcomponente>();
 			for(Subcomponente subcomponente:subcomponentes){
 				stsubcomponente temp =new stsubcomponente();
@@ -522,6 +522,11 @@ public class SSubComponente extends HttpServlet {
 	        response_text = String.join("", "\"subcomponente\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 
+		}else if(accion.equals("borrarSubComponente")){
+			Integer subcomponentId = Utils.String2Int(map.get("id"));
+			Subcomponente subcomponente = SubComponenteDAO.getSubComponente(subcomponentId);
+			
+			 response_text = String.join("", "{\"success\":" + ObjetoDAO.borrarHijos(subcomponente.getTreePath(), 2, usuario) + "}");
 		}
 		else{
 			response_text = "{ \"success\": false }";
