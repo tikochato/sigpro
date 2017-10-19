@@ -113,8 +113,7 @@
 			<uib-tabset active="prestamoc.active">
 				<shiro:hasPermission name="43010">
 				<uib-tab ng-click="prestamoc.getPorcentajes();" index="0" heading="Préstamo" >
-					<br/>
-							<div class="row">
+							<div class="row" style="margin-top: 15px;">
 								<div class="col-sm-12">
 									<div class="form-group">
 										<input type="text" class="inputText"   
@@ -322,8 +321,7 @@
 				</shiro:hasPermission>
 				<shiro:hasPermission name="43010">
 				<uib-tab ng-click="prestamoc.getPorcentajes();" index="prestamoc.ordenTab+1" heading="Configuraciones Préstamo" >
-					<br/>
-							<div class="row">
+							<div class="row" style="margin-top: 15px;">
 								<div class="col-sm-6">
 									<div class="form-group">
 										<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaElegibilidadUe" is-open="prestamoc.fe_abierto"
@@ -487,7 +485,7 @@
 				
 				</uib-tab>
 				<uib-tab index="prestamoc.ordenTab+2" heading="Adicionales" ng-if="prestamoc.mostrarPrestamo" >
-					<div class="row">
+					<div class="row" style="margin-top: 15px;">
 						<div class="col-sm-3">
 							<div class="form-group">
 							   	<input  type="text" class="inputText"   ng-model="prestamoc.prestamo.numeroAutorizacion" 
@@ -860,7 +858,7 @@
 				</uib-tab>
 				</shiro:hasPermission>
 				<uib-tab  index="prestamoc.ordenTab+3" heading="Unidades Ejecutoras" ng-if="prestamoc.mostrarPrestamo">
-					<table st-table="prestamoc.displayCollectionUE" st-safe-src="prestamoc.rowCollectionUE" class="table table-striped">
+					<table st-table="prestamoc.displayCollectionUE" st-safe-src="prestamoc.rowCollectionUE" class="table table-striped" style="margin-top: 15px;">
 						<thead>
 							<tr>
 								<th class="label-form" style="text-align: center; min-width:300px; max-width:300px;">Organismo ejecutor</th>
@@ -884,7 +882,7 @@
 					</table>
 				</uib-tab>
 				<uib-tab  index="prestamoc.ordenTab+4" heading="Componentes" ng-if="prestamoc.mostrarPrestamo">
-					<table st-table="prestamoc.displayedCollectionComponentes" st-safe-src="prestamoc.rowCollectionComponentes" class="table table-striped">
+					<table st-table="prestamoc.displayedCollectionComponentes" st-safe-src="prestamoc.rowCollectionComponentes" class="table table-striped" style="margin-top: 15px;">
 						<thead>
 							<tr>
 								<th class="label-form" style="text-align: center; min-width:300px; max-width:300px;">Nombre</th>
@@ -914,7 +912,8 @@
 					</table>
 				</uib-tab>
 				<uib-tab  index="prestamoc.ordenTab+5" heading="Matriz" ng-if="prestamoc.mostrarPrestamo">
-					
+					<div style="margin-top: 15px;">
+					</div>
 				</uib-tab>
 			</uib-tabset>
 			</form>
