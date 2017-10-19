@@ -860,7 +860,28 @@
 				</uib-tab>
 				</shiro:hasPermission>
 				<uib-tab  index="prestamoc.ordenTab+3" heading="Unidades Ejecutoras" ng-if="prestamoc.mostrarPrestamo">
-					
+					<table st-table="prestamoc.displayCollectionUE" st-safe-src="prestamoc.rowCollectionUE" class="table table-striped">
+						<thead>
+							<tr>
+								<th class="label-form" style="text-align: center; min-width:300px; max-width:300px;">Organismo ejecutor</th>
+								<th class="label-form" style="text-align: center; min-width:30px; max-width:30px;">Entidad</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="row in prestamoc.rowCollectionUE">
+								<td class="divisionColumna truncate" style="min-width:300px;max-width:300px;">
+	    							<div style="height: 25px;">
+	    								<div style="text-align: left">{{row.nombre}}</div>
+	    							</div>
+	    						</td>
+	    						<td class="divisionColumna truncate" style="min-width:300px;max-width:300px;">
+	    							<div style="height: 25px;">
+	    								<div style="text-align: left">{{row.entidad}}</div>
+	    							</div>
+	    						</td>
+							</tr>
+						</tbody>
+					</table>
 				</uib-tab>
 				<uib-tab  index="prestamoc.ordenTab+4" heading="Componentes" ng-if="prestamoc.mostrarPrestamo">
 					<table st-table="prestamoc.displayedCollectionComponentes" st-safe-src="prestamoc.rowCollectionComponentes" class="table table-striped">
@@ -878,7 +899,7 @@
 	    								<div style="text-align: left">{{row.nombre}}</div>
 	    							</div>
 	    						</td>
-	    						<td class="divisionColumna truncate" style="min-width:300px;max-width:300px;">
+	    						<td class="divisionColumna truncate" style="min-width:30px;max-width:300px;">
 	    							<div style="height: 25px;">
 	    								<div style="text-align: center">{{row.tipoMoneda}}</div>
 	    							</div>
