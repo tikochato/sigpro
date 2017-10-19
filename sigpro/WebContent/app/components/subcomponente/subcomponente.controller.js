@@ -19,7 +19,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 		mi.mostraringreso=false;
 		mi.esnuevo = false;
 		mi.totalSubComponentes = 0;
-		mi.proyectoNombre="";
+		mi.componenteNombre="";
 		mi.objetoTipoNombre = ""
 		mi.paginaActual = 1;
 		mi.datotipoid = "";
@@ -62,7 +62,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 				function(response) {
 					mi.componenteid = response.id;
 					mi.componenteNombre = response.nombre;
-					mi.objetoTipoNombre = "Proyecto";
+					mi.objetoTipoNombre = "Componente";
 		});
 		
 		$http.post('/SAcumulacionCosto', { accion: 'getAcumulacionesCosto', t: (new Date()).getTime()}).success(
@@ -172,8 +172,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SSubComponente', { accion: 'getSubComponentesPaginaPorProyecto', pagina: pagina, numerosubcomponentes: $utilidades.elementosPorPagina,componenteid: $routeParams.componente_id,
-				numeroproyecto:  $utilidades.elementosPorPagina,
+			$http.post('/SSubComponente', { accion: 'getSubComponentesPaginaPorComponente', pagina: pagina, numerosubcomponentes: $utilidades.elementosPorPagina,componenteid: $routeParams.componente_id,
 				filtro_nombre: mi.filtros['nombre'], filtro_snip: mi.filtros['snip'],
 				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
 				columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion,t: (new Date()).getTime()
@@ -453,7 +452,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 		}
 
 		mi.obtenerTotalSubComponentes = function(){
-			$http.post('/SSubComponente', { accion: 'numeroSubComponentesPorProyecto', componenteid: $routeParams.componente_id,
+			$http.post('/SSubComponente', { accion: 'numeroSubComponentesPorComponente', componenteid: $routeParams.componente_id,
 				filtro_nombre: mi.filtros['nombre'],
 				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],t: (new Date()).getTime()  }).then(
 					function(response) {
