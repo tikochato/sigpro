@@ -262,7 +262,7 @@ public class SProducto extends HttpServlet {
 				
 				if (esnuevo){
 					
-					producto = new Producto(acumulacionCosto, componente, productoTipo, unidadEjecutora, nombre, descripcion, 
+					producto = new Producto(acumulacionCosto, componente, productoTipo,null, unidadEjecutora, nombre, descripcion, 
 							usuario, null, new DateTime().toDate(), null, 1, snip, programa, subprograma, proyecto_, 
 							actividad, obra, latitud, longitud,null,costo, renglon, ubicacionGeografica,fechaInicio, 
 							fechaFin, duracion, duracionDimension,null,null,null,null,null,null);
@@ -726,7 +726,7 @@ public class SProducto extends HttpServlet {
 				if(esnuevo){
 					Componente componente = new Componente();
 					componente.setId(componenteId);
-					producto = new Producto(componente, productoTipo,  nombre, usuario, new Date(),1,0);
+					producto = new Producto( productoTipo,  nombre, usuario, new Date(),1,0);
 					producto.setFechaInicio(fechaInicio);
 					producto.setFechaFin(fechaFin);
 					producto.setDuracion(duracion);

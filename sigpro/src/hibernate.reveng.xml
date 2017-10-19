@@ -181,4 +181,14 @@
 	<table-filter match-name="componente_sigade"
 		match-catalog="sipro">
 	</table-filter>
+	<table-filter match-name="subcomponente" match-catalog="sipro"></table-filter>
+	<table-filter match-name="subcomponente_propiedad"
+		match-catalog="sipro">
+	</table-filter>
+	<table-filter match-name="subcomponente_propiedad_valor"
+		match-catalog="sipro">
+	</table-filter>
+	<table-filter match-name="subcomponente_tipo"
+		match-catalog="sipro">
+	</table-filter>
 </hibernate-reverse-engineering>
