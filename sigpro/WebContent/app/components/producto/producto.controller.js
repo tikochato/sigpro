@@ -21,7 +21,9 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.child_adquisiciones = null;
 	mi.child_riesgos = null;
 	
-	mi.componenteid = $routeParams.componente_id;
+	mi.objetoId = $routeParams.objeto_id;
+	mi.objetoTipo = $routeParams.objeto_tipo;
+	
 	mi.esForma = false;
 	mi.totalElementos = 0;
 	mi.paginaActual = 1;
@@ -55,14 +57,25 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	
 	mi.duracionDimension = mi.dimensiones[0];
 	
-	$http.post('/SComponente', { accion: 'obtenerComponentePorId', id: $routeParams.componente_id, t: (new Date()).getTime()}).success(
+	if(mi.objetoTipo==1){
+		mi.objetoTipoNombre = "Componente";
+		$http.post('/SComponente', { accion: 'obtenerComponentePorId', id: mi.objetoId, t: (new Date()).getTime()}).success(
 			function(response) {
 				mi.componenteid = response.id;
-				mi.componenteNombre = response.nombre;
-				mi.objetoTipoNombre = "Componente";
+				mi.objetoNombre = response.nombre;
 				var fechaInicioPadre = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
 				mi.modificarFechaInicial(fechaInicioPadre);
-	});
+			});
+	}else if(mi.objetoTipo==2){
+		mi.objetoTipoNombre = "Subcomponente";
+		$http.post('/SSubComponente', { accion: 'obtenerSubComponentePorId', id: mi.objetoId, t: (new Date()).getTime()}).success(
+				function(response) {
+					mi.subcomponenteid = response.id;
+					mi.objetoNombre = response.nombre;
+					var fechaInicioPadre = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
+					mi.modificarFechaInicial(fechaInicioPadre);
+				});
+	}
 	
 	$http.post('/SAcumulacionCosto', { accion: 'getAcumulacionesCosto', t: (new Date()).getTime()}).success(
 			function(response) {
@@ -114,7 +127,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			accion : 'cargar',
 			pagina : pagina,
 			registros : mi.elementosPorPagina,
-			componenteid : $routeParams.componente_id,
+			componenteid : mi.componenteid,
+			subcomponenteid : mi.subcomponenteid,
 			numeroproyecto:  $utilidades.elementosPorPagina, 
 			filtro_nombre: mi.filtros['nombre'],
 			filtro_usuario_creo: mi.filtros['usuarioCreo'], 
@@ -172,7 +186,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			}, 
 			{ displayName : 'Descripción', name : 'descripcion', cellClass : 'grid-align-left', enableFiltering: false },
 			{ displayName : 'Tipo', name : 'productoTipo', cellClass : 'grid-align-left', enableFiltering: false, enableSorting: false},  
-			{ displayName : 'Componente', name : 'componente', cellClass : 'grid-align-left', visible : false },
+			{ displayName : mi.objetoTipoNombre, name : mi.objetoTipoNombre.toLowerCase(), cellClass : 'grid-align-left', visible : false },
 			{ displayName : 'Producto', name : 'producto', cellClass : 'grid-align-left', visible : false },
 			{ name: 'usuarioCreo', displayName: 'Usuario Creación',cellClass: 'grid-align-left',
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text"  style="width: 90%;" ng-keypress="grid.appScope.producto.filtrar($event,2)" ></input></div>'
@@ -359,6 +373,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				renglon: mi.producto.renglon,
 				ubicacionGeografica: mi.producto.ubicacionGeografica,
 				componente : mi.componenteid,
+				subcomponente : mi.subcomponenteid,
 				productoPadre : mi.productoPadre,
 				tipoproductoid : mi.tipo,
 				unidadEjecutora : mi.unidadEjecutora,
@@ -437,7 +452,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				mi.duracionDimension = mi.dimensiones[0];
 			}
 			
-			mi.componenteId = mi.producto.idComponente;
+			mi.componenteid = mi.producto.idComponente;
+			mi.subcomponenteid = mi.producto.idSubComponente;
 
 			mi.productoPadre = mi.producto.idProducto;
 			mi.productoPadreNombre = mi.producto.producto;
@@ -486,10 +502,10 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 	
 	mi.reiniciarVista = function() {
-		if($location.path()==('/producto/'+ $routeParams.componente_id + '/rv'))
+		if($location.path()==('/producto/'+ mi.objetoId + '/' + mi.objetoTipo + '/rv'))
 			$route.reload();
 		else
-			$location.path('/producto/'+ $routeParams.componente_id + '/rv');
+			$location.path('/producto/'+ mi.objetoId + '/' + mi.objetoTipo + '/rv');
 		
 	}
 	
@@ -507,7 +523,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 
 	mi.obtenerTotalProductos = function(){
-		$http.post('/SProducto', { accion: 'totalElementos',componenteid : $routeParams.componente_id,
+		$http.post('/SProducto', { accion: 'totalElementos',componenteid : mi.componenteid, subcomponenteid : mi.subcomponenteid, 
 			filtro_nombre: mi.filtros['nombre'],
 			filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'], t: (new Date()).getTime() }).then(
 				function(response) {

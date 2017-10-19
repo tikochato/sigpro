@@ -84,7 +84,11 @@ public class ProductoDAO {
 			if(producto.getId()==null || producto.getId()<1){
 				session.saveOrUpdate(producto);
 				session.flush();
-				producto.setTreePath(producto.getComponente().getTreePath()+""+(10000000+producto.getId()));
+				if(producto.getComponente()!=null){
+					producto.setTreePath(producto.getComponente().getTreePath()+""+(10000000+producto.getId()));
+				}else if(producto.getSubcomponente()!=null){
+					producto.setTreePath(producto.getSubcomponente().getTreePath()+""+(10000000+producto.getId()));
+				}
 			}
 			session.saveOrUpdate(producto);
 			Usuario usu = UsuarioDAO.getUsuario( producto.getUsuarioCreo());

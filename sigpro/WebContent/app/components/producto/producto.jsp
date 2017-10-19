@@ -32,7 +32,7 @@
 		</div>
 	</div>
 		<div class="subtitulo" ng-if="!producto.esTreeview">
-			{{ producto.objetoTipoNombre }}: {{ producto.componenteNombre }}
+			{{ producto.objetoTipoNombre }}: {{ producto.objetoNombre }}
 		</div>
 	
   

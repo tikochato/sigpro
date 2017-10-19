@@ -426,7 +426,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 		
 		mi.irAProductos=function(subcomponenteid){
 			if(mi.subcomponente!=null){
-				$location.path('/producto/'+subcomponenteid);
+				$location.path('/producto/'+subcomponenteid+'/2');
 			}
 		};
 		
