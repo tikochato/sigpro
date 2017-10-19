@@ -71,7 +71,7 @@
 				  </div>
 			</div>
 			<br/>
-			<div class="total-rows">Total de {{  prestamoc.totalProyectos + (prestamoc.totalProyectos == 1 ? "Prestamo" : " Prestamos" ) }}</div>
+			<div class="total-rows">Total de {{  prestamoc.totalProyectos + (prestamoc.totalProyectos == 1 ? "Préstamo" : " Préstamos" ) }}</div>
 				<ul uib-pagination total-items="prestamoc.totalProyectos"
 						ng-model="prestamoc.paginaActual"
 						max-size="prestamoc.numeroMaximoPaginas"
@@ -113,8 +113,7 @@
 			<uib-tabset active="prestamoc.active">
 				<shiro:hasPermission name="43010">
 				<uib-tab ng-click="prestamoc.getPorcentajes();" index="0" heading="Préstamo" >
-					<br/>
-							<div class="row">
+							<div class="row" style="margin-top: 15px;">
 								<div class="col-sm-12">
 									<div class="form-group">
 										<input type="text" class="inputText"   
@@ -322,8 +321,7 @@
 				</shiro:hasPermission>
 				<shiro:hasPermission name="43010">
 				<uib-tab ng-click="prestamoc.getPorcentajes();" index="prestamoc.ordenTab+1" heading="Configuraciones Préstamo" >
-					<br/>
-							<div class="row">
+							<div class="row" style="margin-top: 15px;">
 								<div class="col-sm-6">
 									<div class="form-group">
 										<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaElegibilidadUe" is-open="prestamoc.fe_abierto"
@@ -487,7 +485,7 @@
 				
 				</uib-tab>
 				<uib-tab index="prestamoc.ordenTab+2" heading="Adicionales" ng-if="prestamoc.mostrarPrestamo" >
-					<div class="row">
+					<div class="row" style="margin-top: 15px;">
 						<div class="col-sm-3">
 							<div class="form-group">
 							   	<input  type="text" class="inputText"   ng-model="prestamoc.prestamo.numeroAutorizacion" 
@@ -860,7 +858,7 @@
 				</uib-tab>
 				</shiro:hasPermission>
 				<uib-tab  index="prestamoc.ordenTab+3" heading="Unidades Ejecutoras" ng-if="prestamoc.mostrarPrestamo">
-					<table st-table="prestamoc.displayCollectionUE" st-safe-src="prestamoc.rowCollectionUE" class="table table-striped">
+					<table st-table="prestamoc.displayCollectionUE" st-safe-src="prestamoc.rowCollectionUE" class="table table-striped" style="margin-top: 15px;">
 						<thead>
 							<tr>
 								<th class="label-form" style="text-align: center; min-width:300px; max-width:300px;">Organismo ejecutor</th>
@@ -884,29 +882,23 @@
 					</table>
 				</uib-tab>
 				<uib-tab  index="prestamoc.ordenTab+4" heading="Componentes" ng-if="prestamoc.mostrarPrestamo">
-					<table st-table="prestamoc.displayedCollectionComponentes" st-safe-src="prestamoc.rowCollectionComponentes" class="table table-striped">
+					<table st-table="prestamoc.displayedCollectionComponentes" st-safe-src="prestamoc.rowCollectionComponentes" class="table table-striped" style="margin-top: 15px;">
 						<thead>
 							<tr>
 								<th class="label-form" style="text-align: center; min-width:300px; max-width:300px;">Nombre</th>
-								<th class="label-form" style="text-align: center; min-width:30px; max-width:30px;">Tipo de moneda</th>
 								<th class="label-form" style="text-align: center; min-width: 140px; max-width: 140px">Techo</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr ng-repeat="row in prestamoc.rowCollectionComponentes">
-								<td class="divisionColumna truncate" style="min-width:300px;max-width:300px;">
+								<td style="min-width:300px;max-width:300px;">
 	    							<div style="height: 25px;">
 	    								<div style="text-align: left">{{row.nombre}}</div>
 	    							</div>
 	    						</td>
-	    						<td class="divisionColumna truncate" style="min-width:30px;max-width:300px;">
-	    							<div style="height: 25px;">
-	    								<div style="text-align: center">{{row.tipoMoneda}}</div>
-	    							</div>
-	    						</td>
 	    						<td>
 	    							<div style="height: 25px;">
-	    								<div style="text-align: left">{{row.techo | formatoMillones : controller.enMillones}}</div>
+	    								<div style="text-align: right">{{row.techo | formatoMillonesDolares : controller.enMillones}}</div>
 	    							</div>
 	    						</td>
 							</tr>
@@ -914,7 +906,8 @@
 					</table>
 				</uib-tab>
 				<uib-tab  index="prestamoc.ordenTab+5" heading="Matriz" ng-if="prestamoc.mostrarPrestamo">
-					
+					<div style="margin-top: 15px;">
+					</div>
 				</uib-tab>
 			</uib-tabset>
 			</form>
