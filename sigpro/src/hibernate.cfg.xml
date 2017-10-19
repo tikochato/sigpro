@@ -31,6 +31,7 @@
         <mapping class="pojo.Componente" />
         <mapping class="pojo.ComponentePropiedad" />
         <mapping class="pojo.ComponentePropiedadValor" />
+        <mapping class="pojo.ComponenteSigade" />
         <mapping class="pojo.ComponenteTipo" />
         <mapping class="pojo.Cooperante" />
         <mapping class="pojo.CtipoPropiedad" />
@@ -100,6 +101,11 @@
         <mapping class="pojo.RolUsuarioProyecto" />
         <mapping class="pojo.RolUsuarioProyectoId" />
         <mapping class="pojo.RtipoPropiedad" />
+        <mapping class="pojo.Subcomponente" />
+        <mapping class="pojo.SubcomponentePropiedad" />
+        <mapping class="pojo.SubcomponentePropiedadValor" />
+        <mapping class="pojo.SubcomponentePropiedadValorId" />
+        <mapping class="pojo.SubcomponenteTipo" />
         <mapping class="pojo.SubprodtipoPropiedad" />
         <mapping class="pojo.SubprodtipoPropiedadId" />
         <mapping class="pojo.Subproducto" />

@@ -200,7 +200,7 @@ public class CProject {
 				, null,usuario, null, new Date(), null, 1, null, null, null, null, null, null, null, null, 
 				new BigDecimal(task.getCost().toString()),null,null,Utils.setDateCeroHoras(task.getStart()),
 				Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
-				, task.getDuration().getUnits().getName(),null,null,1,0,null,null,null,null,null,null);
+				, task.getDuration().getUnits().getName(),null,null,1,0,null,null,null,null,null,null,null);
 		
 		return ComponenteDAO.guardarComponente(componente, false) ? componente : null;
 	}
@@ -231,7 +231,7 @@ public class CProject {
 		UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(new DateTime().getYear(), ENTIDAD_ID_DEFECTO, UNIDAD_EJECUTORA_ID_DEFECTO);
 		AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
 		
-		Producto producto = new Producto(acumulacionCosto,componente, productoTipo, unidadEjecutora
+		Producto producto = new Producto(acumulacionCosto,componente, productoTipo,null, unidadEjecutora
 				,task.getName() , null, usuario, null, new Date(), null,1, 
 				 null, null, null, null, null, null, null, 
 				null, null, new BigDecimal(task.getCost().toString()),null,null,

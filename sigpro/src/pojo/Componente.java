@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 18, 2017 4:40:30 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 18, 2017 5:58:56 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class Componente implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 7477009794361710212L;
+	private static final long serialVersionUID = 5917901801607604939L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private ComponenteSigade componenteSigade;
@@ -68,6 +68,7 @@ public class Componente implements java.io.Serializable {
 	private Set<ComponenteUsuario> componenteUsuarios = new HashSet<ComponenteUsuario>(0);
 	private Set<Producto> productos = new HashSet<Producto>(0);
 	private Set<ComponentePropiedadValor> componentePropiedadValors = new HashSet<ComponentePropiedadValor>(0);
+	private Set<Subcomponente> subcomponentes = new HashSet<Subcomponente>(0);
 
 	public Componente() {
 	}
@@ -91,7 +92,8 @@ public class Componente implements java.io.Serializable {
 			Integer ubicacionGeografica, Date fechaInicio, Date fechaFin, int duracion, String duracionDimension,
 			Integer orden, String treePath, Integer nivel, Integer esDeSigade, BigDecimal fuentePrestamo,
 			BigDecimal fuenteDonacion, BigDecimal fuenteNacional, Set<ComponenteUsuario> componenteUsuarios,
-			Set<Producto> productos, Set<ComponentePropiedadValor> componentePropiedadValors) {
+			Set<Producto> productos, Set<ComponentePropiedadValor> componentePropiedadValors,
+			Set<Subcomponente> subcomponentes) {
 		this.acumulacionCosto = acumulacionCosto;
 		this.componenteSigade = componenteSigade;
 		this.componenteTipo = componenteTipo;
@@ -129,6 +131,7 @@ public class Componente implements java.io.Serializable {
 		this.componenteUsuarios = componenteUsuarios;
 		this.productos = productos;
 		this.componentePropiedadValors = componentePropiedadValors;
+		this.subcomponentes = subcomponentes;
 	}
 
 	@Id
@@ -485,6 +488,15 @@ public class Componente implements java.io.Serializable {
 
 	public void setComponentePropiedadValors(Set<ComponentePropiedadValor> componentePropiedadValors) {
 		this.componentePropiedadValors = componentePropiedadValors;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "componente")
+	public Set<Subcomponente> getSubcomponentes() {
+		return this.subcomponentes;
+	}
+
+	public void setSubcomponentes(Set<Subcomponente> subcomponentes) {
+		this.subcomponentes = subcomponentes;
 	}
 
 }

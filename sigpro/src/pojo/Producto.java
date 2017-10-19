@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 18, 2017 4:40:30 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 18, 2017 5:58:56 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,11 +29,12 @@ public class Producto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5960094765780436524L;
+	private static final long serialVersionUID = 6905543688623013584L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Componente componente;
 	private ProductoTipo productoTipo;
+	private Subcomponente subcomponente;
 	private UnidadEjecutora unidadEjecutora;
 	private String nombre;
 	private String descripcion;
@@ -68,9 +69,8 @@ public class Producto implements java.io.Serializable {
 	public Producto() {
 	}
 
-	public Producto(Componente componente, ProductoTipo productoTipo, String nombre, String usuarioCreo,
-			Date fechaCreacion, int estado, int duracion) {
-		this.componente = componente;
+	public Producto(ProductoTipo productoTipo, String nombre, String usuarioCreo, Date fechaCreacion, int estado,
+			int duracion) {
 		this.productoTipo = productoTipo;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
@@ -80,16 +80,17 @@ public class Producto implements java.io.Serializable {
 	}
 
 	public Producto(AcumulacionCosto acumulacionCosto, Componente componente, ProductoTipo productoTipo,
-			UnidadEjecutora unidadEjecutora, String nombre, String descripcion, String usuarioCreo,
-			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, Long snip,
-			Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra, String latitud,
-			String longitud, Integer peso, BigDecimal costo, Integer renglon, Integer ubicacionGeografica,
-			Date fechaInicio, Date fechaFin, int duracion, String duracionDimension, Integer orden, String treePath,
-			Integer nivel, Set<ProductoUsuario> productoUsuarios, Set<Subproducto> subproductos,
-			Set<ProductoPropiedadValor> productoPropiedadValors) {
+			Subcomponente subcomponente, UnidadEjecutora unidadEjecutora, String nombre, String descripcion,
+			String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
+			Long snip, Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra,
+			String latitud, String longitud, Integer peso, BigDecimal costo, Integer renglon,
+			Integer ubicacionGeografica, Date fechaInicio, Date fechaFin, int duracion, String duracionDimension,
+			Integer orden, String treePath, Integer nivel, Set<ProductoUsuario> productoUsuarios,
+			Set<Subproducto> subproductos, Set<ProductoPropiedadValor> productoPropiedadValors) {
 		this.acumulacionCosto = acumulacionCosto;
 		this.componente = componente;
 		this.productoTipo = productoTipo;
+		this.subcomponente = subcomponente;
 		this.unidadEjecutora = unidadEjecutora;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -145,7 +146,7 @@ public class Producto implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "componenteid", nullable = false)
+	@JoinColumn(name = "componenteid")
 	public Componente getComponente() {
 		return this.componente;
 	}
@@ -162,6 +163,16 @@ public class Producto implements java.io.Serializable {
 
 	public void setProductoTipo(ProductoTipo productoTipo) {
 		this.productoTipo = productoTipo;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "subcomponenteid")
+	public Subcomponente getSubcomponente() {
+		return this.subcomponente;
+	}
+
+	public void setSubcomponente(Subcomponente subcomponente) {
+		this.subcomponente = subcomponente;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

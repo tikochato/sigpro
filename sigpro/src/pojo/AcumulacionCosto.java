@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 18, 2017 4:40:30 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 18, 2017 5:58:56 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -25,7 +25,7 @@ public class AcumulacionCosto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8015213596989810385L;
+	private static final long serialVersionUID = 4036305660705081926L;
 	private Integer id;
 	private String nombre;
 	private String usuarioCreo;
@@ -38,6 +38,7 @@ public class AcumulacionCosto implements java.io.Serializable {
 	private Set<Actividad> actividads = new HashSet<Actividad>(0);
 	private Set<Proyecto> proyectos = new HashSet<Proyecto>(0);
 	private Set<Subproducto> subproductos = new HashSet<Subproducto>(0);
+	private Set<Subcomponente> subcomponentes = new HashSet<Subcomponente>(0);
 
 	public AcumulacionCosto() {
 	}
@@ -51,7 +52,8 @@ public class AcumulacionCosto implements java.io.Serializable {
 
 	public AcumulacionCosto(String nombre, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, int estado, Set<Componente> componentes, Set<Producto> productos,
-			Set<Actividad> actividads, Set<Proyecto> proyectos, Set<Subproducto> subproductos) {
+			Set<Actividad> actividads, Set<Proyecto> proyectos, Set<Subproducto> subproductos,
+			Set<Subcomponente> subcomponentes) {
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
@@ -63,6 +65,7 @@ public class AcumulacionCosto implements java.io.Serializable {
 		this.actividads = actividads;
 		this.proyectos = proyectos;
 		this.subproductos = subproductos;
+		this.subcomponentes = subcomponentes;
 	}
 
 	@Id
@@ -176,6 +179,15 @@ public class AcumulacionCosto implements java.io.Serializable {
 
 	public void setSubproductos(Set<Subproducto> subproductos) {
 		this.subproductos = subproductos;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "acumulacionCosto")
+	public Set<Subcomponente> getSubcomponentes() {
+		return this.subcomponentes;
+	}
+
+	public void setSubcomponentes(Set<Subcomponente> subcomponentes) {
+		this.subcomponentes = subcomponentes;
 	}
 
 }
