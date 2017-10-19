@@ -6,10 +6,8 @@ import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 import java.math.BigDecimal;
 import java.time.Year;
@@ -42,8 +40,6 @@ import pojo.ComponenteTipo;
 import pojo.Cooperante;
 import pojo.EjecucionEstado;
 import pojo.InteresTipo;
-import pojo.ObjetoPrestamo;
-import pojo.ObjetoPrestamoId;
 import pojo.Prestamo;
 import pojo.Proyecto;
 import pojo.TipoMoneda;
@@ -274,8 +270,8 @@ public class SPrestamo extends HttpServlet {
 			}	
 		}else if (accion.equals("guardarPrestamo")) {
 			boolean result = false;
-			Integer objetoId = Utils.String2Int(map.get("objetoId"), null);
-			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"),null);
+			boolean esNuevo = map.get("esNuevo") == "true" ? true : false;
+			Integer prestamoId = Utils.String2Int(map.get("prestamoId"), null);
 			Long codigoPresupuestario = Utils.String2Long(map.get("codigoPresupuestario"));
 			String numeroPrestamo =  map.get("numeroPrestamo"); 
 			String  proyectoPrograma = map.get("proyetoPrograma");
@@ -373,10 +369,9 @@ public class SPrestamo extends HttpServlet {
 				interesTipo.setId(tipoInteresId);
 			}
 			
-			Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(objetoId, objetoTipo);
-			ObjetoPrestamo objetoPrestamo = null;
+			Prestamo prestamo = PrestamoDAO.getPrestamoById(prestamoId);
 			
-			if (prestamo==null){
+			if (esNuevo==true){
 				// revisar esta variable plazoEjecucionUe que deberia ir en el penultimo null
 				prestamo = new Prestamo(autorizacionTipo, cooperanteUe, ejecucionEstado, interesTipo, tipoMoneda, 
 						unidadEjecutora_, fechaCorte, codigoPresupuestario, numeroPrestamo, destino, sectorEconomico, 
@@ -393,12 +388,7 @@ public class SPrestamo extends HttpServlet {
 						null, montoAsignadoUe, desembolsoAFechaUe, montoPorDesembolsarUe, fechaVigencia, 
 						montoContratadoUsd, montoContratadoQtz, desembolsoAFechaUsd, montoPorDesembolsarUsd, montoAsignadoUeUsd, 
 						montoAsignadoUeQtz, desembolsoAFechaUeUsd, montoPorDesembolsarUeUsd, null);
-				
-				ObjetoPrestamoId objetoPrestamoId = new ObjetoPrestamoId(0, objetoId, objetoTipo);
-				objetoPrestamo = new ObjetoPrestamo(objetoPrestamoId, prestamo);
-				Set <ObjetoPrestamo> objetoPrestamos = new HashSet<>();
-				objetoPrestamos.add(objetoPrestamo);
-				result = PrestamoDAO.guardarPrestamo(prestamo, objetoPrestamo);
+				result = PrestamoDAO.guardarPrestamo(prestamo);
 				
 			}else{
 				prestamo.setAmortizado(amortizado);
@@ -466,12 +456,9 @@ public class SPrestamo extends HttpServlet {
 				prestamo.setDesembolsoAFechaUeUsd(desembolsoAFechaUeUsd);
 				prestamo.setMontoPorDesembolsarUeUsd(montoPorDesembolsarUeUsd);
 				prestamo.setCooperante(cooperanteUe);
-				result = PrestamoDAO.guardarPrestamo(prestamo, PrestamoDAO.getObjetoPrestamo(prestamo.getId()));
+				result = PrestamoDAO.guardarPrestamo(prestamo);
 				
 			}
-			if (result && objetoTipo == 1)
-				result = guardarComponentes(codigoPresupuestario.toString(), objetoId, usuario,prestamo.getFechaSuscripcion());
-			
 			response_text = String.join("","{ \"success\": ",(result ? "true" : "false")," }");
 		}else if(accion.equals("getPrestamosPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;

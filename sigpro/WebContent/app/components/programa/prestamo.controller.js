@@ -216,13 +216,15 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 				mi.prestamo.montoPorDesembolsarUsd= ((1 - (mi.prestamo.desembolsoAFechaUsdP/100) ) *  mi.prestamo.montoContratado);
 				mi.prestamo.montoPorDesembolsarUsd= Number(mi.prestamo.montoPorDesembolsarUsd.toFixed(2));
 				mi.prestamo.montoPorDesembolsarUsdP= 100 - mi.prestamo.desembolsoAFechaUsdP;
-				
+				if(isNaN(mi.prestamo.montoPorDesembolsarUsdP))
+					mi.prestamo.montoPorDesembolsarUsdP = null;
 			}
 		}else if (tipo==2){
 			if(mi.prestamo.montoContratadoUsd !== undefined && mi.prestamo.montoPorDesembolsarUsd !== undefined){
 				n = (mi.prestamo.montoPorDesembolsarUsd / mi.prestamo.montoContratadoUsd) * 100;
 				mi.prestamo.montoPorDesembolsarUsdP = Number(n.toFixed(2));
-				
+				if(isNaN(mi.prestamo.montoPorDesembolsarUsdP))
+					mi.prestamo.montoPorDesembolsarUsdP = null;
 			}
 		}else if (tipo==3){
 			if(mi.prestamo.desembolsoAFechaUeUsd !== undefined && mi.prestamo.montoAsignadoUe !== undefined){
@@ -230,11 +232,19 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 				mi.prestamo.desembolsoAFechaUeUsdP = Number(n.toFixed(2));
 				mi.prestamo.montoPorDesembolsarUeUsd = ((1.00 - (mi.prestamo.desembolsoAFechaUeUsdP/100.00) ) *  (mi.prestamo.montoAsignadoUeUsd*1.00));
 				mi.prestamo.montoPorDesembolsarUeUsdP= 100.00 - mi.prestamo.desembolsoAFechaUeUsdP;
+				if(isNaN(mi.prestamo.desembolsoAFechaUeUsdP))
+					mi.prestamo.desembolsoAFechaUeUsdP = null;
+				if(isNaN(mi.prestamo.montoPorDesembolsarUeUsd))
+					mi.prestamo.montoPorDesembolsarUeUsd = null;
+				if(isNaN(mi.prestamo.montoPorDesembolsarUeUsdP))
+					mi.prestamo.montoPorDesembolsarUeUsdP = null;
 			}
 		}else if(tipo==4){
 			if(mi.prestamo.montoAsignadoUeUsd !== undefined && mi.prestamo.montoPorDesembolsarUeUsd !== undefined){
 				n = (mi.prestamo.montoPorDesembolsarUeUsd / mi.prestamo.montoAsignadoUeUsd) * 100;
 				mi.prestamo.montoPorDesembolsarUeUsdP = Number(n.toFixed(2));
+				if(isNaN(mi.prestamo.montoPorDesembolsarUeUsdP))
+					mi.prestamo.montoPorDesembolsarUeUsdP = null;
 			}
 		}else if(tipo==5){
 			if(mi.prestamo.fechaCierreActualUe !== undefined && mi.prestamo.fechaElegibilidadUe !== undefined){
@@ -254,6 +264,10 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 					n = 0.00;
 				mi.prestamo.plazoEjecucionUe = Number(n.toFixed(2));
 				mi.prestamo.mesesProrrogaUe = moment(mi.prestamo.fechaCierreActualUe).diff(mi.prestamo.fechaCierreOrigianlUe,'months',true);
+				if(isNaN(mi.prestamo.plazoEjecucionUe))
+					mi.prestamo.plazoEjecucionUe = null;
+				if(isNaN(mi.prestamo.mesesProrrogaUe))
+					mi.prestamo.mesesProrrogaUe = null;
 			}
 			
 		}
@@ -267,8 +281,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		if (mi.prestamo!=null && mi.prestamo.codigoPresupuestario !=null && mi.prestamo.codigoPresupuestario != ''){
 			var param_data = {
 					accion: "guardarPrestamo",
-					objetoId: mi.prestamo.id,
-					objetoTipo: 1,
+					esNuevo: mi.esNuevo,
+					prestamoId: mi.prestamo.id,
 					codigoPresupuestario: mi.prestamo.codigoPresupuestario,
 					numeroPrestamo: mi.prestamo.numeroPrestamo,
 					proyetoPrograma: mi.prestamo.proyectoPrograma,
@@ -343,8 +357,29 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 								if(mi.esTreeview){
 									mi.t_cambiarNombreNodo();
 								}
-								else
+								else{
 									mi.obtenerTotalPrestamos();
+									
+									$http.post('/SPrestamo', {
+										accion: 'getComponentesSigade',
+										codigoPresupuestario : mi.prestamo.codigoPresupuestario
+									}).then(function(response){
+										if(response.data.success){
+											mi.componentes = response.data.componentes;
+											mi.rowCollectionComponentes = mi.componentes;
+											mi.displayedCollectionComponentes = [].concat(mi.rowCollectionComponentes);
+										}
+									})
+									
+									$http.post('/SPrestamo',{
+										accion: 'getUnidadesEjecutoras',
+										codigoPresupuestario : mi.prestamo.codigoPresupuestario
+									}).then(function(response){
+										mi.unidadesEjecutoras = response.data.unidadesEjecutoras;
+										mi.rowCollectionUE = mi.unidadesEjecutoras;
+										mi.displayCollectionUE = [].concat(mi.rowCollectionUE);
+									})
+								}
 								if(mi.child_desembolso!=null || mi.child_riesgos!=null){
 									if(mi.child_desembolso)
 										ret = mi.child_desembolso.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',

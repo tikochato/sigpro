@@ -57,20 +57,12 @@ public class PrestamoDAO {
 		return ret;
 	}
 
-	public static boolean guardarPrestamo(Prestamo prestamo,ObjetoPrestamo objetoPrestamo){
+	public static boolean guardarPrestamo(Prestamo prestamo){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
 			session.saveOrUpdate(prestamo);
-			
-			objetoPrestamo.setEstado(1);
-			objetoPrestamo.setPrestamo(prestamo);
-			objetoPrestamo.getId().setPrestamoid(prestamo.getId());
-			objetoPrestamo.setFechaCreacion(prestamo.getFechaCreacion());
-			objetoPrestamo.setUsuarioCreo(prestamo.getUsuarioCreo());
-			
-			session.saveOrUpdate(objetoPrestamo);
 			session.getTransaction().commit();
 			ret = true;
 		}
