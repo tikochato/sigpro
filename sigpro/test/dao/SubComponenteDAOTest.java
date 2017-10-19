@@ -3,7 +3,7 @@ package dao;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-import pojo.Componente;
+import pojo.Subcomponente;
 
 public class SubComponenteDAOTest {
 	
@@ -19,17 +19,17 @@ public class SubComponenteDAOTest {
 	
 	@Test
 	public void guardarSubComponenteTest(){
-		assertNotNull(SubComponenteDAO.guardarSubComponente(new Componente(), true));
+		assertNotNull(SubComponenteDAO.guardarSubComponente(new Subcomponente(), true));
 	}
 	
 	@Test
 	public void eliminarSubComponenteTest(){
-		assertNotNull(SubComponenteDAO.eliminarSubComponente(new Componente()));
+		assertNotNull(SubComponenteDAO.eliminarSubComponente(new Subcomponente()));
 	}
 	
 	@Test
 	public void eliminarTotalSubComponenteTest(){
-		assertNotNull(SubComponenteDAO.eliminarTotalSubComponente(new Componente()));
+		assertNotNull(SubComponenteDAO.eliminarTotalSubComponente(new Subcomponente()));
 	}
 	
 	@Test

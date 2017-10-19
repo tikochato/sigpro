@@ -307,7 +307,7 @@ public class ObjetoDAO {
 			}
 			return false;
 		case 2:
-			Componente componente = SubComponenteDAO.getSubComponente(objetoId);
+			Componente componente = ComponenteDAO.getComponente(objetoId);
 			if (componente.getProductos()!=null && componente.getProductos().size()>0){
 				return true;
 			}
@@ -361,7 +361,7 @@ public class ObjetoDAO {
 			Componente componente = null;
 			for(Object obj : resultados){
 				Producto producto = (Producto)obj;
-				componente = SubComponenteDAO.getSubComponente(producto.getComponente().getId());
+				componente = ComponenteDAO.getComponente(producto.getComponente().getId());
 				temp = new ObjetoHoja(3, obj, 2, componente);
 				hojas.add(temp);
 			}
@@ -399,7 +399,7 @@ public class ObjetoDAO {
 					temp = new ObjetoHoja(5, obj, 1, proyecto);
 					break;
 				case 2:
-					componente = SubComponenteDAO.getSubComponente(actividad.getObjetoId());
+					componente = ComponenteDAO.getComponente(actividad.getObjetoId());
 					temp = new ObjetoHoja(5, obj, 2, componente);
 					break;
 				case 3:

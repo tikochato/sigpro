@@ -21,6 +21,7 @@ import pojo.PlanAdquisicion;
 import pojo.PlanAdquisicionPago;
 import pojo.Producto;
 import pojo.Proyecto;
+import pojo.Subcomponente;
 import pojo.Subproducto;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -121,13 +122,17 @@ public class ActividadDAO {
 				session.save(Actividad);
 				session.flush();
 				switch(Actividad.getObjetoTipo()){
-					case 1:
+					case 0:
 						Proyecto proyecto = ProyectoDAO.getProyecto(Actividad.getObjetoId());
 						Actividad.setTreePath(proyecto.getTreePath()+""+(10000000+Actividad.getId()));
 						break;
-					case 2:
-						Componente componente = SubComponenteDAO.getSubComponente(Actividad.getObjetoId());
+					case 1:
+						Componente componente = ComponenteDAO.getComponente(Actividad.getObjetoId());
 						Actividad.setTreePath(componente.getTreePath()+""+(10000000+Actividad.getId()));
+						break;
+					case 2:
+						Subcomponente subcomponente = SubComponenteDAO.getSubComponente(Actividad.getObjetoId());
+						Actividad.setTreePath(subcomponente.getTreePath()+""+(10000000+Actividad.getId()));
 						break;
 					case 3:
 						Producto producto = ProductoDAO.getProductoPorId(Actividad.getObjetoId());
@@ -509,11 +514,11 @@ public class ActividadDAO {
 						"from (",
 							"select distinct ac.* ",
 							"from actividad ac , (",
-							    "select p.id, 1 objeto_tipo",
+							    "select p.id, 0 objeto_tipo",
 								"from proyecto p",
 								"where p.id = ",idPrestamos,
 								"union",
-								"select c.id, 2 objeto_tipo",
+								"select c.id, 1 objeto_tipo",
 								"from proyecto p",
 								"left outer join componente c on c.proyectoid = p.id",
 								"where c.id in (" + idComponentes + ")",

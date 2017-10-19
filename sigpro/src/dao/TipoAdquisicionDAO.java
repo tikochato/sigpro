@@ -96,7 +96,7 @@ public class TipoAdquisicionDAO {
 		int cooperanteCodigo=0;
 		switch(objetoTipo){
 			case 2:
-				Componente componente = SubComponenteDAO.getSubComponente(objetoId);
+				Componente componente = ComponenteDAO.getComponente(objetoId);
 				cooperanteCodigo = componente.getProyecto().getCooperante().getCodigo();
 				break;
 			case 3: 

@@ -14,6 +14,7 @@ import pojo.Actividad;
 import pojo.Componente;
 import pojo.Producto;
 import pojo.Proyecto;
+import pojo.Subcomponente;
 import pojo.Subproducto;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -387,8 +388,9 @@ public class EstructuraProyectoDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		String treePath_inicio="";
 		switch(objetoTipo){
-			case 1: Proyecto proyecto = ProyectoDAO.getProyecto(objetoId); treePath_inicio = (proyecto!=null) ? proyecto.getTreePath() : null; break;
-			case 2: Componente componente = SubComponenteDAO.getSubComponente(objetoId); treePath_inicio = (componente!=null) ? componente.getTreePath() : null; break;
+			case 0: Proyecto proyecto = ProyectoDAO.getProyecto(objetoId); treePath_inicio = (proyecto!=null) ? proyecto.getTreePath() : null; break;
+			case 1: Componente componente = ComponenteDAO.getComponente(objetoId); treePath_inicio = (componente!=null) ? componente.getTreePath() : null; break;
+			case 2: Subcomponente subcomponente = SubComponenteDAO.getSubComponente(objetoId); treePath_inicio = (subcomponente!=null) ? subcomponente.getTreePath() : null; break;
 			case 3: Producto producto = ProductoDAO.getProductoPorId(objetoId); treePath_inicio = (producto!=null) ? producto.getTreePath() : null; break;
 			case 4: Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId); treePath_inicio = (subproducto!=null) ? subproducto.getTreePath() : null; break;
 			case 5: Actividad actividad = ActividadDAO.getActividadPorId(objetoId); treePath_inicio = (actividad!=null) ? actividad.getTreePath() : null; break;
