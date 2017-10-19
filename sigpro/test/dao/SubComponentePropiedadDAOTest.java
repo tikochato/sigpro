@@ -3,51 +3,51 @@ package dao;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-import pojo.ComponentePropiedad;
+import pojo.SubcomponentePropiedad;
 public class SubComponentePropiedadDAOTest {
 	
 	@Test
-	public void getComponentePropiedadesPorTipoComponentePaginaTest(){
-		assertNotNull(SubComponentePropiedadDAO.getSubComponentePropiedadesPorTipoComponentePagina(1, 1));
+	public void getSubComponentePropiedadesPorTipoSubComponentePaginaTest(){
+		assertNotNull(SubComponentePropiedadDAO.getSubComponentePropiedadesPorTipoSubComponentePagina(1, 1));
 	}
 	
 	@Test
-	public void getTotalComponentePropiedadesTest(){
+	public void getTotalSubComponentePropiedadesTest(){
 		assertEquals(SubComponentePropiedadDAO.getTotalSubComponentePropiedades().getClass(),Long.class);
 	}
 	
 	@Test
-	public void getComponentePropiedadPaginaTotalDisponiblesTest(){
+	public void getSubComponentePropiedadPaginaTotalDisponiblesTest(){
 		assertNotNull(SubComponentePropiedadDAO.getSubComponentePropiedadPaginaTotalDisponibles(1, 1,"unit_test"));
 	}
 	
 	@Test
-	public void getComponentePropiedadPorIdTest(){
+	public void getSubComponentePropiedadPorIdTest(){
 		assertNull(SubComponentePropiedadDAO.getSubComponentePropiedadPorId(0));
 	}
 	
 	@Test
-	public void guardarComponentePropiedadTest(){
-		assertEquals(SubComponentePropiedadDAO.guardarSubComponentePropiedad(new ComponentePropiedad()), false);
+	public void guardarSubComponentePropiedadTest(){
+		assertEquals(SubComponentePropiedadDAO.guardarSubComponentePropiedad(new SubcomponentePropiedad()), false);
 	}
 	
 	@Test
-	public void eliminarComponentePropiedadTest(){
-		assertEquals(SubComponentePropiedadDAO.eliminarSubComponentePropiedad(new ComponentePropiedad()),false);
+	public void eliminarSubComponentePropiedadTest(){
+		assertEquals(SubComponentePropiedadDAO.eliminarSubComponentePropiedad(new SubcomponentePropiedad()),false);
 	}
 	
 	@Test
-	public void eliminarTotalComponentePropiedadTest(){
-		assertNotNull(SubComponentePropiedadDAO.eliminarTotalSubComponentePropiedad(new ComponentePropiedad()));
+	public void eliminarTotalSubComponentePropiedadTest(){
+		assertNotNull(SubComponentePropiedadDAO.eliminarTotalSubComponentePropiedad(new SubcomponentePropiedad()));
 	}
 	
 	@Test
-	public void getComponentePropiedadesPaginaTest(){
+	public void getSubComponentePropiedadesPaginaTest(){
 		assertNotNull(SubComponentePropiedadDAO.getSubComponentePropiedadesPagina(1, 1, "","","","",""));
 	}
 	
 	@Test
-	public void getTotalComponentePropiedad(){
+	public void getTotalSubComponentePropiedad(){
 		assertEquals(SubComponentePropiedadDAO.getTotalSubComponentePropiedad("","","").getClass(),Long.class);
 	}
 

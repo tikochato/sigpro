@@ -25,6 +25,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.SubComponenteDAO;
+import dao.ComponenteDAO;
 import dao.ObjetoDAO;
 import dao.ProductoDAO;
 import dao.ProductoPropiedadDAO;
@@ -41,6 +42,7 @@ import pojo.ProductoPropiedadValorId;
 import pojo.ProductoTipo;
 import pojo.ProductoUsuario;
 import pojo.ProductoUsuarioId;
+import pojo.Subcomponente;
 import pojo.UnidadEjecutora;
 import pojo.Usuario;
 import utilities.Utils;
@@ -57,6 +59,8 @@ public class SProducto extends HttpServlet {
 		String descripcion;
 		Integer idComponente;
 		String componente;
+		Integer idSubComponente;
+		String subcomponente;
 		Integer idProductoTipo;
 		String productoTipo;
 		Integer unidadEjectuora;
@@ -127,6 +131,7 @@ public class SProducto extends HttpServlet {
 
 		if (accion.equals("cargar")) {
 			int componenteid = Utils.String2Int(parametro.get("componenteid"), 0);
+			int subcomponenteid = Utils.String2Int(parametro.get("subcomponenteid"), 0);
 			int pagina = Utils.String2Int(parametro.get("pagina"), 1);
 			int registros = Utils.String2Int(parametro.get("registros"), 20);
 			String filtro_nombre = parametro.get("filtro_nombre");
@@ -135,7 +140,7 @@ public class SProducto extends HttpServlet {
 			String columna_ordenada = parametro.get("columna_ordenada");
 			String orden_direccion = parametro.get("orden_direccion");
 
-			List<Producto> productos = ProductoDAO.getProductosPagina(pagina, registros,componenteid
+			List<Producto> productos = ProductoDAO.getProductosPagina(pagina, registros,componenteid, subcomponenteid
 					,filtro_nombre, filtro_usuario_creo,filtro_fecha_creacion
 					,columna_ordenada,orden_direccion,usuario);
 			List<stproducto> listaProducto = new ArrayList<stproducto>();
@@ -173,10 +178,33 @@ public class SProducto extends HttpServlet {
 					temp.idComponente = producto.getComponente().getId();
 					temp.componente = producto.getComponente().getNombre();
 				}
+				
+				if (producto.getSubcomponente() != null) {
+					temp.idSubComponente = producto.getSubcomponente().getId();
+					temp.subcomponente = producto.getSubcomponente().getNombre();
+				}
 
 				if (producto.getProductoTipo() != null) {
 					temp.idProductoTipo = producto.getProductoTipo().getId();
-					temp.productoTipo = producto.getProductoTipo().getNombre();
+					temp.productoTipo = producto.getProductoTipo().getNombre();if(componenteid>0){
+						Componente componente = ComponenteDAO.getComponente(componenteid);
+						if (componente!=null && componente.getUnidadEjecutora()!=null){
+							temp.unidadEjectuora = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+							temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
+							temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+							temp.nombreUnidadEjecutora = componente.getUnidadEjecutora().getNombre();
+							temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+						}
+					}else if(subcomponenteid>0){
+						Subcomponente subcomponente = SubComponenteDAO.getSubComponente(subcomponenteid);
+						if (subcomponente!=null && subcomponente.getUnidadEjecutora()!=null){
+							temp.unidadEjectuora = subcomponente.getUnidadEjecutora().getId().getUnidadEjecutora();
+							temp.entidadentidad = subcomponente.getUnidadEjecutora().getId().getEntidadentidad();
+							temp.ejercicio = subcomponente.getUnidadEjecutora().getId().getEjercicio();
+							temp.nombreUnidadEjecutora = subcomponente.getUnidadEjecutora().getNombre();
+							temp.entidadnombre = subcomponente.getUnidadEjecutora().getEntidad().getNombre();
+						}
+					}
 				}
 				
 				if (producto.getUnidadEjecutora() != null){
@@ -186,13 +214,24 @@ public class SProducto extends HttpServlet {
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
 					temp.entidadnombre = producto.getUnidadEjecutora().getEntidad().getNombre();
 				}else{
-					Componente componente = SubComponenteDAO.getSubComponente(componenteid);
-					if (componente!=null && componente.getUnidadEjecutora()!=null){
-						temp.unidadEjectuora = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
-						temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
-						temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
-						temp.nombreUnidadEjecutora = componente.getUnidadEjecutora().getNombre();
-						temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+					if(componenteid>0){
+						Componente componente = ComponenteDAO.getComponente(componenteid);
+						if (componente!=null && componente.getUnidadEjecutora()!=null){
+							temp.unidadEjectuora = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+							temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
+							temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+							temp.nombreUnidadEjecutora = componente.getUnidadEjecutora().getNombre();
+							temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+						}
+					}else if(subcomponenteid>0){
+						Subcomponente subcomponente = SubComponenteDAO.getSubComponente(subcomponenteid);
+						if (subcomponente!=null && subcomponente.getUnidadEjecutora()!=null){
+							temp.unidadEjectuora = subcomponente.getUnidadEjecutora().getId().getUnidadEjecutora();
+							temp.entidadentidad = subcomponente.getUnidadEjecutora().getId().getEntidadentidad();
+							temp.ejercicio = subcomponente.getUnidadEjecutora().getId().getEjercicio();
+							temp.nombreUnidadEjecutora = subcomponente.getUnidadEjecutora().getNombre();
+							temp.entidadnombre = subcomponente.getUnidadEjecutora().getEntidad().getNombre();
+						}
 					}
 				}
 
@@ -215,7 +254,8 @@ public class SProducto extends HttpServlet {
 				String nombre = parametro.get("nombre");
 				String descripcion = parametro.get("descripcion");
 				
-				Integer componenteId = Utils.String2Int(parametro.get("componente"));
+				Integer componenteId = Utils.String2Int(parametro.get("componente"), null);
+				Integer subcomponenteId = Utils.String2Int(parametro.get("subcomponente"), null);
 				Integer tipoproductoId = Utils.String2Int(parametro.get("tipoproductoid"));
 				
 				Integer unidadEjecutoraId = Utils.String2Int(parametro.get("unidadEjecutora"));
@@ -252,7 +292,8 @@ public class SProducto extends HttpServlet {
 				}.getType();
 
 				List<stdatadinamico> datos = gson.fromJson(parametro.get("datadinamica"), type);
-				Componente componente = SubComponenteDAO.getSubComponente(componenteId);
+				Componente componente = componenteId!=null ? ComponenteDAO.getComponente(componenteId) : null;
+				Subcomponente subcomponente = subcomponenteId!=null ? SubComponenteDAO.getSubComponente(subcomponenteId) : null;
 				
 				
 				ProductoTipo productoTipo = new ProductoTipo();
@@ -262,7 +303,7 @@ public class SProducto extends HttpServlet {
 				
 				if (esnuevo){
 					
-					producto = new Producto(acumulacionCosto, componente, productoTipo,null, unidadEjecutora, nombre, descripcion, 
+					producto = new Producto(acumulacionCosto, componente, productoTipo,subcomponente, unidadEjecutora, nombre, descripcion, 
 							usuario, null, new DateTime().toDate(), null, 1, snip, programa, subprograma, proyecto_, 
 							actividad, obra, latitud, longitud,null,costo, renglon, ubicacionGeografica,fechaInicio, 
 							fechaFin, duracion, duracionDimension,null,null,null,null,null,null);
@@ -270,6 +311,7 @@ public class SProducto extends HttpServlet {
 				}else{
 					producto = ProductoDAO.getProductoPorId(id);
 					producto.setComponente(componente);
+					producto.setSubcomponente(subcomponente);
 					producto.setProductoTipo(productoTipo);
 					producto.setUnidadEjecutora(unidadEjecutora);
 					producto.setNombre(nombre);
@@ -366,6 +408,7 @@ public class SProducto extends HttpServlet {
 				*/
 				
 				int componenteid = Utils.String2Int(parametro.get("componenteid"), 0);
+				int subcomponenteid = Utils.String2Int(parametro.get("subcomponenteid"), 0);
 				int pagina = Utils.String2Int(parametro.get("pagina"), 1);
 				int registros = Utils.String2Int(parametro.get("registros"), 20);
 				String filtro_nombre = parametro.get("filtro_nombre");
@@ -374,7 +417,7 @@ public class SProducto extends HttpServlet {
 				String columna_ordenada = parametro.get("columna_ordenada");
 				String orden_direccion = parametro.get("orden_direccion");
 
-				List<Producto> productos = ProductoDAO.getProductosPagina(pagina, registros,componenteid
+				List<Producto> productos = ProductoDAO.getProductosPagina(pagina, registros,componenteid, subcomponenteid
 						,filtro_nombre, filtro_usuario_creo,filtro_fecha_creacion
 						,columna_ordenada,orden_direccion,usuario);
 				List<stproducto> listaProducto = new ArrayList<stproducto>();
@@ -414,6 +457,10 @@ public class SProducto extends HttpServlet {
 						temp.idComponente = producto.getComponente().getId();
 						temp.componente = producto.getComponente().getNombre();
 					}
+					if (producto.getSubcomponente() != null) {
+						temp.idSubComponente = producto.getSubcomponente().getId();
+						temp.subcomponente = producto.getSubcomponente().getNombre();
+					}
 
 					if (producto.getProductoTipo() != null) {
 						temp.idProductoTipo = producto.getProductoTipo().getId();
@@ -427,13 +474,24 @@ public class SProducto extends HttpServlet {
 						temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
 						temp.entidadnombre = producto.getUnidadEjecutora().getEntidad().getNombre();
 					}else{
-						Componente componente = SubComponenteDAO.getSubComponente(componenteid);
-						if (componente!=null && componente.getUnidadEjecutora()!=null){
-							temp.unidadEjectuora = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
-							temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
-							temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
-							temp.nombreUnidadEjecutora = componente.getUnidadEjecutora().getNombre();
-							temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+						if(componenteid>0){
+							Componente componente = ComponenteDAO.getComponente(componenteid);
+							if (componente!=null && componente.getUnidadEjecutora()!=null){
+								temp.unidadEjectuora = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+								temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
+								temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+								temp.nombreUnidadEjecutora = componente.getUnidadEjecutora().getNombre();
+								temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+							}
+						}else if(subcomponenteid>0){
+							Subcomponente subcomponente = SubComponenteDAO.getSubComponente(subcomponenteid);
+							if (subcomponente!=null && subcomponente.getUnidadEjecutora()!=null){
+								temp.unidadEjectuora = subcomponente.getUnidadEjecutora().getId().getUnidadEjecutora();
+								temp.entidadentidad = subcomponente.getUnidadEjecutora().getId().getEntidadentidad();
+								temp.ejercicio = subcomponente.getUnidadEjecutora().getId().getEjercicio();
+								temp.nombreUnidadEjecutora = subcomponente.getUnidadEjecutora().getNombre();
+								temp.entidadnombre = subcomponente.getUnidadEjecutora().getEntidad().getNombre();
+							}
 						}
 					}
 
@@ -450,10 +508,11 @@ public class SProducto extends HttpServlet {
 			}
 		} else if (accion.equals("totalElementos")) {
 			int componenteid = Utils.String2Int(parametro.get("componenteid"), 0);
+			int subcomponenteid = Utils.String2Int(parametro.get("subcomponenteid"), 0);
 			String filtro_nombre = parametro.get("filtro_nombre");
 			String filtro_usuario_creo = parametro.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = parametro.get("filtro_fecha_creacion");
-			Long total = ProductoDAO.getTotalProductos(componenteid,filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,usuario);
+			Long total = ProductoDAO.getTotalProductos(componenteid,subcomponenteid,filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,usuario);
 
 			response_text = "{\"success\":true, \"total\":" + total + "}";
 			
@@ -461,6 +520,7 @@ public class SProducto extends HttpServlet {
 			int pagina = Utils.String2Int(parametro.get("pagina"), 1);
 			int registros = Utils.String2Int(parametro.get("registros"), 20);
 			int componenteid = Utils.String2Int(parametro.get("componenteid"), 0);
+			int subcomponenteid = Utils.String2Int(parametro.get("subcomponenteid"), 0);
 			
 			String filtro_nombre = parametro.get("filtro_nombre");
 			String filtro_usuario_creo = parametro.get("filtro_usuario_creo");
@@ -468,7 +528,7 @@ public class SProducto extends HttpServlet {
 			String columna_ordenada = parametro.get("columna_ordenada");
 			String orden_direccion = parametro.get("orden_direccion");
 			
-			List<Producto> productos = ProductoDAO.getProductosPagina(pagina, registros,componenteid,usuario,
+			List<Producto> productos = ProductoDAO.getProductosPagina(pagina, registros,componenteid,subcomponenteid,usuario,
 					filtro_nombre,filtro_usuario_creo
 					,filtro_fecha_creacion,columna_ordenada,orden_direccion);
 			List<stproducto> listaProducto = new ArrayList<stproducto>();
@@ -508,6 +568,10 @@ public class SProducto extends HttpServlet {
 					temp.idComponente = producto.getComponente().getId();
 					temp.componente = producto.getComponente().getNombre();
 				}
+				if (producto.getSubcomponente() != null) {
+					temp.idSubComponente = producto.getSubcomponente().getId();
+					temp.subcomponente = producto.getSubcomponente().getNombre();
+				}
 
 				if (producto.getProductoTipo() != null) {
 					temp.idProductoTipo = producto.getProductoTipo().getId();
@@ -521,13 +585,24 @@ public class SProducto extends HttpServlet {
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
 					temp.entidadnombre = producto.getUnidadEjecutora().getEntidad().getNombre();
 				}else{
-					Componente componente = SubComponenteDAO.getSubComponente(componenteid);
-					if (componente!=null && componente.getUnidadEjecutora()!=null){
-						temp.unidadEjectuora = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
-						temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
-						temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
-						temp.nombreUnidadEjecutora = componente.getUnidadEjecutora().getNombre();
-						temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+					if(componenteid>0){
+						Componente componente = ComponenteDAO.getComponente(componenteid);
+						if (componente!=null && componente.getUnidadEjecutora()!=null){
+							temp.unidadEjectuora = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+							temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
+							temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+							temp.nombreUnidadEjecutora = componente.getUnidadEjecutora().getNombre();
+							temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+						}
+					}else if(subcomponenteid>0){
+						Subcomponente subcomponente = SubComponenteDAO.getSubComponente(subcomponenteid);
+						if (subcomponente!=null && subcomponente.getUnidadEjecutora()!=null){
+							temp.unidadEjectuora = subcomponente.getUnidadEjecutora().getId().getUnidadEjecutora();
+							temp.entidadentidad = subcomponente.getUnidadEjecutora().getId().getEntidadentidad();
+							temp.ejercicio = subcomponente.getUnidadEjecutora().getId().getEjercicio();
+							temp.nombreUnidadEjecutora = subcomponente.getUnidadEjecutora().getNombre();
+							temp.entidadnombre = subcomponente.getUnidadEjecutora().getEntidad().getNombre();
+						}
 					}
 				}
 
@@ -545,13 +620,14 @@ public class SProducto extends HttpServlet {
 			int pagina = Utils.String2Int(parametro.get("pagina"), 1);
 			int registros = Utils.String2Int(parametro.get("registros"), 20);
 			int componenteid = Utils.String2Int(parametro.get("componenteid"), 0);
+			int subcomponenteid = Utils.String2Int(parametro.get("subcomponenteid"), 0);
 			String filtro_nombre = parametro.get("filtro_nombre");
 			String filtro_usuario_creo = parametro.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = parametro.get("filtro_fecha_creacion");
 			String columna_ordenada = parametro.get("columna_ordenada");
 			String orden_direccion = parametro.get("orden_direccion");
 
-			List<Producto> productos = ProductoDAO.getProductosPagina(pagina, registros,componenteid,
+			List<Producto> productos = ProductoDAO.getProductosPagina(pagina, registros,componenteid,subcomponenteid,
 					filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,columna_ordenada,orden_direccion,usuario);
 			List<stproducto> stproductos=new ArrayList<stproducto>();
 			
@@ -590,6 +666,10 @@ public class SProducto extends HttpServlet {
 					temp.idComponente = producto.getComponente().getId();
 					temp.componente = producto.getComponente().getNombre();
 				}
+				if (producto.getSubcomponente() != null) {
+					temp.idSubComponente = producto.getSubcomponente().getId();
+					temp.subcomponente = producto.getSubcomponente().getNombre();
+				}
 
 				if (producto.getProductoTipo() != null) {
 					temp.idProductoTipo = producto.getProductoTipo().getId();
@@ -603,13 +683,24 @@ public class SProducto extends HttpServlet {
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
 					temp.entidadnombre = producto.getUnidadEjecutora().getEntidad().getNombre();
 				}else{
-					Componente componente = SubComponenteDAO.getSubComponente(componenteid);
-					if (componente!=null && componente.getUnidadEjecutora()!=null){
-						temp.unidadEjectuora = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
-						temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
-						temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
-						temp.nombreUnidadEjecutora = componente.getUnidadEjecutora().getNombre();
-						temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+					if(componenteid>0){
+						Componente componente = ComponenteDAO.getComponente(componenteid);
+						if (componente!=null && componente.getUnidadEjecutora()!=null){
+							temp.unidadEjectuora = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+							temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
+							temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+							temp.nombreUnidadEjecutora = componente.getUnidadEjecutora().getNombre();
+							temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+						}
+					}else if(subcomponenteid>0){
+						Subcomponente subcomponente = SubComponenteDAO.getSubComponente(subcomponenteid);
+						if (subcomponente!=null && subcomponente.getUnidadEjecutora()!=null){
+							temp.unidadEjectuora = subcomponente.getUnidadEjecutora().getId().getUnidadEjecutora();
+							temp.entidadentidad = subcomponente.getUnidadEjecutora().getId().getEntidadentidad();
+							temp.ejercicio = subcomponente.getUnidadEjecutora().getId().getEjercicio();
+							temp.nombreUnidadEjecutora = subcomponente.getUnidadEjecutora().getNombre();
+							temp.entidadnombre = subcomponente.getUnidadEjecutora().getEntidad().getNombre();
+						}
 					}
 				}
 
@@ -656,6 +747,10 @@ public class SProducto extends HttpServlet {
 					temp.idComponente = producto.getComponente().getId();
 					temp.componente = producto.getComponente().getNombre();
 				}
+				if (producto.getSubcomponente() != null) {
+					temp.idSubComponente = producto.getSubcomponente().getId();
+					temp.subcomponente = producto.getSubcomponente().getNombre();
+				}
 
 				if (producto.getProductoTipo() != null) {
 					temp.idProductoTipo = producto.getProductoTipo().getId();
@@ -669,13 +764,24 @@ public class SProducto extends HttpServlet {
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
 					temp.entidadnombre = producto.getUnidadEjecutora().getEntidad().getNombre();
 				}else{
-					Componente componente = SubComponenteDAO.getSubComponente(producto.getComponente().getId());
-					if (componente!=null && componente.getUnidadEjecutora()!=null){
-						temp.unidadEjectuora = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
-						temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
-						temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
-						temp.nombreUnidadEjecutora = componente.getUnidadEjecutora().getNombre();
-						temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+					if(producto.getComponente() != null){
+						Componente componente = ComponenteDAO.getComponente(producto.getComponente().getId());
+						if (componente!=null && componente.getUnidadEjecutora()!=null){
+							temp.unidadEjectuora = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+							temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
+							temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+							temp.nombreUnidadEjecutora = componente.getUnidadEjecutora().getNombre();
+							temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+						}
+					}else if(producto.getSubcomponente() != null){
+						Subcomponente subcomponente = SubComponenteDAO.getSubComponente(producto.getSubcomponente().getId());
+						if (subcomponente!=null && subcomponente.getUnidadEjecutora()!=null){
+							temp.unidadEjectuora = subcomponente.getUnidadEjecutora().getId().getUnidadEjecutora();
+							temp.entidadentidad = subcomponente.getUnidadEjecutora().getId().getEntidadentidad();
+							temp.ejercicio = subcomponente.getUnidadEjecutora().getId().getEjercicio();
+							temp.nombreUnidadEjecutora = subcomponente.getUnidadEjecutora().getNombre();
+							temp.entidadnombre = subcomponente.getUnidadEjecutora().getEntidad().getNombre();
+						}
 					}
 				}
 				temp.fechaInicio = Utils.formatDate(producto.getFechaInicio());
@@ -705,7 +811,8 @@ public class SProducto extends HttpServlet {
 			boolean ret = false;
 			int id = Utils.String2Int(parametro.get("id"));
 			boolean esnuevo = parametro.get("esnuevo").equals("true");
-			Integer componenteId = Utils.String2Int(parametro.get("componenteId"));
+			Integer componenteId = Utils.String2Int(parametro.get("componenteId"), null);
+			Integer subcomponenteId = Utils.String2Int(parametro.get("subcomponenteId"), null);
 			Producto producto = null;
 			
 			if(id>0 || esnuevo ){
@@ -724,9 +831,11 @@ public class SProducto extends HttpServlet {
 				productoTipo.setId(tipoproductoId);
 				UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidadId, unidadEjecutoraId);
 				if(esnuevo){
-					Componente componente = new Componente();
-					componente.setId(componenteId);
 					producto = new Producto( productoTipo,  nombre, usuario, new Date(),1,0);
+					Componente componente = componenteId!=null ? ComponenteDAO.getComponente(componenteId) : null;
+					Subcomponente subcomponente = subcomponenteId!=null ? SubComponenteDAO.getSubComponente(subcomponenteId) : null;
+					producto.setComponente(componente);
+					producto.setSubcomponente(subcomponente);
 					producto.setFechaInicio(fechaInicio);
 					producto.setFechaFin(fechaFin);
 					producto.setDuracion(duracion);
@@ -759,6 +868,10 @@ public class SProducto extends HttpServlet {
 					temp.idComponente = producto.getComponente().getId();
 					temp.componente = producto.getComponente().getNombre();
 				}
+				if (producto.getSubcomponente() != null) {
+					temp.idSubComponente = producto.getSubcomponente().getId();
+					temp.subcomponente = producto.getSubcomponente().getNombre();
+				}
 
 				if (producto.getProductoTipo() != null) {
 					temp.idProductoTipo = producto.getProductoTipo().getId();
@@ -772,13 +885,24 @@ public class SProducto extends HttpServlet {
 					temp.nombreUnidadEjecutora = producto.getUnidadEjecutora().getNombre();
 					temp.entidadnombre = producto.getUnidadEjecutora().getEntidad().getNombre();
 				}else{
-					Componente componente = SubComponenteDAO.getSubComponente(producto.getId());
-					if (componente!=null && componente.getUnidadEjecutora()!=null){
-						temp.unidadEjectuora = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
-						temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
-						temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
-						temp.nombreUnidadEjecutora = componente.getUnidadEjecutora().getNombre();
-						temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+					if(producto.getComponente() != null){
+						Componente componente = ComponenteDAO.getComponente(producto.getComponente().getId());
+						if (componente!=null && componente.getUnidadEjecutora()!=null){
+							temp.unidadEjectuora = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+							temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
+							temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+							temp.nombreUnidadEjecutora = componente.getUnidadEjecutora().getNombre();
+							temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
+						}
+					}else if(producto.getSubcomponente() != null){
+						Subcomponente subcomponente = SubComponenteDAO.getSubComponente(producto.getSubcomponente().getId());
+						if (subcomponente!=null && subcomponente.getUnidadEjecutora()!=null){
+							temp.unidadEjectuora = subcomponente.getUnidadEjecutora().getId().getUnidadEjecutora();
+							temp.entidadentidad = subcomponente.getUnidadEjecutora().getId().getEntidadentidad();
+							temp.ejercicio = subcomponente.getUnidadEjecutora().getId().getEjercicio();
+							temp.nombreUnidadEjecutora = subcomponente.getUnidadEjecutora().getNombre();
+							temp.entidadnombre = subcomponente.getUnidadEjecutora().getEntidad().getNombre();
+						}
 					}
 				}
 				

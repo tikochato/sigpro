@@ -11,7 +11,6 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import pojo.SubcomponenteTipo;
-import pojo.CtipoPropiedad;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
@@ -69,12 +68,12 @@ public class SubComponenteTipoDAO {
 			session.beginTransaction();
 			session.saveOrUpdate(subcomponenteTipo);
 			session.flush();
-			
-			if (subcomponenteTipo.getCtipoPropiedads()!=null && subcomponenteTipo.getCtipoPropiedads().size()>0){
-				for (CtipoPropiedad propiedad : subcomponenteTipo.getCtipoPropiedads()){
-					session.saveOrUpdate(propiedad);	
-				}
-			}
+			//TODO: crear ctipo_propiedad
+//			if (subcomponenteTipo.getCtipoPropiedads()!=null && subcomponenteTipo.getCtipoPropiedads().size()>0){
+//				for (CtipoPropiedad propiedad : subcomponenteTipo.getCtipoPropiedads()){
+//					session.saveOrUpdate(propiedad);	
+//				}
+//			}
 			session.flush();
 			
 			session.getTransaction().commit();
@@ -93,14 +92,14 @@ public class SubComponenteTipoDAO {
 	
 	
 	
-	public static boolean eliminarComponenteTipo(SubcomponenteTipo componenteTipo){
+	public static boolean eliminarSubComponenteTipo(SubcomponenteTipo subcomponenteTipo){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			
-			componenteTipo.setEstado(0);
+			subcomponenteTipo.setEstado(0);
 			session.beginTransaction();
-			session.update(componenteTipo);
+			session.update(subcomponenteTipo);
 			session.getTransaction().commit();
 			ret = true;
 		}
@@ -115,12 +114,12 @@ public class SubComponenteTipoDAO {
 	
 	
 	
-	public static boolean eliminarTotalComponenteTipo(SubcomponenteTipo componenteTipo){
+	public static boolean eliminarTotalSubComponenteTipo(SubcomponenteTipo subcomponenteTipo){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
-			session.delete(componenteTipo);
+			session.delete(subcomponenteTipo);
 			session.getTransaction().commit();
 			ret = true;
 		}
@@ -134,7 +133,7 @@ public class SubComponenteTipoDAO {
 	}
 	
 	
-	public static List<SubcomponenteTipo> getComponenteTiposPagina(int pagina, int numerocomponentestipo 
+	public static List<SubcomponenteTipo> getSubComponenteTiposPagina(int pagina, int numerosubcomponentestipo 
 			,String filtro_nombre, String filtro_usuario_creo, 
 			String filtro_fecha_creacion, String columna_ordenada, String orden_direccion){
 		List<SubcomponenteTipo> ret = new ArrayList<SubcomponenteTipo>();
@@ -153,8 +152,8 @@ public class SubComponenteTipoDAO {
 			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
 			
 			Query<SubcomponenteTipo> criteria = session.createQuery(query,SubcomponenteTipo.class);
-			criteria.setFirstResult(((pagina-1)*(numerocomponentestipo)));
-			criteria.setMaxResults(numerocomponentestipo);
+			criteria.setFirstResult(((pagina-1)*(numerosubcomponentestipo)));
+			criteria.setMaxResults(numerosubcomponentestipo);
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
@@ -166,7 +165,7 @@ public class SubComponenteTipoDAO {
 		return ret;
 	}
 	
-	public static Long getTotalComponenteTipo(String filtro_nombre, String filtro_usuario_creo, 
+	public static Long getTotalSubComponenteTipo(String filtro_nombre, String filtro_usuario_creo, 
 			String filtro_fecha_creacion){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();

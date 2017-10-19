@@ -123,7 +123,7 @@
 			<div class="col-sm-12">
 				<form name="componentec.mForm">
 					<uib-tabset active="componentec.active">
-					<uib-tab index="0" heading="{{etiquetas.proyecto}}" >
+					<uib-tab index="0" heading="Componente" >
 						<div class="form-group">
 						  <label for="id" class="floating-label id_class">ID {{ componentec.componente.id }}</label>
 						  <br/><br/>

@@ -145,15 +145,21 @@ public class ProductoDAO {
 		return ret;
 	}
 
-	public static List<Producto> getProductosPagina(int pagina, int numeroProductos,Integer componenteid, 
+	public static List<Producto> getProductosPagina(int pagina, int numeroProductos,Integer componenteid, Integer subcomponenteid,
 			String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion, String columna_ordenada, 
 			String orden_direccion,String usuario) {
 		List<Producto> ret = new ArrayList<Producto>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
 			
-			String query = "SELECT p FROM Producto p WHERE p.estado = 1 "
-					+ (componenteid!=null && componenteid > 0 ? "AND p.componente.id = :idComp " : "");
+			String query = "SELECT p FROM Producto p WHERE p.estado = 1 ";
+			if(componenteid!=null && componenteid > 0){
+				query += "AND p.componente.id = :idComp ";
+			}
+			if(subcomponenteid!=null && subcomponenteid > 0){
+				query += "AND p.subcomponente.id = :idSubComp ";
+			}
+
 			String query_a="";
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
 				query_a = String.join("",query_a, " p.nombre LIKE '%",filtro_nombre,"%' ");
@@ -171,6 +177,9 @@ public class ProductoDAO {
 			if (componenteid!=null && componenteid>0){
 				criteria.setParameter("idComp", componenteid);
 			}
+			if (subcomponenteid!=null && subcomponenteid>0){
+				criteria.setParameter("idSubComp", subcomponenteid);
+			}
 			criteria.setFirstResult(((pagina - 1) * (numeroProductos)));
 			criteria.setMaxResults(numeroProductos);
 			
@@ -183,14 +192,20 @@ public class ProductoDAO {
 		return ret;
 	}
 
-	public static Long getTotalProductos(Integer componenteid, String filtro_nombre, String filtro_usuario_creo, 
+	public static Long getTotalProductos(Integer componenteid, Integer subcomponenteid, String filtro_nombre, String filtro_usuario_creo, 
 			String filtro_fecha_creacion, String usuario) {
 		Long ret = 0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
 			
-			String query = "SELECT count(p.id) FROM Producto p WHERE p.estado = 1 "
-					+ (componenteid!=null && componenteid > 0 ? "AND p.componente.id = :idComp " : "");
+			String query = "SELECT count(p.id) FROM Producto p WHERE p.estado = 1 ";
+			if(componenteid!=null && componenteid > 0){
+				query += "AND p.componente.id = :idComp ";
+			}
+			if(subcomponenteid!=null && subcomponenteid > 0){
+				query += "AND p.subcomponente.id = :idSubComp ";
+			}
+
 			String query_a="";
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
 				query_a = String.join("",query_a, " p.nombre LIKE '%",filtro_nombre,"%' ");
@@ -207,6 +222,9 @@ public class ProductoDAO {
 			conteo.setParameter("usuario", usuario);
 			if (componenteid!=null && componenteid > 0){
 				conteo.setParameter("idComp", componenteid);
+			}
+			if (subcomponenteid!=null && subcomponenteid > 0){
+				conteo.setParameter("idSubComp", subcomponenteid);
 			}
 			ret = conteo.getSingleResult();
 		} catch (Throwable e) {
@@ -273,7 +291,14 @@ public class ProductoDAO {
 					,"from (",
 					"SELECT pr.* FROM producto pr JOIN componente c ON c.id = pr.componenteid "
 					,"JOIN proyecto p ON p.id = c.proyectoid"
-					,"where p.id = :idProy) as t"
+					,"where p.id = :idProy"
+					,"UNION"
+					,"SELECT pr.* FROM producto pr" 
+					,"JOIN subcomponente s ON s.id = pr.subcomponenteid" 
+					,"JOIN componente c ON c.id = s.componenteid" 
+					,"JOIN proyecto p ON p.id = c.proyectoid"
+					,"where p.id = :idProy"
+					,") as t"
 					,usuario!=null && usuario.length()>0 ? 
 					 "join producto_usuario pu on pu.productoid = t.id where pu.usuario = :usuario ":"",
 					 usuario!=null && usuario.length()>0 ? "and" : "where", "t.estado = 1");
@@ -292,12 +317,25 @@ public class ProductoDAO {
 		return ret;
 	}
 	
-	public static Producto getProductoInicial(Integer componenteId, String usuario, Session session){
+	public static Producto getProductoInicial(Integer componenteId, Integer subcomponenteId, String usuario, Session session){
 		Producto ret = null;
 		try{
-			String query = "FROM Producto p where p.estado=1 and p.orden=1 and p.componente.id=:componenteId and p.usuarioCreo=:usuario";
+			String query = "FROM Producto p where p.estado=1 and p.orden=1 ";
+			if(componenteId!=null && componenteId > 0){
+				query += "AND p.componente.id = :idComp ";
+			}
+			if(subcomponenteId!=null && subcomponenteId > 0){
+				query += "AND p.subcomponente.id = :idSubComp ";
+			}
+	
+			query += "and p.usuarioCreo=:usuario";
 			Query<Producto> criteria = session.createQuery(query, Producto.class);
-			criteria.setParameter("componenteId", componenteId);
+			if (componenteId!=null && componenteId > 0){
+				criteria.setParameter("idComp", componenteId);
+			}
+			if (subcomponenteId!=null && subcomponenteId > 0){
+				criteria.setParameter("idSubComp", subcomponenteId);
+			}
 			criteria.setParameter("usuario", usuario);
 			List<Producto> lista = criteria.getResultList();
 			ret = !lista.isEmpty() ? lista.get(0) : null;
@@ -309,13 +347,25 @@ public class ProductoDAO {
 		return ret;
 	}
 	
-	public static Producto getProductoFechaMaxima(Integer componenteId, String usuario, Session session){
+	public static Producto getProductoFechaMaxima(Integer componenteId, Integer subcomponenteId, String usuario, Session session){
 		Producto ret = null;
 		try{
-			String query = "FROM Producto p where p.estado=1 and p.componente.id=:componenteId and p.usuarioCreo=:usuario order by p.fechaFin desc";
+			String query = "FROM Producto p where p.estado=1 ";
+			if(componenteId!=null && componenteId > 0){
+				query += "AND p.componente.id = :idComp ";
+			}
+			if(subcomponenteId!=null && subcomponenteId > 0){
+				query += "AND p.subcomponente.id = :idSubComp ";
+			} 
+			query += " and p.usuarioCreo=:usuario order by p.fechaFin desc";
 			Query<Producto> criteria = session.createQuery(query, Producto.class);
 			criteria.setMaxResults(1);
-			criteria.setParameter("componenteId", componenteId);
+			if (componenteId!=null && componenteId > 0){
+				criteria.setParameter("idComp", componenteId);
+			}
+			if (subcomponenteId!=null && subcomponenteId > 0){
+				criteria.setParameter("idSubComp", subcomponenteId);
+			}
 			criteria.setParameter("usuario", usuario);
 			List<Producto> lista = criteria.getResultList();
 			ret = !lista.isEmpty() ? lista.get(0) : null;
@@ -327,16 +377,28 @@ public class ProductoDAO {
 		return ret;
 	}
 	
-	public static List<Producto> getProductosOrden(Integer componenteid, String usuario, Session session) {
+	public static List<Producto> getProductosOrden(Integer componenteId, Integer subcomponenteId, String usuario, Session session) {
 		List<Producto> ret = new ArrayList<Producto>();
 		try {
 			
-			String query = "SELECT p FROM Producto p WHERE p.estado = 1 AND p.componente.id = :componenteid ";
+			String query = "SELECT p FROM Producto p WHERE p.estado = 1 ";
+			if(componenteId!=null && componenteId > 0){
+				query += "AND p.componente.id = :idComp ";
+			}
+			if(subcomponenteId!=null && subcomponenteId > 0){
+				query += "AND p.subcomponente.id = :idSubComp ";
+			} 
+			
 			query = String.join("", query, " AND p.id in (SELECT u.id.productoid from ProductoUsuario u where u.id.usuario=:usuario )");
 			
 			Query<Producto> criteria = session.createQuery(query,Producto.class);
 			criteria.setParameter("usuario", usuario);
-			criteria.setParameter("componenteid", componenteid);
+			if (componenteId!=null && componenteId > 0){
+				criteria.setParameter("idComp", componenteId);
+			}
+			if (subcomponenteId!=null && subcomponenteId > 0){
+				criteria.setParameter("idSubComp", subcomponenteId);
+			}
 			ret = criteria.getResultList();
 		} catch (Throwable e) {
 			CLogger.write("13", ProductoDAO.class, e);

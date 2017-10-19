@@ -25,20 +25,20 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.SubComponentePropiedadDAO;
 import dao.SubComponentePropiedadValorDAO;
-import pojo.ComponentePropiedad;
-import pojo.ComponentePropiedadValor;
 import pojo.DatoTipo;
+import pojo.SubcomponentePropiedad;
+import pojo.SubcomponentePropiedadValor;
 import utilities.CFormaDinamica;
 import utilities.Utils;
 
 /**
- * Servlet implementation class SComponentePropiedad
+ * Servlet implementation class SSubComponentePropiedad
  */
 @WebServlet("/SSubComponentePropiedad")
 public class SSubComponentePropiedad extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	class stcomponentepropiedad{
+	class stsubcomponentepropiedad{
 		int id;
 		String nombre;
 		String descripcion;
@@ -95,92 +95,92 @@ public class SSubComponentePropiedad extends HttpServlet {
 		String response_text="";
 		
 		
-		if(accion.equals("getComponentePropiedadPaginaPorTipo")){
+		if(accion.equals("getSubComponentePropiedadPaginaPorTipo")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int idProyectoPropiedad = map.get("idComponenteTipo")!=null  ? Integer.parseInt(map.get("idComponenteTipo")) : 0;
-			List<ComponentePropiedad> compoentepropiedades = SubComponentePropiedadDAO.getSubComponentePropiedadesPorTipoComponentePagina(pagina, idProyectoPropiedad);
-			List<stcomponentepropiedad> stcomponentepropiedad=new ArrayList<stcomponentepropiedad>();
-			for(ComponentePropiedad componentepropiedad:compoentepropiedades){
-				stcomponentepropiedad temp =new stcomponentepropiedad();
-				temp.id = componentepropiedad.getId();
-				temp.nombre = componentepropiedad.getNombre();
-				temp.descripcion = componentepropiedad.getDescripcion();
-				temp.datotipoid = componentepropiedad.getDatoTipo().getId();
-				temp.datotiponombre = componentepropiedad.getDatoTipo().getNombre();
-				temp.fechaActualizacion = Utils.formatDateHour(componentepropiedad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDateHour(componentepropiedad.getFechaCreacion());	
-				temp.usuarioActualizo = componentepropiedad.getUsuarioActualizo();
-				temp.usuarioCreo = componentepropiedad.getUsuarioCreo();
-				temp.estado = componentepropiedad.getEstado();
-				stcomponentepropiedad.add(temp);
+			int idTipoSubComponente = map.get("idSubComponenteTipo")!=null  ? Integer.parseInt(map.get("idSubComponenteTipo")) : 0;
+			List<SubcomponentePropiedad> subcompoentepropiedades = SubComponentePropiedadDAO.getSubComponentePropiedadesPorTipoSubComponentePagina(pagina, idTipoSubComponente);
+			List<stsubcomponentepropiedad> stsubcomponentepropiedad=new ArrayList<stsubcomponentepropiedad>();
+			for(SubcomponentePropiedad subcomponentepropiedad:subcompoentepropiedades){
+				stsubcomponentepropiedad temp =new stsubcomponentepropiedad();
+				temp.id = subcomponentepropiedad.getId();
+				temp.nombre = subcomponentepropiedad.getNombre();
+				temp.descripcion = subcomponentepropiedad.getDescripcion();
+				temp.datotipoid = subcomponentepropiedad.getDatoTipo().getId();
+				temp.datotiponombre = subcomponentepropiedad.getDatoTipo().getNombre();
+				temp.fechaActualizacion = Utils.formatDateHour(subcomponentepropiedad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(subcomponentepropiedad.getFechaCreacion());	
+				temp.usuarioActualizo = subcomponentepropiedad.getUsuarioActualizo();
+				temp.usuarioCreo = subcomponentepropiedad.getUsuarioCreo();
+				temp.estado = subcomponentepropiedad.getEstado();
+				stsubcomponentepropiedad.add(temp);
 			}
-			response_text=new GsonBuilder().serializeNulls().create().toJson(stcomponentepropiedad);
+			response_text=new GsonBuilder().serializeNulls().create().toJson(stsubcomponentepropiedad);
 	        response_text = String.join("", "\"componentepropiedades\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
-		else if(accion.equals("getComponentePropiedadPagina")){
+		else if(accion.equals("getSubComponentePropiedadPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int numeroComponentePropiedad = map.get("numerocomponentepropiedades")!=null  ? Integer.parseInt(map.get("numerocomponentepropiedades")) : 0;
+			int numeroSubComponentePropiedad = map.get("numerosubcomponentepropiedades")!=null  ? Integer.parseInt(map.get("numerosubcomponentepropiedades")) : 0;
 			String filtro_nombre = map.get("filtro_nombre");
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			String columna_ordenada = map.get("columna_ordenada");
 			String orden_direccion = map.get("orden_direccion");
-			List<ComponentePropiedad> compoentepropiedades = SubComponentePropiedadDAO.getSubComponentePropiedadesPagina(pagina,numeroComponentePropiedad,
+			List<SubcomponentePropiedad> subcompoentepropiedades = SubComponentePropiedadDAO.getSubComponentePropiedadesPagina(pagina,numeroSubComponentePropiedad,
 					filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,columna_ordenada,orden_direccion);
-			List<stcomponentepropiedad> stcomponentepropiedad=new ArrayList<stcomponentepropiedad>();
-			for(ComponentePropiedad componentepropiedad:compoentepropiedades){
-				stcomponentepropiedad temp =new stcomponentepropiedad();
-				temp.id = componentepropiedad.getId();
-				temp.nombre = componentepropiedad.getNombre();
-				temp.descripcion = componentepropiedad.getDescripcion();
-				temp.datotipoid = componentepropiedad.getDatoTipo().getId();
-				temp.datotiponombre = componentepropiedad.getDatoTipo().getNombre();
-				temp.fechaActualizacion = Utils.formatDateHour(componentepropiedad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDateHour(componentepropiedad.getFechaCreacion());	
-				temp.usuarioActualizo = componentepropiedad.getUsuarioActualizo();
-				temp.usuarioCreo = componentepropiedad.getUsuarioCreo();
-				temp.estado = componentepropiedad.getEstado();
+			List<stsubcomponentepropiedad> stcomponentepropiedad=new ArrayList<stsubcomponentepropiedad>();
+			for(SubcomponentePropiedad subcomponentepropiedad:subcompoentepropiedades){
+				stsubcomponentepropiedad temp =new stsubcomponentepropiedad();
+				temp.id = subcomponentepropiedad.getId();
+				temp.nombre = subcomponentepropiedad.getNombre();
+				temp.descripcion = subcomponentepropiedad.getDescripcion();
+				temp.datotipoid = subcomponentepropiedad.getDatoTipo().getId();
+				temp.datotiponombre = subcomponentepropiedad.getDatoTipo().getNombre();
+				temp.fechaActualizacion = Utils.formatDateHour(subcomponentepropiedad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(subcomponentepropiedad.getFechaCreacion());	
+				temp.usuarioActualizo = subcomponentepropiedad.getUsuarioActualizo();
+				temp.usuarioCreo = subcomponentepropiedad.getUsuarioCreo();
+				temp.estado = subcomponentepropiedad.getEstado();
 				stcomponentepropiedad.add(temp);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stcomponentepropiedad);
 	        response_text = String.join("", "\"componentepropiedades\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
-		else if(accion.equals("getComponentePropiedadesTotalDisponibles")){
+		else if(accion.equals("getSubComponentePropiedadesTotalDisponibles")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			String idsPropiedades = map.get("idspropiedades")!=null ? map.get("idspropiedades").toString()   : "0";
-			int numeroComponentePropiedad = map.get("numerocomponentepropiedad")!=null  ? Integer.parseInt(map.get("numerocomponentepropiedad")) : 0;
-			List<ComponentePropiedad> componentepropiedades = SubComponentePropiedadDAO.getSubComponentePropiedadPaginaTotalDisponibles(pagina, numeroComponentePropiedad,idsPropiedades);
-			List<stcomponentepropiedad> stcomponentepropiedad=new ArrayList<stcomponentepropiedad>();
-			for(ComponentePropiedad componentepropiedad:componentepropiedades){
-				stcomponentepropiedad temp =new stcomponentepropiedad();
-				temp.id = componentepropiedad.getId();
-				temp.nombre = componentepropiedad.getNombre();
-				temp.descripcion = componentepropiedad.getDescripcion();
-				temp.datotipoid = componentepropiedad.getDatoTipo().getId();
-				temp.datotiponombre = componentepropiedad.getDatoTipo().getNombre();
-				temp.fechaActualizacion = Utils.formatDateHour(componentepropiedad.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDateHour(componentepropiedad.getFechaCreacion());	
-				temp.usuarioActualizo = componentepropiedad.getUsuarioActualizo();
-				temp.usuarioCreo = componentepropiedad.getUsuarioCreo();
-				temp.estado = componentepropiedad.getEstado();
-				stcomponentepropiedad.add(temp);
+			int numeroSubComponentePropiedad = map.get("numerosubcomponentepropiedad")!=null  ? Integer.parseInt(map.get("numerosubcomponentepropiedad")) : 0;
+			List<SubcomponentePropiedad> subcomponentepropiedades = SubComponentePropiedadDAO.getSubComponentePropiedadPaginaTotalDisponibles(pagina, numeroSubComponentePropiedad,idsPropiedades);
+			List<stsubcomponentepropiedad> stsubcomponentepropiedad=new ArrayList<stsubcomponentepropiedad>();
+			for(SubcomponentePropiedad subcomponentepropiedad:subcomponentepropiedades){
+				stsubcomponentepropiedad temp =new stsubcomponentepropiedad();
+				temp.id = subcomponentepropiedad.getId();
+				temp.nombre = subcomponentepropiedad.getNombre();
+				temp.descripcion = subcomponentepropiedad.getDescripcion();
+				temp.datotipoid = subcomponentepropiedad.getDatoTipo().getId();
+				temp.datotiponombre = subcomponentepropiedad.getDatoTipo().getNombre();
+				temp.fechaActualizacion = Utils.formatDateHour(subcomponentepropiedad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(subcomponentepropiedad.getFechaCreacion());	
+				temp.usuarioActualizo = subcomponentepropiedad.getUsuarioActualizo();
+				temp.usuarioCreo = subcomponentepropiedad.getUsuarioCreo();
+				temp.estado = subcomponentepropiedad.getEstado();
+				stsubcomponentepropiedad.add(temp);
 			}
-			response_text=new GsonBuilder().serializeNulls().create().toJson(stcomponentepropiedad);
+			response_text=new GsonBuilder().serializeNulls().create().toJson(stsubcomponentepropiedad);
 	        response_text = String.join("", "\"componentepropiedades\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
-		else if(accion.equals("numeroComponentePropiedadesDisponibles")){
+		else if(accion.equals("numeroSubComponentePropiedadesDisponibles")){
 			response_text = String.join("","{ \"success\": true, \"totalcomponentepropiedades\":",SubComponentePropiedadDAO.getTotalSubComponentePropiedades().toString()," }");
 		}
-		else if(accion.equals("numeroComponentePropiedades")){
+		else if(accion.equals("numeroSubComponentePropiedades")){
 			String filtro_nombre = map.get("filtro_nombre");
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
-			response_text = String.join("","{ \"success\": true, \"totalcomponentepropiedades\":",SubComponentePropiedadDAO.getTotalSubComponentePropiedad(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
+			response_text = String.join("","{ \"success\": true, \"totalsubcomponentepropiedades\":",SubComponentePropiedadDAO.getTotalSubComponentePropiedad(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
 		}
-		else if(accion.equals("guardarComponentePropiedad")){
+		else if(accion.equals("guardarSubComponentePropiedad")){
 			boolean result = false;
 			boolean esnuevo = map.get("esnuevo").equals("true");
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
@@ -192,70 +192,70 @@ public class SSubComponentePropiedad extends HttpServlet {
 				DatoTipo datoTipo = new DatoTipo();
 				datoTipo.setId(datoTipoId);
 				
-				ComponentePropiedad componentePropiedad;
+				SubcomponentePropiedad subcomponentePropiedad;
 				if(esnuevo){
-					componentePropiedad = new ComponentePropiedad(datoTipo, nombre, usuario, new DateTime().toDate(), 1);
+					subcomponentePropiedad = new SubcomponentePropiedad(datoTipo, nombre, usuario, new DateTime().toDate(), 1);
 				}
 				else{
-					componentePropiedad = SubComponentePropiedadDAO.getSubComponentePropiedadPorId(id);
+					subcomponentePropiedad = SubComponentePropiedadDAO.getSubComponentePropiedadPorId(id);
 					
-					componentePropiedad.setNombre(nombre);
-					componentePropiedad.setDescripcion(descripcion);
-					componentePropiedad.setUsuarioActualizo(usuario);
-					componentePropiedad.setFechaActualizacion(new DateTime().toDate());
-					componentePropiedad.setDatoTipo(datoTipo);
+					subcomponentePropiedad.setNombre(nombre);
+					subcomponentePropiedad.setDescripcion(descripcion);
+					subcomponentePropiedad.setUsuarioActualizo(usuario);
+					subcomponentePropiedad.setFechaActualizacion(new DateTime().toDate());
+					subcomponentePropiedad.setDatoTipo(datoTipo);
 				}
-				result = SubComponentePropiedadDAO.guardarSubComponentePropiedad(componentePropiedad);
+				result = SubComponentePropiedadDAO.guardarSubComponentePropiedad(subcomponentePropiedad);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-						+ "\"id\": " + componentePropiedad.getId() , ","
-						, "\"usuarioCreo\": \"" , componentePropiedad.getUsuarioCreo(),"\","
-						, "\"fechaCreacion\":\" " , Utils.formatDateHour(componentePropiedad.getFechaCreacion()),"\","
-						, "\"usuarioactualizo\": \"" , componentePropiedad.getUsuarioActualizo() != null ? componentePropiedad.getUsuarioActualizo() : "","\","
-						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(componentePropiedad.getFechaActualizacion()),"\""+
+						+ "\"id\": " + subcomponentePropiedad.getId() , ","
+						, "\"usuarioCreo\": \"" , subcomponentePropiedad.getUsuarioCreo(),"\","
+						, "\"fechaCreacion\":\" " , Utils.formatDateHour(subcomponentePropiedad.getFechaCreacion()),"\","
+						, "\"usuarioactualizo\": \"" , subcomponentePropiedad.getUsuarioActualizo() != null ? subcomponentePropiedad.getUsuarioActualizo() : "","\","
+						, "\"fechaactualizacion\": \"" , Utils.formatDateHour(subcomponentePropiedad.getFechaActualizacion()),"\""+
 						" }");
 			}
 			else
 				response_text = "{ \"success\": false }";
 		}	
-		else if(accion.equals("borrarComponentePropiedad")){
+		else if(accion.equals("borrarSubComponentePropiedad")){
 			
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0){
-				ComponentePropiedad componentePropiedad = SubComponentePropiedadDAO.getSubComponentePropiedadPorId(id);
-				componentePropiedad.setUsuarioActualizo(usuario);
-				response_text = String.join("","{ \"success\": ",(SubComponentePropiedadDAO.eliminarSubComponentePropiedad(componentePropiedad) ? "true" : "false")," }");
+				SubcomponentePropiedad subcomponentePropiedad = SubComponentePropiedadDAO.getSubComponentePropiedadPorId(id);
+				subcomponentePropiedad.setUsuarioActualizo(usuario);
+				response_text = String.join("","{ \"success\": ",(SubComponentePropiedadDAO.eliminarSubComponentePropiedad(subcomponentePropiedad) ? "true" : "false")," }");
 			}
 			else
 				response_text = "{ \"success\": false }";
 		}
-		else if(accion.equals("getComponentePropiedadPorTipo")){
-			int idComponente = map.get("idComponente")!=null  ? Integer.parseInt(map.get("idComponente")) : 0;
-			int idComponenteTipo = map.get("idComponenteTipo")!=null  ? Integer.parseInt(map.get("idComponenteTipo")) : 0;
-			List<ComponentePropiedad> compoentepropiedades = SubComponentePropiedadDAO.getSubComponentePropiedadesPorTipoComponente(idComponenteTipo);
+		else if(accion.equals("getSubComponentePropiedadPorTipo")){
+			int idSubComponente = map.get("idSubComponente")!=null  ? Integer.parseInt(map.get("idSubComponente")) : 0;
+			int idSubComponenteTipo = map.get("idSubComponenteTipo")!=null  ? Integer.parseInt(map.get("idSubComponenteTipo")) : 0;
+			List<SubcomponentePropiedad> subcompoentepropiedades = SubComponentePropiedadDAO.getSubComponentePropiedadesPorTipoComponente(idSubComponenteTipo);
 			
 			List<HashMap<String,Object>> campos = new ArrayList<>();
-			for(ComponentePropiedad componentepropiedad:compoentepropiedades){
+			for(SubcomponentePropiedad subcomponentepropiedad:subcompoentepropiedades){
 				HashMap <String,Object> campo = new HashMap<String, Object>();
-				campo.put("id", componentepropiedad.getId());
-				campo.put("nombre", componentepropiedad.getNombre());
-				campo.put("tipo", componentepropiedad.getDatoTipo().getId());
-				ComponentePropiedadValor coomponentePropiedadValor = SubComponentePropiedadValorDAO.getValorPorSubComponenteYPropiedad(componentepropiedad.getId(), idComponente);
-				if (coomponentePropiedadValor !=null ){
-					switch (componentepropiedad.getDatoTipo().getId()){
+				campo.put("id", subcomponentepropiedad.getId());
+				campo.put("nombre", subcomponentepropiedad.getNombre());
+				campo.put("tipo", subcomponentepropiedad.getDatoTipo().getId());
+				SubcomponentePropiedadValor subcoomponentePropiedadValor = SubComponentePropiedadValorDAO.getValorPorSubComponenteYPropiedad(subcomponentepropiedad.getId(), idSubComponente);
+				if (subcoomponentePropiedadValor !=null ){
+					switch (subcomponentepropiedad.getDatoTipo().getId()){
 						case 1:
-							campo.put("valor",  coomponentePropiedadValor.getValorString());
+							campo.put("valor",  subcoomponentePropiedadValor.getValorString());
 							break;
 						case 2:
-							campo.put("valor", coomponentePropiedadValor.getValorEntero());
+							campo.put("valor", subcoomponentePropiedadValor.getValorEntero());
 							break;
 						case 3:
-							campo.put("valor", coomponentePropiedadValor.getValorDecimal());
+							campo.put("valor", subcoomponentePropiedadValor.getValorDecimal());
 							break;
 						case 4:
-							campo.put("valor", coomponentePropiedadValor.getValorEntero()==1 ? true : false);
+							campo.put("valor", subcoomponentePropiedadValor.getValorEntero()==1 ? true : false);
 							break;	
 						case 5:
-							campo.put("valor", Utils.formatDate(coomponentePropiedadValor.getValorTiempo()));
+							campo.put("valor", Utils.formatDate(subcoomponentePropiedadValor.getValorTiempo()));
 							break;
 					}
 				}
@@ -266,7 +266,7 @@ public class SSubComponentePropiedad extends HttpServlet {
 			}
 			
 			response_text = CFormaDinamica.convertirEstructura(campos);
-	        response_text = String.join("", "\"componentepropiedades\":",response_text);
+	        response_text = String.join("", "\"subcomponentepropiedades\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		else

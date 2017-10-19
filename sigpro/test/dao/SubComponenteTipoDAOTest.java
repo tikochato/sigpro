@@ -4,45 +4,45 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import pojo.ComponenteTipo;
+import pojo.SubcomponenteTipo;
 
 public class SubComponenteTipoDAOTest {
 	
 
 	
 	@Test
-	public void getComponenteTiposTest(){
+	public void getSubComponenteTiposTest(){
 		assertNotNull(SubComponenteTipoDAO.getSubComponenteTipos());
 	}
 	
 	@Test
-	public void getComponenteTipoPorIdTest(){
+	public void getSubComponenteTipoPorIdTest(){
 		assertEquals(SubComponenteTipoDAO.getSubComponenteTipoPorId(1),null);
 	}
 	
 	@Test
-	public void guardarComponenteTipoTest(){
-		assertEquals(SubComponenteTipoDAO.guardarSubComponenteTipo(new ComponenteTipo()),false);
+	public void guardarSubComponenteTipoTest(){
+		assertEquals(SubComponenteTipoDAO.guardarSubComponenteTipo(new SubcomponenteTipo()),false);
 	}
 	
 	@Test
-	public void eliminarComponenteTipoTest(){
-		assertEquals(SubComponenteTipoDAO.eliminarComponenteTipo(new ComponenteTipo()),false);
+	public void eliminarSubComponenteTipoTest(){
+		assertEquals(SubComponenteTipoDAO.eliminarSubComponenteTipo(new SubcomponenteTipo()),false);
 	}
 	
 	@Test
-	public void eliminarTotalComponenteTipo(){
-		assertNotNull(SubComponenteTipoDAO.eliminarTotalComponenteTipo(new ComponenteTipo()));
+	public void eliminarTotalSubComponenteTipo(){
+		assertNotNull(SubComponenteTipoDAO.eliminarTotalSubComponenteTipo(new SubcomponenteTipo()));
 	}
 	
 	@Test
-	public void getComponenteTiposPagina(){
-		assertNotNull(SubComponenteTipoDAO.getComponenteTiposPagina(1, 1,"","","","",""));
+	public void getSubComponenteTiposPagina(){
+		assertNotNull(SubComponenteTipoDAO.getSubComponenteTiposPagina(1, 1,"","","","",""));
 	}
 	
 	@Test
-	public void getTotalComponenteTipo(){
-		assertNotNull(SubComponenteTipoDAO.getTotalComponenteTipo("","",""));
+	public void getTotalSubComponenteTipo(){
+		assertNotNull(SubComponenteTipoDAO.getTotalSubComponenteTipo("","",""));
 	}
 
 }

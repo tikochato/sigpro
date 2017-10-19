@@ -8,22 +8,22 @@ import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
 
-import pojo.ComponentePropiedadValor;
-import pojo.ComponentePropiedadValorId;
+import pojo.SubcomponentePropiedadValor;
+import pojo.SubcomponentePropiedadValorId;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
 public class SubComponentePropiedadValorDAO {
-	public static ComponentePropiedadValor getValorPorSubComponenteYPropiedad(int idPropiedad,int idSubComponente){
+	public static SubcomponentePropiedadValor getValorPorSubComponenteYPropiedad(int idPropiedad,int idSubComponente){
 		Session session = CHibernateSession.getSessionFactory().openSession();
-		ComponentePropiedadValor ret = null;
-		List<ComponentePropiedadValor> listRet = null;
+		SubcomponentePropiedadValor ret = null;
+		List<SubcomponentePropiedadValor> listRet = null;
 		try {
 			CriteriaBuilder builder = session.getCriteriaBuilder();
-			CriteriaQuery<ComponentePropiedadValor> criteria = builder.createQuery(ComponentePropiedadValor.class);
-			Root<ComponentePropiedadValor> root = criteria.from(ComponentePropiedadValor.class);
+			CriteriaQuery<SubcomponentePropiedadValor> criteria = builder.createQuery(SubcomponentePropiedadValor.class);
+			Root<SubcomponentePropiedadValor> root = criteria.from(SubcomponentePropiedadValor.class);
 			criteria.select(root);
-			criteria.where(builder.equal(root.get("id"), new ComponentePropiedadValorId(idSubComponente, idPropiedad)));
+			criteria.where(builder.equal(root.get("id"), new SubcomponentePropiedadValorId(idSubComponente, idPropiedad)));
 			listRet = session.createQuery(criteria).getResultList();
 			
 			ret = !listRet.isEmpty() ? listRet.get(0) : null;
@@ -35,7 +35,7 @@ public class SubComponentePropiedadValorDAO {
 		return ret;
 	}
 	
-	public static boolean guardarSubComponentePropiedadValor(ComponentePropiedadValor subcomponentePropiedadValor){
+	public static boolean guardarSubComponentePropiedadValor(SubcomponentePropiedadValor subcomponentePropiedadValor){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -53,7 +53,7 @@ public class SubComponentePropiedadValorDAO {
 		return ret;
 	}
 	
-	public static boolean eliminarTotalSubComponentePropiedadValor(ComponentePropiedadValor subcomponentePropiedadValor){
+	public static boolean eliminarTotalSubComponentePropiedadValor(SubcomponentePropiedadValor subcomponentePropiedadValor){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{

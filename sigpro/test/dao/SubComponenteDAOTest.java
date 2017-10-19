@@ -44,11 +44,11 @@ public class SubComponenteDAOTest {
 
 	@Test
 	public void getSubComponentesPaginaPorProyectoTest(){
-		assertNotNull(SubComponenteDAO.getSubComponentesPaginaPorProyecto(0,0,0,"","","","","",""));
+		assertNotNull(SubComponenteDAO.getSubComponentesPaginaPorComponente(0,0,0,"","","","","",""));
 	}
 	
 	@Test
 	public void getTotalSubComponentesPorProyecto(){
-		assertNotNull(SubComponenteDAO.getTotalSubComponentesPorProyecto(0,"","","",""));
+		assertNotNull(SubComponenteDAO.getTotalSubComponentesPorComponente(0,"","","",""));
 	}
 }

@@ -29,16 +29,16 @@ import com.google.gson.reflect.TypeToken;
 import dao.SubComponenteDAO;
 import dao.SubComponentePropiedadDAO;
 import dao.SubComponentePropiedadValorDAO;
+import dao.ComponenteDAO;
 import dao.ObjetoDAO;
-import dao.ProyectoDAO;
 import dao.UnidadEjecutoraDAO;
 import pojo.AcumulacionCosto;
 import pojo.Componente;
-import pojo.ComponentePropiedad;
-import pojo.ComponentePropiedadValor;
-import pojo.ComponentePropiedadValorId;
-import pojo.ComponenteTipo;
-import pojo.Proyecto;
+import pojo.Subcomponente;
+import pojo.SubcomponentePropiedad;
+import pojo.SubcomponentePropiedadValor;
+import pojo.SubcomponentePropiedadValorId;
+import pojo.SubcomponenteTipo;
 import pojo.UnidadEjecutora;
 import utilities.Utils;
 
@@ -82,7 +82,6 @@ public class SSubComponente extends HttpServlet {
 		BigDecimal costo;
 		Integer acumulacionCostoId;
 		String acumulacionCostoNombre;
-		BigDecimal costoTecho;
 		boolean tieneHijos;
 	}
 
@@ -132,9 +131,9 @@ public class SSubComponente extends HttpServlet {
 		if(accion.equals("getSubComponentesPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int numeroSubComponentes = map.get("numerosubcomponentes")!=null  ? Integer.parseInt(map.get("numerosubcomponentes")) : 0;
-			List<Componente> subcomponentes = SubComponenteDAO.getSubComponentesPagina(pagina, numeroSubComponentes,usuario);
+			List<Subcomponente> subcomponentes = SubComponenteDAO.getSubComponentesPagina(pagina, numeroSubComponentes,usuario);
 			List<stsubcomponente> stsubcomponentes=new ArrayList<stsubcomponente>();
-			for(Componente subcomponente:subcomponentes){
+			for(Subcomponente subcomponente:subcomponentes){
 				stsubcomponente temp =new stsubcomponente();
 				temp.descripcion = subcomponente.getDescripcion();
 				temp.estado = subcomponente.getEstado();
@@ -144,12 +143,12 @@ public class SSubComponente extends HttpServlet {
 				temp.nombre = subcomponente.getNombre();
 				temp.usuarioActualizo = subcomponente.getUsuarioActualizo();
 				temp.usuarioCreo = subcomponente.getUsuarioCreo();
-				temp.subcomponentetipoid = subcomponente.getComponenteTipo().getId();
-				temp.subcomponentetiponombre = subcomponente.getComponenteTipo().getNombre();
+				temp.subcomponentetipoid = subcomponente.getSubcomponenteTipo().getId();
+				temp.subcomponentetiponombre = subcomponente.getSubcomponenteTipo().getNombre();
 				temp.snip = subcomponente.getSnip();
 				temp.programa = subcomponente.getPrograma();
 				temp.subprograma = subcomponente.getSubprograma();
-				temp.proyecto_ = subcomponente.getProyecto_1();
+				temp.proyecto_ = subcomponente.getProyecto();
 				temp.actividad = subcomponente.getActividad();
 				temp.renglon = subcomponente.getRenglon();
 				temp.ubicacionGeografica = subcomponente.getUbicacionGeografica();
@@ -165,11 +164,11 @@ public class SSubComponente extends HttpServlet {
 					temp.entidadentidad = subcomponente.getUnidadEjecutora().getId().getEntidadentidad();
 					temp.unidadejecutoranombre = subcomponente.getUnidadEjecutora().getNombre();
 				}else{
-					Proyecto proyecto = ProyectoDAO.getProyecto(subcomponente.getProyecto().getId());
-					temp.unidadejecutoraid = proyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
-					temp.ejercicio = proyecto.getUnidadEjecutora().getId().getEjercicio();
-					temp.entidadentidad = proyecto.getUnidadEjecutora().getId().getEntidadentidad();
-					temp.unidadejecutoranombre = proyecto.getUnidadEjecutora().getNombre();
+					Componente componente = ComponenteDAO.getComponente(subcomponente.getComponente().getId());
+					temp.unidadejecutoraid = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+					temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
+					temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
 				}
 				
 				temp.entidadnombre = subcomponente.getUnidadEjecutora().getEntidad().getNombre();
@@ -189,9 +188,9 @@ public class SSubComponente extends HttpServlet {
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		else if(accion.equals("getSubComponentes")){
-			List<Componente> subcomponentes = SubComponenteDAO.getSubComponentes(usuario);
+			List<Subcomponente> subcomponentes = SubComponenteDAO.getSubComponentes(usuario);
 			List<stsubcomponente> stsubcomponentes=new ArrayList<stsubcomponente>();
-			for(Componente subcomponente:subcomponentes){
+			for(Subcomponente subcomponente:subcomponentes){
 				stsubcomponente temp =new stsubcomponente();
 
 				temp.descripcion = subcomponente.getDescripcion();
@@ -202,12 +201,12 @@ public class SSubComponente extends HttpServlet {
 				temp.nombre = subcomponente.getNombre();
 				temp.usuarioActualizo = subcomponente.getUsuarioActualizo();
 				temp.usuarioCreo = subcomponente.getUsuarioCreo();
-				temp.subcomponentetipoid = subcomponente.getComponenteTipo().getId();
-				temp.subcomponentetiponombre = subcomponente.getComponenteTipo().getNombre();
+				temp.subcomponentetipoid = subcomponente.getSubcomponenteTipo().getId();
+				temp.subcomponentetiponombre = subcomponente.getSubcomponenteTipo().getNombre();
 				temp.snip = subcomponente.getSnip();
 				temp.programa = subcomponente.getPrograma();
 				temp.subprograma = subcomponente.getSubprograma();
-				temp.proyecto_ = subcomponente.getProyecto_1();
+				temp.proyecto_ = subcomponente.getProyecto();
 				temp.obra = subcomponente.getObra();
 				temp.actividad = subcomponente.getActividad();
 				temp.renglon = subcomponente.getRenglon();
@@ -220,12 +219,12 @@ public class SSubComponente extends HttpServlet {
 					temp.unidadejecutoranombre = subcomponente.getUnidadEjecutora().getNombre();
 					temp.entidadnombre = subcomponente.getUnidadEjecutora().getEntidad().getNombre();
 				}else{
-					Proyecto proyecto = ProyectoDAO.getProyecto(subcomponente.getProyecto().getId());
-					temp.unidadejecutoraid = proyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
-					temp.ejercicio = proyecto.getUnidadEjecutora().getId().getEjercicio();
-					temp.entidadentidad = proyecto.getUnidadEjecutora().getId().getEjercicio();
-					temp.unidadejecutoranombre = proyecto.getUnidadEjecutora().getNombre();
-					temp.entidadnombre = proyecto.getUnidadEjecutora().getEntidad().getNombre();
+					Componente componente = ComponenteDAO.getComponente(subcomponente.getComponente().getId());
+					temp.unidadejecutoraid = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+					temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+					temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
+					temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
+					temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
 				}
 				
 				temp.latitud = subcomponente.getLatitud();
@@ -238,7 +237,6 @@ public class SSubComponente extends HttpServlet {
 				temp.duracion = subcomponente.getDuracion();
 				temp.duracionDimension = subcomponente.getDuracionDimension();
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
-				temp.costoTecho = subcomponente.getCostoTecho();
 				
 				stsubcomponentes.add(temp);
 			}
@@ -256,7 +254,7 @@ public class SSubComponente extends HttpServlet {
 					String nombre = map.get("nombre");
 					String descripcion = map.get("descripcion");
 					int subcomponentetipoid = map.get("subcomponentetipoid")!=null ? Integer.parseInt(map.get("subcomponentetipoid")) : 0;
-					int proyectoid= map.get("proyectoid")!=null ? Integer.parseInt(map.get("proyectoid")) : 0;
+					int componenteid= map.get("componenteid")!=null ? Integer.parseInt(map.get("componenteid")) : 0;
 					
 					Integer unidadEjecutoraId = map.get("unidadejecutoraid") != null ? Integer.parseInt(map.get("unidadejecutoraid")) : null;
 					Integer ejercicio = map.get("ejercicio") != null ? map.get("ejercicio") != null ? Utils.String2Int(map.get("ejercicio")) : null : null;
@@ -278,8 +276,6 @@ public class SSubComponente extends HttpServlet {
 					Date fechaFin = Utils.dateFromStringCeroHoras(map.get("fechaFin"));
 					Integer duracion = Utils.String2Int(map.get("duaracion"), null);
 					String duracionDimension = map.get("duracionDimension");
-					Integer esDeSigade = Utils.String2Boolean("true",0);
-					BigDecimal costoTecho = Utils.String2BigDecimal(map.get("costoTecho")!= null ? map.get("costoTecho") : null, null);
 					
 					AcumulacionCosto acumulacionCosto = null;
 					if(acumulacionCostoid != null){
@@ -287,25 +283,24 @@ public class SSubComponente extends HttpServlet {
 						acumulacionCosto.setId(Utils.String2Int(map.get("acumulacionCosto")));
 					}
 					
-					ComponenteTipo subcomponenteTipo= new ComponenteTipo();
+					SubcomponenteTipo subcomponenteTipo= new SubcomponenteTipo();
 					subcomponenteTipo.setId(subcomponentetipoid);
 
 					UnidadEjecutora unidadEjecutora_ = UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidad, unidadEjecutoraId);
-					Proyecto proyecto = ProyectoDAO.getProyecto(proyectoid);
+					Componente componente = ComponenteDAO.getComponente(componenteid);
 
 					type = new TypeToken<List<stdatadinamico>>() {
 					}.getType();
 
 					List<stdatadinamico> datos = gson.fromJson(map.get("datadinamica"), type);
 
-					Componente subcomponente;
+					Subcomponente subcomponente;
 					if(esnuevo){
-						
-						subcomponente = new Componente(acumulacionCosto,subcomponenteTipo, proyecto, unidadEjecutora_, nombre,
-								descripcion, usuario, null, new DateTime().toDate(), null, 1,
-								snip, programa, subPrograma, proyecto_, actividad,obra, latitud,longitud, costo, renglon, 
-								ubicacionGeografica, fechaInicio, fechaFin, duracion, duracionDimension, null,null,null,esDeSigade,costoTecho,
-								null,null,null);
+						subcomponente = new Subcomponente(acumulacionCosto, componente, subcomponenteTipo, unidadEjecutora_, 
+								nombre, descripcion, usuario, null, new DateTime().toDate(), null, 1, 
+								snip, programa, subPrograma, proyecto_, actividad, obra, latitud, longitud, costo, renglon, 
+								ubicacionGeografica, fechaInicio, fechaFin, duracion, duracionDimension, null, null, null, 
+								null, null);						
 					}
 					else{
 						subcomponente = SubComponenteDAO.getSubComponentePorId(id,usuario);
@@ -316,7 +311,7 @@ public class SSubComponente extends HttpServlet {
 						subcomponente.setSnip(snip);
 						subcomponente.setPrograma(programa);
 						subcomponente.setSubprograma(subPrograma);
-						subcomponente.setProyecto_1(proyecto_);
+						subcomponente.setProyecto(proyecto_);
 						subcomponente.setObra(obra);
 						subcomponente.setRenglon(renglon);
 						subcomponente.setUbicacionGeografica(ubicacionGeografica);
@@ -330,15 +325,14 @@ public class SSubComponente extends HttpServlet {
 						subcomponente.setDuracion(duracion);
 						subcomponente.setDuracionDimension(duracionDimension);
 						subcomponente.setUnidadEjecutora(unidadEjecutora_);
-						subcomponente.setComponenteTipo(subcomponenteTipo);
-						subcomponente.setCostoTecho(costoTecho);
+						subcomponente.setSubcomponenteTipo(subcomponenteTipo);
 					}
 					result = SubComponenteDAO.guardarSubComponente(subcomponente, true);
 					
-					Set<ComponentePropiedadValor> valores_temp = subcomponente.getComponentePropiedadValors();
-					subcomponente.setComponentePropiedadValors(null);
+					Set<SubcomponentePropiedadValor> valores_temp = subcomponente.getSubcomponentePropiedadValors();
+					subcomponente.setSubcomponentePropiedadValors(null);
 					if (valores_temp!=null){
-						for (ComponentePropiedadValor valor : valores_temp){
+						for (SubcomponentePropiedadValor valor : valores_temp){
 							SubComponentePropiedadValorDAO.eliminarTotalSubComponentePropiedadValor(valor);
 						}
 					}
@@ -346,9 +340,9 @@ public class SSubComponente extends HttpServlet {
 					for (stdatadinamico data : datos) {
 						if (data.valor!=null && data.valor.length()>0 && data.valor.compareTo("null")!=0){
 							
-							ComponentePropiedad subcomponentePropiedad = SubComponentePropiedadDAO.getSubComponentePropiedadPorId(Integer.parseInt(data.id));
-							ComponentePropiedadValorId idValor = new ComponentePropiedadValorId(subcomponente.getId(),Integer.parseInt(data.id));
-							ComponentePropiedadValor valor = new ComponentePropiedadValor(idValor, subcomponente, subcomponentePropiedad, usuario, new DateTime().toDate());
+							SubcomponentePropiedad subcomponentePropiedad = SubComponentePropiedadDAO.getSubComponentePropiedadPorId(Integer.parseInt(data.id));
+							SubcomponentePropiedadValorId idValor = new SubcomponentePropiedadValorId(subcomponente.getId(),Integer.parseInt(data.id));
+							SubcomponentePropiedadValor valor = new SubcomponentePropiedadValor(idValor, subcomponente, subcomponentePropiedad, usuario, new DateTime().toDate());
 	
 							switch (subcomponentePropiedad.getDatoTipo().getId()){
 								case 1:
@@ -390,27 +384,28 @@ public class SSubComponente extends HttpServlet {
 		else if(accion.equals("numeroSubComponentes")){
 			response_text = String.join("","{ \"success\": true, \"totalsubcomponentes\":",SubComponenteDAO.getTotalSubComponentes(usuario).toString()," }");
 		}
-		else if(accion.equals("numeroSubComponentesPorProyecto")){
+		else if(accion.equals("numeroSubComponentesPorComponente")){
 			String filtro_nombre = map.get("filtro_nombre");
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
-			int proyectoId = map.get("proyectoid")!=null  ? Integer.parseInt(map.get("proyectoid")) : 0;
-			response_text = String.join("","{ \"success\": true, \"totalsubcomponentes\":",SubComponenteDAO.getTotalSubComponentesPorProyecto(proyectoId, filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion,usuario).toString()," }");
+			int componenteId = map.get("componenteid")!=null  ? Integer.parseInt(map.get("componenteid")) : 0;
+			response_text = String.join("","{ \"success\": true, \"totalsubcomponentes\":",SubComponenteDAO.getTotalSubComponentesPorComponente(componenteId, filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion,usuario).toString()," }");
 		}
-		else if(accion.equals("getSubComponentesPaginaPorProyecto")){
+		else if(accion.equals("getSubComponentesPaginaPorComponente")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
-			int proyectoId = map.get("proyectoid")!=null  ? Integer.parseInt(map.get("proyectoid")) : 0;
-			int numeroCooperantes = map.get("numerosubcomponentes")!=null  ? Integer.parseInt(map.get("numerosubcomponentes")) : 0;
+			int componenteId = map.get("componenteid")!=null  ? Integer.parseInt(map.get("componenteid")) : 0;
+			int numeroSubComponentes = map.get("numerosubcomponentes")!=null  ? Integer.parseInt(map.get("numerosubcomponentes")) : 0;
 			String filtro_nombre = map.get("filtro_nombre");
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			String columna_ordenada = map.get("columna_ordenada");
 			String orden_direccion = map.get("orden_direccion");
 
-			List<Componente> subcomponentes = SubComponenteDAO.getSubComponentesPaginaPorProyecto(pagina, numeroCooperantes,proyectoId
-					,filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,columna_ordenada,orden_direccion,usuario);
+			List<Subcomponente> subcomponentes = SubComponenteDAO.getSubComponentesPaginaPorComponente(pagina, numeroSubComponentes, 
+					componenteId, filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, 
+					orden_direccion, filtro_usuario_creo);
 			List<stsubcomponente> stsubcomponentes=new ArrayList<stsubcomponente>();
-			for(Componente subcomponente:subcomponentes){
+			for(Subcomponente subcomponente:subcomponentes){
 				stsubcomponente temp =new stsubcomponente();
 				temp.descripcion = subcomponente.getDescripcion();
 				temp.estado = subcomponente.getEstado();
@@ -420,12 +415,12 @@ public class SSubComponente extends HttpServlet {
 				temp.nombre = subcomponente.getNombre();
 				temp.usuarioActualizo = subcomponente.getUsuarioActualizo();
 				temp.usuarioCreo = subcomponente.getUsuarioCreo();
-				temp.subcomponentetipoid = subcomponente.getComponenteTipo().getId();
-				temp.subcomponentetiponombre = subcomponente.getComponenteTipo().getNombre();
+				temp.subcomponentetipoid = subcomponente.getSubcomponenteTipo().getId();
+				temp.subcomponentetiponombre = subcomponente.getSubcomponenteTipo().getNombre();
 				temp.snip = subcomponente.getSnip();
 				temp.programa = subcomponente.getPrograma();
 				temp.subprograma = subcomponente.getSubprograma();
-				temp.proyecto_ = subcomponente.getProyecto_1();
+				temp.proyecto_ = subcomponente.getProyecto();
 				temp.obra = subcomponente.getObra();
 				temp.renglon = subcomponente.getRenglon();
 				temp.ubicacionGeografica = subcomponente.getUbicacionGeografica();
@@ -438,12 +433,12 @@ public class SSubComponente extends HttpServlet {
 					temp.unidadejecutoranombre = subcomponente.getUnidadEjecutora().getNombre();
 					temp.entidadnombre = subcomponente.getUnidadEjecutora().getEntidad().getNombre();
 				}else{
-					Proyecto proyecto = ProyectoDAO.getProyecto(subcomponente.getProyecto().getId());
-					temp.unidadejecutoraid = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getUnidadEjecutora() : null;
-					temp.ejercicio = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getEjercicio() : null;
-					temp.entidadentidad = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getEntidadentidad() : null;
-					temp.unidadejecutoranombre = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getNombre() : "";
-					temp.entidadnombre = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getEntidad().getNombre() : "";
+					Componente componente = ComponenteDAO.getComponente(subcomponente.getComponente().getId());
+					temp.unidadejecutoraid = componente.getUnidadEjecutora()!=null ? componente.getUnidadEjecutora().getId().getUnidadEjecutora() : null;
+					temp.ejercicio = componente.getUnidadEjecutora()!=null ? componente.getUnidadEjecutora().getId().getEjercicio() : null;
+					temp.entidadentidad = componente.getUnidadEjecutora()!=null ? componente.getUnidadEjecutora().getId().getEntidadentidad() : null;
+					temp.unidadejecutoranombre = componente.getUnidadEjecutora()!=null ? componente.getUnidadEjecutora().getNombre() : "";
+					temp.entidadnombre = componente.getUnidadEjecutora()!=null ? componente.getUnidadEjecutora().getEntidad().getNombre() : "";
 				}
 				
 				temp.latitud = subcomponente.getLatitud();
@@ -457,7 +452,6 @@ public class SSubComponente extends HttpServlet {
 				temp.duracionDimension = subcomponente.getDuracionDimension();
 				
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
-				temp.costoTecho = subcomponente.getCostoTecho();
 				
 				stsubcomponentes.add(temp);
 			}
@@ -468,7 +462,7 @@ public class SSubComponente extends HttpServlet {
 		}
 		else if(accion.equals("obtenerSubComponentePorId")){
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
-			Componente subcomponente = SubComponenteDAO.getSubComponentePorId(id,usuario);
+			Subcomponente subcomponente = SubComponenteDAO.getSubComponentePorId(id,usuario);
 
 			response_text = String.join("","{ \"success\": ",(subcomponente!=null && subcomponente.getId()!=null ? "true" : "false"),", "
 				+ "\"id\": " + (subcomponente!=null ? subcomponente.getId():"0") +", " + "\"fechaInicio\": \"" + (subcomponente!=null ? Utils.formatDate(subcomponente.getFechaInicio()): null) +"\", "
@@ -476,7 +470,7 @@ public class SSubComponente extends HttpServlet {
 
 		}else if(accion.equals("getSubComponentePorId")){
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
-			Componente subcomponente = SubComponenteDAO.getSubComponentePorId(id,usuario);
+			Subcomponente subcomponente = SubComponenteDAO.getSubComponentePorId(id,usuario);
 			stsubcomponente temp =new stsubcomponente();
 			temp.descripcion = subcomponente.getDescripcion();
 			temp.estado = subcomponente.getEstado();
@@ -486,12 +480,12 @@ public class SSubComponente extends HttpServlet {
 			temp.nombre = subcomponente.getNombre();
 			temp.usuarioActualizo = subcomponente.getUsuarioActualizo();
 			temp.usuarioCreo = subcomponente.getUsuarioCreo();
-			temp.subcomponentetipoid = subcomponente.getComponenteTipo().getId();
-			temp.subcomponentetiponombre = subcomponente.getComponenteTipo().getNombre();
+			temp.subcomponentetipoid = subcomponente.getSubcomponenteTipo().getId();
+			temp.subcomponentetiponombre = subcomponente.getSubcomponenteTipo().getNombre();
 			temp.snip = subcomponente.getSnip();
 			temp.programa = subcomponente.getPrograma();
 			temp.subprograma = subcomponente.getSubprograma();
-			temp.proyecto_ = subcomponente.getProyecto_1();
+			temp.proyecto_ = subcomponente.getProyecto();
 			temp.obra = subcomponente.getObra();
 			temp.renglon = subcomponente.getRenglon();
 			temp.ubicacionGeografica = subcomponente.getUbicacionGeografica();
@@ -504,12 +498,12 @@ public class SSubComponente extends HttpServlet {
 				temp.unidadejecutoranombre = subcomponente.getUnidadEjecutora().getNombre();
 				temp.entidadnombre = subcomponente.getUnidadEjecutora().getEntidad().getNombre();
 			}else{
-				Proyecto proyecto = ProyectoDAO.getProyecto(subcomponente.getProyecto().getId());
-				temp.unidadejecutoraid = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getUnidadEjecutora() : null;
-				temp.ejercicio = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getEjercicio() : null;
-				temp.entidadentidad = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getEntidadentidad() : null;
-				temp.unidadejecutoranombre = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getNombre() : "";
-				temp.entidadnombre = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getEntidad().getNombre() : "";
+				Componente componente = ComponenteDAO.getComponente(subcomponente.getComponente().getId());
+				temp.unidadejecutoraid = componente.getUnidadEjecutora()!=null ? componente.getUnidadEjecutora().getId().getUnidadEjecutora() : null;
+				temp.ejercicio = componente.getUnidadEjecutora()!=null ? componente.getUnidadEjecutora().getId().getEjercicio() : null;
+				temp.entidadentidad = componente.getUnidadEjecutora()!=null ? componente.getUnidadEjecutora().getId().getEntidadentidad() : null;
+				temp.unidadejecutoranombre = componente.getUnidadEjecutora()!=null ? componente.getUnidadEjecutora().getNombre() : "";
+				temp.entidadnombre = componente.getUnidadEjecutora()!=null ? componente.getUnidadEjecutora().getEntidad().getNombre() : "";
 			}
 			
 			temp.latitud = subcomponente.getLatitud();
@@ -523,7 +517,6 @@ public class SSubComponente extends HttpServlet {
 			temp.duracionDimension = subcomponente.getDuracionDimension();
 			
 			temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
-			temp.costoTecho = subcomponente.getCostoTecho();
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"subcomponente\":",response_text);

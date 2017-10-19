@@ -11,21 +11,21 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-
-import pojo.ComponentePropiedad;
+import pojo.SubcomponentePropiedad;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
 public class SubComponentePropiedadDAO {
 
-	public static List<ComponentePropiedad> getSubComponentePropiedadesPorTipoComponentePagina(int pagina,int idTipoSubComponente){
-		List<ComponentePropiedad> ret = new ArrayList<ComponentePropiedad>();
+	public static List<SubcomponentePropiedad> getSubComponentePropiedadesPorTipoSubComponentePagina(int pagina,int idTipoSubComponente){
+		List<SubcomponentePropiedad> ret = new ArrayList<SubcomponentePropiedad>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<ComponentePropiedad> criteria = session.createQuery("select p from ComponentePropiedad p "
+			//TODO: ctipoPropiedads
+			Query<SubcomponentePropiedad> criteria = session.createQuery("select p from SubcomponentePropiedad p "
 					+ "inner join p.ctipoPropiedads ptp "
 					+ "inner join ptp.componenteTipo pt  "
-					+ "where p.estado=1 and pt.id =  " + idTipoSubComponente + " ",ComponentePropiedad.class);
+					+ "where p.estado=1 and pt.id =  " + idTipoSubComponente + " ",SubcomponentePropiedad.class);
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
@@ -41,7 +41,7 @@ public class SubComponentePropiedadDAO {
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<Long> conteo = session.createQuery("SELECT count(p.id) FROM ComponentePropiedad p where p.estado=1",Long.class);
+			Query<Long> conteo = session.createQuery("SELECT count(p.id) FROM SubcomponentePropiedad p where p.estado=1",Long.class);
 			ret = conteo.getSingleResult();
 		}catch (NoResultException e){
 			
@@ -53,13 +53,13 @@ public class SubComponentePropiedadDAO {
 		}
 		return ret;
 	}
-	public static List<ComponentePropiedad> getSubComponentePropiedadPaginaTotalDisponibles(int pagina, int numerosubcomponentepropiedades, String idPropiedades){
-		List<ComponentePropiedad> ret = new ArrayList<ComponentePropiedad>();
+	public static List<SubcomponentePropiedad> getSubComponentePropiedadPaginaTotalDisponibles(int pagina, int numerosubcomponentepropiedades, String idPropiedades){
+		List<SubcomponentePropiedad> ret = new ArrayList<SubcomponentePropiedad>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<ComponentePropiedad> criteria = session.createQuery("select p from ComponentePropiedad p  "
+			Query<SubcomponentePropiedad> criteria = session.createQuery("select p from SubcomponentePropiedad p  "
 					+ (idPropiedades!=null && idPropiedades.length()>0 ?  " where p.estado=1 and p.id not in ("+ idPropiedades + ")" : "")
-					,ComponentePropiedad.class);
+					,SubcomponentePropiedad.class);
 			criteria.setFirstResult(((pagina-1)*(numerosubcomponentepropiedades)));
 			criteria.setMaxResults(numerosubcomponentepropiedades);
 			ret = criteria.getResultList();
@@ -73,15 +73,15 @@ public class SubComponentePropiedadDAO {
 		return ret;
 	}
 
-	public static ComponentePropiedad getSubComponentePropiedadPorId(int id){
+	public static SubcomponentePropiedad getSubComponentePropiedadPorId(int id){
 		Session session = CHibernateSession.getSessionFactory().openSession();
-		ComponentePropiedad ret = null;
-		List<ComponentePropiedad> listRet = null;
+		SubcomponentePropiedad ret = null;
+		List<SubcomponentePropiedad> listRet = null;
 		try{
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 
-			CriteriaQuery<ComponentePropiedad> criteria = builder.createQuery(ComponentePropiedad.class);
-			Root<ComponentePropiedad> root = criteria.from(ComponentePropiedad.class);
+			CriteriaQuery<SubcomponentePropiedad> criteria = builder.createQuery(SubcomponentePropiedad.class);
+			Root<SubcomponentePropiedad> root = criteria.from(SubcomponentePropiedad.class);
 			criteria.select( root );
 			criteria.where( builder.and(builder.equal( root.get("id"), id )));
 			listRet = session.createQuery( criteria ).getResultList();
@@ -97,7 +97,7 @@ public class SubComponentePropiedadDAO {
 		return ret;
 	}
 
-	public static boolean guardarSubComponentePropiedad(ComponentePropiedad subcomponentePropiedad){
+	public static boolean guardarSubComponentePropiedad(SubcomponentePropiedad subcomponentePropiedad){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -115,7 +115,7 @@ public class SubComponentePropiedadDAO {
 		return ret;
 	}
 
-	public static boolean eliminarSubComponentePropiedad(ComponentePropiedad subcomponentePropiedad){
+	public static boolean eliminarSubComponentePropiedad(SubcomponentePropiedad subcomponentePropiedad){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -134,7 +134,7 @@ public class SubComponentePropiedadDAO {
 		return ret;
 	}
 
-	public static boolean eliminarTotalSubComponentePropiedad(ComponentePropiedad subcomponentePropiedad){
+	public static boolean eliminarTotalSubComponentePropiedad(SubcomponentePropiedad subcomponentePropiedad){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -152,14 +152,14 @@ public class SubComponentePropiedadDAO {
 		return ret;
 	}
 
-	public static List<ComponentePropiedad> getSubComponentePropiedadesPagina(int pagina, int numeroSubComponentePropiedades , 
+	public static List<SubcomponentePropiedad> getSubComponentePropiedadesPagina(int pagina, int numeroSubComponentePropiedades , 
 			String filtro_nombre, String filtro_usuario_creo, 
 			String filtro_fecha_creacion, String columna_ordenada, String orden_direccion){
-		List<ComponentePropiedad> ret = new ArrayList<ComponentePropiedad>();
+		List<SubcomponentePropiedad> ret = new ArrayList<SubcomponentePropiedad>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			
-			String query = "SELECT c FROM ComponentePropiedad c WHERE c.estado=1";
+			String query = "SELECT c FROM SubcomponentePropiedad c WHERE c.estado=1";
 			String query_a="";
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
 				query_a = String.join("",query_a, " c.nombre LIKE '%",filtro_nombre,"%' ");
@@ -171,7 +171,7 @@ public class SubComponentePropiedadDAO {
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
 			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
 			
-			Query<ComponentePropiedad> criteria = session.createQuery(query,ComponentePropiedad.class);
+			Query<SubcomponentePropiedad> criteria = session.createQuery(query,SubcomponentePropiedad.class);
 			criteria.setFirstResult(((pagina-1)*(numeroSubComponentePropiedades)));
 			criteria.setMaxResults(numeroSubComponentePropiedades);
 			ret = criteria.getResultList();
@@ -191,7 +191,7 @@ public class SubComponentePropiedadDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			
-			String query = "SELECT count(c.id) FROM ComponentePropiedad c WHERE c.estado=1";
+			String query = "SELECT count(c.id) FROM SubcomponentePropiedad c WHERE c.estado=1";
 			String query_a="";
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
 				query_a = String.join("",query_a, " c.nombre LIKE '%",filtro_nombre,"%' ");
@@ -215,15 +215,16 @@ public class SubComponentePropiedadDAO {
 		return ret;
 	}
 	
-	public static List<ComponentePropiedad> getSubComponentePropiedadesPorTipoComponente(int idTipoSubComponente){
-		List<ComponentePropiedad> ret = new ArrayList<ComponentePropiedad>();
+	public static List<SubcomponentePropiedad> getSubComponentePropiedadesPorTipoComponente(int idTipoSubComponente){
+		List<SubcomponentePropiedad> ret = new ArrayList<SubcomponentePropiedad>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<ComponentePropiedad> criteria = session.createNativeQuery(" select cp.* "
+			//TODO: ctipo_propiedad
+			Query<SubcomponentePropiedad> criteria = session.createNativeQuery(" select cp.* "
 				+ "from componente_tipo ct "
 				+ "join ctipo_propiedad ctp ON ctp.componente_tipoid = ct.id "
 				+ "join componente_propiedad cp ON cp.id = ctp.componente_propiedadid "
-				+ " where ct.id = :idTipoComp and cp.estado=1",ComponentePropiedad.class);
+				+ " where ct.id = :idTipoComp and cp.estado=1",SubcomponentePropiedad.class);
 			
 			criteria.setParameter("idTipoComp", idTipoSubComponente);
 			ret = criteria.getResultList();

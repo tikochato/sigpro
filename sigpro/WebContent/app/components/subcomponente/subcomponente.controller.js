@@ -28,7 +28,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 		mi.subcomponentenombre = "";
 		mi.unidadejecutoraid="";
 		mi.unidadejecutoranombre="";
-		mi.proyectoid = $routeParams.componente_id;
+		mi.componenteid = $routeParams.componente_id;
 		mi.formatofecha = 'dd/MM/yyyy';
 		mi.camposdinamicos = {};
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
@@ -58,10 +58,10 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 		
 		mi.duracionDimension = mi.dimensiones[0];
 		
-		$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: $routeParams.proyecto_id, t: (new Date()).getTime() }).success(
+		$http.post('/SComponente', { accion: 'obtenerComponentePorId', id: $routeParams.componente_id, t: (new Date()).getTime() }).success(
 				function(response) {
-					mi.proyectoid = response.id;
-					mi.proyectoNombre = response.nombre;
+					mi.componenteid = response.id;
+					mi.componenteNombre = response.nombre;
 					mi.objetoTipoNombre = "Proyecto";
 		});
 		
@@ -172,7 +172,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 
 		mi.cargarTabla = function(pagina){
 			mi.mostrarcargando=true;
-			$http.post('/SSubComponente', { accion: 'getSubComponentesPaginaPorProyecto', pagina: pagina, numerosubcomponentes: $utilidades.elementosPorPagina,proyectoid: $routeParams.proyecto_id,
+			$http.post('/SSubComponente', { accion: 'getSubComponentesPaginaPorProyecto', pagina: pagina, numerosubcomponentes: $utilidades.elementosPorPagina,componenteid: $routeParams.componente_id,
 				numeroproyecto:  $utilidades.elementosPorPagina,
 				filtro_nombre: mi.filtros['nombre'], filtro_snip: mi.filtros['snip'],
 				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
@@ -207,7 +207,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 					esnuevo: mi.esnuevo,
 					subcomponentetipoid : mi.subcomponentetipoid,
 					id: mi.subcomponente.id,
-					proyectoid: $routeParams.proyecto_id,
+					componenteid: $routeParams.componente_id,
 					nombre: mi.subcomponente.nombre,
 					descripcion: mi.subcomponente.descripcion,
 					snip: mi.subcomponente.snip,
@@ -225,7 +225,6 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 					longitud: mi.subcomponente.longitud,
 					latitud : mi.subcomponente.latitud,
 					costo: mi.subcomponente.costo == null ? null : mi.subcomponente.costo,
-					costoTecho: mi.subcomponente.costoTecho != null ?  mi.subcomponente.costoTecho : null,
 					acumulacionCosto: mi.subcomponente.acumulacionCostoId == null ? null : mi.subcomponente.acumulacionCostoId,
 					fechaInicio: moment(mi.subcomponente.fechaInicio).format('DD/MM/YYYY'),
 					fechaFin: moment(mi.subcomponente.fechaFin).format('DD/MM/YYYY'),
@@ -387,10 +386,10 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 		}
 
 		mi.reiniciarVista=function(){
-			if($location.path()==('/subcomponente/'+ mi.proyectoid + '/rv'))
+			if($location.path()==('/subcomponente/'+ mi.componenteid + '/rv'))
 				$route.reload();
 			else
-				$location.path('/subcomponente/'+ mi.proyectoid + '/rv');
+				$location.path('/subcomponente/'+ mi.componenteid + '/rv');
 		}
 
 		mi.abrirPopupFecha = function(index) {
@@ -454,7 +453,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 		}
 
 		mi.obtenerTotalSubComponentes = function(){
-			$http.post('/SSubComponente', { accion: 'numeroSubComponentesPorProyecto', proyectoid: $routeParams.proyecto_id,
+			$http.post('/SSubComponente', { accion: 'numeroSubComponentesPorProyecto', componenteid: $routeParams.componente_id,
 				filtro_nombre: mi.filtros['nombre'],
 				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],t: (new Date()).getTime()  }).then(
 					function(response) {

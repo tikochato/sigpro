@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
-	<div ng-controller="subcomponentecontroller as subcomponentec" ng-class="subcomponentec.esTreeview ? 'maincontainer_treeview all_page' : 'maincontainer all_page'" id="title">
+	<div ng-controller="subcomponenteController as subcomponentec" ng-class="subcomponentec.esTreeview ? 'maincontainer_treeview all_page' : 'maincontainer all_page'" id="title">
 		<script type="text/ng-template" id="map.html">
         <div class="modal-header">
             <h3 class="modal-title">Mapa de Ubicación</h3>
@@ -29,10 +29,10 @@
 		</shiro:lacksPermission>
 		
 		<div class="panel panel-default" ng-if="!subcomponentec.esTreeview">
-			<div class="panel-heading"><h3>SubComponentes</h3></div>
+			<div class="panel-heading"><h3>Subcomponentes</h3></div>
 		</div>
 		<div class="subtitulo" ng-if="!subcomponentec.esTreeview">
-			{{ subcomponentec.objetoTipoNombre }} {{ subcomponentec.proyectoNombre }}
+			{{ subcomponentec.objetoTipoNombre }} {{ subcomponentec.componenteNombre }}
 		</div>
 		
 		<div  align="center" ng-hide="subcomponentec.mostraringreso" ng-if="!subcomponentec.esTreeview">
@@ -74,7 +74,7 @@
 				  </div>
 				</div>
 				<br/>
-			<div class="total-rows">Total de {{  subcomponentec.totalSubComponentes + (subcomponentec.totalSubComponentes == 1 ? " SubComponente" : " SubComponentes" ) }}</div>
+			<div class="total-rows">Total de {{  subcomponentec.totalSubComponentes + (subcomponentec.totalSubComponentes == 1 ? " Subcomponente" : " Subcomponentes" ) }}</div>
 				<ul uib-pagination total-items="subcomponentec.totalSubComponentes"
 						ng-model="subcomponentec.paginaActual"
 						max-size="subcomponentec.numeroMaximoPaginas"
@@ -92,8 +92,8 @@
 		</div>
 		<div class="row second-main-form" ng-show="subcomponentec.mostraringreso || subcomponentec.esTreeview">
 			<div class="page-header">
-				<h2 ng-if="subcomponentec.esnuevo"><small>Nuevo SubComponente</small></h2>
-				<h2 ng-if="!subcomponentec.esnuevo"><small>Edición de SubComponente</small></h2>
+				<h2 ng-if="subcomponentec.esnuevo"><small>Nuevo Subcomponente</small></h2>
+				<h2 ng-if="!subcomponentec.esnuevo"><small>Edición de Subcomponente</small></h2>
 			</div>
 			
     		<div class="operation_buttons">
@@ -115,13 +115,10 @@
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			  </div>
 			</div>
-			<div class="col-sm-12" ng-if="subcomponentec.subcomponente.esDeSigade">
-				<div class="componente_sigade">SubComponente SIGADE</div>
-			</div>
 			<div class="col-sm-12">
 				<form name="subcomponentec.mForm">
 					<uib-tabset active="subcomponentec.active">
-					<uib-tab index="0" heading="{{etiquetas.proyecto}}" >
+					<uib-tab index="0" heading="Subcomponente" >
 						<div class="form-group">
 						  <label for="id" class="floating-label id_class">ID {{ subcomponentec.subcomponente.id }}</label>
 						  <br/><br/>
@@ -217,14 +214,7 @@
 					       ng-readonly="subcomponentec.subcomponente.tieneHijos" />
 					       <label for="iprog" class="floating-label">{{subcomponentec.subcomponente.acumulacionCostoId > 0 ? "* Costo" : "Costo"}}</label>
 						</div>
-						
-						<div class="form-group" >
-					       <input type="text" class="inputText" ng-model="subcomponentec.subcomponente.costoTecho" ng-value="subcomponentec.subcomponente.costoTecho" ui-number-mask="2"
-					        onblur="this.setAttribute('value', this.value);" style="text-align: left" 
-					       ng-readonly="subcomponentec.subcomponente.esDeSigade" />
-					       <label for="iprog" class="floating-label">Costo Techo</label>
-						</div>
-						
+												
 						<div class="form-group">
 		            		<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="subcomponentec.cambioAcumulacionCosto"
 							  local-data="subcomponentec.acumulacionesCosto" search-fields="nombre" title-field="nombre" field-required="subcomponentec.subcomponente.costo!=null && subcomponentec.subcomponente.costo>0" 

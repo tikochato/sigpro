@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
+import dao.ComponenteDAO;
 import dao.SubComponenteDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
@@ -26,6 +27,7 @@ import pojo.Actividad;
 import pojo.Componente;
 import pojo.Producto;
 import pojo.Proyecto;
+import pojo.Subcomponente;
 import pojo.Subproducto;
 import utilities.Utils;
 
@@ -83,15 +85,21 @@ public class SObjeto extends HttpServlet {
 			String fechaInicio = "";
 			if(objetoTipo!=null){
 				switch(objetoTipo){
-					case 1: //Proyecto;
+					case 0: //Proyecto;
 						tiponombre = "Proyecto";
 						Proyecto proyecto = ProyectoDAO.getProyectoPorId(objetoId,usuario);
 						nombre = (proyecto!=null) ? proyecto.getNombre() : "";
 						fechaInicio = (proyecto!=null) ? Utils.formatDate(proyecto.getFechaInicio()) : "";
 						break;
+					case 1: //Componente;
+						tiponombre = "Componente";
+						Componente componente = ComponenteDAO.getComponentePorId(objetoId,usuario);
+						nombre = (componente!=null) ? componente.getNombre() : "";
+						fechaInicio = (componente!=null) ? Utils.formatDate(componente.getFechaInicio()) : "";
+						break;
 					case 2: //SubComponente;
 						tiponombre = "SubComponente";
-						Componente subcomponente = SubComponenteDAO.getSubComponentePorId(objetoId,usuario);
+						Subcomponente subcomponente = SubComponenteDAO.getSubComponentePorId(objetoId,usuario);
 						nombre = (subcomponente!=null) ? subcomponente.getNombre() : "";
 						fechaInicio = (subcomponente!=null) ? Utils.formatDate(subcomponente.getFechaInicio()) : "";
 						break;

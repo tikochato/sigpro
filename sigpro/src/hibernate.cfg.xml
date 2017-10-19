@@ -106,6 +106,8 @@
         <mapping class="pojo.SubcomponentePropiedadValor" />
         <mapping class="pojo.SubcomponentePropiedadValorId" />
         <mapping class="pojo.SubcomponenteTipo" />
+        <mapping class="pojo.SubcomponenteUsuario" />
+        <mapping class="pojo.SubcomponenteUsuarioId" />
         <mapping class="pojo.SubprodtipoPropiedad" />
         <mapping class="pojo.SubprodtipoPropiedadId" />
         <mapping class="pojo.Subproducto" />
