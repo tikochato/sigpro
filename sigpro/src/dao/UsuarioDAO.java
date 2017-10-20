@@ -31,6 +31,7 @@ import pojo.ProyectoUsuario;
 import pojo.ProyectoUsuarioId;
 import pojo.RolUsuarioProyecto;
 import pojo.RolUsuarioProyectoId;
+import pojo.SubcomponenteUsuario;
 import pojo.UnidadEjecutora;
 
 import java.util.ArrayList;
@@ -665,6 +666,24 @@ public class UsuarioDAO {
 		return ret;
 	}
 	
+	public static boolean checkUsuarioSubComponente(String usuario, int subcomponenteid){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		boolean ret = false;
+		try {
+			Query <SubcomponenteUsuario> criteria = session.createQuery("FROM SubcomponenteUsuario where id.usuario=:usuario and id.subcomponenteid=:id", SubcomponenteUsuario.class);
+			criteria.setParameter("usuario",usuario);
+			criteria.setParameter("id", subcomponenteid);
+			List<SubcomponenteUsuario> listRet = null;
+			listRet = criteria.getResultList();
+			ret = !listRet.isEmpty() ? true : false;
+		} catch (Throwable e) {
+			CLogger.write("29", UsuarioDAO.class, e);
+		} finally {
+			session.close();
+		}
+		return ret;
+	}
+	
 	public static boolean checkUsuarioProducto(String usuario, int productoid){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		boolean ret = false;
@@ -676,7 +695,7 @@ public class UsuarioDAO {
 			listRet = criteria.getResultList();
 			ret = !listRet.isEmpty() ? true : false;
 		} catch (Throwable e) {
-			CLogger.write("29", UsuarioDAO.class, e);
+			CLogger.write("30", UsuarioDAO.class, e);
 		} finally {
 			session.close();
 		}
@@ -698,7 +717,7 @@ public class UsuarioDAO {
 			session.getTransaction().commit();
 			ret = true;
 		}catch(Throwable e){
-			CLogger.write("30", UsuarioDAO.class, e);
+			CLogger.write("31", UsuarioDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -725,7 +744,7 @@ public class UsuarioDAO {
 //			session.flush();
 			ret = true;
 		}catch(Throwable e){
-			CLogger.write("31", UsuarioDAO.class, e);
+			CLogger.write("32", UsuarioDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -746,7 +765,7 @@ public class UsuarioDAO {
 			//session.flush();
 			ret = true;
 		}catch(Throwable e){
-			CLogger.write("32", UsuarioDAO.class, e);
+			CLogger.write("33", UsuarioDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -768,7 +787,7 @@ public class UsuarioDAO {
 				usuario.setSalt(salt.toString());
 			} 
 		}catch(Throwable e){
-			CLogger.write("33", UsuarioDAO.class, e);
+			CLogger.write("34", UsuarioDAO.class, e);
 		}finally{
 			session.close();
 		}
