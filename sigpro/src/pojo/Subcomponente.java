@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 18, 2017 5:58:56 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 19, 2017 6:14:38 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class Subcomponente implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 7023482109407263525L;
+	private static final long serialVersionUID = -8737237607204197616L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Componente componente;
@@ -60,6 +60,7 @@ public class Subcomponente implements java.io.Serializable {
 	private Integer orden;
 	private String treePath;
 	private Integer nivel;
+	private Set<SubcomponenteUsuario> subcomponenteUsuarios = new HashSet<SubcomponenteUsuario>(0);
 	private Set<Producto> productos = new HashSet<Producto>(0);
 	private Set<SubcomponentePropiedadValor> subcomponentePropiedadValors = new HashSet<SubcomponentePropiedadValor>(0);
 
@@ -83,7 +84,8 @@ public class Subcomponente implements java.io.Serializable {
 			Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra, String latitud,
 			String longitud, BigDecimal costo, Integer renglon, Integer ubicacionGeografica, Date fechaInicio,
 			Date fechaFin, int duracion, String duracionDimension, Integer orden, String treePath, Integer nivel,
-			Set<Producto> productos, Set<SubcomponentePropiedadValor> subcomponentePropiedadValors) {
+			Set<SubcomponenteUsuario> subcomponenteUsuarios, Set<Producto> productos,
+			Set<SubcomponentePropiedadValor> subcomponentePropiedadValors) {
 		this.acumulacionCosto = acumulacionCosto;
 		this.componente = componente;
 		this.subcomponenteTipo = subcomponenteTipo;
@@ -113,6 +115,7 @@ public class Subcomponente implements java.io.Serializable {
 		this.orden = orden;
 		this.treePath = treePath;
 		this.nivel = nivel;
+		this.subcomponenteUsuarios = subcomponenteUsuarios;
 		this.productos = productos;
 		this.subcomponentePropiedadValors = subcomponentePropiedadValors;
 	}
@@ -398,6 +401,15 @@ public class Subcomponente implements java.io.Serializable {
 
 	public void setNivel(Integer nivel) {
 		this.nivel = nivel;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "subcomponente")
+	public Set<SubcomponenteUsuario> getSubcomponenteUsuarios() {
+		return this.subcomponenteUsuarios;
+	}
+
+	public void setSubcomponenteUsuarios(Set<SubcomponenteUsuario> subcomponenteUsuarios) {
+		this.subcomponenteUsuarios = subcomponenteUsuarios;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "subcomponente")

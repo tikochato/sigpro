@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 18, 2017 5:58:56 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 19, 2017 6:14:38 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class SubcomponentePropiedad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -2457169595665768377L;
+	private static final long serialVersionUID = 4423094149828108988L;
 	private Integer id;
 	private DatoTipo datoTipo;
 	private String nombre;
@@ -38,6 +38,7 @@ public class SubcomponentePropiedad implements java.io.Serializable {
 	private Date fechaActualizacion;
 	private int estado;
 	private Set<SubcomponentePropiedadValor> subcomponentePropiedadValors = new HashSet<SubcomponentePropiedadValor>(0);
+	private Set<SctipoPropiedad> sctipoPropiedads = new HashSet<SctipoPropiedad>(0);
 
 	public SubcomponentePropiedad() {
 	}
@@ -53,7 +54,7 @@ public class SubcomponentePropiedad implements java.io.Serializable {
 
 	public SubcomponentePropiedad(DatoTipo datoTipo, String nombre, String descripcion, String usuarioCreo,
 			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
-			Set<SubcomponentePropiedadValor> subcomponentePropiedadValors) {
+			Set<SubcomponentePropiedadValor> subcomponentePropiedadValors, Set<SctipoPropiedad> sctipoPropiedads) {
 		this.datoTipo = datoTipo;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -63,6 +64,7 @@ public class SubcomponentePropiedad implements java.io.Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
 		this.subcomponentePropiedadValors = subcomponentePropiedadValors;
+		this.sctipoPropiedads = sctipoPropiedads;
 	}
 
 	@Id
@@ -159,6 +161,15 @@ public class SubcomponentePropiedad implements java.io.Serializable {
 
 	public void setSubcomponentePropiedadValors(Set<SubcomponentePropiedadValor> subcomponentePropiedadValors) {
 		this.subcomponentePropiedadValors = subcomponentePropiedadValors;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "subcomponentePropiedad")
+	public Set<SctipoPropiedad> getSctipoPropiedads() {
+		return this.sctipoPropiedads;
+	}
+
+	public void setSctipoPropiedads(Set<SctipoPropiedad> sctipoPropiedads) {
+		this.sctipoPropiedads = sctipoPropiedads;
 	}
 
 }

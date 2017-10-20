@@ -1,12 +1,15 @@
 package pojo;
-// Generated Oct 18, 2017 5:58:56 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 19, 2017 6:14:38 PM by Hibernate Tools 5.2.3.Final
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -23,12 +26,12 @@ public class ComponenteSigade implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -478540257208969450L;
-	private int id;
+	private static final long serialVersionUID = -6854220732232603190L;
+	private Integer id;
 	private String nombre;
 	private String codigoPresupuestario;
 	private int numeroComponente;
-	private String montoComponente;
+	private BigDecimal montoComponente;
 	private int estado;
 	private String usuaraioCreo;
 	private String usuarioActualizo;
@@ -39,9 +42,8 @@ public class ComponenteSigade implements java.io.Serializable {
 	public ComponenteSigade() {
 	}
 
-	public ComponenteSigade(int id, String nombre, String codigoPresupuestario, int numeroComponente,
-			String montoComponente, int estado, String usuaraioCreo, Date fechaCreacion) {
-		this.id = id;
+	public ComponenteSigade(String nombre, String codigoPresupuestario, int numeroComponente,
+			BigDecimal montoComponente, int estado, String usuaraioCreo, Date fechaCreacion) {
 		this.nombre = nombre;
 		this.codigoPresupuestario = codigoPresupuestario;
 		this.numeroComponente = numeroComponente;
@@ -51,10 +53,9 @@ public class ComponenteSigade implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public ComponenteSigade(int id, String nombre, String codigoPresupuestario, int numeroComponente,
-			String montoComponente, int estado, String usuaraioCreo, String usuarioActualizo, Date fechaCreacion,
+	public ComponenteSigade(String nombre, String codigoPresupuestario, int numeroComponente,
+			BigDecimal montoComponente, int estado, String usuaraioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, Set<Componente> componentes) {
-		this.id = id;
 		this.nombre = nombre;
 		this.codigoPresupuestario = codigoPresupuestario;
 		this.numeroComponente = numeroComponente;
@@ -68,13 +69,14 @@ public class ComponenteSigade implements java.io.Serializable {
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 
 	@Column(name = "id", unique = true, nullable = false)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -105,12 +107,12 @@ public class ComponenteSigade implements java.io.Serializable {
 		this.numeroComponente = numeroComponente;
 	}
 
-	@Column(name = "monto_componente", nullable = false, length = 45)
-	public String getMontoComponente() {
+	@Column(name = "monto_componente", nullable = false, precision = 15)
+	public BigDecimal getMontoComponente() {
 		return this.montoComponente;
 	}
 
-	public void setMontoComponente(String montoComponente) {
+	public void setMontoComponente(BigDecimal montoComponente) {
 		this.montoComponente = montoComponente;
 	}
 

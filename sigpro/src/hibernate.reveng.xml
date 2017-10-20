@@ -191,4 +191,8 @@
 	<table-filter match-name="subcomponente_tipo"
 		match-catalog="sipro">
 	</table-filter>
+	<table-filter match-name="sctipo_propiedad" match-catalog="sipro"></table-filter>
+	<table-filter match-name="subcomponente_usuario"
+		match-catalog="sipro">
+	</table-filter>
 </hibernate-reverse-engineering>

@@ -101,6 +101,8 @@
         <mapping class="pojo.RolUsuarioProyecto" />
         <mapping class="pojo.RolUsuarioProyectoId" />
         <mapping class="pojo.RtipoPropiedad" />
+        <mapping class="pojo.SctipoPropiedad" />
+        <mapping class="pojo.SctipoPropiedadId" />
         <mapping class="pojo.Subcomponente" />
         <mapping class="pojo.SubcomponentePropiedad" />
         <mapping class="pojo.SubcomponentePropiedadValor" />
