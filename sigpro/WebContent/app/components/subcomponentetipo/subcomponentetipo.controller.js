@@ -415,10 +415,11 @@ function modalBuscarSubComponentePropiedad($uibModalInstance, $scope, $http, $in
 
     mi.cargarData = function(pagina) {
     	var datos = {
-    	    accion : 'getSubComponentePropiedadPagina',
+    	    accion : 'getSubComponentePropiedadesTotalDisponibles',
     	    pagina : pagina,
-    	    numerosubcomponentepropiedades: mi.elementosPorPagina,
-    	    registros : mi.elementosPorPagina, t: (new Date()).getTime()
+    	    idspropiedades: idspropiedad,
+    	    registros : mi.elementosPorPagina, 
+    	    t: (new Date()).getTime()
     	};
 
     	mi.mostrarCargando = true;

@@ -21,10 +21,9 @@ public class SubComponentePropiedadDAO {
 		List<SubcomponentePropiedad> ret = new ArrayList<SubcomponentePropiedad>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			//TODO: ctipoPropiedads
 			Query<SubcomponentePropiedad> criteria = session.createQuery("select p from SubcomponentePropiedad p "
-					+ "inner join p.ctipoPropiedads ptp "
-					+ "inner join ptp.componenteTipo pt  "
+					+ "inner join p.sctipoPropiedads ptp "
+					+ "inner join ptp.subcomponenteTipo pt  "
 					+ "where p.estado=1 and pt.id =  " + idTipoSubComponente + " ",SubcomponentePropiedad.class);
 			ret = criteria.getResultList();
 		}
@@ -219,14 +218,13 @@ public class SubComponentePropiedadDAO {
 		List<SubcomponentePropiedad> ret = new ArrayList<SubcomponentePropiedad>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			//TODO: ctipo_propiedad
 			Query<SubcomponentePropiedad> criteria = session.createNativeQuery(" select cp.* "
-				+ "from componente_tipo ct "
-				+ "join ctipo_propiedad ctp ON ctp.componente_tipoid = ct.id "
-				+ "join componente_propiedad cp ON cp.id = ctp.componente_propiedadid "
-				+ " where ct.id = :idTipoComp and cp.estado=1",SubcomponentePropiedad.class);
+				+ "from subcomponente_tipo ct "
+				+ "join sctipo_propiedad ctp ON ctp.subcomponente_tipoid = ct.id "
+				+ "join subcomponente_propiedad cp ON cp.id = ctp.subcomponente_propiedadid "
+				+ " where ct.id = :idTipoSComp and cp.estado=1",SubcomponentePropiedad.class);
 			
-			criteria.setParameter("idTipoComp", idTipoSubComponente);
+			criteria.setParameter("idTipoSComp", idTipoSubComponente);
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){

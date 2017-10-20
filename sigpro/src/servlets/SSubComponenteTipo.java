@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletException;
@@ -23,8 +25,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-
+import dao.SctipoPropiedadDAO;
 import dao.SubComponenteTipoDAO;
+import pojo.SctipoPropiedad;
+import pojo.SctipoPropiedadId;
+import pojo.SubcomponentePropiedad;
 import pojo.SubcomponenteTipo;
 import utilities.Utils;
 
@@ -145,37 +150,34 @@ public class SSubComponenteTipo extends HttpServlet {
 					subcomponenteTipo.setDescripcion(descripcion);
 					subcomponenteTipo.setUsuarioActualizo(usuario);
 					subcomponenteTipo.setFechaActualizacion(new DateTime().toDate());
-					//TODO: CtipoPropiedad
-//					Set<CtipoPropiedad> propiedades_temp = subcomponenteTipo.getCtipoPropiedads();
-//					subcomponenteTipo.setCtipoPropiedads(null);
-//					if (propiedades_temp!=null){
-//						for (CtipoPropiedad ctipoPropiedad : propiedades_temp){
-//							CtipoPropiedadDAO.eliminarTotalCtipoPropiedad(ctipoPropiedad);
-//						}
-//					}
+					Set<SctipoPropiedad> propiedades_temp = subcomponenteTipo.getSctipoPropiedads();
+					subcomponenteTipo.setSctipoPropiedads(null);
+					if (propiedades_temp!=null){
+						for (SctipoPropiedad sctipoPropiedad : propiedades_temp){
+							SctipoPropiedadDAO.eliminarTotalSctipoPropiedad(sctipoPropiedad);
+						}
+					}
 				}
 				
 				result = SubComponenteTipoDAO.guardarSubComponenteTipo(subcomponenteTipo);
 				
 				String[] idsPropiedades =  map.get("propiedades") != null ? map.get("propiedades").toString().split(",") : null;
 				if (idsPropiedades !=null && idsPropiedades.length>0){
-					
-//					for (String idPropiedad : idsPropiedades){
-						//TODO: CtipoPropiedad
-//						CtipoPropiedadId ctipoPropiedadId = new CtipoPropiedadId(subcomponenteTipo.getId(), Integer.parseInt(idPropiedad));
-//						ComponentePropiedad componentePropiedad = new ComponentePropiedad();
-//						componentePropiedad.setId(Integer.parseInt(idPropiedad));
-//						
-//						CtipoPropiedad ctipoPropiedad = new CtipoPropiedad(
-//								ctipoPropiedadId, componentePropiedad, 
-//								subcomponenteTipo, usuario, new DateTime().toDate());
-//						
-//						ctipoPropiedad.setComponenteTipo(subcomponenteTipo);
-//						if (subcomponenteTipo.getCtipoPropiedads() == null){
-//							subcomponenteTipo.setCtipoPropiedads(new HashSet<CtipoPropiedad>(0));
-//						}
-//						subcomponenteTipo.getCtipoPropiedads().add(ctipoPropiedad);
-//					}
+					for (String idPropiedad : idsPropiedades){
+						SctipoPropiedadId sctipoPropiedadId = new SctipoPropiedadId(subcomponenteTipo.getId(), Integer.parseInt(idPropiedad));
+						SubcomponentePropiedad subcomponentePropiedad = new SubcomponentePropiedad();
+						subcomponentePropiedad.setId(Integer.parseInt(idPropiedad));
+						
+						SctipoPropiedad sctipoPropiedad = new SctipoPropiedad(
+								sctipoPropiedadId, subcomponentePropiedad, 
+								subcomponenteTipo, usuario, new DateTime().toDate());
+						
+						sctipoPropiedad.setSubcomponenteTipo(subcomponenteTipo);
+						if (subcomponenteTipo.getSctipoPropiedads() == null){
+							subcomponenteTipo.setSctipoPropiedads(new HashSet<SctipoPropiedad>(0));
+						}
+						subcomponenteTipo.getSctipoPropiedads().add(sctipoPropiedad);
+					}
 				}
 				
 				result = SubComponenteTipoDAO.guardarSubComponenteTipo(subcomponenteTipo);

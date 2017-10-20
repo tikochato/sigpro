@@ -35,14 +35,20 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		if($scope.$parent.controller && $scope.$parent.controller.proyecto){
 			$scope.$parent.controller.child_riesgos = $scope.riesgoc;
 			mi.objetoId = $scope.$parent.controller.proyecto.id;
-			mi.objetoTipo=1;
+			mi.objetoTipo=0;
 			mi.parentController=$scope.$parent.controller;
 		}
 		else if($scope.$parent.componentec && $scope.$parent.componentec.componente){
 			$scope.$parent.componentec.child_riesgos = $scope.riesgoc;
 			mi.objetoId = $scope.$parent.componentec.componente.id;
-			mi.objetoTipo=2;
+			mi.objetoTipo=1;
 			mi.parentController=$scope.$parent.componentec;
+		}
+		else if($scope.$parent.subcomponentec && $scope.$parent.subcomponentec.subcomponente){
+			$scope.$parent.subcomponentec.child_riesgos = $scope.riesgoc;
+			mi.objetoId = $scope.$parent.subcomponentec.subcomponente.id;
+			mi.objetoTipo=2;
+			mi.parentController=$scope.$parent.subcomponentec;
 		}
 		else if( $scope.$parent.producto && $scope.$parent.producto.producto){
 			$scope.$parent.producto.child_riesgos = $scope.riesgoc;

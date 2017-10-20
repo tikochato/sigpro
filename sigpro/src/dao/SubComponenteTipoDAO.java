@@ -10,6 +10,7 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import pojo.SctipoPropiedad;
 import pojo.SubcomponenteTipo;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -68,12 +69,11 @@ public class SubComponenteTipoDAO {
 			session.beginTransaction();
 			session.saveOrUpdate(subcomponenteTipo);
 			session.flush();
-			//TODO: crear ctipo_propiedad
-//			if (subcomponenteTipo.getCtipoPropiedads()!=null && subcomponenteTipo.getCtipoPropiedads().size()>0){
-//				for (CtipoPropiedad propiedad : subcomponenteTipo.getCtipoPropiedads()){
-//					session.saveOrUpdate(propiedad);	
-//				}
-//			}
+			if (subcomponenteTipo.getSctipoPropiedads()!=null && subcomponenteTipo.getSctipoPropiedads().size()>0){
+				for (SctipoPropiedad propiedad : subcomponenteTipo.getSctipoPropiedads()){
+					session.saveOrUpdate(propiedad);	
+				}
+			}
 			session.flush();
 			
 			session.getTransaction().commit();

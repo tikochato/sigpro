@@ -328,7 +328,7 @@ public class CProject {
 		List<Componente> componentes = null;
 		if (marcarCargado){
 			proyecto = ProyectoDAO.getProyecto(proyectoId);
-			componentes = SubComponenteDAO.getSubComponentesPorProyecto(proyectoId);
+			componentes = ComponenteDAO.getComponentesPorProyecto(proyectoId);
 			
 		}
 		
@@ -382,7 +382,7 @@ public class CProject {
 							 componente =  componentes.size() > posicionComponente 
 									? componentes.get(posicionComponente) : null;
 						}else{
-							componente =  crearSubComponente(task, (Proyecto) objeto, usuario);
+							componente =  crearComponente(task, (Proyecto) objeto, usuario);
 						}
 						
 						ret = componente.getId();
@@ -483,9 +483,9 @@ public class CProject {
 			Task task1 = project.addTask();
 			task1.setName(proyecto.getNombre());
 			
-			List<Componente> subcomponentes = SubComponenteDAO.getSubComponentesPaginaPorProyecto(0, 0, proyecto.getId(),
+			List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyecto.getId(),
 					null, null, null, null, null, usuario);
-			for (Componente componente :subcomponentes){
+			for (Componente componente :componentes){
 				Task task2 = task1.addTask();
 				task2.setName(componente.getNombre());
 				
