@@ -497,4 +497,39 @@ public class ComponenteDAO {
 		}
 		return ret;
 	}
+	
+	public static Componente obtenerComponentePorEntidad (String codigo_presupuestario, int ejercicio, int entidad, 
+			int unidadEjectora, int numeroComponente){
+		Componente ret = null;
+		List<Componente> listRet = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ","select c from Componente c", 
+						"inner join c.componenteSigade cs",
+						"where cs.codigoPresupuestario = ?1",
+						"and c.unidadEjecutora.id.ejercicio = ?2", 
+						"and c.unidadEjecutora.id.entidadentidad = ?3", 
+						"and c.unidadEjecutora.id.unidadEjecutora = ?4",
+						"and cs.numeroComponente = ?5",
+						"and cs.estado = 1",
+						"order by c.id desc");
+			Query<Componente> criteria = session.createQuery(query, Componente.class);
+			criteria.setMaxResults(1);
+			criteria.setParameter(1, codigo_presupuestario);
+			criteria.setParameter(2, ejercicio);
+			criteria.setParameter(3, entidad);
+			criteria.setParameter(4, unidadEjectora);
+			criteria.setParameter(5, numeroComponente);
+			listRet = criteria.getResultList();
+			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
+		}catch (NoResultException e){
+			
+		} catch(Throwable e){
+			CLogger.write("22", ComponenteDAO.class, e);
+			session.getTransaction().rollback();
+			session.close();
+		}
+		return ret;
+	}
 }

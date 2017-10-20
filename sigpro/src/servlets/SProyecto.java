@@ -487,6 +487,9 @@ public class SProyecto extends HttpServlet {
 				Integer proyectoClase = map.get("proyectoClase")!=null ? Utils.String2Int(map.get("proyectoClase")) : 1;
 				Etiqueta etiqueta = EtiquetaDAO.getEtiquetaPorId(proyectoClase);
 				Integer projectCargado = Utils.String2Int(map.get("projectCargado"), 0);
+				Integer prestamoId = Utils.String2Int(map.get("prestamoId"), 0);
+				
+				Prestamo prestamo = PrestamoDAO.getPrestamoById(prestamoId);
 
 				AcumulacionCosto acumulacionCosto = null;
 				if (map.get("acumulacionCosto")!=null){
@@ -517,7 +520,7 @@ public class SProyecto extends HttpServlet {
 				List<stdatadinamico> datos = gson.fromJson(map.get("datadinamica"), type);
 
 				if(esnuevo){
-					proyecto = new Proyecto(acumulacionCosto,directorProyecto, cooperante, etiqueta, proyectoTipo, unidadEjecutora, nombre, 
+					proyecto = new Proyecto(acumulacionCosto,directorProyecto, cooperante, etiqueta, prestamo,proyectoTipo, unidadEjecutora, nombre, 
 							descripcion, usuario, null, new DateTime().toDate(), null, 1, snip, programa, subPrograma, proyecto_, actividad, 
 							obra,latitud,longitud, objetivo,enunciadoAlcance, costo, objetivoEspecifico,visionGeneral,renglon, 
 							ubicacionGeografica,null, null, 0, null, null, null, null, ejecucionFisicaReal,projectCargado,null, null, 

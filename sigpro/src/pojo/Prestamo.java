@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 19, 2017 6:14:38 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 20, 2017 12:16:45 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class Prestamo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 7198693220635568885L;
+	private static final long serialVersionUID = -8737648224079488839L;
 	private Integer id;
 	private AutorizacionTipo autorizacionTipo;
 	private Cooperante cooperante;
@@ -100,6 +100,7 @@ public class Prestamo implements java.io.Serializable {
 	private BigDecimal desembolsoAFechaUeUsd;
 	private BigDecimal montoPorDesembolsarUeUsd;
 	private Set<ObjetoPrestamo> objetoPrestamos = new HashSet<ObjetoPrestamo>(0);
+	private Set<Proyecto> proyectos = new HashSet<Proyecto>(0);
 
 	public Prestamo() {
 	}
@@ -158,7 +159,7 @@ public class Prestamo implements java.io.Serializable {
 			BigDecimal montoPorDesembolsarUe, Date fechaVigencia, BigDecimal montoContratadoUsd,
 			BigDecimal montoContratadoQtz, BigDecimal desembolsoAFechaUsd, BigDecimal montoPorDesembolsarUsd,
 			BigDecimal montoAsignadoUeUsd, BigDecimal montoAsignadoUeQtz, BigDecimal desembolsoAFechaUeUsd,
-			BigDecimal montoPorDesembolsarUeUsd, Set<ObjetoPrestamo> objetoPrestamos) {
+			BigDecimal montoPorDesembolsarUeUsd, Set<ObjetoPrestamo> objetoPrestamos, Set<Proyecto> proyectos) {
 		this.autorizacionTipo = autorizacionTipo;
 		this.cooperante = cooperante;
 		this.ejecucionEstado = ejecucionEstado;
@@ -228,6 +229,7 @@ public class Prestamo implements java.io.Serializable {
 		this.desembolsoAFechaUeUsd = desembolsoAFechaUeUsd;
 		this.montoPorDesembolsarUeUsd = montoPorDesembolsarUeUsd;
 		this.objetoPrestamos = objetoPrestamos;
+		this.proyectos = proyectos;
 	}
 
 	@Id
@@ -881,6 +883,15 @@ public class Prestamo implements java.io.Serializable {
 
 	public void setObjetoPrestamos(Set<ObjetoPrestamo> objetoPrestamos) {
 		this.objetoPrestamos = objetoPrestamos;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "prestamo")
+	public Set<Proyecto> getProyectos() {
+		return this.proyectos;
+	}
+
+	public void setProyectos(Set<Proyecto> proyectos) {
+		this.proyectos = proyectos;
 	}
 
 }
