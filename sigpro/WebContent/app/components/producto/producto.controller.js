@@ -401,7 +401,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 							mi.producto.usuarioactualizo = response.data.usuarioactualizo;
 							mi.producto.fechaactualizacion = response.data.fechaactualizacion;
 							if(mi.child_metas!=null)
-								mi.child_metas.guardar(mi.child_adquisiciones.guardar, mi.child_riesgos.guardar,'Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+								mi.child_metas.guardar((mi.child_adquisiciones!=null) ? mi.child_adquisiciones.guardar : null, (mi.child_riesgos!=null) ?  mi.child_riesgos.guardar : null,'Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
 										'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Producto');
 							else{
 								if(mi.child_adquisiciones!=null)

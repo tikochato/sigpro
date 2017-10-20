@@ -31,7 +31,9 @@ import pojo.ProyectoUsuario;
 import pojo.ProyectoUsuarioId;
 import pojo.RolUsuarioProyecto;
 import pojo.RolUsuarioProyectoId;
+import pojo.Subcomponente;
 import pojo.SubcomponenteUsuario;
+import pojo.SubcomponenteUsuarioId;
 import pojo.UnidadEjecutora;
 
 import java.util.ArrayList;
@@ -630,6 +632,30 @@ public class UsuarioDAO {
 		return ret;
 	}
 	
+	public static boolean asignarSubComponentes(String usuario, List <Integer> subcomponentes, String usuario_creo){
+		boolean ret =false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			
+			for(int i =0; i<subcomponentes.size();i++){
+				Subcomponente subcomponente = SubComponenteDAO.getSubComponente(subcomponentes.get(i));
+				SubcomponenteUsuario cu = new SubcomponenteUsuario(new SubcomponenteUsuarioId(subcomponentes.get(i), usuario), subcomponente);
+				cu.setSubcomponente(subcomponente);
+				session.save(cu);
+			}			
+			session.getTransaction().commit();
+			ret = true;
+		}catch(Throwable e){
+			CLogger.write("27", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return ret;
+	}
+	
 	public static boolean checkUsuarioProyecto(String usuario, int proyectoid){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		boolean ret = false;
@@ -641,7 +667,7 @@ public class UsuarioDAO {
 			listRet = criteria.getResultList();
 			ret = !listRet.isEmpty() ? true : false;
 		} catch (Throwable e) {
-			CLogger.write("27", UsuarioDAO.class, e);
+			CLogger.write("28", UsuarioDAO.class, e);
 		} finally {
 			session.close();
 		}
@@ -659,7 +685,7 @@ public class UsuarioDAO {
 			listRet = criteria.getResultList();
 			ret = !listRet.isEmpty() ? true : false;
 		} catch (Throwable e) {
-			CLogger.write("28", UsuarioDAO.class, e);
+			CLogger.write("29", UsuarioDAO.class, e);
 		} finally {
 			session.close();
 		}
@@ -677,7 +703,7 @@ public class UsuarioDAO {
 			listRet = criteria.getResultList();
 			ret = !listRet.isEmpty() ? true : false;
 		} catch (Throwable e) {
-			CLogger.write("29", UsuarioDAO.class, e);
+			CLogger.write("30", UsuarioDAO.class, e);
 		} finally {
 			session.close();
 		}
@@ -695,7 +721,7 @@ public class UsuarioDAO {
 			listRet = criteria.getResultList();
 			ret = !listRet.isEmpty() ? true : false;
 		} catch (Throwable e) {
-			CLogger.write("30", UsuarioDAO.class, e);
+			CLogger.write("31", UsuarioDAO.class, e);
 		} finally {
 			session.close();
 		}
@@ -717,7 +743,7 @@ public class UsuarioDAO {
 			session.getTransaction().commit();
 			ret = true;
 		}catch(Throwable e){
-			CLogger.write("31", UsuarioDAO.class, e);
+			CLogger.write("32", UsuarioDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -744,7 +770,7 @@ public class UsuarioDAO {
 //			session.flush();
 			ret = true;
 		}catch(Throwable e){
-			CLogger.write("32", UsuarioDAO.class, e);
+			CLogger.write("33", UsuarioDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -765,7 +791,7 @@ public class UsuarioDAO {
 			//session.flush();
 			ret = true;
 		}catch(Throwable e){
-			CLogger.write("33", UsuarioDAO.class, e);
+			CLogger.write("34", UsuarioDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -787,7 +813,7 @@ public class UsuarioDAO {
 				usuario.setSalt(salt.toString());
 			} 
 		}catch(Throwable e){
-			CLogger.write("34", UsuarioDAO.class, e);
+			CLogger.write("35", UsuarioDAO.class, e);
 		}finally{
 			session.close();
 		}

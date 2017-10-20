@@ -9,8 +9,6 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		mi.camposdinamicos = {};
 		mi.formatofecha = 'dd/MM/yyyy';
 		
-		mi.objetoTipo = 0;
-		mi.objetoId = 0;
 		mi.id = 0;
 		mi.tipo = 0;
 		
@@ -28,8 +26,6 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		if($scope.$parent.producto){
 			$scope.$parent.producto.child_adquisiciones = $scope.adquisicionc;
 			mi.parentController = $scope.$parent.producto;
-			mi.objetoTipo = 2;
-			mi.objetoId = $scope.$parent.producto.componenteId;
 			mi.id = $scope.$parent.producto.producto.id;
 			mi.tipo = 3;
 			mi.tieneHijos = $scope.$parent.producto.tieneHijos;
@@ -38,8 +34,6 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		if($scope.$parent.subproducto){
 			$scope.$parent.subproducto.child_adquisiciones = $scope.adquisicionc;
 			mi.parentController = $scope.$parent.subproducto;
-			mi.objetoTipo = 3;
-			mi.objetoId = $scope.$parent.subproducto.productoid;
 			mi.id = $scope.$parent.subproducto.subproducto.id;
 			mi.tipo = 4;
 			mi.tieneHijos = $scope.$parent.subproducto.tieneHijos;
@@ -48,15 +42,13 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		if($scope.$parent.actividadc){
 			$scope.$parent.actividadc.child_adquisiciones = $scope.adquisicionc;
 			mi.parentController = $scope.$parent.actividadc;
-			mi.objetoTipo = $scope.$parent.actividadc.objetotipo;
-			mi.objetoId = $scope.$parent.actividadc.objetoid;
 			mi.id = $scope.$parent.actividadc.actividad.id;
 			mi.tipo = 5;
 			mi.tieneHijos = $scope.$parent.actividadc.tieneHijos;
 			mi.actualizarCosto = $scope.$parent.actividadc.actualizarCosto;
 		}
 		
-		$http.post('/STipoAdquisicion', { accion: 'getTipoAdquisicionPorObjeto', objetoId: mi.objetoId, objetoTipo: mi.objetoTipo, t: (new Date()).getTime()}).success(
+		$http.post('/STipoAdquisicion', { accion: 'getTipoAdquisicionPorObjeto', objetoId: mi.id, objetoTipo: mi.tipo, t: (new Date()).getTime()}).success(
 				function(response) {
 					mi.tipos = response.tipoAdquisiciones;
 		});
@@ -207,8 +199,8 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 			else{
 				$http.post('/SPlanAdquisicion', {
 					accion: 'borrarTodasAdquisiciones',
-					objetoId: mi.objetoId,
-					objetoTipo: mi.objetoTipo, 
+					objetoId: mi.id,
+					objetoTipo: mi.tipo, 
 					t: (new Date()).getTime()
 				}).success(function(response){
 					if(response.success){

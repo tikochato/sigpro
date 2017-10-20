@@ -513,15 +513,9 @@ public class SPrestamoMetas extends HttpServlet {
 			for (int i=0; i<lstPrestamo.size(); i++){
 				columna = 0;
 				stprestamo prestamo = lstPrestamo.get(i);
-				String sangria;
-				switch (prestamo.objeto_tipo){
-					case 0: sangria = "         "; break;
-					case 1: sangria = ""; break;
-					case 2: sangria = "   "; break;
-					case 3: sangria = "      "; break;
-					case 4: sangria = "         "; break;
-					case 5: sangria = "            "; break;
-					default: sangria = "";
+				String sangria="";
+				for(int s=1; s<prestamo.nivel; s++){
+					sangria+="\t";
 				}
 				datos[i][columna] = sangria+prestamo.nombre;
 				columna++;

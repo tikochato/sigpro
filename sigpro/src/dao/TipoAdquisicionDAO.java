@@ -12,6 +12,7 @@ import org.hibernate.query.Query;
 import pojo.Actividad;
 import pojo.Componente;
 import pojo.Producto;
+import pojo.Subcomponente;
 import pojo.Subproducto;
 import pojo.TipoAdquisicion;
 import utilities.CHibernateSession;
@@ -95,17 +96,29 @@ public class TipoAdquisicionDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		int cooperanteCodigo=0;
 		switch(objetoTipo){
-			case 2:
+			case 1:
 				Componente componente = ComponenteDAO.getComponente(objetoId);
 				cooperanteCodigo = componente.getProyecto().getPrestamo().getCooperante().getCodigo();
 				break;
+			case 2:
+				Subcomponente subcomponente = SubComponenteDAO.getSubComponente(objetoId);
+				cooperanteCodigo = subcomponente.getComponente().getProyecto().getPrestamo().getCooperante().getCodigo();
+				break;
 			case 3: 
 				Producto producto = ProductoDAO.getProductoPorId(objetoId);
-				cooperanteCodigo = producto.getComponente().getProyecto().getPrestamo().getCooperante().getCodigo();
+				if(producto.getComponente()!=null){
+					cooperanteCodigo = producto.getComponente().getProyecto().getPrestamo().getCooperante().getCodigo();
+				}else if(producto.getSubcomponente()!=null){
+					cooperanteCodigo = producto.getSubcomponente().getComponente().getProyecto().getPrestamo().getCooperante().getCodigo();
+				} 
 				break;
 			case 4: 
 				Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId);
-				cooperanteCodigo = subproducto.getProducto().getComponente().getProyecto().getPrestamo().getCooperante().getCodigo();
+				if(subproducto.getProducto().getComponente()!=null){
+					cooperanteCodigo = subproducto.getProducto().getComponente().getProyecto().getPrestamo().getCooperante().getCodigo();
+				}else if(subproducto.getProducto().getSubcomponente()!=null){
+					cooperanteCodigo = subproducto.getProducto().getSubcomponente().getComponente().getProyecto().getPrestamo().getCooperante().getCodigo();
+				} 
 				break;
 			case 5: 
 				Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
