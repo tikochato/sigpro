@@ -29,7 +29,7 @@
   		</script>
   		
   		<script type="text/ng-template" id="buscarPorProyecto.jsp">
-    		<%@ include file="/app/components/prestamo/buscarPorProyecto.jsp"%>
+    		<%@ include file="/app/components/pep/buscarPorProyecto.jsp"%>
   	 	</script>
   	 	
   	 	<script type="text/ng-template" id="pesoProducto.jsp">

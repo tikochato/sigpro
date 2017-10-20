@@ -21,13 +21,13 @@
         </div>
     </script>
 	<script type="text/ng-template" id="buscarPorProyecto.jsp">
-    		<%@ include file="/app/components/prestamo/buscarPorProyecto.jsp"%>
+    		<%@ include file="/app/components/pep/buscarPorProyecto.jsp"%>
   	 </script>
   	 <script type="text/ng-template" id="cargarArchivo.jsp">
-    		<%@ include file="/app/components/prestamo/cargarArchivo.jsp"%>
+    		<%@ include file="/app/components/pep/cargarArchivo.jsp"%>
   	 </script>
   	 <script type="text/ng-template" id="agregarImpacto.jsp">
-    		<%@ include file="/app/components/prestamo/agregarImpacto.jsp"%>
+    		<%@ include file="/app/components/pep/agregarImpacto.jsp"%>
   	 </script>
 	<shiro:lacksPermission name="24010">
 		<span ng-init="controller.redireccionSinPermisos()"></span>
@@ -146,216 +146,7 @@
 		<div class="col-sm-12">
 			<form name="controller.mForm" style="margin-top: 10px;">
 			<uib-tabset active="controller.active">
-				<shiro:hasPermission name="43010">
-				<uib-tab ng-click="controller.getPorcentajes();" index="0" heading="{{etiquetas.proyecto}}" >
-					<br/>
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="form-group">
-										<input type="text" class="inputText"   
-										ng-model="controller.prestamo.codigoPresupuestario" ng-readonly="true" ng-required="true"
-										ng-click="controller.buscarCodigoPresupuestario()"
-										onblur="this.setAttribute('value', this.value);" ng-value="controller.prestamo.codigoPresupuestario" />			            	
-										<span class="label-icon" ng-click="controller.buscarCodigoPresupuestario()">
-											<i class="glyphicon glyphicon-search"></i>
-										</span>
-										<label class="floating-label">* Código presupuestario</label>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="form-group">
-										<input type="text" class="inputText"  ng-model="controller.prestamo.numeroPrestamo" ng-required="true" 
-										ng-value="controller.prestamo.numeroPrestamo" onblur="this.setAttribute('value', this.value);">
-										<label class="floating-label" >* Número de {{etiquetas.proyecto}}</label>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="form-group">
-									<input type="text" class="inputText"   ng-model="controller.prestamo.proyectoPrograma" ng-required="true"
-									onblur="this.setAttribute('value', this.value);" ng-value="controller.prestamo.proyectoPrograma"  >
-									<label class="floating-label">* Proyecto/Programa</label>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="form-group" >
-										<div id="cooperante" angucomplete-alt placeholder="" pause="100" selected-object="controller.cambioCooperante"
-											  local-data="controller.cooperantes" search-fields="nombre" title-field="nombre" field-required="true" field-label="* Cooperante"
-											  minlength="2" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
-											  initial-value="controller.prestamo.cooperantenombre" focus-out="controller.blurCooperante()"></div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-4">
-									<div class="form-group">    						
-										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaDecreto" is-open="controller.fd_abierto"
-											datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
-											ng-value="controller.prestamo.fechaDecreto" onblur="this.setAttribute('value', this.value);"
-										/>
-										<span class="label-icon" ng-click="controller.abrirPopupFecha(1007)">	
-											<i class="glyphicon glyphicon-calendar"></i>
-										</span>
-										<label class="floating-label">* Fecha Decreto</label>
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<div class="form-group">
-										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaSuscripcion" is-open="controller.fs_abierto"
-											datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
-											ng-value="controller.prestamo.fechaSuscripcion" onblur="this.setAttribute('value', this.value);"
-											/>
-											<span class="label-icon" ng-click="controller.abrirPopupFecha(1008)">
-												<i class="glyphicon glyphicon-calendar"></i>
-										</span>
-										<label class="floating-label">* Fecha de Suscripción</label>
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<div class="form-group">
-										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaVigencia" is-open="controller.fv_abierto"
-											datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
-											ng-value="controller.prestamo.fechaVigencia" onblur="this.setAttribute('value', this.value);"
-											/>
-											<span class="label-icon" ng-click="controller.abrirPopupFecha(1012)">
-												<i class="glyphicon glyphicon-calendar"></i>
-										</span>
-										<label class="floating-label">* Fecha de vigencia</label>
-									</div>
-								</div>
-							</div>
-							
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="text" class="inputText"  
-										ng-model="controller.prestamo.tipoMonedaNombre" ng-readonly="true" ng-required="true"
-										ng-click="controller.buscarTipoMoneda()"
-										onblur="this.setAttribute('value', this.value);" ng-value="controller.prestamo.tipoMonedaNombre"/>
-										<span class="label-icon" ng-click="controller.buscarTipoMoneda()">
-											<i class="glyphicon glyphicon-search"></i>
-										</span>
-										<label class="floating-label">* Tipo de Moneda</label>
-									</div>
-								</div>
-								
-								<div class="col-sm-6">
-									<div class="form-group money-input">
-										<input type="text" 
-										 class="inputText input-money"  
-										 ng-model="controller.prestamo.montoContratado" 
-										 ng-required="true"
-										 ng-value="controller.prestamo.montoContratado"
-										 onblur="this.setAttribute('value', this.value);" 
-										 ng-change="controller.setPorcentaje(1);" 
-										 ui-number-mask="0"
-										 >
-										<label class="floating-label" >* Monto Contratado</label>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="text" 
-										 class="inputText input-money"  
-										 ng-model="controller.prestamo.montoContratadoUsd" 
-										 ng-required="true"
-										 ng-value="controller.prestamo.montoContratadoUsd" 
-										 onblur="this.setAttribute('value', this.value);" 
-										 ng-change="controller.setPorcentaje(2);"
-										 ui-number-mask="0"
-										 >
-										 <label class="floating-label" >* Monto Contratado $</label>
-									</div>
-								</div>
-								
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="text" 
-										class="inputText input-money" 
-										ng-model="controller.prestamo.montoContratadoQtz" 
-										ng-required="true"
-										ng-value="controller.prestamo.montoContratadoQtz" 
-										onblur="this.setAttribute('value', this.value);"
-										ui-number-mask="0"
-										>
-										<label class="floating-label" >* Monto Contratado Q</label>
-									</div>
-								</div>
-							</div>
-							
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input inputText="text" 
-										class="inputText input-money" 
-										ng-model="controller.prestamo.desembolsoAFechaUsd" 
-										ng-required="true"
-										ng-value="controller.prestamo.desembolsoAFechaUsd" 
-										onblur="this.setAttribute('value', this.value);" 
-										ng-change="controller.setPorcentaje(1);"
-										ui-number-mask="0"
-										>
-										<label class="floating-label">* Desembolso a la Fecha $</label>
-									</div>
-								</div>
-								
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="text" class="inputText input-money" ng-model="controller.prestamo.desembolsoAFechaUsdP" ng-disabled="true"
-										ng-value="controller.prestamo.desembolsoAFechaUsdP" onblur="this.setAttribute('value', this.value);" ui-number-mask="2"/>
-										<label class="floating-label">Desembolso a la Fecha %</label>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="text" 
-										class="inputText input-money" 
-										ng-model="controller.prestamo.montoPorDesembolsarUsd" 
-										ng-required="true"
-										ng-value="controller.prestamo.montoPorDesembolsarUsd" 
-										onblur="this.setAttribute('value', this.value);" 
-										ng-change="controller.setPorcentaje(2);"
-										ng-disabled="true"
-										ui-number-mask="0"
-										/>
-										<label class="floating-label">* Monto por Desembolsar $</label>
-									</div>
-								</div>
-								
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="text" class="inputText input-money" ng-model="controller.prestamo.montoPorDesembolsarUsdP" ng-disabled="true"
-										ng-value="controller.prestamo.montoPorDesembolsarUsdP" onblur="this.setAttribute('value', this.value);" ui-number-mask="0"/>
-										<label class="floating-label">Monto por Desembolsar %</label>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="form-group">
-										<input type="number"
-										 class="inputText "  
-										 ng-model="controller.proyecto.ejecucionFisicaReal"
-										 ng-value="controller.proyecto.ejecucionFisicaReal"
-										 onblur="this.setAttribute('value', this.value);"
-										 min="0" max="100">
-										<label class="floating-label" >Ejecucion Física Real %</label>
-									</div>
-								</div>
-							</div>
-					
-				</uib-tab>
-				</shiro:hasPermission>
-				<uib-tab index="controller.ordenTab" heading="Generales" >
+				<uib-tab index="0" heading="Generales" >
 					<div class="form-group">
 						<label for="id" class="floating-label id_class">ID {{ controller.proyecto.id }}</label>
 						<br/><br/>
@@ -586,172 +377,7 @@
 					</div>
 				</uib-tab>
 				<shiro:hasPermission name="43010">
-				<uib-tab ng-click="controller.getPorcentajes();" index="controller.ordenTab+1" heading="Unidad Ejecutora" >
-					<br/>
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaElegibilidadUe" is-open="controller.fe_abierto"
-											datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="controller.setPorcentaje(5);"
-											ng-value="controller.prestamo.fechaElegibilidadUe" onblur="this.setAttribute('value', this.value);" />
-										<span class="label-icon" ng-click="controller.abrirPopupFecha(1009)">
-												<i class="glyphicon glyphicon-calendar"></i>
-										</span>
-										<label class="floating-label">* Fecha de Elegibilidad</label>
-									</div>
-								</div>
-								
-								<div class="col-sm-6">
-									<div class="form-group">
-											<input type="text" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaCierreOrigianlUe" is-open="controller.fco_abierto"
-												datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="controller.setPorcentaje(5);"
-												ng-value="controller.prestamo.fechaCierreOrigianlUe" onblur="this.setAttribute('value', this.value);"
-											/>
-											<span class="label-icon" ng-click="controller.abrirPopupFecha(1010)">
-													<i class="glyphicon glyphicon-calendar"></i>
-											</span>
-										<label class="floating-label">* Fecha de Cierre Original</label>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="form-group">
-											<input type="text" class="inputText"   uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.prestamo.fechaCierreActualUe" is-open="controller.fca_abierto"
-												datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="controller.setPorcentaje(5);"
-												ng-value="controller.prestamo.fechaCierreActualUe" onblur="this.setAttribute('value', this.value);"/>
-											<span class="label-icon" ng-click="controller.abrirPopupFecha(1011)"
-											ng-readonly="true">
-													<i class="glyphicon glyphicon-calendar"></i>
-											</span>
-										<label  class="floating-label">* Fecha de Cierre Actual</label>
-									</div>
-								</div>
-								
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="text" 
-										class="inputText input-money" 
-										ng-model="controller.prestamo.mesesProrrogaUe" 
-										ng-required="true"
-										ng-readonly="true"
-										ng-value="controller.prestamo.mesesProrrogaUe"
-										onblur="this.setAttribute('value', this.value);" 
-										ui-number-mask="2">
-										<label class="floating-label">* Meses de Prórroga</label>
-									</div>
-								</div>
-							</div>
-							
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="text" class="inputText input-money"   ng-model="controller.prestamo.plazoEjecucionUe" ng-disabled="true"
-										ng-value="controller.prestamo.plazoEjecucionUe" onblur="this.setAttribute('value', this.value);" ui-number-mask="2"/>
-										<label class="floating-label">Plazo de Ejecución %</label>
-									</div>
-								</div>
-								
-								<div class="col-sm-6">
-									<div class="form-group">							
-										<input type="text" 
-										class="inputText input-money" 
-										ng-model="controller.prestamo.montoAsignadoUe" 
-										ng-required="true"
-										ng-value="controller.prestamo.montoAsignadoUe"
-										onblur="this.setAttribute('value', this.value);" 
-										ui-number-mask="0"
-										>
-										<label class="floating-label">* Monto Asignado</label>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								
-								<div class="col-sm-6">
-									<div class="form-group">							
-										<input 
-										type="text" 
-										class="inputText input-money" 
-										ng-model="controller.prestamo.montoAsignadoUeUsd" 
-										ng-required="true" 
-										ng-value="controller.prestamo.montoAsignadoUeUsd" 
-										onblur="this.setAttribute('value', this.value);"
-										ng-change="controller.setPorcentaje(3);"
-										ui-number-mask="0"
-										/>
-										<label class="floating-label">* Monto Asignado $</label>
-									</div>
-								</div>
-								
-								<div class="col-sm-6">
-									<div class="form-group">							
-										<input 
-										type="text" 
-										class="inputText input-money" 
-										ng-model="controller.prestamo.montoAsignadoUeQtz" 
-										ng-required="true" 
-										ng-value="controller.prestamo.montoAsignadoUeQtz" 
-										onblur="this.setAttribute('value', this.value);" 
-										ui-number-mask="2"
-										>
-										<label class="floating-label">* Monto Asignado Q</label>
-									</div>
-								</div>
-							</div>
-							
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="text" 
-										class="inputText input-money" 
-										ng-model="controller.prestamo.desembolsoAFechaUeUsd" 
-										ng-required="true"
-										ng-value="controller.prestamo.desembolsoAFechaUeUsd" 
-										onblur="this.setAttribute('value', this.value);" 
-										ng-change="controller.setPorcentaje(3);"
-										ui-number-mask="0"
-										>
-										<label class="floating-label">* Desembolso a la Fecha $</label>
-									</div>
-								</div>
-								
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="text" class="inputText input-money" ng-model="controller.prestamo.desembolsoAFechaUeUsdP" ng-disabled="true"
-										ng-value="controller.prestamo.desembolsoAFechaUeUsdP" onblur="this.setAttribute('value', this.value);" ui-number-mask="2"/>
-										<label class="floating-label">Desembolsos a la fecha %</label>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="form-group">							
-										<input type="text" 
-										class="inputText input-money" 
-										ng-model="controller.prestamo.montoPorDesembolsarUeUsd" 
-										ng-required="true" 
-										ng-value="controller.prestamo.montoPorDesembolsarUeUsd" 
-										onblur="this.setAttribute('value', this.value);" 
-										ng-change="controller.setPorcentaje(4);"
-										ng-disabled="true"
-										ui-number-mask="0"
-										/>
-										<label class="floating-label">* Monto por desembolsar $</label>
-									</div>
-								</div>
-								
-								<div class="col-sm-6">
-									<div class="form-group">							
-										<input type="text" class="inputText input-money" ng-model="controller.prestamo.montoPorDesembolsarUeUsdP" ng-disabled="true" 
-										ng-value="controller.prestamo.montoPorDesembolsarUeUsdP" onblur="this.setAttribute('value', this.value);" ui-number-mask="2"/>
-										<label class="floating-label">Monto por desembolsar %</label>
-									</div>
-								</div>
-							</div>
-				
-				</uib-tab>
-				<uib-tab index="controller.ordenTab+2" heading="Adicionales" ng-if="controller.mostrarPrestamo" >
+				<uib-tab index="controller.ordenTab+1" heading="Adicionales" ng-if="controller.mostrarPrestamo" >
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="form-group">
@@ -1124,7 +750,7 @@
 					</div>
 				
 				</uib-tab>
-				<uib-tab index= "controller.ordenTab+3" heading="Acta de constitución" ng-if="false">
+				<uib-tab index= "controller.ordenTab+2" heading="Acta de constitución" ng-if="false">
 					
 					<div class="form-group">
 						<label for="id" class="floating-label">Nombre del Proyecto {{ controller.proyecto.nombre }}</label>
@@ -1225,10 +851,10 @@
 						</table>
 					</div>
 				</uib-tab>
-				<uib-tab index="4" heading="Desembolsos" ng-click="controller.desembolsos=true" >
+				<uib-tab index="3" heading="Desembolsos" ng-click="controller.desembolsos=true" >
 					<div ng-if="controller.desembolsos !== undefined"><%@include file="/app/components/desembolso/desembolso.jsp" %></div>
 				</uib-tab>
-				<uib-tab index="5" heading="Riesgos" ng-click="controller.riesgos=true" >
+				<uib-tab index="4" heading="Riesgos" ng-click="controller.riesgos=true" >
 					<div ng-if="controller.riesgos !== undefined"><%@include file="/app/components/riesgo/riesgo.jsp" %></div>
 				</uib-tab>
 				</shiro:hasPermission>

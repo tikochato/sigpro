@@ -11,7 +11,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
 	   $locationProvider.hashPrefix('!');
 	   
 	$routeProvider
-	   		.when('/prestamo/:id',{
+	   		.when('/pep/:id',{
 	       		template: '<div load-on-demand="\'proyectoController\'" class="all_page"></div>'
 	       })
 	       .when('/componente/:proyecto_id/:id/:nuevo?',{
@@ -66,8 +66,8 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	       },
 	       {
 	    	   name: 'proyectoController',
-	    	   script: '/app/components/prestamo/proyecto.controller.js',
-	    	   template: '/app/components/prestamo/proyecto.jsp'
+	    	   script: '/app/components/pep/proyecto.controller.js',
+	    	   template: '/app/components/pep/proyecto.jsp'
 	       }, {
 	    	   name: 'moduloProducto',
 	    	   script: '/app/components/producto/producto.controller.js',
@@ -164,7 +164,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	
 	$rootScope.$on( "$routeChangeStart", function(event, next, current) {
 		if((mi.proyecto===undefined || mi.proyecto==null)){
-			if(next.$$route.originalPath!="/prestamo/:id")
+			if(next.$$route.originalPath!="/pep/:id")
 				$location.path('/main');				
 		}
 	});
@@ -185,7 +185,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 		mi.nodo_seleccionado = nodo;
 		switch(nodo.objeto_tipo){
 			case 0:
-				$location.path('/prestamo/'+nodo.id); break;
+				$location.path('/pep/'+nodo.id); break;
 			case 1:
 				$location.path('/componente/'+nodo.parent.id+'/'+nodo.id); break;
 			case 2:
@@ -244,7 +244,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 						mi.nodos_expandidos.push(mi.treedata.children[0]);
 						mi.setParentNode(mi.treedata);
 						mi.nodo_seleccionado = mi.treedata.children[0];
-						$location.path('/prestamo/'+mi.proyecto.id); 
+						$location.path('/pep/'+mi.proyecto.id); 
 					}
 				});
 		}
@@ -262,7 +262,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 					mi.nodos_expandidos.push(mi.treedata.children[0]);
 					mi.setParentNode(mi.treedata);
 					mi.nodo_seleccionado = mi.treedata.children[0];
-					$location.path('/prestamo/'+mi.proyecto.id); 
+					$location.path('/pep/'+mi.proyecto.id); 
 				}
 			});
 	}

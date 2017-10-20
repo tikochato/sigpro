@@ -94,10 +94,10 @@ public class SProyecto extends HttpServlet {
 		String acumulacionCostoNombre;
 		String objetivoEspecifico;
 		String visionGeneral;
-		stprestamo prestamo;
 		Integer ejecucionFisicaReal;
 		Integer proyectoClase;
 		Integer projectCargado;
+		Integer prestamoId;
 	};
 
 	class stdatadinamico {
@@ -108,85 +108,7 @@ public class SProyecto extends HttpServlet {
 		String valor_f;
 	}
 
-	class stprestamo{
-		String fechaCorte;
-		Long codigoPresupuestario;
-		String numeroPrestamo;
-		String destino;
-		String sectorEconomico;
-		Integer unidadEjecutora;
-		String unidadEjecutoraNombre;
-		String fechaFirma;
-		Integer tipoAutorizacionId;
-		String tipoAutorizacionNombre;
-		String numeroAutorizacion;
-		String fechaAutorizacion;
-		Integer aniosPlazo;
-		Integer aniosGracia;
-		String fechaFinEjecucion;
-		Integer periodoEjecucion;
-		Integer tipoInteresId;
-		String tipoInteresNombre;
-		BigDecimal porcentajeInteres;
-		BigDecimal porcentajeComisionCompra;
-		int tipoMonedaId;
-		String tipoMonedaNombre;
-		BigDecimal montoContratado;
-		BigDecimal amortizado;
-		BigDecimal porAmortizar;
-		BigDecimal principalAnio;
-		BigDecimal interesesAnio;
-		BigDecimal comisionCompromisoAnio;
-		BigDecimal otrosGastos;
-		BigDecimal principalAcumulado;
-		BigDecimal interesesAcumulados;
-		BigDecimal comisionCompromisoAcumulado;
-		BigDecimal otrosCargosAcumulados;
-		BigDecimal presupuestoAsignadoFuncionamiento;
-		BigDecimal presupuestoAsignadoInversion;
-		BigDecimal presupuestoModificadoFun;
-		BigDecimal presupuestoModificadoInv;
-		BigDecimal presupuestoVigenteFun;
-		BigDecimal presupuestoVigenteInv;
-		BigDecimal presupuestoDevengadoFun;
-		BigDecimal presupuestoDevengadoInv;
-		BigDecimal presupuestoPagadoFun;
-		BigDecimal presupuestoPagadoInv;
-		BigDecimal saldoCuentas;
-		BigDecimal desembolsoReal;
-		Integer ejecucionEstadoId;
-		String ejecucionEstadoNombre;
-		String  proyectoPrograma;
-		String fechaDecreto;
-		String fechaSuscripcion;
-		String fechaElegibilidadUe;
-		String fechaCierreOrigianlUe;
-		String fechaCierreActualUe;
-		int mesesProrrogaUe;
-		int plazoEjecucionUe;
-		BigDecimal montoAsignadoUe;
-		BigDecimal desembolsoAFechaUe;
-		BigDecimal montoPorDesembolsarUe;
-		String fechaVigencia;
-		BigDecimal montoContratadoUsd;
-		BigDecimal montoContratadoQtz;
-		BigDecimal desembolsoAFechaUsd;
-		BigDecimal montoPorDesembolsarUsd;
-		BigDecimal montoAsignadoUeUsd;
-		BigDecimal montoAsignadoUeQtz;
-		BigDecimal desembolsoAFechaUeUsd;
-		BigDecimal montoPorDesembolsarUeUsd;
-		String nombreEntidadEjecutora;
-		int cooperanteid;
-		String cooperantenombre;
-		String usuarioCreo;
-		String usuarioActualizo;
-		String fechaCreacion;
-		String fechaActualizacion;
-
-	}
-
-    public SProyecto() {
+	public SProyecto() {
         super();
 
     }
@@ -270,6 +192,7 @@ public class SProyecto extends HttpServlet {
 				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
 				dato.proyectoClase = proyecto.getEtiqueta().getId();
 				dato.projectCargado = proyecto.getProjectCargado();
+				dato.prestamoId = proyecto.getPrestamo().getId();
 				datos_.add(dato);
 			}
 
@@ -329,6 +252,7 @@ public class SProyecto extends HttpServlet {
 				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
 				dato.proyectoClase = proyecto.getEtiqueta().getId();
 				dato.projectCargado = proyecto.getProjectCargado();
+				dato.prestamoId = proyecto.getPrestamo().getId();
 				datos_.add(dato);
 			}
 
@@ -387,10 +311,10 @@ public class SProyecto extends HttpServlet {
 										+ " " + proyecto.getColaborador().getPapellido()
 										+ " " + proyecto.getColaborador().getSapellido()) : null;
 
-				dato.prestamo = obtenerPrestamo(proyecto.getId(),1);
 				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
 				dato.proyectoClase = proyecto.getEtiqueta().getId();
 				dato.projectCargado = proyecto.getProjectCargado();
+				dato.prestamoId = proyecto.getPrestamo().getId();
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -450,6 +374,7 @@ public class SProyecto extends HttpServlet {
 				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
 				dato.proyectoClase = proyecto.getEtiqueta().getId();
 				dato.projectCargado = proyecto.getProjectCargado();
+				dato.prestamoId = proyecto.getPrestamo().getId();
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -806,8 +731,6 @@ public class SProyecto extends HttpServlet {
 				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
 				dato.proyectoClase = proyecto.getEtiqueta().getId();
 				dato.projectCargado = proyecto.getProjectCargado();
-
-				dato.prestamo = obtenerPrestamo(proyecto.getId(),1);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(dato);
 	        response_text = String.join("", "\"proyecto\":",response_text);
@@ -850,94 +773,5 @@ public class SProyecto extends HttpServlet {
         gz.write(response_text.getBytes("UTF-8"));
         gz.close();
         output.close();
-	}
-
-
-	private stprestamo obtenerPrestamo(int objetoId, int objetoTipo){
-		stprestamo ret =  null;
-		Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(objetoId, objetoTipo);
-
-		if (prestamo !=null){
-			ret =  new stprestamo();
-			ret.fechaCorte = prestamo.getFechaCorte() == null ? null : Utils.formatDate(prestamo.getFechaCorte());
-			ret.codigoPresupuestario = prestamo.getCodigoPresupuestario();
-			ret.numeroPrestamo = prestamo.getNumeroPrestamo();
-			ret.destino = prestamo.getDestino();
-			ret.sectorEconomico = prestamo.getSectorEconomico();
-			ret.unidadEjecutora = prestamo.getUnidadEjecutora() !=null ? prestamo.getUnidadEjecutora().getId().getUnidadEjecutora() : null;
-			ret.unidadEjecutoraNombre = prestamo.getUnidadEjecutora() !=null ? prestamo.getUnidadEjecutora().getNombre() : null;
-			ret.fechaFirma = (prestamo.getFechaFirma() == null ? null : Utils.formatDate(prestamo.getFechaFirma()));
-			ret.tipoAutorizacionId = (prestamo.getAutorizacionTipo() == null ? null : prestamo.getAutorizacionTipo().getId());
-			ret.tipoAutorizacionNombre = (prestamo.getAutorizacionTipo() == null ? null : prestamo.getAutorizacionTipo().getNombre());
-			ret.numeroAutorizacion = (prestamo.getNumeroAutorizacion() == null ? null: prestamo.getNumeroAutorizacion());
-			ret.fechaAutorizacion = prestamo.getFechaAutorizacion() == null ? null : Utils.formatDate(prestamo.getFechaAutorizacion());
-			ret.aniosPlazo = (prestamo.getAniosPlazo() == null ? null : prestamo.getAniosPlazo());
-			ret.aniosGracia = (prestamo.getAniosGracia() == null ? null : prestamo.getAniosGracia());
-			ret.fechaFinEjecucion = prestamo.getFechaFinEjecucion() == null ? null : Utils.formatDate(prestamo.getFechaFinEjecucion());
-			ret.periodoEjecucion = (prestamo.getPeridoEjecucion() == null ? null :prestamo.getPeridoEjecucion());
-			ret.tipoInteresId = (prestamo.getInteresTipo() == null ? null : prestamo.getInteresTipo().getId());
-			ret.tipoInteresNombre = (prestamo.getInteresTipo() == null ? null : prestamo.getInteresTipo().getNombre());
-			ret.porcentajeInteres = prestamo.getPorcentajeInteres();
-			ret.porcentajeComisionCompra = prestamo.getPorcentajeComisionCompra();
-			ret.tipoMonedaId = prestamo.getTipoMoneda().getId();
-			ret.tipoMonedaNombre = prestamo.getTipoMoneda().getNombre();
-			ret.montoContratado = prestamo.getMontoContratado();
-			ret.amortizado = prestamo.getAmortizado();
-			ret.porAmortizar = prestamo.getPorAmortizar();
-			ret.principalAnio = prestamo.getPrincipalAnio();
-			ret.interesesAnio = prestamo.getInteresesAnio();
-			ret.comisionCompromisoAnio = prestamo.getComisionCompromisoAnio();
-			ret.otrosGastos = prestamo.getOtrosGastos();
-			ret.principalAcumulado = prestamo.getPrincipalAcumulado();
-			ret.interesesAcumulados = prestamo.getInteresesAcumulados();
-			ret.comisionCompromisoAcumulado = prestamo.getComisionCompromisoAcumulado();
-			ret.otrosCargosAcumulados = prestamo.getOtrosCargosAcumulados();
-			ret.presupuestoAsignadoFuncionamiento = prestamo.getPresupuestoAsignadoFuncionamiento();
-			ret.presupuestoAsignadoInversion = prestamo.getPrespupuestoAsignadoInversion();
-			ret.presupuestoModificadoFun = prestamo.getPresupuestoModificadoFuncionamiento();
-			ret.presupuestoModificadoInv = prestamo.getPresupuestoModificadoInversion();
-			ret.presupuestoVigenteFun = prestamo.getPresupuestoVigenteFuncionamiento();
-			ret.presupuestoVigenteInv = prestamo.getPresupuestoVigenteInversion();
-			ret.presupuestoDevengadoFun = prestamo.getPrespupuestoDevengadoFuncionamiento();
-			ret.presupuestoDevengadoInv = prestamo.getPresupuestoDevengadoInversion();
-			ret.presupuestoPagadoFun = prestamo.getPresupuestoPagadoFuncionamiento();
-			ret.presupuestoPagadoInv = prestamo.getPresupuestoPagadoInversion();
-			ret.saldoCuentas = prestamo.getSaldoCuentas();
-			ret.desembolsoReal = prestamo.getSaldoCuentas();
-			ret.ejecucionEstadoId = (prestamo.getEjecucionEstado() == null ? null :prestamo.getEjecucionEstado().getId());
-			ret.ejecucionEstadoNombre = (prestamo.getEjecucionEstado() == null ? null : prestamo.getEjecucionEstado().getNombre());
-			ret.proyectoPrograma = prestamo.getProyectoPrograma();
-			ret.fechaDecreto = Utils.formatDate(prestamo.getFechaDecreto());
-			ret.fechaSuscripcion = Utils.formatDate(prestamo.getFechaSuscripcion());
-			ret.fechaElegibilidadUe = Utils.formatDate(prestamo.getFechaElegibilidadUe());
-			ret.fechaCierreOrigianlUe = Utils.formatDate(prestamo.getFechaCierreOrigianlUe());
-			ret.fechaCierreActualUe = Utils.formatDate(prestamo.getFechaCierreActualUe());
-			ret.mesesProrrogaUe = prestamo.getMesesProrrogaUe();
-			ret.montoAsignadoUe = prestamo.getMontoAsignadoUe();
-			ret.desembolsoAFechaUe = prestamo.getDesembolsoAFechaUe();
-			ret.montoPorDesembolsarUe = prestamo.getMontoPorDesembolsarUe();
-			ret.fechaVigencia = Utils.formatDate(prestamo.getFechaVigencia());
-			ret.montoContratadoUsd = prestamo.getMontoContratadoUsd();
-			ret.montoContratadoQtz = prestamo.getMontoContratadoQtz();
-			ret.desembolsoAFechaUsd = prestamo.getDesembolsoAFechaUsd();
-			ret.montoPorDesembolsarUsd = prestamo.getMontoPorDesembolsarUsd();
-			ret.montoAsignadoUeUsd = prestamo.getMontoAsignadoUeUsd();
-			ret.montoAsignadoUeQtz = prestamo.getMontoAsignadoUeQtz();
-			ret.desembolsoAFechaUeUsd = prestamo.getDesembolsoAFechaUeUsd();
-			ret.montoPorDesembolsarUeUsd = prestamo.getMontoPorDesembolsarUeUsd();
-			ret.cooperanteid = prestamo.getCooperante().getId();
-			ret.cooperantenombre =  (prestamo.getCooperante().getSiglas()!=null) ? prestamo.getCooperante().getSiglas() + " - " + prestamo.getCooperante().getNombre() : prestamo.getCooperante().getNombre();
-
-			ret.unidadEjecutora = prestamo.getUnidadEjecutora() !=null ? prestamo.getUnidadEjecutora().getId().getUnidadEjecutora() : null;
-			ret.unidadEjecutoraNombre = prestamo.getUnidadEjecutora() !=null ? prestamo.getUnidadEjecutora().getNombre() : "";
-
-			ret.usuarioCreo = prestamo.getUsuarioCreo();
-			ret.usuarioActualizo = prestamo.getUsuarioActualizo();
-			ret.fechaCreacion = Utils.formatDate(prestamo.getFechaCreacion());
-			ret.fechaActualizacion = Utils.formatDate(prestamo.getFechaActualizacion());
-			ret.nombreEntidadEjecutora = prestamo.getUnidadEjecutora() !=null ? prestamo.getUnidadEjecutora().getEntidad().getNombre() : "";
-		}
-
-		return ret;
 	}
 }

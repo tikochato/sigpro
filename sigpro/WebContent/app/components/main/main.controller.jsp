@@ -25,7 +25,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/cooperante/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'cooperanteController\'" class="all_page"></div>'
             })
-            .when('/prestamo/:reiniciar_vista?',{
+            .when('/pep/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'proyectoController\'" class="all_page"></div>'
             })
             .when('/prestamometas',{
@@ -157,7 +157,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/programatipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'programatipoController\'" class="all_page"></div>'
             })
-            .when('/programa/:reiniciar_vista?',{
+            .when('/prestamo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'prestamoController\'" class="all_page"></div>'
             })
             .when('/mapa/:proyecto_id?/:reiniciar_vista?',{
@@ -250,8 +250,8 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	       },
 	       {
 	    	   name: 'proyectoController',
-	    	   script: '/app/components/prestamo/proyecto.controller.js',
-	    	   template: '/app/components/prestamo/proyecto.jsp'
+	    	   script: '/app/components/pep/proyecto.controller.js',
+	    	   template: '/app/components/pep/proyecto.jsp'
 	       }, {
 	    	   name: 'prestamometasController',
 	    	   script: '/app/components/reportes/prestamometas/prestamometas.controller.js',
@@ -295,8 +295,8 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	       },
 	       {
 	    	   name: 'proyectotipoController',
-	    	   script: '/app/components/prestamo/proyectotipo.controller.js',
-	    	   template: '/app/components/prestamo/proyectotipo.jsp'
+	    	   script: '/app/components/pep/proyectotipo.controller.js',
+	    	   template: '/app/components/pep/proyectotipo.jsp'
 	       },
 	       {
 	    	   name: 'desembolsotipoController',
@@ -462,8 +462,8 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	       },
 	       {
 	    	   name: 'prestamoController',
-	    	   script: '/app/components/programa/prestamo.controller.js',
-	    	   template: '/app/components/programa/prestamo.jsp'
+	    	   script: '/app/components/prestamo/prestamo.controller.js',
+	    	   template: '/app/components/prestamo/prestamo.jsp'
 	       },
 	       {
 	    	   name: 'mapaController',
