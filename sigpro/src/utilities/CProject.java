@@ -14,8 +14,6 @@ import dao.ActividadDAO;
 import dao.AcumulacionCostoDAO;
 import dao.ComponenteDAO;
 import dao.ComponenteTipoDAO;
-import dao.SubComponenteDAO;
-import dao.SubComponenteTipoDAO;
 import dao.CooperanteDAO;
 import dao.ProductoDAO;
 import dao.ProgramaDAO;
@@ -205,24 +203,25 @@ public class CProject {
 		return ComponenteDAO.guardarComponente(componente, false) ? componente : null;
 	}
 
-	public Componente crearSubComponente(Task task,Proyecto proyecto ,String usuario){
-		
-		
-		ComponenteTipo componenteTipo = SubComponenteTipoDAO.getSubComponenteTipoPorId(COMPONENTE_TIPO_ID_DEFECTO);
-		
-		int year = new DateTime().getYear();
-		UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(year, ENTIDAD_ID_DEFECTO, UNIDAD_EJECUTORA_ID_DEFECTO);
-		AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
-		
-		
-		Componente subcomponente = new Componente(acumulacionCosto,componenteTipo, proyecto, unidadEjecutora, task.getName()
-				, null,usuario, null, new Date(), null, 1, null, null, null, null, null, null, null, null, 
-				new BigDecimal(task.getCost().toString()),null,null,Utils.setDateCeroHoras(task.getStart()),
-				Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
-				, task.getDuration().getUnits().getName(),null,null,1,0,null,null,null,null);
-		
-		return SubComponenteDAO.guardarSubComponente(subcomponente, false) ? subcomponente : null;
-	}
+	//TODO: agregar subcomponente
+//	public Subcomponente crearSubComponente(Task task,Proyecto proyecto ,String usuario){
+//		
+//		
+//		SubcomponenteTipo componenteTipo = SubComponenteTipoDAO.getSubComponenteTipoPorId(COMPONENTE_TIPO_ID_DEFECTO);
+//		
+//		int year = new DateTime().getYear();
+//		UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(year, ENTIDAD_ID_DEFECTO, UNIDAD_EJECUTORA_ID_DEFECTO);
+//		AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
+//		
+//		
+//		Subcomponente subcomponente = new Subcomponente(acumulacionCosto,componenteTipo, proyecto, unidadEjecutora, task.getName()
+//				, null,usuario, null, new Date(), null, 1, null, null, null, null, null, null, null, null, 
+//				new BigDecimal(task.getCost().toString()),null,null,Utils.setDateCeroHoras(task.getStart()),
+//				Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
+//				, task.getDuration().getUnits().getName(),null,null,1,0,null,null,null,null);
+//		
+//		return SubComponenteDAO.guardarSubComponente(subcomponente, false) ? subcomponente : null;
+//	}
 	
 	public Producto crearProducto (Task task, Componente componente,String usuario){
 		
@@ -489,7 +488,7 @@ public class CProject {
 				Task task2 = task1.addTask();
 				task2.setName(componente.getNombre());
 				
-				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
+				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(), null,
 						null, null, null, null, null, usuario);
 				for (Producto producto : productos){
 					

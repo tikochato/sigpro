@@ -10,7 +10,7 @@ import org.hibernate.Session;
 import org.joda.time.DateTime;
 
 import dao.ActividadDAO;
-import dao.SubComponenteDAO;
+import dao.ComponenteDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
 import dao.SubproductoDAO;
@@ -44,7 +44,7 @@ public class COrden {
 				if(proyectoId!=null)
 					proyecto_id=proyectoId;
 				else if(componenteId!=null){
-					Componente componente=SubComponenteDAO.getSubComponente(componenteId);
+					Componente componente=ComponenteDAO.getComponente(componenteId);
 					proyecto_id = componente.getProyecto().getId();
 				}
 				else if(productoId!=null){
@@ -101,7 +101,7 @@ public class COrden {
 		    	        	componente.setOrden(orden);
 		    	        	componente.setTreePath(treePath + String.format("%6s", orden).replace(' ', '0'));
 		    	        	componente.setNivel(getNivel(componente.getTreePath()));
-		    	        	SubComponenteDAO.guardarSubComponenteOrden(componente, session);
+		    	        	ComponenteDAO.guardarComponenteOrden(componente, session);
 		    	        	fecha_menor = componente.getFechaInicio()!=null && fecha_menor.after(componente.getFechaInicio()) ? componente.getFechaInicio() : fecha_menor;
 		    	        	fecha_mayor = componente.getFechaFin()!=null && fecha_mayor.before(componente.getFechaFin()) ? componente.getFechaFin() : fecha_mayor;
 		        			break;
@@ -144,7 +144,7 @@ public class COrden {
 		        	case 2: Componente componente = (Componente)getObjeto((int)objPadre[4], 2, estructuraPrestamo)[3];
 		        		componente.setFechaInicio(fecha_menor);
 		        		componente.setFechaFin(fecha_mayor);
-			    		SubComponenteDAO.guardarSubComponenteOrden(componente, session);
+			    		ComponenteDAO.guardarComponenteOrden(componente, session);
 			    		break;	
 		        	case 3: Producto producto = (Producto)getObjeto((int)objPadre[4], 3, estructuraPrestamo)[3];
 			        	producto.setFechaInicio(fecha_menor);
@@ -184,12 +184,12 @@ public class COrden {
 			Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
 			objProyecto = new Object[]{ 1, 0, 0, proyecto, proyecto.getId(),1, proyecto.getTreePath() == null ? "1" : proyecto.getTreePath() };
 			lstProyecto.add(objProyecto);
-			List<Componente> subcomponentes = SubComponenteDAO.getSubComponentesPaginaPorProyecto(0,0, proyectoId, null, null, null, null, null, usuario);
-			for(Componente componente : subcomponentes){
+			List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0,0, proyectoId, null, null, null, null, null, usuario);
+			for(Componente componente : componentes){
 				objProyecto = new Object[]{2, proyectoId, 1, componente, componente.getId(), 2, componente.getTreePath()};
 				lstProyecto.add(objProyecto);
 				
-				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(), null, null, null, null, null, usuario);
+				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(), null, null, null, null, null, null, usuario);
 				for(Producto producto : productos){
 					objProyecto = new Object[]{ 3, producto.getComponente().getId(), 2, producto, producto.getId(), 3, producto.getTreePath()};
 					lstProyecto.add(objProyecto);
