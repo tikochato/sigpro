@@ -30,12 +30,12 @@ public class ProyectoDAOTest {
 	
 	@Test
 	public void getTotalProyectosTest(){
-		assertEquals(ProyectoDAO.getTotalProyectos("","","","").getClass(),Long.class);
+		assertEquals(ProyectoDAO.getTotalProyectos("","","","",0).getClass(),Long.class);
 	}
 	
 	@Test
 	public void getProyectosPaginaTest(){
-		assertNotNull(ProyectoDAO.getProyectosPagina(0,0,"","","","","",""));
+		assertNotNull(ProyectoDAO.getProyectosPagina(0,0,"","","","","","",0));
 	}
 	
 	@Test
