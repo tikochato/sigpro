@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 18, 2017 5:58:56 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 19, 2017 6:14:38 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -25,7 +25,7 @@ public class SubcomponenteTipo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5118320674415290769L;
+	private static final long serialVersionUID = 2045130907883664454L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;
@@ -35,6 +35,7 @@ public class SubcomponenteTipo implements java.io.Serializable {
 	private Date fechaActualizacion;
 	private int estado;
 	private Set<Subcomponente> subcomponentes = new HashSet<Subcomponente>(0);
+	private Set<SctipoPropiedad> sctipoPropiedads = new HashSet<SctipoPropiedad>(0);
 
 	public SubcomponenteTipo() {
 	}
@@ -47,7 +48,8 @@ public class SubcomponenteTipo implements java.io.Serializable {
 	}
 
 	public SubcomponenteTipo(String nombre, String descripcion, String usuarioCreo, String usuarioActualizo,
-			Date fechaCreacion, Date fechaActualizacion, int estado, Set<Subcomponente> subcomponentes) {
+			Date fechaCreacion, Date fechaActualizacion, int estado, Set<Subcomponente> subcomponentes,
+			Set<SctipoPropiedad> sctipoPropiedads) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.usuarioCreo = usuarioCreo;
@@ -56,6 +58,7 @@ public class SubcomponenteTipo implements java.io.Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
 		this.subcomponentes = subcomponentes;
+		this.sctipoPropiedads = sctipoPropiedads;
 	}
 
 	@Id
@@ -142,6 +145,15 @@ public class SubcomponenteTipo implements java.io.Serializable {
 
 	public void setSubcomponentes(Set<Subcomponente> subcomponentes) {
 		this.subcomponentes = subcomponentes;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "subcomponenteTipo")
+	public Set<SctipoPropiedad> getSctipoPropiedads() {
+		return this.sctipoPropiedads;
+	}
+
+	public void setSctipoPropiedads(Set<SctipoPropiedad> sctipoPropiedads) {
+		this.sctipoPropiedads = sctipoPropiedads;
 	}
 
 }
