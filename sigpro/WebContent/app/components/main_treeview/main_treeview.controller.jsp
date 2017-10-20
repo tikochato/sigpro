@@ -319,6 +319,9 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	
 	mi.crearNodo=function(id,nombre,objeto_tipo,estado){
 		if(mi.nodo_seleccionado){
+			if(mi.nodo_seleccionado.children==null || mi.nodo_seleccionado.children===undefined){
+				mi.nodo_seleccionado.children=[];
+			}
 			mi.nodo_seleccionado.children.push({id: id, nombre: nombre, objeto_tipo: objeto_tipo, estado: estado, nivel: mi.nodo_seleccionado.nivel+1, parent: mi.nodo_seleccionado });
 			mi.nodos_expandidos.push(mi.nodo_seleccionado);
 			mi.nodo_seleccionado=mi.nodo_seleccionado.children[mi.nodo_seleccionado.children.length-1];

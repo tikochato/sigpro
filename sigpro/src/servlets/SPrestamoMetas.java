@@ -244,7 +244,7 @@ public class SPrestamoMetas extends HttpServlet {
 									tempMeta.objeto_id = tempPrestamo.objeto_id;
 									tempMeta.nombre = meta.getNombre();
 									tempMeta.nivel = nivel +2;
-									tempMeta.objeto_tipo = 0;
+									tempMeta.objeto_tipo = 10;
 									if(meta.getMetaUnidadMedida()!=null){
 										tempMeta.unidadDeMedida = meta.getMetaUnidadMedida().getId();
 									}

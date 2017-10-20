@@ -29,6 +29,7 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
 import dao.AsignacionRaciDAO;
+import dao.ComponenteDAO;
 import dao.SubComponenteDAO;
 import dao.EstructuraProyectoDAO;
 import dao.ProductoDAO;
@@ -40,6 +41,7 @@ import pojo.Colaborador;
 import pojo.Componente;
 import pojo.Producto;
 import pojo.Proyecto;
+import pojo.Subcomponente;
 import pojo.Subproducto;
 import utilities.CExcel;
 import utilities.CLogger;
@@ -160,12 +162,16 @@ public class SMatrizRACI extends HttpServlet {
 			stinformacion informacion = new stinformacion();
 			
 			switch (objetoTipo){
-			case 1:
+			case 0:
 				Proyecto proyecto = ProyectoDAO.getProyectoPorId(objetoId, usuario);
 				informacion.nombreTarea = proyecto.getNombre();
 			break;
+			case 1:
+				Componente componente = ComponenteDAO.getComponentePorId(objetoId, usuario);
+				informacion.nombreTarea = componente.getNombre();
+			break;
 			case 2:
-				Componente subcomponente = SubComponenteDAO.getSubComponentePorId(objetoId, usuario);
+				Subcomponente subcomponente = SubComponenteDAO.getSubComponentePorId(objetoId, usuario);
 				informacion.nombreTarea = subcomponente.getNombre();
 			break;
 			case 3:
@@ -176,10 +182,10 @@ public class SMatrizRACI extends HttpServlet {
 				Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId, usuario);
 				informacion.nombreTarea = subproducto.getNombre();
 			break;
-				case 5:
-					Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
-					informacion.nombreTarea = actividad.getNombre();
-				break;
+			case 5:
+				Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
+				informacion.nombreTarea = actividad.getNombre();
+			break;
 			}
 			
 			AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(objetoId, objetoTipo, rol);
@@ -444,11 +450,12 @@ public class SMatrizRACI extends HttpServlet {
 				stmatriz matriz = stmatriz.get(i);
 				String sangria;
 				switch (matriz.objetoTipo){
-					case 1: sangria = ""; break;
-					case 2: sangria = "   "; break;
-					case 3: sangria = "      "; break;
-					case 4: sangria = "         "; break;
-					case 5: sangria = "            "; break;
+					case 0: sangria = ""; break;
+					case 1: sangria = "   "; break;
+					case 2: sangria = "      "; break;
+					case 3: sangria = "         "; break;
+					case 4: sangria = "            "; break;
+					case 5: sangria = "               "; break;
 					default: sangria = "";
 				}
 				datos[i][0]=sangria+matriz.objetoNombre;
