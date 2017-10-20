@@ -254,6 +254,7 @@ public class SProyecto extends HttpServlet {
 			response_text = String.join("", "{\"success\":true,", response_text, "}");
 
 		}else if(accion.equals("getProyectoPagina")){
+			Integer prestamoId = Utils.String2Int(map.get("prestamoId"),null);
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int numeroProyecto = map.get("numeroproyecto")!=null  ? Integer.parseInt(map.get("numeroproyecto")) : 0;
 			String filtro_nombre = map.get("filtro_nombre");
@@ -262,7 +263,7 @@ public class SProyecto extends HttpServlet {
 			String columna_ordenada = map.get("columna_ordenada");
 			String orden_direccion = map.get("orden_direccion");
 			List<Proyecto> proyectos = ProyectoDAO.getProyectosPagina(pagina, numeroProyecto,
-					filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion,usuario);
+					filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion,usuario, prestamoId);
 			List<datos> datos_=new ArrayList<datos>();
 			for (Proyecto proyecto : proyectos){
 				datos dato = new datos();
@@ -633,7 +634,8 @@ public class SProyecto extends HttpServlet {
 			String filtro_nombre = map.get("filtro_nombre");
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
-			response_text = String.join("","{ \"success\": true, \"totalproyectos\":",ProyectoDAO.getTotalProyectos(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion,usuario).toString()," }");
+			Integer prestamoId = Utils.String2Int(map.get("prestamoId"), null);
+			response_text = String.join("","{ \"success\": true, \"totalproyectos\":",ProyectoDAO.getTotalProyectos(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion,usuario, prestamoId).toString()," }");
 		}
 		else if(accion.equals("numeroProyectosDisponibles")){
 			String filtro_nombre = map.get("filtro_nombre");
