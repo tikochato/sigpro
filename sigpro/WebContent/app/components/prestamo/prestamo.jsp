@@ -21,7 +21,7 @@
         </div>
     </script>
     <script type="text/ng-template" id="buscarPorPrestamo.jsp">
-    		<%@ include file="/app/components/programa/buscarPorPrestamo.jsp"%>
+    		<%@ include file="/app/components/prestamo/buscarPorPrestamo.jsp"%>
   	 </script>
 	<shiro:lacksPermission name="24010">
 		<span ng-init="prestamoc.redireccionSinPermisos()"></span>

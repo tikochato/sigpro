@@ -21,13 +21,13 @@
         </div>
     </script>
 	<script type="text/ng-template" id="buscarPorProyecto.jsp">
-    		<%@ include file="/app/components/prestamo/buscarPorProyecto.jsp"%>
+    		<%@ include file="/app/components/pep/buscarPorProyecto.jsp"%>
   	 </script>
   	 <script type="text/ng-template" id="cargarArchivo.jsp">
-    		<%@ include file="/app/components/prestamo/cargarArchivo.jsp"%>
+    		<%@ include file="/app/components/pep/cargarArchivo.jsp"%>
   	 </script>
   	 <script type="text/ng-template" id="agregarImpacto.jsp">
-    		<%@ include file="/app/components/prestamo/agregarImpacto.jsp"%>
+    		<%@ include file="/app/components/pep/agregarImpacto.jsp"%>
   	 </script>
 	<shiro:lacksPermission name="24010">
 		<span ng-init="controller.redireccionSinPermisos()"></span>
