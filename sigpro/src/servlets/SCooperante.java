@@ -134,7 +134,7 @@ public class SCooperante extends HttpServlet {
 					
 					
 					cooperante = new Cooperante(0,codigo, siglas, nombre, descripcion, 
-							usuario, null, new DateTime().toDate(), null, 1,ejercicio, null, null);
+							usuario, null, new DateTime().toDate(), null, 1,ejercicio, null);
 				}
 				else{
 					cooperante = CooperanteDAO.getCooperantePorId(id);
