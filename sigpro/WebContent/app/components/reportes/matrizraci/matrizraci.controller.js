@@ -131,10 +131,12 @@ app.controller('matrizraciController',['$scope','$rootScope','$http','$interval'
 	  mi.claseIcon = function (item,index) {
 		   
 		    switch (item[0].objetoTipo) {
-		        case 1:
+		        case 0:
 		            return 'glyphicon glyphicon-record';
-		        case 2:
+		        case 1:
 		            return 'glyphicon glyphicon-th';
+		        case 2:
+		            return 'glyphicon glyphicon-equalizer';
 		        case 3:
 		            return 'glyphicon glyphicon-certificate';
 		        case 4:

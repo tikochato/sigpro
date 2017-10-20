@@ -25,7 +25,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/cooperante/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'cooperanteController\'" class="all_page"></div>'
             })
-            .when('/prestamo/:reiniciar_vista?',{
+            .when('/pep/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'proyectoController\'" class="all_page"></div>'
             })
             .when('/prestamometas',{
@@ -46,7 +46,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/productopropiedad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloProductoPropiedad\'" class="all_page"></div>'
             })
-            .when('/producto/:componente_id?/:reiniciar_vista?',{
+            .when('/producto/:objeto_id?/:objeto_tipo?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloProducto\'" class="all_page"></div>'
             })
             .when('/subproductotipo/:reiniciar_vista?',{
@@ -88,14 +88,23 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/componente/:proyecto_id?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'componenteController\'" class="all_page"></div>'
             })
+            .when('/subcomponente/:componente_id?/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'subcomponenteController\'" class="all_page"></div>'
+            })
             .when('/componentetipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'componentetipoController\'" class="all_page"></div>'
+            })
+            .when('/subcomponentetipo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'subcomponentetipoController\'" class="all_page"></div>'
             })
             .when('/hitotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'hitotipoController\'" class="all_page"></div>'
             })
             .when('/componentepropiedad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'componentepropiedadController\'" class="all_page"></div>'
+            })  
+            .when('/subcomponentepropiedad/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'subcomponentepropiedadController\'" class="all_page"></div>'
             })            
             .when('/riesgopropiedad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'riesgopropiedadController\'" class="all_page"></div>'
@@ -148,7 +157,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/programatipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'programatipoController\'" class="all_page"></div>'
             })
-            .when('/programa/:reiniciar_vista?',{
+            .when('/prestamo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'prestamoController\'" class="all_page"></div>'
             })
             .when('/mapa/:proyecto_id?/:reiniciar_vista?',{
@@ -241,8 +250,8 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	       },
 	       {
 	    	   name: 'proyectoController',
-	    	   script: '/app/components/prestamo/proyecto.controller.js',
-	    	   template: '/app/components/prestamo/proyecto.jsp'
+	    	   script: '/app/components/pep/proyecto.controller.js',
+	    	   template: '/app/components/pep/proyecto.jsp'
 	       }, {
 	    	   name: 'prestamometasController',
 	    	   script: '/app/components/reportes/prestamometas/prestamometas.controller.js',
@@ -286,8 +295,8 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	       },
 	       {
 	    	   name: 'proyectotipoController',
-	    	   script: '/app/components/prestamo/proyectotipo.controller.js',
-	    	   template: '/app/components/prestamo/proyectotipo.jsp'
+	    	   script: '/app/components/pep/proyectotipo.controller.js',
+	    	   template: '/app/components/pep/proyectotipo.jsp'
 	       },
 	       {
 	    	   name: 'desembolsotipoController',
@@ -335,6 +344,16 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   template: '/app/components/componentetipo/componentetipo.jsp'
 	       },
 	       {
+	    	   name: 'subcomponenteController',
+	    	   script: '/app/components/subcomponente/subcomponente.controller.js',
+	    	   template: '/app/components/subcomponente/subcomponente.jsp'
+	       },
+	       {
+	    	   name: 'subcomponentetipoController',
+	    	   script: '/app/components/subcomponentetipo/subcomponentetipo.controller.js',
+	    	   template: '/app/components/subcomponentetipo/subcomponentetipo.jsp'
+	       },
+	       {
 	    	   name: 'hitotipoController',
 	    	   script: '/app/components/hitotipo/hitotipo.controller.js',
 	    	   template: '/app/components/hitotipo/hitotipo.jsp'
@@ -343,6 +362,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'componentepropiedadController',
 	    	   script: '/app/components/componentepropiedad/componentepropiedad.controller.js',
 	    	   template: '/app/components/componentepropiedad/componentepropiedad.jsp'
+	       },
+	       {
+	    	   name: 'subcomponentepropiedadController',
+	    	   script: '/app/components/subcomponentepropiedad/subcomponentepropiedad.controller.js',
+	    	   template: '/app/components/subcomponentepropiedad/subcomponentepropiedad.jsp'
 	       },{
 	    	   name: 'recursounidadmedidaController',
 	    	   script: '/app/components/recursounidadmedida/recursounidadmedida.controller.js',
@@ -438,8 +462,8 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	       },
 	       {
 	    	   name: 'prestamoController',
-	    	   script: '/app/components/programa/prestamo.controller.js',
-	    	   template: '/app/components/programa/prestamo.jsp'
+	    	   script: '/app/components/prestamo/prestamo.controller.js',
+	    	   template: '/app/components/prestamo/prestamo.jsp'
 	       },
 	       {
 	    	   name: 'mapaController',

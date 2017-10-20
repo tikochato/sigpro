@@ -55,7 +55,6 @@ public class SActividadPropiedad extends HttpServlet {
      */
     public SActividadPropiedad() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**

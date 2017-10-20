@@ -39,6 +39,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import dao.ActividadDAO;
 import dao.ComponenteDAO;
+import dao.SubComponenteDAO;
 import dao.EstructuraProyectoDAO;
 import dao.HitoDAO;
 import dao.ProductoDAO;
@@ -57,9 +58,10 @@ import utilities.Utils;
 @WebServlet("/SGantt")
 public class SGantt extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static int OBJETO_ID_HITO = 0;
-	private static int OBJETO_ID_PROYECTO = 1;
-	private static int OBJETO_ID_COMPONENTE = 2;
+	private static int OBJETO_ID_HITO = -1;
+	private static int OBJETO_ID_PROYECTO = 0;
+	private static int OBJETO_ID_COMPONENTE = 1;
+	private static int OBJETO_ID_SUBCOMPONENTE = 2;
 	private static int OBJETO_ID_PRODUCTO = 3;
 	private static int OBJETO_ID_SUBPRODUCTO = 4;
 	private static int OBJETO_ID_ACTIVIDAD= 5;
@@ -399,6 +401,7 @@ public class SGantt extends HttpServlet {
 		String items_subproducto="";
 		String items_producto="";
 		String items_componente="";
+		String items_subcomponente="";
 		String items="";
 
 		//predecesores = new HashMap<>();
@@ -408,7 +411,7 @@ public class SGantt extends HttpServlet {
 					null, null, null, null, null, usuario);
 			items_componente="";
 			for (Componente componente :componentes){
-				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
+				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(), null,
 						null, null, null, null, null, usuario);
 				items_producto="";
 				for (Producto producto : productos){
@@ -462,7 +465,7 @@ public class SGantt extends HttpServlet {
 
 				}
 				items_componente = String.join(items_componente.trim().length()>0 ? "," : "",items_componente,
-						construirItem(componente.getId(),componente.getId(),OBJETO_ID_COMPONENTE,componente.getNombre(),1, true, fechaPrimeraActividad,
+						construirItem(componente.getId(),componente.getId(),OBJETO_ID_SUBCOMPONENTE,componente.getNombre(),1, true, fechaPrimeraActividad,
 								null,false,componente.getDuracion(),componente.getCosto(),null,null));
 				items_componente = items_producto.trim().length() > 0 ? String.join(",", items_componente,items_producto) : items_componente;
 
@@ -506,7 +509,7 @@ public class SGantt extends HttpServlet {
 					
 					break;
 				case 2:
-					item = construirItem((Integer)obj[0], (Integer)obj[0], OBJETO_ID_COMPONENTE, (String)obj[1], 1, 
+					item = construirItem((Integer)obj[0], (Integer)obj[0], OBJETO_ID_SUBCOMPONENTE, (String)obj[1], 1, 
 							true, null, null, false,(Integer) obj[6], (BigDecimal) obj[8], null, null);
 					break;
 				case 3:

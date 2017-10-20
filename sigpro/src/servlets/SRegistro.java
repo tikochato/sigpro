@@ -29,7 +29,6 @@ public class SRegistro extends HttpServlet {
      */
     public SRegistro() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**

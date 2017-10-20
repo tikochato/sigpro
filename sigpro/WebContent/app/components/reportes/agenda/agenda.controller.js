@@ -51,7 +51,7 @@ app.controller('agendaController',['$scope','$rootScope','$http','$interval','i1
 			 mi.agenda = [].concat(mi.lista);
 			 var tab = "\t";
 			 for (x in mi.agenda){
-				 mi.agenda[x].nombre = tab.repeat(mi.agenda[x].objetoTipo -1) + mi.agenda[x].nombre; 
+				 mi.agenda[x].nombre = tab.repeat(mi.agenda[x].objetoTipo) + mi.agenda[x].nombre; 
 			 }
 			 mi.mostrarcargando = false;
 			 if(mi.lista.length > 0)
@@ -78,10 +78,12 @@ app.controller('agendaController',['$scope','$rootScope','$http','$interval','i1
 		 mi.claseIcon = function (objetoTipo) {
 			   
 			    switch (objetoTipo) {
-			        case 1:
+			        case 0:
 			            return 'glyphicon glyphicon-record';
-			        case 2:
+			        case 1:
 			            return 'glyphicon glyphicon-th';
+			        case 2:
+			            return 'glyphicon glyphicon-equalizer';
 			        case 3:
 			            return 'glyphicon glyphicon-certificate';
 			        case 4:

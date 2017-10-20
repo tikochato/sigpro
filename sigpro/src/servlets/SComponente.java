@@ -180,7 +180,7 @@ public class SComponente extends HttpServlet {
 				temp.acumulacionCostoId = componente.getAcumulacionCosto().getId();
 				temp.acumulacionCostoNombre = componente.getAcumulacionCosto().getNombre();
 				
-				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
+				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 1);
 				temp.esDeSigade = componente.getEsDeSigade().equals(1);
 				
 				stcomponentes.add(temp);
@@ -239,7 +239,7 @@ public class SComponente extends HttpServlet {
 				temp.fechaFin = Utils.formatDate(componente.getFechaFin());
 				temp.duracion = componente.getDuracion();
 				temp.duracionDimension = componente.getDuracionDimension();
-				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
+				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 1);
 				temp.esDeSigade = componente.getEsDeSigade().equals(1);
 				
 				stcomponentes.add(temp);
@@ -456,7 +456,7 @@ public class SComponente extends HttpServlet {
 				temp.duracion = componente.getDuracion();
 				temp.duracionDimension = componente.getDuracionDimension();
 				
-				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
+				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 1);
 				temp.esDeSigade = componente.getEsDeSigade().equals(1);
 				
 				stcomponentes.add(temp);
@@ -522,7 +522,7 @@ public class SComponente extends HttpServlet {
 			temp.duracion = componente.getDuracion();
 			temp.duracionDimension = componente.getDuracionDimension();
 			
-			temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
+			temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 1);
 			temp.esDeSigade = componente.getEsDeSigade().equals(1);
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
@@ -533,7 +533,7 @@ public class SComponente extends HttpServlet {
 			Integer componentId = Utils.String2Int(map.get("id"));
 			Componente componente = ComponenteDAO.getComponente(componentId);
 			
-			 response_text = String.join("", "{\"success\":" + ObjetoDAO.borrarHijos(componente.getTreePath(), 2, usuario) + "}");
+			 response_text = String.join("", "{\"success\":" + ObjetoDAO.borrarHijos(componente.getTreePath(), 1, usuario) + "}");
 		}
 		else{
 			response_text = "{ \"success\": false }";

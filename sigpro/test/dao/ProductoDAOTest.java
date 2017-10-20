@@ -36,12 +36,12 @@ public class ProductoDAOTest {
 	
 	@Test
 	public void getProductosPaginaTest(){
-		assertNotNull(ProductoDAO.getProductosPagina(1, 1,1,"", "", "","", "",""));
+		assertNotNull(ProductoDAO.getProductosPagina(1, 1,1,null, "", "", "","", "",""));
 	}
 	
 	@Test
 	public void getTotalProductosTest(){
-		assertEquals(ProductoDAO.getTotalProductos(1,"", "","","").getClass(),Long.class);
+		assertEquals(ProductoDAO.getTotalProductos(1,null,"", "","","").getClass(),Long.class);
 	}
 	
 	@Test

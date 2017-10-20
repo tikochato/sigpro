@@ -6,7 +6,7 @@
 	class="maincontainer all_page" id="title">
 
 	<script type="text/ng-template" id="buscarpropiedad.jsp">
-    	<%@ include file="/app/components/prestamo/buscarpropiedad.jsp"%>
+    	<%@ include file="/app/components/pep/buscarpropiedad.jsp"%>
   	</script>
   	<shiro:lacksPermission name="36010">
 		<p ng-init="proyectotipoc.redireccionSinPermisos()"></p>
@@ -72,8 +72,8 @@
 
 	<div class="row second-main-form" ng-if="proyectotipoc.mostraringreso">
 		<div class="page-header">
-			<h2 ng-hide="!proyectotipoc.esnuevo">Nuevo tipo de {{etiquetas.proyecto}}</h2>
-			<h2 ng-hide="proyectotipoc.esnuevo">Edición tipo de {{etiquetas.proyecto}}</h2>
+			<h2 ng-hide="!proyectotipoc.esnuevo"><small>Nuevo tipo de {{etiquetas.proyecto}}</small></h2>
+			<h2 ng-hide="proyectotipoc.esnuevo"><small>Edición tipo de {{etiquetas.proyecto}}</small></h2>
 		</div>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">

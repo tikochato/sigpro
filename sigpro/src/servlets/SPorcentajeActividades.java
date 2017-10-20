@@ -23,11 +23,13 @@ import javax.servlet.http.HttpSession;
 
 import dao.ActividadDAO;
 import dao.ComponenteDAO;
+import dao.SubComponenteDAO;
 import dao.ProductoDAO;
 import dao.SubproductoDAO;
 import pojo.Actividad;
 import pojo.Componente;
 import pojo.Producto;
+import pojo.Subcomponente;
 import pojo.Subproducto;
 import utilities.Utils;
 
@@ -37,8 +39,9 @@ public class SPorcentajeActividades extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	
-	private static int OBJETO_ID_PROYECTO = 1;
-	private static int OBJETO_ID_COMPONENTE = 2;
+	private static int OBJETO_ID_PROYECTO = 0;
+	private static int OBJETO_ID_COMPONENTE = 1;
+	private static int OBJETO_ID_SUBCOMPONENTE = 2;
 	private static int OBJETO_ID_PRODUCTO = 3;
 	private static int OBJETO_ID_SUBPRODUCTO = 4;
 	private static int OBJETO_ID_SUBACTIVIDAD = 5;
@@ -80,7 +83,36 @@ public class SPorcentajeActividades extends HttpServlet {
 			List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyectoId,
 					null, null, null, null, null, usuario);
 			for (Componente componente : componentes){
-				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
+				List<Subcomponente> subcomponentes = SubComponenteDAO.getSubComponentesPaginaPorComponente(0, 0, componente.getId(), 
+						null, null, null, null, null, usuario);
+				for(Subcomponente subcomponente : subcomponentes){
+					List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, null, subcomponente.getId(),
+							null, null, null, null, null, usuario);
+					for (Producto producto : productos){
+						List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(),
+								null, null, null, null, null, usuario);
+						for (Subproducto subproducto : subproductos){						
+							List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), OBJETO_ID_SUBPRODUCTO,
+									null, null, null, null, null, usuario);
+							for (Actividad actividad : actividades ){
+								items = ObtenerActividades(actividad,usuario, items);
+							}
+						}
+						List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), OBJETO_ID_PRODUCTO,
+								null, null, null, null, null, usuario);
+						for (Actividad actividad : actividades ){						
+							items = ObtenerActividades(actividad,usuario, items);
+						}
+
+					}
+					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componente.getId(), OBJETO_ID_SUBCOMPONENTE,
+							null, null, null, null, null, usuario);
+					for (Actividad actividad : actividades ){
+						items = ObtenerActividades(actividad,usuario, items);
+					}
+				}
+				
+				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(), null,
 						null, null, null, null, null, usuario);
 				for (Producto producto : productos){
 					List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(),
@@ -115,7 +147,35 @@ public class SPorcentajeActividades extends HttpServlet {
 		}else if(accion.equals("getKanbanComponente")){
 			items = "";
 			Integer componenteId = Utils.String2Int(map.get("componente_id"),0);
-			List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componenteId,
+			List<Subcomponente> subcomponentes = SubComponenteDAO.getSubComponentesPaginaPorComponente(0, 0, componenteId, 
+					null, null, null, null, null, usuario);
+			for(Subcomponente subcomponente : subcomponentes){
+				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, null, subcomponente.getId(),
+						null, null, null, null, null, usuario);
+				for (Producto producto : productos){
+					List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(),
+							null, null, null, null, null, usuario);
+					for (Subproducto subproducto : subproductos){
+						List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), OBJETO_ID_SUBPRODUCTO,
+								null, null, null, null, null, usuario);
+						for (Actividad actividad : actividades ){
+							items = ObtenerActividades(actividad,usuario, items);
+						}
+					}
+					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), OBJETO_ID_PRODUCTO,
+							null, null, null, null, null, usuario);
+					for (Actividad actividad : actividades ){
+						items = ObtenerActividades(actividad,usuario, items);
+					}
+
+				}
+				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componenteId, OBJETO_ID_SUBCOMPONENTE,
+						null, null, null, null, null, usuario);
+				for (Actividad actividad : actividades ){
+					items = ObtenerActividades(actividad,usuario, items);
+				}
+			}
+			List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componenteId, null,
 					null, null, null, null, null, usuario);
 			for (Producto producto : productos){
 				List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(),

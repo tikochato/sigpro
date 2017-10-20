@@ -11,13 +11,16 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
 	   $locationProvider.hashPrefix('!');
 	   
 	$routeProvider
-	   		.when('/prestamo/:id',{
+	   		.when('/pep/:id',{
 	       		template: '<div load-on-demand="\'proyectoController\'" class="all_page"></div>'
 	       })
 	       .when('/componente/:proyecto_id/:id/:nuevo?',{
             	template: '<div load-on-demand="\'componenteController\'" class="all_page"></div>'
             })
-	   		.when('/producto/:componente_id/:id/:nuevo?',{
+            .when('/subcomponente/:componente_id/:id/:nuevo?',{
+            	template: '<div load-on-demand="\'subcomponenteController\'" class="all_page"></div>'
+            })
+	   		.when('/producto/:objeto_id/:objeto_tipo/:id/:nuevo?',{
             	template: '<div load-on-demand="\'moduloProducto\'" class="all_page"></div>'
             })
             .when('/subproducto/:producto_id/:id/:nuevo?',{
@@ -63,8 +66,8 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	       },
 	       {
 	    	   name: 'proyectoController',
-	    	   script: '/app/components/prestamo/proyecto.controller.js',
-	    	   template: '/app/components/prestamo/proyecto.jsp'
+	    	   script: '/app/components/pep/proyecto.controller.js',
+	    	   template: '/app/components/pep/proyecto.jsp'
 	       }, {
 	    	   name: 'moduloProducto',
 	    	   script: '/app/components/producto/producto.controller.js',
@@ -78,6 +81,10 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'componenteController',
 	    	   script: '/app/components/componente/componente.controller.js',
 	    	   template: '/app/components/componente/componente.jsp'
+	       }, {
+	    	   name: 'subcomponenteController',
+	    	   script: '/app/components/subcomponente/subcomponente.controller.js',
+	    	   template: '/app/components/subcomponente/subcomponente.jsp'
 	       }, {
 	    	   name: 'hitoController',
 	    	   script: '/app/components/hito/hito.controller.js',
@@ -157,7 +164,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	
 	$rootScope.$on( "$routeChangeStart", function(event, next, current) {
 		if((mi.proyecto===undefined || mi.proyecto==null)){
-			if(next.$$route.originalPath!="/prestamo/:id")
+			if(next.$$route.originalPath!="/pep/:id")
 				$location.path('/main');				
 		}
 	});
@@ -177,12 +184,14 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	mi.showSelected=function(nodo){
 		mi.nodo_seleccionado = nodo;
 		switch(nodo.objeto_tipo){
+			case 0:
+				$location.path('/pep/'+nodo.id); break;
 			case 1:
-				$location.path('/prestamo/'+nodo.id); break;
-			case 2:
 				$location.path('/componente/'+nodo.parent.id+'/'+nodo.id); break;
+			case 2:
+				$location.path('/subcomponente/'+nodo.parent.id+'/'+nodo.id); break;
 			case 3:
-				$location.path('/producto/'+nodo.parent.id+'/'+nodo.id); break;
+				$location.path('/producto/'+nodo.parent.id+'/'+nodo.parent.objeto_tipo+'/'+nodo.id); break;
 			case 4:
 				$location.path('/subproducto/'+nodo.parent.id+'/'+nodo.id); break;
 			case 5:
@@ -235,7 +244,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 						mi.nodos_expandidos.push(mi.treedata.children[0]);
 						mi.setParentNode(mi.treedata);
 						mi.nodo_seleccionado = mi.treedata.children[0];
-						$location.path('/prestamo/'+mi.proyecto.id); 
+						$location.path('/pep/'+mi.proyecto.id); 
 					}
 				});
 		}
@@ -253,17 +262,17 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 					mi.nodos_expandidos.push(mi.treedata.children[0]);
 					mi.setParentNode(mi.treedata);
 					mi.nodo_seleccionado = mi.treedata.children[0];
-					$location.path('/prestamo/'+mi.proyecto.id); 
+					$location.path('/pep/'+mi.proyecto.id); 
 				}
 			});
 	}
 	
 	mi.nuevoObjeto=function(tipo){
 		switch(tipo){
-			case 1: //componente
-				$location.path('/componente/'+mi.nodo_seleccionado.id+'/0/1'); break;
+			case 1: //subcomponente
+				$location.path('/subcomponente/'+mi.nodo_seleccionado.id+'/0/1'); break;
 			case 2: //producto
-				$location.path('/producto/'+mi.nodo_seleccionado.id+'/0/1'); break;
+				$location.path('/producto/'+mi.nodo_seleccionado.id+'/'+mi.nodo_seleccionado.objeto_tipo+'/0/1'); break;
 			case 3: //subproducto
 				$location.path('/subproducto/'+mi.nodo_seleccionado.id+'/0/1'); break;
 			case 4: //actividad
@@ -310,6 +319,9 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	
 	mi.crearNodo=function(id,nombre,objeto_tipo,estado){
 		if(mi.nodo_seleccionado){
+			if(mi.nodo_seleccionado.children==null || mi.nodo_seleccionado.children===undefined){
+				mi.nodo_seleccionado.children=[];
+			}
 			mi.nodo_seleccionado.children.push({id: id, nombre: nombre, objeto_tipo: objeto_tipo, estado: estado, nivel: mi.nodo_seleccionado.nivel+1, parent: mi.nodo_seleccionado });
 			mi.nodos_expandidos.push(mi.nodo_seleccionado);
 			mi.nodo_seleccionado=mi.nodo_seleccionado.children[mi.nodo_seleccionado.children.length-1];

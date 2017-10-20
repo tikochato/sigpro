@@ -49,18 +49,20 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 	$scope.divActivo = "";
 		
 	mi.iconoObjetoTipo = {
-			0: "glyphicon glyphicon-scale",
-			1: "glyphicon glyphicon-record",
-		    2: "glyphicon glyphicon-th",
+			10: "glyphicon glyphicon-scale",
+			0: "glyphicon glyphicon-record",
+		    1: "glyphicon glyphicon-th",
+		    2: "glyphicon glyphicon-equalizer",
 		    3: "glyphicon glyphicon-certificate",
 		    4: "glyphicon glyphicon-link",
 		    5: "glyphicon glyphicon-time",
 		};
 		
 		mi.tooltipObjetoTipo = {
-			0: "Meta",
-		    1: "Proyecto",
-		    2: "Componente",
+			10: "Meta",
+		    0: "Proyecto",
+		    1: "Componente",
+		    2: "Subcomponente",
 		    3: "Producto",
 		    4: "Subproducto",
 		    5: "Actividad",
@@ -292,7 +294,7 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 					 for (x in mi.data){
 						 var totalFinal = {"planificado": null, "real": null};
 						 var fila = [];
-						 if(mi.data[x].objeto_tipo == 0){
+						 if(mi.data[x].objeto_tipo == 10){
 							 totalFinal = {"planificado": 0, "real": 0};
 							 for(a in mi.data[x].anios){
 								 var totalAnual = {"planificado": 0, "real": 0};
@@ -394,7 +396,7 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 							mi.data = JSON.parse(JSON.stringify(mi.dataOriginal));
 							mi.agrupacionActual = agrupacion;
 							for (x in mi.data){
-								 if(mi.data[x].objeto_tipo == 0){
+								 if(mi.data[x].objeto_tipo == 10){
 									 for(a in mi.data[x].anios){
 										 var anio = mi.data[x].anios[a];
 										 mi.data[x].anios[a] = mi.agruparMeses(anio);
@@ -511,7 +513,7 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 			anio = indice - (mes*mi.aniosTotal.length);
 			var item = mi.data[itemIndice];
 			var valor = Object.values(item.anios[anio])[mes];
-			if(valor[tipoMeta]==null && mi.data[itemIndice].objeto_tipo==0){
+			if(valor[tipoMeta]==null && mi.data[itemIndice].objeto_tipo==10){
 				return 0;
 			}
 			return valor[tipoMeta];

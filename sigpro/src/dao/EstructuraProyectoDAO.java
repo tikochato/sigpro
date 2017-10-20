@@ -14,6 +14,7 @@ import pojo.Actividad;
 import pojo.Componente;
 import pojo.Producto;
 import pojo.Proyecto;
+import pojo.Subcomponente;
 import pojo.Subproducto;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -30,17 +31,24 @@ public class EstructuraProyectoDAO {
 
 			String query =
 					"select * from ( "+
-					"select p.id, p.nombre, 1 objeto_tipo,  p.treePath, p.fecha_inicio, "+
+					"select p.id, p.nombre, 0 objeto_tipo,  p.treePath, p.fecha_inicio, "+
 					"p.fecha_fin, p.duracion, p.duracion_dimension,p.costo,0, p.acumulacion_costoid,  "+
 					"p.programa, p.subprograma, p.proyecto, p.actividad, p.obra "+
 					"from proyecto p "+
 					"where p.id= ?1 and p.estado=1  "+
 					"union "+
-					"select c.id, c.nombre, 2 objeto_tipo,  c.treePath, c.fecha_inicio, "+
+					"select c.id, c.nombre, 1 objeto_tipo,  c.treePath, c.fecha_inicio, "+
 					"c.fecha_fin , c.duracion, c.duracion_dimension,c.costo,0,c.acumulacion_costoid, "+
 					"c.programa, c.subprograma, c.proyecto, c.actividad, c.obra "+
 					"from componente c "+
 					"where c.proyectoid=?1 and c.estado=1  "+
+					"union "+
+					"select s.id, s.nombre, 2 objeto_tipo,  s.treePath, s.fecha_inicio, "+
+					"s.fecha_fin , s.duracion, s.duracion_dimension,s.costo,0,s.acumulacion_costoid, "+
+					"s.programa, s.subprograma, s.proyecto, s.actividad, s.obra "+
+					"from subcomponente s "+
+					"left outer join componente c on c.id=s.componenteid "+
+					"where c.proyectoid=?1 and s.estado=1 and c.estado=1  "+
 					"union "+
 					"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
 					"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid, "+
@@ -50,6 +58,15 @@ public class EstructuraProyectoDAO {
 					"left outer join proyecto p on p.id=c.proyectoid "+
 					"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1   "+
 					"union "+
+					"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
+					"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid, "+
+					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra "+
+					"from producto pr "+
+					"left outer join subcomponente sc on sc.id=pr.subcomponenteid   "+  
+					"left outer join componente c on c.id = sc.componenteid   "+
+					"left outer join proyecto p on p.id=c.proyectoid   "+  
+					"where p.id= ?1 and p.estado=1 and c.estado=1 and sc.estado=1 and pr.estado=1   "+
+					"union   "+
 					"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
 					"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid, "+
 					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra "+
@@ -87,15 +104,21 @@ public class EstructuraProyectoDAO {
 		try{
 			String query =
 				"select * from ( "+
-				"select p.id, p.nombre, 1 objeto_tipo,  p.treePath, p.fecha_inicio, "+
+				"select p.id, p.nombre, 0 objeto_tipo,  p.treePath, p.fecha_inicio, "+
 				"p.fecha_fin, p.duracion, p.duracion_dimension,p.costo,0, p.acumulacion_costoid  "+
 				"from proyecto p "+
 				"where p.id= ?1 and p.estado=1 and p.id in ( select proyectoid from proyecto_usuario where usuario = ?2 ) "+
 				"union "+
-				"select c.id, c.nombre, 2 objeto_tipo,  c.treePath, c.fecha_inicio, "+
+				"select c.id, c.nombre, 1 objeto_tipo,  c.treePath, c.fecha_inicio, "+
 				"c.fecha_fin , c.duracion, c.duracion_dimension,c.costo,0,c.acumulacion_costoid "+
 				"from componente c "+
 				"where c.proyectoid=?1 and c.estado=1 and c.id in (select componenteid from componente_usuario where usuario = ?2 ) "+
+				"union "+
+				"select s.id, s.nombre, 2 objeto_tipo,  s.treePath, s.fecha_inicio, "+
+				"s.fecha_fin , s.duracion, s.duracion_dimension,s.costo,0,s.acumulacion_costoid "+
+				"from subcomponente s "+
+				"left outer join componente c on c.id=s.componenteid "+
+				"where c.proyectoid=?1 and s.estado=1 and c.estado=1 and s.id in (select subcomponenteid from subcomponente_usuario where usuario = ?2 ) "+
 				"union "+
 				"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
 				"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid "+
@@ -103,6 +126,14 @@ public class EstructuraProyectoDAO {
 				"left outer join componente c on c.id=pr.componenteid "+
 				"left outer join proyecto p on p.id=c.proyectoid "+
 				"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1 and pr.id in ( select productoid from producto_usuario where usuario = ?2 )  "+
+				"union "+
+				"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
+				"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid "+
+				"from producto pr "+
+				"left outer join subcomponente s on s.id=pr.subcomponenteid "+
+				"left outer join componente c on c.id=s.componenteid "+
+				"left outer join proyecto p on p.id=c.proyectoid "+
+				"where p.id= ?1 and p.estado=1 and c.estado=1 and s.estado=1 and pr.estado=1 and pr.id in ( select productoid from producto_usuario where usuario = ?2 )  "+
 				"union "+
 				"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
 				"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid "+
@@ -387,8 +418,9 @@ public class EstructuraProyectoDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		String treePath_inicio="";
 		switch(objetoTipo){
-			case 1: Proyecto proyecto = ProyectoDAO.getProyecto(objetoId); treePath_inicio = (proyecto!=null) ? proyecto.getTreePath() : null; break;
-			case 2: Componente componente = ComponenteDAO.getComponente(objetoId); treePath_inicio = (componente!=null) ? componente.getTreePath() : null; break;
+			case 0: Proyecto proyecto = ProyectoDAO.getProyecto(objetoId); treePath_inicio = (proyecto!=null) ? proyecto.getTreePath() : null; break;
+			case 1: Componente componente = ComponenteDAO.getComponente(objetoId); treePath_inicio = (componente!=null) ? componente.getTreePath() : null; break;
+			case 2: Subcomponente subcomponente = SubComponenteDAO.getSubComponente(objetoId); treePath_inicio = (subcomponente!=null) ? subcomponente.getTreePath() : null; break;
 			case 3: Producto producto = ProductoDAO.getProductoPorId(objetoId); treePath_inicio = (producto!=null) ? producto.getTreePath() : null; break;
 			case 4: Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId); treePath_inicio = (subproducto!=null) ? subproducto.getTreePath() : null; break;
 			case 5: Actividad actividad = ActividadDAO.getActividadPorId(objetoId); treePath_inicio = (actividad!=null) ? actividad.getTreePath() : null; break;
@@ -397,19 +429,28 @@ public class EstructuraProyectoDAO {
 
 			String query =
 					"select * from ( "+
-					( objetoTipo<=1 ? 
-					"select p.id, p.nombre, 1 objeto_tipo,  p.treePath, p.fecha_inicio, "+
+					( objetoTipo<=0 ? 
+					"select p.id, p.nombre, 0 objeto_tipo,  p.treePath, p.fecha_inicio, "+
 					"p.fecha_fin, p.duracion, p.duracion_dimension,p.costo,0, p.acumulacion_costoid,  "+
 					"p.programa, p.subprograma, p.proyecto, p.actividad, p.obra "+
 					"from proyecto p "+
 					"where p.id= ?1 and p.estado=1  "+
 					"union " : "" ) +
-					( objetoTipo<=2 ? 
-					"select c.id, c.nombre, 2 objeto_tipo,  c.treePath, c.fecha_inicio, "+
+					( objetoTipo<=1 ? 
+					"select c.id, c.nombre, 1 objeto_tipo,  c.treePath, c.fecha_inicio, "+
 					"c.fecha_fin , c.duracion, c.duracion_dimension,c.costo,0,c.acumulacion_costoid, "+
 					"c.programa, c.subprograma, c.proyecto, c.actividad, c.obra "+
 					"from componente c "+
 					"where c.proyectoid=?1 and c.estado=1  "+
+					"union " : "" ) +
+					( objetoTipo<=2 ? 
+					"select s.id, s.nombre, 2 objeto_tipo,  s.treePath, s.fecha_inicio, "+
+					"s.fecha_fin , s.duracion, s.duracion_dimension,s.costo,0,s.acumulacion_costoid, "+
+					"s.programa, s.subprograma, s.proyecto, s.actividad, s.obra "+
+					"from subcomponente s "+
+					"left outer join componente c on c.id=s.componenteid "+
+					"left outer join proyecto p on p.id=c.proyectoid "+
+					"where p.id= ?1 and p.estado=1 and c.estado=1 and s.estado=1 and pr.estado=1   "+
 					"union " : "" ) +
 					( objetoTipo<=3 ? "select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
 					"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid, "+
@@ -418,6 +459,15 @@ public class EstructuraProyectoDAO {
 					"left outer join componente c on c.id=pr.componenteid "+
 					"left outer join proyecto p on p.id=c.proyectoid "+
 					"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1   "+
+					"union "+
+					"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
+					"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid, "+
+					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra "+
+					"from producto pr "+
+					"left outer join subcomponente s on s.id=pr.subcomponenteid "+
+					"left outer join componente c on c.id=s.componenteid "+
+					"left outer join proyecto p on p.id=c.proyectoid "+
+					"where p.id= ?1 and p.estado=1 and c.estado=1 and s.estado=1 and pr.estado=1   "+
 					"union " : "")+
 					( objetoTipo<=4 ? "select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
 					"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid, "+

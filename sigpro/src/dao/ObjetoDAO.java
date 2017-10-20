@@ -24,6 +24,7 @@ import pojo.PlanAdquisicionPago;
 import pojo.Prestamo;
 import pojo.Producto;
 import pojo.Proyecto;
+import pojo.Subcomponente;
 import pojo.Subproducto;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -38,17 +39,24 @@ public class ObjetoDAO {
 		try{
 			String query =
 					"select arbol.*, costo.total, costo.pago from ( "+
-					"select p.id, p.nombre, 1 objeto_tipo,  p.treePath, p.fecha_inicio, "+
+					"select p.id, p.nombre, 0 objeto_tipo,  p.treePath, p.fecha_inicio, "+
 					"p.fecha_fin, p.duracion, p.duracion_dimension,p.costo,0, p.acumulacion_costoid,  "+
 					"p.programa, p.subprograma, p.proyecto, p.actividad, p.obra, null renglon, null geografico "+
 					"from proyecto p "+
 					"where p.id= ?1 and p.estado=1  "+
 					"union "+
-					"select c.id, c.nombre, 2 objeto_tipo,  c.treePath, c.fecha_inicio, "+
+					"select c.id, c.nombre, 1 objeto_tipo,  c.treePath, c.fecha_inicio, "+
 					"c.fecha_fin , c.duracion, c.duracion_dimension,c.costo,0,c.acumulacion_costoid, "+
 					"c.programa, c.subprograma, c.proyecto, c.actividad, c.obra, c.renglon, c.ubicacion_geografica geografico "+
 					"from componente c "+
 					"where c.proyectoid=?1 and c.estado=1  "+
+					"union    "+
+					"select sc.id, sc.nombre, 2 objeto_tipo,  sc.treePath, sc.fecha_inicio,  "+  
+					"sc.fecha_fin , sc.duracion, sc.duracion_dimension,sc.costo,0,sc.acumulacion_costoid,  "+  
+					"sc.programa, sc.subprograma, sc.proyecto, sc.actividad, sc.obra, sc.renglon, sc.ubicacion_geografica geografico  "+  
+					"from subcomponente sc  "+
+					"left outer join componente c on c.id = sc.componenteid  "+
+					"where c.proyectoid=?1 and sc.estado=1 and c.estado=1   "+
 					"union "+
 					"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
 					"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid, "+
@@ -57,7 +65,16 @@ public class ObjetoDAO {
 					"left outer join componente c on c.id=pr.componenteid "+
 					"left outer join proyecto p on p.id=c.proyectoid "+
 					"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1   "+
-					"union "+
+					"union     "+
+					"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio,   "+  
+					"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid,   "+  
+					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra, pr.renglon, pr.ubicacion_geografica geografico   "+  
+					"from producto pr   "+  
+					"left outer join subcomponente sc on sc.id=pr.subcomponenteid   "+  
+					"left outer join componente c on c.id = sc.componenteid   "+
+					"left outer join proyecto p on p.id=c.proyectoid   "+  
+					"where p.id= ?1 and p.estado=1 and c.estado=1 and sc.estado=1 and pr.estado=1   "+
+					"union   "+
 					"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
 					"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid, "+
 					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra, sp.renglon, sp.ubicacion_geografica geografico "+
@@ -174,8 +191,7 @@ public class ObjetoDAO {
 						objetoCosto.inicializarStanio(anioInicial, anioFinal);
 						
 						if(obtenerPlanificado){
-							BigDecimal totalPagos = obj[19]!=null ? (BigDecimal)obj[19] : null;					
-							BigDecimal totalPlan = obj[18]!= null ? (BigDecimal)obj[18] : null;
+							BigDecimal totalPagos = obj[19]!=null ? (BigDecimal)obj[19] : null;		
 							if(totalPagos!=null && totalPagos.compareTo(BigDecimal.ZERO)!=0){
 								//obtener pagos
 								List<?> estructuraPagos = getConsultaPagos(objetoCosto.objeto_id, objetoCosto.objeto_tipo, anioInicial, anioFinal);
@@ -190,8 +206,6 @@ public class ObjetoDAO {
 										objetoCosto.anios[ejercicio-anioInicial].mes[m].planificado = objPago[3+m]!=null ? (BigDecimal)objPago[3+m] : null;
 									}
 								}	
-							}else if(totalPlan!=null && totalPlan.compareTo(BigDecimal.ZERO)!=0){
-								//utilizar costo de la adquisicion
 							}else{
 								//utilizar costo del objeto
 								for(int a=0; a<(anioFinal-anioInicial+1); a++){
@@ -303,15 +317,24 @@ public class ObjetoDAO {
 			return true;
 		}
 		switch(objetoTipo){
-		case 1:
+		case 0:
 			Proyecto proyecto = ProyectoDAO.getProyecto(objetoId);
 			if (proyecto.getComponentes()!=null && proyecto.getComponentes().size()>0){
 				return true;
 			}
 			return false;
-		case 2:
+		case 1:
 			Componente componente = ComponenteDAO.getComponente(objetoId);
 			if (componente.getProductos()!=null && componente.getProductos().size()>0){
+				return true;
+			}
+			if (componente.getSubcomponentes()!=null && componente.getSubcomponentes().size()>0){
+				return true;
+			}
+			return false;
+		case 2:
+			Subcomponente subcomponente = SubComponenteDAO.getSubComponente(objetoId);
+			if (subcomponente.getProductos()!=null && subcomponente.getProductos().size()>0){
 				return true;
 			}
 			return false;
@@ -334,7 +357,8 @@ public class ObjetoDAO {
 			List<?> resultados = new ArrayList<Object>();
 			String query = String.join(" ", "SELECT c FROM Componente c",
 					"WHERE not exists (FROM Producto pr where pr.componente.id=c.id and pr.estado=1)",
-					"and not exists (FROM Actividad a where a.objetoId=c.id and a.objetoTipo=2 and a.estado=1)",
+					"and not exists (FROM Subcomponente s where s.componente.id=c.id and s.estado=1)",
+					"and not exists (FROM Actividad a where a.objetoId=c.id and a.objetoTipo=1 and a.estado=1)",
 					"and c.proyecto.id=:proyectoId");
 			Query<?> criteria = session.createQuery(query);
 			criteria.setParameter("proyectoId", proyectoId);
@@ -348,7 +372,24 @@ public class ObjetoDAO {
 					proyecto = ProyectoDAO.getProyecto(componente.getProyecto().getId());
 				}
 					
-				temp = new ObjetoHoja(2, obj, 1, proyecto);
+				temp = new ObjetoHoja(1, obj, 0, proyecto);
+				hojas.add(temp);
+			}
+			
+			query = String.join(" ", "SELECT s FROM Subcomponente s",
+					"WHERE not exists (FROM Producto p where p.producto.id=pr.id and sp.estado=1)",
+					"and not exists (FROM Actividad a where a.objetoId=pr.id and a.objetoTipo=2 and a.estado=1)",
+					"and pr.componente.proyecto.id=:proyectoId");
+			
+			criteria = session.createQuery(query);
+			criteria.setParameter("proyectoId", proyectoId);
+			resultados = criteria.getResultList();
+			
+			Componente componente = null;
+			for(Object obj : resultados){
+				Subcomponente subcomponente = (Subcomponente)obj;
+				componente = ComponenteDAO.getComponente(subcomponente.getComponente().getId());
+				temp = new ObjetoHoja(2, obj, 1, componente);
 				hojas.add(temp);
 			}
 			
@@ -361,12 +402,20 @@ public class ObjetoDAO {
 			criteria.setParameter("proyectoId", proyectoId);
 			resultados = criteria.getResultList();
 			
-			Componente componente = null;
+			Subcomponente subcomponente = null;
+			componente = null;
 			for(Object obj : resultados){
 				Producto producto = (Producto)obj;
-				componente = ComponenteDAO.getComponente(producto.getComponente().getId());
-				temp = new ObjetoHoja(3, obj, 2, componente);
-				hojas.add(temp);
+				if(producto.getComponente()!=null){
+					componente = ComponenteDAO.getComponente(producto.getComponente().getId());
+					temp = new ObjetoHoja(3, obj, 1, componente);
+					hojas.add(temp);
+				}
+				if(producto.getSubcomponente()!=null){
+					subcomponente = SubComponenteDAO.getSubComponente(producto.getSubcomponente().getId());
+					temp = new ObjetoHoja(3, obj, 2, subcomponente);
+					hojas.add(temp);
+				}
 			}
 			
 			query = String.join(" ", "SELECT sp FROM Subproducto sp",
@@ -397,12 +446,16 @@ public class ObjetoDAO {
 			for(Object obj : resultados){
 				Actividad actividad = (Actividad)obj;
 				switch(actividad.getObjetoTipo()){
-				case 1:
+				case 0:
 					proyecto = ProyectoDAO.getProyecto(actividad.getObjetoId());
-					temp = new ObjetoHoja(5, obj, 1, proyecto);
+					temp = new ObjetoHoja(5, obj, 0, proyecto);
+					break;
+				case 1:
+					componente = ComponenteDAO.getComponente(actividad.getObjetoId());
+					temp = new ObjetoHoja(5, obj, 1, componente);
 					break;
 				case 2:
-					componente = ComponenteDAO.getComponente(actividad.getObjetoId());
+					subcomponente = SubComponenteDAO.getSubComponente(actividad.getObjetoId());
 					temp = new ObjetoHoja(5, obj, 2, componente);
 					break;
 				case 3:
@@ -432,8 +485,9 @@ public class ObjetoDAO {
 	public static Object getObjetoPorIdyTipo(Integer id, Integer tipo){
 		Object ret=null;
 		switch(tipo){
-			case 1: ret = (Object)ProyectoDAO.getProyecto(id); break;
-			case 2: ret = (Object)ComponenteDAO.getComponente(id); break;
+			case 0: ret = (Object)ProyectoDAO.getProyecto(id); break;
+			case 1: ret = (Object)ComponenteDAO.getComponente(id); break;
+			case 2: ret = (Object)SubComponenteDAO.getSubComponente(id); break;
 			case 3: ret = (Object)ProductoDAO.getProductoPorId(id); break;
 			case 4: ret = (Object)SubproductoDAO.getSubproductoPorId(id); break;
 			case 5: ret = (Object)ActividadDAO.getActividadPorId(id); break;
@@ -492,12 +546,18 @@ public class ObjetoDAO {
 				objetos.addAll(objetos_nuevos);
 			}
 			if (objetoTipo < 3){
-				query = "FROM Componente c where c.treePath like '" + treePathPadre + "%' and c.estado=1";
+				query = "FROM Subcomponente s where s.treePath like '" + treePathPadre + "%' and s.estado=1";
 				criteria = session.createQuery(query);
 				objetos_nuevos=criteria.getResultList();
 				objetos.addAll(objetos_nuevos);
 			}
 			if (objetoTipo < 2){
+				query = "FROM Componente c where c.treePath like '" + treePathPadre + "%' and c.estado=1";
+				criteria = session.createQuery(query);
+				objetos_nuevos=criteria.getResultList();
+				objetos.addAll(objetos_nuevos);
+			}
+			if (objetoTipo < 1){
 				query = "FROM Proyecto p where p.treePath = '" + treePathPadre + "' and p.estado=1";
 				criteria = session.createQuery(query);
 				objetos_nuevos=criteria.getResultList();

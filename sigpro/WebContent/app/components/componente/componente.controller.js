@@ -29,7 +29,6 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 		mi.componentenombre = "";
 		mi.unidadejecutoraid="";
 		mi.unidadejecutoranombre="";
-		mi.proyectoid = $routeParams.proyecto_id;
 		mi.formatofecha = 'dd/MM/yyyy';
 		mi.camposdinamicos = {};
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
@@ -427,21 +426,27 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 			}
 		}
 		
+		mi.irASubComponente=function(componenteid){
+			if(mi.componente!=null){
+				$location.path('/subcomponente/'+componenteid);
+			}
+		};
+		
 		mi.irAProductos=function(componenteid){
 			if(mi.componente!=null){
-				$location.path('/producto/'+componenteid);
+				$location.path('/producto/'+componenteid+'/1');
 			}
 		};
 		
 		mi.irAActividades=function(componenteid){
 			if(mi.componente!=null){
-				$location.path('/actividad/'+ componenteid +'/2' );
+				$location.path('/actividad/'+ componenteid +'/1' );
 			}
 		};
 		
 		mi.irARiesgos=function(componenteid){
 			if(mi.componente!=null){
-				$location.path('/riesgo/'+ componenteid +'/2' );
+				$location.path('/riesgo/'+ componenteid +'/1' );
 			}
 		};
 		
