@@ -687,20 +687,16 @@ public class SPrestamo extends HttpServlet {
 	        response_text = String.join("", "\"existenDatos\":",existenDatos + ",",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		} else if(accion.equals("guardarMatriz")){
-			
-			
 			Integer prestamoId = Utils.String2Int(map.get("prestamoId"));
 			Prestamo prestamo = PrestamoDAO.getPrestamoById(prestamoId);
 			String data = map.get("estructura");
-			
+			boolean ret = false;
 			guardarComponentesSigade(prestamo.getCodigoPresupuestario() + "", usuario);
 			
 			Type listType = new TypeToken<List<Map<String, Object>>>() {}.getType();
 			List<Map<String, Object>> estructuras = gson.fromJson(data, listType);
 			
 			ArrayList<Proyecto> proyectos = new ArrayList<Proyecto>();
-			
-			
 			for (Map<String, Object> estructura : estructuras){
 				List<Object> unidades = (List<Object>) estructura.get("unidadesEjecutoras");
 				listType = new TypeToken<List<Map<String, Object>>>() {}.getType();
@@ -714,10 +710,11 @@ public class SPrestamo extends HttpServlet {
 					BigDecimal fuenteNacional = unidad.get("nacional") != null ? new BigDecimal((Double) unidad.get("nacional")) : new BigDecimal(0);
 					if(posicion== -1){
 						proyectos.add(crearProyecto(unidad,prestamo,usuario));
+						ret = proyectos.size()>0;
 						if (fuentePrestamo.compareTo(BigDecimal.ZERO) > 0 || 
 								fuenteDonacion.compareTo(BigDecimal.ZERO) > 0 || 
 								fuenteNacional.compareTo(BigDecimal.ZERO)  > 0){
-							crearComponente(proyectos.get(proyectos.size() -1),(String) estructura.get("nombre"),
+							ret = ret && crearComponente(proyectos.get(proyectos.size() -1),(String) estructura.get("nombre"),
 									fuentePrestamo, fuenteDonacion, fuenteNacional,usuario,
 									prestamo.getCodigoPresupuestario(),((Double) estructura.get("orden")).intValue());
 						}
@@ -725,14 +722,14 @@ public class SPrestamo extends HttpServlet {
 						if (fuentePrestamo.compareTo(BigDecimal.ZERO) > 0 || 
 								fuenteDonacion.compareTo(BigDecimal.ZERO) > 0 || 
 								fuenteNacional.compareTo(BigDecimal.ZERO)  > 0){
-							crearComponente(proyectos.get(posicion),(String) estructura.get("nombre"),
+							ret = ret && crearComponente(proyectos.get(posicion),(String) estructura.get("nombre"),
 									fuentePrestamo, fuenteDonacion, fuenteNacional,usuario,
 									prestamo.getCodigoPresupuestario(),((Double) estructura.get("orden")).intValue());
 						}
 					}
 				}
 			}
-			
+			 response_text = String.join("", "{\"success\":",ret ? "true" : "false", response_text,"}");
 			
 		} else if(accion.equals("crearComponentesSigade")){
 			
@@ -742,7 +739,13 @@ public class SPrestamo extends HttpServlet {
 			
 			boolean ret = guardarComponentes(prestamo.getCodigoPresupuestario() + "", proyectoId, usuario, prestamo.getFechaSuscripcion());
 			response_text = String.join("", "{\"success\":,",ret ? "true" : "false", response_text,"}");
-		}
+		}else if(accion.equals("obtenerPrestamoPorId")){
+            Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
+            Prestamo prestamo = PrestamoDAO.getPrestamoById(id);
+            response_text = String.join("","{ \"success\": ",(prestamo!=null && prestamo.getId()!=null ? "true" : "false"),", "
+                    + "\"id\": " + (prestamo!=null ? prestamo.getId():"0") +", "
+                    + "\"nombre\": \"" + (prestamo!=null ? prestamo.getProyectoPrograma():"") +"\" }");
+        }
 		else
 			response_text = "{ \"success\": false }";
 		
