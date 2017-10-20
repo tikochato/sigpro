@@ -97,8 +97,8 @@ public class SObjeto extends HttpServlet {
 						nombre = (componente!=null) ? componente.getNombre() : "";
 						fechaInicio = (componente!=null) ? Utils.formatDate(componente.getFechaInicio()) : "";
 						break;
-					case 2: //SubComponente;
-						tiponombre = "SubComponente";
+					case 2: //Subcomponente;
+						tiponombre = "Subcomponente";
 						Subcomponente subcomponente = SubComponenteDAO.getSubComponentePorId(objetoId,usuario);
 						nombre = (subcomponente!=null) ? subcomponente.getNombre() : "";
 						fechaInicio = (subcomponente!=null) ? Utils.formatDate(subcomponente.getFechaInicio()) : "";

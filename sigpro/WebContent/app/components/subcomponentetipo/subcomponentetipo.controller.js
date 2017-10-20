@@ -4,7 +4,7 @@ app.controller('subcomponentetipoController',['$scope','$http','$interval','i18n
 	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal, $dialogoConfirmacion) {
 		var mi=this;
 		
-		$window.document.title = $utilidades.sistema_nombre+' - Tipo SubComponente';
+		$window.document.title = $utilidades.sistema_nombre+' - Tipo Subcomponente';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.subcomponentetipos = [];
@@ -135,7 +135,7 @@ app.controller('subcomponentetipoController',['$scope','$http','$interval','i18n
 					propiedades: idspropiedad.length > 0 ? idspropiedad : null, t: (new Date()).getTime()
 				}).success(function(response){
 					if(response.success){
-						$utilidades.mensaje('success','Tipo SubComponente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
+						$utilidades.mensaje('success','Tipo Subcomponente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
 						mi.subcomponentetipo.id = response.id;
 						mi.subcomponentetipo.usuarioCreo=response.usuarioCreo;
@@ -145,7 +145,7 @@ app.controller('subcomponentetipoController',['$scope','$http','$interval','i18n
 						mi.obtenerTotalSubComponenteTipos();
 					}
 					else
-						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' el Tipo SubComponente');
+						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' el Tipo Subcomponente');
 				});
 			}
 			else
@@ -160,7 +160,7 @@ app.controller('subcomponentetipoController',['$scope','$http','$interval','i18n
 				$utilidades.setFocus(document.getElementById("nombre"));
 			}
 			else
-				$utilidades.mensaje('warning','Debe seleccionar el Tipo de SubComponente que desea editar');
+				$utilidades.mensaje('warning','Debe seleccionar el Tipo de Subcomponente que desea editar');
 		}
 		
 		mi.borrar = function(ev) {
@@ -177,12 +177,12 @@ app.controller('subcomponentetipoController',['$scope','$http','$interval','i18n
 							id: mi.subcomponentetipo.id, t: (new Date()).getTime()
 						}).success(function(response){
 							if(response.success){
-								$utilidades.mensaje('success','Tipo SubComponente borrado con éxito');
+								$utilidades.mensaje('success','Tipo Subcomponente borrado con éxito');
 								mi.subcomponentetipo = null;
 								mi.obtenerTotalSubComponenteTipos();
 							}
 							else
-								$utilidades.mensaje('danger','Error al borrar el Tipo SubComponente');
+								$utilidades.mensaje('danger','Error al borrar el Tipo Subcomponente');
 						});
 					}
 				}, function(){
@@ -190,7 +190,7 @@ app.controller('subcomponentetipoController',['$scope','$http','$interval','i18n
 				});
 			}
 			else
-				$utilidades.mensaje('warning','Debe seleccionar el Tipo SubComponente que desea borrar');
+				$utilidades.mensaje('warning','Debe seleccionar el Tipo Subcomponente que desea borrar');
 		};
 		
 		mi.nuevo = function() {

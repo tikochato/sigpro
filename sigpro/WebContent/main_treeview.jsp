@@ -35,7 +35,7 @@
 				<div class="btn-group btn-group-sm" ng-switch="mainController.nodo_seleccionado.objeto_tipo">
 				       		<label ng-switch-when="0" class="btn btn-default" ng-click="mainController.nuevoObjeto(0)" uib-tooltip="Nuevo Componente" role="button">
 							<span class="glyphicon glyphicon-th"></span></label>
-							<label ng-switch-when="1" class="btn btn-default" ng-click="mainController.nuevoObjeto(1)" uib-tooltip="Nuevo SubComponente" role="button">
+							<label ng-switch-when="1" class="btn btn-default" ng-click="mainController.nuevoObjeto(1)" uib-tooltip="Nuevo Subcomponente" role="button">
 							<span class="glyphicon glyphicon-equalizer"></span></label>
 							<label ng-switch-when="1" class="btn btn-default" ng-click="mainController.nuevoObjeto(2)" uib-tooltip="Nuevo Producto" role="button">
 							<span class="glyphicon glyphicon-certificate"></span></label>

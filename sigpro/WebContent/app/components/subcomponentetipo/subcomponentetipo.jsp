@@ -12,7 +12,7 @@
 		<p ng-init="subcomponentetipoc.redireccionSinPermisos()"></p>
 	</shiro:lacksPermission>
 		<div class="panel panel-default">
-		    <div class="panel-heading"><h3>Tipo de SubComponente</h3></div>
+		    <div class="panel-heading"><h3>Tipo de Subcomponente</h3></div>
 		</div>
 
 
@@ -59,7 +59,7 @@
 				</div>
 			</div>
 			<br/>
-			<div class="total-rows">Total de {{  subcomponentetipoc.totalSubComponentetipos + (subcomponentetipoc.totalSubComponentetipos == 1 ? " Tipo de SubComponente" : " Tipos de SubComponentes" ) }}</div>
+			<div class="total-rows">Total de {{  subcomponentetipoc.totalSubComponentetipos + (subcomponentetipoc.totalSubComponentetipos == 1 ? " Tipo de Subcomponente" : " Tipos de Subcomponentes" ) }}</div>
 			<ul uib-pagination total-items="subcomponentetipoc.totalSubComponentetipos"
 				ng-model="subcomponentetipoc.paginaActual"
 				max-size="subcomponentetipoc.numeroMaximoPaginas"
@@ -74,8 +74,8 @@
 
 	<div class="row second-main-form" ng-show="subcomponentetipoc.mostraringreso">
 		<div class="page-header">
-		    <h2 ng-hide="!subcomponentetipoc.esnuevo"><small>Nuevo Tipo SubComponente</small></h2>
-		    <h2 ng-hide="subcomponentetipoc.esnuevo"><small>Edición de Tipo SubComponente</small></h2>
+		    <h2 ng-hide="!subcomponentetipoc.esnuevo"><small>Nuevo Tipo Subcomponente</small></h2>
+		    <h2 ng-hide="subcomponentetipoc.esnuevo"><small>Edición de Tipo Subcomponente</small></h2>
 		</div>
 		
 		<div class="operation_buttons" align="right">

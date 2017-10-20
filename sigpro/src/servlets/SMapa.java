@@ -293,7 +293,7 @@ public class SMapa extends HttpServlet {
 				break;
 			case 2:
 				Componente subcomponente = SubComponenteDAO.getSubComponentePorId(objetoId, usuario);
-				objeto.nombreOjetoTipo = "SubComponente";
+				objeto.nombreOjetoTipo = "Subcomponente";
 				objeto.id = subcomponente.getId();
 				objeto.nombre = subcomponente.getNombre();
 				objeto.fechaCreacion = Utils.formatDate(subcomponente.getFechaCreacion());

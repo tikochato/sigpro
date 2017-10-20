@@ -8,7 +8,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 		mi.botones = true;
 		
 		if(!mi.esTreeview)
-			$window.document.title = $utilidades.sistema_nombre+' - SubComponentes';
+			$window.document.title = $utilidades.sistema_nombre+' - Subcomponentes';
 		
 		mi.acumulacionesCosto = [];
 		
@@ -246,15 +246,15 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 								mi.t_crearNodo(mi.subcomponente.id,mi.subcomponente.nombre,2,true);
 						}
 						if(mi.child_riesgos!=null){
-							ret = mi.child_riesgos.guardar('SubComponente '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
-									'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el SubComponente');
+							ret = mi.child_riesgos.guardar('Subcomponente '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+									'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Subcomponente');
 						}
 						else
-							$utilidades.mensaje('success','SubComponente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
+							$utilidades.mensaje('success','Subcomponente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
 					}
 					else
-						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el SubComponente');
+						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el Subcomponente');
 					mi.botones = true;
 				});
 			
@@ -264,7 +264,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 			if(mi.subcomponente!=null && mi.subcomponente.id!=null){
 				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 						, "Confirmación de Borrado"
-						, '¿Desea borrar el SubComponente "'+mi.subcomponente.nombre+'"?'
+						, '¿Desea borrar el Subcomponente "'+mi.subcomponente.nombre+'"?'
 						, "Borrar"
 						, "Cancelar")
 				.result.then(function(data) {
@@ -275,12 +275,12 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 							id: mi.subcomponente.id
 						}).success(function(response){
 							if(response.success){
-								$utilidades.mensaje('success','SubComponente borrado con éxito');
+								$utilidades.mensaje('success','Subcomponente borrado con éxito');
 								mi.subcomponente = null;
 								mi.obtenerTotalSubComponentes();
 							}
 							else
-								$utilidades.mensaje('danger','Error al borrar el SubComponente');
+								$utilidades.mensaje('danger','Error al borrar el Subcomponente');
 							mi.botones = true;
 						});
 					}
@@ -289,7 +289,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 				});	
 			}
 			else
-				$utilidades.mensaje('warning','Debe seleccionar el SubComponente que desea borrar');
+				$utilidades.mensaje('warning','Debe seleccionar el Subcomponente que desea borrar');
 		};
 
 		mi.nuevo = function() {
@@ -365,7 +365,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 				});
 			}
 			else
-				$utilidades.mensaje('warning','Debe seleccionar el SubComponente que desea editar');
+				$utilidades.mensaje('warning','Debe seleccionar el Subcomponente que desea editar');
 		}
 
 		mi.irATabla = function() {
@@ -573,7 +573,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 
 
 		mi.buscarSubComponenteTipo = function() {
-			var resultado = mi.llamarModalBusqueda('Tipos de SubComponente','/SSubComponenteTipo', {
+			var resultado = mi.llamarModalBusqueda('Tipos de Subcomponente','/SSubComponenteTipo', {
 				accion : 'numeroSubComponenteTipos'
 			}, function(pagina, elementosPorPagina) {
 				return {
@@ -693,7 +693,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 				if (mi.subcomponente!=null && mi.subcomponente.id!=null) {
 					$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 							, "Confirmación de Borrado"
-							, '¿Desea borrar el SubComponente "' + mi.subcomponente.nombre + '"?'
+							, '¿Desea borrar el Subcomponente "' + mi.subcomponente.nombre + '"?'
 							, "Borrar"
 							, "Cancelar")
 					.result.then(function(data) {
@@ -707,12 +707,12 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 										function(response) {
 											if (response.success) {
 												
-												$utilidades.mensaje('success','SubComponente borrado con éxito');
+												$utilidades.mensaje('success','Subcomponente borrado con éxito');
 												mi.subcomponente = null;		
 												$rootScope.$emit("eliminarNodo", {});
 											} else{
 												$utilidades.mensaje('danger',
-														'Error al borrar el SubComponente');
+														'Error al borrar el Subcomponente');
 											}
 										});
 						}
@@ -721,7 +721,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 					});
 				} else {
 					$utilidades.mensaje('warning',
-							'Debe seleccionar el SubComponente que desee borrar');
+							'Debe seleccionar el Subcomponente que desee borrar');
 				}
 			};
 			

@@ -4,7 +4,7 @@ app.controller('subcomponentepropiedadController',['$scope','$http','$interval',
 		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog, $dialogoConfirmacion) {
 			var mi=this;
 			
-			$window.document.title = $utilidades.sistema_nombre+' - SubComponente Propiedad';
+			$window.document.title = $utilidades.sistema_nombre+' - Subcomponente Propiedad';
 			i18nService.setCurrentLang('es');
 			mi.mostrarcargando=true;
 			mi.subcomponentepropiedades = [];
@@ -101,8 +101,8 @@ app.controller('subcomponentepropiedadController',['$scope','$http','$interval',
 			
 			mi.cargarTabla = function(pagina){
 				mi.mostrarcargando=true;
-				$http.post('/SSubComponentePropiedad', { accion: 'getSubComponentePropiedadPagina', pagina: pagina, numerosubcomponentepropiedades: $utilidades.elementosPorPagina,
-					numeroproyecto:  $utilidades.elementosPorPagina,
+				$http.post('/SSubComponentePropiedad', { accion: 'getSubComponentePropiedadPagina', pagina: pagina, 
+					numerosubcomponentepropiedades: $utilidades.elementosPorPagina,
 					filtro_nombre: mi.filtros['nombre'], 
 					filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'],
 					columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t: (new Date()).getTime()		
@@ -129,7 +129,7 @@ app.controller('subcomponentepropiedadController',['$scope','$http','$interval',
 						datoTipoId: mi.datotipo.id, t: (new Date()).getTime()
 					}).success(function(response){
 						if(response.success){
-							$utilidades.mensaje('success','Propiedad SubComponente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
+							$utilidades.mensaje('success','Propiedad Subcomponente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 							mi.subcomponentepropiedad.id = response.id;
 							mi.subcomponentepropiedad.usuarioCreo=response.usuarioCreo;
 							mi.subcomponentepropiedad.fechaCreacion=response.fechaCreacion;
@@ -139,7 +139,7 @@ app.controller('subcomponentepropiedadController',['$scope','$http','$interval',
 							mi.obtenerTotalSubComponentePropiedades();
 						}
 						else
-							$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' la Propiedad SubComponente');
+							$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' la Propiedad Subcomponente');
 					});
 				}
 				else
@@ -150,7 +150,7 @@ app.controller('subcomponentepropiedadController',['$scope','$http','$interval',
 				if(mi.subcomponentepropiedad!=null && mi.subcomponentepropiedad.id!=null){
 					$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 							, "Confirmación de Borrado"
-							, '¿Desea borrar la Propiedad SubComponente "'+mi.subcomponentepropiedad.nombre+'"?'
+							, '¿Desea borrar la Propiedad Subcomponente "'+mi.subcomponentepropiedad.nombre+'"?'
 							, "Borrar"
 							, "Cancelar")
 					.result.then(function(data) {
@@ -160,12 +160,12 @@ app.controller('subcomponentepropiedadController',['$scope','$http','$interval',
 								id: mi.subcomponentepropiedad.id, t: (new Date()).getTime()
 							}).success(function(response){
 								if(response.success){
-									$utilidades.mensaje('success','Propiedad SubComponente borrado con éxito');
+									$utilidades.mensaje('success','Propiedad Subcomponente borrado con éxito');
 									mi.subcomponentepropiedad = null;
 									mi.cargarTabla();
 								}
 								else
-									$utilidades.mensaje('danger','Error al borrar la Propiedad SubComponente');
+									$utilidades.mensaje('danger','Error al borrar la Propiedad Subcomponente');
 							});
 						}
 					}, function(){
@@ -173,7 +173,7 @@ app.controller('subcomponentepropiedadController',['$scope','$http','$interval',
 					});		
 				}
 				else
-					$utilidades.mensaje('warning','Debe seleccionar la Propiedad SubComponente que desea borrar');
+					$utilidades.mensaje('warning','Debe seleccionar la Propiedad Subcomponente que desea borrar');
 			};
 
 			mi.nuevo = function() {
@@ -197,7 +197,7 @@ app.controller('subcomponentepropiedadController',['$scope','$http','$interval',
 					$utilidades.setFocus(document.getElementById("nombre"));
 				}
 				else
-					$utilidades.mensaje('warning','Debe seleccionar la Propiedad SubComponente que desea editar');
+					$utilidades.mensaje('warning','Debe seleccionar la Propiedad Subcomponente que desea editar');
 			}
 
 			mi.irATabla = function() {

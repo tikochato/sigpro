@@ -192,7 +192,7 @@
 				            <input type="text" class="inputText" id="icomptipo" name="icomptipo" ng-model="subcomponentec.subcomponentetiponombre" ng-readonly="true" ng-required="true" 
 				            	ng-click="subcomponentec.buscarSubComponenteTipo()" ng-value="subcomponentec.subcomponentetiponombre" onblur="this.setAttribute('value', this.value);"/>
 				            <span class="label-icon" ng-click="subcomponentec.buscarSubComponenteTipo()"><i class="glyphicon glyphicon-search"></i></span>
-				          	<label for="campo3" class="floating-label">* Tipo SubComponente</label>
+				          	<label for="campo3" class="floating-label">* Tipo Subcomponente</label>
 						</div>
 						<div class="form-group" >
 						    <input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="subcomponentec.coordenadas" ng-value="subcomponentec.coordenadas" 

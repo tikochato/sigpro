@@ -8,7 +8,7 @@
 		</shiro:lacksPermission>
 		
 		<div class="panel panel-default">
-		    <div class="panel-heading"><h3>Propiedad de SubComponentes</h3></div>
+		    <div class="panel-heading"><h3>Propiedad de Subcomponentes</h3></div>
 		</div>
 		<div class="row" align="center" ng-hide="subcomponentepropiedadc.mostraringreso">
 			
@@ -49,7 +49,7 @@
 				  </div>
 				</div>
 				<br/>
-			<div class="total-rows">Total de {{  subcomponentepropiedadc.totalSubComponentePropiedades + (subcomponentepropiedadc.totalSubComponentePropiedades == 1 ? " Propiedad de SubComponente" : " Propiedades de SubComponentes" ) }}</div>
+			<div class="total-rows">Total de {{  subcomponentepropiedadc.totalSubComponentePropiedades + (subcomponentepropiedadc.totalSubComponentePropiedades == 1 ? " Propiedad de Subcomponente" : " Propiedades de Subcomponentes" ) }}</div>
 				<ul uib-pagination total-items="subcomponentepropiedadc.totalSubComponentePropiedades"
 						ng-model="subcomponentepropiedadc.paginaActual"
 						max-size="subcomponentepropiedadc.numeroMaximoPaginas"

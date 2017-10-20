@@ -115,7 +115,7 @@ public class SSubComponentePropiedad extends HttpServlet {
 				stsubcomponentepropiedad.add(temp);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stsubcomponentepropiedad);
-	        response_text = String.join("", "\"componentepropiedades\":",response_text);
+	        response_text = String.join("", "\"subcomponentepropiedades\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		else if(accion.equals("getSubComponentePropiedadPagina")){
@@ -128,7 +128,7 @@ public class SSubComponentePropiedad extends HttpServlet {
 			String orden_direccion = map.get("orden_direccion");
 			List<SubcomponentePropiedad> subcompoentepropiedades = SubComponentePropiedadDAO.getSubComponentePropiedadesPagina(pagina,numeroSubComponentePropiedad,
 					filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,columna_ordenada,orden_direccion);
-			List<stsubcomponentepropiedad> stcomponentepropiedad=new ArrayList<stsubcomponentepropiedad>();
+			List<stsubcomponentepropiedad> stsubcomponentepropiedad=new ArrayList<stsubcomponentepropiedad>();
 			for(SubcomponentePropiedad subcomponentepropiedad:subcompoentepropiedades){
 				stsubcomponentepropiedad temp =new stsubcomponentepropiedad();
 				temp.id = subcomponentepropiedad.getId();
@@ -141,10 +141,10 @@ public class SSubComponentePropiedad extends HttpServlet {
 				temp.usuarioActualizo = subcomponentepropiedad.getUsuarioActualizo();
 				temp.usuarioCreo = subcomponentepropiedad.getUsuarioCreo();
 				temp.estado = subcomponentepropiedad.getEstado();
-				stcomponentepropiedad.add(temp);
+				stsubcomponentepropiedad.add(temp);
 			}
-			response_text=new GsonBuilder().serializeNulls().create().toJson(stcomponentepropiedad);
-	        response_text = String.join("", "\"componentepropiedades\":",response_text);
+			response_text=new GsonBuilder().serializeNulls().create().toJson(stsubcomponentepropiedad);
+	        response_text = String.join("", "\"subcomponentepropiedades\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		else if(accion.equals("getSubComponentePropiedadesTotalDisponibles")){
@@ -168,11 +168,11 @@ public class SSubComponentePropiedad extends HttpServlet {
 				stsubcomponentepropiedad.add(temp);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stsubcomponentepropiedad);
-	        response_text = String.join("", "\"componentepropiedades\":",response_text);
+	        response_text = String.join("", "\"subcomponentepropiedades\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		else if(accion.equals("numeroSubComponentePropiedadesDisponibles")){
-			response_text = String.join("","{ \"success\": true, \"totalcomponentepropiedades\":",SubComponentePropiedadDAO.getTotalSubComponentePropiedades().toString()," }");
+			response_text = String.join("","{ \"success\": true, \"totalsubcomponentepropiedades\":",SubComponentePropiedadDAO.getTotalSubComponentePropiedades().toString()," }");
 		}
 		else if(accion.equals("numeroSubComponentePropiedades")){
 			String filtro_nombre = map.get("filtro_nombre");
