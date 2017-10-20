@@ -112,8 +112,8 @@
 			</div>
 		<div class="operation_buttons">
 			<div class="btn-group" ng-hide="prestamoc.esNuevo">
-				<label class="btn btn-default" ng-if="prestamoc.esTreeview" ng-click="prestamoc.botones ? prestamoc.irAPep(prestamoc.prestamo.id) : ''" uib-tooltip="Componentes" tooltip-placement="bottom">
-				<span class="glyphicon glyphicon-th"></span></label>
+				<label class="btn btn-default" ng-if="!prestamoc.esTreeview" ng-click="prestamoc.botones ? prestamoc.irAPeps(prestamoc.prestamo.id) : ''" uib-tooltip="PEPs" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-record"></span></label>
 			</div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="24020">

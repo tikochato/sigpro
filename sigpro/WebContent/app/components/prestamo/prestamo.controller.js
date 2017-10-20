@@ -360,6 +360,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 				$http.post('/SPrestamo',param_data).then(
 						function(response) {
 							if (response.data.success) {
+								
 								if(mi.esTreeview){
 									mi.t_cambiarNombreNodo();
 								}
@@ -386,21 +387,57 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 										mi.displayCollectionUE = [].concat(mi.rowCollectionUE);
 									})
 								}
-								if(mi.child_desembolso!=null || mi.child_riesgos!=null){
-									if(mi.child_desembolso)
-										ret = mi.child_desembolso.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
-												'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo',
-												mi.child_riesgo!=null ? mi.child_riesgo.guardar :  null);
-									else if(mi.child_riesgo)
-										ret = mi.child_riesgo.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
-												'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo');
-								}
-								else{
-									$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
-									mi.botones=true;
+								
+								if (mi.matriz_valid && !mi.m_existenDatos && $scope.m_componentes.length > 0 ){
+									var parametros = {
+											accion: 'guardarMatriz',
+											estructura: JSON.stringify($scope.m_componentes),
+											prestamoId: mi.prestamo.id,
+										    t:moment().unix()
+									};
+						
+									$http.post('/SPrestamo', parametros).then(function(response){
+						
+										if (response.data.success){
+											mi.m_organismosEjecutores = response.data.unidadesEjecutoras;
+											
+											mi.m_existenDatos = true;
+											if(mi.child_desembolso!=null || mi.child_riesgos!=null  ){
+												if(mi.child_desembolso)
+													ret = mi.child_desembolso.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+															'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo',
+															mi.child_riesgo!=null ? mi.child_riesgo.guardar :  null);
+												else if(mi.child_riesgo)
+													ret = mi.child_riesgo.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+															'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo');
+											}
+											else{
+												$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+												mi.botones=true;
+											}
+										}else{
+											$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo');
+											mi.botones=true;
+										}
+						
+									});
+								}else{
+								
+									if(mi.child_desembolso!=null || mi.child_riesgos!=null ){
+										if(mi.child_desembolso)
+											ret = mi.child_desembolso.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+													'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo',
+													mi.child_riesgo!=null ? mi.child_riesgo.guardar :  null);
+										else if(mi.child_riesgo)
+											ret = mi.child_riesgo.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+													'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo');
+									}
+									else{
+										$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+										mi.botones=true;
+									}
 								}
 								
-								mi.guardarMatriz();
 									
 							}else{
 								$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo');
@@ -1030,7 +1067,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		}
 		
 		mi.irAPeps=function(prestamoid){
-			if(mi.proyecto!=null){
+			if(mi.prestamo!=null){
 				$location.path('/pep/'+ prestamoid );
 			}
 		};
@@ -1060,26 +1097,26 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		};
 		
 		mi.guardarMatriz = function(){
-			if (!mi.m_existenDatos && $scope.m_componentes.length > 0 ){
-			var parametros = {
-					accion: 'guardarMatriz',
-					estructura: JSON.stringify($scope.m_componentes),
-					prestamoId: mi.prestamo.id,
-				    t:moment().unix()
-			};
-
-			$http.post('/SPrestamo', parametros).then(function(response){
-
-				if (response.data.success){
-					mi.m_organismosEjecutores = response.data.unidadesEjecutoras;
-					$scope.m_componentes = response.data.componentes;
-					mi.m_existenDatos = true; 
-
-				}else{
-					$utilidades.mensaje('warning', 'Error al guardar matriz de componentes');
-				}
-
-			});
+			if (mi.matriz_valid && !mi.m_existenDatos && $scope.m_componentes.length > 0 ){
+				var parametros = {
+						accion: 'guardarMatriz',
+						estructura: JSON.stringify($scope.m_componentes),
+						prestamoId: mi.prestamo.id,
+					    t:moment().unix()
+				};
+	
+				$http.post('/SPrestamo', parametros).then(function(response){
+	
+					if (response.data.success){
+						mi.m_organismosEjecutores = response.data.unidadesEjecutoras;
+						$scope.m_componentes = response.data.componentes;
+						mi.m_existenDatos = true; 
+						return true;
+					}else{
+						return false;
+					}
+	
+				});
 			}
 		};
 		
