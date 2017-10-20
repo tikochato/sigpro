@@ -51,7 +51,7 @@ app.controller('agendaController',['$scope','$rootScope','$http','$interval','i1
 			 mi.agenda = [].concat(mi.lista);
 			 var tab = "\t";
 			 for (x in mi.agenda){
-				 mi.agenda[x].nombre = tab.repeat(mi.agenda[x].objetoTipo) + mi.agenda[x].nombre; 
+				 mi.agenda[x].nombre = tab.repeat(mi.agenda[x].nivel) + mi.agenda[x].nombre; 
 			 }
 			 mi.mostrarcargando = false;
 			 if(mi.lista.length > 0)
