@@ -97,22 +97,22 @@ public class TipoAdquisicionDAO {
 		switch(objetoTipo){
 			case 2:
 				Componente componente = ComponenteDAO.getComponente(objetoId);
-				cooperanteCodigo = componente.getProyecto().getCooperante().getCodigo();
+				cooperanteCodigo = componente.getProyecto().getPrestamo().getCooperante().getCodigo();
 				break;
 			case 3: 
 				Producto producto = ProductoDAO.getProductoPorId(objetoId);
-				cooperanteCodigo = producto.getComponente().getProyecto().getCooperante().getCodigo();
+				cooperanteCodigo = producto.getComponente().getProyecto().getPrestamo().getCooperante().getCodigo();
 				break;
 			case 4: 
 				Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId);
-				cooperanteCodigo = subproducto.getProducto().getComponente().getProyecto().getCooperante().getCodigo();
+				cooperanteCodigo = subproducto.getProducto().getComponente().getProyecto().getPrestamo().getCooperante().getCodigo();
 				break;
 			case 5: 
 				Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
 				if(actividad.getTreePath()!=null){
 					Integer proyectoId = Integer.parseInt(actividad.getTreePath().substring(0,8))-10000000;
 					if(proyectoId!=null)
-						cooperanteCodigo = ProyectoDAO.getProyecto(proyectoId).getCooperante().getCodigo();
+						cooperanteCodigo = ProyectoDAO.getProyecto(proyectoId).getPrestamo().getCooperante().getCodigo();
 				}
 				break;
 		}

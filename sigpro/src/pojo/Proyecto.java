@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 20, 2017 12:16:45 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 20, 2017 4:18:11 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -26,14 +26,9 @@ import javax.persistence.TemporalType;
 @Table(name = "proyecto", catalog = "sipro")
 public class Proyecto implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4342083302710933471L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Colaborador colaborador;
-	private Cooperante cooperante;
 	private Etiqueta etiqueta;
 	private Prestamo prestamo;
 	private ProyectoTipo proyectoTipo;
@@ -82,9 +77,8 @@ public class Proyecto implements java.io.Serializable {
 	public Proyecto() {
 	}
 
-	public Proyecto(Cooperante cooperante, Etiqueta etiqueta, ProyectoTipo proyectoTipo, String nombre,
-			String usuarioCreo, Date fechaCreacion, int estado, int duracion) {
-		this.cooperante = cooperante;
+	public Proyecto(Etiqueta etiqueta, ProyectoTipo proyectoTipo, String nombre, String usuarioCreo, Date fechaCreacion,
+			int estado, int duracion) {
 		this.etiqueta = etiqueta;
 		this.proyectoTipo = proyectoTipo;
 		this.nombre = nombre;
@@ -94,21 +88,20 @@ public class Proyecto implements java.io.Serializable {
 		this.duracion = duracion;
 	}
 
-	public Proyecto(AcumulacionCosto acumulacionCosto, Colaborador colaborador, Cooperante cooperante,
-			Etiqueta etiqueta, Prestamo prestamo, ProyectoTipo proyectoTipo, UnidadEjecutora unidadEjecutora,
-			String nombre, String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma, Integer proyecto,
-			Integer actividad, Integer obra, String latitud, String longitud, String objetivo, String enunciadoAlcance,
-			BigDecimal costo, String objetivoEspecifico, String visionGeneral, Integer renglon,
-			Integer ubicacionGeografica, Date fechaInicio, Date fechaFin, int duracion, String duracionDimension,
-			Integer orden, String treePath, Integer nivel, Integer ejecucionFisicaReal, Integer projectCargado,
-			Set<Desembolso> desembolsos, Set<Hito> hitos, Set<ProgramaProyecto> programaProyectos,
-			Set<MatrizRaci> matrizRacis, Set<ProyectoMiembro> proyectoMiembros, Set<ProyectoImpacto> proyectoImpactos,
+	public Proyecto(AcumulacionCosto acumulacionCosto, Colaborador colaborador, Etiqueta etiqueta, Prestamo prestamo,
+			ProyectoTipo proyectoTipo, UnidadEjecutora unidadEjecutora, String nombre, String descripcion,
+			String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
+			Long snip, Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra,
+			String latitud, String longitud, String objetivo, String enunciadoAlcance, BigDecimal costo,
+			String objetivoEspecifico, String visionGeneral, Integer renglon, Integer ubicacionGeografica,
+			Date fechaInicio, Date fechaFin, int duracion, String duracionDimension, Integer orden, String treePath,
+			Integer nivel, Integer ejecucionFisicaReal, Integer projectCargado, Set<Desembolso> desembolsos,
+			Set<Hito> hitos, Set<ProgramaProyecto> programaProyectos, Set<MatrizRaci> matrizRacis,
+			Set<ProyectoMiembro> proyectoMiembros, Set<ProyectoImpacto> proyectoImpactos,
 			Set<ProyectoPropiedadValor> proyectoPropiedadValors, Set<ProyectoUsuario> proyectoUsuarios,
 			Set<Componente> componentes) {
 		this.acumulacionCosto = acumulacionCosto;
 		this.colaborador = colaborador;
-		this.cooperante = cooperante;
 		this.etiqueta = etiqueta;
 		this.prestamo = prestamo;
 		this.proyectoTipo = proyectoTipo;
@@ -185,16 +178,6 @@ public class Proyecto implements java.io.Serializable {
 
 	public void setColaborador(Colaborador colaborador) {
 		this.colaborador = colaborador;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cooperanteid", nullable = false)
-	public Cooperante getCooperante() {
-		return this.cooperante;
-	}
-
-	public void setCooperante(Cooperante cooperante) {
-		this.cooperante = cooperante;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

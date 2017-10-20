@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 20, 2017 12:16:45 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 20, 2017 4:18:11 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -22,10 +22,6 @@ import javax.persistence.TemporalType;
 @Table(name = "meta_planificado", catalog = "sipro")
 public class MetaPlanificado implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7188695219643137480L;
 	private MetaPlanificadoId id;
 	private Meta meta;
 	private Integer eneroEntero;

@@ -14,7 +14,6 @@ import dao.ActividadDAO;
 import dao.AcumulacionCostoDAO;
 import dao.ComponenteDAO;
 import dao.ComponenteTipoDAO;
-import dao.CooperanteDAO;
 import dao.ProductoDAO;
 import dao.ProgramaDAO;
 import dao.ProyectoDAO;
@@ -33,7 +32,6 @@ import pojo.ActividadTipo;
 import pojo.AcumulacionCosto;
 import pojo.Componente;
 import pojo.ComponenteTipo;
-import pojo.Cooperante;
 import pojo.Etiqueta;
 import pojo.Producto;
 import pojo.ProductoTipo;
@@ -167,14 +165,13 @@ public class CProject {
 	}
 	
 	public Proyecto crearProyecto(Task task,String usuario){
-		Cooperante cooperante =CooperanteDAO.getCooperantePorCodigo(COOPERANTE_ID_DEFECTO);
 		ProyectoTipo proyectoTipo = ProyectoTipoDAO.getProyectoTipoPorId(PROYECTO_TIPO_ID_DEFECTO);
 		Etiqueta etiqueta = new Etiqueta();
 		etiqueta.setId(PROYECTO_ETIQUETA_DEFECTO);
 		AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
 		
 		UnidadEjecutora unidadEjecturoa = UnidadEjecutoraDAO.getUnidadEjecutora(new DateTime().getYear(),ENTIDAD_ID_DEFECTO,UNIDAD_EJECUTORA_ID_DEFECTO);
-		Proyecto proyecto = new Proyecto(acumulacionCosto,null,cooperante, etiqueta,null,proyectoTipo, unidadEjecturoa
+		Proyecto proyecto = new Proyecto(acumulacionCosto,null, etiqueta,null,proyectoTipo, unidadEjecturoa
 				, task.getName(), null, usuario, null, new Date(), null, 1, null, null, null, null, 
 				null, null, null,null, null, null, new BigDecimal(task.getCost().toString()),null, null, null,null,
 				Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish()),
