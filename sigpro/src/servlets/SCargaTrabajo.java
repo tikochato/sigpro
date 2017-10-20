@@ -51,6 +51,7 @@ public class SCargaTrabajo extends HttpServlet {
        
 	class stEstructura{
 		String idComponentes="";
+		String idSubComponentes="";
 		String idPrestamos="";
 		String idProductos="";
 		String idSubproductos="";
@@ -74,6 +75,7 @@ public class SCargaTrabajo extends HttpServlet {
 	class stestructuracolaborador{
 		int objetoId;
 		int objetoTipo;
+		int nivel;
 		String nombre;
 		int estado;
 		String nombreEstado;
@@ -126,11 +128,14 @@ public class SCargaTrabajo extends HttpServlet {
 					int objeto_id = (Integer)obj[0];
 					int objeto_tipo = ((BigInteger) obj[2]).intValue();
 					switch(objeto_tipo){
-					case 1: 
+					case 0: 
 						estructura.idPrestamos += estructura.idPrestamos.isEmpty() ? objeto_id : ","+objeto_id;
 						break;
-					case 2: 
+					case 1: 
 						estructura.idComponentes += estructura.idComponentes.isEmpty() ? objeto_id : ","+objeto_id;
+						break;
+					case 2: 
+						estructura.idSubComponentes += estructura.idSubComponentes.isEmpty() ? objeto_id : ","+objeto_id;
 						break;
 					case 3: 
 						estructura.idProductos += estructura.idProductos.isEmpty() ? objeto_id : ","+objeto_id;
@@ -162,11 +167,12 @@ public class SCargaTrabajo extends HttpServlet {
 				Integer anio_fin = Utils.String2Int(map.get("anio_fin"));
 				String idPrestamos = map.get("idPrestamos") != null && map.get("idPrestamos").length() > 0? map.get("idPrestamos") : "0";
 				String idComponentes = map.get("idComponentes") != null && map.get("idComponentes").length() > 0 ? map.get("idComponentes") : "0";
+				String idSubComponentes = map.get("idSubComponentes") != null && map.get("idSubComponentes").length() > 0 ? map.get("idSubComponentes") : "0";
 				String idProductos = map.get("idProductos") != null && map.get("idProductos").length() > 0 ? map.get("idProductos") : "0";
 				String idSubproductos = map.get("idSubproductos") != null && map.get("idSubproductos").length() > 0 ? map.get("idSubproductos") : "0";
 				Integer colaboradorId = Utils.String2Int(map.get("colaboradorid"));
 							
-				List<?> objActividades =ActividadDAO.getActividadesTerminadas(idPrestamos, idComponentes, idProductos,
+				List<?> objActividades =ActividadDAO.getActividadesTerminadas(idPrestamos, idComponentes, idSubComponentes, idProductos,
 						idSubproductos, colaboradorId, anio_inicio, anio_fin);
 				
 				List<stactividadterminada> actividadesTerminadas = new ArrayList<>();
@@ -194,6 +200,7 @@ public class SCargaTrabajo extends HttpServlet {
 					List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
 					stestructuracolaborador stprestamo=null;
 					stestructuracolaborador stcomponente=null;
+					stestructuracolaborador stsubcomponente=null;
 					stestructuracolaborador stproducto=null;
 					stestructuracolaborador stsubproducto=null;
 					
@@ -202,25 +209,38 @@ public class SCargaTrabajo extends HttpServlet {
 						Integer objeto_id = (Integer)obj[0];
 						String nombre = (String)obj[1];
 						Integer objeto_tipo = ((BigInteger) obj[2]).intValue();
+						Integer nivel = ((String)obj[3]).length()/8;
 							
 						switch(objeto_tipo){
-						case 1: 
+						case 0: 
 							stprestamo = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);
+							stprestamo.nivel = nivel;
 							stcomponente=null;
+							stsubcomponente=null;
 							stproducto=null;
 							stsubproducto=null;
 							break;
-						case 2: 
+						case 1: 
 							stcomponente = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);
+							stcomponente.nivel = nivel;
+							stproducto=null;
+							stsubcomponente=null;
+							stsubproducto=null;
+							break;
+						case 2: 
+							stsubcomponente = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);
+							stsubcomponente.nivel = nivel;
 							stproducto=null;
 							stsubproducto=null;
 							break;
 						case 3: 
 							stproducto = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);
+							stproducto.nivel = nivel;
 							stsubproducto=null;
 							break;
 						case 4: 
 							stsubproducto = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);
+							stsubproducto.nivel = nivel;
 							break;
 						case 5: 
 							Actividad objActividad = ActividadDAO.getActividadPorIdResponsable(objeto_id,  idColaboradores, "r");
@@ -228,11 +248,13 @@ public class SCargaTrabajo extends HttpServlet {
 							if (objActividad!=null){
 								stestructuracolaborador stactividad = construirItemPorColaborador(
 										objActividad.getNombre(), objActividad.getId(), 5, true,objActividad.getFechaInicio(),objActividad.getFechaFin());
+								stactividad.nivel = nivel;
 								getEstado(stactividad, objActividad, anio_inicio, anio_fin);
 								if(stactividad.estado > 0){
 									estructuracolaborador.add(stactividad);
 									if(stprestamo!=null) stprestamo.mostrar=true;
 									if(stcomponente!=null) stcomponente.mostrar=true;
+									if(stsubcomponente!=null) stsubcomponente.mostrar=true;
 									if(stproducto!=null) stproducto.mostrar = true;
 									if(stsubproducto!=null) stsubproducto.mostrar = true;
 								}
@@ -274,10 +296,11 @@ public class SCargaTrabajo extends HttpServlet {
 					Integer anio_fin = Utils.String2Int(map.get("anio_fin"));
 					Integer idPrestamos = Utils.String2Int(map.get("idPrestamos"));
 					String idComponentes = map.get("idComponentes") != null && map.get("idComponentes").length() > 0 ? map.get("idComponentes") : "0";
+					String idSubComponentes = map.get("idSubComponentes") != null && map.get("idSubComponentes").length() > 0 ? map.get("idSubComponentes") : "0";
 					String idProductos = map.get("idProductos") != null && map.get("idProductos").length() > 0 ? map.get("idProductos") : "0";
 					String idSubproductos = map.get("idSubproductos") != null && map.get("idSubproductos").length() > 0 ? map.get("idSubproductos") : "0";
 					
-			        byte [] outArray = exportarExcel(idPrestamos, idComponentes, idProductos, idSubproductos, anio_inicio, anio_fin, usuario);
+			        byte [] outArray = exportarExcel(idPrestamos, idComponentes, idSubComponentes, idProductos, idSubproductos, anio_inicio, anio_fin, usuario);
 				
 					response.setContentType("application/ms-excel");
 					response.setContentLength(outArray.length);
@@ -295,12 +318,13 @@ public class SCargaTrabajo extends HttpServlet {
 				Integer anio_fin = Utils.String2Int(map.get("anio_fin"));
 				Integer idPrestamos = Utils.String2Int(map.get("idPrestamos"));
 				String idComponentes = map.get("idComponentes") != null && map.get("idComponentes").length() > 0 ? map.get("idComponentes") : "0";
+				String idSubComponentes = map.get("idSubComponentes") != null && map.get("idSubComponentes").length() > 0 ? map.get("idSubComponentes") : "0";
 				String idProductos = map.get("idProductos") != null && map.get("idProductos").length() > 0 ? map.get("idProductos") : "0";
 				String idSubproductos = map.get("idSubproductos") != null && map.get("idSubproductos").length() > 0 ? map.get("idSubproductos") : "0";
 				String headers[][];
 				String datos[][];
 				headers = generarHeaders();
-				datos = generarDatos(idPrestamos, idComponentes, idProductos, idSubproductos, anio_inicio, anio_fin, usuario);
+				datos = generarDatos(idPrestamos, idComponentes, idSubComponentes, idProductos, idSubproductos, anio_inicio, anio_fin, usuario);
 				String path = archivo.ExportarPdfCargaTrabajo(headers, datos,usuario);
 				File file=new File(path);
 				if(file.exists()){
@@ -497,7 +521,7 @@ public class SCargaTrabajo extends HttpServlet {
 		}
 	}
 	
-	private byte[] exportarExcel(Integer idPrestamos, String idComponentes, String idProductos, String idSubproductos, Integer anio_inicio, Integer anio_fin, String usuario) throws IOException{
+	private byte[] exportarExcel(Integer idPrestamos, String idComponentes, String idSubComponentes, String idProductos, String idSubproductos, Integer anio_inicio, Integer anio_fin, String usuario) throws IOException{
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -507,7 +531,7 @@ public class SCargaTrabajo extends HttpServlet {
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
 			headers = generarHeaders();
-			datos = generarDatos(idPrestamos, idComponentes, idProductos, idSubproductos, anio_inicio, anio_fin, usuario);
+			datos = generarDatos(idPrestamos, idComponentes, idSubComponentes, idProductos, idSubproductos, anio_inicio, anio_fin, usuario);
 			CGraficaExcel grafica = generarGrafica(datos);
 			excel = new CExcel("Administración Transaccional", false, grafica);
 			wb=excel.generateExcelOfData(datos, "Carga de Trabajo", headers, null, true, usuario);
@@ -536,7 +560,7 @@ public class SCargaTrabajo extends HttpServlet {
 		return headers;
 	}
 	
-	public String[][] generarDatos(Integer idPrestamos, String idComponentes, String idProductos, String idSubproductos, Integer anio_inicio, Integer anio_fin, String usuario){
+	public String[][] generarDatos(Integer idPrestamos, String idComponentes, String idSubComponentes, String idProductos, String idSubproductos, Integer anio_inicio, Integer anio_fin, String usuario){
 		List<stcargatrabajo> cargas = getCargaTrabajoPrestamo(idPrestamos, anio_inicio, anio_fin);
 		String[][] datos = null;
 		
@@ -620,11 +644,8 @@ public class SCargaTrabajo extends HttpServlet {
 		datos = new String[estructura.size()][4];
 		for (stestructuracolaborador estr : estructura){
 			String indent="";
-			switch (estr.objetoTipo){
-				case 2: indent = "  "; break;
-				case 3: indent = "    "; break;
-				case 4: indent = "      "; break;
-				case 5: indent = "        "; break;
+			for(int s=1; s<estr.nivel; s++){
+				indent+="  ";
 			}
 			datos[i][0] = indent +  estr.nombre;
 			datos[i][1] = estr.nombreEstado;
@@ -642,6 +663,7 @@ public class SCargaTrabajo extends HttpServlet {
 		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
 		stestructuracolaborador stprestamo=null;
 		stestructuracolaborador stcomponente=null;
+		stestructuracolaborador stsubcomponente=null;
 		stestructuracolaborador stproducto=null;
 		stestructuracolaborador stsubproducto=null;
 		
@@ -650,28 +672,42 @@ public class SCargaTrabajo extends HttpServlet {
 			Integer objeto_id = (Integer)obj[0];
 			String nombre = (String)obj[1];
 			Integer objeto_tipo = ((BigInteger) obj[2]).intValue();
+			Integer nivel = ((String)obj[3]).length()/8;
 				
 			switch(objeto_tipo){
-			case 1: 
+			case 0: 
 				stprestamo = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);						 
+				stprestamo.nivel = nivel;
 				estructuracolaborador.add(stprestamo);
 				stcomponente=null;
+				stsubcomponente=null;
+				stproducto=null;
+				stsubproducto=null;
+				break;
+			case 1: 
+				stcomponente = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);	
+				stcomponente.nivel = nivel;
+				estructuracolaborador.add(stcomponente);
+				stsubcomponente=null;
 				stproducto=null;
 				stsubproducto=null;
 				break;
 			case 2: 
-				stcomponente = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);						 
-				estructuracolaborador.add(stcomponente);
+				stsubcomponente = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);	
+				stsubcomponente.nivel = nivel;
+				estructuracolaborador.add(stsubcomponente);
 				stproducto=null;
 				stsubproducto=null;
 				break;
 			case 3: 
 				stproducto = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);						 
+				stproducto.nivel = nivel;
 				estructuracolaborador.add(stproducto);
 				stsubproducto=null;
 				break;
 			case 4: 
 				stsubproducto = construirItemPorColaborador(nombre, objeto_id, objeto_tipo, false,null,null);						 
+				stsubproducto.nivel = nivel;
 				estructuracolaborador.add(stsubproducto);
 				break;
 			case 5: 
@@ -679,11 +715,13 @@ public class SCargaTrabajo extends HttpServlet {
 				if (objActividad!=null){
 					stestructuracolaborador stactividad = construirItemPorColaborador(
 							objActividad.getNombre(), objActividad.getId(), 5, true,objActividad.getFechaInicio(),objActividad.getFechaFin());
+					stactividad.nivel = nivel;
 					getEstado(stactividad, objActividad, anio_inicio, anio_fin);
 					if(stactividad.estado > 0){
 						estructuracolaborador.add(stactividad);
 						if(stprestamo!=null) stprestamo.mostrar=true;
 						if(stcomponente!=null) stcomponente.mostrar=true;
+						if(stsubcomponente!=null) stsubcomponente.mostrar=true;
 						if(stproducto!=null) stproducto.mostrar = true;
 						if(stsubproducto!=null) stsubproducto.mostrar = true;
 					}

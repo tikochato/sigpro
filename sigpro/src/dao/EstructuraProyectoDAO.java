@@ -82,7 +82,7 @@ public class EstructuraProyectoDAO {
 					"from subproducto sp "+
 					"left outer join producto pr on pr.id=sp.productoid "+
 					"left outer join subcomponente sc on sc.id=pr.subcomponenteid "+
-					"left outer join componente c on c.id=sc.subcomponenteid "+
+					"left outer join componente c on c.id=sc.componenteid "+
 					"left outer join proyecto p on p.id=c.proyectoid "+
 					"where p.id= ?1 and p.estado=1 and c.estado=1 and sc.estado=1 and pr.estado=1 and sp.estado=1 and sp.id  "+
 					"union "+

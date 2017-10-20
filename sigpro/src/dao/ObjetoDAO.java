@@ -83,6 +83,16 @@ public class ObjetoDAO {
 					"left outer join componente c on c.id=pr.componenteid "+
 					"left outer join proyecto p on p.id=c.proyectoid "+
 					"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1 and sp.estado=1 and sp.id  "+
+					"union   "+
+					"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
+					"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid, "+
+					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra, sp.renglon, sp.ubicacion_geografica geografico "+
+					"from subproducto sp "+
+					"left outer join producto pr on pr.id=sp.productoid "+
+					"left outer join subcomponente sc on sc.id=pr.subcomponenteid "+
+					"left outer join componente c on c.id=sc.componenteid "+
+					"left outer join proyecto p on p.id=c.proyectoid "+
+					"where p.id= ?1 and p.estado=1 and c.estado=1 and sc.estado=1 and pr.estado=1 and sp.estado=1 and sp.id  "+
 					"union "+
 					"select a.id, a.nombre, 5 objeto_tipo,  a.treePath, a.fecha_inicio, "+
 					"a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id,a.acumulacion_costo acumulacion_costoid, "+
@@ -396,12 +406,12 @@ public class ObjetoDAO {
 			query = String.join(" ", "SELECT pr FROM Producto pr",
 					"WHERE not exists (FROM Subproducto sp where sp.producto.id=pr.id and sp.estado=1)",
 					"and not exists (FROM Actividad a where a.objetoId=pr.id and a.objetoTipo=3 and a.estado=1)",
-					"and pr.componente.proyecto.id=:proyectoId");
+					"and (pr.componente.proyecto.id=:proyectoId or pr.subcomponente.componente.componente.proyecto.id=:proyectoId)");
 			
 			criteria = session.createQuery(query);
 			criteria.setParameter("proyectoId", proyectoId);
 			resultados = criteria.getResultList();
-			
+									
 			Subcomponente subcomponente = null;
 			componente = null;
 			for(Object obj : resultados){
@@ -420,7 +430,7 @@ public class ObjetoDAO {
 			
 			query = String.join(" ", "SELECT sp FROM Subproducto sp",
 					"WHERE not exists (FROM Actividad a where a.objetoId=sp.id and a.objetoTipo=4 and a.estado=1)",
-					"and sp.producto.componente.proyecto.id=:proyectoId");
+					"and (sp.producto.componente.proyecto.id=:proyectoId or sp.producto.subcomponente.componente.proyecto.id=:proyectoId)");
 			
 			criteria = session.createQuery(query);
 			criteria.setParameter("proyectoId", proyectoId);
