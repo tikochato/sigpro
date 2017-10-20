@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 19, 2017 6:14:38 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 20, 2017 12:16:45 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,12 +29,13 @@ public class Proyecto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 949671685974121626L;
+	private static final long serialVersionUID = -4342083302710933471L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Colaborador colaborador;
 	private Cooperante cooperante;
 	private Etiqueta etiqueta;
+	private Prestamo prestamo;
 	private ProyectoTipo proyectoTipo;
 	private UnidadEjecutora unidadEjecutora;
 	private String nombre;
@@ -94,8 +95,8 @@ public class Proyecto implements java.io.Serializable {
 	}
 
 	public Proyecto(AcumulacionCosto acumulacionCosto, Colaborador colaborador, Cooperante cooperante,
-			Etiqueta etiqueta, ProyectoTipo proyectoTipo, UnidadEjecutora unidadEjecutora, String nombre,
-			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
+			Etiqueta etiqueta, Prestamo prestamo, ProyectoTipo proyectoTipo, UnidadEjecutora unidadEjecutora,
+			String nombre, String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma, Integer proyecto,
 			Integer actividad, Integer obra, String latitud, String longitud, String objetivo, String enunciadoAlcance,
 			BigDecimal costo, String objetivoEspecifico, String visionGeneral, Integer renglon,
@@ -109,6 +110,7 @@ public class Proyecto implements java.io.Serializable {
 		this.colaborador = colaborador;
 		this.cooperante = cooperante;
 		this.etiqueta = etiqueta;
+		this.prestamo = prestamo;
 		this.proyectoTipo = proyectoTipo;
 		this.unidadEjecutora = unidadEjecutora;
 		this.nombre = nombre;
@@ -203,6 +205,16 @@ public class Proyecto implements java.io.Serializable {
 
 	public void setEtiqueta(Etiqueta etiqueta) {
 		this.etiqueta = etiqueta;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "prestamoid")
+	public Prestamo getPrestamo() {
+		return this.prestamo;
+	}
+
+	public void setPrestamo(Prestamo prestamo) {
+		this.prestamo = prestamo;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
