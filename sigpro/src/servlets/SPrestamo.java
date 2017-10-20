@@ -771,7 +771,7 @@ public class SPrestamo extends HttpServlet {
 			AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
 			
 			
-			Proyecto proyecto = new Proyecto(acumulacionCosto,null,cooperante, etiqueta,prestamo,proyectoTipo, unidadEjecutora
+			Proyecto proyecto = new Proyecto(acumulacionCosto,null, etiqueta,prestamo,proyectoTipo, unidadEjecutora
 					, prestamo.getProyectoPrograma(), null, usuario, null, new Date(), null, 1, null, null, null, null, 
 					null, null, null,null, null, null, null,null, null, null,null,
 					prestamo.getFechaSuscripcion(),prestamo.getFechaSuscripcion(),

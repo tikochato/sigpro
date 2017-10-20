@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 20, 2017 12:16:45 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 20, 2017 4:18:11 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,10 +22,6 @@ import javax.persistence.Table;
 @Table(name = "unidad_ejecutora", catalog = "sipro")
 public class UnidadEjecutora implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -7892088800518473517L;
 	private UnidadEjecutoraId id;
 	private Entidad entidad;
 	private String nombre;

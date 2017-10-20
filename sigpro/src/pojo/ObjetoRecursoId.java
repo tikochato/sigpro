@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 20, 2017 12:16:45 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 20, 2017 4:18:11 PM by Hibernate Tools 5.2.3.Final
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -10,10 +10,6 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class ObjetoRecursoId implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2710107472232022626L;
 	private int recursoid;
 	private int objetoid;
 	private int objetoTipo;

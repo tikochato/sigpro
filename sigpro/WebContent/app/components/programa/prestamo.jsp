@@ -1,5 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	<style type="text/css">
+	
+		.filaIngreso  > td{
+			padding: 0px !important;
+			padding-left: 8px !important;
+			padding-right: 8px !important;
+			vertical-align: initial !important; 
+		}
+	
+		.divTabla{
+		    width: 100%;
+		    height: 100%;
+		    overflow-y: hidden;
+		    margin-top: 40px;
+		    overflow-x: auto;
+		}
+	
+	</style>
 <%@ page import="org.apache.shiro.SecurityUtils" %>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <div ng-controller="prestamoController as prestamoc"
@@ -93,6 +111,10 @@
 			<h2 ng-if="!prestamoc.esNuevo"><small>Edición de {{etiquetas.proyecto}}</small></h2>
 			</div>
 		<div class="operation_buttons">
+			<div class="btn-group" ng-hide="prestamoc.esNuevo">
+				<label class="btn btn-default" ng-if="prestamoc.esTreeview" ng-click="prestamoc.botones ? prestamoc.irAPep(prestamoc.prestamo.id) : ''" uib-tooltip="Componentes" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-th"></span></label>
+			</div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="24020">
 					<label class="btn btn-success" ng-click="prestamoc.mForm.$valid && prestamoc.botones ? prestamoc.guardar(form.$valid) : ''" ng-disabled="!prestamoc.mForm.$valid || !prestamoc.botones" uib-tooltip="Guardar" tooltip-placement="bottom">
@@ -149,7 +171,8 @@
 								<div class="col-sm-12">
 									<div class="form-group" >
 										<div id="cooperante" angucomplete-alt placeholder="" pause="100" selected-object="prestamoc.cambioCooperante"
-											  local-data="prestamoc.cooperantes" search-fields="nombre" title-field="nombre" field-required="true" field-label="* Cooperante"
+											  local-data="prestamoc.cooperantes" search-fields="nombre" title-field="nombre" field-required="true" 
+											  field-label="* Organismo Financiero Internacional"
 											  minlength="2" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
 											  initial-value="prestamoc.prestamo.cooperantenombre" focus-out="prestamoc.blurCooperante()"></div>
 									</div>
@@ -312,7 +335,7 @@
 										 ng-value="prestamoc.proyecto.ejecucionFisicaReal"
 										 onblur="this.setAttribute('value', this.value);"
 										 min="0" max="100">
-										<label class="floating-label" >Ejecucion Física Real %</label>
+										<label class="floating-label" >Ejecucion Física %</label>
 									</div>
 								</div>
 							</div>
@@ -907,6 +930,79 @@
 				</uib-tab>
 				<uib-tab  index="prestamoc.ordenTab+5" heading="Matriz" ng-if="prestamoc.mostrarPrestamo">
 					<div style="margin-top: 15px;">
+						<div class="row">
+						
+							<div class="divTabla">
+								<table class="table " >
+								 	<tr>
+								 		<th rowspan="2" class="label-form" style="vertical-align: middle;"> COMPONENTES</th>
+								 		<th colspan="3"  class="label-form" ng-repeat= "organismo in prestamoc.m_organismosEjecutores"
+								 			style="text-align: center;">
+								 			<div>{{ organismo.nombre }}</div>
+								 		</th>
+								 		<th rowspan="2" class="label-form" style="text-align: center; vertical-align: middle;">TECHO</th>
+								 	</tr>
+								 	<tr>
+								 		<th colspan="3" ng-repeat= "organismo in prestamoc.m_organismosEjecutores">
+								 			<table>
+								 				<tr>
+								 					<th class="label-form" style="width: 100px; text-align: center;">Prestamo</th>
+								 					<th class="label-form" style="width: 100px; text-align: center;">Donación</th>
+								 					<th class="label-form" style="width: 100px;text-align: center;">Nacional</th>
+								 				</tr>
+								 			</table>
+								 		</th>
+								 	</tr>
+								 	
+								 	<tr ng-repeat="row in m_componentes track by $index " class="filaIngreso"
+								 	    ng-click="prestamoc.componenteSeleccionado(row)" ng-class="row.isSelected ? 'st-selected' : ''">
+								 		<td style="width: 200px; min-width: 200px;" class="label-form"> {{ row.nombre }} </td>
+								 		<td  colspan="3" ng-repeat = "ue in row.unidadesEjecutoras track by $index">
+								 			<table>
+								 				<tr>
+								 					<td style=>
+								 						<input  inputText="text" style="width: 100px; margin-right: 5px;"
+															class="inputText input-money"
+															ng-model="ue.prestamo"
+															ng-value="ue.prestamo"
+															onblur="this.setAttribute('value', this.value);"
+															ui-number-mask="2"
+															ng-readonly="prestamoc.m_existenDatos"
+														/>
+								 					</td>
+								 					<td >
+								 						<input  inputText="text" style="width: 100px; margin-right: 5px;"
+															class="inputText input-money"
+															ng-model="ue.donacion"
+															ng-value="ue.donacion"
+															onblur="this.setAttribute('value', this.value);"
+															ui-number-mask="2"
+															ng-readonly="prestamoc.m_existenDatos"
+														/>
+								 					</td>
+								 					<td>
+								 						<input  inputText="text" style="width: 100px; margin-right: 5px;"
+															class="inputText input-money"
+															ng-model="ue.nacional"
+															ng-value="ue.nacional"
+															onblur="this.setAttribute('value', this.value);"
+															ui-number-mask="2"
+															ng-readonly="prestamoc.m_existenDatos"
+														/>
+								 					</td>
+								 				<tr>
+								 			</table>
+								 		</td>
+								 		<td style="width: 150px; min-width: 150px; text-align: right;"
+								 		 	class="label-form"> {{ row.techo | formatoMillones : desembolsosc.enMillones }} 
+								 		 </td>
+								 	</tr>
+								</table>
+							</div>
+						</div>
+						<br/>
+						<input type="hidden" ng-model="prestamoc.matriz_valid" name="matriz_valid" ng-required="true" />
+						
 					</div>
 				</uib-tab>
 			</uib-tabset>

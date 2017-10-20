@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 20, 2017 12:16:45 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 20, 2017 4:18:11 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,10 +19,6 @@ import javax.persistence.Table;
 @Table(name = "ejecucion_estado", catalog = "sipro")
 public class EjecucionEstado implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3030278393900771893L;
 	private Integer id;
 	private String nombre;
 	private String descripcion;

@@ -61,7 +61,11 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	
 	mi.child_desembolso = null;
 	mi.child_riesgos = null;
+	mi.ingresoValidoMatriz = true;
 
+	mi.m_organismosEjecutores = [];
+	$scope.m_componentes = [];
+	
 	mi.fechaOptions = {
 			formatYear : 'yy',
 			maxDate : new Date(2050, 12, 31),
@@ -74,6 +78,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
         mi.gridApi.selection.selectRow(mi.gridOpciones.data[filaId]);
         mi.editar();
     };
+    
+    
     
 	mi.gridOpciones = {
 		enableRowSelection : true,
@@ -393,6 +399,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 									$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 									mi.botones=true;
 								}
+								
+								mi.guardarMatriz();
 									
 							}else{
 								$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo');
@@ -479,6 +487,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 				mi.rowCollectionUE = mi.unidadesEjecutoras;
 				mi.displayCollectionUE = [].concat(mi.rowCollectionUE);
 			})
+			
+			mi.cargarMatriz();
 		}
 		else
 			$utilidades.mensaje('warning','Debe seleccionar el préstamo que desea editar');
@@ -1019,6 +1029,87 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			$rootScope.$emit("recargarArbol",mi.prestamo.id);
 		}
 		
+		mi.irAPeps=function(prestamoid){
+			if(mi.proyecto!=null){
+				$location.path('/pep/'+ prestamoid );
+			}
+		};
+		
+		
+		mi.cargarMatriz = function(){
+			mi.matriz_valid = null;
+			var parametros = {
+					accion: 'obtenerMatriz',
+					codigoPresupuestario:mi.prestamo.codigoPresupuestario,
+				    t:moment().unix()
+			};
+
+			$http.post('/SPrestamo', parametros).then(function(response){
+
+				if (response.data.success){
+					mi.m_organismosEjecutores = response.data.unidadesEjecutoras;
+					$scope.m_componentes = response.data.componentes;
+					mi.m_existenDatos = response.data.existenDatos;
+					
+
+				}else{
+					$utilidades.mensaje('warning', 'No se encontraron datos con los parámetros ingresados');
+				}
+			});
+
+		};
+		
+		mi.guardarMatriz = function(){
+			if (!mi.m_existenDatos && $scope.m_componentes.length > 0 ){
+			var parametros = {
+					accion: 'guardarMatriz',
+					estructura: JSON.stringify($scope.m_componentes),
+					prestamoId: mi.prestamo.id,
+				    t:moment().unix()
+			};
+
+			$http.post('/SPrestamo', parametros).then(function(response){
+
+				if (response.data.success){
+					mi.m_organismosEjecutores = response.data.unidadesEjecutoras;
+					$scope.m_componentes = response.data.componentes;
+					mi.m_existenDatos = true; 
+
+				}else{
+					$utilidades.mensaje('warning', 'Error al guardar matriz de componentes');
+				}
+
+			});
+			}
+		};
+		
+		mi.componenteSeleccionado = function(row){
+			if(mi.rowAnterior){
+				if(row != mi.rowAnterior){
+					mi.rowAnterior.isSelected=false;
+				}else{
+					return;
+				}
+			}
+			row.isSelected = true;
+			mi.rowAnterior = row;
+		};
+
+		
+		
+		$scope.$watch('m_componentes', function(componentes,componentesOld) {
+			mi.ingresoValidoMatriz = true;
+		     for (x in componentes){
+		    	 var  totalUnidades = 0;
+		    	 for (j in componentes[x].unidadesEjecutoras){
+		    		 totalUnidades = totalUnidades +  componentes[x].unidadesEjecutoras[j].prestamo;
+		    	 }
+		    	 mi.matriz_valid = mi.ingresoValidoMatriz &&  totalUnidades <= componentes[x].techo ? 1 : null;
+		    	 
+		     }
+		 },true);
+		
+		
 } ]);
 
 app.controller('buscarPorPrestamo', [ '$uibModalInstance',
@@ -1159,6 +1250,7 @@ function buscarPorPrestamo($uibModalInstance, $rootScope,$scope, $http, $interva
 			});
 		}
 	};
+	
 	
 	
 }
