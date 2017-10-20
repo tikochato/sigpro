@@ -39,7 +39,6 @@ import dao.ProyectoPropiedadValorDAO;
 import dao.UnidadEjecutoraDAO;
 import pojo.AcumulacionCosto;
 import pojo.Colaborador;
-import pojo.Cooperante;
 import pojo.Entidad;
 import pojo.Etiqueta;
 import pojo.Prestamo;
@@ -72,8 +71,6 @@ public class SProyecto extends HttpServlet {
 		Integer entidadentidad;
 		String entidadnombre;
 		Integer ejercicio;
-		String cooperante;
-		int cooperanteid;
 		String fechaCreacion;
 		String usuarioCreo;
 		String fechaactualizacion;
@@ -164,8 +161,6 @@ public class SProyecto extends HttpServlet {
 				dato.entidadentidad = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getEntidadentidad() : null;
 				dato.entidadnombre = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getEntidad().getNombre() : "";
 				dato.ejercicio = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getEjercicio() : null;
-				dato.cooperante = proyecto.getCooperante().getNombre();
-				dato.cooperanteid = proyecto.getCooperante().getId();
 				dato.fechaCreacion = Utils.formatDateHour( proyecto.getFechaCreacion());
 				dato.usuarioCreo = proyecto.getUsuarioCreo();
 				dato.fechaactualizacion = Utils.formatDateHour( proyecto.getFechaActualizacion());
@@ -192,7 +187,7 @@ public class SProyecto extends HttpServlet {
 				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
 				dato.proyectoClase = proyecto.getEtiqueta().getId();
 				dato.projectCargado = proyecto.getProjectCargado();
-				dato.prestamoId = proyecto.getPrestamo().getId();
+				dato.prestamoId = proyecto.getPrestamo() != null ? proyecto.getPrestamo().getId() : null;
 				datos_.add(dato);
 			}
 
@@ -224,8 +219,6 @@ public class SProyecto extends HttpServlet {
 				dato.entidadentidad = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getEntidadentidad() : null;
 				dato.entidadnombre = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getEntidad().getNombre() : "";
 				dato.ejercicio = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getEjercicio() : null;
-				dato.cooperante = proyecto.getCooperante().getNombre();
-				dato.cooperanteid = proyecto.getCooperante().getId();
 				dato.fechaCreacion = Utils.formatDateHour( proyecto.getFechaCreacion());
 				dato.usuarioCreo = proyecto.getUsuarioCreo();
 				dato.fechaactualizacion = Utils.formatDateHour( proyecto.getFechaActualizacion());
@@ -252,7 +245,7 @@ public class SProyecto extends HttpServlet {
 				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
 				dato.proyectoClase = proyecto.getEtiqueta().getId();
 				dato.projectCargado = proyecto.getProjectCargado();
-				dato.prestamoId = proyecto.getPrestamo().getId();
+				dato.prestamoId = proyecto.getPrestamo() != null ? proyecto.getPrestamo().getId() : null;
 				datos_.add(dato);
 			}
 
@@ -285,8 +278,6 @@ public class SProyecto extends HttpServlet {
 				dato.entidadentidad = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getEntidadentidad() : null;
 				dato.entidadnombre = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getEntidad().getNombre() : "";
 				dato.ejercicio = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getEjercicio() : null;
-				dato.cooperante = proyecto.getCooperante().getNombre();
-				dato.cooperanteid = proyecto.getCooperante().getId();
 				dato.fechaCreacion = Utils.formatDateHour( proyecto.getFechaCreacion());
 				dato.usuarioCreo = proyecto.getUsuarioCreo();
 				dato.fechaactualizacion = Utils.formatDateHour( proyecto.getFechaActualizacion());
@@ -314,7 +305,7 @@ public class SProyecto extends HttpServlet {
 				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
 				dato.proyectoClase = proyecto.getEtiqueta().getId();
 				dato.projectCargado = proyecto.getProjectCargado();
-				dato.prestamoId = proyecto.getPrestamo().getId();
+				dato.prestamoId = proyecto.getPrestamo() != null ? proyecto.getPrestamo().getId() : null;
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -346,8 +337,6 @@ public class SProyecto extends HttpServlet {
 				dato.entidadentidad = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getEntidadentidad() : null;
 				dato.entidadnombre = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getEntidad().getNombre() : "";
 				dato.ejercicio = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getEjercicio() : null;
-				dato.cooperante = proyecto.getCooperante().getNombre();
-				dato.cooperanteid = proyecto.getCooperante().getId();
 				dato.fechaCreacion = Utils.formatDateHour( proyecto.getFechaCreacion());
 				dato.usuarioCreo = proyecto.getUsuarioCreo();
 				dato.fechaactualizacion = Utils.formatDateHour( proyecto.getFechaActualizacion());
@@ -374,7 +363,7 @@ public class SProyecto extends HttpServlet {
 				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
 				dato.proyectoClase = proyecto.getEtiqueta().getId();
 				dato.projectCargado = proyecto.getProjectCargado();
-				dato.prestamoId = proyecto.getPrestamo().getId();
+				dato.prestamoId = proyecto.getPrestamo() != null ? proyecto.getPrestamo().getId() : null;
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -412,10 +401,13 @@ public class SProyecto extends HttpServlet {
 				Integer proyectoClase = map.get("proyectoClase")!=null ? Utils.String2Int(map.get("proyectoClase")) : 1;
 				Etiqueta etiqueta = EtiquetaDAO.getEtiquetaPorId(proyectoClase);
 				Integer projectCargado = Utils.String2Int(map.get("projectCargado"), 0);
-				Integer prestamoId = Utils.String2Int(map.get("prestamoId"), 0);
+				Integer prestamoId = Utils.String2Int(map.get("prestamoId"), null);
 				
-				Prestamo prestamo = PrestamoDAO.getPrestamoById(prestamoId);
-
+				Prestamo prestamo = null;
+				if(prestamoId != null){
+					prestamo = PrestamoDAO.getPrestamoById(prestamoId);	
+				}
+			
 				AcumulacionCosto acumulacionCosto = null;
 				if (map.get("acumulacionCosto")!=null){
 					acumulacionCosto = new AcumulacionCosto();
@@ -428,9 +420,6 @@ public class SProyecto extends HttpServlet {
 				proyectoTipo.setId(map.get("proyectotipoid") !=null ? Integer.parseInt(map.get("proyectotipoid")): null);
 
 				UnidadEjecutora unidadEjecutora = (ejercicio!=null && entidad!=null && unidad_ejecutora!=null) ? UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidad , unidad_ejecutora) :null;
-
-				Cooperante cooperante = new Cooperante();
-				cooperante.setId(map.get("cooperanteid")!=null ? Integer.parseInt(map.get("cooperanteid")): null);
 
 				Colaborador directorProyecto = null;
 				if (map.get("directorProyecto")!=null && map.get("directorProyecto").length()>0){
@@ -445,7 +434,7 @@ public class SProyecto extends HttpServlet {
 				List<stdatadinamico> datos = gson.fromJson(map.get("datadinamica"), type);
 
 				if(esnuevo){
-					proyecto = new Proyecto(acumulacionCosto,directorProyecto, cooperante, etiqueta, prestamo,proyectoTipo, unidadEjecutora, nombre, 
+					proyecto = new Proyecto(acumulacionCosto,directorProyecto, etiqueta, prestamo,proyectoTipo, unidadEjecutora, nombre, 
 							descripcion, usuario, null, new DateTime().toDate(), null, 1, snip, programa, subPrograma, proyecto_, actividad, 
 							obra,latitud,longitud, objetivo,enunciadoAlcance, costo, objetivoEspecifico,visionGeneral,renglon, 
 							ubicacionGeografica,null, null, 0, null, null, null, null, ejecucionFisicaReal,projectCargado,null, null, 
@@ -460,7 +449,6 @@ public class SProyecto extends HttpServlet {
 					proyecto.setSnip(snip);
 					proyecto.setProyectoTipo(proyectoTipo);
 					proyecto.setUnidadEjecutora(unidadEjecutora);
-					proyecto.setCooperante(cooperante);
 					proyecto.setUsuarioActualizo(usuario);
 					proyecto.setFechaActualizacion(new DateTime().toDate());
 					proyecto.setPrograma(programa);
@@ -479,6 +467,7 @@ public class SProyecto extends HttpServlet {
 					proyecto.setEjecucionFisicaReal(ejecucionFisicaReal);
 					proyecto.setEtiqueta(etiqueta);
 					proyecto.setProjectCargado(projectCargado);
+					proyecto.setPrestamo(prestamo);
 
 				    List<ProyectoPropiedadValor> valores_temp = ProyectoPropiedadValorDAO.getProyectoPropiedadadesValoresPorProyecto(proyecto.getId());
 					proyecto.setProyectoPropiedadValors(null);
@@ -593,15 +582,10 @@ public class SProyecto extends HttpServlet {
 
 				UnidadEjecutora unidadEjecutora = (ejercicio!=null && entidad!=null && unidad_ejecutora!=null) ? UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidad , unidad_ejecutora) :null;
 
-				Cooperante cooperante = new Cooperante();
-				cooperante.setId(map.get("cooperanteid")!=null ? Integer.parseInt(map.get("cooperanteid")): null);
-
-
 				proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
 				proyecto.setNombre(nombre);
 				proyecto.setProyectoTipo(proyectoTipo);
 				proyecto.setUnidadEjecutora(unidadEjecutora);
-				proyecto.setCooperante(cooperante);
 				proyecto.setUsuarioActualizo(usuario);
 				proyecto.setFechaActualizacion(new DateTime().toDate());
 
@@ -615,9 +599,7 @@ public class SProyecto extends HttpServlet {
 				temp.unidadejecutora = proyecto.getUnidadEjecutora().getNombre();
 				temp.unidadejecutoraid = proyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
 				temp.entidadentidad = proyecto.getUnidadEjecutora().getId().getEntidadentidad();
-				temp.ejercicio = proyecto.getUnidadEjecutora().getId().getEjercicio();
-				temp.cooperante = proyecto.getCooperante().getNombre();
-				temp.cooperanteid = proyecto.getCooperante().getId();
+				temp.ejercicio = proyecto.getUnidadEjecutora().getId().getEjercicio();				
 
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"proyecto\":",response_text);
@@ -642,7 +624,7 @@ public class SProyecto extends HttpServlet {
 						ProyectoPropiedadValorDAO.eliminarProyectoPropiedadValor(valor);
 					}
 				}
-				response_text = String.join("","{ \"success\": ",(ObjetoDAO.borrarHijos(proyecto.getTreePath(), 1, usuario) ? "true" : "false")," }");
+				response_text = String.join("","{ \"success\": ",(ObjetoDAO.borrarHijos(proyecto.getTreePath(), 0, usuario) ? "true" : "false")," }");
 			}
 			else
 				response_text = "{ \"success\": false }";
@@ -703,8 +685,6 @@ public class SProyecto extends HttpServlet {
 				dato.entidadentidad = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getEntidadentidad() : null;
 				dato.entidadnombre = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getEntidad().getNombre() : "";
 				dato.ejercicio = (proyecto.getUnidadEjecutora()!=null) ? proyecto.getUnidadEjecutora().getId().getEjercicio() : null;
-				dato.cooperante = proyecto.getCooperante().getNombre();
-				dato.cooperanteid = proyecto.getCooperante().getId();
 				dato.fechaCreacion = Utils.formatDateHour( proyecto.getFechaCreacion());
 				dato.usuarioCreo = proyecto.getUsuarioCreo();
 				dato.fechaactualizacion = Utils.formatDateHour( proyecto.getFechaActualizacion());
