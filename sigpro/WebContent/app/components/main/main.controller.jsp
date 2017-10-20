@@ -25,7 +25,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/cooperante/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'cooperanteController\'" class="all_page"></div>'
             })
-            .when('/pep/:reiniciar_vista?',{
+            .when('/pep/:prestamo_id?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'proyectoController\'" class="all_page"></div>'
             })
             .when('/prestamometas',{

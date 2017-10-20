@@ -110,7 +110,10 @@ public class PrestamoDAO {
 		}catch(Exception e){
 			ret = null;
 			CLogger.write("3", PrestamoDAO.class, e);
+		}finally{
+			session.close();
 		}
+		
 		
 		return ret;
 	}
