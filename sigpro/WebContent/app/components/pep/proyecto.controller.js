@@ -394,35 +394,6 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 									fechaCorte : mi.prestamo.fechaCorte != undefined ? moment(mi.prestamo.fechaCorte).format('DD/MM/YYYY') : undefined,
 									t:moment().unix()
 								};
-								
-							
-								$http.post('/SPrestamo',param_data).then(
-										function(response) {
-											if (response.data.success) {
-												if(mi.esTreeview){
-													mi.t_cambiarNombreNodo();
-												}
-												else
-													mi.obtenerTotalProyectos();
-												if(mi.child_desembolso!=null || mi.child_riesgos!=null){
-													if(mi.child_desembolso)
-														ret = mi.child_desembolso.guardar($rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
-																'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el '+$rootScope.etiquetas.proyecto,
-																mi.child_riesgos!=null ? mi.child_riesgos.guardar :  null);
-													else if(mi.child_riesgos)
-														ret = mi.child_riesgos.guardar($rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
-																'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el '+$rootScope.etiquetas.proyecto);
-												}
-												else{
-													$utilidades.mensaje('success',$rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
-													mi.botones=true;
-												}
-													
-											}else{
-												$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el '+$rootScope.etiquetas.proyecto);
-												mi.botones=true;
-											}
-								});
 						}
 						else{
 							$utilidades.mensaje('success',$rootScope.etiquetas.proyecto+' '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
