@@ -10,7 +10,7 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 	mi.enMillones = false;
 	mi.fechaSuscripcion = "";
 	mi.fechaCierre = "";
-	mi.tooltipObjetoTipo = [$rootScope.etiquetas.proyecto,"Componente","Producto","Sub Producto","Actividad"];
+	mi.tooltipObjetoTipo = [$rootScope.etiquetas.proyecto,"Componente","Subcomponente","Producto","Sub Producto","Actividad"];
 	mi.valoresInicializados = [0,0,0,0,0,"","","","","","","","","",""];
 	mi.ddlOpciones = [];
 	mi.ddlOpcionesTipos = [];
@@ -99,10 +99,12 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 	
 	mi.claseIcon = function (item) {
 	    switch (item.objetoTipo) {
-	        case 1:
+	        case 0:
 	            return 'glyphicon glyphicon-record';
-	        case 2:
+	        case 1:
 	            return 'glyphicon glyphicon-th';
+	        case 2:
+	            return 'glyphicon glyphicon-equalizer';
 	        case 3:
 	            return 'glyphicon glyphicon-certificate';
 	        case 4:

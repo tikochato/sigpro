@@ -376,7 +376,12 @@ public class SControlAdquisiciones extends HttpServlet {
 			if (lstprestamo != null && !lstprestamo.isEmpty()){ 
 				datos = new String[lstprestamo.size()][17];
 				for (int i=0; i<lstprestamo.size(); i++){
-						datos[i][0] = lstprestamo.get(i).nombre;
+					
+					String sangria="";
+					for(int s=1; s<lstprestamo.get(i).nivel; s++){
+						sangria+="   ";
+					}
+						datos[i][0] = sangria + lstprestamo.get(i).nombre;
 						datos[i][1] = lstprestamo.get(i).tipoAdquisicionNombre;
 						datos[i][2] = lstprestamo.get(i).unidadMedida;
 						datos[i][3] = lstprestamo.get(i).categoriaAdquisicionNombre;

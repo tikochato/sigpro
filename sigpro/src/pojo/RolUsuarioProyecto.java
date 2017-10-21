@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 20, 2017 4:18:11 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 20, 2017 7:34:40 PM by Hibernate Tools 5.2.3.Final
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;

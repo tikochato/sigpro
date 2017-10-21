@@ -2,7 +2,7 @@ var app = angular.module('planAdquisicionesController',['ngTouch','ngAnimate']);
 app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http','$window', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q',
 	function($scope, $rootScope, $http, $window, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q){
 		var mi = this;
-		mi.tooltipObjetoTipo = [$rootScope.etiquetas.proyecto,"Componente","Producto","Sub Producto","Actividad"];
+		mi.tooltipObjetoTipo = [$rootScope.etiquetas.proyecto,"Componente","Subcomponente","Producto","Sub Producto","Actividad"];
 		var anioFiscal = new Date();
 		mi.anio = anioFiscal.getFullYear();
 		mi.enMillones = true;
@@ -234,7 +234,7 @@ app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http',
 		mi.calcularTotalGeneral = function(){
 			mi.totalGeneral = 0;
 			for(x in mi.data){
-				if(mi.data[x].objetoTipo == 2){
+				if(mi.data[x].objetoTipo == 1){
 					mi.totalGeneral += mi.data[x].total;
 				}
 			}
@@ -249,7 +249,7 @@ app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http',
 			}
 			
 			for(x in mi.data){
-				if(mi.data[x].objetoTipo == 2){
+				if(mi.data[x].objetoTipo == 1){
 					for(y in mi.data[x].anioTotalPlan){
 						if(mi.data[x].anioTotalPlan[y].anio == mi.sumTotalesAnuales[y].anio){
 							 mi.sumTotalesAnuales[y].total += mi.data[x].anioTotalPlan[y].total[0].planificado; 
@@ -575,10 +575,12 @@ app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http',
 		
 		mi.claseIcon = function (item) {
 		    switch (item.objetoTipo) {
-		        case 1:
+		        case 0:
 		            return 'glyphicon glyphicon-record';
-		        case 2:
+		        case 1:
 		            return 'glyphicon glyphicon-th';
+		        case 2:
+		            return 'glyphicon glyphicon-equalizer';
 		        case 3:
 		            return 'glyphicon glyphicon-certificate';
 		        case 4:

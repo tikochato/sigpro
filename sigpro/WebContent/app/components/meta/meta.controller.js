@@ -29,12 +29,16 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 			mi.inicializarControlador = function(){
 				if($scope.$parent.controller){
 					mi.objeto_id = $scope.$parent.controller.proyecto.id;
-					mi.objeto_tipo = 1;
+					mi.objeto_tipo = 0;
 					$scope.$parent.controller.child_metas = $scope.metac;
 				}else if($scope.$parent.componentec){
 					mi.objeto_id = $scope.$parent.componentec.componente.id;
-					mi.objeto_tipo = 2;
+					mi.objeto_tipo = 1;
 					$scope.$parent.componentec.child_metas = $scope.metac;
+				}else if($scope.$parent.subcomponentec){
+					mi.objeto_id = $scope.$parent.subcomponentec.subcomponente.id;
+					mi.objeto_tipo = 2;
+					$scope.$parent.subcomponentec.child_metas = $scope.metac;
 				}else if($scope.$parent.producto){
 					mi.objeto_id = $scope.$parent.producto.producto.id;
 					mi.objeto_tipo = 3;
@@ -50,8 +54,9 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 				}
 				
 				switch(mi.objeto_tipo){
-				case "1": mi.nombreTipoPcp = $rootScope.etiquetas.proyecto; break;
-				case "2": mi.nombreTipoPcp = "Componente"; break;
+				case "0": mi.nombreTipoPcp = $rootScope.etiquetas.proyecto; break;
+				case "1": mi.nombreTipoPcp = "Componente"; break;
+				case "2": mi.nombreTipoPcp = "Subcomponente"; break;
 				case "3": mi.nombreTipoPcp = "Producto"; break;
 				case "4": mi.nombreTipoPcp = "Subproducto"; break;
 				
