@@ -11,6 +11,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class MetaAvanceId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -887561860408909433L;
 	private int metaid;
 	private Date fecha;
 

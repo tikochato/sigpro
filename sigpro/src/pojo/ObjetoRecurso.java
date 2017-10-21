@@ -22,6 +22,10 @@ import javax.persistence.TemporalType;
 @Table(name = "objeto_recurso", catalog = "sipro")
 public class ObjetoRecurso implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6673865031125672481L;
 	private ObjetoRecursoId id;
 	private Recurso recurso;
 	private String usuarioCreo;

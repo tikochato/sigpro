@@ -21,6 +21,10 @@ import javax.persistence.TemporalType;
 @Table(name = "proyecto_usuario", catalog = "sipro")
 public class ProyectoUsuario implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7606540943294043087L;
 	private ProyectoUsuarioId id;
 	private Proyecto proyecto;
 	private Usuario usuario;

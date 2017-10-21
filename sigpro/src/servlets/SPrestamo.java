@@ -29,7 +29,6 @@ import dao.AcumulacionCostoDAO;
 import dao.ComponenteDAO;
 import dao.ComponenteSigadeDAO;
 import dao.ComponenteTipoDAO;
-import dao.CooperanteDAO;
 import dao.DataSigadeDAO;
 import dao.ObjetoDAO;
 import dao.PrestamoDAO;
@@ -767,7 +766,6 @@ public class SPrestamo extends HttpServlet {
 				Integer.parseInt((String) unidad.get("entidad")),
 				((Double)unidad.get("id")).intValue());
 		if (unidadEjecutora != null){
-			Cooperante cooperante =CooperanteDAO.getCooperantePorCodigo(0);
 			ProyectoTipo proyectoTipo = ProyectoTipoDAO.getProyectoTipoPorId(1);
 			Etiqueta etiqueta = new Etiqueta();
 			etiqueta.setId(1);

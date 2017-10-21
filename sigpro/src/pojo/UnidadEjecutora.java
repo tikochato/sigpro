@@ -22,6 +22,10 @@ import javax.persistence.Table;
 @Table(name = "unidad_ejecutora", catalog = "sipro")
 public class UnidadEjecutora implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7892088800518473517L;
 	private UnidadEjecutoraId id;
 	private Entidad entidad;
 	private String nombre;
