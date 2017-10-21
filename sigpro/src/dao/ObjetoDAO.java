@@ -178,7 +178,7 @@ public class ObjetoDAO {
 				while (iterador.hasNext()) {
 					Object objeto = iterador.next();
 					Object[] obj = (Object[]) objeto;
-					Integer nivel = ((String)obj[3]).length() / 8;
+					Integer nivel = (obj[3]!=null) ? ((String)obj[3]).length()/8 : 0;
 					if(nivel != null){
 						Integer objeto_id = obj[0]!=null ? (Integer)obj[0] : null;
 						String nombre = obj[1]!=null ? (String)obj[1] : null;

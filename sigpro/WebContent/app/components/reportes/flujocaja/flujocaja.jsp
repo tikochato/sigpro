@@ -235,7 +235,7 @@
 									<tr ng-repeat="item in flujoc.data">
 							      		<td nowrap style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">
 							      			<p class="nombreFormat">
-							      				<span ng-class="flujoc.iconoObjetoTipo[item.objeto_tipo]" uib-tooltip="{{flujoc.tooltipObjetoTipo[item.objeto_tipo]}}" style="margin-left: {{item.nivel}}em"></span>
+							      				<span ng-class="flujoc.iconoObjetoTipo[item.objeto_tipo]" uib-tooltip="{{flujoc.tooltipObjetoTipo[item.objeto_tipo]}}" style="margin-left: {{item.nivel-1}}em"></span>
 							      				<span uib-tooltip="{{item.nombre}}">{{item.nombre}}</span>
 							      			</p>
 							      		</td>

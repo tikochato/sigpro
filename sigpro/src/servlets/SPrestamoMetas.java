@@ -223,11 +223,10 @@ public class SPrestamoMetas extends HttpServlet {
 			Object[] obj = (Object[]) objeto;
 			Integer nivel = (obj[3]!=null) ? ((String)obj[3]).length()/8 : 0;
 			if(nivel!= null){
-				nivel = nivel/8;
 				stprestamo tempPrestamo =  new stprestamo();
 				tempPrestamo.objeto_id = (Integer)obj[0];
 				tempPrestamo.nombre = (String)obj[1];
-				tempPrestamo.nivel = nivel +1;
+				tempPrestamo.nivel = nivel;
 				tempPrestamo.objeto_tipo = ((BigInteger) obj[2]).intValue();
 				if(tempPrestamo.objeto_tipo <=3){
 					ArrayList<ArrayList<BigDecimal>> metaValores = new ArrayList<ArrayList<BigDecimal>>();

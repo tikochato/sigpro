@@ -181,7 +181,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 					cat.objCosto = new ArrayList<ObjetoCosto>();
 				}
 				
-				if(objetoTipo == 2){
+				if(objetoTipo == 1){
 					Integer componenteid = objeto.getObjeto_id(); 
 					temp.objetoId = objeto.getObjeto_id();
 					temp.nombre = objeto.getNombre();
@@ -230,7 +230,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 								temp.fechaFinal = new DateTime(fechaFin);
 								temp.planadquisicionId = cat.adquisicionId;
 								temp.objetoIdPadre = componenteid;
-								temp.objetoTipoPadre = 2;
+								temp.objetoTipoPadre = 1;
 								
 								temp.fechaIncial = null;
 								temp.fechaFinal = null;
@@ -258,7 +258,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 			
 			int posComponente = 0;
 			for(int i = 0; i < lstPrestamo.size(); i++){
-				if(lstPrestamo.get(i).objetoTipo != null && lstPrestamo.get(i).objetoTipo == 2){
+				if(lstPrestamo.get(i).objetoTipo != null && lstPrestamo.get(i).objetoTipo == 1){
 					posComponente = i;
 					lstPrestamo.get(i).anioTotalPlan = inicializarStTotalPlan(fechaInicial, fechaFinal);
 				}else{
@@ -425,14 +425,9 @@ public class SPlanAdquisiciones extends HttpServlet {
 			for (int i=0; i<lstPrestamo.size(); i++){
 				columna = 0;
 				stcomponenteplanadquisicion prestamo = lstPrestamo.get(i);
-				String sangria;
-				switch (prestamo.nivel + 1){
-					case 1: sangria = ""; break;
-					case 2: sangria = "   "; break;
-					case 3: sangria = "      "; break;
-					case 4: sangria = "         "; break;
-					case 5: sangria = "            "; break;
-					default: sangria = "";
+				String sangria="";
+				for(int s=1; s<prestamo.nivel; s++){
+					sangria+="   ";
 				}
 				datos[i][columna] = sangria+prestamo.nombre;
 				columna++;

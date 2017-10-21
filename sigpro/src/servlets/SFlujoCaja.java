@@ -398,14 +398,9 @@ public class SFlujoCaja extends HttpServlet {
 			for (int i=0; i<lstPrestamo.size(); i++){
 				columna = 0;
 				ObjetoCosto prestamo = lstPrestamo.get(i);
-				String sangria;
-				switch (prestamo.getObjeto_tipo()){
-					case 1: sangria = ""; break;
-					case 2: sangria = "   "; break;
-					case 3: sangria = "      "; break;
-					case 4: sangria = "         "; break;
-					case 5: sangria = "            "; break;
-					default: sangria = "";
+				String sangria="";
+				for(int s=1; s<prestamo.getNivel(); s++){
+					sangria+="   ";
 				}
 				datos[i][columna] = sangria+prestamo.getNombre();
 				columna++;
