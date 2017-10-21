@@ -24,12 +24,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import dao.ProyectoTipoDAO;
-import dao.PtipoPropiedadDAO;
-import pojo.ProyectoPropiedad;
-import pojo.ProyectoTipo;
-import pojo.PtipoPropiedad;
-import pojo.PtipoPropiedadId;
+import dao.PrestamoTipoDAO;
 import utilities.Utils;
 
 @WebServlet("/SPrestamoTipo")
@@ -81,19 +76,19 @@ public class SPrestamoTipo extends HttpServlet {
 			String orden_direccion = map.get("orden_direccion");
 			
 			
-			List<PrestamoTipo> proyectotipos = ProyectoTipoDAO.getProyectosTipoPagina(pagina, numeroPrestamosTipos, filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
+			List<PrestamoTipo> prestamotipos = PrestamoTipoDAO.getPrestamosTipoPagina(pagina, numeroPrestamosTipos, filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
 			List<stprestamotipo> stcooperantes=new ArrayList<stprestamotipo>();
-			for(ProyectoTipo proyectotipo:proyectotipos){
+			for(PrestamoTipo prestamotipo:prestamotipos){
 				stprestamotipo temp =new stprestamotipo();
-				temp.id = proyectotipo.getId();
-				temp.nombre = proyectotipo.getNombre();
-				temp.descripcion = proyectotipo.getDescripcion();
+				temp.id = prestamotipo.getId();
+				temp.nombre = prestamotipo.getNombre();
+				temp.descripcion = prestamotipo.getDescripcion();
 				
-				temp.estado = proyectotipo.getEstado();
-				temp.fechaActualizacion = Utils.formatDateHour(proyectotipo.getFechaActualizacion());
-				temp.fechaCreacion = Utils.formatDateHour(proyectotipo.getFechaCreacion());
-				temp.usuarioActualizo = proyectotipo.getUsuarioActualizo();
-				temp.usuarioCreo = proyectotipo.getUsarioCreo();
+				temp.estado = prestamotipo.getEstado();
+				temp.fechaActualizacion = Utils.formatDateHour(prestamotipo.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(prestamotipo.getFechaCreacion());
+				temp.usuarioActualizo = prestamotipo.getUsuarioActualizo();
+				temp.usuarioCreo = prestamotipo.getUsarioCreo();
 				stcooperantes.add(temp);
 			}
 			
@@ -101,13 +96,13 @@ public class SPrestamoTipo extends HttpServlet {
 	        response_text = String.join("", "\"poryectotipos\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
-		else if(accion.equals("numeroProyectoTipos")){
+		else if(accion.equals("numeroprestamoTipos")){
 			String filtro_nombre = map.get("filtro_nombre");
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
-			response_text = String.join("","{ \"success\": true, \"totalproyectotipos\":",ProyectoTipoDAO.getTotalProyectoTipos(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
+			response_text = String.join("","{ \"success\": true, \"totalprestamotipos\":",PrestamoTipoDAO.getTotalPrestamoTipos(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
 		}
-		else if(accion.equals("guardarProyectotipo")){
+		else if(accion.equals("guardarPrestamotipo")){
 			boolean result = false;
 			boolean esnuevo = map.get("esnuevo").equals("true");
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
@@ -115,62 +110,33 @@ public class SPrestamoTipo extends HttpServlet {
 				
 				String nombre = map.get("nombre");
 				String descripcion = map.get("descripcion");
-				ProyectoTipo proyectoTipo;
+				PrestamoTipo prestamoTipo;
 				
 				if(esnuevo){
-					proyectoTipo = new ProyectoTipo(nombre, descripcion, 
-							usuario,null,new DateTime().toDate(),null,1,null,new HashSet<PtipoPropiedad>(0));
+					prestamoTipo = new PrestamoTipo(nombre, descripcion, 
+							usuario,null,new DateTime().toDate(),null,1,null);
 				}
 				else{
-					proyectoTipo = ProyectoTipoDAO.getProyectoTipoPorId(id);
-					proyectoTipo.setNombre(nombre);
-					proyectoTipo.setDescripcion(descripcion);
-					proyectoTipo.setUsuarioActualizo(usuario);
-					proyectoTipo.setFechaActualizacion(new DateTime().toDate());
-					Set<PtipoPropiedad> propiedades_temp = proyectoTipo.getPtipoPropiedads();
-					proyectoTipo.setPtipoPropiedads(new HashSet<PtipoPropiedad>(0));
-					if (propiedades_temp!=null){
-						for (PtipoPropiedad ptipoPropiedad : propiedades_temp){
-							PtipoPropiedadDAO.eliminarTotalPtipoPropiedad(ptipoPropiedad);
-						}
-					}
+					prestamoTipo = PrestamoTipoDAO.getPrestamoTipoPorId(id);
+					prestamoTipo.setNombre(nombre);
+					prestamoTipo.setDescripcion(descripcion);
+					prestamoTipo.setUsuarioActualizo(usuario);
+					prestamoTipo.setFechaActualizacion(new DateTime().toDate());
 				}
 				
-				result = ProyectoTipoDAO.guardarProyectoTipo(proyectoTipo);
+				result = PrestamoTipoDAO.guardarprestamoTipo(prestamoTipo);
 				
-				String[] idsPropiedades =  map.get("propiedades") != null && map.get("propiedades").length()>0 ? map.get("propiedades").toString().split(",") : null;
-				if (idsPropiedades !=null && idsPropiedades.length>0){
-					for (String idPropiedad : idsPropiedades){
-						PtipoPropiedadId ptipoPropiedadId = new PtipoPropiedadId(proyectoTipo.getId(), Integer.parseInt(idPropiedad));
-						ProyectoPropiedad proyectoPropiedad = new ProyectoPropiedad();
-						proyectoPropiedad.setId(Integer.parseInt(idPropiedad));
-						
-						PtipoPropiedad ptipoPropiedad = new PtipoPropiedad(
-								ptipoPropiedadId,
-								proyectoPropiedad,
-								proyectoTipo, 
-								usuario, new DateTime().toDate());
-						
-						ptipoPropiedad.setProyectoTipo(proyectoTipo);
-						if (proyectoTipo.getPtipoPropiedads() == null){
-							proyectoTipo.setPtipoPropiedads(new HashSet<PtipoPropiedad>(0));
-						}
-						proyectoTipo.getPtipoPropiedads().add(ptipoPropiedad);
-					}
-				}
-				
-				result = ProyectoTipoDAO.guardarProyectoTipo(proyectoTipo);
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-						+ "\"id\": " + proyectoTipo.getId() +" }");
+						+ "\"id\": " + prestamoTipo.getId() +" }");
 			}
 			else
 				response_text = "{ \"success\": false }";
 		}
-		else if(accion.equals("borrarProyectoTipo")){
+		else if(accion.equals("borrarPrestamoTipo")){
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0){
-				ProyectoTipo proyectoTipo = ProyectoTipoDAO.getProyectoTipoPorId(id);
-				response_text = String.join("","{ \"success\": ",(ProyectoTipoDAO.eliminarProyectoTipo(proyectoTipo) ? "true" : "false")," }");
+				PrestamoTipo prestamoTipo = PrestamoTipoDAO.getPrestamoTipoPorId(id);
+				response_text = String.join("","{ \"success\": ",(PrestamoTipoDAO.eliminarprestamoTipo(prestamoTipo) ? "true" : "false")," }");
 			}
 			else
 				response_text = "{ \"success\": false }";
