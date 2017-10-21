@@ -347,7 +347,7 @@ public class SubComponenteDAO {
 		Subcomponente ret = null;
 		List<Subcomponente> listRet = null;
 		try{
-			Query<Subcomponente> criteria = session.createQuery("FROM Subcomponente where id=:id", Subcomponente.class);
+			Query<Subcomponente> criteria = session.createQuery("Select S FROM Subcomponente S where S.id=:id and S.estado = 1", Subcomponente.class);
 			criteria.setParameter("id", id);
 			 listRet = criteria.getResultList();
 			 

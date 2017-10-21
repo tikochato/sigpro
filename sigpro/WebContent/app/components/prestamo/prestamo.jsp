@@ -6,7 +6,15 @@
 			padding: 0px !important;
 			padding-left: 8px !important;
 			padding-right: 8px !important;
-			vertical-align: initial !important; 
+			vertical-align: middle !important; 
+		}
+		
+		.filaIngreso > td > table > tbody > tr > td > input {
+			border-bottom: none !important;
+		}
+		
+		.filaIngreso > td > table > tbody > tr > td > input:focus {
+			border-bottom: 2px solid rgb(63, 81, 181) !important;
 		}
 	
 		.divTabla{
@@ -908,21 +916,17 @@
 					<table st-table="prestamoc.displayedCollectionComponentes" st-safe-src="prestamoc.rowCollectionComponentes" class="table table-striped" style="margin-top: 15px;">
 						<thead>
 							<tr>
-								<th class="label-form" style="text-align: center; min-width:300px; max-width:300px;">Nombre</th>
-								<th class="label-form" style="text-align: center; min-width: 140px; max-width: 140px">Techo</th>
+								<th class="label-form" style="text-align: center; min-width:300px;">Nombre</th>
+								<th class="label-form" style="text-align: center; min-width: 140px;">Techo</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr ng-repeat="row in prestamoc.rowCollectionComponentes">
-								<td style="min-width:300px;max-width:300px;">
-	    							<div style="height: 25px;">
-	    								<div style="text-align: left">{{row.nombre}}</div>
-	    							</div>
+								<td style="min-width:300px; text-align: left;">
+	    							{{row.nombre}}
 	    						</td>
-	    						<td>
-	    							<div style="height: 25px;">
-	    								<div style="text-align: right">{{row.techo | formatoMillonesDolares : controller.enMillones}}</div>
-	    							</div>
+	    						<td style="text-align: right;">
+	    							{{row.techo | formatoMillonesDolares : controller.enMillones}}
 	    						</td>
 							</tr>
 						</tbody>
@@ -937,18 +941,18 @@
 								 	<tr>
 								 		<th rowspan="2" class="label-form" style="vertical-align: middle;"> COMPONENTES</th>
 								 		<th colspan="3"  class="label-form" ng-repeat= "organismo in prestamoc.m_organismosEjecutores"
-								 			style="text-align: center;">
+								 			style="text-align: center; vertical-align: middle;">
 								 			<div>{{ organismo.nombre }}</div>
 								 		</th>
 								 		<th rowspan="2" class="label-form" style="text-align: center; vertical-align: middle;">TECHO</th>
 								 	</tr>
 								 	<tr>
 								 		<th colspan="3" ng-repeat= "organismo in prestamoc.m_organismosEjecutores">
-								 			<table>
+								 			<table style="width: 100%">
 								 				<tr>
-								 					<th class="label-form" style="width: 100px; text-align: center;">Prestamo</th>
-								 					<th class="label-form" style="width: 100px; text-align: center;">Donación</th>
-								 					<th class="label-form" style="width: 100px;text-align: center;">Nacional</th>
+								 					<td class="label-form" style="min-width: 100px; text-align: center;">Prestamo</td>
+								 					<td class="label-form" style="min-width: 100px; text-align: center;">Donación</td>
+								 					<td class="label-form" style="min-width: 100px;text-align: center;">Nacional</td>
 								 				</tr>
 								 			</table>
 								 		</th>
@@ -956,11 +960,11 @@
 								 	
 								 	<tr ng-repeat="row in m_componentes track by $index " class="filaIngreso"
 								 	    ng-click="prestamoc.componenteSeleccionado(row)" ng-class="row.isSelected ? 'st-selected' : ''">
-								 		<td style="width: 200px; min-width: 200px;" class="label-form"> {{ row.nombre }} </td>
+								 		<td style="min-width: 200px;" class="label-form"> {{ row.nombre }} </td>
 								 		<td  colspan="3" ng-repeat = "ue in row.unidadesEjecutoras track by $index">
-								 			<table>
+								 			<table style="width: 100%;">
 								 				<tr>
-								 					<td style=>
+								 					<td style="text-align: center;">
 								 						<input  inputText="text" style="width: 100px; margin-right: 5px;"
 															class="inputText input-money"
 															ng-model="ue.prestamo"
@@ -970,7 +974,7 @@
 															ng-readonly="prestamoc.m_existenDatos"
 														/>
 								 					</td>
-								 					<td >
+								 					<td style="text-align: center;">
 								 						<input  inputText="text" style="width: 100px; margin-right: 5px;"
 															class="inputText input-money"
 															ng-model="ue.donacion"
@@ -980,7 +984,7 @@
 															ng-readonly="prestamoc.m_existenDatos"
 														/>
 								 					</td>
-								 					<td>
+								 					<td style="text-align: center; border-right: 1px solid #ddd;">
 								 						<input  inputText="text" style="width: 100px; margin-right: 5px;"
 															class="inputText input-money"
 															ng-model="ue.nacional"
@@ -993,7 +997,7 @@
 								 				<tr>
 								 			</table>
 								 		</td>
-								 		<td style="width: 150px; min-width: 150px; text-align: right;"
+								 		<td style="width: 150px; text-align: right;"
 								 		 	class="label-form"> {{ row.techo | formatoMillones : desembolsosc.enMillones }} 
 								 		 </td>
 								 	</tr>
