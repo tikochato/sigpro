@@ -58,7 +58,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/subproducto/:producto_id/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloSubproducto\'" class="all_page"></div>'
             })
-            .when('/prestamotipo/:reiniciar_vista?',{
+            .when('/peptipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'proyectotipoController\'" class="all_page"></div>'
             })
             .when('/desembolsotipo/:reiniciar_vista?',{
@@ -213,6 +213,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             })
             .when('/flujocaja',{
             	template: '<div load-on-demand="\'flujocajaController\'" class="all_page"></div>'
+            })
+            .when('/prestamotipo/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'prestamotipoController\'" class="all_page"></div>'
             })
             .when("/:redireccion?",{
             	controller:"MainController"
@@ -549,6 +552,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'treePathController',
 	    	   script: '/app/components/utilidades/calcularTreePath.controller.js',
 	    	   template: '/app/components/utilidades/calcularTreePath.jsp'
+	       }, 
+	       {
+	       		name: 'prestamotipoController',
+	       		script: '/app/components/prestamo/prestamoTipo.controller.js',
+	       		template: '/app/components/prestamo/prestamotipo.jsp'
 	       }
 
 	   ];
