@@ -717,7 +717,7 @@ public class SPrestamo extends HttpServlet {
 					
 					BigDecimal fuentePrestamo =!unidad.get("prestamo").isJsonNull() ?   Utils.String2BigDecimal(unidad.get("prestamo").getAsString(), new BigDecimal(0)) : new BigDecimal(0);
 					BigDecimal fuenteDonacion = !unidad.get("donacion").isJsonNull() ?  Utils.String2BigDecimal(unidad.get("donacion").getAsString(), new BigDecimal(0)): new BigDecimal(0);
-					BigDecimal fuenteNacional = !unidad.get("donacion").isJsonNull() ? Utils.String2BigDecimal(unidad.get("nacional").getAsString(), new BigDecimal(0)): new BigDecimal(0); 
+					BigDecimal fuenteNacional = !unidad.get("nacional").isJsonNull() ? Utils.String2BigDecimal(unidad.get("nacional").getAsString(), new BigDecimal(0)): new BigDecimal(0); 
 					if(posicion== -1){
 						proyectos.add(crearProyecto(unidad,prestamo,usuario));
 						ret = proyectos.size()>0;
