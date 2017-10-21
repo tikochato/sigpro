@@ -400,30 +400,17 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 						
 										if (response.data.success){
 											mi.m_organismosEjecutores = response.data.unidadesEjecutoras;
+											$scope.m_componentes = response.data.componentes;
+											mi.m_existenDatos = true; 
 											
-											mi.m_existenDatos = true;
-											if(mi.child_desembolso!=null || mi.child_riesgos!=null  ){
-												if(mi.child_desembolso)
-													ret = mi.child_desembolso.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
-															'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo',
-															mi.child_riesgo!=null ? mi.child_riesgo.guardar :  null);
-												else if(mi.child_riesgo)
-													ret = mi.child_riesgo.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
-															'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo');
-											}
-											else{
-												$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
-												mi.botones=true;
-											}
 										}else{
-											$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo');
-											mi.botones=true;
+											
 										}
 						
 									});
 								}else{
 								
-									if(mi.child_desembolso!=null || mi.child_riesgos!=null ){
+									if(mi.child_desembolso!=null || mi.child_riesgos!=null || !matrizGuardada ){
 										if(mi.child_desembolso)
 											ret = mi.child_desembolso.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
 													'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo',
