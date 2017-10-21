@@ -11,10 +11,6 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import pojo.PrestamoTipo;
-import pojo.PrestamoTipo;
-import pojo.PrestamoTipo;
-import pojo.PtipoPropiedad;
-import pojo.PrestamoTipo;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
@@ -131,6 +127,25 @@ public class PrestamoTipoDAO {
 		}
 		catch(Throwable e){
 			CLogger.write("5", ProyectoTipoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static boolean eliminarPrestamoTipo(PrestamoTipo prestamoTipo){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			prestamoTipo.setEstado(0);
+			session.beginTransaction();
+			session.update(prestamoTipo);
+			session.getTransaction().commit();
+			ret = true;
+		}
+		catch(Throwable e){
+			CLogger.write("6", ProyectoTipoDAO.class, e);
 		}
 		finally{
 			session.close();

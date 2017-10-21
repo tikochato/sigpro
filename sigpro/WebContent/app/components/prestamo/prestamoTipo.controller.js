@@ -4,7 +4,7 @@ app.controller('prestamotipoController',['$scope','$rootScope','$http','$interva
 	function($scope, $rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$q,$uibModal, $dialogoConfirmacion) {
 		var mi=this;
 
-		$window.document.title = $utilidades.sistema_nombre+' - Tipo '+$rootScope.etiquetas.prestamo;
+		$window.document.title = $utilidades.sistema_nombre+' - Tipo de Préstamo';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
 		mi.prestamotipos = [];
@@ -119,21 +119,26 @@ app.controller('prestamotipoController',['$scope','$rootScope','$http','$interva
 		mi.guardar=function(){
 			if(mi.prestamotipo!=null  && mi.prestamotipo.nombre!=''){
 				$http.post('/SPrestamoTipo', {
-					accion: 'guardarprestamotipo',
+					accion: 'guardarPrestamotipo',
 					esnuevo: mi.esnuevo,
 					id: mi.prestamotipo.id,
 					nombre: mi.prestamotipo.nombre,
 					descripcion: mi.prestamotipo.descripcion,
 				}).success(function(response){
 					if(response.success){
-						$utilidades.mensaje('success','Tipo de '+$rootScope.etiquetas.prestamo+' '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
+						$utilidades.mensaje('success','Tipo de préstamo ' + (mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
 						mi.prestamotipo.id = response.id;
+						mi.prestamotipo.usuarioCreo=response.usuarioCreo;
+						mi.prestamotipo.fechaCreacion=response.fechaCreacion;
+						mi.prestamotipo.usuarioActualizo=response.usuarioactualizo;
+						mi.prestamotipo.fechaActualizacion=response.fechaactualizacion;
+						
 						mi.obtenerTotalprestamotipos();
 
 					}
 					else
-						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' el Tipo de '+$rootScope.etiquetas.prestamo);
+						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' el Tipo de préstamo');
 				});
 			}
 			else
@@ -148,7 +153,7 @@ app.controller('prestamotipoController',['$scope','$rootScope','$http','$interva
 				$utilidades.setFocus(document.getElementById("nombre"));
 			}
 			else
-				$utilidades.mensaje('warning','Debe seleccionar el Tipo de '+$rootScope.etiquetas.prestamo+' que desea editar');
+				$utilidades.mensaje('warning','Debe seleccionar el Tipo de préstamo que desea editar');
 		}
 
 
@@ -156,22 +161,22 @@ app.controller('prestamotipoController',['$scope','$rootScope','$http','$interva
 			if(mi.prestamotipo!=null && mi.prestamotipo.id!=null){
 				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 						, "Confirmación de Borrado"
-						, '¿Desea borrar el tipo de '+$rootScope.etiquetas.prestamo+' "'+mi.prestamotipo.nombre+'"?'
+						, '¿Desea borrar el tipo de préstamo "'+mi.prestamotipo.nombre+'"?'
 						, "Borrar"
 						, "Cancelar")
 				.result.then(function(data) {
 					if(data){
 						$http.post('/SPrestamoTipo', {
-							accion: 'borrarprestamoTipo',
+							accion: 'borrarPrestamoTipo',
 							id: mi.prestamotipo.id
 						}).success(function(response){
 							if(response.success){
-								$utilidades.mensaje('success','Tipo de '+$rootScope.etiquetas.prestamo+' borrado con éxito');
+								$utilidades.mensaje('success','Tipo de préstamo borrado con éxito');
 								mi.prestamotipo = null;
 								mi.obtenerTotalprestamotipos();
 							}
 							else
-								$utilidades.mensaje('danger','Error al borrar el Tipo '+$rootScope.etiquetas.prestamo);
+								$utilidades.mensaje('danger','Error al borrar el Tipo préstmoa');
 						});
 					}
 				}, function(){
@@ -179,7 +184,7 @@ app.controller('prestamotipoController',['$scope','$rootScope','$http','$interva
 				});
 			}
 			else
-				$utilidades.mensaje('warning','Debe seleccionar el Tipo de '+$rootScope.etiquetas.prestamo+' que desea borrar');
+				$utilidades.mensaje('warning','Debe seleccionar el Tipo de préstamo que desea borrar');
 		};
 
 		mi.nuevo = function() {
@@ -223,11 +228,11 @@ app.controller('prestamotipoController',['$scope','$rootScope','$http','$interva
 		}
 		
 		mi.obtenerTotalprestamotipos = function(){
-			$http.post('/SPrestamoTipo', { accion: 'numeroprestamoTipos',
+			$http.post('/SPrestamoTipo', { accion: 'numeroPrestamoTipos',
 				filtro_nombre: mi.filtros['nombre'], 
 				filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'], t: (new Date()).getTime() }).then(
 					function(response) {
-						mi.totalprestamotipos = response.data.totalprestamotipos;
+						mi.totalPrestamotipos = response.data.totalprestamotipos;
 						mi.paginaActual = 1;
 						mi.cargarTabla(mi.paginaActual);
 			});

@@ -5,10 +5,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletException;
@@ -25,6 +23,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.PrestamoTipoDAO;
+import pojo.PrestamoTipo;
 import utilities.Utils;
 
 @WebServlet("/SPrestamoTipo")
@@ -88,7 +87,7 @@ public class SPrestamoTipo extends HttpServlet {
 				temp.fechaActualizacion = Utils.formatDateHour(prestamotipo.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDateHour(prestamotipo.getFechaCreacion());
 				temp.usuarioActualizo = prestamotipo.getUsuarioActualizo();
-				temp.usuarioCreo = prestamotipo.getUsarioCreo();
+				temp.usuarioCreo = prestamotipo.getUsuarioCreo();
 				stcooperantes.add(temp);
 			}
 			
@@ -96,11 +95,11 @@ public class SPrestamoTipo extends HttpServlet {
 	        response_text = String.join("", "\"poryectotipos\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
-		else if(accion.equals("numeroprestamoTipos")){
+		else if(accion.equals("numeroPrestamoTipos")){
 			String filtro_nombre = map.get("filtro_nombre");
 			String filtro_usuario_creo = map.get("filtro_usuario_creo");
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
-			response_text = String.join("","{ \"success\": true, \"totalprestamotipos\":",PrestamoTipoDAO.getTotalPrestamoTipos(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
+			response_text = String.join("","{ \"success\": true, \"totalprestamotipos\":",PrestamoTipoDAO.getTotalPrestamosTipos(filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion).toString()," }");
 		}
 		else if(accion.equals("guardarPrestamotipo")){
 			boolean result = false;
@@ -124,10 +123,15 @@ public class SPrestamoTipo extends HttpServlet {
 					prestamoTipo.setFechaActualizacion(new DateTime().toDate());
 				}
 				
-				result = PrestamoTipoDAO.guardarprestamoTipo(prestamoTipo);
+				result = PrestamoTipoDAO.guardarPrestamoTipo(prestamoTipo);
 				
 				response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
-						+ "\"id\": " + prestamoTipo.getId() +" }");
+					+ "\"id\": " + prestamoTipo.getId() ,","
+					, "\"usuarioCreo\": \"" , prestamoTipo.getUsuarioCreo(),"\","
+					, "\"fechaCreacion\":\" " , Utils.formatDateHour(prestamoTipo.getFechaCreacion()),"\","
+					, "\"usuarioactualizo\": \"" , prestamoTipo.getUsuarioActualizo() != null ? prestamoTipo.getUsuarioActualizo() : "","\","
+					, "\"fechaactualizacion\": \"" , Utils.formatDateHour(prestamoTipo.getFechaActualizacion()),"\""+
+					" }");
 			}
 			else
 				response_text = "{ \"success\": false }";
@@ -136,7 +140,7 @@ public class SPrestamoTipo extends HttpServlet {
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0){
 				PrestamoTipo prestamoTipo = PrestamoTipoDAO.getPrestamoTipoPorId(id);
-				response_text = String.join("","{ \"success\": ",(PrestamoTipoDAO.eliminarprestamoTipo(prestamoTipo) ? "true" : "false")," }");
+				response_text = String.join("","{ \"success\": ",(PrestamoTipoDAO.eliminarPrestamoTipo(prestamoTipo) ? "true" : "false")," }");
 			}
 			else
 				response_text = "{ \"success\": false }";
