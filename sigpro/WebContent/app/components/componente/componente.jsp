@@ -273,10 +273,10 @@
 								<div class="form-group" >
 								  <input type="text"  class="inputText" uib-datepicker-popup="{{componentec.formatofecha}}" ng-model="componentec.componente.fechaFin" is-open="componentec.ff_abierto"
 								            datepicker-options="componentec.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true"
-								            ng-readonly="componentec.componente.tieneHijos"
+								            ng-readonly="true"
 								            ng-value="componentec.componente.fechaFin" onblur="this.setAttribute('value', this.value);"
 								            ng-readonly="true"/>
-								            <span class="label-icon" ng-click="componentec.componente.tieneHijos != true ? componentec.abrirPopupFecha(1001) : ''">
+								            <span class="label-icon">
 								              <i class="glyphicon glyphicon-calendar"></i>
 								            </span>
 								  <label for="campo.id" class="floating-label">* Fecha de Fin</label>
