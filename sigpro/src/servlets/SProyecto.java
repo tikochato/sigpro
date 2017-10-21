@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import dao.ComponenteDAO;
 import dao.EntidadDAO;
 import dao.EstructuraProyectoDAO;
 import dao.EtiquetaDAO;
@@ -39,6 +40,7 @@ import dao.ProyectoPropiedadValorDAO;
 import dao.UnidadEjecutoraDAO;
 import pojo.AcumulacionCosto;
 import pojo.Colaborador;
+import pojo.Componente;
 import pojo.Entidad;
 import pojo.Etiqueta;
 import pojo.Prestamo;
@@ -104,6 +106,25 @@ public class SProyecto extends HttpServlet {
 		String valor;
 		String valor_f;
 	}
+	
+	 class stcomponentessigade{
+    	Integer id;
+    	String nombre;
+    	String tipoMoneda;
+    	BigDecimal techo;
+    	int orden;
+		List<stunidadejecutora> unidadesEjecutoras;
+    }
+    
+    class stunidadejecutora{
+    	Integer id;
+    	String nombre;
+    	String entidad;
+		Integer ejercicio;
+		Double prestamo;
+		Double donacion;
+		Double nacional;
+    }
 
 	public SProyecto() {
         super();
@@ -746,7 +767,44 @@ public class SProyecto extends HttpServlet {
 		else if(accion.equals("calcularCostoFecha")){
 			Integer proyectoId = Utils.String2Int(map.get("proyectoId"));
 			response_text = String.join("", "{\"success\":", ProyectoDAO.calcularCostoyFechas(proyectoId) ? "true" : "false","}");
-		}
+		}else if(accion.equals("obtenerMatriz")){
+			Integer proyectoId = Utils.String2Int(map.get("proyectoId"),0);
+			
+			List<Componente> componentes = ComponenteDAO.getComponentesPorProyecto(proyectoId);
+			List<stcomponentessigade> stcomponentes = new ArrayList<stcomponentessigade>();
+			stunidadejecutora stunidad = new stunidadejecutora();
+			List<stunidadejecutora> unidadesEjecutroas =  new ArrayList<stunidadejecutora>();
+			
+			
+			for (Componente componente : componentes){
+				stcomponentessigade temp = new stcomponentessigade();
+				temp.id = componente.getId();
+				temp.nombre = componente.getNombre();
+				temp.techo = componente.getComponenteSigade().getMontoComponente();
+				stcomponentes.add(temp);
+				
+				List<stunidadejecutora> stunidades = new ArrayList<stunidadejecutora>();
+				stunidad = new stunidadejecutora();
+				stunidad.donacion = componente.getFuenteDonacion().doubleValue();
+				stunidad.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
+				stunidad.nacional =  componente.getFuenteNacional().doubleValue();
+				stunidad.prestamo = componente.getFuentePrestamo().doubleValue();
+				stunidad.id = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
+				stunidad.nombre = componente.getUnidadEjecutora().getNombre();
+				stunidades.add(stunidad);
+				temp.unidadesEjecutoras = stunidades;
+				if (unidadesEjecutroas.size() == 0)
+					unidadesEjecutroas.add(stunidad);
+			}
+			
+			String unidades_text=new GsonBuilder().serializeNulls().create().toJson(unidadesEjecutroas);
+			String componentes_text = new GsonBuilder().serializeNulls().create().toJson(stcomponentes);
+	        response_text = String.join("", ",\"unidadesEjecutoras\":",unidades_text);
+	        response_text = String.join("", "\"componentes\":",componentes_text,response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+			
+		}else
+			response_text = "{ \"success\": false }";
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");
 
@@ -757,3 +815,4 @@ public class SProyecto extends HttpServlet {
         output.close();
 	}
 }
+ 

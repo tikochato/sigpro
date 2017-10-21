@@ -61,6 +61,8 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	
 	mi.prestamoNombre = "";
 	mi.objetoTipoNombre = "";
+	mi.m_organismosEjecutores = [];
+	mi.m_componentes = [];
 	
 	$http.post('/SPrestamo', { accion: 'obtenerPrestamoPorId', id: mi.prestamoid, t: (new Date()).getTime() }).success(
 		function(response) {
@@ -397,6 +399,19 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			}
 			$http.post('/SProyectoImpacto', parametros).then(function(response){
 				mi.impactos  = response.data.impactos;
+				
+			});
+			
+			parametros = {
+					accion: 'obtenerMatriz',
+					proyectoId: mi.proyecto!=''? mi.proyecto.id:0,
+				    t:moment().unix()
+			}
+			
+			$http.post('/SProyecto', parametros).then(function(response){
+				mi.m_organismosEjecutores = response.data.unidadesEjecutoras;
+				mi.m_componentes = response.data.componentes;
+				mi.m_existenDatos = response.data.existenDatos;
 				
 			});
 			

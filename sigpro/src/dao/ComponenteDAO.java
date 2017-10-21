@@ -536,4 +536,6 @@ public class ComponenteDAO {
 		}
 		return ret;
 	}
+	
+	
 }
