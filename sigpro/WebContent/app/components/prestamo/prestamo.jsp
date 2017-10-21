@@ -143,211 +143,246 @@
 			<uib-tabset active="prestamoc.active">
 				<shiro:hasPermission name="43010">
 				<uib-tab ng-click="prestamoc.getPorcentajes();" index="0" heading="Préstamo" >
-							<div class="row" style="margin-top: 15px;">
-								<div class="col-sm-12">
-									<div class="form-group">
-										<input type="text" class="inputText"   
-										ng-model="prestamoc.prestamo.codigoPresupuestario" ng-readonly="true" ng-required="true"
-										ng-click="prestamoc.buscarCodigoPresupuestario()"
-										onblur="this.setAttribute('value', this.value);" ng-value="prestamoc.prestamo.codigoPresupuestario" />			            	
-										<span class="label-icon" ng-click="prestamoc.buscarCodigoPresupuestario()">
-											<i class="glyphicon glyphicon-search"></i>
-										</span>
-										<label class="floating-label">* Código presupuestario</label>
-									</div>
-								</div>
+					<div class="row" style="margin-top: 15px;">
+						<div class="col-sm-12">
+							<div class="form-group">
+								<input type="text" class="inputText"   
+								ng-model="prestamoc.prestamo.codigoPresupuestario" ng-readonly="true" ng-required="true"
+								ng-click="prestamoc.buscarCodigoPresupuestario()"
+								onblur="this.setAttribute('value', this.value);" ng-value="prestamoc.prestamo.codigoPresupuestario" />			            	
+								<span class="label-icon" ng-click="prestamoc.buscarCodigoPresupuestario()">
+									<i class="glyphicon glyphicon-search"></i>
+								</span>
+								<label class="floating-label">* Código presupuestario</label>
 							</div>
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="form-group">
-										<input type="text" class="inputText"  ng-model="prestamoc.prestamo.numeroPrestamo" ng-required="true" 
-										ng-value="prestamoc.prestamo.numeroPrestamo" onblur="this.setAttribute('value', this.value);">
-										<label class="floating-label" >* Número de {{etiquetas.proyecto}}</label>
-									</div>
-								</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group">
+								<input type="text" class="inputText"  ng-model="prestamoc.prestamo.numeroPrestamo" ng-required="true" 
+								ng-value="prestamoc.prestamo.numeroPrestamo" onblur="this.setAttribute('value', this.value);">
+								<label class="floating-label" >* Número de {{etiquetas.proyecto}}</label>
 							</div>
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="form-group">
-									<input type="text" class="inputText"   ng-model="prestamoc.prestamo.proyectoPrograma" ng-required="true"
-									onblur="this.setAttribute('value', this.value);" ng-value="prestamoc.prestamo.proyectoPrograma"  >
-									<label class="floating-label">* Proyecto/Programa</label>
-									</div>
-								</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group">
+							<input type="text" class="inputText"   ng-model="prestamoc.prestamo.proyectoPrograma" ng-required="true"
+							onblur="this.setAttribute('value', this.value);" ng-value="prestamoc.prestamo.proyectoPrograma"  >
+							<label class="floating-label">* Proyecto/Programa</label>
 							</div>
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="form-group" >
-										<div id="cooperante" angucomplete-alt placeholder="" pause="100" selected-object="prestamoc.cambioCooperante"
-											  local-data="prestamoc.cooperantes" search-fields="nombre" title-field="nombre" field-required="true" 
-											  field-label="* Organismo Financiero Internacional"
-											  minlength="2" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
-											  initial-value="prestamoc.prestamo.cooperantenombre" focus-out="prestamoc.blurCooperante()"></div>
-									</div>
-								</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group" >
+								<div id="cooperante" angucomplete-alt placeholder="" pause="100" selected-object="prestamoc.cambioCooperante"
+									  local-data="prestamoc.cooperantes" search-fields="nombre" title-field="nombre" field-required="true" 
+									  field-label="* Organismo Financiero Internacional"
+									  minlength="2" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
+									  initial-value="prestamoc.prestamo.cooperantenombre" focus-out="prestamoc.blurCooperante()"></div>
 							</div>
-							<div class="row">
-								<div class="col-sm-4">
-									<div class="form-group">    						
-										<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaDecreto" is-open="prestamoc.fd_abierto"
-											datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
-											ng-value="prestamoc.prestamo.fechaDecreto" onblur="this.setAttribute('value', this.value);"
-										/>
-										<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1007)">	
-											<i class="glyphicon glyphicon-calendar"></i>
-										</span>
-										<label class="floating-label">* Fecha Decreto</label>
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<div class="form-group">
-										<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaSuscripcion" is-open="prestamoc.fs_abierto"
-											datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
-											ng-value="prestamoc.prestamo.fechaSuscripcion" onblur="this.setAttribute('value', this.value);"
-											/>
-											<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1008)">
-												<i class="glyphicon glyphicon-calendar"></i>
-										</span>
-										<label class="floating-label">* Fecha de Suscripción</label>
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<div class="form-group">
-										<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaVigencia" is-open="prestamoc.fv_abierto"
-											datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
-											ng-value="prestamoc.prestamo.fechaVigencia" onblur="this.setAttribute('value', this.value);"
-											/>
-											<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1012)">
-												<i class="glyphicon glyphicon-calendar"></i>
-										</span>
-										<label class="floating-label">* Fecha de vigencia</label>
-									</div>
-								</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="form-group">    						
+								<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaDecreto" is-open="prestamoc.fd_abierto"
+									datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
+									ng-value="prestamoc.prestamo.fechaDecreto" onblur="this.setAttribute('value', this.value);"
+								/>
+								<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1007)">	
+									<i class="glyphicon glyphicon-calendar"></i>
+								</span>
+								<label class="floating-label">* Fecha Decreto</label>
 							</div>
-							
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="text" class="inputText"  
-										ng-model="prestamoc.prestamo.tipoMonedaNombre" ng-readonly="true" ng-required="true"
-										ng-click="prestamoc.buscarTipoMoneda()"
-										onblur="this.setAttribute('value', this.value);" ng-value="prestamoc.prestamo.tipoMonedaNombre"/>
-										<span class="label-icon" ng-click="prestamoc.buscarTipoMoneda()">
-											<i class="glyphicon glyphicon-search"></i>
-										</span>
-										<label class="floating-label">* Tipo de Moneda</label>
-									</div>
-								</div>
-								
-								<div class="col-sm-6">
-									<div class="form-group money-input">
-										<input type="text" 
-										 class="inputText input-money"  
-										 ng-model="prestamoc.prestamo.montoContratado" 
-										 ng-required="true"
-										 ng-value="prestamoc.prestamo.montoContratado"
-										 onblur="this.setAttribute('value', this.value);" 
-										 ng-change="prestamoc.setPorcentaje(1);" 
-										 ui-number-mask="0"
-										 >
-										<label class="floating-label" >* Monto Contratado</label>
-									</div>
-								</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaSuscripcion" is-open="prestamoc.fs_abierto"
+									datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
+									ng-value="prestamoc.prestamo.fechaSuscripcion" onblur="this.setAttribute('value', this.value);"
+									/>
+									<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1008)">
+										<i class="glyphicon glyphicon-calendar"></i>
+								</span>
+								<label class="floating-label">* Fecha de Suscripción</label>
 							</div>
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="text" 
-										 class="inputText input-money"  
-										 ng-model="prestamoc.prestamo.montoContratadoUsd" 
-										 ng-required="true"
-										 ng-value="prestamoc.prestamo.montoContratadoUsd" 
-										 onblur="this.setAttribute('value', this.value);" 
-										 ng-change="prestamoc.setPorcentaje(2);"
-										 ui-number-mask="0"
-										 >
-										 <label class="floating-label" >* Monto Contratado $</label>
-									</div>
-								</div>
-								
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="text" 
-										class="inputText input-money" 
-										ng-model="prestamoc.prestamo.montoContratadoQtz" 
-										ng-required="true"
-										ng-value="prestamoc.prestamo.montoContratadoQtz" 
-										onblur="this.setAttribute('value', this.value);"
-										ui-number-mask="0"
-										>
-										<label class="floating-label" >* Monto Contratado Q</label>
-									</div>
-								</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaVigencia" is-open="prestamoc.fv_abierto"
+									datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
+									ng-value="prestamoc.prestamo.fechaVigencia" onblur="this.setAttribute('value', this.value);"
+									/>
+									<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1012)">
+										<i class="glyphicon glyphicon-calendar"></i>
+								</span>
+								<label class="floating-label">* Fecha de vigencia</label>
 							</div>
-							
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input inputText="text" 
-										class="inputText input-money" 
-										ng-model="prestamoc.prestamo.desembolsoAFechaUsd" 
-										ng-required="true"
-										ng-value="prestamoc.prestamo.desembolsoAFechaUsd" 
-										onblur="this.setAttribute('value', this.value);" 
-										ng-change="prestamoc.setPorcentaje(1);"
-										ui-number-mask="0"
-										>
-										<label class="floating-label">* Desembolso a la Fecha $</label>
-									</div>
-								</div>
-								
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="text" class="inputText input-money" ng-model="prestamoc.prestamo.desembolsoAFechaUsdP" ng-disabled="true"
-										ng-value="prestamoc.prestamo.desembolsoAFechaUsdP" onblur="this.setAttribute('value', this.value);" ui-number-mask="2"/>
-										<label class="floating-label">Desembolso a la Fecha %</label>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="text" 
-										class="inputText input-money" 
-										ng-model="prestamoc.prestamo.montoPorDesembolsarUsd" 
-										ng-required="true"
-										ng-value="prestamoc.prestamo.montoPorDesembolsarUsd" 
-										onblur="this.setAttribute('value', this.value);" 
-										ng-change="prestamoc.setPorcentaje(2);"
-										ng-disabled="true"
-										ui-number-mask="0"
-										/>
-										<label class="floating-label">* Monto por Desembolsar $</label>
-									</div>
-								</div>
-								
-								<div class="col-sm-6">
-									<div class="form-group">
-										<input type="text" class="inputText input-money" ng-model="prestamoc.prestamo.montoPorDesembolsarUsdP" ng-disabled="true"
-										ng-value="prestamoc.prestamo.montoPorDesembolsarUsdP" onblur="this.setAttribute('value', this.value);" ui-number-mask="0"/>
-										<label class="floating-label">Monto por Desembolsar %</label>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="form-group">
-										<input type="number"
-										 class="inputText "  
-										 ng-model="prestamoc.proyecto.ejecucionFisicaReal"
-										 ng-value="prestamoc.proyecto.ejecucionFisicaReal"
-										 onblur="this.setAttribute('value', this.value);"
-										 min="0" max="100">
-										<label class="floating-label" >Ejecucion Física %</label>
-									</div>
-								</div>
-							</div>
+						</div>
+					</div>
 					
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<input type="text" class="inputText"  
+								ng-model="prestamoc.prestamo.tipoMonedaNombre" ng-readonly="true" ng-required="true"
+								ng-click="prestamoc.buscarTipoMoneda()"
+								onblur="this.setAttribute('value', this.value);" ng-value="prestamoc.prestamo.tipoMonedaNombre"/>
+								<span class="label-icon" ng-click="prestamoc.buscarTipoMoneda()">
+									<i class="glyphicon glyphicon-search"></i>
+								</span>
+								<label class="floating-label">* Tipo de Moneda</label>
+							</div>
+						</div>
+						
+						<div class="col-sm-6">
+							<div class="form-group money-input">
+								<input type="text" 
+								 class="inputText input-money"  
+								 ng-model="prestamoc.prestamo.montoContratado" 
+								 ng-required="true"
+								 ng-value="prestamoc.prestamo.montoContratado"
+								 onblur="this.setAttribute('value', this.value);" 
+								 ng-change="prestamoc.setPorcentaje(1);" 
+								 ui-number-mask="0"
+								 >
+								<label class="floating-label" >* Monto Contratado</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<input type="text" 
+								 class="inputText input-money"  
+								 ng-model="prestamoc.prestamo.montoContratadoUsd" 
+								 ng-required="true"
+								 ng-value="prestamoc.prestamo.montoContratadoUsd" 
+								 onblur="this.setAttribute('value', this.value);" 
+								 ng-change="prestamoc.setPorcentaje(2);"
+								 ui-number-mask="0"
+								 >
+								 <label class="floating-label" >* Monto Contratado $</label>
+							</div>
+						</div>
+						
+						<div class="col-sm-6">
+							<div class="form-group">
+								<input type="text" 
+								class="inputText input-money" 
+								ng-model="prestamoc.prestamo.montoContratadoQtz" 
+								ng-required="true"
+								ng-value="prestamoc.prestamo.montoContratadoQtz" 
+								onblur="this.setAttribute('value', this.value);"
+								ui-number-mask="0"
+								>
+								<label class="floating-label" >* Monto Contratado Q</label>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<input inputText="text" 
+								class="inputText input-money" 
+								ng-model="prestamoc.prestamo.desembolsoAFechaUsd" 
+								ng-required="true"
+								ng-value="prestamoc.prestamo.desembolsoAFechaUsd" 
+								onblur="this.setAttribute('value', this.value);" 
+								ng-change="prestamoc.setPorcentaje(1);"
+								ui-number-mask="0"
+								>
+								<label class="floating-label">* Desembolso a la Fecha $</label>
+							</div>
+						</div>
+						
+						<div class="col-sm-6">
+							<div class="form-group">
+								<input type="text" class="inputText input-money" ng-model="prestamoc.prestamo.desembolsoAFechaUsdP" ng-disabled="true"
+								ng-value="prestamoc.prestamo.desembolsoAFechaUsdP" onblur="this.setAttribute('value', this.value);" ui-number-mask="2"/>
+								<label class="floating-label">Desembolso a la Fecha %</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<input type="text" 
+								class="inputText input-money" 
+								ng-model="prestamoc.prestamo.montoPorDesembolsarUsd" 
+								ng-required="true"
+								ng-value="prestamoc.prestamo.montoPorDesembolsarUsd" 
+								onblur="this.setAttribute('value', this.value);" 
+								ng-change="prestamoc.setPorcentaje(2);"
+								ng-disabled="true"
+								ui-number-mask="0"
+								/>
+								<label class="floating-label">* Monto por Desembolsar $</label>
+							</div>
+						</div>
+						
+						<div class="col-sm-6">
+							<div class="form-group">
+								<input type="text" class="inputText input-money" ng-model="prestamoc.prestamo.montoPorDesembolsarUsdP" ng-disabled="true"
+								ng-value="prestamoc.prestamo.montoPorDesembolsarUsdP" onblur="this.setAttribute('value', this.value);" ui-number-mask="0"/>
+								<label class="floating-label">Monto por Desembolsar %</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group">
+								<input type="number"
+								 class="inputText "  
+								 ng-model="prestamoc.proyecto.ejecucionFisicaReal"
+								 ng-value="prestamoc.proyecto.ejecucionFisicaReal"
+								 onblur="this.setAttribute('value', this.value);"
+								 min="0" max="100">
+								<label class="floating-label" >Ejecucion Física %</label>
+							</div>
+						</div>
+					</div>
+					<br>
+					<div class="row">
+						<div class="panel panel-default">
+							<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
+							<div class="panel-body">
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group" style="text-align: right">
+											<label class="label-form" for="usuarioCreo">Usuario que creo</label>
+						  					<p>{{ prestamoc.prestamo.usuarioCreo }}</pl>
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label  class="label-form"  for="fechaCreacion">Fecha de creación</label>
+						  					<p>{{ prestamoc.prestamo.fechaCreacion }}</p>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group" style="text-align: right">
+											<label  class="label-form" for="usuarioActualizo">Usuario que actualizo</label>
+						  					<p>{{ prestamoc.prestamo.usuarioActualizo }}</p>
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label for="fechaActualizacion"  class="label-form" >Fecha de actualizacion</label>
+						  					<p>{{ prestamoc.prestamo.fechaActualizacion }}</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>	
 				</uib-tab>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="43010">

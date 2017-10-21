@@ -362,7 +362,12 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 				$http.post('/SPrestamo',param_data).then(
 						function(response) {
 							if (response.data.success) {
-
+								
+								mi.prestamo.usuarioCreo = response.data.usuarioCreo;
+								mi.prestamo.fechaCreacion = response.data.fechaCreacion;
+								mi.prestamo.usuarioActualizo = response.data.usuarioActualizo;
+								mi.prestamo.fechaActualizacion = response.data.fechaActualizacion;
+								
 								if(mi.esTreeview){
 									mi.t_cambiarNombreNodo();
 								}
