@@ -214,7 +214,7 @@
 		    							<tr ng-repeat="row in ctrladqui.rowCollectionPrestamo">
 		    								<td class="divisionColumna truncate" style="min-width:300px;max-width:300px;">
 				    							<div style="height: 25px;">
-				    								<div style="text-align: left" uib-tooltip="{{row.nombre}}"><span style="float: left;margin-left: {{row.nivel-1}}em;" ng-class="ctrladqui.claseIcon(row);" uib-tooltip="{{ctrladqui.tooltipObjetoTipo[row.objetoTipo-1]}}"></span>{{row.nombre}}</div>
+				    								<div style="text-align: left" uib-tooltip="{{row.nombre}}"><span style="float: left;margin-left: {{row.nivel-1}}em;" ng-class="ctrladqui.claseIcon(row);" uib-tooltip="{{ctrladqui.tooltipObjetoTipo[row.objetoTipo]}}"></span>{{row.nombre}}</div>
 				    							</div>
 				    						</td>
 		    								<td class="divisionColumna" style="min-width: 200px; max-width: 200px">

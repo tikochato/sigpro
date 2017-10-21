@@ -43,16 +43,18 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 		
 		
 		mi.iconoObjetoTipo = {
-		    1: "glyphicon glyphicon-record",
-		    2: "glyphicon glyphicon-th",
+		    0: "glyphicon glyphicon-record",
+		    1: "glyphicon glyphicon-th",
+		    2: "glyphicon glyphicon-equalizer",
 		    3: "glyphicon glyphicon-certificate",
 		    4: "glyphicon glyphicon-link",
 		    5: "glyphicon glyphicon-time",
 		};
 		
 		mi.tooltipObjetoTipo = {
-		    1: "Proyecto",
-		    2: "Componente",
+		    0: "Proyecto",
+		    1: "Componente",
+		    2: "Subcomponente",
 		    3: "Producto",
 		    4: "Subproducto",
 		    5: "Actividad",

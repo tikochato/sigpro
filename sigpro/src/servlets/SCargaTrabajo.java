@@ -209,7 +209,7 @@ public class SCargaTrabajo extends HttpServlet {
 						Integer objeto_id = (Integer)obj[0];
 						String nombre = (String)obj[1];
 						Integer objeto_tipo = ((BigInteger) obj[2]).intValue();
-						Integer nivel = ((String)obj[3]).length()/8;
+						Integer nivel = (obj[3]!=null) ? ((String)obj[3]).length()/8 : 0;
 							
 						switch(objeto_tipo){
 						case 0: 
@@ -672,7 +672,7 @@ public class SCargaTrabajo extends HttpServlet {
 			Integer objeto_id = (Integer)obj[0];
 			String nombre = (String)obj[1];
 			Integer objeto_tipo = ((BigInteger) obj[2]).intValue();
-			Integer nivel = ((String)obj[3]).length()/8;
+			Integer nivel = (obj[3]!=null) ? ((String)obj[3]).length()/8 : 0;
 				
 			switch(objeto_tipo){
 			case 0: 
