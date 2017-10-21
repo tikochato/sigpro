@@ -10,6 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class SubcomponentePropiedadValorId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3302496374168046872L;
 	private int subcomponenteid;
 	private int subcomponentePropiedadid;
 

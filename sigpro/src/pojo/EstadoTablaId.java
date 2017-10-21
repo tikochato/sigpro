@@ -10,6 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class EstadoTablaId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8686808495004515024L;
 	private String usuario;
 	private String tabla;
 

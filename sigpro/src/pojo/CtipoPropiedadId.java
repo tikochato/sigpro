@@ -10,6 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class CtipoPropiedadId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8552251174636414201L;
 	private int componenteTipoid;
 	private int componentePropiedadid;
 
