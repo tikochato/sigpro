@@ -221,13 +221,12 @@ public class SPrestamoMetas extends HttpServlet {
 		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
 		for(Object objeto : estructuraProyecto){
 			Object[] obj = (Object[]) objeto;
-			Integer nivel = ((String)obj[3]).length();
+			Integer nivel = (obj[3]!=null) ? ((String)obj[3]).length()/8 : 0;
 			if(nivel!= null){
-				nivel = nivel/8;
 				stprestamo tempPrestamo =  new stprestamo();
 				tempPrestamo.objeto_id = (Integer)obj[0];
 				tempPrestamo.nombre = (String)obj[1];
-				tempPrestamo.nivel = nivel +1;
+				tempPrestamo.nivel = nivel;
 				tempPrestamo.objeto_tipo = ((BigInteger) obj[2]).intValue();
 				if(tempPrestamo.objeto_tipo <=3){
 					ArrayList<ArrayList<BigDecimal>> metaValores = new ArrayList<ArrayList<BigDecimal>>();
@@ -513,15 +512,9 @@ public class SPrestamoMetas extends HttpServlet {
 			for (int i=0; i<lstPrestamo.size(); i++){
 				columna = 0;
 				stprestamo prestamo = lstPrestamo.get(i);
-				String sangria;
-				switch (prestamo.objeto_tipo){
-					case 0: sangria = "         "; break;
-					case 1: sangria = ""; break;
-					case 2: sangria = "   "; break;
-					case 3: sangria = "      "; break;
-					case 4: sangria = "         "; break;
-					case 5: sangria = "            "; break;
-					default: sangria = "";
+				String sangria="";
+				for(int s=1; s<prestamo.nivel; s++){
+					sangria+="   ";
 				}
 				datos[i][columna] = sangria+prestamo.nombre;
 				columna++;

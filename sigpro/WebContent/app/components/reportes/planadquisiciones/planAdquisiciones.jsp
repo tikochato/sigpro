@@ -265,7 +265,7 @@
 		    							<tr ng-repeat="row in planadqui.data" style="height: 35px; max-height: 35px; min-height: 35px">
 		    								<td nowrap style="min-width:200px; {{planadqui.padre(row)}}">
 				    							<div uib-tooltip="{{item.nombre}}" class="nombreFormat">
-				    								<div uib-tooltip="{{row.nombre}}"><span ng-class="row.objetoTipo == 2 ? planadqui.claseIcon(row) : ''" style="margin-left: {{row.nivel}}em" uib-tooltip="{{planadqui.tooltipObjetoTipo[row.objetoTipo-1]}}"></span>{{row.nombre}}</div>
+				    								<div uib-tooltip="{{row.nombre}}"><span ng-class="row.objetoTipo == 1 ? planadqui.claseIcon(row) : ''" style="margin-left: {{row.nivel}}em" uib-tooltip="{{planadqui.tooltipObjetoTipo[row.objetoTipo]}}"></span>{{row.nombre}}</div>
 				    							</div>
 				    						</td>
 		    							</tr>

@@ -11,6 +11,8 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		mi.riesgoTipoNombre="";
 		mi.componenteid = "";
 		mi.componenteNombre="";
+		mi.subcomponenteid = "";
+		mi.subcomponenteNombre="";
 		mi.productoid="";
 		mi.productoNombre="";
 		mi.colaboradorid = ""
@@ -148,6 +150,8 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			mi.riesgoTipoNombre="";
 			mi.componenteid = "";
 			mi.componenteNombre="";
+			mi.subcomponenteid = "";
+			mi.subcomponenteNombre="";
 			mi.productoid="";
 			mi.productoNombre="";
 			mi.camposdinamicos = {};

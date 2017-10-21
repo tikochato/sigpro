@@ -448,15 +448,9 @@ public class SMatrizRACI extends HttpServlet {
 			datos = new String[stmatriz.size()][colaboradores.size()+1];
 			for (int i=0; i<stmatriz.size(); i++){
 				stmatriz matriz = stmatriz.get(i);
-				String sangria;
-				switch (matriz.objetoTipo){
-					case 0: sangria = ""; break;
-					case 1: sangria = "   "; break;
-					case 2: sangria = "      "; break;
-					case 3: sangria = "         "; break;
-					case 4: sangria = "            "; break;
-					case 5: sangria = "               "; break;
-					default: sangria = "";
+				String sangria="";
+				for(int s=1; s<matriz.nivel; s++){
+					sangria+="   ";
 				}
 				datos[i][0]=sangria+matriz.objetoNombre;
 				for(int c=0; c<colaboradores.size(); c++){

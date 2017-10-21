@@ -75,6 +75,16 @@ public class EstructuraProyectoDAO {
 					"left outer join componente c on c.id=pr.componenteid "+
 					"left outer join proyecto p on p.id=c.proyectoid "+
 					"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1 and sp.estado=1 and sp.id  "+
+					"union   "+
+					"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
+					"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid, "+
+					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra "+
+					"from subproducto sp "+
+					"left outer join producto pr on pr.id=sp.productoid "+
+					"left outer join subcomponente sc on sc.id=pr.subcomponenteid "+
+					"left outer join componente c on c.id=sc.componenteid "+
+					"left outer join proyecto p on p.id=c.proyectoid "+
+					"where p.id= ?1 and p.estado=1 and c.estado=1 and sc.estado=1 and pr.estado=1 and sp.estado=1 and sp.id  "+
 					"union "+
 					"select a.id, a.nombre, 5 objeto_tipo,  a.treePath, a.fecha_inicio, "+
 					"a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id,a.acumulacion_costo acumulacion_costoid, "+
@@ -142,6 +152,15 @@ public class EstructuraProyectoDAO {
 				"left outer join componente c on c.id=pr.componenteid "+
 				"left outer join proyecto p on p.id=c.proyectoid "+
 				"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1 and sp.estado=1 and sp.id and pr.id in ( select productoid from producto_usuario where usuario = ?2 ) "+
+				"union "+
+				"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
+				"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid "+
+				"from subproducto sp "+
+				"left outer join producto pr on pr.id=sp.productoid "+
+				"left outer join subcomponente sc on sc.id=pr.subcomponenteid "+
+				"left outer join componente c on c.id=sc.componenteid "+
+				"left outer join proyecto p on p.id=c.proyectoid "+
+				"where p.id= ?1 and p.estado=1 and c.estado=1 and sc.estado=1 and pr.estado=1 and sp.estado=1 and sp.id and pr.id in ( select productoid from producto_usuario where usuario = ?2 ) "+
 				"union "+
 				"select a.id, a.nombre, 5 objeto_tipo,  a.treePath, a.fecha_inicio, "+
 				"a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id,a.acumulacion_costo acumulacion_costoid "+
@@ -312,8 +331,9 @@ public class EstructuraProyectoDAO {
 	public static boolean checkPermiso(int id, int objeto_tipo, String usuario){
 		boolean ret = false;
 		switch(objeto_tipo){
-			case 1: ret = UsuarioDAO.checkUsuarioProyecto(usuario,id); break;
-			case 2: ret = UsuarioDAO.checkUsuarioComponente(usuario,id); break;
+			case 0: ret = UsuarioDAO.checkUsuarioProyecto(usuario,id); break;
+			case 1: ret = UsuarioDAO.checkUsuarioComponente(usuario,id); break;
+			case 2: ret = UsuarioDAO.checkUsuarioSubComponente(usuario,id); break;
 			case 3: ret = UsuarioDAO.checkUsuarioProducto(usuario,id); break;
 		}
 		return ret;
@@ -477,6 +497,16 @@ public class EstructuraProyectoDAO {
 					"left outer join componente c on c.id=pr.componenteid "+
 					"left outer join proyecto p on p.id=c.proyectoid "+
 					"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1 and sp.estado=1 and sp.id  "+
+					"union "+
+					"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
+					"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid, "+
+					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra "+
+					"from subproducto sp "+
+					"left outer join producto pr on pr.id=sp.productoid "+
+					"left outer join subcomponente sc on sc.id=pr.subcomponenteid "+
+					"left outer join componente c on c.id=sc.componenteid "+
+					"left outer join proyecto p on p.id=c.proyectoid "+
+					"where p.id= ?1 and p.estado=1 and c.estado=1 and sc.estado=1 and pr.estado=1 and sp.estado=1 and sp.id  "+
 					"union " : "") +
 					"select a.id, a.nombre, 5 objeto_tipo,  a.treePath, a.fecha_inicio, "+
 					"a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id,a.acumulacion_costo acumulacion_costoid, "+

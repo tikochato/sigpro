@@ -160,8 +160,9 @@ public class SUsuario extends HttpServlet {
 								List<Integer> ids_estructuras = new ArrayList<Integer>();
 								ids_estructuras.add(id);
 								switch(objeto_tipo){
-									case 1: UsuarioDAO.asignarPrestamos(usuario, ids_estructuras, usuarioActualizo); break;
-									case 2: UsuarioDAO.asignarComponentes(usuario, ids_estructuras, usuarioActualizo); break;
+									case 0: UsuarioDAO.asignarPrestamos(usuario, ids_estructuras, usuarioActualizo); break;
+									case 1: UsuarioDAO.asignarComponentes(usuario, ids_estructuras, usuarioActualizo); break;
+									case 2: UsuarioDAO.asignarSubComponentes(usuario, ids_estructuras, usuarioActualizo); break;
 									case 3: UsuarioDAO.asignarProductos(usuario, ids_estructuras, usuarioActualizo); break;
 									
 								}
@@ -376,8 +377,9 @@ public class SUsuario extends HttpServlet {
 													List<Integer> ids_estructuras = new ArrayList<Integer>();
 													ids_estructuras.add(id);
 													switch(objeto_tipo){
-														case 1: UsuarioDAO.asignarPrestamos(usuario, ids_estructuras, usuario_texto); break;
-														case 2: UsuarioDAO.asignarComponentes(usuario, ids_estructuras, usuario_texto); break;
+														case 0: UsuarioDAO.asignarPrestamos(usuario, ids_estructuras, usuario_texto); break;
+														case 1: UsuarioDAO.asignarComponentes(usuario, ids_estructuras, usuario_texto); break;
+														case 2: UsuarioDAO.asignarSubComponentes(usuario, ids_estructuras, usuario_texto); break;
 														case 3: UsuarioDAO.asignarProductos(usuario, ids_estructuras, usuario_texto); break;
 														
 													}
@@ -440,8 +442,9 @@ public class SUsuario extends HttpServlet {
 											List<Integer> ids_estructuras = new ArrayList<Integer>();
 											ids_estructuras.add(id);
 											switch(objeto_tipo){
-												case 1: UsuarioDAO.asignarPrestamos(usuario, ids_estructuras, usuario_texto); break;
-												case 2: UsuarioDAO.asignarComponentes(usuario, ids_estructuras, usuario_texto); break;
+												case 0: UsuarioDAO.asignarPrestamos(usuario, ids_estructuras, usuario_texto); break;
+												case 1: UsuarioDAO.asignarComponentes(usuario, ids_estructuras, usuario_texto); break;
+												case 2: UsuarioDAO.asignarSubComponentes(usuario, ids_estructuras, usuario_texto); break;
 												case 3: UsuarioDAO.asignarProductos(usuario, ids_estructuras, usuario_texto); break;
 												
 											}

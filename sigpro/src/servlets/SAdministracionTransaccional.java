@@ -218,7 +218,7 @@ public class SAdministracionTransaccional extends HttpServlet {
 				nuevaFechaFin = nuevaFechaFin.plusMinutes(59);
 				nuevaFechaFin = nuevaFechaFin.plusSeconds(59);
 				
-				CPdf archivo = new CPdf("Detalle Administraci髇 Transaccional del Prestamo " + proyectoNombre);
+				CPdf archivo = new CPdf("Detalle Administraci贸n Transaccional del Prestamo " + proyectoNombre);
 				String headers[][];
 				String datos[][];
 				headers = generarHeadersDetalle();
@@ -275,7 +275,7 @@ public class SAdministracionTransaccional extends HttpServlet {
 			nuevaFechaFin = nuevaFechaFin.plusMinutes(59);
 			nuevaFechaFin = nuevaFechaFin.plusSeconds(59);
 			
-			CPdf archivo = new CPdf("Administraci髇 Transaccional");
+			CPdf archivo = new CPdf("Administraci贸n Transaccional");
 			String headers[][];
 			String datos[][];
 			headers = generarHeaders();
@@ -347,7 +347,7 @@ public class SAdministracionTransaccional extends HttpServlet {
 			for(Proyecto proyecto : lstprestamos){
 				temp.nombre = proyecto.getNombre();
 				temp.objeto_id = proyecto.getId();
-				temp.objeto_tipo = 1;
+				temp.objeto_tipo = 0;
 				temp.nivel = 0;
 				lsttransaccion.add(temp);
 				
@@ -557,8 +557,8 @@ public class SAdministracionTransaccional extends HttpServlet {
 		try{			
 			headers = generarHeadersDetalle();
 			datos = generarDatosDetalle(proyectoId, fechaInicio, fechaFin);
-			excel = new CExcel("Detalle Administraci髇 Transaccional del Pr閟tamo " + proyectoNombre, false, null);
-			wb=excel.generateExcelOfData(datos, "Detalle Administraci髇 Transaccional del Prestamo " + proyectoNombre, headers, null, true, usuario);
+			excel = new CExcel("Detalle Administraci贸n Transaccional del Pr茅stamo " + proyectoNombre, false, null);
+			wb=excel.generateExcelOfData(datos, "Detalle Administraci贸n Transaccional del Prestamo " + proyectoNombre, headers, null, true, usuario);
 		
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
@@ -698,7 +698,7 @@ public class SAdministracionTransaccional extends HttpServlet {
 				tipoData[i] = "int";
 		}
 		
-		CGraficaExcel grafica = new CGraficaExcel("Administraci髇 Transaccional", CGraficaExcel.EXCEL_CHART_AREA2, "Meses", "Creados", datos, tipoData, null);
+		CGraficaExcel grafica = new CGraficaExcel("Administraci贸n Transaccional", CGraficaExcel.EXCEL_CHART_AREA2, "Meses", "Creados", datos, tipoData, null);
 	
 		return grafica;
 	}

@@ -61,7 +61,8 @@ public class SAgenda extends HttpServlet {
 		String edt;
 		Integer objetoTipo;
 		String objetoTipoNombre;
-		String nombre;;
+		String nombre;
+		Integer nivel;
 		String fechaInicio;
 		String fechaFin;
 		String estado;
@@ -123,15 +124,9 @@ public class SAgenda extends HttpServlet {
 			int fila = 1;
 			
 			for (stagenda agenda : lstagenda){
-				String sangria;
-				switch (agenda.objetoTipo){
-					case 0: sangria = ""; break;
-					case 1: sangria = "\t"; break;
-					case 2: sangria = "\t\t"; break;
-					case 3: sangria = "\t\t\t"; break;
-					case 4: sangria = "\t\t\t\t"; break;
-					case 5: sangria = "\t\t\t\t"; break;
-					default: sangria = "";
+				String sangria="";
+				for(int i=1; i<agenda.nivel; i++){
+					sangria+="\t";
 				}
 				datos.put(fila+"", new Object [] { agenda.edt, sangria + agenda.nombre ,agenda.fechaInicio,agenda.fechaFin,agenda.estado});
 				fila++;
@@ -193,6 +188,7 @@ public class SAgenda extends HttpServlet {
 			agenda.nombre = proyecto.getNombre();
 			agenda.fechaInicio = "";
 			agenda.fechaFin = "";
+			agenda.nivel = proyecto.getTreePath().length()/8;
 			lstagenda.add(agenda);
 		}
 		List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyectoId,
@@ -207,6 +203,7 @@ public class SAgenda extends HttpServlet {
 			agenda.nombre = componente.getNombre();
 			agenda.fechaInicio = "";
 			agenda.fechaFin = "";
+			agenda.nivel = componente.getTreePath().length()/8;
 			lstagenda.add(agenda);
 			
 			
@@ -222,6 +219,7 @@ public class SAgenda extends HttpServlet {
 				agenda.nombre = subcomponente.getNombre();
 				agenda.fechaInicio = "";
 				agenda.fechaFin = "";
+				agenda.nivel = subcomponente.getTreePath().length()/8;
 				lstagenda.add(agenda);
 				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, null, subcomponente.getId(),
 						null, null, null, null, null, usuario);
@@ -237,6 +235,7 @@ public class SAgenda extends HttpServlet {
 					agenda.edt = "1."+edtComponente+"."+edtSubComponente+"."+edtProducto;
 					agenda.fechaInicio = "";
 					agenda.fechaFin = "";
+					agenda.nivel = producto.getTreePath().length()/8;
 					lstagenda.add(agenda);
 					
 					int edtSubproducto = 1;
@@ -251,6 +250,7 @@ public class SAgenda extends HttpServlet {
 						agenda.nombre =   subproducto.getNombre();
 						agenda.fechaInicio = "";
 						agenda.fechaFin = "";
+						agenda.nivel = subproducto.getTreePath().length()/8;
 						
 						lstagenda.add(agenda);
 						edtActividad = 1;
@@ -283,7 +283,7 @@ public class SAgenda extends HttpServlet {
 			
 			List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(), null,
 					null, null, null, null, null, usuario);
-			int edtProducto = 1;
+			int edtProducto = edtSubComponente;
 			for (Producto producto : productos){
 				List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(),
 						null, null, null, null, null, usuario);
@@ -295,6 +295,7 @@ public class SAgenda extends HttpServlet {
 				agenda.edt = "1."+edtComponente+"."+edtProducto;
 				agenda.fechaInicio = "";
 				agenda.fechaFin = "";
+				agenda.nivel = producto.getTreePath().length()/8;
 				lstagenda.add(agenda);
 				
 				int edtSubproducto = 1;
@@ -309,7 +310,7 @@ public class SAgenda extends HttpServlet {
 					agenda.nombre =   subproducto.getNombre();
 					agenda.fechaInicio = "";
 					agenda.fechaFin = "";
-					
+					agenda.nivel = subproducto.getTreePath().length()/8;
 					lstagenda.add(agenda);
 					edtActividad = 1;
 					strEdtActividad = agenda.edt;
@@ -360,6 +361,7 @@ public class SAgenda extends HttpServlet {
 		agenda.nombre =   actividad.getNombre();
 		agenda.fechaInicio = Utils.formatDate(actividad.getFechaInicio());
 		agenda.fechaFin = Utils.formatDate(actividad.getFechaFin());
+		agenda.nivel = actividad.getTreePath().length()/8;
 		agenda.estado = actividad.getPorcentajeAvance() == 0 ? "Nuevo" :
 						(actividad.getPorcentajeAvance() > 0 && actividad.getPorcentajeAvance() <100 ? 
 								"Proceso" : "Finalizado") ;
