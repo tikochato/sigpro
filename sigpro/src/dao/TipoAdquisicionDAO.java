@@ -11,10 +11,7 @@ import org.hibernate.query.Query;
 
 import pojo.Actividad;
 import pojo.Componente;
-import pojo.Cooperante;
-import pojo.Prestamo;
 import pojo.Producto;
-import pojo.Proyecto;
 import pojo.Subcomponente;
 import pojo.Subproducto;
 import pojo.TipoAdquisicion;
@@ -112,11 +109,6 @@ public class TipoAdquisicionDAO {
 				if(producto.getComponente()!=null){
 					cooperanteCodigo = producto.getComponente().getProyecto().getPrestamo().getCooperante().getCodigo();
 				}else if(producto.getSubcomponente()!=null){
-					Subcomponente sub = producto.getSubcomponente();
-					Componente comp = sub.getComponente();
-					Proyecto proy =  comp.getProyecto();
-					Prestamo pres = proy.getPrestamo();
-					Cooperante coo = pres.getCooperante();
 					cooperanteCodigo = producto.getSubcomponente().getComponente().getProyecto().getPrestamo().getCooperante().getCodigo();
 				} 
 				break;
