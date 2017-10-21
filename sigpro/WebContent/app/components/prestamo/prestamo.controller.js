@@ -66,6 +66,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	mi.m_organismosEjecutores = [];
 	$scope.m_componentes = [];
 	
+	mi.matriz_valid = 1;
+	
 	mi.fechaOptions = {
 			formatYear : 'yy',
 			maxDate : new Date(2050, 12, 31),
@@ -410,7 +412,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 									});
 								}else{
 								
-									if(mi.child_desembolso!=null || mi.child_riesgos!=null || !matrizGuardada ){
+									if(mi.child_desembolso!=null || mi.child_riesgos!=null){
 										if(mi.child_desembolso)
 											ret = mi.child_desembolso.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
 													'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo',
@@ -1122,13 +1124,13 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		
 		
 		$scope.$watch('m_componentes', function(componentes,componentesOld) {
-			mi.ingresoValidoMatriz = true;
+			mi.matriz_valid = 1;
 		     for (x in componentes){
 		    	 var  totalUnidades = 0;
 		    	 for (j in componentes[x].unidadesEjecutoras){
 		    		 totalUnidades = totalUnidades +  componentes[x].unidadesEjecutoras[j].prestamo;
 		    	 }
-		    	 mi.matriz_valid = mi.ingresoValidoMatriz &&  totalUnidades <= componentes[x].techo ? 1 : null;
+		    	 mi.matriz_valid = mi.matriz_valid==1 &&  totalUnidades <= componentes[x].techo ? 1 : null;
 		    	 
 		     }
 		 },true);

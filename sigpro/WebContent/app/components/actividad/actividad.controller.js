@@ -1,4 +1,4 @@
-var app = angular.module('actividadController', []);
+var app = angular.module('actividadController', ['smart-table']);
 
 app.controller('actividadController',['$rootScope','$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$sce','uiGmapGoogleMapApi', 'dialogoConfirmacion','documentoAdjunto', 
 	function($rootScope,$scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$sce,uiGmapGoogleMapApi, $dialogoConfirmacion, $documentoAdjunto) {
@@ -376,7 +376,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 						mi.esnuevo = false;		
 						mi.esNuevoDocumento = false;
 						if(mi.child_adquisiciones!=null)
-							mi.child_adquisiciones.guardar('Actividad '+(mi.esNuevo ? 'creada' : 'guardada')+' con éxito',
+							mi.child_adquisiciones.guardar(null,'Actividad '+(mi.esNuevo ? 'creada' : 'guardada')+' con éxito',
 								'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' la Actividad', null);
 						else
 							$utilidades.mensaje('success','Actividad '+(mi.esNuevo ? 'creada' : 'guardada')+' con éxito');
