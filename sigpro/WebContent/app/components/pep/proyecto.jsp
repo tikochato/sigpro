@@ -1,5 +1,29 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	<style type="text/css">
+		.filaIngreso  > td{
+			padding: 0px !important;
+			padding-left: 8px !important;
+			padding-right: 8px !important;
+			vertical-align: middle !important; 
+		}
+		
+		.filaIngreso > td > table > tbody > tr > td > input {
+			border-bottom: none !important;
+		}
+		
+		.filaIngreso > td > table > tbody > tr > td > input:focus {
+			border-bottom: 2px solid rgb(63, 81, 181) !important;
+		}
+	
+		.divTabla{
+		    width: 100%;
+		    height: 100%;
+		    overflow-y: hidden;
+		    margin-top: 40px;
+		    overflow-x: auto;
+		}
+	</style>
 <%@ page import="org.apache.shiro.SecurityUtils" %>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <div ng-controller="proyectoController as controller"
@@ -497,6 +521,83 @@
 				</uib-tab>
 				<uib-tab index="4" heading="Riesgos" ng-click="controller.riesgos=true" >
 					<div ng-if="controller.riesgos !== undefined"><%@include file="/app/components/riesgo/riesgo.jsp" %></div>
+				</uib-tab>
+				<uib-tab index="5" heading="Componentes" ng-click="controller.riesgos=true" >
+					
+					<div class="row">
+						
+							<div class="divTabla" ng-hide="controller.m_componentes.length == 0">
+								<table class="table " >
+								 	<tr>
+								 		<th rowspan="2" class="label-form" style="vertical-align: middle;"> COMPONENTES</th>
+								 		<th colspan="3"  class="label-form" ng-repeat= "organismo in controller.m_organismosEjecutores"
+								 			style="text-align: center; vertical-align: middle;">
+								 			<div>ASIGNADO A {{ organismo.nombre }}</div>
+								 		</th>
+								 		<th rowspan="2" class="label-form" style="text-align: center; vertical-align: middle;">TECHO TOTAL</th>
+								 	</tr>
+								 	<tr>
+								 		<th colspan="3" ng-repeat= "organismo in controller.m_organismosEjecutores">
+								 			<table style="width: 100%">
+								 				<tr>
+								 					<td class="label-form" style="min-width: 100px; text-align: center;">Prestamo</td>
+								 					<td class="label-form" style="min-width: 100px; text-align: center;">Donación</td>
+								 					<td class="label-form" style="min-width: 100px;text-align: center;">Nacional</td>
+								 				</tr>
+								 			</table>
+								 		</th>
+								 	</tr>
+								 	
+								 	<tr ng-repeat="row in controller.m_componentes track by $index " class="filaIngreso"
+								 	    ng-click="controller.componenteSeleccionado(row)" ng-class="row.isSelected ? 'st-selected' : ''">
+								 		<td style="min-width: 200px;" class="label-form"> {{ row.nombre }} </td>
+								 		<td  colspan="3" ng-repeat = "ue in row.unidadesEjecutoras track by $index">
+								 			<table style="width: 100%;">
+								 				<tr>
+								 					<td style="text-align: center;">
+								 						<input  inputText="text" style="width: 100px; margin-right: 5px;"
+															class="inputText input-money"
+															ng-model="ue.prestamo"
+															ng-value="ue.prestamo"
+															onblur="this.setAttribute('value', this.value);"
+															ui-number-mask="2"
+															ng-readonly="true"
+														/>
+								 					</td>
+								 					<td style="text-align: center;">
+								 						<input  inputText="text" style="width: 100px; margin-right: 5px;"
+															class="inputText input-money"
+															ng-model="ue.donacion"
+															ng-value="ue.donacion"
+															onblur="this.setAttribute('value', this.value);"
+															ui-number-mask="2"
+															ng-readonly="true"
+														/>
+								 					</td>
+								 					<td style="text-align: center; border-right: 1px solid #ddd;">
+								 						<input  inputText="text" style="width: 100px; margin-right: 5px;"
+															class="inputText input-money"
+															ng-model="ue.nacional"
+															ng-value="ue.nacional"
+															onblur="this.setAttribute('value', this.value);"
+															ui-number-mask="2"
+															ng-readonly="true"
+														/>
+								 					</td>
+								 				<tr>
+								 			</table>
+								 		</td>
+								 		<td style="width: 150px; text-align: right;"
+								 		 	class="label-form"> {{ row.techo | formatoMillones : desembolsosc.enMillones }} 
+								 		 </td>
+								 	</tr>
+								</table>
+							</div>
+						</div>
+					
+					
+					
+					
 				</uib-tab>
 				</shiro:hasPermission>
 			</uib-tabset>
