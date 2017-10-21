@@ -69,6 +69,9 @@
         <mapping class="pojo.PlanAdquisicion" />
         <mapping class="pojo.Permiso" />
         <mapping class="pojo.Prestamo" />
+        <mapping class="pojo.PrestamoTipo" />
+        <mapping class="pojo.PrestamoTipoPrestamo" />
+        <mapping class="pojo.PrestamoTipoPrestamoId" />
         <mapping class="pojo.ProdtipoPropiedad" />
         <mapping class="pojo.Producto" />
         <mapping class="pojo.ProductoPropiedad" />
