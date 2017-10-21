@@ -636,6 +636,7 @@ public class SPrestamo extends HttpServlet {
 		}
 		else if(accion.equals("obtenerMatriz")){
 			String codigoPresupuestario = map.get("codigoPresupuestario");
+			Integer prestamoId = Utils.String2Int(map.get("prestamoId"),0);
 			boolean existenDatos = false;
 			int anio_actual = Year.now().getValue();
 			List<?> unidadesEjecutorasSigade = DataSigadeDAO.getUnidadesEjecutoras(codigoPresupuestario,anio_actual);
@@ -665,7 +666,7 @@ public class SPrestamo extends HttpServlet {
 							
 							
 							Componente compTemp = ComponenteDAO.obtenerComponentePorEntidad(codigoPresupuestario,temp_.ejercicio,
-									Integer.valueOf(temp_.entidad),temp_.id,temp.orden);
+									Integer.valueOf(temp_.entidad),temp_.id,temp.orden,prestamoId);
 							if (compTemp != null){
 								temp_.prestamo = compTemp.getFuentePrestamo().doubleValue();
 								temp_.donacion = compTemp.getFuenteDonacion().doubleValue();
