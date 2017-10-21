@@ -499,18 +499,21 @@ public class ComponenteDAO {
 	}
 	
 	public static Componente obtenerComponentePorEntidad (String codigo_presupuestario, int ejercicio, int entidad, 
-			int unidadEjectora, int numeroComponente){
+			int unidadEjectora, int numeroComponente,int prestamoId){
 		Componente ret = null;
 		List<Componente> listRet = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = String.join(" ","select c from Componente c", 
 						"inner join c.componenteSigade cs",
+						"inner join c.proyecto p",
+						"inner join p.prestamo pr",
 						"where cs.codigoPresupuestario = ?1",
 						"and c.unidadEjecutora.id.ejercicio = ?2", 
 						"and c.unidadEjecutora.id.entidadentidad = ?3", 
 						"and c.unidadEjecutora.id.unidadEjecutora = ?4",
 						"and cs.numeroComponente = ?5",
+						"and pr.id = ?6",
 						"and cs.estado = 1",
 						"order by c.id desc");
 			Query<Componente> criteria = session.createQuery(query, Componente.class);
@@ -520,6 +523,7 @@ public class ComponenteDAO {
 			criteria.setParameter(3, entidad);
 			criteria.setParameter(4, unidadEjectora);
 			criteria.setParameter(5, numeroComponente);
+			criteria.setParameter(6, prestamoId);
 			listRet = criteria.getResultList();
 			
 			ret = !listRet.isEmpty() ? listRet.get(0) : null;

@@ -426,7 +426,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 										mi.botones=true;
 									}
 								}
-								
+								mi.cargarMatriz();
 									
 							}else{
 								$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo');
@@ -1066,6 +1066,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			mi.matriz_valid = null;
 			var parametros = {
 					accion: 'obtenerMatriz',
+					prestamoId: mi.prestamo.id,
 					codigoPresupuestario:mi.prestamo.codigoPresupuestario,
 				    t:moment().unix()
 			};
