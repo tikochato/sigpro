@@ -13,6 +13,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 		$window.document.title = $utilidades.sistema_nombre+' - '+$rootScope.etiquetas.proyecto+'s';
 		
 	mi.rowCollection = [];
+	mi.prestamoid = $routeParams.prestamo_id;
 	mi.proyecto = null;
 	mi.esNuevo = false;
 	mi.esNuevoDocumento = true;
@@ -57,6 +58,17 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	
 	mi.child_desembolso = null;
 	mi.child_riesgos = null;
+	
+	mi.prestamoNombre = "";
+	mi.objetoTipoNombre = "";
+	
+	$http.post('/SPrestamo', { accion: 'obtenerPrestamoPorId', id: mi.prestamoid, t: (new Date()).getTime() }).success(
+		function(response) {
+			if(response.success){
+				mi.prestamoNombre = response.nombre;
+				mi.objetoTipoNombre = "Préstamo";	
+			}
+	});
 
 	mi.fechaOptions = {
 			formatYear : 'yy',
@@ -156,7 +168,8 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	}
 	mi.cargarTabla = function(pagina){
 		mi.mostrarcargando=true;
-		$http.post('/SProyecto', { accion: 'getProyectoPagina', pagina: pagina,
+		
+		$http.post('/SProyecto', { accion: 'getProyectoPagina', pagina: pagina, prestamoId: mi.prestamoid,
 			numeroproyecto:  $utilidades.elementosPorPagina, filtro_nombre: mi.filtros['nombre'],
 			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion'],
 			columna_ordenada: mi.columnaOrdenada, orden_direccion: mi.ordenDireccion, t:moment().unix()
@@ -479,10 +492,10 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	}
 
 	mi.reiniciarVista=function(){
-		if($location.path()=='/pep/rv')
+		if($location.path()=='/pep/'+ mi.prestamoid + '/rv')
 			$route.reload();
 		else
-			$location.path('/pep/rv');
+			$location.path('/pep/'+ mi.prestamoid + 'rv');
 	}
 
 	mi.filtrar = function(evt){
@@ -495,7 +508,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 
 	mi.obtenerTotalProyectos = function(){
 		$http.post('/SProyecto', { accion: 'numeroProyectos',t:moment().unix(),
-			filtro_nombre: mi.filtros['nombre'],
+			filtro_nombre: mi.filtros['nombre'], prestamoId: mi.prestamoid,
 			filtro_usuario_creo: mi.filtros['usuario_creo'], filtro_fecha_creacion: mi.filtros['fecha_creacion']  } ).then(
 				function(response) {
 					mi.totalProyectos = response.data.totalproyectos;

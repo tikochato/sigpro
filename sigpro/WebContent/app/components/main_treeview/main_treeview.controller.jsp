@@ -11,7 +11,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
 	   $locationProvider.hashPrefix('!');
 	   
 	$routeProvider
-	   		.when('/pep/:id',{
+	   		.when('/pep/:prestamo_id/:id/:nuevo?',{
 	       		template: '<div load-on-demand="\'proyectoController\'" class="all_page"></div>'
 	       })
 	       .when('/componente/:proyecto_id/:id/:nuevo?',{

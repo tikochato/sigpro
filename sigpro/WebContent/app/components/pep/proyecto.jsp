@@ -38,6 +38,9 @@
 	<div class="panel panel-default" ng-if="!controller.esTreeview">
 	  <div class="panel-heading"><h3>{{etiquetas.proyecto}}s</h3></div>
 	</div>
+	<div class="subtitulo" ng-if="!componentec.esTreeview">
+		{{ controller.objetoTipoNombre }} {{ controller.prestamoNombre }}
+	</div>
 	<div align="center" ng-hide="controller.esColapsado" ng-if="!controller.esTreeview">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">

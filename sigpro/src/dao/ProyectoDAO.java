@@ -143,12 +143,16 @@ public class ProyectoDAO implements java.io.Serializable  {
 	}
 
 	public static Long getTotalProyectos(String filtro_nombre, String filtro_usuario_creo,
-			String filtro_fecha_creacion, String usuario){
+			String filtro_fecha_creacion, String usuario, Integer prestamoId){
 		Long ret=0L;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = "SELECT count(p.id) FROM Proyecto p WHERE p.estado=1 ";
 			String query_a="";
+			if(prestamoId != null && prestamoId > 0)
+				query_a = String.join("", " p.prestamo.id=", prestamoId+"");
+			if(prestamoId == null)
+				query_a = String.join("", " p.prestamo.id=null");
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
 				query_a = String.join("",query_a, " p.nombre LIKE '%",filtro_nombre,"%' ");
 			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
@@ -161,7 +165,6 @@ public class ProyectoDAO implements java.io.Serializable  {
 			Query<Long> criteria = session.createQuery(query,Long.class);
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getSingleResult();
-		} catch (NoResultException e){
 		}
 		catch(Throwable e){
 			CLogger.write("5", ProyectoDAO.class, e);
@@ -174,12 +177,16 @@ public class ProyectoDAO implements java.io.Serializable  {
 
 	public static List<Proyecto> getProyectosPagina(int pagina, int numeroproyecto,
 			String filtro_nombre, String filtro_usuario_creo,
-			String filtro_fecha_creacion, String columna_ordenada, String orden_direccion, String usuario){
+			String filtro_fecha_creacion, String columna_ordenada, String orden_direccion, String usuario, Integer prestamoId){
 		List<Proyecto> ret = new ArrayList<Proyecto>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = "SELECT p FROM Proyecto p WHERE p.estado = 1";
 			String query_a="";
+			if(prestamoId != null && prestamoId > 0)
+				query_a = String.join("", " p.prestamo.id=", prestamoId+"");
+			if(prestamoId == null)
+				query_a = String.join("", " p.prestamo.id=null");
 			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
 				query_a = String.join("",query_a, " p.nombre LIKE '%",filtro_nombre,"%' ");
 			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
