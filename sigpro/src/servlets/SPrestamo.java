@@ -23,6 +23,9 @@ import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import dao.AcumulacionCostoDAO;
@@ -695,18 +698,25 @@ public class SPrestamo extends HttpServlet {
 			Type listType = new TypeToken<List<Map<String, Object>>>() {}.getType();
 			List<Map<String, Object>> estructuras = gson.fromJson(data, listType);
 			
+			JsonParser parser = new JsonParser();
+			JsonArray estructuras_ = parser.parse(data).getAsJsonArray();
+			
 			ArrayList<Proyecto> proyectos = new ArrayList<Proyecto>();
+			int k = 0;
 			for (Map<String, Object> estructura : estructuras){
-				List<Object> unidades = (List<Object>) estructura.get("unidadesEjecutoras");
+				JsonObject estructura_ = estructuras_.get(k).getAsJsonObject();
+				k++;
+				parser = new JsonParser();
+				JsonArray unidades = estructura_.get("unidadesEjecutoras").getAsJsonArray() ;
 				listType = new TypeToken<List<Map<String, Object>>>() {}.getType();
 				
-				for (Object unidadObjeto : unidades){
-					Map<String,Object> unidad = (Map<String, Object>) unidadObjeto;
-					int posicion = existeUnidad(proyectos,(Map<String,Object>) unidad);
+				for(int j=0; j<unidades.size(); j++){
+					JsonObject unidad = unidades.get(j).getAsJsonObject();
+					int posicion = existeUnidad(proyectos,unidad);
 					
-					BigDecimal fuentePrestamo = unidad.get("prestamo") != null ? new BigDecimal((Double) unidad.get("prestamo")) : new BigDecimal(0);
-					BigDecimal fuenteDonacion = unidad.get("donacion") != null ? new BigDecimal((Double) unidad.get("donacion")) : new BigDecimal(0);
-					BigDecimal fuenteNacional = unidad.get("nacional") != null ? new BigDecimal((Double) unidad.get("nacional")) : new BigDecimal(0);
+					BigDecimal fuentePrestamo =!unidad.get("prestamo").isJsonNull() ?   Utils.String2BigDecimal(unidad.get("prestamo").getAsString(), new BigDecimal(0)) : new BigDecimal(0);
+					BigDecimal fuenteDonacion = !unidad.get("donacion").isJsonNull() ?  Utils.String2BigDecimal(unidad.get("donacion").getAsString(), new BigDecimal(0)): new BigDecimal(0);
+					BigDecimal fuenteNacional = !unidad.get("donacion").isJsonNull() ? Utils.String2BigDecimal(unidad.get("nacional").getAsString(), new BigDecimal(0)): new BigDecimal(0); 
 					if(posicion== -1){
 						proyectos.add(crearProyecto(unidad,prestamo,usuario));
 						ret = proyectos.size()>0;
@@ -758,13 +768,13 @@ public class SPrestamo extends HttpServlet {
         output.close();
 	}
 	
-	private Proyecto crearProyecto(Map<String,Object> unidad,Prestamo prestamo,String usuario){
+	private Proyecto crearProyecto(JsonObject unidad,Prestamo prestamo,String usuario){
 		Proyecto ret = null;
 		
 		UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(
-				((Double)unidad.get("ejercicio")).intValue(),
-				Integer.parseInt((String) unidad.get("entidad")),
-				((Double)unidad.get("id")).intValue());
+				Utils.String2Int(unidad.get("ejercicio").getAsString()),
+				Utils.String2Int(unidad.get("entidad").getAsString()),
+				Utils.String2Int(unidad.get("id").getAsString()));
 		if (unidadEjecutora != null){
 			ProyectoTipo proyectoTipo = ProyectoTipoDAO.getProyectoTipoPorId(1);
 			Etiqueta etiqueta = new Etiqueta();
@@ -801,10 +811,10 @@ public class SPrestamo extends HttpServlet {
 		return ComponenteDAO.guardarComponente(componente, false);
 	}
 	
-	private int existeUnidad(List<Proyecto> proyectos,Map<String,Object> unidad){
-		int ejercicio = ((Double)unidad.get("ejercicio")).intValue();
-		int entidad = Integer.parseInt((String) unidad.get("entidad"));
-		int id = ((Double)unidad.get("id")).intValue();
+	private int existeUnidad(List<Proyecto> proyectos,JsonObject unidad){
+		int ejercicio = Utils.String2Int(unidad.get("ejercicio").getAsString()); 
+		int entidad = Utils.String2Int(unidad.get("entidad").getAsString());
+		int id = Utils.String2Int(unidad.get("id").getAsString());
 		
 		int x = -1;
 		for (Proyecto proyecto : proyectos){
