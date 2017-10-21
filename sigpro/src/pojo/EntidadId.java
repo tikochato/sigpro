@@ -10,6 +10,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class EntidadId implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8013891628878068484L;
 	private int entidad;
 	private int ejercicio;
 
