@@ -88,7 +88,7 @@ public class SGantt extends HttpServlet {
 		boolean multiproyecto = false;
 		Integer programaId = null;
 		boolean marcarCargado = false;
-
+		Integer prestamoId = null;
 		Map<String, String> map = null;
 
 		HashMap<Integer,List<Integer>> predecesores;
@@ -110,8 +110,11 @@ public class SGantt extends HttpServlet {
 							multiproyecto = parametro.getString().equals("1");
 						}else if (parametro.getFieldName().compareTo("programa_id")==0 && parametro.getString().length()>0){
 							programaId = Integer.parseInt(parametro.getString());
-						}else if (parametro.getFieldName().compareTo("marcarCargado")==0 && parametro.getString().length()>0)
+						}else if (parametro.getFieldName().compareTo("marcarCargado")==0 && parametro.getString().length()>0){
 							marcarCargado = parametro.getString().equals("1");
+						}else if (parametro.getFieldName().compareTo("prestamoId")==0 && parametro.getString().length()>0){
+							prestamoId = proyectoId = Integer.parseInt(parametro.getString());
+						}
 					}
 					
 				}
@@ -204,7 +207,7 @@ public class SGantt extends HttpServlet {
 
 				CProject project = new CProject(directorioTemporal + "/temp_"+ time.toString());
 
-				boolean creado = project.imporatarArchivo(project.getProject(),usuario,multiproyecto,proyectoId,marcarCargado);
+				boolean creado = project.imporatarArchivo(project.getProject(),usuario,multiproyecto,proyectoId,marcarCargado,prestamoId);
 
 				if (file.exists())
 				{
