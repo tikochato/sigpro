@@ -82,7 +82,9 @@ public class SComponente extends HttpServlet {
 		BigDecimal costo;
 		Integer acumulacionCostoId;
 		String acumulacionCostoNombre;
-		BigDecimal costoTecho;
+		BigDecimal fuentePrestamo;
+		BigDecimal fuenteDonacion;
+		BigDecimal fuenteNacional;
 		boolean tieneHijos;
 		boolean esDeSigade;
 	}
@@ -182,6 +184,9 @@ public class SComponente extends HttpServlet {
 				
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 1);
 				temp.esDeSigade = componente.getEsDeSigade().equals(1);
+				temp.fuentePrestamo = componente.getFuentePrestamo();
+				temp.fuenteDonacion = componente.getFuenteDonacion();
+				temp.fuenteNacional = componente.getFuenteNacional();
 				
 				stcomponentes.add(temp);
 			}
@@ -241,6 +246,9 @@ public class SComponente extends HttpServlet {
 				temp.duracionDimension = componente.getDuracionDimension();
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 1);
 				temp.esDeSigade = componente.getEsDeSigade().equals(1);
+				temp.fuentePrestamo = componente.getFuentePrestamo();
+				temp.fuenteDonacion = componente.getFuenteDonacion();
+				temp.fuenteNacional = componente.getFuenteNacional();
 				
 				stcomponentes.add(temp);
 			}
@@ -458,6 +466,9 @@ public class SComponente extends HttpServlet {
 				
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 1);
 				temp.esDeSigade = componente.getEsDeSigade().equals(1);
+				temp.fuentePrestamo = componente.getFuentePrestamo();
+				temp.fuenteDonacion = componente.getFuenteDonacion();
+				temp.fuenteNacional = componente.getFuenteNacional();
 				
 				stcomponentes.add(temp);
 			}
@@ -524,6 +535,9 @@ public class SComponente extends HttpServlet {
 			
 			temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 1);
 			temp.esDeSigade = componente.getEsDeSigade().equals(1);
+			temp.fuentePrestamo = componente.getFuentePrestamo();
+			temp.fuenteDonacion = componente.getFuenteDonacion();
+			temp.fuenteNacional = componente.getFuenteNacional();
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"componente\":",response_text);
