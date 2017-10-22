@@ -149,7 +149,6 @@ app.controller('prestamotipoController',['$scope','$rootScope','$http','$interva
 			if(mi.prestamotipo!=null && mi.prestamotipo.id!=null){
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
-				mi.cargarTotalPropiedades();
 				$utilidades.setFocus(document.getElementById("nombre"));
 			}
 			else
@@ -192,7 +191,6 @@ app.controller('prestamotipoController',['$scope','$rootScope','$http','$interva
 			mi.esnuevo = true;
 			mi.prestamotipo = {};
 			mi.gridApi.selection.clearSelectedRows();
-			mi.cargarTotalPropiedades();
 			$utilidades.setFocus(document.getElementById("nombre"));
 		};
 
