@@ -113,7 +113,7 @@ public class SGantt extends HttpServlet {
 						}else if (parametro.getFieldName().compareTo("marcarCargado")==0 && parametro.getString().length()>0){
 							marcarCargado = parametro.getString().equals("1");
 						}else if (parametro.getFieldName().compareTo("prestamoId")==0 && parametro.getString().length()>0){
-							prestamoId = proyectoId = Integer.parseInt(parametro.getString());
+							prestamoId  = Integer.parseInt(parametro.getString());
 						}
 					}
 					

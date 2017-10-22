@@ -381,7 +381,7 @@ public class CProject {
 						if (objeto != null){
 							objetoTipoTemp=5;
 							Proyecto objeto_padre = ((Proyecto) objeto);
-							Actividad actividad = crearActividad(task, usuario,objeto_padre.getId(),1 
+							Actividad actividad = crearActividad(task, usuario,objeto_padre.getId(),0 
 								,2,objeto_padre.getTreePath(),objeto_padre.getId(),null,null);
 							cargarItem(task,actividad.getId(), 5,2);
 							ret = actividad.getId();
