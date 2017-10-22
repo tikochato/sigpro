@@ -1,6 +1,7 @@
 package dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -10,7 +11,10 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import pojo.Prestamo;
 import pojo.PrestamoTipo;
+import pojo.PrestamoTipoPrestamo;
+import pojo.PrestamoTipoPrestamoId;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
@@ -27,7 +31,7 @@ public class PrestamoTipoDAO {
 			ret = session.createQuery( criteria ).getResultList();
 		}
 		catch(Throwable e){
-			CLogger.write("1", ProyectoTipoDAO.class, e);
+			CLogger.write("1", PrestamoTipoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -48,7 +52,7 @@ public class PrestamoTipoDAO {
 			ret = session.createQuery( criteria ).getSingleResult();
 		}
 		catch(Throwable e){
-			CLogger.write("2", FormularioDAO.class, e);
+			CLogger.write("2", PrestamoTipoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -67,7 +71,7 @@ public class PrestamoTipoDAO {
 			ret = true;
 		}
 		catch(Throwable e){
-			CLogger.write("3", ProyectoTipoDAO.class, e);
+			CLogger.write("3", PrestamoTipoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -77,7 +81,7 @@ public class PrestamoTipoDAO {
 	
 	public static List<PrestamoTipo> getPrestamosTipoPagina(int pagina, int numeroproyectotipos,
 			String filtro_nombre, String filtro_usuario_creo, 
-			String filtro_fecha_creacion, String columna_ordenada, String orden_direccion){
+			String filtro_fecha_creacion, String columna_ordenada, String orden_direccion, String excluir){
 		List<PrestamoTipo> ret = new ArrayList<PrestamoTipo>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -91,6 +95,7 @@ public class PrestamoTipoDAO {
 			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
 				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(p.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
+			query = String.join(" ", query, (excluir!=null && excluir.length()>0 ? "and p.id not in (" + excluir + ")" : ""));
 			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
 			
 			Query<PrestamoTipo> criteria = session.createQuery(query,PrestamoTipo.class);
@@ -126,7 +131,7 @@ public class PrestamoTipoDAO {
 			ret = conteo.getSingleResult();
 		}
 		catch(Throwable e){
-			CLogger.write("5", ProyectoTipoDAO.class, e);
+			CLogger.write("5", PrestamoTipoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -145,9 +150,71 @@ public class PrestamoTipoDAO {
 			ret = true;
 		}
 		catch(Throwable e){
-			CLogger.write("6", ProyectoTipoDAO.class, e);
+			CLogger.write("6", PrestamoTipoDAO.class, e);
 		}
 		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static boolean desasignarTiposAPrestamo(Integer prestamoId){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			Query<?> criteria = session.createQuery("delete PrestamoTipoPrestamo ptp where ptp.prestamo.id=:prestamoId");
+			criteria.setParameter("prestamoId", prestamoId);
+			criteria.executeUpdate();
+			session.getTransaction().commit();
+			ret = true;
+		}catch(Exception e){
+			CLogger.write("7", PrestamoTipoDAO.class, e);
+		}finally {
+			session.close();
+		}	
+		return ret;
+	}
+	
+	public static boolean asignarTiposAPrestamo(ArrayList<Integer> tipos, Prestamo prestamo, String usuario){
+		boolean ret =false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			for(int i=0; i<tipos.size();i++){
+				PrestamoTipo prestamoTipo = getPrestamoTipoPorId(tipos.get(i));
+				PrestamoTipoPrestamoId prestamotipoid = new PrestamoTipoPrestamoId(prestamo.getId(), tipos.get(i), usuario, new Date());;
+				PrestamoTipoPrestamo prestamotipoprestamo = new PrestamoTipoPrestamo();
+				prestamotipoprestamo.setId(prestamotipoid);
+				prestamotipoprestamo.setPrestamo(prestamo);
+				prestamotipoprestamo.setPrestamoTipo(prestamoTipo);
+				session.save(prestamotipoprestamo);
+				if( i % 20 == 0 ){
+					session.flush();
+		            session.clear();
+		        }
+			}
+			session.getTransaction().commit();
+			ret = true;
+		}catch(Exception e){
+			ret = false;
+			CLogger.write("8", PrestamoTipoDAO.class, e);
+		}finally{
+			session.close();
+		}	
+		return ret;
+	}
+	
+	public static List <PrestamoTipoPrestamo> getPrestamoTiposPrestamo(Integer prestamoId){
+		List <PrestamoTipoPrestamo> ret = new ArrayList <PrestamoTipoPrestamo> ();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<PrestamoTipoPrestamo> criteria = session.createQuery("FROM PrestamoTipoPrestamo where prestamoId=:prestamoId", PrestamoTipoPrestamo.class);
+			criteria.setParameter("prestamoId", prestamoId);
+			ret = criteria.getResultList();
+		}catch(Throwable e){
+			CLogger.write("9", PrestamoTipoDAO.class, e);
+		}finally{
 			session.close();
 		}
 		return ret;

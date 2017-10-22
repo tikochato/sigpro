@@ -97,7 +97,7 @@
 				  </div>
 			</div>
 			<br/>
-			<div class="total-rows">Total de {{  prestamoc.totalProyectos + (prestamoc.totalProyectos == 1 ? "Préstamo" : " Préstamos" ) }}</div>
+			<div class="total-rows">Total de {{  prestamoc.totalPrestamos + (prestamoc.totalPrestamos == 1 ? "Préstamo" : " Préstamos" ) }}</div>
 				<ul uib-pagination total-items="prestamoc.totalProyectos"
 						ng-model="prestamoc.paginaActual"
 						max-size="prestamoc.numeroMaximoPaginas"
@@ -346,6 +346,47 @@
 								<label class="floating-label" >Ejecucion Física %</label>
 							</div>
 						</div>
+					</div>
+					<br>
+					<div align="center">
+						<h5>Tipo de Préstamo</h5>
+						<div style="height: 35px;" >
+							<div style="text-align: right;">
+								<div class="btn-group" role="group" aria-label="">
+									<a class="btn btn-default" href
+										ng-click="prestamoc.buscarTiposPrestamo()" role="button"
+										uib-tooltip="Asignar un tipo de préstamo" tooltip-placement="left">
+										<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+									</a>
+								</div>
+							</div>
+						</div>
+						<br/>
+						<table st-table="prestamoc.prestamotipos"
+							class="table table-striped table-bordered table-hover table-propiedades">
+							<thead >
+								<tr>
+									<th style="width: 60px;">ID</th>
+									<th>Nombre</th>
+									<th style="width: 30px;">Quitar</th>
+			
+								</tr>
+							</thead>
+							<tbody>
+								<tr st-select-row="row"
+									ng-repeat="row in prestamoc.prestamotipos">
+									<td>{{row.id}}</td>
+									<td>{{row.nombre}}</td>
+									<td>
+										<button type="button"
+											ng-click="prestamoc.eliminarTiposPrestamo(row)"
+											class="btn btn-sm btn-danger">
+											<i class="glyphicon glyphicon-minus-sign"> </i>
+										</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 					<br>
 					<div class="row">

@@ -36,7 +36,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	mi.formatofecha = 'dd/MM/yyyy';
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
-	mi.totalProyectos = 0;
+	mi.totalPrestamos = 0;
 	mi.mostrarPrestamo = true;
 	mi.ordenTab=0;
 	mi.columnaOrdenada=null;
@@ -73,6 +73,36 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			maxDate : new Date(2050, 12, 31),
 			minDate : new Date(1990, 1, 1),
 			startingDay : 1
+	};
+	
+	mi.buscarTiposPrestamo = function(){
+		var idPrestamoTipos = "";
+		for(x in mi.prestamotipos){
+			idPrestamoTipos = idPrestamoTipos + (x > 0 ? "," : "") + mi.prestamotipos[x].id;
+		}
+		var resultado = mi.llamarModalBusqueda('Tipos de préstmo','/SPrestamoTipo', {
+			accion : 'numeroPrestamoTipos'	
+		}, function(pagina, elementosPorPagina) {
+			return {
+				accion : 'getPrestamoTipoPagina',
+				pagina : pagina,
+				numeroresponsablerol : elementosPorPagina,
+				idPrestamoTipos : idPrestamoTipos
+			};
+		},'id','nombre', null, null);
+
+		resultado.then(function(itemSeleccionado) {
+			var tipoPrestamo = {};
+			tipoPrestamo = { id: itemSeleccionado.id, nombre: itemSeleccionado.nombre };
+			mi.prestamotipos.push(tipoPrestamo);
+		});
+	}
+	
+	mi.eliminarTiposPrestamo= function(tipo){
+		var indice = mi.prestamotipos.indexOf(tipo);
+		if (indice !== -1) {
+	       mi.prestamotipos.splice(indice, 1);
+	    }
 	};
 
 	mi.editarElemento = function (event) {
@@ -287,6 +317,10 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	
 	mi.guardar = function(esvalido){
 		if (mi.prestamo!=null && mi.prestamo.codigoPresupuestario !=null && mi.prestamo.codigoPresupuestario != ''){
+			var idPrestamoTipos = "";
+			for(x in mi.prestamotipos){
+				idPrestamoTipos = idPrestamoTipos + (x > 0 ? "," : "") + mi.prestamotipos[x].id;
+			}
 			var param_data = {
 					accion: "guardarPrestamo",
 					esNuevo: mi.esNuevo,
@@ -355,88 +389,76 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 					desembolsoReal: mi.prestamo.desembolsoReal,
 					ejecucionEstadoId: mi.prestamo.ejecucionEstadoId != undefined ? mi.prestamo.ejecucionEstadoId : undefined,
 					fechaCorte : mi.prestamo.fechaCorte != undefined ? moment(mi.prestamo.fechaCorte).format('DD/MM/YYYY') : undefined,
+					idPrestamoTipos: idPrestamoTipos,
 					t:moment().unix()
 				};
 				
 			
 				$http.post('/SPrestamo',param_data).then(
-						function(response) {
-							if (response.data.success) {
+					function(response) {
+						if (response.data.success) {
+							
+							mi.prestamo.usuarioCreo = response.data.usuarioCreo;
+							mi.prestamo.fechaCreacion = response.data.fechaCreacion;
+							mi.prestamo.usuarioActualizo = response.data.usuarioActualizo;
+							
+							if(mi.esTreeview){
+								mi.t_cambiarNombreNodo();
+							}
+							else{
+								mi.obtenerTotalPrestamos();
 								
-								mi.prestamo.usuarioCreo = response.data.usuarioCreo;
-								mi.prestamo.fechaCreacion = response.data.fechaCreacion;
-								mi.prestamo.usuarioActualizo = response.data.usuarioActualizo;
-								mi.prestamo.fechaActualizacion = response.data.fechaActualizacion;
-								
-								if(mi.esTreeview){
-									mi.t_cambiarNombreNodo();
-								}
-								else{
-									mi.obtenerTotalPrestamos();
-									
-									$http.post('/SPrestamo', {
-										accion: 'getComponentesSigade',
-										codigoPresupuestario : mi.prestamo.codigoPresupuestario
-									}).then(function(response){
-										if(response.data.success){
-											mi.componentes = response.data.componentes;
-											mi.rowCollectionComponentes = mi.componentes;
-											mi.displayedCollectionComponentes = [].concat(mi.rowCollectionComponentes);
-										}
-									})
-									
-									$http.post('/SPrestamo',{
-										accion: 'getUnidadesEjecutoras',
-										codigoPresupuestario : mi.prestamo.codigoPresupuestario
-									}).then(function(response){
-										mi.unidadesEjecutoras = response.data.unidadesEjecutoras;
-										mi.rowCollectionUE = mi.unidadesEjecutoras;
-										mi.displayCollectionUE = [].concat(mi.rowCollectionUE);
-									})
-								}
-								
-								if (mi.matriz_valid && !mi.m_existenDatos && $scope.m_componentes.length > 0 ){
-									var parametros = {
-											accion: 'guardarMatriz',
-											estructura: JSON.stringify($scope.m_componentes),
-											prestamoId: mi.prestamo.id,
-										    t:moment().unix()
-									};
-						
-									$http.post('/SPrestamo', parametros).then(function(response){
-						
-										if (response.data.success){
-											mi.m_organismosEjecutores = response.data.unidadesEjecutoras;
-											$scope.m_componentes = response.data.componentes;
-											mi.m_existenDatos = true; 
-											
-										}else{
-											
-										}
-						
-									});
-								}else{
-								
-									if(mi.child_desembolso!=null || mi.child_riesgos!=null){
-										if(mi.child_desembolso)
-											ret = mi.child_desembolso.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
-													'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo',
-													mi.child_riesgo!=null ? mi.child_riesgo.guardar :  null);
-										else if(mi.child_riesgo)
-											ret = mi.child_riesgo.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
-													'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo');
+								$http.post('/SPrestamo', {
+									accion: 'getComponentesSigade',
+									codigoPresupuestario : mi.prestamo.codigoPresupuestario
+								}).then(function(response){
+									if(response.data.success){
+										mi.componentes = response.data.componentes;
+										mi.rowCollectionComponentes = mi.componentes;
+										mi.displayedCollectionComponentes = [].concat(mi.rowCollectionComponentes);
 									}
-									else{
+								})
+								
+								$http.post('/SPrestamo',{
+									accion: 'getUnidadesEjecutoras',
+									codigoPresupuestario : mi.prestamo.codigoPresupuestario
+								}).then(function(response){
+									mi.unidadesEjecutoras = response.data.unidadesEjecutoras;
+									mi.rowCollectionUE = mi.unidadesEjecutoras;
+									mi.displayCollectionUE = [].concat(mi.rowCollectionUE);
+								})
+							}
+							
+							if (mi.matriz_valid && !mi.m_existenDatos && $scope.m_componentes.length > 0 ){
+								var parametros = {
+										accion: 'guardarMatriz',
+										estructura: JSON.stringify($scope.m_componentes),
+										prestamoId: mi.prestamo.id,
+									    t:moment().unix()
+								};
+					
+								$http.post('/SPrestamo', parametros).then(function(response){
+									if (response.data.success){
+										mi.m_organismosEjecutores = response.data.unidadesEjecutoras;
+										$scope.m_componentes = response.data.componentes;
+										mi.m_existenDatos = true; 
+
 										$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 										mi.botones=true;
+									}else{
+										$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' la matriz del préstamo');
+										mi.botones=true;
 									}
-								}
-								mi.cargarMatriz();
-									
+								});
 							}else{
-								$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo');
+								$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 								mi.botones=true;
 							}
+							mi.cargarMatriz();
+						}else{
+							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo');
+							mi.botones=true;
+						}
 				});
 		}
 		else
@@ -498,6 +520,15 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			mi.esNuevo = false;
 			mi.esNuevoDocumento = false;
 			mi.active = 0;
+			
+			$http.post('/SPrestamo',{
+				accion: 'obtenerTipos',
+				prestamoId: mi.prestamo.id
+			}).then(function(response){
+				if(response.success){
+					mi.prestamotipos = response.prestamoTipos;
+				}
+			})
 			
 			$http.post('/SPrestamo', {
 				accion: 'getComponentesSigade',
@@ -617,7 +648,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			filtro_numero_prestamo: mi.filtros['numero_prestamo'], filtro_usuario_creo: mi.filtros['usuario_creo'], 
 			filtro_fecha_creacion: mi.filtros['fecha_creacion'], t:moment().unix()  } ).then(
 				function(response) {
-					mi.totalProyectos = response.data.totalprestamos;
+					mi.totalPrestamos = response.data.totalprestamos;
 					mi.paginaActual = 1;
 					mi.cargarTabla(mi.paginaActual);
 		});

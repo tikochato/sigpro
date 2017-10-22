@@ -73,9 +73,10 @@ public class SPrestamoTipo extends HttpServlet {
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			String columna_ordenada = map.get("columna_ordenada");
 			String orden_direccion = map.get("orden_direccion");
+			String excluir = map.get("idPrestamoTipos");
 			
-			
-			List<PrestamoTipo> prestamotipos = PrestamoTipoDAO.getPrestamosTipoPagina(pagina, numeroPrestamosTipos, filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
+			List<PrestamoTipo> prestamotipos = PrestamoTipoDAO.getPrestamosTipoPagina(pagina, numeroPrestamosTipos, filtro_nombre, 
+					filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion, excluir);
 			List<stprestamotipo> stcooperantes=new ArrayList<stprestamotipo>();
 			for(PrestamoTipo prestamotipo:prestamotipos){
 				stprestamotipo temp =new stprestamotipo();
