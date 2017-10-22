@@ -35,6 +35,7 @@ import dao.ComponenteTipoDAO;
 import dao.DataSigadeDAO;
 import dao.ObjetoDAO;
 import dao.PrestamoDAO;
+import dao.PrestamoTipoDAO;
 import dao.ProyectoDAO;
 import dao.ProyectoTipoDAO;
 import dao.UnidadEjecutoraDAO;
@@ -48,6 +49,7 @@ import pojo.EjecucionEstado;
 import pojo.Etiqueta;
 import pojo.InteresTipo;
 import pojo.Prestamo;
+import pojo.PrestamoTipoPrestamo;
 import pojo.Proyecto;
 import pojo.ProyectoTipo;
 import pojo.TipoMoneda;
@@ -135,6 +137,15 @@ public class SPrestamo extends HttpServlet {
 		String fechaCreacion;
 		String fechaActualizacion;
 		
+	}
+	
+	class sttiposprestamo{
+		Integer id;
+		String nombre;
+		String usuarioCreo;
+		String usuarioActualizo;
+		String fechaCreacion;
+		String fechaActualizacion;
 	}
        
     class stcomponentessigade{
@@ -473,6 +484,19 @@ public class SPrestamo extends HttpServlet {
 				result = PrestamoDAO.guardarPrestamo(prestamo);
 				
 			}
+			
+			if(result){
+				PrestamoTipoDAO.desasignarTiposAPrestamo(prestamo.getId());
+				String idPrestamoTipos = map.get("idPrestamoTipos");
+				if(idPrestamoTipos != null && idPrestamoTipos.length() > 0){
+					String[] prestamoTipos = idPrestamoTipos.split(",");
+					ArrayList<Integer> tipos = new ArrayList<Integer>();
+					for(String tipo : prestamoTipos){
+						tipos.add(Utils.String2Int(tipo));
+					}
+					result = PrestamoTipoDAO.asignarTiposAPrestamo(tipos, prestamo, usuario);
+				}	
+			}
 			response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 					+ "\"id\": " + prestamo.getId() ,","
 					, "\"usuarioCreo\": \"" , prestamo.getUsuarioCreo(),"\","
@@ -761,6 +785,26 @@ public class SPrestamo extends HttpServlet {
             response_text = String.join("","{ \"success\": ",(prestamo!=null && prestamo.getId()!=null ? "true" : "false"),", "
                     + "\"id\": " + (prestamo!=null ? prestamo.getId():"0") +", "
                     + "\"nombre\": \"" + (prestamo!=null ? prestamo.getProyectoPrograma():"") +"\" }");
+        }else if(accion.equals("obtenerTipos")){
+        	Integer prestamoId = Utils.String2Int(map.get("prestamoId"));
+        	List<PrestamoTipoPrestamo> tipos = PrestamoTipoDAO.getPrestamoTiposPrestamo(prestamoId);
+        	List<sttiposprestamo> lsttipos = new ArrayList<sttiposprestamo>();
+        	if(tipos != null && tipos.size() > 0){
+        		for(PrestamoTipoPrestamo tipo : tipos){
+	        		sttiposprestamo temp = new sttiposprestamo();
+	        		temp.id = tipo.getPrestamoTipo().getId();
+	        		temp.nombre = tipo.getPrestamoTipo().getNombre();
+	        		temp.usuarioCreo = tipo.getUsuarioCreo();
+	        		temp.usuarioActualizo = tipo.getUsuarioActualizo();
+	        		temp.fechaCreacion = Utils.formatDate(tipo.getFechaCreacion());
+	        		temp.fechaActualizacion = Utils.formatDate(tipo.getFechaActualizacion());
+	        		lsttipos.add(temp);
+        		}
+        	}
+        	
+        	String componentes_text = new GsonBuilder().serializeNulls().create().toJson(lsttipos);
+	        response_text = String.join("", "\"prestamoTipos\":",componentes_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
         }
 		else
 			response_text = "{ \"success\": false }";
