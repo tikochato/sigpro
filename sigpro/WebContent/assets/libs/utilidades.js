@@ -86,3 +86,14 @@ app.filter('formatoMillonesDolares', function() {
     };
 })
 
+app.filter('formatoMillonesSinTipo', function() {
+    return function(numero, millones) {
+    	if(numero != null){
+	        if(millones){
+	        	var res = ((numero/1000000).toFixed(2));
+	        	return (res.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+	        }
+	        return ((Number(numero).toFixed(2)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    	}
+    };
+})

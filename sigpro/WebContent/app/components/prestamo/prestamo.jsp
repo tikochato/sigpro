@@ -993,6 +993,7 @@
 						<thead>
 							<tr>
 								<th class="label-form" style="text-align: center; min-width:300px;">Nombre</th>
+								<th class="label-form" style="text-align: center;">Tipo Moneda</th>
 								<th class="label-form" style="text-align: center; min-width: 155px;">Techo</th>
 							</tr>
 						</thead>
@@ -1001,8 +1002,11 @@
 								<td style="min-width:300px; text-align: left;">
 	    							{{row.nombre}}
 	    						</td>
+	    						<td style="text-align: center;">
+	    							{{row.tipoMoneda}}
+	    						</td>
 	    						<td style="text-align: right;">
-	    							{{row.techo | formatoMillonesDolares : controller.enMillones}}
+	    							{{row.techo | formatoMillonesSinTipo : prestamoc.enMillones}}
 	    						</td>
 							</tr>
 						</tbody>

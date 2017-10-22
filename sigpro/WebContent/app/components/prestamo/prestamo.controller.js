@@ -129,19 +129,19 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		columnDefs : [
 			{ name: 'id', width: 60, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
 			{ name: 'proyectoPrograma',  displayName: 'Nombre',cellClass: 'grid-align-left',
-				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'nombre\']" ng-keypress="grid.appScope.controller.filtrar($event)" style="width:175px;"></input></div>'
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.prestamoc.filtros[\'nombre\']" ng-keypress="grid.appScope.prestamoc.filtrar($event)" style="width:175px;"></input></div>'
 			},
 			{ name : 'codigoPresupuestario',    displayName : 'Código presupuestario',cellClass: 'grid-align-left',
-				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'codigo_presupuestario\']" ng-keypress="grid.appScope.controller.filtrar($event)" style="width:175px;"></input></div>',
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.prestamoc.filtros[\'codigo_presupuestario\']" ng-keypress="grid.appScope.prestamoc.filtrar($event)" style="width:175px;"></input></div>',
 			},
 			{ name : 'numeroPrestamo',    displayName : 'Número de Préstamo' ,cellClass: 'grid-align-left', 
-				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'numero_prestamo\']" ng-keypress="grid.appScope.controller.filtrar($event)" style="width:175px;"></input></div>',
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.prestamoc.filtros[\'numero_prestamo\']" ng-keypress="grid.appScope.prestamoc.filtrar($event)" style="width:175px;"></input></div>',
 			},
 			{ name: 'usuarioCreo', width: 120, displayName: 'Usuario Creación',cellClass: 'grid-align-left',
-				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text"style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'usuario_creo\']"  ng-keypress="grid.appScope.controller.filtrar($event)" style="width:90px;"></input></div>'
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text"style="width: 90%;" ng-model="grid.appScope.prestamoc.filtros[\'usuario_creo\']"  ng-keypress="grid.appScope.prestamoc.filtrar($event)" style="width:90px;"></input></div>'
 			},
 		    { name: 'fechaCreacion', width: 100, displayName: 'Fecha Creación', cellClass: 'grid-align-right', type: 'date', cellFilter: 'date:\'dd/MM/yyyy\'',
-				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.controller.filtrar($event)" style="width:80px;" ></input></div>'
+				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.prestamoc.filtros[\'fecha_creacion\']" ng-keypress="grid.appScope.prestamoc.filtrar($event)" style="width:80px;" ></input></div>'
 		    }
 		],
 		onRegisterApi: function(gridApi) {
@@ -152,18 +152,18 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 
 			gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
 				if(sortColumns.length==1){
-					grid.appScope.controller.columnaOrdenada=sortColumns[0].field;
-					grid.appScope.controller.ordenDireccion = sortColumns[0].sort.direction;
+					grid.appScope.prestamoc.columnaOrdenada=sortColumns[0].field;
+					grid.appScope.prestamoc.ordenDireccion = sortColumns[0].sort.direction;
 
-					grid.appScope.controller.cargarTabla(grid.appScope.controller.paginaActual);
+					grid.appScope.prestamoc.cargarTabla(grid.appScope.prestamoc.paginaActual);
 				}
 				else if(sortColumns.length>1){
 					sortColumns[0].unsort();
 				}
 				else{
-					if(grid.appScope.controller.columnaOrdenada!=null){
-						grid.appScope.controller.columnaOrdenada=null;
-						grid.appScope.controller.ordenDireccion=null;
+					if(grid.appScope.prestamoc.columnaOrdenada!=null){
+						grid.appScope.prestamoc.columnaOrdenada=null;
+						grid.appScope.prestamoc.ordenDireccion=null;
 					}
 				}
 			} );
