@@ -794,16 +794,16 @@ public class SPrestamo extends HttpServlet {
 	        		sttiposprestamo temp = new sttiposprestamo();
 	        		temp.id = tipo.getPrestamoTipo().getId();
 	        		temp.nombre = tipo.getPrestamoTipo().getNombre();
-	        		temp.usuarioCreo = tipo.getId().getUsuarioCreo();
-	        		temp.usuarioActualizo = tipo.getId().getUsuarioActualizo();
-	        		temp.fechaCreacion = Utils.formatDate(tipo.getId().getFechaCreacion());
-	        		temp.fechaActualizacion = Utils.formatDate(tipo.getId().getFechaActualizacion());
+	        		temp.usuarioCreo = tipo.getUsuarioCreo();
+	        		temp.usuarioActualizo = tipo.getUsuarioActualizo();
+	        		temp.fechaCreacion = Utils.formatDate(tipo.getFechaCreacion());
+	        		temp.fechaActualizacion = Utils.formatDate(tipo.getFechaActualizacion());
 	        		lsttipos.add(temp);
         		}
         	}
         	
         	String componentes_text = new GsonBuilder().serializeNulls().create().toJson(lsttipos);
-	        response_text = String.join("", ",\"prestamoTipos\":",componentes_text);
+	        response_text = String.join("", "\"prestamoTipos\":",componentes_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
         }
 		else

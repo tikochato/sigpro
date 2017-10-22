@@ -183,11 +183,14 @@ public class PrestamoTipoDAO {
 			session.beginTransaction();
 			for(int i=0; i<tipos.size();i++){
 				PrestamoTipo prestamoTipo = getPrestamoTipoPorId(tipos.get(i));
-				PrestamoTipoPrestamoId prestamotipoid = new PrestamoTipoPrestamoId(prestamo.getId(), tipos.get(i), usuario, new Date());;
+				PrestamoTipoPrestamoId prestamotipoid = new PrestamoTipoPrestamoId(prestamo.getId(), tipos.get(i));;
 				PrestamoTipoPrestamo prestamotipoprestamo = new PrestamoTipoPrestamo();
 				prestamotipoprestamo.setId(prestamotipoid);
 				prestamotipoprestamo.setPrestamo(prestamo);
 				prestamotipoprestamo.setPrestamoTipo(prestamoTipo);
+				prestamotipoprestamo.setFechaCreacion(new Date());
+				prestamotipoprestamo.setEstado(1);
+				prestamotipoprestamo.setUsuarioCreo(usuario);
 				session.save(prestamotipoprestamo);
 				if( i % 20 == 0 ){
 					session.flush();

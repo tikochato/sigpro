@@ -1,6 +1,6 @@
 var app = angular.module('prestamoController', [ 'ngTouch','smart-table',  'ui.bootstrap.contextMenu']);
 
-app.controller('prestamoController',['$rootScope','$scope','$http','$interval','i18nService','Utilidades','documentoAdjunto','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$filter', 'dialogoConfirmacion', 
+app.controller('prestamoController',['$rootScope','$scope','$http','$interval','i18nService','Utilidades','documentoAdjunto','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$filter', 'dialogoConfirmacion',
 	function($rootScope,$scope, $http, $interval,i18nService,$utilidades,$documentoAdjunto,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$filter, $dialogoConfirmacion) {
 
 	var mi = this;
@@ -8,10 +8,10 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 
 	mi.esTreeview = $rootScope.treeview;
 	mi.botones = true;
-	
+
 	if(!mi.esTreeview)
 		$window.document.title = 'Préstamos';
-		
+
 	mi.rowCollection = [];
 	mi.prestamo = null;
 	mi.esNuevo = false;
@@ -36,7 +36,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	mi.formatofecha = 'dd/MM/yyyy';
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
-	mi.totalPrestamos = 0;
+	mi.totalProyectos = 0;
 	mi.mostrarPrestamo = true;
 	mi.ordenTab=0;
 	mi.columnaOrdenada=null;
@@ -45,64 +45,34 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	mi.orden = null;
 	mi.prestamo = [];
 	mi.componentes = [];
-	
+
 	mi.prestamo.desembolsoAFechaUsdP = "";
 	mi.prestamo.montoPorDesembolsarUsdP = "";
 	mi.prestamo.desembolsoAFechaUeUsdP = "";
 	mi.prestamo.montoPorDesembolsarUeUsdP = "";
 	mi.prestamo.plazoEjecucionUe = "";
-	
+
 	mi.coordenadas = "";
-	
+
 	mi.impactos =[];
 	mi.miembros = [];
-	
+
 	mi.active = 0;
-	
+
 	mi.child_desembolso = null;
 	mi.child_riesgos = null;
 	mi.ingresoValidoMatriz = true;
 
 	mi.m_organismosEjecutores = [];
 	$scope.m_componentes = [];
-	
+
 	mi.matriz_valid = 1;
-	
+
 	mi.fechaOptions = {
 			formatYear : 'yy',
 			maxDate : new Date(2050, 12, 31),
 			minDate : new Date(1990, 1, 1),
 			startingDay : 1
-	};
-	
-	mi.buscarTiposPrestamo = function(){
-		var idPrestamoTipos = "";
-		for(x in mi.prestamotipos){
-			idPrestamoTipos = idPrestamoTipos + (x > 0 ? "," : "") + mi.prestamotipos[x].id;
-		}
-		var resultado = mi.llamarModalBusqueda('Tipos de préstmo','/SPrestamoTipo', {
-			accion : 'numeroPrestamoTipos'	
-		}, function(pagina, elementosPorPagina) {
-			return {
-				accion : 'getPrestamoTipoPagina',
-				pagina : pagina,
-				numeroresponsablerol : elementosPorPagina,
-				idPrestamoTipos : idPrestamoTipos
-			};
-		},'id','nombre', null, null);
-
-		resultado.then(function(itemSeleccionado) {
-			var tipoPrestamo = {};
-			tipoPrestamo = { id: itemSeleccionado.id, nombre: itemSeleccionado.nombre };
-			mi.prestamotipos.push(tipoPrestamo);
-		});
-	}
-	
-	mi.eliminarTiposPrestamo= function(tipo){
-		var indice = mi.prestamotipos.indexOf(tipo);
-		if (indice !== -1) {
-	       mi.prestamotipos.splice(indice, 1);
-	    }
 	};
 
 	mi.editarElemento = function (event) {
@@ -110,9 +80,9 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
         mi.gridApi.selection.selectRow(mi.gridOpciones.data[filaId]);
         mi.editar();
     };
-    
-    
-    
+
+
+
 	mi.gridOpciones = {
 		enableRowSelection : true,
 		enableRowHeaderSelection : false,
@@ -133,7 +103,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			{ name : 'codigoPresupuestario',    displayName : 'Código presupuestario',cellClass: 'grid-align-left',
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'codigo_presupuestario\']" ng-keypress="grid.appScope.controller.filtrar($event)" style="width:175px;"></input></div>',
 			},
-			{ name : 'numeroPrestamo',    displayName : 'Número de Préstamo' ,cellClass: 'grid-align-left', 
+			{ name : 'numeroPrestamo',    displayName : 'Número de Préstamo' ,cellClass: 'grid-align-left',
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'numero_prestamo\']" ng-keypress="grid.appScope.controller.filtrar($event)" style="width:175px;"></input></div>',
 			},
 			{ name: 'usuarioCreo', width: 120, displayName: 'Usuario Creación',cellClass: 'grid-align-left',
@@ -188,7 +158,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	mi.redireccionSinPermisos=function(){
 		$window.location.href = '/main.jsp#!/forbidden';
 	}
-	
+
 	mi.cargarTabla = function(pagina){
 		mi.mostrarcargando=true;
 		$http.post('/SPrestamo', { accion: 'getPrestamosPagina', pagina: pagina,
@@ -210,13 +180,13 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 						response.prestamos[x].fechaAutorizacion = response.prestamos[x].fechaAutorizacion != null ? moment(response.prestamos[x].fechaAutorizacion,'DD/MM/YYYY').toDate() : undefined;
 						response.prestamos[x].fechaFinEjecucion = response.prestamos[x].fechaFinEjecucion != null ? moment(response.prestamos[x].fechaFinEjecucion,'DD/MM/YYYY').toDate() : undefined;
 					}
-					
+
 					mi.prestamos = response.prestamos;
 					mi.gridOpciones.data = mi.prestamos;
 					mi.mostrarcargando = false;
 				});
 	};
-	
+
 	mi.cambioCooperante=function(selected){
 		if(selected!== undefined){
 			mi.cooperantenombre=selected.originalObject.nombre;
@@ -229,13 +199,13 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			mi.prestamo.cooperanteid = null;
 		}
 	}
-	
+
 	mi.blurCooperante=function(){
 		if(document.getElementById("cooperante_value").defaultValue!=mi.cooperantenombre){
 			$scope.$broadcast('angucomplete-alt:clearInput');
 		}
 	}
-	
+
 	mi.getPorcentajes = function(){
 		mi.setPorcentaje(1);
 		mi.setPorcentaje(2);
@@ -243,7 +213,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		mi.setPorcentaje(4);
 		mi.setPorcentaje(5);
 	}
-	
+
 	mi.setPorcentaje = function(tipo){
 		var n = 0;
 		if (tipo==1)
@@ -290,11 +260,11 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 				var fechaFinal = moment(mi.prestamo.fechaCierreActualUe).format('DD/MM/YYYY').split('/');
 				var ffechaInicio = Date.UTC(fechaInicio[2],fechaInicio[1]-1,fechaInicio[0]);
 				var ffechaFinal = Date.UTC(fechaFinal[2],fechaFinal[1]-1,fechaFinal[0]);
-				
+
 				var hoy = new Date();
 				var fechaActual = hoy.today().split('/');
 				var ffechaActual = Date.UTC(fechaActual[2],fechaActual[1]-1,fechaActual[0]);
-				
+
 				var dif1 = ffechaFinal - ffechaInicio;
 				var dif2 = ffechaActual - ffechaInicio;
 				n = (dif1>0) ? (dif2 / dif1) * 100.00 : 0.00;
@@ -307,20 +277,16 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 				if(isNaN(mi.prestamo.mesesProrrogaUe))
 					mi.prestamo.mesesProrrogaUe = null;
 			}
-			
+
 		}
 	};
 
-	Date.prototype.today = function () { 
+	Date.prototype.today = function () {
 	    return ((this.getDate() < 10)?"0":"") + this.getDate() +"/"+(((this.getMonth()+1) < 10)?"0":"") + (this.getMonth()+1) +"/"+ this.getFullYear();
 	}
-	
+
 	mi.guardar = function(esvalido){
 		if (mi.prestamo!=null && mi.prestamo.codigoPresupuestario !=null && mi.prestamo.codigoPresupuestario != ''){
-			var idPrestamoTipos = "";
-			for(x in mi.prestamotipos){
-				idPrestamoTipos = idPrestamoTipos + (x > 0 ? "," : "") + mi.prestamotipos[x].id;
-			}
 			var param_data = {
 					accion: "guardarPrestamo",
 					esNuevo: mi.esNuevo,
@@ -329,7 +295,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 					numeroPrestamo: mi.prestamo.numeroPrestamo,
 					proyetoPrograma: mi.prestamo.proyectoPrograma,
 					unidadEjecutora: mi.unidadejecutoraid,
-					entidad: mi.entidad, 
+					entidad: mi.entidad,
 					ejercicio: mi.ejercicio,
 					cooperanteUeId: mi.prestamo.cooperanteid,
 					fechaDecreto: moment(mi.prestamo.fechaDecreto).format('DD/MM/YYYY'),
@@ -389,76 +355,88 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 					desembolsoReal: mi.prestamo.desembolsoReal,
 					ejecucionEstadoId: mi.prestamo.ejecucionEstadoId != undefined ? mi.prestamo.ejecucionEstadoId : undefined,
 					fechaCorte : mi.prestamo.fechaCorte != undefined ? moment(mi.prestamo.fechaCorte).format('DD/MM/YYYY') : undefined,
-					idPrestamoTipos: idPrestamoTipos,
 					t:moment().unix()
 				};
-				
-			
-				$http.post('/SPrestamo',param_data).then(
-					function(response) {
-						if (response.data.success) {
-							
-							mi.prestamo.usuarioCreo = response.data.usuarioCreo;
-							mi.prestamo.fechaCreacion = response.data.fechaCreacion;
-							mi.prestamo.usuarioActualizo = response.data.usuarioActualizo;
-							
-							if(mi.esTreeview){
-								mi.t_cambiarNombreNodo();
-							}
-							else{
-								mi.obtenerTotalPrestamos();
-								
-								$http.post('/SPrestamo', {
-									accion: 'getComponentesSigade',
-									codigoPresupuestario : mi.prestamo.codigoPresupuestario
-								}).then(function(response){
-									if(response.data.success){
-										mi.componentes = response.data.componentes;
-										mi.rowCollectionComponentes = mi.componentes;
-										mi.displayedCollectionComponentes = [].concat(mi.rowCollectionComponentes);
-									}
-								})
-								
-								$http.post('/SPrestamo',{
-									accion: 'getUnidadesEjecutoras',
-									codigoPresupuestario : mi.prestamo.codigoPresupuestario
-								}).then(function(response){
-									mi.unidadesEjecutoras = response.data.unidadesEjecutoras;
-									mi.rowCollectionUE = mi.unidadesEjecutoras;
-									mi.displayCollectionUE = [].concat(mi.rowCollectionUE);
-								})
-							}
-							
-							if (mi.matriz_valid && !mi.m_existenDatos && $scope.m_componentes.length > 0 ){
-								var parametros = {
-										accion: 'guardarMatriz',
-										estructura: JSON.stringify($scope.m_componentes),
-										prestamoId: mi.prestamo.id,
-									    t:moment().unix()
-								};
-					
-								$http.post('/SPrestamo', parametros).then(function(response){
-									if (response.data.success){
-										mi.m_organismosEjecutores = response.data.unidadesEjecutoras;
-										$scope.m_componentes = response.data.componentes;
-										mi.m_existenDatos = true; 
 
+
+				$http.post('/SPrestamo',param_data).then(
+						function(response) {
+							if (response.data.success) {
+								
+								mi.prestamo.usuarioCreo = response.data.usuarioCreo;
+								mi.prestamo.fechaCreacion = response.data.fechaCreacion;
+								mi.prestamo.usuarioActualizo = response.data.usuarioActualizo;
+								mi.prestamo.fechaActualizacion = response.data.fechaActualizacion;
+								
+								if(mi.esTreeview){
+									mi.t_cambiarNombreNodo();
+								}
+								else{
+									mi.obtenerTotalPrestamos();
+
+									$http.post('/SPrestamo', {
+										accion: 'getComponentesSigade',
+										codigoPresupuestario : mi.prestamo.codigoPresupuestario
+									}).then(function(response){
+										if(response.data.success){
+											mi.componentes = response.data.componentes;
+											mi.rowCollectionComponentes = mi.componentes;
+											mi.displayedCollectionComponentes = [].concat(mi.rowCollectionComponentes);
+										}
+									})
+
+									$http.post('/SPrestamo',{
+										accion: 'getUnidadesEjecutoras',
+										codigoPresupuestario : mi.prestamo.codigoPresupuestario
+									}).then(function(response){
+										mi.unidadesEjecutoras = response.data.unidadesEjecutoras;
+										mi.rowCollectionUE = mi.unidadesEjecutoras;
+										mi.displayCollectionUE = [].concat(mi.rowCollectionUE);
+									})
+								}
+
+								if (mi.matriz_valid && !mi.m_existenDatos && $scope.m_componentes.length > 0 ){
+									var parametros = {
+											accion: 'guardarMatriz',
+											estructura: JSON.stringify($scope.m_componentes),
+											prestamoId: mi.prestamo.id,
+										    t:moment().unix()
+									};
+
+									$http.post('/SPrestamo', parametros).then(function(response){
+
+										if (response.data.success){
+											mi.m_organismosEjecutores = response.data.unidadesEjecutoras;
+											$scope.m_componentes = response.data.componentes;
+											mi.m_existenDatos = true;
+
+										}else{
+
+										}
+
+									});
+								}else{
+
+									if(mi.child_desembolso!=null || mi.child_riesgos!=null){
+										if(mi.child_desembolso)
+											ret = mi.child_desembolso.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+													'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo',
+													mi.child_riesgo!=null ? mi.child_riesgo.guardar :  null);
+										else if(mi.child_riesgo)
+											ret = mi.child_riesgo.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+													'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo');
+									}
+									else{
 										$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 										mi.botones=true;
-									}else{
-										$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' la matriz del préstamo');
-										mi.botones=true;
 									}
-								});
+								}
+								mi.cargarMatriz();
+
 							}else{
-								$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+								$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo');
 								mi.botones=true;
 							}
-							mi.cargarMatriz();
-						}else{
-							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo');
-							mi.botones=true;
-						}
 				});
 		}
 		else
@@ -489,7 +467,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 					});
 				}
 			}, function(){
-				
+
 			});
 		}
 		else
@@ -497,7 +475,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	};
 
 	mi.nuevo = function (){
-		mi.esNuevoDocumento = true;		
+		mi.esNuevoDocumento = true;
 		mi.poryectotipoid = "";
 		mi.prestamotiponombre="";
 		mi.unidadejecutoraid="";
@@ -520,16 +498,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			mi.esNuevo = false;
 			mi.esNuevoDocumento = false;
 			mi.active = 0;
-			
-			$http.post('/SPrestamo',{
-				accion: 'obtenerTipos',
-				prestamoId: mi.prestamo.id
-			}).then(function(response){
-				if(response.success){
-					mi.prestamotipos = response.prestamoTipos;
-				}
-			})
-			
+
 			$http.post('/SPrestamo', {
 				accion: 'getComponentesSigade',
 				codigoPresupuestario : mi.prestamo.codigoPresupuestario
@@ -540,7 +509,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 					mi.displayedCollectionComponentes = [].concat(mi.rowCollectionComponentes);
 				}
 			})
-			
+
 			$http.post('/SPrestamo',{
 				accion: 'getUnidadesEjecutoras',
 				codigoPresupuestario : mi.prestamo.codigoPresupuestario
@@ -549,7 +518,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 				mi.rowCollectionUE = mi.unidadesEjecutoras;
 				mi.displayCollectionUE = [].concat(mi.rowCollectionUE);
 			})
-			
+
 			mi.cargarMatriz();
 		}
 		else
@@ -565,7 +534,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		        mi.displayedCollection = [].concat(mi.rowCollection);
 			}
 		}, function(){
-			
+
 		});
 	}
 
@@ -576,8 +545,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		formatData.append("idObjeto", objetoId);
 		formatData.append("idTipoObjeto", tipoObjetoId);
 		formatData.append("t", moment().unix());
-		
-		
+
+
 		$http.post('/SDocumentosAdjuntos', formatData, {
 			headers: {'Content-Type': undefined},
 			transformRequest: angular.identity,
@@ -588,19 +557,19 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			}
 		});
 	}
-	
+
 	mi.descargarDocumento= function(row){
 		var url = "/SDocumentosAdjuntos?accion=getDescarga&id="+row.id;
 		window.location.href = url;
 	}
-	
+
 	mi.eliminarDocumento= function(row){
 		$http.post('/SDocumentosAdjuntos?accion=eliminarDocumento&id='+row.id)
 		.then(function successCAllback(response){
 			if (response.data.success){
 				var indice = mi.rowCollection.indexOf(row);
 				if (indice !== -1) {
-			       mi.rowCollection.splice(indice, 1);		       
+			       mi.rowCollection.splice(indice, 1);
 			    }
 				mi.rowCollection = [];
 				mi.getDocumentosAdjuntos(1, mi.prestamo.id);
@@ -622,7 +591,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 
 		});
 	}
-	
+
 	mi.cambioPagina=function(){
 		mi.cargarTabla(mi.paginaActual);
 	}
@@ -643,12 +612,12 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	};
 
 	mi.obtenerTotalPrestamos = function(){
-		$http.post('/SPrestamo', { accion: 'numeroPrestamos', 
-			filtro_nombre: mi.filtros['nombre'], filtro_codigo_presupuestario: mi.filtros['codigo_presupuestario'], 
-			filtro_numero_prestamo: mi.filtros['numero_prestamo'], filtro_usuario_creo: mi.filtros['usuario_creo'], 
+		$http.post('/SPrestamo', { accion: 'numeroPrestamos',
+			filtro_nombre: mi.filtros['nombre'], filtro_codigo_presupuestario: mi.filtros['codigo_presupuestario'],
+			filtro_numero_prestamo: mi.filtros['numero_prestamo'], filtro_usuario_creo: mi.filtros['usuario_creo'],
 			filtro_fecha_creacion: mi.filtros['fecha_creacion'], t:moment().unix()  } ).then(
 				function(response) {
-					mi.totalPrestamos = response.data.totalprestamos;
+					mi.totalProyectos = response.data.totalprestamos;
 					mi.paginaActual = 1;
 					mi.cargarTabla(mi.paginaActual);
 		});
@@ -737,17 +706,17 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		},'id','nombre', false, null);
 
 		resultado.then(function(itemSeleccionado) {
-			
+
 				mi.prestamo.cooperanteid= itemSeleccionado.id;
 				mi.prestamo.cooperantenombre = itemSeleccionado.siglas + " - " + itemSeleccionado.nombre;
-			
+
 				mi.cooperanteid= itemSeleccionado.id;
 				mi.cooperantenombre = itemSeleccionado.siglas + " - " + itemSeleccionado.nombre;
-			
+
 
 		});
 	};
-	
+
 	mi.abrirPopupFecha = function(index) {
 		if(index<1000){
 			mi.camposdinamicos[index].isOpen = true;
@@ -768,8 +737,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		}
 
 	};
-	
-	mi.buscarUnidadEjecutoraPrestamo = function() {	
+
+	mi.buscarUnidadEjecutoraPrestamo = function() {
 		var resultado = mi.llamarModalBusqueda('Unidades Ejecutoras','/SUnidadEjecutora', {
 			accion : 'totalElementos',
 			ejercicio: mi.ejercicio,
@@ -792,11 +761,11 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			mi.entidadnombre = itemSeleccionado.nombreEntidad;
 		});
 	};
-	
+
 	mi.buscarAutorizacionTipo = function() {
-		
+
 		var resultado = mi.llamarModalBusqueda('Tipos de Autorizaciones','/SAutorizacionTipo', {
-			accion : 'numeroAutorizacionTipo' ,t:moment().unix()	
+			accion : 'numeroAutorizacionTipo' ,t:moment().unix()
 		}, function(pagina, elementosPorPagina) {
 			return {
 				accion : 'getAutorizacionTipoPagin',
@@ -811,11 +780,11 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			mi.prestamo.tipoAutorizacionId = itemSeleccionado.id;
 		});
 	};
-	
+
 	mi.buscarInteresTipo = function() {
-		
+
 		var resultado = mi.llamarModalBusqueda('Tipos de Interes','/SInteresTipo', {
-			accion : 'numeroInteresTipo' ,t:moment().unix()	
+			accion : 'numeroInteresTipo' ,t:moment().unix()
 		}, function(pagina, elementosPorPagina) {
 			return {
 				accion : 'getAutorizacionTipoPagin',
@@ -830,11 +799,11 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			mi.prestamo.tipoInteresId = itemSeleccionado.id;
 		});
 	};
-	
+
 	mi.buscarTipoMoneda = function() {
-		
+
 		var resultado = mi.llamarModalBusqueda('Tipos de Moneda','/STipoMoneda', {
-			accion : 'numeroTipoMonedas',t:moment().unix()	
+			accion : 'numeroTipoMonedas',t:moment().unix()
 		}, function(pagina, elementosPorPagina) {
 			return {
 				accion : 'getTipoMonedaPagina',
@@ -849,11 +818,11 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			mi.prestamo.tipoMonedaId = itemSeleccionado.id;
 		});
 	};
-	
+
 	mi.buscarEstadoEjecucion = function() {
-		
+
 		var resultado = mi.llamarModalBusqueda('Estado de Ejecución','/SEjecucionEstado', {
-			accion : 'numeroEjecucionEstado' ,t:moment().unix()	
+			accion : 'numeroEjecucionEstado' ,t:moment().unix()
 		}, function(pagina, elementosPorPagina) {
 			return {
 				accion : 'getEjecucionEstadoPagina',
@@ -899,10 +868,10 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 				mi.prestamo.longitud = null;
 	    	}
 	    }, function() {
-	    	
+
 		});
 	  };
-	  
+
 	  mi.cargaSigade = function(){
 			var parametros = {
 					accion: 'getdatos',
@@ -920,16 +889,16 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 					mi.prestamo.nombre = mi.prestamo.nombre == null || mi.prestamo.nombre == undefined || mi.prestamo.nombre == '' ?
 							mi.prestamo.proyectoPrograma : mi.prestamo.nombre;
 					mi.cooperanteid = mi.prestamo.cooperanteid;
-					
+
 					mi.getPorcentajes();
 				}else{
 					$utilidades.mensaje('warning', 'No se encontraron datos con los parámetros ingresados');
 				}
-				
+
 			});
-			
+
 		};
-		
+
 		mi.buscarDirecotorProyecto = function() {
 			var resultado = mi.llamarModalBusqueda('Colaboradores','/SColaborador', {
 				accion : 'totalElementos', t:moment().unix()
@@ -950,7 +919,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 				mi.directorProyectoId = itemSeleccionado.id;
 			});
 		};
-		
+
 		mi.agregarImpacto = function() {
 
 			var modalInstance = $uibModal.open({
@@ -962,7 +931,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 				controllerAs : 'modalc',
 				backdrop : 'static',
 				size : 'md',
-				
+
 			});
 
 			modalInstance.result.then(function(resultado) {
@@ -974,14 +943,14 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			}, function() {
 			});
 		};
-		
+
 		mi.quitarImpacto = function(row){
 			var index = mi.impactos.indexOf(row);
 	        if (index !== -1) {
 	            mi.impactos.splice(index, 1);
 	        }
 		}
-		
+
 		mi.agregarMiembro = function() {
 			var resultado = mi.llamarModalBusqueda('Colaboradores','/SColaborador', {
 				accion : 'totalElementos', t:moment().unix()
@@ -1008,18 +977,18 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 				}
 			});
 		};
-		
+
 		mi.quitarMiembro = function(row){
 			var index = mi.miembros.indexOf(row);
 	        if (index !== -1) {
 	            mi.miembros.splice(index, 1);
 	        }
 		};
-		
-		
-		mi.buscarCodigoPresupuestario = function() {	
+
+
+		mi.buscarCodigoPresupuestario = function() {
 			var resultado = mi.llamarModalBusqueda('Código Presupuestario','/SDataSigade', {
-				accion : 'totalElementos',t:moment().unix()	
+				accion : 'totalElementos',t:moment().unix()
 			}, function(pagina, elementosPorPagina) {
 				return {
 					accion : 'getcodigos',
@@ -1033,10 +1002,10 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 					mi.prestamo.codigoPresupuestario = Number(itemSeleccionado.codigopresupuestario);
 					mi.cargaSigade();
 				}
-				
+
 			});
 		};
-		
+
 		if(mi.esTreeview){
 			  $http.post('/SProyecto', { accion : 'getProyectoPorId', id: $routeParams.id, t: (new Date()).getTime() }).then(function(response) {
 						if (response.data.success) {
@@ -1049,7 +1018,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 						}
 					});
 		  }
-		
+
 		mi.t_borrar = function(ev) {
 			if (mi.prestamo!=null && mi.prestamo.id!=null) {
 				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
@@ -1067,9 +1036,9 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 							$http.post('/SProyecto', datos).success(
 									function(response) {
 										if (response.success) {
-											
+
 											$utilidades.mensaje('success',$rootScope.etiquetas.proyecto+' borrado con éxito');
-											mi.prestamo = null;		
+											mi.prestamo = null;
 											$rootScope.$emit("eliminarNodo", {});
 										} else{
 											$utilidades.mensaje('danger',
@@ -1078,26 +1047,26 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 									});
 					}
 				}, function(){
-					
+
 				});
 			} else {
 				$utilidades.mensaje('warning',
 						'Debe seleccionar el '+$rootScope.etiquetas.proyecto+' que desee borrar');
 			}
 		};
-		
+
 		mi.t_cambiarNombreNodo = function(ev){
 			$rootScope.$emit("cambiarNombreNodo",mi.prestamo.nombre);
 			$rootScope.$emit("recargarArbol",mi.prestamo.id);
 		}
-		
+
 		mi.irAPeps=function(prestamoid){
 			if(mi.prestamo!=null){
 				$location.path('/pep/'+ prestamoid );
 			}
 		};
-		
-		
+
+
 		mi.cargarMatriz = function(){
 			mi.matriz_valid = null;
 			var parametros = {
@@ -1113,7 +1082,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 					mi.m_organismosEjecutores = response.data.unidadesEjecutoras;
 					$scope.m_componentes = response.data.componentes;
 					mi.m_existenDatos = response.data.existenDatos;
-					
+
 
 				}else{
 					$utilidades.mensaje('warning', 'No se encontraron datos con los parámetros ingresados');
@@ -1121,7 +1090,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			});
 
 		};
-		
+
 		mi.guardarMatriz = function(){
 			if (mi.matriz_valid && !mi.m_existenDatos && $scope.m_componentes.length > 0 ){
 				var parametros = {
@@ -1130,22 +1099,22 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 						prestamoId: mi.prestamo.id,
 					    t:moment().unix()
 				};
-	
+
 				$http.post('/SPrestamo', parametros).then(function(response){
-	
+
 					if (response.data.success){
 						mi.m_organismosEjecutores = response.data.unidadesEjecutoras;
 						$scope.m_componentes = response.data.componentes;
-						mi.m_existenDatos = true; 
+						mi.m_existenDatos = true;
 						return true;
 					}else{
 						return false;
 					}
-	
+
 				});
 			}
 		};
-		
+
 		mi.componenteSeleccionado = function(row){
 			if(mi.rowAnterior){
 				if(row != mi.rowAnterior){
@@ -1158,8 +1127,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			mi.rowAnterior = row;
 		};
 
-		
-		
+
+
 		$scope.$watch('m_componentes', function(componentes,componentesOld) {
 			mi.matriz_valid = 1;
 		     for (x in componentes){
@@ -1168,11 +1137,11 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		    		 totalUnidades = totalUnidades +  componentes[x].unidadesEjecutoras[j].prestamo;
 		    	 }
 		    	 mi.matriz_valid = mi.matriz_valid==1 &&  totalUnidades <= componentes[x].techo ? 1 : null;
-		    	 
+
 		     }
 		 },true);
-		
-		
+
+
 } ]);
 
 app.controller('buscarPorPrestamo', [ '$uibModalInstance',
@@ -1195,12 +1164,12 @@ function buscarPorPrestamo($uibModalInstance, $rootScope,$scope, $http, $interva
 
 	mi.itemSeleccionado = null;
 	mi.seleccionado = false;
-	
+
 	mi.showfilters = $showfilters;
 	mi.ejercicios = [];
 	mi.prestamos = [];
 	mi.titulo = $titulo;
-	
+
 	if(mi.showfilters){
 		var current_year = moment().year();
 		mi.entidad = $entidad;
@@ -1221,7 +1190,7 @@ function buscarPorPrestamo($uibModalInstance, $rootScope,$scope, $http, $interva
 					mi.cargarData(1,mi.ejercicio,mi.entidad.entidad);
 				});
 			}
-			
+
 		});
 	}
 	else{
@@ -1297,11 +1266,11 @@ function buscarPorPrestamo($uibModalInstance, $rootScope,$scope, $http, $interva
 	mi.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
 	};
-	
+
 	mi.cambioEjercicio= function(){
 		mi.cargarData(1,mi.ejercicio, mi.entidad.entidad);
 	}
-	
+
 	mi.cambioEntidad=function(selected){
 		if(selected!==undefined){
 			mi.entidad = selected.originalObject;
@@ -1313,9 +1282,9 @@ function buscarPorPrestamo($uibModalInstance, $rootScope,$scope, $http, $interva
 			});
 		}
 	};
-	
-	
-	
+
+
+
 }
 
 app.controller('modalAgregarImpacto', [ '$uibModalInstance',
@@ -1327,7 +1296,7 @@ function modalAgregarImpacto($uibModalInstance, $scope, $http, $interval,
 
 	var mi = this;
 	mi.impacto = {};
-	
+
 	mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {
 		var resultado = $q.defer();
 		var modalInstance = $uibModal.open({
@@ -1380,7 +1349,7 @@ function modalAgregarImpacto($uibModalInstance, $scope, $http, $interval,
 			mi.impacto.entidadId = itemSeleccionado.entidad;
 		});
 	};
-	
+
 	mi.ok = function() {
 		$uibModalInstance.close(mi.impacto);
 	};
