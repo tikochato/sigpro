@@ -45,7 +45,7 @@
 													</span></div></td>
 							<td style="padding: 0px 5px 0px 5px;"><div class="form-group" style="padding: 3px;"><input type="text" class="inputText" ng-model="row.monto" ng-required="true"
 												ng-value="row.monto" ng-required="true"
-												onblur="this.setAttribute('value', this.value);" ui-number-mask="0" style="text-align: right;" /></div></td>
+												onblur="this.setAttribute('value', this.value);" ui-number-mask="2" style="text-align: right;" /></div></td>
 							<td style="padding: 0px;"><div class="form-group" style="padding: 3px;" >
 								    <input type="text" class="inputText" ng-model="row.tipo_moneda_nombre"
 									ng-click="desembolsoc.buscarTipoMoneda('Tipo de Moneda','',$index)" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>

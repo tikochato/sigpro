@@ -73,8 +73,8 @@ public class PlanAdquisicionDAO {
 			CLogger.write("3", PlanAdquisicionDAO.class, e);
 		}
 		finally{
-			session.close();
 			retList = (retList.size()>0) ? retList : null;
+			session.close();
 		}
 		return retList!=null ? retList.get(0) : null;
 	}

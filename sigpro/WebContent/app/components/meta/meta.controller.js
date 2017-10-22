@@ -25,7 +25,7 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 			mi.planificado = null;
 			mi.real = null;
 			mi.planificadoActual = null;
-									
+						
 			mi.inicializarControlador = function(){
 				var objeto = mi.obtenerDatosPadre();
 				mi.fechaInicio = objeto.fechaInicio;
@@ -47,7 +47,7 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 				case "4": mi.nombreTipoPcp = "Subproducto"; break;
 				
 				}
-								
+				
 				$http.post('/SMeta', { accion: 'getMetasUnidadesMedida', t: (new Date()).getTime() }).success(
 						function(response) {
 							mi.metaunidades = response.MetasUnidades;
@@ -57,6 +57,7 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 										mi.cargarTabla();
 							});
 				});
+				
 			}
 			
 			mi.obtenerDatosPadre = function(){
@@ -511,7 +512,7 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 				}
 				else{
 					if(child_scope!=null)
-						child_scope.guardar(mensaje, mensaje_error);
+						child_scope(call_chain,mensaje, mensaje_error);
 					else{
 						$utilidades.mensaje('success',mensaje);
 					}
