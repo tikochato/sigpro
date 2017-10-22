@@ -39,7 +39,6 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import dao.ActividadDAO;
 import dao.ComponenteDAO;
-import dao.SubComponenteDAO;
 import dao.EstructuraProyectoDAO;
 import dao.HitoDAO;
 import dao.ProductoDAO;
@@ -51,6 +50,7 @@ import pojo.Hito;
 import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subproducto;
+import utilities.CLogger;
 import utilities.CProject;
 import utilities.Utils;
 
@@ -404,7 +404,6 @@ public class SGantt extends HttpServlet {
 		String items_subproducto="";
 		String items_producto="";
 		String items_componente="";
-		String items_subcomponente="";
 		String items="";
 
 		//predecesores = new HashMap<>();
@@ -498,52 +497,59 @@ public class SGantt extends HttpServlet {
 
 	
 	private String cargarProyecto(Integer proyectoId,String usuario, HashMap<Integer,List<Integer>> predecesores){
-		
-		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(proyectoId);
 		String items = "";
-		for(Object objeto : estructuraProyecto){
-			String item="";
-			Object[] obj = (Object[]) objeto;
-			Integer tipoObjeto =((BigInteger)obj[2]).intValue();
-			switch(tipoObjeto){
-				case 1:
-					item = construirItem((Integer)obj[0], (Integer)obj[0], OBJETO_ID_PROYECTO, (String)obj[1], 0, 
-							true, (Date)obj[5], null, false,(Integer) obj[6], (BigDecimal) obj[8], null, null);
-					
-					break;
-				case 2:
-					item = construirItem((Integer)obj[0], (Integer)obj[0], OBJETO_ID_SUBCOMPONENTE, (String)obj[1], 1, 
-							true, null, null, false,(Integer) obj[6], (BigDecimal) obj[8], null, null);
-					break;
-				case 3:
-//					BigDecimal metaPlanificada = MetaValorDAO.getMetaValorPorMetaTipoObjetoObjetoTipo(2, (Integer)obj[0], OBJETO_ID_PRODUCTO);
-//					BigDecimal metaReal = MetaValorDAO.getMetaValorPorMetaTipoObjetoObjetoTipo(1, (Integer)obj[0], OBJETO_ID_PRODUCTO);
-					
-					item = construirItem((Integer)obj[0], (Integer)obj[0], OBJETO_ID_PRODUCTO, (String)obj[1], 2, 
-							false, null, null, false,(Integer) obj[6], (BigDecimal) obj[8], null,null);
-					break;
-				case 4:
-					item = construirItem((Integer)obj[0], (Integer)obj[0], OBJETO_ID_SUBPRODUCTO, (String)obj[1], 3, 
-							false, null, null, false,(Integer) obj[6], (BigDecimal) obj[8], null, null);
-					break;
-				case 5:
-					item = construirItem((Integer)obj[0], (Integer)obj[0], OBJETO_ID_ACTIVIDAD, (String)obj[1], (obj[3]!=null) ?  (((String)obj[3]).length()/8 - 1 ) : 0, 
-							false, (Date)obj[4], (Date)obj[5], false,(Integer) obj[6],(BigDecimal) obj[8], null, null);
-					if (obj[10]!=null){
-						List<Integer> idPredecesores = new ArrayList<>();
-						idPredecesores.add(((BigInteger)obj[10]).intValue());
-						predecesores.put((Integer)obj[0], idPredecesores);
-					}
-					break;
-			}
+		try{
+			List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(proyectoId);
 			
-			items = String.join(items.length() > 0 ? "," : "", items,item);
+			for(Object objeto : estructuraProyecto){
+				String item="";
+				Object[] obj = (Object[]) objeto;
+				Integer tipoObjeto =((BigInteger)obj[2]).intValue();
+				switch(tipoObjeto){
+					case 0:
+						item = construirItem((Integer)obj[0], (Integer)obj[0], OBJETO_ID_PROYECTO, (String)obj[1], 0, 
+								true, (Date)obj[5], null, false,(Integer) obj[6], (BigDecimal) obj[8], null, null);
+						
+						break;
+					case 1:
+						item = construirItem((Integer)obj[0], (Integer)obj[0], OBJETO_ID_COMPONENTE, (String)obj[1], 1, 
+								true, null, null, false,(Integer) obj[6], (BigDecimal) obj[8], null, null);
+						break;
+						
+					case 2:
+						item = construirItem((Integer)obj[0], (Integer)obj[0], OBJETO_ID_SUBCOMPONENTE, (String)obj[1], 2, 
+								true, null, null, false,(Integer) obj[6], (BigDecimal) obj[8], null, null);
+						break;
+					case 3:
+	//					BigDecimal metaPlanificada = MetaValorDAO.getMetaValorPorMetaTipoObjetoObjetoTipo(2, (Integer)obj[0], OBJETO_ID_PRODUCTO);
+	//					BigDecimal metaReal = MetaValorDAO.getMetaValorPorMetaTipoObjetoObjetoTipo(1, (Integer)obj[0], OBJETO_ID_PRODUCTO);
+						
+						item = construirItem((Integer)obj[0], (Integer)obj[0], OBJETO_ID_PRODUCTO, (String)obj[1], 3, 
+								false, null, null, false,(Integer) obj[6], (BigDecimal) obj[8], null,null);
+						break;
+					case 4:
+						item = construirItem((Integer)obj[0], (Integer)obj[0], OBJETO_ID_SUBPRODUCTO, (String)obj[1], 4, 
+								false, null, null, false,(Integer) obj[6], (BigDecimal) obj[8], null, null);
+						break;
+					case 5:
+						item = construirItem((Integer)obj[0], (Integer)obj[0], OBJETO_ID_ACTIVIDAD, (String)obj[1], (obj[3]!=null) ?  (((String)obj[3]).length()/8 - 1 ) : 0, 
+								false, (Date)obj[4], (Date)obj[5], false,(Integer) obj[6],(BigDecimal) obj[8], null, null);
+						/*if (obj[10]!=null){
+							List<Integer> idPredecesores = new ArrayList<>();
+							idPredecesores.add(((BigInteger)obj[10]).intValue());
+							predecesores.put((Integer)obj[0], idPredecesores);
+						}*/
+						break;
+				}
+				
+				items = String.join(items.length() > 0 ? "," : "", items,item);
+			}
+		}catch(Exception e){
+			CLogger.write("6", SGantt.class, e);
 		}
 		return items;
 		
 	}
 	
-	
-
 
 }
