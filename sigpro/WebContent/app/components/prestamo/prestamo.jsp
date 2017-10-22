@@ -120,8 +120,10 @@
 			</div>
 		<div class="operation_buttons">
 			<div class="btn-group" ng-hide="prestamoc.esNuevo">
-				<label class="btn btn-default" ng-if="!prestamoc.esTreeview" ng-click="prestamoc.botones ? prestamoc.irAPeps(prestamoc.prestamo.id) : ''" uib-tooltip="PEPs" tooltip-placement="bottom">
-				<span class="glyphicon glyphicon-record"></span></label>
+				<label class="btn btn-default" ng-if="!prestamoc.esTreeview" ng-click="prestamoc.botones ? prestamoc.irAPepsArbol(prestamoc.prestamo.id) : ''" uib-tooltip="PEPs Árbol" tooltip-placement="bottom">
+				<span class="glyphicon">A</span></label>
+				<label class="btn btn-default" ng-if="!prestamoc.esTreeview" ng-click="prestamoc.botones ? prestamoc.irAPeps(prestamoc.prestamo.id) : ''" uib-tooltip="PEPs Lista" tooltip-placement="bottom">
+				<span class="glyphicon">L</span></label>
 			</div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="24020">

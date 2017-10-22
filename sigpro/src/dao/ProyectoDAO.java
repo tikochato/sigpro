@@ -48,6 +48,24 @@ public class ProyectoDAO implements java.io.Serializable  {
 		return ret;
 	}
 	
+	public static List<Proyecto> getProyectos(Integer prestamoId, String usuario){
+		List<Proyecto> ret = new ArrayList<Proyecto>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<Proyecto> criteria = session.createQuery("FROM Proyecto p where p.prestamo.id=:prestamo and p.id in (SELECT u.id.proyectoid from ProyectoUsuario u where u.id.usuario=:usuario ) and p.estado=1", Proyecto.class);
+			criteria.setParameter("prestamo", prestamoId);
+			criteria.setParameter("usuario", usuario);
+			ret =   criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("2", Proyecto.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
 	public static boolean guardarProyecto(Proyecto proyecto,boolean calcular_valores_agregados){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -76,7 +94,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 			ret = true;
 		}
 		catch(Throwable e){
-			CLogger.write("2", ProyectoDAO.class, e);
+			CLogger.write("3", ProyectoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -97,7 +115,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 			
 		}
 		catch(Throwable e){
-			CLogger.write("3", ProyectoDAO.class, e);
+			CLogger.write("4", ProyectoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -115,7 +133,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 		} catch (NoResultException e){
 		}
 		catch(Throwable e){
-			CLogger.write("3", ProyectoDAO.class, e);
+			CLogger.write("5", ProyectoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -134,7 +152,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 			ret = true;
 		}
 		catch(Throwable e){
-			CLogger.write("4", ProyectoDAO.class, e);
+			CLogger.write("6", ProyectoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -167,7 +185,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 			ret = criteria.getSingleResult();
 		}
 		catch(Throwable e){
-			CLogger.write("5", ProyectoDAO.class, e);
+			CLogger.write("7", ProyectoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -206,7 +224,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
-			CLogger.write("6", Proyecto.class, e);
+			CLogger.write("8", Proyecto.class, e);
 		}
 		finally{
 			session.close();
@@ -240,7 +258,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
-			CLogger.write("7", Proyecto.class, e);
+			CLogger.write("9", Proyecto.class, e);
 		}
 		finally{
 			session.close();
@@ -269,7 +287,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 		} catch (NoResultException e){
 		}
 		catch(Throwable e){
-			CLogger.write("8", ProyectoDAO.class, e);
+			CLogger.write("10", ProyectoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -290,7 +308,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 			ret =   criteria.getResultList();
 		}
 		catch(Throwable e){
-			CLogger.write("9", ProyectoDAO.class, e);
+			CLogger.write("11", ProyectoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -313,7 +331,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 		}
 		catch(Throwable e){
 			e.printStackTrace();
-			CLogger.write("10", Proyecto.class, e);
+			CLogger.write("12", Proyecto.class, e);
 		}
 		finally{
 			session.close();
@@ -331,7 +349,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 		} catch (NoResultException e){
 		}
 		catch(Throwable e){
-			CLogger.write("11", ProyectoDAO.class, e);
+			CLogger.write("13", ProyectoDAO.class, e);
 		}
 		return ret;
 	}
@@ -345,7 +363,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 			ret = true;
 		}
 		catch(Throwable e){
-			CLogger.write("12", ProyectoDAO.class, e);
+			CLogger.write("14", ProyectoDAO.class, e);
 			session.getTransaction().rollback();
 			session.close();
 		}
@@ -360,7 +378,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 			ret =   criteria.getResultList();
 		}
 		catch(Throwable e){
-			CLogger.write("13", Proyecto.class, e);
+			CLogger.write("15", Proyecto.class, e);
 		}
 		finally{
 			session.close();
@@ -391,7 +409,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 				costo = proyecto.getCosto();
 			}				
 		}catch(Exception e){
-			CLogger.write("14", Proyecto.class, e);
+			CLogger.write("16", Proyecto.class, e);
 		} 
 		
 		return costo;
@@ -433,7 +451,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 			}else if(fechaActual == null)
 				fechaActual = new DateTime(proyecto.getFechaInicio());	
 		}catch(Exception e){
-			CLogger.write("15", Proyecto.class, e);
+			CLogger.write("17", Proyecto.class, e);
 		}
 		
 		return fechaActual.toDate();
@@ -476,7 +494,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 					fechaActual = new DateTime(proyecto.getFechaFin());
 				
 		}catch(Exception e){
-			CLogger.write("16", Proyecto.class, e);
+			CLogger.write("18", Proyecto.class, e);
 		}
 		
 		return fechaActual.toDate();
@@ -532,7 +550,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 			}
 		}
 		catch(Throwable e){
-			CLogger.write("17", ProyectoDAO.class, e);
+			CLogger.write("19", ProyectoDAO.class, e);
 		}
 		
 	}
@@ -558,7 +576,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 		}
 		catch(Throwable e){
 			ret = false;
-			CLogger.write("18", ProyectoDAO.class, e);
+			CLogger.write("20", ProyectoDAO.class, e);
 		}
 		return ret;
 	}

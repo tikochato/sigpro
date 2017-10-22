@@ -21,17 +21,8 @@
 		    <div class="collapse navbar-collapse" id="navBar">
 	            <ul class="nav navbar-nav">
 	                <li>
-                    	<shiro:hasPermission name="37010"><a href="/main.jsp#!/prestamo"><span class="glyphicon" aria-hidden="true"></span>Préstamo</a></shiro:hasPermission>                       
+                    	<shiro:hasPermission name="37010"><a href="/main.jsp#!/prestamo"><span class="glyphicon" aria-hidden="true"></span>Préstamos</a></shiro:hasPermission>                       
                     </li>
-                    <shiro:hasPermission name="24010">
-	                    <li uib-dropdown>
-	                    	<a href="#" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> {{etiquetas.proyecto}}s <b class="caret"></b></a> 
-	                    	<ul class="dropdown-menu multi-level" role="menu" aria-labelledby="split-button">
-	                    		<li role="menuitem"><a href="/main_treeview.jsp">Árbol</a></li>
-	                    		<li role="menuitem"><a href="/main.jsp#!/pep"><span class="glyphicon" aria-hidden="true"></span>Lista</a></li>
-	                    	</ul>                      
-	                    </li>
-                    </shiro:hasPermission>
                     <shiro:hasPermission name="44010">
 	                    <li uib-dropdown>
 	                    	<a href="#" uib-dropdown-toggle><span class="glyphicon" aria-hidden="true"></span> Configuraciones <b class="caret"></b></a>

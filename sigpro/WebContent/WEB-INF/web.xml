@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" metadata-complete="false" version="3.1">
-  <display-name>Sigpro</display-name>
+  <display-name>Sipro</display-name>
   <welcome-file-list>
     <welcome-file>login.jsp</welcome-file>
   </welcome-file-list>
+  <jsp-config>
+    <jsp-property-group>
+        <url-pattern>*.jsp</url-pattern>
+    </jsp-property-group>
+    <jsp-property-group>
+        <url-pattern>*.jsx</url-pattern>
+    </jsp-property-group>
+  </jsp-config>
   <error-page>
     <error-code>500</error-code>
     <location>/error.jsp</location>

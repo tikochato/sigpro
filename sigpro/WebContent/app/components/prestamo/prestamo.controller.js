@@ -1097,6 +1097,12 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			}
 		};
 		
+		mi.irAPepsArbol=function(prestamoid){
+			if(mi.prestamo!=null){
+				$window.location='/main_treeview.jsp#!/'+ prestamoid;
+			}
+		};
+		
 		
 		mi.cargarMatriz = function(){
 			mi.matriz_valid = null;

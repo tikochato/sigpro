@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ page import="servlets.SLogin.stetiqueta" %>
-<script type="text/javascript">
 var app = angular.module('sipro',['ngRoute','ui.bootstrap','chart.js', 'loadOnDemand','ngAnimate',
                                        'ui.grid', 'ui.grid.treeView', 'ui.grid.selection','ui.grid.moveColumns', 'ui.grid.resizeColumns', 'ui.grid.saveState','ui.grid.pinning',
                                        'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize','ngFlash','ngUtilidades','documentoAdjunto','dialogoConfirmacion',
@@ -11,7 +10,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
 	   $locationProvider.hashPrefix('!');
 	   
 	$routeProvider
-	   		.when('/pep/:id/:nuevo?',{
+	   		.when('/pep/:prestamo_id/:id/:nuevo?',{
 	       		template: '<div load-on-demand="\'proyectoController\'" class="all_page"></div>'
 	       })
 	       .when('/componente/:proyecto_id/:id/:nuevo?',{
@@ -35,7 +34,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/hito/:proyecto_id/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'hitoController\'" class="all_page"></div>'
             })
-            .when("/:redireccion?",{
+            .when("/:prestamo_id",{
             	controller:"MainController"
             })
             /*.when('/salir',{
@@ -119,6 +118,13 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	mi.proyecto=null;
 	mi.nodo_seleccionado;
 	mi.nodos_expandidos=[];
+	mi.prestamoid=null;
+	
+	mi.letter=/^[0-9]+$/;  
+	if($location.$$path.substring(1).match(mi.letter))   
+	{  
+		mi.prestamoid=parseInt($location.$$path.substring(1));  
+	}  
 	
 	mi.tree_options={
 			allowDeselect: false
@@ -163,9 +169,12 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	$scope.device = deviceDetector;
 	
 	$rootScope.$on( "$routeChangeStart", function(event, next, current) {
-		if((mi.proyecto===undefined || mi.proyecto==null)){
-			if(next.$$route.originalPath!="/pep/:id")
-				$location.path('/main');				
+		if((mi.proyecto=== undefined || mi.proyecto==null)){
+			if(next!==undefined && next.$$route.originalPath!="/:prestamo_id" && next.$$route.originalPath!="/pep/:prestamo_id/:id?/:nuevo?")
+				$location.path('/main');
+			else if(next===undefined)
+				$location.path('/main');
+					
 		}
 	});
 	
@@ -185,7 +194,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 		mi.nodo_seleccionado = nodo;
 		switch(nodo.objeto_tipo){
 			case 0:
-				$location.path('/pep/'+nodo.id); break;
+				$location.path('/pep/'+mi.prestamoid+'/'+nodo.id); break;
 			case 1:
 				$location.path('/componente/'+nodo.parent.id+'/'+nodo.id); break;
 			case 2:
@@ -201,9 +210,9 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 		
 	}
 	
-	$http.post('/SProyecto', { accion: 'getProyectos'}).success(function(response) {
+	$http.post('/SProyecto', { accion: 'getProyectos', prestamoid: mi.prestamoid }).success(function(response) {
 		mi.proyectos = response.entidades;
-		if($location.$$path.substring(0,9)=='/prestamo' && $routeParams.id!==undefined && $routeParams.id>0){
+		if($location.$$path.substring(0,4)=='/pep' && $routeParams.id!==undefined && $routeParams.id>0){
 			for(var i = 0; i< mi.proyectos.length; i++){
 				if(mi.proyectos[i].id==$routeParams.id){
 					mi.proyecto = mi.proyectos[i];
@@ -244,7 +253,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 						mi.nodos_expandidos.push(mi.treedata.children[0]);
 						mi.setParentNode(mi.treedata);
 						mi.nodo_seleccionado = mi.treedata.children[0];
-						$location.path('/pep/'+mi.proyecto.id); 
+						$location.path('/pep/'+mi.prestamoid+'/'+mi.proyecto.id); 
 					}
 				});
 		}
@@ -329,5 +338,3 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	}
 	
 }]);
-
-</script>

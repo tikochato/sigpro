@@ -162,7 +162,8 @@ public class SProyecto extends HttpServlet {
 		String response_text = "";
 
 		if (accion.equals("getProyectos")) {
-			List<Proyecto> proyectos = ProyectoDAO.getProyectos(usuario);
+			Integer prestamoId = Utils.String2Int(map.get("prestamoid"), -1);
+			List<Proyecto> proyectos = ProyectoDAO.getProyectos(prestamoId, usuario);
 
 			response.setHeader("Content-Encoding", "gzip");
 			response.setCharacterEncoding("UTF-8");
@@ -780,17 +781,17 @@ public class SProyecto extends HttpServlet {
 				stcomponentessigade temp = new stcomponentessigade();
 				temp.id = componente.getId();
 				temp.nombre = componente.getNombre();
-				temp.techo = componente.getComponenteSigade().getMontoComponente();
+				temp.techo = (componente.getComponenteSigade()!=null) ? componente.getComponenteSigade().getMontoComponente() : null;
 				stcomponentes.add(temp);
 				
 				List<stunidadejecutora> stunidades = new ArrayList<stunidadejecutora>();
 				stunidad = new stunidadejecutora();
-				stunidad.donacion = componente.getFuenteDonacion().doubleValue();
-				stunidad.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
-				stunidad.nacional =  componente.getFuenteNacional().doubleValue();
-				stunidad.prestamo = componente.getFuentePrestamo().doubleValue();
-				stunidad.id = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
-				stunidad.nombre = componente.getUnidadEjecutora().getNombre();
+				stunidad.donacion = componente.getFuenteDonacion()!=null ? componente.getFuenteDonacion().doubleValue() : 0;
+				stunidad.ejercicio = componente.getUnidadEjecutora()!=null ? componente.getUnidadEjecutora().getId().getEjercicio() : 0;
+				stunidad.nacional =  componente.getFuenteNacional()!=null ? componente.getFuenteNacional().doubleValue() : 0;
+				stunidad.prestamo = componente.getFuentePrestamo()!=null ? componente.getFuentePrestamo().doubleValue() : 0;
+				stunidad.id = componente.getUnidadEjecutora()!=null ? componente.getUnidadEjecutora().getId().getUnidadEjecutora() : 0;
+				stunidad.nombre = componente.getUnidadEjecutora()!=null ? componente.getUnidadEjecutora().getNombre() : null;
 				stunidades.add(stunidad);
 				temp.unidadesEjecutoras = stunidades;
 				if (unidadesEjecutroas.size() == 0)
