@@ -15,6 +15,7 @@ app.controller('mapaController',['$scope','$rootScope','$http','$interval','i18n
 	$scope.mostrarTodo=true;
 	$scope.mostrarProyectos=true;
 	$scope.mostrarComponentes=true;
+	$scope.mostrarSubComponentes=true;
 	$scope.mostrarProductos = true;
 	$scope.mostrarSubproductos = true;
 	$scope.mostrarActividades = true;
@@ -92,6 +93,7 @@ app.controller('mapaController',['$scope','$rootScope','$http','$interval','i18n
 		 	case 0:
 		 		$scope.mostrarProyectos=$scope.mostrarTodo;
 		 		$scope.mostrarComponentes=$scope.mostrarTodo;
+		 		$scope.mostrarSubComponentes=$scope.mostrarTodo;
 		 		$scope.mostrarProductos = $scope.mostrarTodo;
 		 		$scope.mostrarSubproductos = $scope.mostrarTodo;
 		 		$scope.mostrarActividades = $scope.mostrarTodo;
@@ -99,11 +101,13 @@ app.controller('mapaController',['$scope','$rootScope','$http','$interval','i18n
 		 			mi.transclusionModel = [mi.transclusionData[0],mi.transclusionData[1],mi.transclusionData[2],mi.transclusionData[3]];
 		 			mi.estadoSubproductos = [mi.optionSubproductos[0],mi.optionSubproductos[1],mi.optionSubproductos[2]];
 		 			mi.estadoProductos = [mi.optionProductos[0],mi.optionProductos[1],mi.optionProductos[2]];
+		 			mi.estadoSubComponentes = [mi.optionSubComponentes[0],mi.optionSubComponentes[1],mi.optionSubComponentes[2]];
 		 			mi.estadoComponentes = [mi.optionComponentes[0],mi.optionComponentes[1],mi.optionComponentes[2]];
 		 		}else{
 		 			mi.transclusionModel = [];
 		 			mi.estadoSubproductos = [];
 		 			mi.estadoProductos = [];
+		 			mi.estadoSubComponentes = [];
 		 			mi.estadoComponentes = [];
 		 		}
 		 		for (x in $scope.marcas){
@@ -111,19 +115,28 @@ app.controller('mapaController',['$scope','$rootScope','$http','$interval','i18n
 				 }
 		 		break;
 		 	case 1:
-		 		mi.getMostrarTodo();
-		 		break;
-		 	case 2:
 		 		if ($scope.mostrarComponentes)
 		 			mi.estadoComponentes = [mi.optionComponentes[0],mi.optionComponentes[1],mi.optionComponentes[2]];
 		 		else
 		 			mi.estadoComponentes = [];
+		 		for (x in $scope.marcas){
+					 if ($scope.marcas[x].objetoTipoId==1 )
+						 $scope.marcas[x].mostrar = true;
+				 }
+		 		mi.getMostrarTodo();
+		 		break;
+		 	case 2:
+		 		if ($scope.mostrarSubComponentes)
+		 			mi.estadoSubComponentes = [mi.optionSubComponentes[0],mi.optionSubComponentes[1],mi.optionSubComponentes[2]];
+		 		else
+		 			mi.estadoSubComponentes = [];
 		 		for (x in $scope.marcas){
 					 if ($scope.marcas[x].objetoTipoId==2 )
 						 $scope.marcas[x].mostrar = true;
 				 }
 		 		mi.getMostrarTodo();
 		 		break;
+		 	
 		 	case 3:
 		 		if ($scope.mostrarProductos)
 		 			mi.estadoProductos = [mi.optionProductos[0],mi.optionProductos[1],mi.optionProductos[2]];
@@ -365,6 +378,62 @@ app.controller('mapaController',['$scope','$rootScope','$http','$interval','i18n
 			 onItemSelect: function(item) {
 				 for (x in $scope.marcas){
 					 if (item.id == 3){
+						 if ($scope.marcas[x].objetoTipoId==1 && $scope.marcas[x].porcentajeEstado >= 0 &&
+								 $scope.marcas[x].porcentajeEstado <= 40)
+							 $scope.marcas[x].mostrar = true;
+					 }else if (item.id == 2){
+						 if ($scope.marcas[x].objetoTipoId==1 && $scope.marcas[x].porcentajeEstado > 40 &&
+								 $scope.marcas[x].porcentajeEstado <= 60){
+							 $scope.marcas[x].mostrar = true;
+						 }
+					 }else if (item.id == 1){
+						 if ($scope.marcas[x].objetoTipoId==1 && $scope.marcas[x].porcentajeEstado > 60 &&
+								 $scope.marcas[x].porcentajeEstado <= 100){
+							 $scope.marcas[x].mostrar = true;
+						 }
+					 }
+				 }
+				 $scope.mostrarComponentes = true;
+				 if (mi.estadoComponentes.length == 3)
+					 mi.getMostrarTodo();
+			 },
+			 onItemDeselect:function(item) {
+				 
+				 for (x in $scope.marcas){
+					 if (item.id == 3){
+						 if ($scope.marcas[x].objetoTipoId==1 && $scope.marcas[x].porcentajeEstado >= 0 &&
+								 $scope.marcas[x].porcentajeEstado <= 40){
+							 $scope.marcas[x].mostrar = false;
+						 }
+					 }else if (item.id == 2){
+						 if ($scope.marcas[x].objetoTipoId==1 && $scope.marcas[x].porcentajeEstado > 40 &&
+								 $scope.marcas[x].porcentajeEstado <= 60){
+							 $scope.marcas[x].mostrar = false;
+						 }
+					 }else if (item.id == 1){
+						 if ($scope.marcas[x].objetoTipoId==1 && $scope.marcas[x].porcentajeEstado > 60 &&
+								 $scope.marcas[x].porcentajeEstado <= 100){
+							 $scope.marcas[x].mostrar = false;
+						 }
+					 }
+				 }
+				 $scope.mostrarTodo = false;
+				 
+				 if (mi.estadoComponentes.length == 0){
+					 $scope.mostrarComponentes = false;
+				 }
+				 
+			 }
+	 };
+
+	 mi.optionSubComponentes = [  { id: 1, label: 'Aceptacion' }, { id: 2, label: 'Advertencia' }, { id: 3, label: 'Riesgo' }]; 
+	 mi.extraSetingSubComponentes = { dynamicTitle: false, showCheckAll: false, showUncheckAll:false,};
+	 mi.estadoSubComponentes = [mi.optionSubComponentes[0],mi.optionSubComponentes[1],mi.optionSubComponentes[2]];
+	 
+	 mi.selectSubComponente = {
+			 onItemSelect: function(item) {
+				 for (x in $scope.marcas){
+					 if (item.id == 3){
 						 if ($scope.marcas[x].objetoTipoId==2 && $scope.marcas[x].porcentajeEstado >= 0 &&
 								 $scope.marcas[x].porcentajeEstado <= 40)
 							 $scope.marcas[x].mostrar = true;
@@ -380,8 +449,8 @@ app.controller('mapaController',['$scope','$rootScope','$http','$interval','i18n
 						 }
 					 }
 				 }
-				 $scope.mostrarComponentes = true;
-				 if (mi.estadoComponentes.length == 3)
+				 $scope.mostrarSubComponentes = true;
+				 if (mi.estadoSubComponentes.length == 3)
 					 mi.getMostrarTodo();
 			 },
 			 onItemDeselect:function(item) {
@@ -406,20 +475,18 @@ app.controller('mapaController',['$scope','$rootScope','$http','$interval','i18n
 				 }
 				 $scope.mostrarTodo = false;
 				 
-				 if (mi.estadoComponentes.length == 0){
-					 $scope.mostrarComponentes = false;
+				 if (mi.estadoSubComponentes.length == 0){
+					 $scope.mostrarSubComponentes = false;
 				 }
 				 
 			 }
 	 };
-
-	 
 	 
 	 
 	 mi.getMostrarTodo = function(){
-		 $scope.mostrarTodo = $scope.mostrarProyectos && $scope.mostrarComponentes && $scope.mostrarProductos
+		 $scope.mostrarTodo = $scope.mostrarProyectos && $scope.mostrarComponentes && $scope.mostrarSubComponentes && $scope.mostrarProductos
 			&& $scope.mostrarSubproductos && $scope.mostrarActividades && mi.transclusionModel.length == 4
-			&& mi.estadoSubproductos.length == 3 && mi.estadoProductos.length == 3 && mi.estadoComponentes.length == 3;
+			&& mi.estadoSubproductos.length == 3 && mi.estadoProductos.length == 3 && mi.estadoSubComponentes.length == 3 && mi.estadoComponentes.length == 3;
 	 }
 
 }]);
