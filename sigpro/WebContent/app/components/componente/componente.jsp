@@ -221,10 +221,24 @@
 						</div>
 						
 						<div class="form-group" >
-					       <input type="text" class="inputText" ng-model="componentec.componente.costoTecho" ng-value="componentec.componente.costoTecho" ui-number-mask="2"
+					       <input type="text" class="inputText" ng-model="componentec.componente.fuentePrestamo" ng-value="componentec.componente.fuentePrestamo" ui-number-mask="2"
 					        onblur="this.setAttribute('value', this.value);" style="text-align: left" 
-					       ng-readonly="componentec.componente.esDeSigade" />
-					       <label for="iprog" class="floating-label">Costo Techo</label>
+					       ng-readonly="true" />
+					       <label for="iprog" class="floating-label">Total de Fuente Prestamo Asignada</label>
+						</div>
+						
+						<div class="form-group" >
+					       <input type="text" class="inputText" ng-model="componentec.componente.fuenteDonacion" ng-value="componentec.componente.fuenteDonacion" ui-number-mask="2"
+					        onblur="this.setAttribute('value', this.value);" style="text-align: left" 
+					       ng-readonly="true" />
+					       <label for="iprog" class="floating-label">Total de Fuente Donación Asignada</label>
+						</div>
+						
+						<div class="form-group" >
+					       <input type="text" class="inputText" ng-model="componentec.componente.fuenteNacional" ng-value="componentec.componente.fuenteNacional" ui-number-mask="2"
+					        onblur="this.setAttribute('value', this.value);" style="text-align: left" 
+					       ng-readonly="true" />
+					       <label for="iprog" class="floating-label">Total de Fuente Nacional Asignada</label>
 						</div>
 						
 						<div class="form-group">
