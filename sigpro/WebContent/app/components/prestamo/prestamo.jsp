@@ -993,7 +993,7 @@
 						<thead>
 							<tr>
 								<th class="label-form" style="text-align: center; min-width:300px;">Nombre</th>
-								<th class="label-form" style="text-align: center; min-width: 140px;">Techo</th>
+								<th class="label-form" style="text-align: center; min-width: 155px;">Techo</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -1073,7 +1073,7 @@
 								 				<tr>
 								 			</table>
 								 		</td>
-								 		<td style="width: 150px; text-align: right;"
+								 		<td style="width: 155px; text-align: right;"
 								 		 	class="label-form"> {{ row.techo | formatoMillones : desembolsosc.enMillones }} 
 								 		 </td>
 								 	</tr>

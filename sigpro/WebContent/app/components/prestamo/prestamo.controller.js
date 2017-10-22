@@ -65,6 +65,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 
 	mi.m_organismosEjecutores = [];
 	$scope.m_componentes = [];
+	mi.totalIngresado  = 0;
 	
 	mi.matriz_valid = 1;
 	
@@ -401,6 +402,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 							mi.prestamo.usuarioCreo = response.data.usuarioCreo;
 							mi.prestamo.fechaCreacion = response.data.fechaCreacion;
 							mi.prestamo.usuarioActualizo = response.data.usuarioActualizo;
+							mi.prestamo.id = response.data.id;
 							
 							if(mi.esTreeview){
 								mi.t_cambiarNombreNodo();
@@ -409,7 +411,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 								mi.obtenerTotalPrestamos();
 							}
 							
-							if (mi.matriz_valid && !mi.m_existenDatos && $scope.m_componentes.length > 0 ){
+							if (mi.matriz_valid && !mi.m_existenDatos && mi.totalIngresado  > 0 && $scope.m_componentes.length > 0 ){
 								var parametros = {
 										accion: 'guardarMatriz',
 										estructura: JSON.stringify($scope.m_componentes),
@@ -419,8 +421,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 					
 								$http.post('/SPrestamo', parametros).then(function(response){
 									if (response.data.success){
-										mi.m_organismosEjecutores = response.data.unidadesEjecutoras;
-										$scope.m_componentes = response.data.componentes;
+										//mi.m_organismosEjecutores = response.data.unidadesEjecutoras;
+										//$scope.m_componentes = response.data.componentes;
 										mi.m_existenDatos = true; 
 
 										$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
@@ -434,7 +436,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 								$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 								mi.botones=true;
 							}
-							mi.cargarMatriz();
+							
 						}else{
 							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo');
 							mi.botones=true;
@@ -492,6 +494,16 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		mi.gridApi.selection.clearSelectedRows();
 		mi.prestamo = [];
 		$scope.active = 0;
+		
+		mi.rowCollectionComponentes = [];
+		mi.displayedCollectionComponentes = [];
+		mi.rowCollectionUE = [];
+		mi.displayCollectionUE = [];
+		mi.m_organismosEjecutores = [];
+		$scope.m_componentes = [];
+		mi.totalIngresado  = 0;
+		
+		mi.matriz_valid = 1;
 	};
 
 	mi.editar = function() {
@@ -1012,6 +1024,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 				if (itemSeleccionado!=null && itemSeleccionado != undefined){
 					mi.prestamo.codigoPresupuestario = Number(itemSeleccionado.codigopresupuestario);
 					mi.cargaSigade();
+					mi.cargarMatriz();
 					
 					$http.post('/SPrestamo', {
 						accion: 'getComponentesSigade',
@@ -1162,11 +1175,13 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		
 		$scope.$watch('m_componentes', function(componentes,componentesOld) {
 			mi.matriz_valid = 1;
+			mi.totalIngresado  = 0;
 		     for (x in componentes){
 		    	 var  totalUnidades = 0;
 		    	 for (j in componentes[x].unidadesEjecutoras){
 		    		 totalUnidades = totalUnidades +  componentes[x].unidadesEjecutoras[j].prestamo;
 		    	 }
+		    	 mi.totalIngresado = mi.totalIngresado + totalUnidades;
 		    	 mi.matriz_valid = mi.matriz_valid==1 &&  totalUnidades <= componentes[x].techo ? 1 : null;
 		    	 
 		     }
