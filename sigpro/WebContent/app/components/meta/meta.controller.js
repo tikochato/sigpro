@@ -28,10 +28,10 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 									
 			mi.inicializarControlador = function(){
 				var objeto = mi.obtenerDatosPadre();
-				mi.fechaInicio = moment(objeto.fechaInicio, 'DD/MM/YYYY').toDate();
-				mi.fechaFin = moment(objeto.fechaFin, 'DD/MM/YYYY').toDate();
-				var anioInicio = moment(objeto.fechaInicio, 'DD/MM/YYYY').year();
-				var anioFin = moment(objeto.fechaFin, 'DD/MM/YYYY').year();
+				mi.fechaInicio = objeto.fechaInicio;
+				mi.fechaFin = objeto.fechaFin;
+				var anioInicio = moment(objeto.fechaInicio).year();
+				var anioFin = moment(objeto.fechaFin).year();
 				for(a = anioInicio; a<=anioFin; a++){
 					mi.anios.push(a);
 				}
@@ -483,7 +483,7 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 			
 			mi.guardar = function(child_scope,call_chain, mensaje, mensaje_error){	
 				if(mi.metas!=null && mi.metas.length>0){
-					if(mi.objeto_tipo===null){
+					if(mi.objeto_id===null || mi.objeto_id==undefined){
 						mi.obtenerDatosPadre();
 					}
 					var metasArreglo = mi.metas.concat(mi.metasBorradas);
