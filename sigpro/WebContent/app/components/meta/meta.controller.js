@@ -47,7 +47,6 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 				case "4": mi.nombreTipoPcp = "Subproducto"; break;
 				
 				}
-				
 				$http.post('/SMeta', { accion: 'getMetasUnidadesMedida', t: (new Date()).getTime() }).success(
 						function(response) {
 							mi.metaunidades = response.MetasUnidades;
@@ -57,7 +56,6 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 										mi.cargarTabla();
 							});
 				});
-				
 			}
 			
 			mi.obtenerDatosPadre = function(){
