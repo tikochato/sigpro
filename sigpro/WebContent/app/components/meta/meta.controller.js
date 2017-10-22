@@ -27,30 +27,16 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 			mi.planificadoActual = null;
 						
 			mi.inicializarControlador = function(){
-				if($scope.$parent.controller){
-					mi.objeto_id = $scope.$parent.controller.proyecto.id;
-					mi.objeto_tipo = 0;
-					$scope.$parent.controller.child_metas = $scope.metac;
-				}else if($scope.$parent.componentec){
-					mi.objeto_id = $scope.$parent.componentec.componente.id;
-					mi.objeto_tipo = 1;
-					$scope.$parent.componentec.child_metas = $scope.metac;
-				}else if($scope.$parent.subcomponentec){
-					mi.objeto_id = $scope.$parent.subcomponentec.subcomponente.id;
-					mi.objeto_tipo = 2;
-					$scope.$parent.subcomponentec.child_metas = $scope.metac;
-				}else if($scope.$parent.producto){
-					mi.objeto_id = $scope.$parent.producto.producto.id;
-					mi.objeto_tipo = 3;
-					$scope.$parent.producto.child_metas = $scope.metac;
-				}else if($scope.$parent.subproducto){
-					mi.objeto_id = $scope.$parent.subproducto.subproducto.id;
-					mi.objeto_tipo = 4;
-					$scope.$parent.subproducto.child_metas = $scope.metac;
-				}else if($scope.$parent.actividadc){
-					mi.objeto_id = $scope.$parent.actividadc.actividad.id;
-					mi.objeto_tipo = 5;
-					$scope.$parent.actividadc.child_metas = $scope.metac;
+				var objeto = mi.obtenerDatosPadre();
+				mi.fechaInicio = objeto.fechaInicio;
+				mi.fechaFin = objeto.fechaFin;
+				var anioInicio = moment(objeto.fechaInicio).year();
+				var anioFin = moment(objeto.fechaFin).year();
+				for(a = anioInicio; a<=anioFin; a++){
+					mi.anios.push(a);
+				}
+				if(mi.anios.length>0){
+					mi.anio=mi.anios[0];
 				}
 				
 				switch(mi.objeto_tipo){
@@ -62,21 +48,6 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 				
 				}
 				
-				$http.post('/SMeta', { accion: 'getPcp', id: mi.objeto_id, tipo: mi.objeto_tipo, t: (new Date()).getTime()}).success(
-					function(response) {
-						mi.nombrePcp = response.nombre;
-						mi.fechaInicio = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
-						mi.fechaFin = moment(response.fechaFin, 'DD/MM/YYYY').toDate();
-						var anioInicio = moment(response.fechaInicio, 'DD/MM/YYYY').year();
-						var anioFin = moment(response.fechaFin, 'DD/MM/YYYY').year();
-						for(a = anioInicio; a<=anioFin; a++){
-							mi.anios.push(a);
-						}
-						if(mi.anios.length>0){
-							mi.anio=mi.anios[0];
-						}
-				});
-				
 				$http.post('/SMeta', { accion: 'getMetasUnidadesMedida', t: (new Date()).getTime() }).success(
 						function(response) {
 							mi.metaunidades = response.MetasUnidades;
@@ -86,6 +57,39 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 										mi.cargarTabla();
 							});
 				});
+				
+			}
+			
+			mi.obtenerDatosPadre = function(){
+				var objeto;
+				if($scope.$parent.controller){
+					objeto = $scope.$parent.controller.proyecto;
+					mi.objeto_tipo = 0;
+					$scope.$parent.controller.child_metas = $scope.metac;
+				}else if($scope.$parent.componentec){
+					objeto = $scope.$parent.componentec.componente;
+					mi.objeto_tipo = 1;
+					$scope.$parent.componentec.child_metas = $scope.metac;
+				}else if($scope.$parent.subcomponentec){
+					objeto = $scope.$parent.subcomponentec.subcomponente;
+					mi.objeto_tipo = 2;
+					$scope.$parent.subcomponentec.child_metas = $scope.metac;
+				}else if($scope.$parent.producto){
+					objeto = $scope.$parent.producto.producto;
+					mi.objeto_tipo = 3;
+					$scope.$parent.producto.child_metas = $scope.metac;
+				}else if($scope.$parent.subproducto){
+					objeto = $scope.$parent.subproducto.subproducto;
+					mi.objeto_tipo = 4;
+					$scope.$parent.subproducto.child_metas = $scope.metac;
+				}else if($scope.$parent.actividadc){
+					objeto = $scope.$parent.actividadc.actividad;
+					mi.objeto_tipo = 5;
+					$scope.$parent.actividadc.child_metas = $scope.metac;
+				}
+				
+				mi.objeto_id = objeto.id;
+				return objeto;
 			}
 			
 			mi.inicializarControlador();
@@ -480,6 +484,9 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 			
 			mi.guardar = function(child_scope,call_chain, mensaje, mensaje_error){	
 				if(mi.metas!=null && mi.metas.length>0){
+					if(mi.objeto_id===null || mi.objeto_id==undefined){
+						mi.obtenerDatosPadre();
+					}
 					var metasArreglo = mi.metas.concat(mi.metasBorradas);
 					
 					var metasJson = JSON.stringify(metasArreglo);
@@ -505,7 +512,7 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 				}
 				else{
 					if(child_scope!=null)
-						child_scope.guardar(mensaje, mensaje_error);
+						child_scope(call_chain,mensaje, mensaje_error);
 					else{
 						$utilidades.mensaje('success',mensaje);
 					}

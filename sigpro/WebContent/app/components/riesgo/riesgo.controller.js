@@ -65,6 +65,16 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			mi.parentController=$scope.$parent.subproducto;
 		}
 		
+		mi.actualizarObjetoId=function(){
+			switch(mi.objetoTipo){
+				case 0: mi.objetoId = $scope.$parent.controller.proyecto.id; break;
+				case 1: mi.objetoId = $scope.$parent.componentec.componente.id; break;
+				case 2: mi.objetoId = $scope.$parent.subcomponentec.subcomponente.id; break;
+				case 3: mi.objetoId = $scope.$parent.producto.producto.id; break;
+				case 4: mi.objetoId = $scope.$parent.subproducto.subproducto.id; break;
+			}
+		}
+		
 		mi.fechaOptions = {
 				formatYear : 'yy',
 				maxDate : new Date(2020, 5, 22),
@@ -96,30 +106,29 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		}
 		
 		mi.guardar=function(mensaje_success, mensaje_error){
-			
-				$http.post('/SRiesgo', {
-					accion: 'guardarRiesgos',
-					riesgos: JSON.stringify(mi.riesgos),
-					objetoTipo: mi.objetoTipo,
-					objetoId: mi.objetoId,
-					t: (new Date()).getTime()
-				}).success(function(response){
-					if(response.success){
-						var sids = response.ids.length>0 ? response.ids.split(",") : [];
-						for(var i = 0; i<sids.length; i++)
-							mi.riesgos[i].id = parseInt(sids[i]);
-						mi.cargarTabla();
-						$utilidades.mensaje('success',mensaje_success);
-						if(mi.parentController)
-							mi.parentController.botones=true;
-					}
-					else{
-						$utilidades.mensaje('danger',mensaje_error);
-						if(mi.parentController)
-							mi.parentController.botones=true;
-					}
-				});
-			
+			mi.actualizarObjetoId();
+			$http.post('/SRiesgo', {
+				accion: 'guardarRiesgos',
+				riesgos: JSON.stringify(mi.riesgos),
+				objetoTipo: mi.objetoTipo,
+				objetoId: mi.objetoId,
+				t: (new Date()).getTime()
+			}).success(function(response){
+				if(response.success){
+					var sids = response.ids.length>0 ? response.ids.split(",") : [];
+					for(var i = 0; i<sids.length; i++)
+						mi.riesgos[i].id = parseInt(sids[i]);
+					mi.cargarTabla();
+					$utilidades.mensaje('success',mensaje_success);
+					if(mi.parentController)
+						mi.parentController.botones=true;
+				}
+				else{
+					$utilidades.mensaje('danger',mensaje_error);
+					if(mi.parentController)
+						mi.parentController.botones=true;
+				}
+			});
 		};
 
 		mi.borrar = function(row) {
