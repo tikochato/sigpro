@@ -107,7 +107,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	};
 
 	mi.editarElemento = function (event) {
-        var filaId = angular.element(event.toElement).scope().rowRenderIndex;
+		var filaId = angular.element(event.toElement).scope().rowRenderIndex;
         mi.gridApi.selection.selectRow(mi.gridOpciones.data[filaId]);
         mi.editar();
     };
