@@ -172,7 +172,7 @@
 				            	<input type="text" class="inputText" ng-model="subproducto.coordenadas" ng-readonly="true" 
 				            		ng-value="subproducto.coordenadas" onblur="this.setAttribute('value', this.value);"
 				            		ng-click="subproducto.open(subproducto.subproducto.latitud, subproducto.subproducto.longitud); "/>
-				            	<span class="label-icon" ng-click="subproducto.open(subproducto.subproducto.latitud, subproducto.subproducto.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
+				            	<span class="label-icon" ng-click="subproducto.open(subproducto.subproducto.latitud, subproducto.subproducto.longitud); " tabindex="-1"><i class="glyphicon glyphicon-map-marker"></i></span>
 				            	<label class="floating-label">Coordenadas</label>
 					</div>
 
@@ -186,7 +186,7 @@
 			            <input type="text" class="inputText" ng-model="subproducto.tipoNombre" ng-readonly="true" ng-required="true" 
 			            	ng-value="subproducto.tipoNombre" onblur="this.setAttribute('value', this.value);" 
 			            	ng-click="subproducto.buscarTipo()"/>
-	            			<span class="label-icon" ng-click="subproducto.buscarTipo()"><i class="glyphicon glyphicon-search"></i></span>
+	            			<span class="label-icon" ng-click="subproducto.buscarTipo()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 			            <label class="floating-label">* Tipo</label>
 			        </div>
 			        
@@ -201,7 +201,7 @@
 			            <input type="text" class="inputText" ng-model="subproducto.unidadEjecutoraNombre" ng-readonly="true" 
 			            	ng-value="subproducto.unidadEjecutoraNombre" onblur="this.setAttribute('value', this.value);" 
 			            	ng-click="subproducto.buscarUnidadEjecutora()"/>
-			            <span class="label-icon" ng-click="subproducto.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
+			            <span class="label-icon" ng-click="subproducto.buscarUnidadEjecutora()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 			          <label class="floating-label">Unidad Ejecutora</label>
 			        </div>
 			        <div class="form-group" >
@@ -218,17 +218,7 @@
 						  initial-value="subproducto.subproducto.acumulacionCostoNombre" focus-out="subproducto.blurCategoria()" input-name="acumulacionCosto"></div>
 					</div>
 					
-					<div class = "row">
-						<div class="col-sm-6">
-							<div class="form-group">
-								<select class="inputText" ng-model="subproducto.duracionDimension"
-									ng-options="dim as dim.nombre for dim in subproducto.dimensiones track by dim.value"
-									 ng-required="true">
-								</select>
-								<label for="nombre" class="floating-label">* Dimension</label>
-							</div>
-						</div>
-							
+					<div class = "row">	
 						<div class="col-sm-6">
 							<div class="form-group">
 							   <input class="inputText"  type="number"
@@ -241,12 +231,22 @@
 						</div>
 							
 						<div class="col-sm-6">
+							<div class="form-group">
+								<select class="inputText" ng-model="subproducto.duracionDimension"
+									ng-options="dim as dim.nombre for dim in subproducto.dimensiones track by dim.value"
+									 ng-required="true">
+								</select>
+								<label for="nombre" class="floating-label">* Dimension</label>
+							</div>
+						</div>
+						
+						<div class="col-sm-6">
 							<div class="form-group" >
 							  <input type="text"  class="inputText" uib-datepicker-popup="{{subproducto.formatofecha}}" ng-model="subproducto.subproducto.fechaInicio" is-open="subproducto.fi_abierto"
 							            datepicker-options="subproducto.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="subproducto.cambioDuracion(subproducto.duracionDimension);" ng-required="true"  
 							            ng-value="subproducto.subproducto.fechaInicio" onblur="this.setAttribute('value', this.value);"
 							            ng-readonly="subproducto.subproducto.tieneHijos"/>
-							            <span class="label-icon" ng-click="subproducto.subproducto.tieneHijos!=true ? subproducto.abrirPopupFecha(1000) : ''">
+							            <span class="label-icon" ng-click="subproducto.subproducto.tieneHijos!=true ? subproducto.abrirPopupFecha(1000) : ''" tabindex="-1">
 							              <i class="glyphicon glyphicon-calendar"></i>
 							            </span>
 							  <label for="campo.id" class="floating-label">* Fecha de Inicio</label>
@@ -259,7 +259,7 @@
 							            datepicker-options="subproducto.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true" ng-click=""
 							            ng-value="subproducto.subproducto.fechaFin" onblur="this.setAttribute('value', this.value);"
 							            ng-readonly="true"/>
-							            <span class="label-icon" >
+							            <span class="label-icon" tabindex="-1">
 							              <i class="glyphicon glyphicon-calendar"></i>
 							            </span>
 							  <label for="campo.id" class="floating-label">* Fecha de Fin</label>

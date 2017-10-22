@@ -175,19 +175,9 @@
 												  local-data="actividadc.tipos" search-fields="nombre" title-field="nombre" field-required="true" field-label="* Tipo de Actividad"
 												  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
 												  initial-value="actividadc.actividad.actividadtiponombre" focus-out="actividadc.blurTipo()" input-name="tipo"></div>
-								<span class="label-icon"><i class="glyphicon glyphicon-search"></i></span>
+								<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 							</div>
 						<div class="row">
-							<div class="col-sm-6">
-								<div class="form-group">
-									<select class="inputText" ng-model="actividadc.duracionDimension"
-										ng-options="dim as dim.nombre for dim in actividadc.dimensiones track by dim.value"
-										 ng-required="true">
-									</select>
-									<label class="floating-label">* Dimension</label>
-								</div>
-							</div>
-							
 							<div class="col-sm-6">
 								<div class="form-group">
 								   <input class="inputText"  type="number"
@@ -200,12 +190,22 @@
 							</div>
 							
 							<div class="col-sm-6">
+								<div class="form-group">
+									<select class="inputText" ng-model="actividadc.duracionDimension"
+										ng-options="dim as dim.nombre for dim in actividadc.dimensiones track by dim.value"
+										 ng-required="true">
+									</select>
+									<label class="floating-label">* Dimension</label>
+								</div>
+							</div>
+							
+							<div class="col-sm-6">
 								<div class="form-group" >
 								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaInicio" is-open="actividadc.fi_abierto"
 								            datepicker-options="actividadc.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafin(); actividadc.cambioDuracion(actividadc.duracionDimension);" ng-required="true"  
 								            ng-value="actividadc.actividad.fechaInicio" onblur="this.setAttribute('value', this.value);"
 								             ng-readonly="actividadc.actividad.tieneHijos"/>
-								            <span class="label-icon" ng-click="actividadc.actividad.tieneHijos!=true ? actividadc.abrirPopupFecha(1000) : ''">
+								            <span class="label-icon" ng-click="actividadc.actividad.tieneHijos!=true ? actividadc.abrirPopupFecha(1000) : ''" tabindex="-1">
 								              <i class="glyphicon glyphicon-calendar"></i>
 								            </span>
 								  <label class="floating-label">*Fecha de Inicio</label>
@@ -219,7 +219,7 @@
 								            datepicker-options="actividadc.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafin()" ng-required="true"
 								            readonly="readonly"
 								            ng-value="actividadc.actividad.fechaFin" onblur="this.setAttribute('value', this.value);"/>
-								            <span class="label-icon" >
+								            <span class="label-icon" tabindex="-1">
 								              <i class="glyphicon glyphicon-calendar"></i>
 								            </span>
 								  <label class="floating-label">* Fecha de Fin</label>
@@ -246,12 +246,12 @@
 						  			field-label="{{actividadc.actividad.costo!=null && actividadc.actividad.costo>0 ? '* ':''}}Tipo Acumulación de Costo"
 									minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
 									initial-value="actividadc.actividad.acumulacionCostoNombre" focus-out="actividadc.blurAcumulacionCosto()" input-name="acumulacionCosto"></div>
-							<span class="label-icon"><i class="glyphicon glyphicon-search"></i></span>
+							<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 						</div>
 						<div class="form-group" >
 						    <input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="actividadc.coordenadas" ng-value="actividadc.coordenadas" 
 								            		ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); " onblur="this.setAttribute('value', this.value);" ng-readonly="true"/>
-							<span class="label-icon" ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
+							<span class="label-icon" ng-click="actividadc.open(actividadc.actividad.latitud, actividadc.actividad.longitud); " tabindex="-1"><i class="glyphicon glyphicon-map-marker"></i></span>
 							<label class="floating-label">Coordenadas</label>
 						</div>
 						

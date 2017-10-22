@@ -185,19 +185,19 @@
 						<div class="form-group">
 				            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="subcomponentec.unidadejecutoranombre" ng-readonly="true" 
 				            	ng-click="subcomponentec.buscarUnidadEjecutora()" ng-value="subcomponentec.unidadejecutoranombre" onblur="this.setAttribute('value', this.value);"/>
-				            <span class="label-icon" ng-click="subcomponentec.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
+				            <span class="label-icon" ng-click="subcomponentec.buscarUnidadEjecutora()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 				          	<label for="campo3" class="floating-label">Unidad Ejecutora</label>
 						</div>
 						<div class="form-group">
 				            <input type="text" class="inputText" id="icomptipo" name="icomptipo" ng-model="subcomponentec.subcomponentetiponombre" ng-readonly="true" ng-required="true" 
 				            	ng-click="subcomponentec.buscarSubComponenteTipo()" ng-value="subcomponentec.subcomponentetiponombre" onblur="this.setAttribute('value', this.value);"/>
-				            <span class="label-icon" ng-click="subcomponentec.buscarSubComponenteTipo()"><i class="glyphicon glyphicon-search"></i></span>
+				            <span class="label-icon" ng-click="subcomponentec.buscarSubComponenteTipo()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 				          	<label for="campo3" class="floating-label">* Tipo Subcomponente</label>
 						</div>
 						<div class="form-group" >
 						    <input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="subcomponentec.coordenadas" ng-value="subcomponentec.coordenadas" 
 								            		ng-click="subcomponentec.open(subcomponentec.subcomponente.latitud, subcomponentec.subcomponente.longitud); " onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="false"/>
-							<span class="label-icon" ng-click="subcomponentec.open(subcomponentec.subcomponente.latitud, subcomponentec.subcomponente.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
+							<span class="label-icon" ng-click="subcomponentec.open(subcomponentec.subcomponente.latitud, subcomponentec.subcomponente.longitud); " tabindex="-1"><i class="glyphicon glyphicon-map-marker"></i></span>
 							<label for="campo3" class="floating-label">Coordenadas</label>
 						</div>
 						
@@ -226,16 +226,6 @@
 						<div class = "row">
 							<div class="col-sm-6">
 								<div class="form-group">
-									<select class="inputText" ng-model="subcomponentec.duracionDimension"
-										ng-options="dim as dim.nombre for dim in subcomponentec.dimensiones track by dim.value"
-										 ng-required="true" ng-readonly="subcomponentec.subcomponente.tieneHijos">
-									</select>
-									<label for="nombre" class="floating-label">* Dimension</label>
-								</div>
-							</div>
-							
-							<div class="col-sm-6">
-								<div class="form-group">
 								   <input class="inputText"  type="number"
 								     ng-model="subcomponentec.subcomponente.duracion" ng-value="subcomponentec.subcomponente.duracion"   
 								     onblur="this.setAttribute('value', this.value);"  min="1" ng-required="true" 
@@ -246,11 +236,21 @@
 							</div>
 							
 							<div class="col-sm-6">
+								<div class="form-group">
+									<select class="inputText" ng-model="subcomponentec.duracionDimension"
+										ng-options="dim as dim.nombre for dim in subcomponentec.dimensiones track by dim.value"
+										 ng-required="true" ng-readonly="subcomponentec.subcomponente.tieneHijos">
+									</select>
+									<label for="nombre" class="floating-label">* Dimension</label>
+								</div>
+							</div>
+														
+							<div class="col-sm-6">
 								<div class="form-group" >
 								  <input type="text"  class="inputText" uib-datepicker-popup="{{subcomponentec.formatofecha}}" ng-model="subcomponentec.subcomponente.fechaInicio" is-open="subcomponentec.fi_abierto"
 								            datepicker-options="subcomponentec.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="subcomponentec.cambioDuracion(subcomponentec.duracionDimension);" ng-required="true"
 								            ng-value="subcomponentec.subcomponente.fechaInicio" onblur="this.setAttribute('value', this.value);" ng-readonly="subcomponentec.subcomponente.tieneHijos">
-								            <span class="label-icon" ng-click="subcomponentec.subcomponente.tieneHijos != true ? subcomponentec.abrirPopupFecha(1000) : ''">
+								            <span class="label-icon" ng-click="subcomponentec.subcomponente.tieneHijos != true ? subcomponentec.abrirPopupFecha(1000) : ''" tabindex="-1">
 								              <i class="glyphicon glyphicon-calendar"></i>
 								            </span>
 								  <label for="campo.id" class="floating-label">* Fecha de Inicio</label>
@@ -261,10 +261,10 @@
 								<div class="form-group" >
 								  <input type="text"  class="inputText" uib-datepicker-popup="{{subcomponentec.formatofecha}}" ng-model="subcomponentec.subcomponente.fechaFin" is-open="subcomponentec.ff_abierto"
 								            datepicker-options="subcomponentec.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true"
-								            ng-readonly="subcomponentec.subcomponente.tieneHijos"
+								            ng-readonly="true"
 								            ng-value="subcomponentec.subcomponente.fechaFin" onblur="this.setAttribute('value', this.value);"
 								            ng-readonly="true"/>
-								            <span class="label-icon" ng-click="subcomponentec.subcomponente.tieneHijos != true ? subcomponentec.abrirPopupFecha(1001) : ''">
+								            <span class="label-icon" tabindex="-1">
 								              <i class="glyphicon glyphicon-calendar"></i>
 								            </span>
 								  <label for="campo.id" class="floating-label">* Fecha de Fin</label>

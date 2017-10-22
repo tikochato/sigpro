@@ -25,7 +25,7 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 			mi.planificado = null;
 			mi.real = null;
 			mi.planificadoActual = null;
-						
+									
 			mi.inicializarControlador = function(){
 				var objeto = mi.obtenerDatosPadre();
 				mi.fechaInicio = objeto.fechaInicio;
@@ -58,6 +58,40 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 							});
 				});
 				
+			}
+			
+			mi.obtenerDatosPadre = function(){
+				var objeto;
+				var objeto = mi.obtenerDatosPadre();
+				mi.fechaInicio = objeto.fechaInicio;
+				mi.fechaFin = objeto.fechaFin;
+				var anioInicio = moment(objeto.fechaInicio).year();
+				var anioFin = moment(objeto.fechaFin).year();
+				for(a = anioInicio; a<=anioFin; a++){
+					mi.anios.push(a);
+				}
+				if(mi.anios.length>0){
+					mi.anio=mi.anios[0];
+				}
+				
+				switch(mi.objeto_tipo){
+				case "0": mi.nombreTipoPcp = $rootScope.etiquetas.proyecto; break;
+				case "1": mi.nombreTipoPcp = "Componente"; break;
+				case "2": mi.nombreTipoPcp = "Subcomponente"; break;
+				case "3": mi.nombreTipoPcp = "Producto"; break;
+				case "4": mi.nombreTipoPcp = "Subproducto"; break;
+				
+				}
+								
+				$http.post('/SMeta', { accion: 'getMetasUnidadesMedida', t: (new Date()).getTime() }).success(
+						function(response) {
+							mi.metaunidades = response.MetasUnidades;
+							$http.post('/SDatoTipo', { accion: 'cargarCombo', t: (new Date()).getTime() }).success(
+									function(response) {
+										mi.datoTipos = response.datoTipos;
+										mi.cargarTabla();
+							});
+				});
 			}
 			
 			mi.obtenerDatosPadre = function(){

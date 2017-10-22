@@ -14,10 +14,13 @@ import dao.ActividadDAO;
 import dao.AcumulacionCostoDAO;
 import dao.ComponenteDAO;
 import dao.ComponenteTipoDAO;
+import dao.PrestamoDAO;
 import dao.ProductoDAO;
 import dao.ProgramaDAO;
 import dao.ProyectoDAO;
 import dao.ProyectoTipoDAO;
+import dao.SubComponenteDAO;
+import dao.SubComponenteTipoDAO;
 import dao.SubproductoDAO;
 import dao.UnidadEjecutoraDAO;
 import net.sf.mpxj.ProjectFile;
@@ -33,6 +36,7 @@ import pojo.AcumulacionCosto;
 import pojo.Componente;
 import pojo.ComponenteTipo;
 import pojo.Etiqueta;
+import pojo.Prestamo;
 import pojo.Producto;
 import pojo.ProductoTipo;
 import pojo.Programa;
@@ -41,6 +45,8 @@ import pojo.ProgramaProyectoId;
 import pojo.ProgramaTipo;
 import pojo.Proyecto;
 import pojo.ProyectoTipo;
+import pojo.Subcomponente;
+import pojo.SubcomponenteTipo;
 import pojo.Subproducto;
 import pojo.SubproductoTipo;
 import pojo.UnidadEjecutora;
@@ -82,11 +88,6 @@ public class CProject {
 	String itemsProject;
 	boolean multiproyecto;
 	private Long proyectoId;
-	
-	
-	
-
-
 	int contComponente = 0;
 	int contProducto = 0;
 	int contSubproducto = 0;
@@ -130,12 +131,12 @@ public class CProject {
 	}
 
 	public boolean imporatarArchivo(ProjectFile projectFile, String usuario,boolean multiproyecto,
-			Integer proyectoId, boolean marcarCargado){
+			Integer proyectoId, boolean marcarCargado,Integer prestamoId){
 		itemsProject = "";
 		items = new HashMap<>();
 		this.multiproyecto = multiproyecto; 
 		
-		return getTask(projectFile,usuario, proyectoId, marcarCargado);
+		return getTask(projectFile,usuario, proyectoId, marcarCargado,prestamoId);
 	}
 	
 	public Programa crearPrograma(Task task,String usuario){
@@ -164,14 +165,15 @@ public class CProject {
 		return ProgramaDAO.guardarPrograma(programa);
 	}
 	
-	public Proyecto crearProyecto(Task task,String usuario){
+	public Proyecto crearProyecto(Task task,String usuario,Integer prestamoId){
 		ProyectoTipo proyectoTipo = ProyectoTipoDAO.getProyectoTipoPorId(PROYECTO_TIPO_ID_DEFECTO);
 		Etiqueta etiqueta = new Etiqueta();
 		etiqueta.setId(PROYECTO_ETIQUETA_DEFECTO);
 		AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
+		Prestamo prestamo = PrestamoDAO.getPrestamoById(prestamoId);
 		
 		UnidadEjecutora unidadEjecturoa = UnidadEjecutoraDAO.getUnidadEjecutora(new DateTime().getYear(),ENTIDAD_ID_DEFECTO,UNIDAD_EJECUTORA_ID_DEFECTO);
-		Proyecto proyecto = new Proyecto(acumulacionCosto,null, etiqueta,null,proyectoTipo, unidadEjecturoa
+		Proyecto proyecto = new Proyecto(acumulacionCosto,null, etiqueta,prestamo,proyectoTipo, unidadEjecturoa
 				, task.getName(), null, usuario, null, new Date(), null, 1, null, null, null, null, 
 				null, null, null,null, null, null, new BigDecimal(task.getCost().toString()),null, null, null,null,
 				Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish()),
@@ -200,40 +202,40 @@ public class CProject {
 		return ComponenteDAO.guardarComponente(componente, false) ? componente : null;
 	}
 
-	//TODO: agregar subcomponente
-//	public Subcomponente crearSubComponente(Task task,Proyecto proyecto ,String usuario){
-//		
-//		
-//		SubcomponenteTipo componenteTipo = SubComponenteTipoDAO.getSubComponenteTipoPorId(COMPONENTE_TIPO_ID_DEFECTO);
-//		
-//		int year = new DateTime().getYear();
-//		UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(year, ENTIDAD_ID_DEFECTO, UNIDAD_EJECUTORA_ID_DEFECTO);
-//		AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
-//		
-//		
-//		Subcomponente subcomponente = new Subcomponente(acumulacionCosto,componenteTipo, proyecto, unidadEjecutora, task.getName()
-//				, null,usuario, null, new Date(), null, 1, null, null, null, null, null, null, null, null, 
-//				new BigDecimal(task.getCost().toString()),null,null,Utils.setDateCeroHoras(task.getStart()),
-//				Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
-//				, task.getDuration().getUnits().getName(),null,null,1,0,null,null,null,null);
-//		
-//		return SubComponenteDAO.guardarSubComponente(subcomponente, false) ? subcomponente : null;
-//	}
+
+	public Subcomponente crearSubComponente(Task task,Componente componente ,String usuario){
+		
+		
+		SubcomponenteTipo componenteTipo = SubComponenteTipoDAO.getSubComponenteTipoPorId(COMPONENTE_TIPO_ID_DEFECTO);
+		
+		int year = new DateTime().getYear();
+		UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(year, ENTIDAD_ID_DEFECTO, UNIDAD_EJECUTORA_ID_DEFECTO);
+		AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
+		
+		
+		Subcomponente subcomponente = new Subcomponente(acumulacionCosto,componente,componenteTipo,  unidadEjecutora, task.getName()
+				, null,usuario, null, new Date(), null, 1, null, null, null, null, null, null, null, null, 
+				new BigDecimal(task.getCost().toString()),null,null,Utils.setDateCeroHoras(task.getStart()),
+				Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
+				, task.getDuration().getUnits().getName(),null,null,2,null,null,null);
+		
+		return SubComponenteDAO.guardarSubComponente(subcomponente, false) ? subcomponente : null;
+	}
 	
-	public Producto crearProducto (Task task, Componente componente,String usuario){
+	public Producto crearProducto (Task task, Componente componente,Subcomponente subcomponente,String usuario){
 		
 		ProductoTipo productoTipo = new ProductoTipo();
 		productoTipo.setId(PRODUCTO_TIPO_ID_DEFECTO);
 		UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(new DateTime().getYear(), ENTIDAD_ID_DEFECTO, UNIDAD_EJECUTORA_ID_DEFECTO);
 		AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
 		
-		Producto producto = new Producto(acumulacionCosto,componente, productoTipo,null, unidadEjecutora
+		Producto producto = new Producto(acumulacionCosto,null, productoTipo,subcomponente, unidadEjecutora
 				,task.getName() , null, usuario, null, new Date(), null,1, 
 				 null, null, null, null, null, null, null, 
 				null, null, new BigDecimal(task.getCost().toString()),null,null,
 				Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
 				, task.getDuration().getUnits().getName(),
-				null,null,2,null,null,null);
+				null,null,3,null,null,null);
 		
 		return ProductoDAO.guardarProducto(producto, false) ? producto : null;
 	}
@@ -251,7 +253,7 @@ public class CProject {
 				new BigDecimal(task.getCost().toString()),null,null,
 				Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
 				, task.getDuration().getUnits().getName(),
-				null,null,3,null,null);
+				null,null,4,null,null);
 		
 		return SubproductoDAO.guardarSubproducto(subproducto, false) ? subproducto : null;
 	}
@@ -307,18 +309,10 @@ public class CProject {
 	}
 	
 
-	public  boolean getTask(ProjectFile projectFile,String usuario,Integer proyectoId, boolean marcarCargado){
-		
+	public  boolean getTask(ProjectFile projectFile,String usuario,Integer proyectoId, boolean marcarCargado,Integer prestamoId){
 		
 		itemsProject = "";
 		items = new HashMap<>();
-		
-		
-/*		if (!multiproyecto){
-			List<Actividad> actividades = ActividadDAO.obtenerActividadesHijas(id);
-			for (Actividad actividad : actividades)
-				ActividadDAO.guardarActividad(actividad, true);
-		} */
 		
 		Proyecto proyecto = null;
 		List<Componente> componentes = null;
@@ -327,9 +321,8 @@ public class CProject {
 			componentes = ComponenteDAO.getComponentesPorProyecto(proyectoId);
 			
 		}
-		
-		Integer ret = listaJerarquica(projectFile.getChildTasks().get(0),usuario,null,1,multiproyecto ? 0 : 1,
-				proyecto,  componentes,marcarCargado,0);
+		Integer ret = listaJerarquica(projectFile.getChildTasks().get(0),usuario,null,0,multiproyecto ? -1 : 0,
+				proyecto,  componentes,marcarCargado,0,prestamoId);
 		ProyectoDAO.calcularCostoyFechas(ret);
 		return ret > 0;
 		
@@ -338,7 +331,8 @@ public class CProject {
 	
 	
 	private Integer listaJerarquica(Task task,String usuario,Object objeto,int objetoTipo, int nivel,
-			Proyecto proyecto_, List<Componente> componentes, boolean marcarCargado, int posicionComponente){
+			Proyecto proyecto_, List<Componente> componentes, boolean marcarCargado, int posicionComponente,
+			Integer prestamoId){
 		Integer ret = 1;
 		Integer ret_hijos=1;
 		try{
@@ -348,31 +342,30 @@ public class CProject {
 			Method getTreePath =  (objeto!=null) ? objeto.getClass().getMethod("getTreePath") : null;
 			Integer objetoTipoTemp=0;
 			switch(nivel){
-				case 0:
+				case -1:
 					objeto_temp = crearPrograma(task, usuario);
 					ret = ((Programa) objeto_temp).getId();
 					break;
-				case 1:
+				case 0:
 					Proyecto proyecto;
 					if (marcarCargado){
 						proyecto =  proyecto_ ;
 						proyecto.setProjectCargado(1);
 						ProyectoDAO.guardarProyecto(proyecto, false);
 					}else{
-						proyecto =  crearProyecto(task, usuario);
+						proyecto =  crearProyecto(task, usuario,prestamoId);
 					}
 					
 					if (objeto != null){
 						crearProgramaProyecto(proyecto,(Programa)objeto, usuario);
-						objetoTipoTemp=1;
+						objetoTipoTemp=0;
 					}
 					ret = proyecto.getId();
 					objeto_temp=(Object)proyecto;
 					break;
-				case 2:
+				case 1:
 					if(tieneHijos){
-						
-						objetoTipoTemp=2;
+						objetoTipoTemp=1;
 						Componente componente = null;
 						if (marcarCargado){
 							 componente =  componentes.size() > posicionComponente 
@@ -381,7 +374,7 @@ public class CProject {
 							componente =  crearComponente(task, (Proyecto) objeto, usuario);
 						}
 						
-						ret = componente.getId();
+						ret = componente!= null ? componente.getId() : 1;
 						objeto_temp = (Object)componente;
 					}
 					else{
@@ -396,11 +389,36 @@ public class CProject {
 						}
 					}
 					break;
+				case 2:
+					if (objeto != null){
+						if(tieneHijos){
+							
+							objetoTipoTemp=2;
+							Subcomponente subcomponente = null;
+							subcomponente =  crearSubComponente(task,(Componente) objeto, usuario);
+							
+							
+							ret = subcomponente.getId();
+							objeto_temp = (Object)subcomponente;
+						}
+						else{
+							if (objeto != null){
+								objetoTipoTemp=5;
+								Componente objeto_padre = ((Componente) objeto);
+								Actividad actividad = crearActividad(task, usuario,objeto_padre.getId(),1 
+									,2,objeto_padre.getTreePath(),objeto_padre.getId(),null,null);
+								cargarItem(task,actividad.getId(), 5,2);
+								ret = actividad.getId();
+								objeto_temp = (Object)actividad;
+							}
+						}
+					}
+					break;
 				case 3:
 					if (objeto != null){
 						if(tieneHijos){
 							objetoTipoTemp=3;
-							Producto producto =  crearProducto(task, (Componente) objeto, usuario);
+							Producto producto =  crearProducto(task, null,(Subcomponente) objeto, usuario);
 							ret = producto.getId();
 							objeto_temp = (Object)producto;
 						}
@@ -445,7 +463,7 @@ public class CProject {
 			}
 			for (Task child : task.getChildTasks())
 				ret_hijos=ret_hijos>0 ? listaJerarquica(child,usuario,objeto_temp,objetoTipoTemp,nivel+1,
-						proyecto_,componentes, marcarCargado, posicionComponente++) : -1;
+						proyecto_,componentes, marcarCargado, posicionComponente++,prestamoId) : -1;
 			
 		}
 		catch(Exception e){

@@ -61,6 +61,8 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	
 	mi.prestamoNombre = "";
 	mi.objetoTipoNombre = "";
+	mi.m_organismosEjecutores = [];
+	mi.m_componentes = [];
 	
 	$http.post('/SPrestamo', { accion: 'obtenerPrestamoPorId', id: mi.prestamoid, t: (new Date()).getTime() }).success(
 		function(response) {
@@ -400,6 +402,19 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				
 			});
 			
+			parametros = {
+					accion: 'obtenerMatriz',
+					proyectoId: mi.proyecto!=''? mi.proyecto.id:0,
+				    t:moment().unix()
+			}
+			
+			$http.post('/SProyecto', parametros).then(function(response){
+				mi.m_organismosEjecutores = response.data.unidadesEjecutoras;
+				mi.m_componentes = response.data.componentes;
+				mi.m_existenDatos = response.data.existenDatos;
+				
+			});
+			
 			mi.getDocumentosAdjuntos(1, mi.proyecto.id);
 			$scope.active = 0;
 			
@@ -694,7 +709,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 		});
 	};
 	
-	mi.llamarModalArchivo = function(proyectoId, completadoSigade) {
+	mi.llamarModalArchivo = function(proyectoId, completadoSigade, prestamoId) {
 		var resultado = $q.defer();
 		var modalInstance = $uibModal.open({
 			animation : 'true',
@@ -712,6 +727,9 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				$completadoSigade : function() {
 					return completadoSigade;
 				},
+				$prestamoId : function() {
+					return prestamoId;
+				}
 				
 				
 			}
@@ -724,7 +742,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	};
 	
 	mi.cargarArchivo = function() {
-		var resultado = mi.llamarModalArchivo( 0, 1);
+		var resultado = mi.llamarModalArchivo( 0, 1,mi.prestamoid);
 
 		resultado.then(function(resultado) {
 			mi.mostrarcargando=false;
@@ -740,7 +758,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	
 	mi.completarConArchivo = function() {
 		var resultado = mi.llamarModalArchivo(mi.proyecto!=null && mi.proyecto != undefined ? mi.proyecto.id : 0, 
-				mi.proyecto!=null && mi.proyecto != undefined ? mi.proyecto.projectCargado: 1);
+				mi.proyecto!=null && mi.proyecto != undefined ? mi.proyecto.projectCargado: 1,0);
 
 		resultado.then(function(resultado) {
 			mi.mostrarcargando=false;
@@ -1221,10 +1239,10 @@ app.directive('rightClick', function($parse) {
 
 app.controller('cargararchivoController', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log','$q','$proyectoId','$completadoSigade', cargararchivoController ]);
+	'$timeout', '$log','$q','$proyectoId','$completadoSigade','$prestamoId', cargararchivoController ]);
 
 function cargararchivoController($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log,$q,$proyectoId,$completadoSigade) {
+	i18nService, $utilidades, $timeout, $log,$q,$proyectoId,$completadoSigade,$prestamoId) {
 
 	var mi = this;
 	mi.mostrar = true;
@@ -1278,6 +1296,7 @@ function cargararchivoController($uibModalInstance, $scope, $http, $interval,
 			formatData.append("multiproyecto",mi.multiproyecto ? 1 : 0);
 			formatData.append("marcarCargado",mi.proyectoId > 0  ? 1 : 0);
 			formatData.append("proyecto_id",$proyectoId);
+			formatData.append("prestamoId", $prestamoId);
 			formatData.append("t",moment().unix());
 			
 			$http.post('/SGantt',formatData, {

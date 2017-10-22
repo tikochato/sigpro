@@ -267,8 +267,8 @@ public class SPrestamo extends HttpServlet {
 				
 				temp.usuarioCreo = prestamo.getUsuarioCreo();
 				temp.usuarioActualizo = prestamo.getUsuarioActualizo();
-				temp.fechaCreacion = Utils.formatDate(prestamo.getFechaCreacion());
-				temp.fechaActualizacion = Utils.formatDate(prestamo.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(prestamo.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(prestamo.getFechaActualizacion());
 				
 				
 					response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
@@ -473,7 +473,13 @@ public class SPrestamo extends HttpServlet {
 				result = PrestamoDAO.guardarPrestamo(prestamo);
 				
 			}
-			response_text = String.join("","{ \"success\": ",(result ? "true" : "false")," }");
+			response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
+					+ "\"id\": " + prestamo.getId() ,","
+					, "\"usuarioCreo\": \"" , prestamo.getUsuarioCreo(),"\","
+					, "\"fechaCreacion\":\" " , Utils.formatDateHour(prestamo.getFechaCreacion()),"\","
+					, "\"usuarioActualizo\": \"" , prestamo.getUsuarioActualizo() != null ? prestamo.getUsuarioActualizo() : "","\","
+					, "\"fechaActualizacion\": \"" , Utils.formatDateHour(prestamo.getFechaActualizacion()),"\""+
+					" }");
 		}else if(accion.equals("getPrestamosPagina")){
 			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
 			int elementosPorPagina = map.get("elementosPorPagina")!=null  ? Integer.parseInt(map.get("elementosPorPagina")) : 0;
@@ -569,8 +575,8 @@ public class SPrestamo extends HttpServlet {
 				
 				temp.usuarioCreo = prestamo.getUsuarioCreo();
 				temp.usuarioActualizo = prestamo.getUsuarioActualizo();
-				temp.fechaCreacion = Utils.formatDate(prestamo.getFechaCreacion());
-				temp.fechaActualizacion = Utils.formatDate(prestamo.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(prestamo.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDateHour(prestamo.getFechaActualizacion());
 				lstprestamo.add(temp);
 			}
 			
@@ -717,7 +723,7 @@ public class SPrestamo extends HttpServlet {
 					
 					BigDecimal fuentePrestamo =!unidad.get("prestamo").isJsonNull() ?   Utils.String2BigDecimal(unidad.get("prestamo").getAsString(), new BigDecimal(0)) : new BigDecimal(0);
 					BigDecimal fuenteDonacion = !unidad.get("donacion").isJsonNull() ?  Utils.String2BigDecimal(unidad.get("donacion").getAsString(), new BigDecimal(0)): new BigDecimal(0);
-					BigDecimal fuenteNacional = !unidad.get("donacion").isJsonNull() ? Utils.String2BigDecimal(unidad.get("nacional").getAsString(), new BigDecimal(0)): new BigDecimal(0); 
+					BigDecimal fuenteNacional = !unidad.get("nacional").isJsonNull() ? Utils.String2BigDecimal(unidad.get("nacional").getAsString(), new BigDecimal(0)): new BigDecimal(0); 
 					if(posicion== -1){
 						proyectos.add(crearProyecto(unidad,prestamo,usuario));
 						ret = proyectos.size()>0;

@@ -176,7 +176,7 @@
 					<div class="form-group" >
 			          <input type="text" class="inputText" ng-model="producto.tipoNombre" ng-value="producto.tipoNombre" 
 			          	ng-click="producto.buscarTipo()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
-			           <span class="label-icon" ng-click="producto.buscarTipo()"><i class="glyphicon glyphicon-search"></i></span>
+			           <span class="label-icon" ng-click="producto.buscarTipo()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 			          <label for="campo3" class="floating-label">* Tipo</label>
 			        </div>
 			        
@@ -190,14 +190,14 @@
 			        <div class="form-group">
 			            <input type="text" class="inputText" ng-model="producto.unidadEjecutoraNombre" ng-value="producto.unidadEjecutoraNombre" 
 			            	ng-click="producto.buscarUnidadEjecutora()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" />
-			            <span class="label-icon" ng-click="producto.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
+			            <span class="label-icon" ng-click="producto.buscarUnidadEjecutora()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 			          <label for="campo5" class="floating-label">Unidad Ejecutora</label>
 			        </div>
 			        
 			        <div class="form-group">
 			          	<input type="text" class="inputText" ng-model="producto.coordenadas" ng-value="producto.coordenadas" 
 			          		onblur="this.setAttribute('value', this.value);"ng-click="producto.open(producto.producto.latitud, producto.producto.longitud); " ng-readonly="true" />
-			            <span class="label-icon" ng-click="producto.open(producto.producto.latitud, producto.producto.longitud); "><i class="glyphicon glyphicon-map-marker"></i></span>
+			            <span class="label-icon" ng-click="producto.open(producto.producto.latitud, producto.producto.longitud); " tabindex="-1"><i class="glyphicon glyphicon-map-marker"></i></span>
 			          	<label  class="floating-label">Coordenadas</label>
 					</div>
 						
@@ -220,17 +220,7 @@
 						  initial-value="producto.producto.acumulacionCostoNombre" focus-out="producto.blurCategoria()" input-name="acumulacionCosto"></div>
 					</div>
 					
-					<div class = "row">
-						<div class="col-sm-6">
-							<div class="form-group">
-								<select class="inputText" ng-model="producto.duracionDimension"
-									ng-options="dim as dim.nombre for dim in producto.dimensiones track by dim.value"
-									 ng-required="true">
-								</select>
-								<label for="nombre" class="floating-label">* Dimension</label>
-							</div>
-						</div>
-							
+					<div class = "row">	
 						<div class="col-sm-6">
 							<div class="form-group">
 							   <input class="inputText"  type="number"
@@ -243,12 +233,22 @@
 						</div>
 							
 						<div class="col-sm-6">
+							<div class="form-group">
+								<select class="inputText" ng-model="producto.duracionDimension"
+									ng-options="dim as dim.nombre for dim in producto.dimensiones track by dim.value"
+									 ng-required="true">
+								</select>
+								<label for="nombre" class="floating-label">* Dimension</label>
+							</div>
+						</div>
+							
+						<div class="col-sm-6">
 							<div class="form-group" >
 							  <input type="text"  class="inputText" uib-datepicker-popup="{{producto.formatofecha}}" min={{producto.fechaInicioPadre}} ng-model="producto.producto.fechaInicio" is-open="producto.fi_abierto"
 							            datepicker-options="producto.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="producto.cambioDuracion(producto.duracionDimension);" ng-required="true"  
 							            ng-value="producto.producto.fechaInicio" onblur="this.setAttribute('value', this.value);" 
 							            ng-readonly="producto.producto.tieneHijos"/>
-							            <span class="label-icon" ng-click="producto.producto.tieneHijos!=true ? producto.abrirPopupFecha(1000) : ''">
+							            <span class="label-icon" ng-click="producto.producto.tieneHijos!=true ? producto.abrirPopupFecha(1000) : ''" tabindex="-1">
 							              <i class="glyphicon glyphicon-calendar"></i>
 							            </span>
 							  <label for="campo.id" class="floating-label">* Fecha de Inicio</label>
@@ -261,7 +261,7 @@
 							            datepicker-options="producto.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true" ng-click=""
 							            ng-value="producto.producto.fechaFin" onblur="this.setAttribute('value', this.value);"
 							            ng-readonly="true"/>
-							            <span class="label-icon">
+							            <span class="label-icon" tabindex="-1">
 							              <i class="glyphicon glyphicon-calendar"></i>
 							            </span>
 							  <label for="campo.id" class="floating-label">* Fecha de Fin</label>
