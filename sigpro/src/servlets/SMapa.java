@@ -111,7 +111,7 @@ public class SMapa extends HttpServlet {
 				if (proyecto.getLongitud()!=null && proyecto.getLatitud()!=null){
 					id++;
 					marcas = String.join(marcas.length() > 0 ? "," : "", marcas,
-					getMarca(id,proyecto.getId(),1, proyecto.getNombre(),proyecto.getLatitud(), proyecto.getLongitud(),null,null,null,null,null));
+					getMarca(id,proyecto.getId(),0, proyecto.getNombre(),proyecto.getLatitud(), proyecto.getLongitud(),null,null,null,null,null));
 				}
 			}
 			
@@ -120,7 +120,7 @@ public class SMapa extends HttpServlet {
 				if (componente.getLatitud()!=null && componente.getLongitud()!=null){
 					id++;
 					marcas = String.join(marcas.length() > 0 ? "," : "", marcas,
-							getMarca(id,componente.getId(),2, componente.getNombre(),componente.getLatitud(), componente.getLongitud(),null,null,null,null,null));
+							getMarca(id,componente.getId(),1, componente.getNombre(),componente.getLatitud(), componente.getLongitud(),null,null,null,null,null));
 				}
 			}
 			
@@ -458,7 +458,10 @@ public class SMapa extends HttpServlet {
 	}
 	
 	private String getEstadoObjeto(Integer total, Integer enProceso){
-		double avance = (enProceso*1.0/total)*100.0;
+		double avance = 0;
+		if(total!=0){
+			avance = (enProceso*1.0/total)*100.0;
+		}
 		return "\"porcentajeEstado\" : " + avance + ",\"mostrar\":\"true\",";
 	}
 

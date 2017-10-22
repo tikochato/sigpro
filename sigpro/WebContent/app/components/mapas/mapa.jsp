@@ -121,17 +121,29 @@
 			    </span>
 			    &nbsp;&nbsp;&nbsp;&nbsp;
 			    <span class="label-form2">
-			      <input type="checkbox" ng-model="mostrarProyectos" ng-click="mostrar(1)">
+			      <input type="checkbox" ng-model="mostrarTodo" ng-click="mostrar(0)">
 			      <span style="font-weight: bold;">Proyecto</span>
 			    </span>
 			    &nbsp;&nbsp;&nbsp;&nbsp;
 			    <span class="label-form2">
-			      <input type="checkbox" ng-model="mostrarComponentes" ng-click="mostrar(2)">
+			      <input type="checkbox" ng-model="mostrarComponentes" ng-click="mostrar(1)">
 			      <span  ng-dropdown-multiselect="" options="mapac.optionComponentes" selected-model="mapac.estadoComponentes" 
 			    	extra-settings="mapac.extraSetingComponentes"
 			    	events="mapac.selectComponente">
 				    	<toggle-dropdown>
 				    		Componentes
+				    		<span class="glyphicon glyphicon-menu-down"></span>
+				    	</toggle-dropdown>
+			      </span>
+			    </span>
+			    &nbsp;&nbsp;&nbsp;&nbsp;
+			    <span class="label-form2">
+			      <input type="checkbox" ng-model="mostrarSubComponentes" ng-click="mostrar(2)">
+			      <span  ng-dropdown-multiselect="" options="mapac.optionSubComponentes" selected-model="mapac.estadoSubComponentes" 
+			    	extra-settings="mapac.extraSetingSubComponentes"
+			    	events="mapac.selectSubComponente">
+				    	<toggle-dropdown>
+				    		Subcomponentes
 				    		<span class="glyphicon glyphicon-menu-down"></span>
 				    	</toggle-dropdown>
 			      </span>
@@ -189,7 +201,7 @@
 	      			
 					<div ng-repeat="marca in marcas track by marca.id">
 						<div ng-switch on ="marca.objetoTipoId">
-							<div ng-switch-when="1">
+							<div ng-switch-when="0">
 								<ui-gmap-marker ng-if="mostrarTodo || mostrarProyectos" 
 									 idkey="marca.id" coords="marca.posicion" icon = "marca.icon"
 									 click="abrirInformacion(marca.objetoId,marca.objetoTipoId,marca.idEstado,marca.porcentajeEstado)" 
@@ -197,8 +209,16 @@
 									 >
 								 </ui-gmap-marker>
 							 </div>
-							 <div ng-switch-when="2">
+							 <div ng-switch-when="1">
 								<ui-gmap-marker ng-if="mostrarTodo || (mostrarComponentes && marca.mostrar)" 
+									 idkey="marca.id" coords="marca.posicion" icon = "marca.icon"
+									 click="abrirInformacion(marca.objetoId,marca.objetoTipoId,marca.idEstado,marca.porcentajeEstado)" 
+									 options="{title:marca.nombre}"  
+									 >
+								 </ui-gmap-marker>
+							 </div>
+							 <div ng-switch-when="2">
+								<ui-gmap-marker ng-if="mostrarTodo || (mostrarSubComponentes && marca.mostrar)" 
 									 idkey="marca.id" coords="marca.posicion" icon = "marca.icon"
 									 click="abrirInformacion(marca.objetoId,marca.objetoTipoId,marca.idEstado,marca.porcentajeEstado)" 
 									 options="{title:marca.nombre}"  
