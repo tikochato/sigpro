@@ -155,7 +155,8 @@ public class RiesgoDAO {
 			String query = "SELECT r FROM Riesgo as r inner join r.objetoRiesgos o "
 					+ "WHERE r.estado = 1 "
 					+ "and o.id.objetoId = :objid "
-					+ "and o.id.objetoTipo = :objetoTipo";
+					+ "and o.id.objetoTipo = :objetoTipo "
+					+ "and o.id.objetoId > 0 ";
 			
 			Query<Riesgo> criteria = session.createQuery(query,Riesgo.class);
 			criteria.setParameter("objid", objetoId);
