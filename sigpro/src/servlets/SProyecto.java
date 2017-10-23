@@ -162,8 +162,9 @@ public class SProyecto extends HttpServlet {
 		String response_text = "";
 
 		if (accion.equals("getProyectos")) {
-			List<Proyecto> proyectos = ProyectoDAO.getProyectos(usuario);
-
+			Integer prestamoId = (map.get("prestamoid")!=null) ? Utils.String2Int(map.get("prestamoid"),-1) : null;
+			List<Proyecto> proyectos = ProyectoDAO.getProyectos(prestamoId,usuario);
+			
 			response.setHeader("Content-Encoding", "gzip");
 			response.setCharacterEncoding("UTF-8");
 
