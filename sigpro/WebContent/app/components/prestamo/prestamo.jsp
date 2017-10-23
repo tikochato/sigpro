@@ -1089,6 +1089,14 @@
 						
 					</div>
 				</uib-tab>
+				<uib-tab index="prestamoc.ordenTab+6" heading="Indicadores" ng-if="prestamoc.mostrarPrestamo" ng-click="prestamoc.metasActivo()">
+					<shiro:lacksPermission name="17010">
+						<span ng-init="prestamoc.redireccionSinPermisos()"></span>
+					</shiro:lacksPermission>
+					<div>
+						<%@include file="/app/components/meta/meta.jsp" %>
+					</div>
+		    	</uib-tab>
 			</uib-tabset>
 			</form>
 		</div>

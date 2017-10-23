@@ -44,7 +44,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	mi.filtros = [];
 	mi.orden = null;
 	mi.prestamo = [];
-	mi.componentes = [];
+	mi.componentes = [];	
+	mi.metasCargadas = false;
 	
 	mi.prestamo.desembolsoAFechaUsdP = "";
 	mi.prestamo.montoPorDesembolsarUsdP = "";
@@ -1179,6 +1180,11 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			mi.rowAnterior = row;
 		};
 
+		mi.metasActivo = function(){
+			if(!mi.metasCargadas){
+				mi.metasCargadas = true;
+			}
+		}
 		
 		
 		$scope.$watch('m_componentes', function(componentes,componentesOld) {
