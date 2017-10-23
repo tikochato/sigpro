@@ -310,9 +310,13 @@ public class SSubproducto extends HttpServlet {
 		
 		Subproducto subproducto = SubproductoDAO.getSubproductoPorId(codigo);
 		
-		ObjetoDAO.borrarHijos(subproducto.getTreePath(), 4, usuario);
+		boolean resultado = ObjetoDAO.borrarHijos(subproducto.getTreePath(), 4, usuario);
 		
 		//SubproductoDAO.eliminar(codigo, usuario);
+		
+		String resultadoJson = "{\"success\":"+resultado+" }";
+
+		Utils.writeJSon(response, resultadoJson);
 		
 	}
 

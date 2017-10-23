@@ -41,7 +41,7 @@
 							<input type="text" class="inputText" uib-datepicker-popup="{{modalAvances.formatofecha}}" ng-model="row.fechaControl" is-open="row.isOpen"
 								datepicker-options="modalAvances.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
 								ng-change="modalAvances.guardarFecha(row)"/>
-							<span class="label-icon" ng-click="modalAvances.abrirPopupFecha($index,0)">
+							<span class="label-icon" ng-click="modalAvances.abrirPopupFecha($index,0)" tabindex="-1">
 								<i class="glyphicon glyphicon-calendar"></i>
 							</span>
 						</div>
@@ -64,7 +64,7 @@
 								<input type="text" class="inputText" uib-datepicker-popup="{{modalAvances.formatofecha}}" ng-model="row.valorTiempoControl" is-open="row.isOpenValor"
 									datepicker-options="modalAvances.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
 									ng-change="modalAvances.guardarFecha(row)"/>
-									<span class="label-icon" ng-click="modalAvances.abrirPopupFecha($index,1)">
+									<span class="label-icon" ng-click="modalAvances.abrirPopupFecha($index,1)" tabindex="-1">
 										<i class="glyphicon glyphicon-calendar"></i>
 									</span>
 							</div>

@@ -82,7 +82,7 @@
 								<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" ng-model="row.fechaControl" is-open="row.isOpen"
 									datepicker-options="metac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="metac.abrirPopupFecha(row)"
 									ng-change="metac.guardarFechaMetaFinal(row)"/>
-									<span class="label-icon" ng-click="metac.abrirPopupFecha(row)">
+									<span class="label-icon" ng-click="metac.abrirPopupFecha(row)" tabindex="-1">
 										<i class="glyphicon glyphicon-calendar"></i>
 									</span>
 							</div>
