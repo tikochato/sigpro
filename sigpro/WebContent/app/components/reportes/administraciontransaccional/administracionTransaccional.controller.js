@@ -20,7 +20,10 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 		
 		mi.validarFecha = function(fecha1, fecha2){
 			if(fecha1 != null && fecha2 != null)
-				mi.generar();
+				if(fecha2 > fecha1)
+					mi.generar();
+				else
+					$utilidades.mensaje('warning','La fecha inicial es mayor que la fecha final');
 		}
 		
 		mi.fechaOptions = {

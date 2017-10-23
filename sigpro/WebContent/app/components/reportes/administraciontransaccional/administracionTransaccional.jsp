@@ -89,7 +89,7 @@
 							<div class="form-group" >
 							  <input type="text"  class="inputText" uib-datepicker-popup="{{admintranc.formatofecha}}" ng-model="admintranc.fechaFin" is-open="admintranc.ff_abierto"
 						            datepicker-options="admintranc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
-						            ng-required="true" ng-change="admintranc.validarFecha(admintranc.fechaFin, admintranc.fechaInicio)"
+						            ng-required="true" ng-change="admintranc.validarFecha(admintranc.fechaInicio, admintranc.fechaFin)"
 						            ng-value="admintranc.fechaFin" onblur="this.setAttribute('value', this.value);"/>
 						            <span class="label-icon" ng-click="admintranc.abrirPopupFecha(1001)">
 						              <i class="glyphicon glyphicon-calendar"></i>
