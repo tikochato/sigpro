@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <div class="modal-body" id="modal-body">
   <div class="row">
-  	<div class="col-sm-12" style="font-weight: bold;">{{ modalBuscar.titulo }}</div>
+  	<div class="col-sm-12" style="font-weight: bold;">Asignación Matríz RACI</div>
   </div>
   <br/>
   <div class="row" ng-show="modalBuscar.showfilters">
@@ -11,6 +11,18 @@
 	    </select><br>
     </div>
   </div>
+  <div class="row" ng-if="modalBuscar.mostrarRoles">
+    	<div class="col-sm-12">
+			<div class="form-group">
+					<select class="inputText" ng-model="modalBuscar.rolAsignado"
+						ng-options="rol as rol.nombre for rol in modalBuscar.roles track by rol.id"
+						ng-required="true">
+						<option value="">Seleccione una opción</option>
+					</select>
+				    <label for="nombre" class="floating-label">* Rol</label>
+			</div>
+			</div>
+	</div>
   <br/>
   <div class="row" ng-show="modalBuscar.showfilters">
   	<div class="col-sm-12">
@@ -47,18 +59,7 @@
     </div>
     </div>
     <br/>
-    <div class="row" ng-if="modalBuscar.mostrarRoles">
-    	<div class="col-sm-12">
-			<div class="form-group">
-					<select class="inputText" ng-model="modalBuscar.rolAsignado"
-						ng-options="rol as rol.nombre for rol in modalBuscar.roles track by rol.id"
-						ng-required="true">
-						<option value="">Seleccione una opción</option>
-					</select>
-				    <label for="nombre" class="floating-label">* Rol</label>
-			</div>
-			</div>
-	</div>
+    
     <div class="row">
 	    <div class="col-sm-12 operation_buttons" align="right">
 		    <div class="btn-group">
