@@ -103,6 +103,7 @@ public class PrestamoDAO {
 			
 			Query<Prestamo> criteria = session.createQuery(query, Prestamo.class);
 			criteria.setFirstResult(((pagina-1)*(elementosPorPagina)));
+			criteria.setMaxResults(elementosPorPagina);
 //			if(usuario != null){
 //				criteria.setParameter("usuario", usuario);
 //			}
