@@ -115,8 +115,8 @@
 	</div>
 	<div class="row second-main-form" ng-show="prestamoc.esColapsado || prestamoc.esTreeview">
 		<div class="page-header">
-			<h2 ng-if="prestamoc.esNuevo"><small>Nuevo {{etiquetas.proyecto}}</small></h2>
-			<h2 ng-if="!prestamoc.esNuevo"><small>Edición de {{etiquetas.proyecto}}</small></h2>
+			<h2 ng-if="prestamoc.esNuevo"><small>Nuevo Préstamo</small></h2>
+			<h2 ng-if="!prestamoc.esNuevo"><small>Edición de Préstamo</small></h2>
 			</div>
 		<div class="operation_buttons">
 			<div class="btn-group" ng-hide="prestamoc.esNuevo">
