@@ -106,10 +106,10 @@
 		      </div>
 			  <div class="btn-group" style="float: right;">
 			    <shiro:hasPermission name="5020">
-			      <label class="btn btn-success" ng-click="subcomponentec.mForm.$valid && subcomponentec.botones ? subcomponentec.guardar() : ''" ng-disabled="!subcomponentec.mForm.$valid || !subcomponentec.botones" title="Guardar">
+			      <label class="btn btn-success" ng-click="subcomponentec.mForm.$valid && subcomponentec.botones ? subcomponentec.guardar() : ''" ng-disabled="!subcomponentec.mForm.$valid || !subcomponentec.botones" uib-tooltip="Guardar">
 			      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 			    </shiro:hasPermission>
-			    <label ng-if="!subcomponentec.esTreeview" class="btn btn-primary" ng-click="subcomponentec.botones ? subcomponentec.irATabla() : ''" title="Ir a Tabla" ng-disabled="!subcomponentec.botones">
+			    <label ng-if="!subcomponentec.esTreeview" class="btn btn-primary" ng-click="subcomponentec.botones ? subcomponentec.irATabla() : ''" uib-tooltip="Ir a Tabla" ng-disabled="!subcomponentec.botones">
 			    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			    <label ng-if="subcomponentec.esTreeview && !subcomponentec.subcomponente.esDeSigade" class="btn btn-danger" ng-click=" subcomponentec.botones && subcomponentec.subcomponente.id>0 ? subcomponentec.t_borrar() : ''" ng-disabled="!(subcomponentec.subcomponente.id>0) || !subcomponentec.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
@@ -357,10 +357,10 @@
 				<div class="col-sm-12">
 					<div class="btn-group" ng-disabled="!subcomponentec.botones">
 						 <shiro:hasPermission name="5020">
-						      <label class="btn btn-success" ng-click="subcomponentec.mForm.$valid && subcomponentec.botones ? subcomponentec.guardar() : ''" ng-disabled="!subcomponentec.mForm.$valid || !subcomponentec.botones" title="Guardar" uib-tooltip="Guardar" tooltip-placement="top">
+						      <label class="btn btn-success" ng-click="subcomponentec.mForm.$valid && subcomponentec.botones ? subcomponentec.guardar() : ''" ng-disabled="!subcomponentec.mForm.$valid || !subcomponentec.botones" uib-tooltip="Guardar" tooltip-placement="top">
 						      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 						    </shiro:hasPermission>
-						    <label ng-if="!subcomponentec.esTreeview" class="btn btn-primary" ng-click="subcomponentec.botones ? subcomponentec.irATabla() :''" title="Ir a Tabla" ng-disabled="!subcomponentec.botones" uib-tooltip="Ir a Tabla" tooltip-placement="top">
+						    <label ng-if="!subcomponentec.esTreeview" class="btn btn-primary" ng-click="subcomponentec.botones ? subcomponentec.irATabla() :''" ng-disabled="!subcomponentec.botones" uib-tooltip="Ir a Tabla" tooltip-placement="top">
 						    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 						    <label ng-if="subcomponentec.esTreeview && !subcomponentec.subcomponente.esDeSigade" class="btn btn-danger" ng-click=" subcomponentec.botones && subcomponentec.subcomponente.id>0  ? subcomponentec.t_borrar() : ''" ng-disabled="!(subcomponentec.subcomponente.id>0) || !subcomponentec.botones" uib-tooltip="Borrar" tooltip-placement="top">
 							<span class="glyphicon glyphicon-trash"></span> Borrar</label>

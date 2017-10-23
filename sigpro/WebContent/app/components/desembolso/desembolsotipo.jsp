@@ -76,10 +76,10 @@
 		   <div class="operation_buttons" align="right">
 			  <div class="btn-group">
 			    <shiro:hasPermission name="35020">
-			      <label class="btn btn-success" ng-click="form.$valid ? desembolsotipoc.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
+			      <label class="btn btn-success" ng-click="form.$valid ? desembolsotipoc.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
 			      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 			    </shiro:hasPermission>
-			    <label class="btn btn-primary" ng-click="desembolsotipoc.irATabla()" title="Ir a Tabla">
+			    <label class="btn btn-primary" ng-click="desembolsotipoc.irATabla()" uib-tooltip="Ir a Tabla">
 			    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			  </div>
 			</div>
@@ -144,10 +144,10 @@
     		<div class="col-sm-12 operation_buttons" align="right">
 			  <div class="btn-group">
 			    <shiro:hasPermission name="35020">
-			      <label class="btn btn-success" ng-click="form.$valid ? desembolsotipoc.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
+			      <label class="btn btn-success" ng-click="form.$valid ? desembolsotipoc.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
 			      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 			    </shiro:hasPermission>
-			    <label class="btn btn-primary" ng-click="desembolsotipoc.irATabla()" title="Ir a Tabla">
+			    <label class="btn btn-primary" ng-click="desembolsotipoc.irATabla()" uib-tooltip="Ir a Tabla">
 			    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			  </div>
 			</div>

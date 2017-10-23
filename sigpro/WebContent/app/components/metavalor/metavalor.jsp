@@ -18,11 +18,11 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			       <shiro:hasPermission name="17040">
-			       		<label class="btn btn-primary" ng-click="metavc.nuevoValor()" title="Nuevo">
+			       		<label class="btn btn-primary" ng-click="metavc.nuevoValor()" uib-tooltip="Nuevo">
 						<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			       </shiro:hasPermission> 
 			       <shiro:hasPermission name="17020">
-			       		<label class="btn btn-primary" ng-click="metavc.editar()" title="Editar">
+			       		<label class="btn btn-primary" ng-click="metavc.editar()" uib-tooltip="Editar">
 						<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 			       </shiro:hasPermission>	
 			       <shiro:hasPermission name="17030">

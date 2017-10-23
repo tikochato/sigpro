@@ -25,7 +25,7 @@
 		    <div class="col-sm-12 operation_buttons" align="right">
 			    <div class="btn-group">
 			        <label class="btn btn-success" ng-click="pesoc.pesoTotal == 100 ? pesoc.ok() : ''" 
-			        ng-disabled="pesoc.pesoTotal != 100" title="Guardar" uib-tooltip="Guardar"> Guardar</label>
+			        ng-disabled="pesoc.pesoTotal != 100" uib-tooltip="Guardar"> Guardar</label>
 					<label class="btn btn-primary" ng-click="pesoc.cancel()">Cancelar</label>
 		    	</div>
 		      
