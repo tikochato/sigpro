@@ -278,6 +278,8 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	
 	mi.nuevoObjeto=function(tipo){
 		switch(tipo){
+			case 0: //componente
+				$location.path('/componente/'+mi.nodo_seleccionado.id+'/0/1'); break;
 			case 1: //subcomponente
 				$location.path('/subcomponente/'+mi.nodo_seleccionado.id+'/0/1'); break;
 			case 2: //producto
