@@ -98,7 +98,7 @@
 			</div>
 			<br/>
 			<div class="total-rows">Total de {{  prestamoc.totalPrestamos + (prestamoc.totalPrestamos == 1 ? "Préstamo" : " Préstamos" ) }}</div>
-				<ul uib-pagination total-items="prestamoc.totalProyectos"
+				<ul uib-pagination total-items="prestamoc.totalPrestamos"
 						ng-model="prestamoc.paginaActual"
 						max-size="prestamoc.numeroMaximoPaginas"
 						items-per-page="prestamoc.elementosPorPagina"
@@ -143,6 +143,11 @@
 			<uib-tabset active="prestamoc.active">
 				<shiro:hasPermission name="43010">
 				<uib-tab ng-click="prestamoc.getPorcentajes();" index="0" heading="Préstamo" >
+					<div class="form-group">
+						<label for="id" class="floating-label id_class">ID {{ prestamoc.prestamo.id }}</label>
+						<br/><br/>
+					</div>
+					
 					<div class="row" style="margin-top: 15px;">
 						<div class="col-sm-12">
 							<div class="form-group">

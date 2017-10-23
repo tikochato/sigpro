@@ -427,6 +427,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 
 										$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 										mi.botones=true;
+										mi.esNuevo=false;
 									}else{
 										$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' la matriz del préstamo');
 										mi.botones=true;
