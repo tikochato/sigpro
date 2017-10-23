@@ -453,10 +453,10 @@
 			<br/>
 			<div class="btn-group">
 				<shiro:hasPermission name="1020">
-					<label class="btn btn-success" ng-click="actividadc.mForm.$valid && actividadc.botones ? actividadc.guardar() : ''" ng-disabled="!actividadc.mForm.$valid || !actividadc.botones" title="Guardar" uib-tooltip="Guardar" tooltip-placement="top">
+					<label class="btn btn-success" ng-click="actividadc.mForm.$valid && actividadc.botones ? actividadc.guardar() : ''" ng-disabled="!actividadc.mForm.$valid || !actividadc.botones" uib-tooltip="Guardar" tooltip-placement="top">
 					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
-				<label ng-if="!actividadc.esTreeview"  class="btn btn-primary" ng-click="actividadc.botones ? actividadc.irATabla() : ''" title="Ir a Tabla" uib-tooltip="Ir a Tabla" ng-disabled="!actividadc.botones" tooltip-placement="top">
+				<label ng-if="!actividadc.esTreeview"  class="btn btn-primary" ng-click="actividadc.botones ? actividadc.irATabla() : ''" uib-tooltip="Ir a Tabla" ng-disabled="!actividadc.botones" tooltip-placement="top">
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 				<label ng-if="actividadc.esTreeview" class="btn btn-danger" ng-click=" actividadc.botones && actividadc.actividad.id>0 ? actividadc.t_borrar() : ''" ng-disabled="!(actividadc.actividad.id>0) || !actividadc.botones" uib-tooltip="Borrar" tooltip-placement="top">
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>

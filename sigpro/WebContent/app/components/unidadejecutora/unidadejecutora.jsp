@@ -26,7 +26,7 @@
 			<span class="glyphicon glyphicon-pencil"></span> Editar</label>
       	</shiro:hasPermission>
       	<shiro:hasPermission name="33030">
-				<label class="btn btn-danger" ng-click="controller.borrar()" title="Borrar">
+				<label class="btn btn-danger" ng-click="controller.borrar()" uib-tooltip="Borrar">
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</shiro:hasPermission>
       </div>

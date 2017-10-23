@@ -121,7 +121,7 @@
 			    <div class="col-sm-12 operation_buttons" align="right">
 				    <div class="btn-group">
 				        <label class="btn btn-success" ng-click="controller.ok()" 
-				        ng-disabled="!form.$valid" title="Guardar" uib-tooltip="Guardar"> Guardar</label>
+				        ng-disabled="!form.$valid" uib-tooltip="Guardar"> Guardar</label>
 						<label class="btn btn-primary" ng-click="controller.cancel()">Cancelar</label>
 			    	</div>
 			      
