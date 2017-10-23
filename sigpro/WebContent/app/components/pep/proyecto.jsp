@@ -233,7 +233,7 @@
 					<div class="form-group" >
 			            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="controller.unidadejecutoranombre" ng-readonly="true"
 			            	ng-click="controller.buscarUnidadEjecutora()" ng-value="controller.unidadejecutoranombre" onblur="this.setAttribute('value', this.value);"/>
-			            <span class="label-icon" ng-click="controller.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
+			            <span class="label-icon" ng-click="controller.proyecto.prestamoId != null ? '' : controller.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
 			          	<label for="campo3" class="floating-label">Unidad Ejecutora</label>
 					</div>
 	

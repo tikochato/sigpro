@@ -962,13 +962,6 @@
 		            	<span class="label-icon" ng-click="prestamoc.buscarEstadoEjecucion()"><i class="glyphicon glyphicon-search"></i></span>
 			          	<label class="floating-label">Estado de Ejecución</label>
 					</div>
-					
-					<div class="form-group">
-						<input type="text" ng-model="prestamoc.proyecto.descripcion"
-							class="inputText" id="campo2" 
-							ng-value="prestamoc.proyecto.descripcion" onblur="this.setAttribute('value', this.value);">
-						<label for="campo2" class="floating-label">Descripción</label>
-					</div>
 				</uib-tab>
 				</shiro:hasPermission>
 				<uib-tab  index="prestamoc.ordenTab+3" heading="Unidades Ejecutoras" ng-if="prestamoc.mostrarPrestamo">
@@ -1085,7 +1078,7 @@
 								 			</table>
 								 		</td>
 								 		<td style="width: 155px; text-align: right;"
-								 		 	class="label-form"> {{ row.techo | formatoMillones : desembolsosc.enMillones }} 
+								 		 	class="label-form"> {{ row.techo | formatoMillonesSinTipo : prestamoc.enMillones }} 
 								 		 </td>
 								 	</tr>
 								</table>

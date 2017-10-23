@@ -401,6 +401,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 							
 							mi.prestamo.usuarioCreo = response.data.usuarioCreo;
 							mi.prestamo.fechaCreacion = response.data.fechaCreacion;
+							mi.prestamo.fechaActualizacion = response.data.fechaActualizacion;
 							mi.prestamo.usuarioActualizo = response.data.usuarioActualizo;
 							mi.prestamo.id = response.data.id;
 							

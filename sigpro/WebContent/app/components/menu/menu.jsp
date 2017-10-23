@@ -37,7 +37,8 @@
 			                         	<shiro:hasPermission name="16010"><li role="menuitem"><a href="/main.jsp#!/hitotipo">Tipo de Hito</a></li></shiro:hasPermission>                         	
 			                         	<shiro:hasPermission name="18010"><li role="menuitem"><a href="/main.jsp#!/metatipo">Tipo de Meta</a></li></shiro:hasPermission>                         	
 				                        <shiro:hasPermission name="23010"><li role="menuitem"><a href="/main.jsp#!/productotipo">Tipo de Producto</a></li></shiro:hasPermission>
-				                        <shiro:hasPermission name="36010"><li role="menuitem"><a href="/main.jsp#!/prestamotipo">Tipo de {{etiquetas.proyecto}}</a></li></shiro:hasPermission>				                        
+				                        <shiro:hasPermission name="36010"><li role="menuitem"><a href="/main.jsp#!/peptipo">Tipo de {{etiquetas.proyecto}}</a></li></shiro:hasPermission>
+				                        <shiro:hasPermission name="36010"><li role="menuitem"><a href="/main.jsp#!/prestamotipo">Tipo de Préstamo</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="32010"><li role="menuitem"><a href="/main.jsp#!/riesgotipo">Tipo de Riesgo</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="42010"><li role="menuitem"><a href="/main.jsp#!/subproductotipo">Tipo de Subproducto</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="19010"><li role="menuitem"><a href="/main.jsp#!/metaunidadmedida">Unidad de Medida para Metas</a></li></shiro:hasPermission>

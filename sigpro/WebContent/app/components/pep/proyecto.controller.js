@@ -510,7 +510,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 		if($location.path()=='/pep/'+ mi.prestamoid + '/rv')
 			$route.reload();
 		else
-			$location.path('/pep/'+ mi.prestamoid + 'rv');
+			$location.path('/pep/'+ mi.prestamoid + '/rv');
 	}
 
 	mi.filtrar = function(evt){
