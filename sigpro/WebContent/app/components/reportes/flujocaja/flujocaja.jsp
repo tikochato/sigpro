@@ -204,7 +204,7 @@
 							<div class="btn-group" style="padding-left: 20px;">
 								<label class="btn btn-default" ng-click="flujoc.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!flujoc.mostrarDescargar">
 								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-								<label class="btn btn-default" ng-click="flujoc.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="!flujoc.mostrarDescargar">
+								<label class="btn btn-default" ng-click="flujoc.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="true">
 								<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 							</div>
 						</div>

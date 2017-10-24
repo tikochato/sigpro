@@ -80,7 +80,7 @@
 		    			<div class="btn-group" role="group" aria-label="">
 							<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!controller.mostrardiv" role="button" tabindex="0" aria-hidden="false" style="">
 							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-							<label class="btn btn-default" ng-click="controller.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="!controller.mostrardiv">
+							<label class="btn btn-default" ng-click="controller.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="true">
 							<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 						</div>
 		    		</div>
