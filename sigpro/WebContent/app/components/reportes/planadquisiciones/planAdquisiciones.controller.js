@@ -15,10 +15,6 @@ app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http',
 		mi.grupoMostrado= {"planificado":true};
 		mi.estiloAlineacion="text-align: center;";
 		
-		mi.peps = [];
-		mi.peps.push({'value' : 0, 'text' : 'Seleccione un '+$rootScope.etiquetas.proyecto});
-		mi.pep = mi.peps[0];
-		
 		mi.padre = function(row){
 			if(row.nivel < 2){
 				return 'font-weight: bold;';

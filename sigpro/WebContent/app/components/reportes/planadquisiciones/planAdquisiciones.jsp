@@ -185,12 +185,6 @@
 						<div class="form-group col-sm-3" align="left">
 							<select  class="inputText" ng-model="planadqui.prestamo"
 								ng-options="a.text for a in planadqui.prestamos" 
-								ng-change="planadqui.cargarPeps(planadqui.prestamo.value)"></select>		
-	    				</div>
-	    				
-						<div class="form-group col-sm-3" align="left">
-							<select  class="inputText" ng-model="planadqui.pep"
-								ng-options="a.text for a in planadqui.peps" 
 								ng-change="planadqui.validar(1)"></select>		
 	    				</div>
 	    				
