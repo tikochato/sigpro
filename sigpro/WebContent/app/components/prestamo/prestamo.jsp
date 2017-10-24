@@ -157,7 +157,7 @@
 								ng-model="prestamoc.prestamo.codigoPresupuestario" ng-readonly="true" ng-required="true"
 								ng-click="prestamoc.buscarCodigoPresupuestario()"
 								onblur="this.setAttribute('value', this.value);" ng-value="prestamoc.prestamo.codigoPresupuestario" />			            	
-								<span class="label-icon" ng-click="prestamoc.buscarCodigoPresupuestario()">
+								<span class="label-icon" ng-click="prestamoc.buscarCodigoPresupuestario()" tabindex="-1">
 									<i class="glyphicon glyphicon-search"></i>
 								</span>
 								<label class="floating-label">* Código presupuestario</label>
@@ -200,7 +200,7 @@
 									datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
 									ng-value="prestamoc.prestamo.fechaDecreto" onblur="this.setAttribute('value', this.value);"
 								/>
-								<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1007)">	
+								<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1007)" tabindex="-1">	
 									<i class="glyphicon glyphicon-calendar"></i>
 								</span>
 								<label class="floating-label">* Fecha Decreto</label>
@@ -212,7 +212,7 @@
 									datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
 									ng-value="prestamoc.prestamo.fechaSuscripcion" onblur="this.setAttribute('value', this.value);"
 									/>
-									<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1008)">
+									<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1008)" tabindex="-1">
 										<i class="glyphicon glyphicon-calendar"></i>
 								</span>
 								<label class="floating-label">* Fecha de Suscripción</label>
@@ -224,7 +224,7 @@
 									datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
 									ng-value="prestamoc.prestamo.fechaVigencia" onblur="this.setAttribute('value', this.value);"
 									/>
-									<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1012)">
+									<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1012)" tabindex="-1">
 										<i class="glyphicon glyphicon-calendar"></i>
 								</span>
 								<label class="floating-label">* Fecha de vigencia</label>
@@ -239,7 +239,7 @@
 								ng-model="prestamoc.prestamo.tipoMonedaNombre" ng-readonly="true" ng-required="true"
 								ng-click="prestamoc.buscarTipoMoneda()"
 								onblur="this.setAttribute('value', this.value);" ng-value="prestamoc.prestamo.tipoMonedaNombre"/>
-								<span class="label-icon" ng-click="prestamoc.buscarTipoMoneda()">
+								<span class="label-icon" ng-click="prestamoc.buscarTipoMoneda()" tabindex="-1">
 									<i class="glyphicon glyphicon-search"></i>
 								</span>
 								<label class="floating-label">* Tipo de Moneda</label>
@@ -441,7 +441,7 @@
 										<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaElegibilidadUe" is-open="prestamoc.fe_abierto"
 											datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="prestamoc.setPorcentaje(5);"
 											ng-value="prestamoc.prestamo.fechaElegibilidadUe" onblur="this.setAttribute('value', this.value);" />
-										<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1009)">
+										<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1009)" tabindex="-1">
 												<i class="glyphicon glyphicon-calendar"></i>
 										</span>
 										<label class="floating-label">* Fecha de Elegibilidad</label>
@@ -454,7 +454,7 @@
 												datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="prestamoc.setPorcentaje(5);"
 												ng-value="prestamoc.prestamo.fechaCierreOrigianlUe" onblur="this.setAttribute('value', this.value);"
 											/>
-											<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1010)">
+											<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1010)" tabindex="-1">
 													<i class="glyphicon glyphicon-calendar"></i>
 											</span>
 										<label class="floating-label">* Fecha de Cierre Original</label>
@@ -467,7 +467,7 @@
 											<input type="text" class="inputText"   uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaCierreActualUe" is-open="prestamoc.fca_abierto"
 												datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="prestamoc.setPorcentaje(5);"
 												ng-value="prestamoc.prestamo.fechaCierreActualUe" onblur="this.setAttribute('value', this.value);"/>
-											<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1011)"
+											<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1011)" tabindex="-1"
 											ng-readonly="true">
 													<i class="glyphicon glyphicon-calendar"></i>
 											</span>
@@ -629,7 +629,7 @@
 								<input type="text" class="inputText"  uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaFirma" is-open="prestamoc.ff_abierto"
 									datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
 									ng-click="prestamoc.abrirPopupFecha(1004)" ng-value="prestamoc.prestamo.fechaCorte" onblur="this.setAttribute('value', this.value);"/>
-								<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1004)"
+								<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1004)" tabindex="-1"
 								ng-readonly="true">
 									<i class="glyphicon glyphicon-calendar"></i>
 								</span>
@@ -644,7 +644,7 @@
 								<input type="text" class="inputText"  uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaCorte" is-open="prestamoc.fc_abierto"
 													datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
 													ng-click="prestamoc.abrirPopupFecha(1003)" ng-value="prestamoc.prestamo.fechaCorte" onblur="this.setAttribute('value', this.value);"/>
-								<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1003)"
+								<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1003)" tabindex="-1"
 								ng-readonly="true">
 									<i class="glyphicon glyphicon-calendar"></i>
 								</span>
@@ -658,7 +658,7 @@
 				            	ng-model="prestamoc.prestamo.tipoAutorizacionNombre" ng-readonly="true" 
 				            	ng-click="prestamoc.buscarAutorizacionTipo()"
 				            	onblur="this.setAttribute('value', this.value);" ng-value="prestamoc.prestamo.tipoAutorizacionNombre"			            	/>
-				            	<span class="label-icon" ng-click="prestamoc.buscarAutorizacionTipo()"><i class="glyphicon glyphicon-search"></i></span>				          	
+				            	<span class="label-icon" ng-click="prestamoc.buscarAutorizacionTipo()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>				          	
 					          	<label class="floating-label">Tipo Autorización</label>
 							</div>
 						</div>
@@ -688,7 +688,7 @@
 								<input type="text" class="inputText"  uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaAutorizacion" is-open="prestamoc.fa_abierto"
 									datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
 									ng-click="prestamoc.abrirPopupFecha(1005)" ng-value="prestamoc.prestamo.fechaAutorizacion" onblur="this.setAttribute('value', this.value);"/>
-								<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1005)"
+								<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1005)" tabindex="-1"
 								ng-readonly="true">
 									<i class="glyphicon glyphicon-calendar"></i>
 								</span>
@@ -700,7 +700,7 @@
 								<input type="text" class="inputText"  uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaFinEjecucion" is-open="prestamoc.ffe_abierto"
 									datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
 									ng-click="prestamoc.abrirPopupFecha(1006)" ng-value="prestamoc.prestamo.fechaFinEjecucion" onblur="this.setAttribute('value', this.value);"/>
-								<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1006)"
+								<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1006)" tabindex="-1"
 								ng-readonly="true">
 									<i class="glyphicon glyphicon-calendar"></i>
 								</span>
@@ -714,8 +714,8 @@
 							<div class="form-group">
 				            	<input type="text" class="inputText" ng-model="prestamoc.prestamo.tipoInteresNombre" ng-readonly="true"
 				            	ng-click="prestamoc.buscarInteresTipo()"
-				            	onblur="this.setAttribute('value', this.value);" ng-value="prestamoc.prestamo.tipoInteresNombre"/>
-				            	<span class="label-icon" ng-click="prestamoc.buscarInteresTipo()">
+				            	onblur="this.setAttribute('value', this.value);" ng-value="prestamoc.prestamo.tipoInteresNombre" tabindex="-1"/>
+				            	<span class="label-icon" ng-click="prestamoc.buscarInteresTipo()" tabindex="-1">
 				            		<i class="glyphicon glyphicon-search"></i>
 				            	</span>
 					          	<label class="floating-label">Tipo de Interés</label>
@@ -959,7 +959,7 @@
 		            	ng-click="prestamoc.buscarEstadoEjecucion()"
 		            	ng-model="prestamoc.prestamo.ejecucionEstadoNombre" ng-readonly="true"
 		            	onblur="this.setAttribute('value', this.value);" ng-value="prestamoc.prestamo.ejecucionEstadoNombre" />
-		            	<span class="label-icon" ng-click="prestamoc.buscarEstadoEjecucion()"><i class="glyphicon glyphicon-search"></i></span>
+		            	<span class="label-icon" ng-click="prestamoc.buscarEstadoEjecucion()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 			          	<label class="floating-label">Estado de Ejecución</label>
 					</div>
 				</uib-tab>
@@ -1089,6 +1089,14 @@
 						
 					</div>
 				</uib-tab>
+				<uib-tab index="prestamoc.ordenTab+6" heading="Indicadores" ng-if="prestamoc.mostrarPrestamo" ng-click="prestamoc.metasActivo()">
+					<shiro:lacksPermission name="17010">
+						<span ng-init="prestamoc.redireccionSinPermisos()"></span>
+					</shiro:lacksPermission>
+					<div ng-if="prestamoc.metasCargadas">
+						<%@include file="/app/components/meta/meta.jsp" %>
+					</div>
+		    	</uib-tab>
 			</uib-tabset>
 			</form>
 		</div>
