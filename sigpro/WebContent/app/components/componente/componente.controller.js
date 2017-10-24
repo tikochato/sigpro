@@ -246,7 +246,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 							if(!mi.esnuevo)
 								mi.t_cambiarNombreNodo();
 							else
-								mi.t_crearNodo(mi.componente.id,mi.componente.nombre,2,true);
+								mi.t_crearNodo(mi.componente.id,mi.componente.nombre,1,true);
 						}
 						if(mi.child_riesgos!=null){
 							ret = mi.child_riesgos.guardar('Componente '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
