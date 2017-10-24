@@ -15,6 +15,10 @@ app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http',
 		mi.grupoMostrado= {"planificado":true};
 		mi.estiloAlineacion="text-align: center;";
 		
+		mi.peps = [];
+		mi.peps.push({'value' : 0, 'text' : 'Seleccione un '+$rootScope.etiquetas.proyecto});
+		mi.pep = mi.peps[0];
+		
 		mi.padre = function(row){
 			if(row.nivel < 2){
 				return 'font-weight: bold;';
@@ -22,25 +26,28 @@ app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http',
 		}
 		
 		mi.validar = function(noElemento){
-			if(mi.prestamo.value > 0)
-			{
-				if(mi.fechaInicio != null && mi.fechaInicio.toString().length == 4 && 
-						mi.fechaFin != null && mi.fechaFin.toString().length == 4)
+			if(mi.prestamo.value > 0){
+				if(mi.pep.value > 0)
 				{
-					if (mi.fechaFin >= mi.fechaInicio){
-						if(noElemento && noElemento == 2 && (mi.fechaFin - mi.fechaInicio)>mi.limiteAnios){ //fechaInicio
-							mi.fechaInicio = mi.fechaFin - mi.limiteAnios;
-							$utilidades.mensaje('warning','La diferencia de años no puede ser mayor a '+mi.limiteAnios);
-						}else if(noElemento && noElemento == 3 && (mi.fechaFin - mi.fechaInicio)>mi.limiteAnios){ //fechaFin
-							mi.fechaFin = mi.fechaInicio + mi.limiteAnios;
-							$utilidades.mensaje('warning','La diferencia de años no puede ser mayor a '+mi.limiteAnios);
-						}else
-							mi.generar(mi.agrupacionActual);
-					}else{
-						$utilidades.mensaje('warning','La fecha inicial es mayor a la fecha final');
+					if(mi.fechaInicio != null && mi.fechaInicio.toString().length == 4 && 
+							mi.fechaFin != null && mi.fechaFin.toString().length == 4)
+					{
+						if (mi.fechaFin >= mi.fechaInicio){
+							if(noElemento && noElemento == 2 && (mi.fechaFin - mi.fechaInicio)>mi.limiteAnios){ //fechaInicio
+								mi.fechaInicio = mi.fechaFin - mi.limiteAnios;
+								$utilidades.mensaje('warning','La diferencia de años no puede ser mayor a '+mi.limiteAnios);
+							}else if(noElemento && noElemento == 3 && (mi.fechaFin - mi.fechaInicio)>mi.limiteAnios){ //fechaFin
+								mi.fechaFin = mi.fechaInicio + mi.limiteAnios;
+								$utilidades.mensaje('warning','La diferencia de años no puede ser mayor a '+mi.limiteAnios);
+							}else
+								mi.generar(mi.agrupacionActual);
+						}else{
+							$utilidades.mensaje('warning','La fecha inicial es mayor a la fecha final');
+						}
 					}
 				}
 			}
+			
 		}
 		
 		mi.movimiento = false;
@@ -136,25 +143,40 @@ app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http',
 		
 		mi.agrupacion = mi.agrupaciones[0];
 		
-		$http.post('/SProyecto',{accion: 'getProyectos'}).success(
-			function(response) {
-				mi.prestamos = [];
-				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un '+$rootScope.etiquetas.proyecto});
-				if (response.success){
-					for (var i = 0; i < response.entidades.length; i++){
-						mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
-					}
-					
-					mi.prestamo = mi.prestamos[0];
+		$http.post('/SPrestamo', {accion: 'getPrestamos'}).success(function(response){
+			mi.prestamos = [];
+			mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un préstamo'});
+			if(response.success){
+				for(var i= 0; i < response.prestamos.length; i++){
+					mi.prestamos.push({'value' : response.prestamos[i].id, 'text' : response.prestamos[i].proyectoPrograma});
 				}
-			});
+				
+				mi.prestamo = mi.prestamos[0];
+			}
+		})
+		
+		
+		mi.cargarPeps = function(prestamoId){
+			$http.post('/SProyecto',{accion: 'getProyectos', prestamoid: prestamoId}).success(
+					function(response) {
+						mi.peps = [];
+						mi.peps.push({'value' : 0, 'text' : 'Seleccione un '+$rootScope.etiquetas.proyecto});
+						if (response.success){
+							for (var i = 0; i < response.entidades.length; i++){
+								mi.peps.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
+							}
+							
+							mi.pep = mi.peps[0];
+						}
+					});	
+		}
 		
 		mi.generar = function(agrupacion){
-			if(mi.prestamo.value > 0){
+			if(mi.pep.value > 0){
 				mi.mostrarCargando = true;
 				mi.mostrarTablas = false;
 				mi.mostrarDescargar = false;
-				mi.idPrestamo = mi.prestamo.value;
+				mi.idPrestamo = mi.pep.value;
 				$http.post('/SPlanAdquisiciones',{
 					accion: 'generarPlan',
 					idPrestamo: mi.idPrestamo,
@@ -355,7 +377,7 @@ app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http',
 		}
 		
 		mi.cambiarAgrupacion = function(agrupacion){
-			if(mi.prestamo.value > 0)
+			if(mi.pep.value > 0)
 			{
 				if(agrupacion != 0){
 					mi.data = JSON.parse(JSON.stringify(mi.dataOriginal));
@@ -599,7 +621,6 @@ app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http',
 		mi.exportarExcel = function(){
 			$http.post('/SPlanAdquisiciones', { 
 				accion: 'exportarExcel', 
-				idPrestamo: mi.prestamo.value,
 				agrupacion: mi.agrupacionActual,
 				fechaInicio: mi.fechaInicio,
 				fechaFin: mi.fechaFin,

@@ -185,6 +185,12 @@
 						<div class="form-group col-sm-3" align="left">
 							<select  class="inputText" ng-model="planadqui.prestamo"
 								ng-options="a.text for a in planadqui.prestamos" 
+								ng-change="planadqui.cargarPeps(planadqui.prestamo.value)"></select>		
+	    				</div>
+	    				
+						<div class="form-group col-sm-3" align="left">
+							<select  class="inputText" ng-model="planadqui.pep"
+								ng-options="a.text for a in planadqui.peps" 
 								ng-change="planadqui.validar(1)"></select>		
 	    				</div>
 	    				
@@ -201,7 +207,9 @@
 							ng-change="planadqui.validar(3)"/>
 						  	<label for="campo.id" class="floating-label">*Año Final</label>
 						</div>
-	    				<div class="col-sm-7" align="right" ng-hide="!planadqui.mostrarDescargar">
+					</div>
+					<div class="row">
+	    				<div class="col-sm-12" align="right" ng-hide="!planadqui.mostrarDescargar">
 	    					<div class="form-group col-sm-1">
 							</div>
 							<div class="col-sm-11">

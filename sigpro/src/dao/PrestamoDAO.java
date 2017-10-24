@@ -191,5 +191,21 @@ public class PrestamoDAO {
 		
 		return ret;
 	}
+	
+	public static List<Prestamo> getPrestamos(){
+		List<Prestamo> ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "SELECT p FROM Prestamo p where p.estado=1 ";
+			Query<Prestamo> criteria = session.createQuery(query,Prestamo.class);
+			ret = criteria.getResultList();
+		}catch(Exception e){
+			CLogger.write("8", PrestamoDAO.class, e);
+		}finally{
+			session.close();
+		}
+		
+		return ret;
+	}
 
 }
