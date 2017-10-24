@@ -342,13 +342,17 @@
 			</div>
 			</uib-tab>
 			<uib-tab index="2" heading="Adquisición" ng-click="subproducto.adquisicionesActivo()">
-	    		<div ng-if="subproducto.adquisicionesCargadas">
-					<%@include file="/app/components/adquisicion/adquisicion.jsp" %>
+				<div class="col-sm-12">
+		    		<div ng-if="subproducto.adquisicionesCargadas">
+						<%@include file="/app/components/adquisicion/adquisicion.jsp" %>
+					</div>
 				</div>
 		    </uib-tab>
 		    <uib-tab index="3" heading="Riesgos" ng-click="subproducto.riesgosActivo()" >
+			    <div class="col-sm-12">
 					<div ng-if="subproducto.riesgos"><%@include file="/app/components/riesgo/riesgo.jsp" %></div>
-				</uib-tab>
+				</div>
+			</uib-tab>
 		</uib-tabset>
 		</form>
 		<div class="col-sm-12 operation_buttons" align="right"  style="margin-top: 15px;">
