@@ -288,7 +288,7 @@ public class SComponente extends HttpServlet {
 					Date fechaFin = Utils.dateFromStringCeroHoras(map.get("fechaFin"));
 					Integer duracion = Utils.String2Int(map.get("duaracion"), null);
 					String duracionDimension = map.get("duracionDimension");
-					Integer esDeSigade = Utils.String2Boolean("true",0);
+					Integer esDeSigade = Utils.String2Boolean(map.get("esDeSigade"),0);
 					
 					AcumulacionCosto acumulacionCosto = null;
 					if(acumulacionCostoid != null){

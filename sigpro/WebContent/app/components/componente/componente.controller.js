@@ -231,6 +231,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 					fechaFin: moment(mi.componente.fechaFin).format('DD/MM/YYYY'),
 					duaracion: mi.componente.duracion,
 					duracionDimension: mi.duracionDimension.sigla,
+					esDeSigade: 0,
 					datadinamica : JSON.stringify(mi.camposdinamicos),
 				}).success(function(response){
 					if(response.success){

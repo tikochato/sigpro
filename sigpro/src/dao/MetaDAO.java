@@ -159,7 +159,7 @@ public class MetaDAO {
 		List<Meta> ret = new ArrayList<Meta>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String query = "SELECT m FROM Meta m WHERE m.estado = 1 and m.objetoId=:objetoId AND m.objetoTipo=:objetoTipo ";
+			String query = "SELECT m FROM Meta m WHERE m.estado = 1 and m.objetoId=:objetoId AND m.objetoTipo=:objetoTipo and m.objetoId > 0 ";
 			
 			Query<Meta> criteria = session.createQuery(query,Meta.class);
 			criteria.setParameter("objetoId", id);
