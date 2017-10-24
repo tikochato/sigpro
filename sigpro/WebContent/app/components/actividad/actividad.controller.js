@@ -348,7 +348,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 					longitud: mi.actividad.longitud,
 					latitud : mi.actividad.latitud,
 					costo: mi.actividad.costo == null ? null : mi.actividad.costo,
-					acumulacionCosto: mi.actividad.acumulacionCostoId == null ? 0 : mi.actividad.acumulacionCostoId,
+					acumulacionCosto: (mi.actividad.acumulacionCostoId != null && mi.actividad.acumulacionCostoId != "") ? mi.actividad.acumulacionCostoId : 0,
 					renglon: mi.actividad.renglon,
 					ubicacionGeografica: mi.actividad.ubicacionGeografica,
 					asignacionroles: asignaciones,
@@ -442,7 +442,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 			mi.responsables =[];
 			mi.activeTab = 0;
 			
-			$scope.$broadcast('angucomplete-alt:clearInput','acumulacionTipo', mi.actividad.acumulacionTipoNombre);
+			$scope.$broadcast('angucomplete-alt:clearInput','acumulacionCosto', mi.actividad.acumulacionTipoNombre);
 			$scope.$broadcast('angucomplete-alt:clearInput','tipoNombre', mi.actividad.actividadtiponombre);
 		};
 
@@ -456,7 +456,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 				mi.esnuevo = false;
 				mi.activeTab = 0;
 				
-				$scope.$broadcast('angucomplete-alt:changeInput','acumulacionTipo', mi.actividad.acumulacionTipoNombre);
+				$scope.$broadcast('angucomplete-alt:changeInput','acumulacionCosto', mi.actividad.acumulacionTipoNombre);
 				$scope.$broadcast('angucomplete-alt:changeInput','tipoNombre', mi.actividad.actividadtiponombre);
 				
 				if(mi.actividad.duracionDimension.toLowerCase() == 'd'){
