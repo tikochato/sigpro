@@ -437,6 +437,9 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.cancelar = function() {
 		mi.esForma = false;
 		mi.esNuevo=false;
+		mi.child_metas = null;
+		mi.child_adquisiciones = null;
+		mi.child_riesgos = null;
 	};
 	
 	mi.editar = function() {

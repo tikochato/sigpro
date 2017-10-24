@@ -262,6 +262,14 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 		mi.coordenadas = "";
 		
 		$utilidades.setFocus(document.getElementById("nombre"));
+		
+		mi.child_adquisiciones = null;
+		mi.child_riesgos = null;
+		
+		mi.riesgos = false;
+		mi.adquisicionesCargadas = false;
+		
+		mi.activeTab = 0;
 	}
 
 	mi.limpiarSeleccion = function() {
@@ -401,6 +409,8 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 	mi.cancelar = function() {
 		mi.esForma = false;
 		mi.esNuevo=false;
+		mi.child_adquisiciones = null;
+		mi.child_riesgos = null;
 	};
 	
 	mi.editar = function() {
