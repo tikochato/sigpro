@@ -28,7 +28,7 @@
 			<table st-table="modalPagos.pagosCollection" st-safe-src="modalPagos.pagos" class="table">
 				<thead>
 				<tr>
-					<th st-sort="fecha">Fecha</th>
+					<th st-sort="fecha" st-sort-default="modalPagos.reverse">Fecha</th>
 					<th st-sort="valor">Monto</th>
 					<th width="1%"></th>
 				</tr>
