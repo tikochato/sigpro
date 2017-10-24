@@ -62,7 +62,13 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 			
 			mi.obtenerDatosPadre = function(){
 				var objeto;
-				if($scope.$parent.controller){
+				if($scope.$parent.prestamoc){
+					objeto = $scope.$parent.prestamoc.prestamo;
+					mi.objeto_tipo = -1;
+					$scope.$parent.prestamoc.child_metas = $scope.metac;
+					objeto.fechaInicio=objeto.fechaDecreto!=null ? objeto.fechaDecreto : new Date();
+					objeto.fechaFin=new Date();
+				}else if($scope.$parent.controller){
 					objeto = $scope.$parent.controller.proyecto;
 					mi.objeto_tipo = 0;
 					$scope.$parent.controller.child_metas = $scope.metac;
@@ -87,6 +93,8 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 					mi.objeto_tipo = 5;
 					$scope.$parent.actividadc.child_metas = $scope.metac;
 				}
+				
+				
 				
 				mi.objeto_id = objeto.id;
 				return objeto;

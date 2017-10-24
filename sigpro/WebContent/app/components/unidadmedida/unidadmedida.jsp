@@ -2,13 +2,13 @@
 	pageEncoding="UTF-8"%>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
-	<div ng-controller="metaunidadmedidaController as metaunidadc" class="maincontainer all_page" id="title">
+	<div ng-controller="unidadmedidaController as metaunidadc" class="maincontainer all_page" id="title">
 		<shiro:lacksPermission name="19010">
 			<p ng-init="metaunidadc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
 		
 		<div class="panel panel-default">
-		  <div class="panel-heading"><h3>Unidades de Medida de Metas</h3></div>
+		  <div class="panel-heading"><h3>Unidades de Medida</h3></div>
 		</div>
 		
 		<div class="row" align="center" ng-hide="metaunidadc.mostraringreso">

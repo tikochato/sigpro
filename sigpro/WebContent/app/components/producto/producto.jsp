@@ -293,7 +293,7 @@
 									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{producto.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
 														datepicker-options="producto.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="producto.abrirPopupFecha($index)"
 														ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
-														<span class="label-icon" ng-click="producto.abrirPopupFecha($index)">
+														<span class="label-icon" ng-click="producto.abrirPopupFecha($index)" tabindex="-1">
 															<i class="glyphicon glyphicon-calendar"></i>
 														</span>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
