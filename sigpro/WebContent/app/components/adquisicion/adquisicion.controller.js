@@ -346,7 +346,7 @@ app.controller('modalPlanadquisicionPagos', [ '$uibModalInstance',
 		mi.pagos = $scope.pagos;
 		mi.formatofecha = 'dd/MM/yyyy';
 		mi.totalPagos=0;
-		mi.reverse=true;		
+				
 		mi.abrirPopupFecha = function(index, tipo) {
 			if(tipo==0){
 				mi.pagos[index].isOpen = true;
