@@ -159,20 +159,6 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 			$location.path('/cargatrabajo/rv');
 	}
     
-    $http.post('/SProyecto',{accion: 'getProyectos',
-		t: new Date().getTime()}).success(
-		function(response) {
-			mi.peps = []; 
-			mi.peps.push({'value' : 0, 'text' : 'Seleccione un '+$rootScope.etiquetas.proyecto});
-			if (response.success){
-				for (var i = 0; i < response.entidades.length; i++){
-					mi.peps.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
-				}
-				mi.pep = mi.peps[0];
-								
-			}
-		});
-    
 	mi.tObjetos = [
 		{value: 0,text: "Seleccione una Opción"},
 		{value: 1,text: $rootScope.etiquetas.proyecto},
