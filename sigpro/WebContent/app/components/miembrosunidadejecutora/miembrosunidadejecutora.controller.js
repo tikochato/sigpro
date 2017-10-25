@@ -10,6 +10,7 @@ app.controller('miembrosunidadejecutoraController',['$rootScope','$scope','$http
 	mi.miembros = [];
 	mi.colaboradores = [];
 	mi.roles = [];
+	mi.proyectoId = $routeParams.proyectoId;
 	
 	mi.tamanoPantalla = Math.floor(document.getElementById("miemborsue").offsetWidth);
 	mi.tamanoTotal = mi.tamanoPantalla - 300; 
@@ -21,7 +22,7 @@ app.controller('miembrosunidadejecutoraController',['$rootScope','$scope','$http
 	
 	$http.post('/SMiembrosUnidadEjecutora', {
 		accion: 'getMiembros',
-		proyectoId: 98,
+		proyectoId: mi.proyectoId,
 		t:moment().unix()
 	}).success(function(response){
 		if(response.success){
@@ -64,7 +65,7 @@ app.controller('miembrosunidadejecutoraController',['$rootScope','$scope','$http
 	mi.guardar = function(){
 		var param_data = {
 				accion : 'guardarMiembros',
-				proyectoId: 98,
+				proyectoId: mi.proyectoId,
 				miembros: JSON.stringify(mi.rowCollection),
 				t:moment().unix()
 		};
