@@ -27,24 +27,78 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
     mi.estructuraPrestamo = [];
     mi.mostrarcargando=false;
     
+    mi.lprestamos = [];
+	
+	
+	$http.post('/SPrestamo', {accion: 'getPrestamos', t: (new Date()).getTime()}).then(
+		function(response){
+			if(response.data.success){
+				mi.lprestamos = response.data.prestamos;
+			}	
+	});
+	
+	mi.blurPrestamo=function(){
+		if(document.getElementById("prestamo_value").defaultValue!=mi.prestamoNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','prestamo');
+		}
+	}
+	
+	mi.cambioPrestamo=function(selected){
+		if(selected!== undefined){
+			mi.prestamoNombre = selected.originalObject.proyectoPrograma;
+			mi.prestamoId = selected.originalObject.id;
+			mi.getPeps(mi.prestamoId);
+		}
+		else{
+			mi.prestamoNombre="";
+			mi.prestamoId="";
+		}
+	}
+	
+	mi.blurPep=function(){
+		if(document.getElementById("pep_value").defaultValue!=mi.pepNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','pep');
+		}
+	}
+	
+	mi.cambioPep=function(selected){
+		if(selected!== undefined){
+			mi.pepNombre = selected.originalObject.nombre;
+			mi.pepId = selected.originalObject.id;
+		}
+		else{
+			mi.pepNombre="";
+			mi.pepId="";
+		}
+	}
+	
+	mi.getPeps = function(prestamoId){
+		$http.post('/SProyecto',{accion: 'getProyectos', prestamoid: prestamoId}).success(
+			function(response) {
+				mi.peps = [];
+				if (response.success){
+					mi.peps = response.entidades;
+				}
+		});	
+	}
+    
     
     mi.pieColors = ['#fd7b7d','#dddd7d','#bae291','#9cc3e2'];
     
     mi.lineColors = ['#9cc3e2'];
     
     
-    	mi.optionsPie = {
-    			
-			legend: {
-				display: true,
-				position: 'right'
-			},
-			pieceLabel: {
-			    render: 'percentage',
-			    fontColor: ['green', 'white', 'red'],
-			    precision: 2
-			  }
-			  };
+	mi.optionsPie = {	
+		legend: {
+			display: true,
+			position: 'right'
+		},
+		pieceLabel: {
+		    render: 'percentage',
+		    fontColor: ['green', 'white', 'red'],
+		    precision: 2
+		}
+	};
     	
     	
     	
@@ -108,13 +162,13 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
     $http.post('/SProyecto',{accion: 'getProyectos',
 		t: new Date().getTime()}).success(
 		function(response) {
-			mi.prestamos = []; 
-			mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un '+$rootScope.etiquetas.proyecto});
+			mi.peps = []; 
+			mi.peps.push({'value' : 0, 'text' : 'Seleccione un '+$rootScope.etiquetas.proyecto});
 			if (response.success){
 				for (var i = 0; i < response.entidades.length; i++){
-					mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
+					mi.peps.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
 				}
-				mi.prestamo = mi.prestamos[0];
+				mi.pep = mi.peps[0];
 								
 			}
 		});
@@ -143,7 +197,7 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 			{value: 0, text: "Seleccione una opción"}
 		]
 		
-		mi.prestamos = [
+		mi.peps = [
 			{value: 0,text: "Seleccione una opción"}
 		];
 		
@@ -161,7 +215,7 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 		
 		mi.entidad = mi.entidades[0];
 		mi.unidadEjecutora = mi.unidadesEjecutoras[0];
-		mi.prestamo = mi.prestamos[0];
+		mi.pep = mi.peps[0];
 		mi.componente = mi.componentes[0];
 		mi.producto = mi.productos[0];
 		mi.subProducto = mi.subProductos[0];
@@ -172,7 +226,7 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 		if(objetoSeleccionado === 0){
 			mi.entidadHide = false;
 			mi.unidadEjecutoraHide = false;
-			mi.prestamoHide = false;
+			mi.pepHide = false;
 			mi.componenteHide = false;
 			mi.productoHide = false;
 			mi.subProductoHide = false;
@@ -180,7 +234,7 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 		}else if(objetoSeleccionado === 1){
 			mi.entidadHide = true;
 			mi.unidadEjecutoraHide = true;
-			mi.prestamoHide = true;
+			mi.pepHide = true;
 			mi.componenteHide = false;
 			mi.productoHide = false;
 			mi.subProductoHide = false;
@@ -189,7 +243,7 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 		}else if(objetoSeleccionado === 2){
 			mi.entidadHide = true;
 			mi.unidadEjecutoraHide = true;
-			mi.prestamoHide = true;
+			mi.pepHide = true;
 			mi.componenteHide = true;
 			mi.productoHide = false;
 			mi.subProductoHide = false;
@@ -198,7 +252,7 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 		}else if (objetoSeleccionado === 3){
 			mi.entidadHide = true;
 			mi.unidadEjecutoraHide = true;
-			mi.prestamoHide = true;
+			mi.pepHide = true;
 			mi.componenteHide = true;
 			mi.productoHide = true;
 			mi.subProductoHide = false;
@@ -207,7 +261,7 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 		}else if (objetoSeleccionado === 4){
 			mi.entidadHide = true;
 			mi.unidadEjecutoraHide = true;
-			mi.prestamoHide = true;
+			mi.pepHide = true;
 			mi.componenteHide = true;
 			mi.productoHide = true;
 			mi.subProductoHide = true;
@@ -247,12 +301,12 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 	
 	mi.generar = function(){
 		
-		if (mi.tObjeto.value == 1 || mi.prestamo.value != 0){
+		if (mi.tObjeto.value == 1 || mi.pepId != 0){
 			mi.grafica = true;
-			mi.idPrestamo = mi.prestamo.value;
+			mi.idPrestamo = mi.pepId;
 			mi.mostrar = false;
 			mi.mostrarcargando=true;
-			$http.post('/SCargaTrabajo', {accion: 'getEstructrua', idPrestamo :mi.prestamo.value,
+			$http.post('/SCargaTrabajo', {accion: 'getEstructrua', idPrestamo :mi.pepId,
 				t: new Date().getTime()}).success(
 					function(response){
 						mi.estructuraPrestamo = response.estructura;
@@ -460,7 +514,7 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 	
 	mi.getEstructura = function (){
 		
-		if(mi.prestamo.value > 0)
+		if(mi.pepId > 0)
 		{
 			if(mi.fechaInicio != null && mi.fechaInicio.toString().length == 4 && 
 					mi.fechaFin != null && mi.fechaFin.toString().length == 4)
@@ -505,7 +559,7 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 	};
 	
 	mi.filtrarEstrucrura = function(titulo, mensaje){
-		var resultado = mi.llamarModal(mi.prestamo.value); 
+		var resultado = mi.llamarModal(mi.pepId); 
 		mi.mostrar = false;
 		resultado.then(function(itemSeleccionados) {
 			mi.objetosSeleccionados = itemSeleccionados;
@@ -601,7 +655,7 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 	
 	
 	mi.actividadesResponsable = function(valor){
-		var resultado = mi.llamarModalEstructuraResponsable(mi.prestamo.value,valor.id,mi.fechaInicio,mi.fechaFin);
+		var resultado = mi.llamarModalEstructuraResponsable(mi.pepId,valor.id,mi.fechaInicio,mi.fechaFin);
 	};
 	
 	
