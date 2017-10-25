@@ -593,6 +593,14 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				$location.path('/matrizriesgo/'+ proyectoid );
 		}
 	};
+	mi.irAMiembrosUnidadEjecutora = function(proyectoid){
+		if(mi.proyecto!=null){
+			if(mi.esTreeview)
+				$window.location='/main.jsp#!/miembrosunidadejecutora/'+ proyectoid;
+			else
+				$location.path('/miembrosunidadejecutora/'+ proyectoid);
+		}
+	};
 
 	mi.llamarModalBusqueda = function(titulo,servlet, accionServlet, datosCarga,columnaId,columnaNombre, showfilters,entidad) {
 		var resultado = $q.defer();
