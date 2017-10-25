@@ -12,9 +12,8 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 	mi.tabla = {};
 	mi.anioFiscal = "";
 	mi.mesReportado = "";
-	mi.anioInicial=0;
-	mi.anioFinal=0;
 	mi.mostrarDescargar = false;
+	mi.mostrarBotones = false;
 	
 	mi.desembolsos= [];
 	mi.desembolsosOriginal = [];
@@ -32,6 +31,61 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 	
 	mi.datosOrigniales;
 	
+	mi.lprestamos = [];
+	
+	
+	$http.post('/SPrestamo', {accion: 'getPrestamos', t: (new Date()).getTime()}).then(
+		function(response){
+			if(response.data.success){
+				mi.lprestamos = response.data.prestamos;
+			}	
+	});
+	
+	mi.blurPrestamo=function(){
+		if(document.getElementById("prestamo_value").defaultValue!=mi.prestamoNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','prestamo');
+		}
+	}
+	
+	mi.cambioPrestamo=function(selected){
+		if(selected!== undefined){
+			mi.prestamoNombre = selected.originalObject.proyectoPrograma;
+			mi.prestamoId = selected.originalObject.id;
+			mi.getPeps(mi.prestamoId);
+		}
+		else{
+			mi.prestamoNombre="";
+			mi.prestamoId="";
+		}
+	}
+	
+	mi.blurPep=function(){
+		if(document.getElementById("pep_value").defaultValue!=mi.pepNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','pep');
+		}
+	}
+	
+	mi.cambioPep=function(selected){
+		if(selected!== undefined){
+			mi.pepNombre = selected.originalObject.nombre;
+			mi.pepId = selected.originalObject.id;
+			mi.generarReporte();
+		}
+		else{
+			mi.pepNombre="";
+			mi.pepId="";
+		}
+	}
+	
+	mi.getPeps = function(prestamoId){
+		$http.post('/SProyecto',{accion: 'getProyectos', prestamoid: prestamoId}).success(
+			function(response) {
+				mi.peps = [];
+				if (response.success){
+					mi.peps = response.entidades;
+				}
+		});	
+	}
 	
 	mi.fechaOptions = {
 			datepickerMode:"year",
@@ -126,17 +180,6 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 			    }
 			  };
 	
-	
-	$http.post('/SProyecto',{accion: 'getProyectos'}).success(
-			function(response) {
-				mi.prestamos = [];
-				if (response.success){
-					for (var i = 0; i < response.entidades.length; i++){
-						mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
-					}
-				}
-	});
-	
 	mi.inicializarDatos = function (){
 		mi.proyectoid = "";
 		mi.proyectoNombre = "";
@@ -161,11 +204,11 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 		mi.inicializarDatos();
 		mi.mostrarDescargar = false;
 		
-		if ( mi.prestamoSeleccionado != null && mi.anio_inicio > 0 &&  mi.anio_inicio.toString().length == 4 ){
+		if ( mi.pepId != null && mi.anio_inicio > 0 &&  mi.anio_inicio.toString().length == 4 ){
 			mi.inicializarDatos();
 			mi.mostrar=true;
 			$http.post('/SDesembolsos', { accion: 'getDesembolsos',
-				 proyectoId: mi.prestamoSeleccionado.value,
+				 proyectoId: mi.pepId,
 				 anio_inicial:mi.anio_inicio,
 				 anio_final:mi.anio_fin,
 				 t: new Date().getTime()
@@ -179,7 +222,7 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 						
 						mi.mostrar = true;
 						mi.mostrarDescargar = true;
-						
+						mi.mostrarBotones = true;
 						
 				}else{
 					$utilidades.mensaje('warning','No se encontraron datos para el '+$rootScope.etiquetas.proyecto);

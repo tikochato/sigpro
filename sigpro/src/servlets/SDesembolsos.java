@@ -27,8 +27,9 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.DataSigadeDAO;
 import dao.DesembolsoDAO;
-import dao.PrestamoDAO;
+import dao.ProyectoDAO;
 import pojo.Prestamo;
+import pojo.Proyecto;
 import utilities.CExcel;
 import utilities.CGraficaExcel;
 import utilities.CLogger;
@@ -91,7 +92,8 @@ public class SDesembolsos extends HttpServlet {
 			Integer anio_final = Utils.String2Int(map.get("anio_final"));
 			
 			Integer proyectoId = Utils.String2Int(map.get("proyectoId"));
-			Prestamo prestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(proyectoId, 1);
+			Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
+			Prestamo prestamo = proyecto.getPrestamo();
 			
 			if (prestamo!=null){
 			
