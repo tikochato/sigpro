@@ -21,7 +21,6 @@ import pojo.Actividad;
 import pojo.Componente;
 import pojo.PlanAdquisicion;
 import pojo.PlanAdquisicionPago;
-import pojo.Prestamo;
 import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subcomponente;
@@ -276,9 +275,8 @@ public class ObjetoDAO {
 						if(obtenerReal){
 							if(objetoCosto.getObjeto_tipo() == 0){
 								Proyecto proy = ProyectoDAO.getProyecto(objetoCosto.getObjeto_id());
-								Prestamo objPrestamo = proy.getPrestamo();
-								if(objPrestamo != null ){
-									String codigoPresupuestario = Long.toString(objPrestamo.getCodigoPresupuestario());
+								if(proy.getPrestamo() != null ){
+									String codigoPresupuestario = Long.toString(proy.getPrestamo().getCodigoPresupuestario());
 									if(codigoPresupuestario!=null && !codigoPresupuestario.isEmpty()){
 										fuente = Utils.String2Int(codigoPresupuestario.substring(0,2));
 										organismo = Utils.String2Int(codigoPresupuestario.substring(2,6));
