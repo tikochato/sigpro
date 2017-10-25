@@ -163,7 +163,8 @@ public class SProyecto extends HttpServlet {
 
 		if (accion.equals("getProyectos")) {
 			Integer prestamoId = (map.get("prestamoid")!=null) ? Utils.String2Int(map.get("prestamoid"),-1) : null;
-			List<Proyecto> proyectos = ProyectoDAO.getProyectos(prestamoId,usuario);
+			List<Proyecto> proyectos = (prestamoId!=null) ? ProyectoDAO.getProyectos(prestamoId,usuario) : 
+				ProyectoDAO.getProyectos(usuario);
 			
 			response.setHeader("Content-Encoding", "gzip");
 			response.setCharacterEncoding("UTF-8");
