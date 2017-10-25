@@ -79,7 +79,8 @@
 								<input type="checkbox" ng-model="row.metaFinalString" />
 							</div>
 							<div ng-switch-when="fecha" class="form-group" >
-								<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" ng-model="row.fechaControl" is-open="row.isOpen"
+								<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" alt-input-formats="{{metac.altformatofecha}}"
+									ng-model="row.fechaControl" is-open="row.isOpen"
 									datepicker-options="metac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="metac.abrirPopupFecha(row)"
 									ng-change="metac.guardarFechaMetaFinal(row)"/>
 									<span class="label-icon" ng-click="metac.abrirPopupFecha(row)" tabindex="-1">
@@ -150,7 +151,8 @@
 												<input type="checkbox" ng-model="metac.planificado.eneroString" ng-change="metac.almacenarPlanificado('eneroString')"/>
 											</div>
 											<div ng-switch-when="fecha" class="form-group" >
-												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" ng-model="metac.planificado.eneroTiempo" is-open="metac.planificado.isOpenEnero"
+												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" alt-input-formats="{{metac.altformatofecha}}"
+													ng-model="metac.planificado.eneroTiempo" is-open="metac.planificado.isOpenEnero"
 													datepicker-options="metac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="metac.abrirPopupFecha(1001)"
 													ng-change="metac.almacenarPlanificado('eneroTiempo')"/>
 											</div>
@@ -171,7 +173,8 @@
 												<input type="checkbox" ng-model="metac.planificado.febreroString" ng-change="metac.almacenarPlanificado('febreroString')"/>
 											</div>
 											<div ng-switch-when="fecha" class="form-group" >
-												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" ng-model="metac.planificado.febreroTiempo" is-open="metac.planificado.isOpenFebrero"
+												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" alt-input-formats="{{metac.altformatofecha}}"
+													ng-model="metac.planificado.febreroTiempo" is-open="metac.planificado.isOpenFebrero"
 													datepicker-options="metac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="metac.abrirPopupFecha(1002)"
 													ng-change="metac.almacenarPlanificado('febreroTiempo')"/>
 											</div>
@@ -192,7 +195,8 @@
 												<input type="checkbox" ng-model="metac.planificado.marzoString" ng-change="metac.almacenarPlanificado('marzoString')"/>
 											</div>
 											<div ng-switch-when="fecha" class="form-group" >
-												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" ng-model="metac.planificado.marzoTiempo" is-open="metac.planificado.isOpenMarzo"
+												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" alt-input-formats="{{metac.altformatofecha}}"
+													ng-model="metac.planificado.marzoTiempo" is-open="metac.planificado.isOpenMarzo"
 													datepicker-options="metac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="metac.abrirPopupFecha(1003)"
 													ng-change="metac.almacenarPlanificado('marzoTiempo')"/>
 											</div>
@@ -213,7 +217,8 @@
 												<input type="checkbox" ng-model="metac.planificado.abrilString" ng-change="metac.almacenarPlanificado('abrilString')"/>
 											</div>
 											<div ng-switch-when="fecha" class="form-group" >
-												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" ng-model="metac.planificado.abrilTiempo" is-open="metac.planificado.isOpenAbril"
+												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" alt-input-formats="{{metac.altformatofecha}}"
+													ng-model="metac.planificado.abrilTiempo" is-open="metac.planificado.isOpenAbril"
 													datepicker-options="metac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="metac.abrirPopupFecha(1004)"
 													ng-change="metac.almacenarPlanificado('abrilTiempo')"/>
 											</div>
@@ -234,7 +239,8 @@
 												<input type="checkbox" ng-model="metac.planificado.mayoString" ng-change="metac.almacenarPlanificado('mayoString')"/>
 											</div>
 											<div ng-switch-when="fecha" class="form-group" >
-												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" ng-model="metac.planificado.mayoTiempo" is-open="metac.planificado.isOpenMayo"
+												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" alt-input-formats="{{metac.altformatofecha}}"
+													ng-model="metac.planificado.mayoTiempo" is-open="metac.planificado.isOpenMayo"
 													datepicker-options="metac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="metac.abrirPopupFecha(1005)"
 													ng-change="metac.almacenarPlanificado('mayoTiempo')"/>
 											</div>
@@ -255,7 +261,8 @@
 												<input type="checkbox" ng-model="metac.planificado.junioString" ng-change="metac.almacenarPlanificado('junioString')"/>
 											</div>
 											<div ng-switch-when="fecha" class="form-group" >
-												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" ng-model="metac.planificado.junioTiempo" is-open="metac.planificado.isOpenJunio"
+												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" alt-input-formats="{{metac.altformatofecha}}"
+													ng-model="metac.planificado.junioTiempo" is-open="metac.planificado.isOpenJunio"
 													datepicker-options="metac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="metac.abrirPopupFecha(1006)"
 													ng-change="metac.almacenarPlanificado('junioTiempo')"/>
 											</div>
@@ -276,7 +283,8 @@
 												<input type="checkbox" ng-model="metac.planificado.julioString" ng-change="metac.almacenarPlanificado('julioString')"/>
 											</div>
 											<div ng-switch-when="fecha" class="form-group" >
-												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" ng-model="metac.planificado.julioTiempo" is-open="metac.planificado.isOpenJulio"
+												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" alt-input-formats="{{metac.altformatofecha}}"
+													ng-model="metac.planificado.julioTiempo" is-open="metac.planificado.isOpenJulio"
 													datepicker-options="metac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="metac.abrirPopupFecha(1007)"
 													ng-change="metac.almacenarPlanificado('julioTiempo')"/>
 											</div>
@@ -297,7 +305,8 @@
 												<input type="checkbox" ng-model="metac.planificado.agostoString" ng-change="metac.almacenarPlanificado('agostoString')"/>
 											</div>
 											<div ng-switch-when="fecha" class="form-group" >
-												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" ng-model="metac.planificado.agostoTiempo" is-open="metac.planificado.isOpenAgosto"
+												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" alt-input-formats="{{metac.altformatofecha}}"
+													ng-model="metac.planificado.agostoTiempo" is-open="metac.planificado.isOpenAgosto"
 													datepicker-options="metac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="metac.abrirPopupFecha(1008)"
 													ng-change="metac.almacenarPlanificado('agostoTiempo')"/>
 											</div>
@@ -318,7 +327,8 @@
 												<input type="checkbox" ng-model="metac.planificado.septiembreString" ng-change="metac.almacenarPlanificado('septiembreString')"/>
 											</div>
 											<div ng-switch-when="fecha" class="form-group" >
-												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" ng-model="metac.planificado.septiembreTiempo" is-open="metac.planificado.isOpenSeptiembre"
+												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" alt-input-formats="{{metac.altformatofecha}}"
+													ng-model="metac.planificado.septiembreTiempo" is-open="metac.planificado.isOpenSeptiembre"
 													datepicker-options="metac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="metac.abrirPopupFecha(1009)"
 													ng-change="metac.almacenarPlanificado('septiembreTiempo')"/>
 											</div>
@@ -339,7 +349,8 @@
 												<input type="checkbox" ng-model="metac.planificado.octubreString" ng-change="metac.almacenarPlanificado('octubreString')"/>
 											</div>
 											<div ng-switch-when="fecha" class="form-group" >
-												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" ng-model="metac.planificado.octubreTiempo" is-open="metac.planificado.isOpenOctubre"
+												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" alt-input-formats="{{metac.altformatofecha}}"
+													ng-model="metac.planificado.octubreTiempo" is-open="metac.planificado.isOpenOctubre"
 													datepicker-options="metac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="metac.abrirPopupFecha(1010)"
 													ng-change="metac.almacenarPlanificado('octubreTiempo')"/>
 											</div>
@@ -360,7 +371,8 @@
 												<input type="checkbox" ng-model="metac.planificado.noviembreString" ng-change="metac.almacenarPlanificado('noviembreString')"/>
 											</div>
 											<div ng-switch-when="fecha" class="form-group" >
-												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" ng-model="metac.planificado.noviembreTiempo" is-open="metac.planificado.isOpenNoviembre"
+												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" alt-input-formats="{{metac.altformatofecha}}"
+													ng-model="metac.planificado.noviembreTiempo" is-open="metac.planificado.isOpenNoviembre"
 													datepicker-options="metac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="metac.abrirPopupFecha(1011)"
 													ng-change="metac.almacenarPlanificado('noviembreTiempo')"/>
 											</div>
@@ -381,7 +393,8 @@
 												<input type="checkbox" ng-model="metac.planificado.diciembreString" ng-change="metac.almacenarPlanificado('diciembreString')"/>
 											</div>
 											<div ng-switch-when="fecha" class="form-group" >
-												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" ng-model="metac.planificado.diciembreTiempo" is-open="metac.planificado.isOpenDiciembre"
+												<input type="text" class="inputText" uib-datepicker-popup="{{metac.formatofecha}}" alt-input-formats="{{metac.altformatofecha}}"
+													ng-model="metac.planificado.diciembreTiempo" is-open="metac.planificado.isOpenDiciembre"
 													datepicker-options="metac.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="metac.abrirPopupFecha(1012)"
 													ng-change="metac.almacenarPlanificado('diciembreTiempo')"/>
 											</div>

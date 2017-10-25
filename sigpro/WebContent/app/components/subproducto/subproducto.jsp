@@ -242,7 +242,8 @@
 						
 						<div class="col-sm-6">
 							<div class="form-group" >
-							  <input type="text"  class="inputText" uib-datepicker-popup="{{subproducto.formatofecha}}" ng-model="subproducto.subproducto.fechaInicio" is-open="subproducto.fi_abierto"
+							  <input type="text"  class="inputText" uib-datepicker-popup="{{subproducto.formatofecha}}" alt-input-formats="{{subproducto.altformatofecha}}"
+							  			ng-model="subproducto.subproducto.fechaInicio" is-open="subproducto.fi_abierto"
 							            datepicker-options="subproducto.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="subproducto.cambioDuracion(subproducto.duracionDimension);" ng-required="true"  
 							            ng-value="subproducto.subproducto.fechaInicio" onblur="this.setAttribute('value', this.value);"
 							            ng-readonly="subproducto.subproducto.tieneHijos"/>
@@ -255,7 +256,8 @@
 						
 						<div class="col-sm-6">
 							<div class="form-group" >
-							  <input type="text"  class="inputText" uib-datepicker-popup="{{subproducto.formatofecha}}" ng-model="subproducto.subproducto.fechaFin" is-open="subproducto.ff_abierto"
+							  <input type="text"  class="inputText" uib-datepicker-popup="{{subproducto.formatofecha}}" alt-input-formats="{{subproducto.altformatofecha}}"
+							  			ng-model="subproducto.subproducto.fechaFin" is-open="subproducto.ff_abierto"
 							            datepicker-options="subproducto.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true" ng-click=""
 							            ng-value="subproducto.subproducto.fechaFin" onblur="this.setAttribute('value', this.value);"
 							            ng-readonly="true"/>
@@ -288,7 +290,8 @@
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="fecha" class="form-group" >
-									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{subproducto.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
+									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{subproducto.formatofecha}}" alt-input-formats="{{subproducto.altformatofecha}}"
+							  							ng-model="campo.valor" is-open="campo.isOpen"
 														datepicker-options="subproducto.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="subproducto.abrirPopupFecha($index)"
 														ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 														<span class="label-icon" ng-click="subproducto.abrirPopupFecha($index)">

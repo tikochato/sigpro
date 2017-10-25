@@ -98,7 +98,8 @@
 							<label  class="floating-label">* Probabilidad</label>
 						</div>
 						<div class="form-group">
-							<input type="text" class="inputText" uib-datepicker-popup="{{riesgoc.formatofecha}}" ng-model="riesgoc.fechaEjecucion" is-open="riesgoc.fe_abierto"
+							<input type="text" class="inputText" uib-datepicker-popup="{{riesgoc.formatofecha}}" alt-input-formats="{{riesgoc.altformatofecha}}"
+									ng-model="riesgoc.fechaEjecucion" is-open="riesgoc.fe_abierto"
 									datepicker-options="riesgoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="riesgoc.mostraringreso"
 									ng-value="riesgoc.riesgo.fechaEjecucion" onblur="this.setAttribute('value', this.value);"/>
 								<span class="label-icon" ng-click="riesgoc.abrirPopupFecha(1000)">
@@ -159,7 +160,8 @@
 									<label class="floating-label">{{ campo.nombre }}</label>
 								</div>
 								<div ng-switch-when="5" class="form-group" >
-									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{riesgoc.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
+									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{riesgoc.formatofecha}}" alt-input-formats="{{riesgoc.altformatofecha}}"
+														ng-model="campo.valor" is-open="campo.isOpen"
 														datepicker-options="riesgoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
 														ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 														<span class="label-icon" ng-click="riesgoc.abrirPopupFecha($index)">

@@ -19,6 +19,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		mi.colaboradorNombre = "";
 		mi.camposdinamicos = {};
 		mi.formatofecha = 'dd/MM/yyyy';
+		mi.altformatofecha = ['d!/M!/yyyy'];
 		mi.colaboradorid="";
 		mi.colaboradorNombre="";
 		mi.proyectoid = "";

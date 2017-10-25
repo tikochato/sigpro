@@ -196,7 +196,8 @@
 					<div class="row">
 						<div class="col-sm-4">
 							<div class="form-group">    						
-								<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaDecreto" is-open="prestamoc.fd_abierto"
+								<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}" alt-input-formats="{{prestamoc.altformatofecha}}"
+									ng-model="prestamoc.prestamo.fechaDecreto" is-open="prestamoc.fd_abierto"
 									datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
 									ng-value="prestamoc.prestamo.fechaDecreto" onblur="this.setAttribute('value', this.value);"
 								/>
@@ -208,7 +209,8 @@
 						</div>
 						<div class="col-sm-4">
 							<div class="form-group">
-								<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaSuscripcion" is-open="prestamoc.fs_abierto"
+								<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}"  alt-input-formats="{{prestamoc.altformatofecha}}"
+									ng-model="prestamoc.prestamo.fechaSuscripcion" is-open="prestamoc.fs_abierto"
 									datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
 									ng-value="prestamoc.prestamo.fechaSuscripcion" onblur="this.setAttribute('value', this.value);"
 									/>
@@ -220,7 +222,8 @@
 						</div>
 						<div class="col-sm-4">
 							<div class="form-group">
-								<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaVigencia" is-open="prestamoc.fv_abierto"
+								<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}"  alt-input-formats="{{prestamoc.altformatofecha}}"
+									ng-model="prestamoc.prestamo.fechaVigencia" is-open="prestamoc.fv_abierto"
 									datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
 									ng-value="prestamoc.prestamo.fechaVigencia" onblur="this.setAttribute('value', this.value);"
 									/>
@@ -438,7 +441,8 @@
 							<div class="row" style="margin-top: 15px;">
 								<div class="col-sm-6">
 									<div class="form-group">
-										<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaElegibilidadUe" is-open="prestamoc.fe_abierto"
+										<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}"  alt-input-formats="{{prestamoc.altformatofecha}}"
+											ng-model="prestamoc.prestamo.fechaElegibilidadUe" is-open="prestamoc.fe_abierto"
 											datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="prestamoc.setPorcentaje(5);"
 											ng-value="prestamoc.prestamo.fechaElegibilidadUe" onblur="this.setAttribute('value', this.value);" />
 										<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1009)" tabindex="-1">
@@ -450,7 +454,8 @@
 								
 								<div class="col-sm-6">
 									<div class="form-group">
-											<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaCierreOrigianlUe" is-open="prestamoc.fco_abierto"
+											<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}"  alt-input-formats="{{prestamoc.altformatofecha}}"
+												ng-model="prestamoc.prestamo.fechaCierreOrigianlUe" is-open="prestamoc.fco_abierto"
 												datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="prestamoc.setPorcentaje(5);"
 												ng-value="prestamoc.prestamo.fechaCierreOrigianlUe" onblur="this.setAttribute('value', this.value);"
 											/>
@@ -464,7 +469,8 @@
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="form-group">
-											<input type="text" class="inputText"   uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaCierreActualUe" is-open="prestamoc.fca_abierto"
+											<input type="text" class="inputText"   uib-datepicker-popup="{{prestamoc.formatofecha}}"  alt-input-formats="{{prestamoc.altformatofecha}}"
+												ng-model="prestamoc.prestamo.fechaCierreActualUe" is-open="prestamoc.fca_abierto"
 												datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="prestamoc.setPorcentaje(5);"
 												ng-value="prestamoc.prestamo.fechaCierreActualUe" onblur="this.setAttribute('value', this.value);"/>
 											<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1011)" tabindex="-1"
@@ -626,7 +632,8 @@
 						
 						<div class="col-sm-3">
 							<div class="form-group">
-								<input type="text" class="inputText"  uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaFirma" is-open="prestamoc.ff_abierto"
+								<input type="text" class="inputText"  uib-datepicker-popup="{{prestamoc.formatofecha}}"  alt-input-formats="{{prestamoc.altformatofecha}}"
+									ng-model="prestamoc.prestamo.fechaFirma" is-open="prestamoc.ff_abierto"
 									datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
 									ng-click="prestamoc.abrirPopupFecha(1004)" ng-value="prestamoc.prestamo.fechaCorte" onblur="this.setAttribute('value', this.value);"/>
 								<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1004)" tabindex="-1"
@@ -641,7 +648,8 @@
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group">
-								<input type="text" class="inputText"  uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaCorte" is-open="prestamoc.fc_abierto"
+								<input type="text" class="inputText"  uib-datepicker-popup="{{prestamoc.formatofecha}}"  alt-input-formats="{{prestamoc.altformatofecha}}"
+											ng-model="prestamoc.prestamo.fechaCorte" is-open="prestamoc.fc_abierto"
 													datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
 													ng-click="prestamoc.abrirPopupFecha(1003)" ng-value="prestamoc.prestamo.fechaCorte" onblur="this.setAttribute('value', this.value);"/>
 								<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1003)" tabindex="-1"
@@ -685,7 +693,8 @@
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group">
-								<input type="text" class="inputText"  uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaAutorizacion" is-open="prestamoc.fa_abierto"
+								<input type="text" class="inputText"  uib-datepicker-popup="{{prestamoc.formatofecha}}"  alt-input-formats="{{prestamoc.altformatofecha}}"
+									ng-model="prestamoc.prestamo.fechaAutorizacion" is-open="prestamoc.fa_abierto"
 									datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
 									ng-click="prestamoc.abrirPopupFecha(1005)" ng-value="prestamoc.prestamo.fechaAutorizacion" onblur="this.setAttribute('value', this.value);"/>
 								<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1005)" tabindex="-1"
@@ -697,7 +706,8 @@
 						</div>
 						<div class="col-sm-6">
 							<div class="form-group">
-								<input type="text" class="inputText"  uib-datepicker-popup="{{prestamoc.formatofecha}}" ng-model="prestamoc.prestamo.fechaFinEjecucion" is-open="prestamoc.ffe_abierto"
+								<input type="text" class="inputText"  uib-datepicker-popup="{{prestamoc.formatofecha}}"  alt-input-formats="{{prestamoc.altformatofecha}}"
+									ng-model="prestamoc.prestamo.fechaFinEjecucion" is-open="prestamoc.ffe_abierto"
 									datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
 									ng-click="prestamoc.abrirPopupFecha(1006)" ng-value="prestamoc.prestamo.fechaFinEjecucion" onblur="this.setAttribute('value', this.value);"/>
 								<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1006)" tabindex="-1"

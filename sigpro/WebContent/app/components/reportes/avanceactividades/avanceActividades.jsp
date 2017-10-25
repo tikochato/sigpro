@@ -67,7 +67,8 @@
 							ng-options="a.text for a in controller.prestamos" ng-change="controller.generar()"></select>
 					</div>
 					<div class="form-group col-sm-3">
-						<input type="text"  class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.fechaCorte" is-open="controller.fi_abierto"
+						<input type="text"  class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" alt-input-formats="{{controller.altformatofecha}}"
+							ng-model="controller.fechaCorte" is-open="controller.fi_abierto"
 				            datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="controller.validarFecha(controller.fechaCorte)" 
 				            ng-required="true"
 				            ng-value="controller.fechaCorte" onblur="this.setAttribute('value', this.value);"/>

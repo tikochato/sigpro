@@ -74,7 +74,8 @@
 				  	<div class="row">
 				  		<div class="col-sm-3">
 							<div class="form-group" >
-							  <input type="text"  class="inputText" uib-datepicker-popup="{{admintranc.formatofecha}}" ng-model="admintranc.fechaInicio" is-open="admintranc.fi_abierto"
+							  <input type="text"  class="inputText" uib-datepicker-popup="{{admintranc.formatofecha}}" alt-input-formats="{{admintranc.altformatofecha}}"
+							  		ng-model="admintranc.fechaInicio" is-open="admintranc.fi_abierto"
 						            datepicker-options="admintranc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  
 						            ng-required="true" ng-change="admintranc.validarFecha(admintranc.fechaInicio, admintranc.fechaFin)"
 						            ng-value="admintranc.fechaInicio" onblur="this.setAttribute('value', this.value);"/>
@@ -87,7 +88,8 @@
 		
 						<div class="col-sm-3">
 							<div class="form-group" >
-							  <input type="text"  class="inputText" uib-datepicker-popup="{{admintranc.formatofecha}}" ng-model="admintranc.fechaFin" is-open="admintranc.ff_abierto"
+							  <input type="text"  class="inputText" uib-datepicker-popup="{{admintranc.formatofecha}}" alt-input-formats="{{admintranc.altformatofecha}}"
+							  		ng-model="admintranc.fechaFin" is-open="admintranc.ff_abierto"
 						            datepicker-options="admintranc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
 						            ng-required="true" ng-change="admintranc.validarFecha(admintranc.fechaInicio, admintranc.fechaFin)"
 						            ng-value="admintranc.fechaFin" onblur="this.setAttribute('value', this.value);"/>

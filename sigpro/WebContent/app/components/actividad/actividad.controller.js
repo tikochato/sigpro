@@ -30,6 +30,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 		mi.actividadtipoid = "";
 		mi.actividadnombre = "";
 		mi.formatofecha = 'dd/MM/yyyy';
+		mi.altformatofecha = ['d!/M!/yyyy'];
 		mi.camposdinamicos = {};
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;

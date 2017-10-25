@@ -961,6 +961,7 @@ function modalEditarComponente($uibModalInstance, $scope, $http, $interval,
 	var mi = this;
 	mi.componente = {};
 	mi.formatofecha = 'dd/MM/yyyy';
+	mi.altformatofecha = ['d!/M!/yyyy'];
 	mi.fechaInicio =  "";
 	mi.fechaFin = "";
 	
@@ -1156,6 +1157,7 @@ function modalEditarProducto($uibModalInstance, $scope, $http, $interval,
 	var mi = this;
 	mi.componente = {};
 	mi.formatofecha = 'dd/MM/yyyy';
+	mi.altformatofecha = ['d!/M!/yyyy'];
 	mi.fechaInicio =  "";
 	mi.fechaFin = "";
 	
@@ -1353,6 +1355,7 @@ function modalEditarSubproducto($uibModalInstance, $scope, $http, $interval,
 	var mi = this;
 	mi.componente = {};
 	mi.formatofecha = 'dd/MM/yyyy';
+	mi.altformatofecha = ['d!/M!/yyyy'];
 	mi.fechaInicio =  "";
 	mi.fechaFin = "";
 	
@@ -1576,6 +1579,7 @@ function modalEditarActividad($uibModalInstance, $scope, $http, $interval,
 	mi.dimensiones = [{id:1,nombre:'Dias',sigla:'d'}];
 	
 	mi.formatofecha = 'dd/MM/yyyy';
+	mi.altformatofecha = ['d!/M!/yyyy'];
 	
 	mi.fechaOptions = {
 			formatYear : 'yy',

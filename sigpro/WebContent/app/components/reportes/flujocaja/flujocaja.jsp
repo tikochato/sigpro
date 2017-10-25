@@ -167,7 +167,8 @@
 					</div>
 					
 					<div class="form-group col-sm-2">
-						<input type="text"  class="inputText" uib-datepicker-popup="{{flujoc.formatofecha}}" ng-model="flujoc.fechaCorte" is-open="flujoc.isOpen"
+						<input type="text"  class="inputText" uib-datepicker-popup="{{flujoc.formatofecha}}" alt-input-formats="{{flujoc.altformatofecha}}"
+							ng-model="flujoc.fechaCorte" is-open="flujoc.isOpen"
 				            datepicker-options="flujoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  
 				            ng-required="true" ng-change="flujoc.validar()"
 				            ng-value="flujoc.fechaCorte" onblur="this.setAttribute('value', this.value);"/>

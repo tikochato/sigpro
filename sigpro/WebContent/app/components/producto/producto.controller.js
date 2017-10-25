@@ -114,6 +114,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 	
 	mi.formatofecha = 'dd/MM/yyyy';
+	mi.altformatofecha = ['d!/M!/yyyy'];
 
 	mi.cambioPagina = function() {
 		mi.cargarTabla(mi.paginaActual);
