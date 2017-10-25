@@ -44,6 +44,7 @@
 				                        <shiro:hasPermission name="19010"><li role="menuitem"><a href="/main.jsp#!/unidadmedida">Unidad de Medida</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="/main.jsp#!/categoriaadquisicion">Categoría de Adquisiciones</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="29010"><li role="menuitem"><a href="/main.jsp#!/tipoadquisicion">Tipo de Adquisiciones</a></li></shiro:hasPermission>
+				                        <shiro:hasPermission name="46010"><li role="menuitem"><a href="/main.jsp#!/tipoadquisicion">Roles de Unidad Ejecutora</a></li></shiro:hasPermission>
 			                        </ul>
 	                    		</li>
 	                    		<li class="dropdown-submenu">

@@ -3,7 +3,7 @@
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="rolunidadejecutoraController as rolc" class="maincontainer all_page" id="title">
-		<shiro:lacksPermission name="24010">
+		<shiro:lacksPermission name="46010">
 			<p ng-init="rolc.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
 		
@@ -14,17 +14,17 @@
 		<div class="row" align="center" ng-hide="rolc.mostraringreso">
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-			       <shiro:hasPermission name="24040">
+			       <shiro:hasPermission name="46040">
 			       		<label class="btn btn-primary" ng-click="rolc.nueva()"  uib-tooltip="Nuevo">
 							<span class="glyphicon glyphicon-plus"></span> Nuevo
 						</label>
 			       </shiro:hasPermission> 
-			       <shiro:hasPermission name="19020">
+			       <shiro:hasPermission name="46020">
 			       		<label class="btn btn-primary" ng-click="rolc.editar()"  uib-tooltip="Editar">
 			       		<span class="glyphicon glyphicon-pencil"></span> Editar
 			       		</label>
 			       	</shiro:hasPermission>
-			       <shiro:hasPermission name="19030">
+			       <shiro:hasPermission name="46030">
 			       		<label class="btn btn-danger" ng-click="rolc.borrar()"  uib-tooltip="Borrar">
 			       		<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			       </shiro:hasPermission>
@@ -32,7 +32,7 @@
 			        
     			</div>				
     		</div>
-    		<shiro:hasPermission name="19010">
+    		<shiro:hasPermission name="46010">
     		<div class="col-sm-12" align="center">
     			<div style="height: 35px;">
 					<div style="text-align: right;"><div class="btn-group" role="group" aria-label="">
@@ -77,7 +77,7 @@
 			
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
-					<shiro:hasPermission name="19020">
+					<shiro:hasPermission name="46020">
 			        	<label class="btn btn-success"  ng-click="form.$valid ? rolc.guardar() : ''" ng-disabled="form.$invalid" uib-tooltip="Guardar" tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 			        </shiro:hasPermission>
@@ -143,7 +143,7 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="col-sm-12 operation_buttons" align="right">
 					<div class="btn-group">
-						<shiro:hasPermission name="19020">
+						<shiro:hasPermission name="46020">
 				        	<label class="btn btn-success" ng-click="form.$valid ? rolc.guardar() : ''" ng-disabled="form.$invalid" uib-tooltip="Guardar" tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 						</shiro:hasPermission>
