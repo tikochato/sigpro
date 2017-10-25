@@ -200,8 +200,8 @@
 			        <div class="form-group">
 			            <input type="text" class="inputText" ng-model="subproducto.unidadEjecutoraNombre" ng-readonly="true" 
 			            	ng-value="subproducto.unidadEjecutoraNombre" onblur="this.setAttribute('value', this.value);" 
-			            	ng-click="subproducto.buscarUnidadEjecutora()"/>
-			            <span class="label-icon" ng-click="subproducto.buscarUnidadEjecutora()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+			            	ng-click="subproducto.prestamoId != null ? '' : subproducto.buscarUnidadEjecutora()"/>
+			            <span class="label-icon" ng-click="subproducto.prestamoId != null ? '' : subproducto.buscarUnidadEjecutora()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 			          <label class="floating-label">Unidad Ejecutora</label>
 			        </div>
 			        <div class="form-group" >
@@ -342,13 +342,17 @@
 			</div>
 			</uib-tab>
 			<uib-tab index="2" heading="Adquisición" ng-click="subproducto.adquisicionesActivo()">
-	    		<div ng-if="subproducto.adquisicionesCargadas">
-					<%@include file="/app/components/adquisicion/adquisicion.jsp" %>
+				<div class="col-sm-12">
+		    		<div ng-if="subproducto.adquisicionesCargadas">
+						<%@include file="/app/components/adquisicion/adquisicion.jsp" %>
+					</div>
 				</div>
 		    </uib-tab>
 		    <uib-tab index="3" heading="Riesgos" ng-click="subproducto.riesgosActivo()" >
+			    <div class="col-sm-12">
 					<div ng-if="subproducto.riesgos"><%@include file="/app/components/riesgo/riesgo.jsp" %></div>
-				</uib-tab>
+				</div>
+			</uib-tab>
 		</uib-tabset>
 		</form>
 		<div class="col-sm-12 operation_buttons" align="right"  style="margin-top: 15px;">

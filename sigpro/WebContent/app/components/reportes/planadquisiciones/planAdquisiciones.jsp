@@ -201,7 +201,9 @@
 							ng-change="planadqui.validar(3)"/>
 						  	<label for="campo.id" class="floating-label">*Año Final</label>
 						</div>
-	    				<div class="col-sm-7" align="right" ng-hide="!planadqui.mostrarDescargar">
+					</div>
+					<div class="row">
+	    				<div class="col-sm-12" align="right" ng-hide="!planadqui.mostrarDescargar">
 	    					<div class="form-group col-sm-1">
 							</div>
 							<div class="col-sm-11">

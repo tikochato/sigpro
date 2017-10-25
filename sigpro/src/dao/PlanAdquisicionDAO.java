@@ -246,4 +246,20 @@ public class PlanAdquisicionDAO {
 		}
 	}
 	
+	public static List<PlanAdquisicionPago> getPagos(Integer planadquisicionId){
+		List<PlanAdquisicionPago> ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<PlanAdquisicionPago> criteria = session.createQuery("FROM PlanAdquisicionPago pap where pap.planAdquisicion.id=:planadquisicionId order by pap.fechaPago", PlanAdquisicionPago.class);
+			criteria.setParameter("planadquisicionId", planadquisicionId);
+			ret = criteria.getResultList();
+		}catch(Exception e){
+			CLogger.write("8", PlanAdquisicionDAO.class, e);
+		}finally {
+			session.close();
+		}
+		
+		return ret;
+	}
+	
 }

@@ -63,6 +63,12 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 					mi.componenteid = response.id;
 					mi.componenteNombre = response.nombre;
 					mi.objetoTipoNombre = "Componente";
+					mi.prestamoId = response.prestamoId;
+					mi.unidadejecutoraid = response.unidadEjecutora;
+					mi.unidadejecutoranombre = response.unidadEjecutoraNombre;
+					mi.entidad = response.entidad;
+					mi.ejercicio = response.ejercicio;
+					mi.entidadnombre = response.entidadNombre;
 		});
 		
 		$http.post('/SAcumulacionCosto', { accion: 'getAcumulacionesCosto', t: (new Date()).getTime()}).success(

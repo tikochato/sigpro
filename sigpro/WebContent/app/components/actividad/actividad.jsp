@@ -174,7 +174,7 @@
 								<div id="tipoNombre" angucomplete-alt placeholder="" pause="100" selected-object="actividadc.cambioTipo"
 												  local-data="actividadc.tipos" search-fields="nombre" title-field="nombre" field-required="true" field-label="* Tipo de Actividad"
 												  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
-												  initial-value="actividadc.actividad.actividadtiponombre" focus-out="actividadc.blurTipo()" input-name="tipo"></div>
+												  initial-value="actividadc.actividad.actividadtiponombre" focus-out="actividadc.blurTipo()" input-name="tipoNombre"></div>
 								<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 							</div>
 						<div class="row">

@@ -728,9 +728,16 @@ public class SProducto extends HttpServlet {
 		}else if(accion.equals("obtenerProductoPorId")){
 			Integer id = parametro.get("id")!=null ? Integer.parseInt(parametro.get("id")) : 0;
 			Producto producto = ProductoDAO.getProductoPorId(id,usuario);
-
+			
 			response_text = String.join("","{ \"success\": ",(producto!=null && producto.getId()!=null ? "true" : "false"),", "
-				+ "\"id\": " + (producto!=null ? producto.getId():"0") +", "  + "\"fechaInicio\": \"" + (producto!=null ? Utils.formatDate(producto.getFechaInicio()): null) +"\", "
+				+ "\"id\": " + (producto!=null ? producto.getId():"0") +", "
+				+ "\"prestamoId\": " + (producto != null ? producto.getComponente() != null ? producto.getComponente().getProyecto().getPrestamo() != null ? producto.getComponente().getProyecto().getPrestamo().getId() : 0 : producto.getSubcomponente() != null ? producto.getSubcomponente().getComponente().getProyecto().getPrestamo() != null ? producto.getSubcomponente().getComponente().getProyecto().getPrestamo().getId() : 0 : 0 : 0) +", "
+				+ "\"ejercicio\": " + (producto != null ? producto.getComponente() != null ? producto.getComponente().getUnidadEjecutora().getId().getEjercicio() : producto.getSubcomponente() != null ? producto.getSubcomponente().getUnidadEjecutora().getId().getEjercicio() : 0 : 0) +", "
+				+ "\"entidad\": " + (producto!=null ? producto.getComponente() != null ? producto.getComponente().getUnidadEjecutora().getId().getEntidadentidad() : producto.getSubcomponente() != null ? producto.getSubcomponente().getUnidadEjecutora().getId().getEntidadentidad() : 0 : 0) + ", "
+				+ "\"entidadNombre\": \"" + (producto != null ? producto.getComponente() != null ? producto.getComponente().getUnidadEjecutora().getEntidad().getNombre() : producto.getSubcomponente() != null ? producto.getSubcomponente().getUnidadEjecutora().getEntidad().getNombre() : "" : "") + "\", "
+				+ "\"unidadEjecutora\": " + (producto != null ? producto.getComponente() != null ? producto.getComponente().getUnidadEjecutora().getId().getUnidadEjecutora() : producto.getSubcomponente() != null ? producto.getSubcomponente().getUnidadEjecutora().getId().getUnidadEjecutora() : 0 : 0) + ", "
+				+ "\"unidadEjecutoraNombre\": \"" + (producto !=null ? producto.getComponente() != null ? producto.getComponente().getUnidadEjecutora().getNombre() : producto.getSubcomponente() != null ? producto.getSubcomponente().getUnidadEjecutora().getNombre() : "" : "") + "\", "
+				+ "\"fechaInicio\": \"" + (producto!=null ? Utils.formatDate(producto.getFechaInicio()): null) +"\", "
 				+ "\"nombre\": \"" + (producto!=null ? producto.getNombre():"Indefinido") +"\" }");
 
 		}else if(accion.equals("getProductoPorId")){
