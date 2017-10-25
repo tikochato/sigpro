@@ -199,4 +199,10 @@
 	<table-filter match-name="prestamo_tipo_prestamo"
 		match-catalog="sipro">
 	</table-filter>
+	<table-filter match-name="rol_unidad_ejecutora"
+		match-catalog="sipro">
+	</table-filter>
+	<table-filter match-name="proyecto_rol_colaborador"
+		match-catalog="sipro">
+	</table-filter>
 </hibernate-reverse-engineering>

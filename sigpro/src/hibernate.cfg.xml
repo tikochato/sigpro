@@ -87,6 +87,7 @@
         <mapping class="pojo.ProyectoImpacto" />
         <mapping class="pojo.ProyectoPropiedadValor" />
         <mapping class="pojo.ProyectoPropiedad" />
+        <mapping class="pojo.ProyectoRolColaborador" />
         <mapping class="pojo.ProgramaProyecto" />
         <mapping class="pojo.ProyectoTipo" />
         <mapping class="pojo.PtipoPropiedad" />
@@ -101,6 +102,7 @@
         <mapping class="pojo.RiesgoTipo" />
         <mapping class="pojo.Rol" />
         <mapping class="pojo.RolPermiso" />
+        <mapping class="pojo.RolUnidadEjecutora" />
         <mapping class="pojo.RolUsuarioProyecto" />
         <mapping class="pojo.RolUsuarioProyectoId" />
         <mapping class="pojo.RtipoPropiedad" />
