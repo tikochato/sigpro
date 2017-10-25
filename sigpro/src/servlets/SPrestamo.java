@@ -845,7 +845,7 @@ public class SPrestamo extends HttpServlet {
 					null, null, null,null, null, null, null,null, null, null,null,
 					prestamo.getFechaSuscripcion(),prestamo.getFechaSuscripcion(),
 					1, "d"
-					,null,null,0,0,0, null,null,null,null,null,null,null,null,null);
+					,null,null,0,0,0, null,null,null,null,null,null,null,null,null,null);
 			
 			return ProyectoDAO.guardarProyecto(proyecto, false) ? proyecto : null;
 		}

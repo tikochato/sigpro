@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 21, 2017 8:30:53 PM by Hibernate Tools 5.2.3.Final
+// Generated Oct 24, 2017 11:46:58 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class Proyecto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8913431170387255697L;
+	private static final long serialVersionUID = 2187852469205990698L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Colaborador colaborador;
@@ -74,6 +74,7 @@ public class Proyecto implements java.io.Serializable {
 	private Set<MatrizRaci> matrizRacis = new HashSet<MatrizRaci>(0);
 	private Set<ProyectoMiembro> proyectoMiembros = new HashSet<ProyectoMiembro>(0);
 	private Set<ProyectoImpacto> proyectoImpactos = new HashSet<ProyectoImpacto>(0);
+	private Set<ProyectoRolColaborador> proyectoRolColaboradors = new HashSet<ProyectoRolColaborador>(0);
 	private Set<ProyectoPropiedadValor> proyectoPropiedadValors = new HashSet<ProyectoPropiedadValor>(0);
 	private Set<ProyectoUsuario> proyectoUsuarios = new HashSet<ProyectoUsuario>(0);
 	private Set<Componente> componentes = new HashSet<Componente>(0);
@@ -102,8 +103,8 @@ public class Proyecto implements java.io.Serializable {
 			Integer nivel, Integer ejecucionFisicaReal, Integer projectCargado, Set<Desembolso> desembolsos,
 			Set<Hito> hitos, Set<ProgramaProyecto> programaProyectos, Set<MatrizRaci> matrizRacis,
 			Set<ProyectoMiembro> proyectoMiembros, Set<ProyectoImpacto> proyectoImpactos,
-			Set<ProyectoPropiedadValor> proyectoPropiedadValors, Set<ProyectoUsuario> proyectoUsuarios,
-			Set<Componente> componentes) {
+			Set<ProyectoRolColaborador> proyectoRolColaboradors, Set<ProyectoPropiedadValor> proyectoPropiedadValors,
+			Set<ProyectoUsuario> proyectoUsuarios, Set<Componente> componentes) {
 		this.acumulacionCosto = acumulacionCosto;
 		this.colaborador = colaborador;
 		this.etiqueta = etiqueta;
@@ -147,6 +148,7 @@ public class Proyecto implements java.io.Serializable {
 		this.matrizRacis = matrizRacis;
 		this.proyectoMiembros = proyectoMiembros;
 		this.proyectoImpactos = proyectoImpactos;
+		this.proyectoRolColaboradors = proyectoRolColaboradors;
 		this.proyectoPropiedadValors = proyectoPropiedadValors;
 		this.proyectoUsuarios = proyectoUsuarios;
 		this.componentes = componentes;
@@ -561,6 +563,15 @@ public class Proyecto implements java.io.Serializable {
 
 	public void setProyectoImpactos(Set<ProyectoImpacto> proyectoImpactos) {
 		this.proyectoImpactos = proyectoImpactos;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
+	public Set<ProyectoRolColaborador> getProyectoRolColaboradors() {
+		return this.proyectoRolColaboradors;
+	}
+
+	public void setProyectoRolColaboradors(Set<ProyectoRolColaborador> proyectoRolColaboradors) {
+		this.proyectoRolColaboradors = proyectoRolColaboradors;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
