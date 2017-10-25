@@ -274,8 +274,9 @@ public class ObjetoDAO {
 						}
 						
 						if(obtenerReal){
-							if(objetoCosto.getObjeto_tipo() == 1){
-							Prestamo objPrestamo = PrestamoDAO.getPrestamoPorObjetoYTipo(objetoCosto.getObjeto_id(), 1);
+							if(objetoCosto.getObjeto_tipo() == 0){
+								Proyecto proy = ProyectoDAO.getProyecto(objetoCosto.getObjeto_id());
+								Prestamo objPrestamo = proy.getPrestamo();
 								if(objPrestamo != null ){
 									String codigoPresupuestario = Long.toString(objPrestamo.getCodigoPresupuestario());
 									if(codigoPresupuestario!=null && !codigoPresupuestario.isEmpty()){
@@ -301,7 +302,7 @@ public class ObjetoDAO {
 	private static ObjetoCosto getCostoReal(ObjetoCosto objetoCosto, Integer fuente, Integer organismo, Integer correlativo, Integer anioInicial, Integer anioFinal, Connection conn, String usuario){
 		ArrayList<ArrayList<BigDecimal>> presupuestoPrestamo = new ArrayList<ArrayList<BigDecimal>>();
 		
-			if(objetoCosto.getObjeto_tipo() == 1){
+			if(objetoCosto.getObjeto_tipo() == 0){
 				presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestoProyecto(fuente, organismo, correlativo,anioInicial,anioFinal, conn);
 			}else{
 				presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestoPorObjeto(fuente, organismo, correlativo, 
