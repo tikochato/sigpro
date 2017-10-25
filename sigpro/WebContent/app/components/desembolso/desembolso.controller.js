@@ -14,6 +14,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			mi.proyectoid = $scope.$parent.controller.proyecto.id;
 			mi.fecha = new Date();
 			mi.formatofecha = 'dd/MM/yyyy';
+			mi.altformatofecha = ['d!/M!/yyyy'];
 			
 			mi.mostrarcargando=false;
 			

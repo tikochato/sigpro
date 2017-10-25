@@ -37,7 +37,8 @@
 					<tbody>
 						<tr ng-repeat="row in desembolsoc.display_desembolsos track by $index" >
 							<td style="padding: 0px;"><div class="form-group" style="padding: 3px;">
-													<input type="text" class="inputText"   uib-datepicker-popup="{{desembolsoc.formatofecha}}" ng-model="row.fecha" is-open="row.c_abierto"
+													<input type="text" class="inputText"   uib-datepicker-popup="{{desembolsoc.formatofecha}}" alt-input-formats="{{desembolsoc.altformatofecha}}"
+														ng-model="row.fecha" is-open="row.c_abierto"
 														datepicker-options="desembolsoc.opcionesFecha" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
 														ng-value="row.fecha" onblur="this.setAttribute('value', this.value);"/>
 													<span class="label-icon" ng-click="desembolsoc.mostrarCalendar($index)">

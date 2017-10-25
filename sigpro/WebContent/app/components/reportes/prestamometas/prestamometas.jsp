@@ -200,7 +200,7 @@
 							<div class="btn-group" style="padding-left: 20px;">
 								<label class="btn btn-default" ng-click="metasc.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!metasc.mostrarDescargar">
 								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-								<label class="btn btn-default" ng-click="metasc.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="!metasc.mostrarDescargar">
+								<label class="btn btn-default" ng-click="metasc.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="true">
 								<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 							</div>
 						</div>

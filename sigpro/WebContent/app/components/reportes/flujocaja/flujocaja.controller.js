@@ -24,6 +24,8 @@ app.controller('flujocajaController',['$scope','$rootScope','$http','$interval',
 	mi.resumenTotalesOriginal = [];
 	mi.resumenTotales = [];		
 	mi.scrollPosicion = 0;
+	mi.formatofecha = 'dd/MM/yyyy';
+	mi.altformatofecha = ['d!/M!/yyyy'];
 	
 	var AGRUPACION_MES= 1;
 	var AGRUPACION_BIMESTRE = 2;
@@ -71,8 +73,6 @@ app.controller('flujocajaController',['$scope','$rootScope','$http','$interval',
 
 	$window.document.title = $utilidades.sistema_nombre+' - Flujo de Caja';
 	i18nService.setCurrentLang('es');
-
-	mi.formatofecha = 'dd/MM/yyyy';
 
 	mi.abrirPopupFecha = function() {
 		mi.isOpen = true; 

@@ -37,7 +37,8 @@
 				<tr class="filaIngreso" ng-repeat="row in modalPagos.pagosCollection">
 					<td>
 						<div class="form-group">
-							<input type="text" class="inputText" uib-datepicker-popup="{{modalPagos.formatofecha}}" ng-model="row.fechaPago" is-open="row.isOpen"
+							<input type="text" class="inputText" uib-datepicker-popup="{{modalPagos.formatofecha}}" alt-input-formats="{{modalPagos.altformatofecha}}"
+										 	ng-model="row.fechaPago" is-open="row.isOpen"
 								datepicker-options="modalPagos.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
 								ng-change="modalPagos.guardarFecha(row)"/>
 							<span class="label-icon" ng-click="modalPagos.abrirPopupFecha($index,0)" tabindex="-1">

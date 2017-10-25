@@ -16,6 +16,7 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 		mi.mostrardiv=false;
 		
 		mi.formatofecha = 'dd/MM/yyyy';
+		mi.altformatofecha = ['d!/M!/yyyy'];
 		
 		mi.totalActividades = 0;
 		mi.totalActividadesCompletadas = 0;

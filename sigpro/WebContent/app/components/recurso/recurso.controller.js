@@ -18,6 +18,7 @@ app.controller('recursoController',['$scope','$http','$interval','i18nService','
 		mi.recursotipoid = "";
 		mi.recursonombre = "";
 		mi.formatofecha = 'dd/MM/yyyy';
+		mi.altformatofecha = ['d!/M!/yyyy'];
 		mi.camposdinamicos = {};
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;

@@ -32,6 +32,9 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 	mi.objetoTipoNombre = "";
 	mi.entidad='';
 	mi.ejercicio = '';
+
+	mi.formatofecha = 'dd/MM/yyyy';
+	mi.altformatofecha = ['d!/M!/yyyy'];
 	
 	mi.acumulacionesCosto = [];
 	
@@ -100,9 +103,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 	mi.modificarFechaInicial = function(fechaPadre){
 		mi.fi_opciones.minDate = fechaPadre;
 	}
-	
-	mi.formatofecha = 'dd/MM/yyyy';
-	
+		
 	mi.fechaOptions = {
 			formatYear : 'yy',
 			maxDate : new Date(2030, 12, 31),

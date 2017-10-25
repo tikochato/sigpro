@@ -247,7 +247,8 @@
 														
 							<div class="col-sm-6">
 								<div class="form-group" >
-								  <input type="text"  class="inputText" uib-datepicker-popup="{{subcomponentec.formatofecha}}" ng-model="subcomponentec.subcomponente.fechaInicio" is-open="subcomponentec.fi_abierto"
+								  <input type="text"  class="inputText" uib-datepicker-popup="{{subcomponentec.formatofecha}}" alt-input-formats="{{subcomponentec.altformatofecha}}"
+								  			ng-model="subcomponentec.subcomponente.fechaInicio" is-open="subcomponentec.fi_abierto"
 								            datepicker-options="subcomponentec.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="subcomponentec.cambioDuracion(subcomponentec.duracionDimension);" ng-required="true"
 								            ng-value="subcomponentec.subcomponente.fechaInicio" onblur="this.setAttribute('value', this.value);" ng-readonly="subcomponentec.subcomponente.tieneHijos">
 								            <span class="label-icon" ng-click="subcomponentec.subcomponente.tieneHijos != true ? subcomponentec.abrirPopupFecha(1000) : ''" tabindex="-1">
@@ -259,7 +260,8 @@
 						
 							<div class="col-sm-6">
 								<div class="form-group" >
-								  <input type="text"  class="inputText" uib-datepicker-popup="{{subcomponentec.formatofecha}}" ng-model="subcomponentec.subcomponente.fechaFin" is-open="subcomponentec.ff_abierto"
+								  <input type="text"  class="inputText" uib-datepicker-popup="{{subcomponentec.formatofecha}}" alt-input-formats="{{subcomponentec.altformatofecha}}"
+								  			ng-model="subcomponentec.subcomponente.fechaFin" is-open="subcomponentec.ff_abierto"
 								            datepicker-options="subcomponentec.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true"
 								            ng-readonly="true"
 								            ng-value="subcomponentec.subcomponente.fechaFin" onblur="this.setAttribute('value', this.value);"
@@ -293,7 +295,8 @@
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="fecha" class="form-group" >
-									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{subcomponentec.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
+									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{subcomponentec.formatofecha}}" alt-input-formats="{{subcomponentec.altformatofecha}}"
+								  						ng-model="campo.valor" is-open="campo.isOpen"
 														datepicker-options="subcomponentec.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="subcomponentec.abrirPopupFecha($index)"
 														ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 														<span class="label-icon" ng-click="subcomponentec.abrirPopupFecha($index)">

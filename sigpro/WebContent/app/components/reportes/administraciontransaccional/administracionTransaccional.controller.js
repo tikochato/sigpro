@@ -10,6 +10,7 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 		}
 		
 		mi.formatofecha = 'dd/MM/yyyy';
+		mi.altformatofecha = ['d!/M!/yyyy'];
 		
 		mi.abrirPopupFecha = function(index) {
 			switch(index){

@@ -30,6 +30,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 		mi.unidadejecutoranombre="";
 		mi.componenteid = $routeParams.componente_id;
 		mi.formatofecha = 'dd/MM/yyyy';
+		mi.altformatofecha = ['d!/M!/yyyy'];
 		mi.camposdinamicos = {};
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;

@@ -103,7 +103,8 @@
     						<label  class="floating-label">Tipo de Dato</label>
 						</div>
 						<div class="form-group">
-							<input type="text" id="fecha" class="inputText" uib-datepicker-popup="{{metavc.formatofecha}}" ng-model="metavc.metavalor.fecha" is-open="metavc.fc_abierto"
+							<input type="text" id="fecha" class="inputText" uib-datepicker-popup="{{metavc.formatofecha}}" alt-input-formats="{{metavc.altformatofecha}}"
+												ng-model="metavc.metavalor.fecha" is-open="metavc.fc_abierto"
 												datepicker-options="metavc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="metavc.abrirPopupFecha(1000)"
 												ng-value="metavc.metavalor.fecha" onblur="this.setAttribute('value', this.value);"  ng-required="true" ng-readonly="true"/>
 												<span class="label-icon" ng-click="metavc.abrirPopupFecha(1000)">
@@ -123,7 +124,8 @@
 										ng-value="metavc.metavalor.valor" onblur="this.setAttribute('value', this.value);"/>
 								<input ng-switch-when="4" type="checkbox"  ng-model="hitoc.hitoresultado"/>
 								
-								<input ng-switch-when="5" type="text"  class="inputText" uib-datepicker-popup="{{metavc.formatofecha}}" ng-model="metavc.metavalor.valor" is-open="metavc.popupfecharesultado.abierto"
+								<input ng-switch-when="5" type="text"  class="inputText" uib-datepicker-popup="{{metavc.formatofecha}}" alt-input-formats="{{metavc.altformatofecha}}"
+										ng-model="metavc.metavalor.valor" is-open="metavc.popupfecharesultado.abierto"
 										datepicker-options="metavc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
 										ng-value="metavc.metavalor.valor" onblur="this.setAttribute('value', this.value);"
 										ng-click="metavc.abirpopupreultado()" ng-readonly="true"/>

@@ -34,6 +34,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	mi.cooperantenombre="";
 	mi.camposdinamicos = {};
 	mi.formatofecha = 'dd/MM/yyyy';
+	mi.altformatofecha = ['d!/M!/yyyy'];
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
 	mi.totalPrestamos = 0;

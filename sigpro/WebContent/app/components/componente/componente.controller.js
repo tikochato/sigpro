@@ -30,6 +30,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 		mi.unidadejecutoraid="";
 		mi.unidadejecutoranombre="";
 		mi.formatofecha = 'dd/MM/yyyy';
+		mi.altformatofecha = ['d!/M!/yyyy'];
 		mi.camposdinamicos = {};
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
