@@ -189,8 +189,8 @@
 			        
 			        <div class="form-group">
 			            <input type="text" class="inputText" ng-model="producto.unidadEjecutoraNombre" ng-value="producto.unidadEjecutoraNombre" 
-			            	ng-click="producto.buscarUnidadEjecutora()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" />
-			            <span class="label-icon" ng-click="producto.buscarUnidadEjecutora()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+			            	ng-click="producto.prestamoId != null ? '' : producto.buscarUnidadEjecutora()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" />
+			            <span class="label-icon" ng-click="producto.prestamoId != null ? '' : producto.buscarUnidadEjecutora()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 			          <label for="campo5" class="floating-label">Unidad Ejecutora</label>
 			        </div>
 			        

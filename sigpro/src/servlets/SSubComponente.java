@@ -466,6 +466,12 @@ public class SSubComponente extends HttpServlet {
 
 			response_text = String.join("","{ \"success\": ",(subcomponente!=null && subcomponente.getId()!=null ? "true" : "false"),", "
 				+ "\"id\": " + (subcomponente!=null ? subcomponente.getId():"0") +", " + "\"fechaInicio\": \"" + (subcomponente!=null ? Utils.formatDate(subcomponente.getFechaInicio()): null) +"\", "
+				+ "\"prestamoId\": " + (subcomponente!=null ? subcomponente.getComponente().getProyecto().getPrestamo() != null ? subcomponente.getComponente().getProyecto().getPrestamo().getId() : 0 : 0) +", "
+				+ "\"ejercicio\": " + (subcomponente!=null ? subcomponente.getComponente().getUnidadEjecutora().getId().getEjercicio() :"0") +", " 
+				+ "\"entidad\": " + (subcomponente!=null ? subcomponente.getComponente().getUnidadEjecutora().getId().getEntidadentidad() :"0") +", "
+				+ "\"entidadNombre\": \"" + (subcomponente!=null ? subcomponente.getComponente().getUnidadEjecutora().getEntidad().getNombre() : "") +"\", "
+				+ "\"unidadEjecutora\": " + (subcomponente!=null ? subcomponente.getComponente().getUnidadEjecutora().getId().getUnidadEjecutora() :"0") +", "
+				+ "\"unidadEjecutoraNombre\": \"" + (subcomponente!=null ? subcomponente.getComponente().getUnidadEjecutora().getNombre() : "") +"\", "
 				+ "\"nombre\": \"" + (subcomponente!=null ? subcomponente.getNombre():"Indefinido") +"\" }");
 
 		}else if(accion.equals("getSubComponentePorId")){

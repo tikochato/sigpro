@@ -184,8 +184,8 @@
 						
 						<div class="form-group">
 				            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="subcomponentec.unidadejecutoranombre" ng-readonly="true" 
-				            	ng-click="subcomponentec.buscarUnidadEjecutora()" ng-value="subcomponentec.unidadejecutoranombre" onblur="this.setAttribute('value', this.value);"/>
-				            <span class="label-icon" ng-click="subcomponentec.buscarUnidadEjecutora()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+				            	ng-click="subcomponentec.prestamoId != null ? '' : subcomponentec.buscarUnidadEjecutora()" ng-value="subcomponentec.unidadejecutoranombre" onblur="this.setAttribute('value', this.value);"/>
+				            <span class="label-icon" ng-click="subcomponentec.prestamoId != null ? '' : subcomponentec.buscarUnidadEjecutora()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 				          	<label for="campo3" class="floating-label">Unidad Ejecutora</label>
 						</div>
 						<div class="form-group">

@@ -244,16 +244,17 @@ public class SPlanAdquisicion extends HttpServlet {
 						temp.tipoId = adquisicion.getTipoAdquisicion().getId();
 						temp.tipoNombre = adquisicion.getTipoAdquisicion().getNombre();
 						temp.total = adquisicion.getTotal()!= null ? adquisicion.getTotal() : new BigDecimal(0);
-						if(adquisicion.getPlanAdquisicionPagos()!=null && adquisicion.getPlanAdquisicionPagos().size()>0){
+						
+						List<PlanAdquisicionPago> lstpagos = PlanAdquisicionDAO.getPagos(adquisicion.getId());
+						if(lstpagos!=null && lstpagos.size()>0){
 							ArrayList<stpago> pagos = new ArrayList<stpago>();
 							stpago pago = null;
 
-							ArrayList<PlanAdquisicionPago> apagos = new ArrayList<PlanAdquisicionPago>(adquisicion.getPlanAdquisicionPagos());
-							for(int i=0; i<apagos.size();i++){
-								if(apagos.get(i).getEstado() == 1){
+							for(int i=0; i<lstpagos.size();i++){
+								if(lstpagos.get(i).getEstado() == 1){
 									pago = new stpago();
-									pago.fechaPago = Utils.formatDate(apagos.get(i).getFechaPago());
-									pago.pago = apagos.get(i).getPago();
+									pago.fechaPago = Utils.formatDate(lstpagos.get(i).getFechaPago());
+									pago.pago = lstpagos.get(i).getPago();
 									pagos.add(pago);	
 								}
 							}

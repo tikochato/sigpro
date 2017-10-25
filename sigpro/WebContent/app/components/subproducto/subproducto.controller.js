@@ -63,6 +63,21 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 	mi.riesgos = false;
 	
 	
+	mi.objetoTipoNombre = "Producto:";
+	$http.post('/SProducto', { accion: 'obtenerProductoPorId', id: mi.productoid, t: (new Date()).getTime()}).success(
+		function(response) {
+			mi.productoid = response.id;
+			mi.prestamoId = response.prestamoId;
+			mi.unidadEjecutora = response.unidadEjecutora;
+			mi.unidadEjecutoraNombre = response.unidadEjecutoraNombre;
+			mi.entidad = response.entidad;
+			mi.ejercicio = response.ejercicio;
+			mi.entidadnombre = response.entidadNombre;
+			mi.productoNombre = response.nombre;
+			var fechaInicioPadre = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
+			mi.modificarFechaInicial(fechaInicioPadre);
+		});
+	
 	$http.post('/SAcumulacionCosto', { accion: 'getAcumulacionesCosto', t: (new Date()).getTime()}).success(
 			function(response) {
 				mi.acumulacionesCosto = response.acumulacionesTipos;
@@ -263,6 +278,14 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 		mi.coordenadas = "";
 		
 		$utilidades.setFocus(document.getElementById("nombre"));
+		
+		mi.child_adquisiciones = null;
+		mi.child_riesgos = null;
+		
+		mi.riesgos = false;
+		mi.adquisicionesCargadas = false;
+		
+		mi.activeTab = 0;
 	}
 
 	mi.limpiarSeleccion = function() {
@@ -402,6 +425,8 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 	mi.cancelar = function() {
 		mi.esForma = false;
 		mi.esNuevo=false;
+		mi.child_adquisiciones = null;
+		mi.child_riesgos = null;
 	};
 	
 	mi.editar = function() {
