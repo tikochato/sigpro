@@ -201,7 +201,9 @@
 							ng-change="planadqui.validar(3)"/>
 						  	<label for="campo.id" class="floating-label">*Año Final</label>
 						</div>
-	    				<div class="col-sm-7" align="right" ng-hide="!planadqui.mostrarDescargar">
+					</div>
+					<div class="row">
+	    				<div class="col-sm-12" align="right" ng-hide="!planadqui.mostrarDescargar">
 	    					<div class="form-group col-sm-1">
 							</div>
 							<div class="col-sm-11">
@@ -228,7 +230,7 @@
 								<div class="btn-group" style="padding-left: 20px;">
 									<label class="btn btn-default" ng-click="planadqui.exportarExcel()" uib-tooltip="Exportar a Excel">
 									<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-									<label class="btn btn-default" ng-click="planadqui.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="!planadqui.mostrarDescargar">
+									<label class="btn btn-default" ng-click="planadqui.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="true">
 									<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 								</div>
 							</div>							

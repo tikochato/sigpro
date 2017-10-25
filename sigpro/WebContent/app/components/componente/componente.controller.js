@@ -30,6 +30,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 		mi.unidadejecutoraid="";
 		mi.unidadejecutoranombre="";
 		mi.formatofecha = 'dd/MM/yyyy';
+		mi.altformatofecha = ['d!/M!/yyyy'];
 		mi.camposdinamicos = {};
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
@@ -63,6 +64,12 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 					mi.proyectoid = response.id;
 					mi.proyectoNombre = response.nombre;
 					mi.objetoTipoNombre = "Proyecto";
+					mi.prestamoId = response.prestamoId;
+					mi.unidadejecutoraid = response.unidadEjecutora;
+					mi.unidadejecutoranombre = response.unidadEjecutoraNombre;
+					mi.entidad = response.entidad;
+					mi.ejercicio = response.ejercicio;
+					mi.entidadnombre = response.entidadNombre;
 		});
 		
 		$http.post('/SAcumulacionCosto', { accion: 'getAcumulacionesCosto', t: (new Date()).getTime()}).success(
@@ -246,7 +253,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 							if(!mi.esnuevo)
 								mi.t_cambiarNombreNodo();
 							else
-								mi.t_crearNodo(mi.componente.id,mi.componente.nombre,2,true);
+								mi.t_crearNodo(mi.componente.id,mi.componente.nombre,1,true);
 						}
 						if(mi.child_riesgos!=null){
 							ret = mi.child_riesgos.guardar('Componente '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',

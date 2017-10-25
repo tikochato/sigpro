@@ -21,14 +21,14 @@ app.controller('ganttController',['$scope','$rootScope','$http','$interval','i18
 		
 		$window.document.title = $utilidades.sistema_nombre+' - Gantt';
 		
-		var servlet_ = $routeParams.objeto_tipo == 1 ? '/SProyecto' : 'SPrograma';
-		var accion_ = $routeParams.objeto_tipo == 1 ? 'obtenerProyectoPorId' : 'obtenerProgramaPorId'
+		var servlet_ = $routeParams.objeto_tipo == 0 ? '/SProyecto' : 'SPrograma';
+		var accion_ = $routeParams.objeto_tipo == 0 ? 'obtenerProyectoPorId' : 'obtenerProgramaPorId'
 		
 		$http.post(servlet_, { accion: accion_, id: $routeParams.objeto_id }).success(
 				function(response) {
 					mi.proyectoid = response.id;
 					mi.proyectoNombre = response.nombre;
-					mi.objetoTipoNombre = $routeParams.objeto_tipo == 1 ? "Proyecto" : "Programa";
+					mi.objetoTipoNombre = $routeParams.objeto_tipo == 0 ? "Proyecto" : "Programa";
 		});
 		
 		mi.zoom = 2.0;
@@ -67,10 +67,12 @@ app.controller('ganttController',['$scope','$rootScope','$http','$interval','i18
 		
 		mi.getOjbetoTipo = function (item) {
 		    switch (item.objetoTipo) {
-		        case '1':
+		        case '0':
 		            return 'glyphicon glyphicon-record';
-		        case '2':
+		        case '1':
 		            return 'glyphicon glyphicon-th';
+		        case '2':
+		            return 'glyphicon glyphicon-equalizer';
 		        case '3':
 		            return 'glyphicon glyphicon-certificate';
 		        case '4':
@@ -83,10 +85,12 @@ app.controller('ganttController',['$scope','$rootScope','$http','$interval','i18
 		
 		mi.getOjbetoTipoNombre = function (item) {
 		    switch (item.objetoTipo) {
-		        case '1':
+		        case '0':
 		            return 'Proyecto';
-		        case '2':
+		        case '1':
 		            return 'Componente';
+		        case '2':
+		            return 'Subcomponente';
 		        case '3':
 		            return 'Producto';
 		        case '4':
@@ -412,11 +416,14 @@ app.controller('ganttController',['$scope','$rootScope','$http','$interval','i18
 			
 		  settings.itemDoubleClickHandler = function (isOnChart, item){
 			switch (item.objetoTipo){
-				case '1':
+				case '0':
 					mi.editarPrestamo(item.objetoId,item.index);
 					break;
-				case '2':
+				case '1':
 					mi.editarComponente(item.objetoId,item.index,0,false);
+					break;
+				case '2':
+					mi.editarSubComponente(item.objetoId,item.index,0,false);
 					break;
 				case '3':
 					mi.editarProducto(item.objetoId,item.index,0,false);
@@ -961,6 +968,7 @@ function modalEditarComponente($uibModalInstance, $scope, $http, $interval,
 	var mi = this;
 	mi.componente = {};
 	mi.formatofecha = 'dd/MM/yyyy';
+	mi.altformatofecha = ['d!/M!/yyyy'];
 	mi.fechaInicio =  "";
 	mi.fechaFin = "";
 	
@@ -1156,6 +1164,7 @@ function modalEditarProducto($uibModalInstance, $scope, $http, $interval,
 	var mi = this;
 	mi.componente = {};
 	mi.formatofecha = 'dd/MM/yyyy';
+	mi.altformatofecha = ['d!/M!/yyyy'];
 	mi.fechaInicio =  "";
 	mi.fechaFin = "";
 	
@@ -1353,6 +1362,7 @@ function modalEditarSubproducto($uibModalInstance, $scope, $http, $interval,
 	var mi = this;
 	mi.componente = {};
 	mi.formatofecha = 'dd/MM/yyyy';
+	mi.altformatofecha = ['d!/M!/yyyy'];
 	mi.fechaInicio =  "";
 	mi.fechaFin = "";
 	
@@ -1576,6 +1586,7 @@ function modalEditarActividad($uibModalInstance, $scope, $http, $interval,
 	mi.dimensiones = [{id:1,nombre:'Dias',sigla:'d'}];
 	
 	mi.formatofecha = 'dd/MM/yyyy';
+	mi.altformatofecha = ['d!/M!/yyyy'];
 	
 	mi.fechaOptions = {
 			formatYear : 'yy',

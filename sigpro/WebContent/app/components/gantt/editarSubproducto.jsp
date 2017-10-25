@@ -58,7 +58,8 @@
 				
 				<div class="col-sm-6">
 					<div class="form-group" >
-					  <input type="text"  class="inputText" uib-datepicker-popup="{{subproductoc.formatofecha}}" ng-model="subproductoc.fechaInicio" is-open="subproductoc.fi_abierto"
+					  <input type="text"  class="inputText" uib-datepicker-popup="{{subproductoc.formatofecha}}" alt-input-formats="{{subproductoc.altformatofecha}}"
+							  	ng-model="subproductoc.fechaInicio" is-open="subproductoc.fi_abierto"
 					            datepicker-options="subproductoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="subproductoc.cambioDuracion(subproductoc.duracionDimension);" ng-required="true"  
 					            ng-click="subproductoc.abrirPopupFecha(1000)" ng-value="subproductoc.fechaInicio" onblur="this.setAttribute('value', this.value);">
 					            <span class="label-icon" ng-click="subproductoc.abrirPopupFecha(1000)">
@@ -70,7 +71,8 @@
 			
 				<div class="col-sm-6">
 					<div class="form-group" >
-					  <input type="text"  class="inputText" uib-datepicker-popup="{{subproductoc.formatofecha}}" ng-model="subproductoc.fechaFin" is-open="subproductoc.ff_abierto"
+					  <input type="text"  class="inputText" uib-datepicker-popup="{{subproductoc.formatofecha}}" alt-input-formats="{{subproductoc.altformatofecha}}"
+							  	ng-model="subproductoc.fechaFin" is-open="subproductoc.ff_abierto"
 					            datepicker-options="subproductoc.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true" ng-click=""
 					            ng-value="subproductoc.fechaFin" onblur="this.setAttribute('value', this.value);"
 					            ng-readonly="true"/>

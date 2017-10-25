@@ -494,6 +494,11 @@ public class SSubproducto extends HttpServlet {
 			temp.acumulacionCosto = subproducto.getAcumulacionCosto()!=null ? subproducto.getAcumulacionCosto().getId() : null;
 			temp.acumulacionCostoNombre = subproducto.getAcumulacionCosto()!=null ? subproducto.getAcumulacionCosto().getNombre() : null;
 			temp.idProducto = subproducto.getProducto().getId();
+			temp.ejercicio = subproducto.getUnidadEjecutora().getId().getEjercicio(); 
+			temp.entidadentidad =  subproducto.getUnidadEjecutora().getId().getEntidadentidad();
+			temp.entidadnombre = subproducto.getUnidadEjecutora().getEntidad().getNombre();
+			temp.unidadEjecutora = subproducto.getUnidadEjecutora().getId().getUnidadEjecutora();
+			temp.nombreUnidadEjecutora = subproducto.getUnidadEjecutora().getNombre();
 			
 			
 			if (subproducto.getSubproductoTipo() != null){

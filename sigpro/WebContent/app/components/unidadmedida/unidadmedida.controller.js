@@ -1,10 +1,10 @@
-var app = angular.module('metaunidadmedidaController', []);
+var app = angular.module('unidadmedidaController', []);
 
-app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog', 'dialogoConfirmacion', 
+app.controller('unidadmedidaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog', 'dialogoConfirmacion', 
 		function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog, $dialogoConfirmacion) {
 			var mi=this;
 			
-			$window.document.title = $utilidades.sistema_nombre+' - Unidades de Medida de Metas';
+			$window.document.title = $utilidades.sistema_nombre+' - Unidades de Medida';
 			i18nService.setCurrentLang('es');
 			mi.mostrarcargando=true;
 			mi.medidas = [];
@@ -208,10 +208,10 @@ app.controller('metaunidadmedidaController',['$scope','$http','$interval','i18nS
 			}
 			
 			mi.reiniciarVista=function(){
-				if($location.path()=='/metaunidadmedida/rv')
+				if($location.path()=='/unidadmedida/rv')
 					$route.reload();
 				else
-					$location.path('/metaunidadmedida/rv');
+					$location.path('/unidadmedida/rv');
 			}
 			
 			mi.filtrar = function(evt){

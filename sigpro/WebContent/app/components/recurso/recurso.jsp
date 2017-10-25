@@ -130,7 +130,8 @@
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="fecha" class="form-group" >
-									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{recursoc.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
+									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{recursoc.formatofecha}}" alt-input-formats="{{recursoc.altformatofecha}}"
+														ng-model="campo.valor" is-open="campo.isOpen"
 														datepicker-options="recursoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="recursoc.abrirPopupFecha($index)"
 														ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 														<span class="label-icon" ng-click="recursoc.abrirPopupFecha($index)">

@@ -251,7 +251,7 @@
 		    			<div class="btn-group" role="group" aria-label="">
 							<label class="btn btn-default" ng-click="racic.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!racic.mostrarExport">
 							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-							<label class="btn btn-default" ng-click="racic.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="!racic.mostrarExport">
+							<label class="btn btn-default" ng-click="racic.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="true">
 								<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 							
 						</div>

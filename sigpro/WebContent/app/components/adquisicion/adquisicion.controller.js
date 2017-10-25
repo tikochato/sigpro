@@ -8,6 +8,7 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		mi.esnuevo = false;
 		mi.camposdinamicos = {};
 		mi.formatofecha = 'dd/MM/yyyy';
+		mi.altformatofecha = ['d!/M!/yyyy'];
 		
 		mi.objetoTipo = 0;
 		mi.objetoId = 0;
@@ -345,6 +346,7 @@ app.controller('modalPlanadquisicionPagos', [ '$uibModalInstance',
 		$scope.pagos = pagos;
 		mi.pagos = $scope.pagos;
 		mi.formatofecha = 'dd/MM/yyyy';
+		mi.altformatofecha = ['d!/M!/yyyy'];
 		mi.totalPagos=0;
 				
 		mi.abrirPopupFecha = function(index, tipo) {

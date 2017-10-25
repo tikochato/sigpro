@@ -109,7 +109,8 @@
 						</div>
 						<div class="form-group">
 							
-							<input type="text" class="inputText" uib-datepicker-popup="{{hitoc.formatofecha}}" ng-model="hitoc.fecha" 
+							<input type="text" class="inputText" uib-datepicker-popup="{{hitoc.formatofecha}}" alt-input-formats="{{hitoc.altformatofecha}}"
+								ng-model="hitoc.fecha" 
 	    						is-open="hitoc.popupfecha.abierto" datepicker-options="hitoc.fechaOptions"  close-text="Cerrar" 
 	    						alt-input-formats="altInputFormats" current-text="Hoy" clear-text="Borrar" ng-required="true"
 	    						ng-click="hitoc.abirpopup()"
@@ -146,7 +147,8 @@
 										ng-value="hitoc.hitoresultado" onblur="this.setAttribute('value', this.value);"/>
 								<input ng-switch-when="4" type="checkbox"  ng-model="hitoc.hitoresultado"/>
 								<p ng-switch-when="5">
-									<input type="text"  class="inputText" uib-datepicker-popup="{{hitoc.formatofecha}}" ng-model="hitoc.hitoresultado" is-open="hitoc.popupfecharesultado.abierto"
+									<input type="text"  class="inputText" uib-datepicker-popup="{{hitoc.formatofecha}}"  alt-input-formats="{{hitoc.altformatofecha}}"
+											ng-model="hitoc.hitoresultado" is-open="hitoc.popupfecharesultado.abierto"
 											datepicker-options="hitoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
 											ng-value="hitoc.hitoresultado" onblur="this.setAttribute('value', this.value);"
 											ng-click="hitoc.abirpopupreultado()"/>

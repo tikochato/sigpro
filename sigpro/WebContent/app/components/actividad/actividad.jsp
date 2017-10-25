@@ -174,7 +174,7 @@
 								<div id="tipoNombre" angucomplete-alt placeholder="" pause="100" selected-object="actividadc.cambioTipo"
 												  local-data="actividadc.tipos" search-fields="nombre" title-field="nombre" field-required="true" field-label="* Tipo de Actividad"
 												  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
-												  initial-value="actividadc.actividad.actividadtiponombre" focus-out="actividadc.blurTipo()" input-name="tipo"></div>
+												  initial-value="actividadc.actividad.actividadtiponombre" focus-out="actividadc.blurTipo()" input-name="tipoNombre"></div>
 								<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 							</div>
 						<div class="row">
@@ -201,7 +201,8 @@
 							
 							<div class="col-sm-6">
 								<div class="form-group" >
-								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaInicio" is-open="actividadc.fi_abierto"
+								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" alt-input-formats="{{actividadc.altformatofecha}}"
+								  			ng-model="actividadc.actividad.fechaInicio" is-open="actividadc.fi_abierto"
 								            datepicker-options="actividadc.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafin(); actividadc.cambioDuracion(actividadc.duracionDimension);" ng-required="true"  
 								            ng-value="actividadc.actividad.fechaInicio" onblur="this.setAttribute('value', this.value);"
 								             ng-readonly="actividadc.actividad.tieneHijos"/>
@@ -215,7 +216,8 @@
 							<div class="col-sm-6">
 							
 								<div class="form-group" >
-								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaFin" is-open="actividadc.ff_abierto"
+								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}"
+								  			ng-model="actividadc.actividad.fechaFin" is-open="actividadc.ff_abierto"
 								            datepicker-options="actividadc.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.actualizarfechafin()" ng-required="true"
 								            readonly="readonly"
 								            ng-value="actividadc.actividad.fechaFin" onblur="this.setAttribute('value', this.value);"/>
@@ -284,7 +286,8 @@
 									<label class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="fecha" class="form-group" >
-									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
+									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}"  alt-input-formats="{{actividadc.altformatofecha}}"
+												ng-model="campo.valor" is-open="campo.isOpen"
 														datepicker-options="actividadc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="actividadc.abrirPopupFecha($index)"
 														ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 														<span class="label-icon" ng-click="actividadc.abrirPopupFecha($index)">

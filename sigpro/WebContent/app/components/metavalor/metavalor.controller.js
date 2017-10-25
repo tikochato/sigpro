@@ -19,6 +19,7 @@ app.controller('metavalorController',['$scope','$http','$interval','i18nService'
 			mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 			mi.elementosPorPagina = $utilidades.elementosPorPagina;
 			mi.formatofecha = 'dd/MM/yyyy';
+			mi.altformatofecha = ['d!/M!/yyyy'];
 			
 			mi.nombreMeta = "";
 			

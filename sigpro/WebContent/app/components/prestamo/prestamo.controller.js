@@ -34,6 +34,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	mi.cooperantenombre="";
 	mi.camposdinamicos = {};
 	mi.formatofecha = 'dd/MM/yyyy';
+	mi.altformatofecha = ['d!/M!/yyyy'];
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
 	mi.totalPrestamos = 0;
@@ -44,7 +45,9 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	mi.filtros = [];
 	mi.orden = null;
 	mi.prestamo = [];
-	mi.componentes = [];
+	mi.componentes = [];	
+	mi.metasCargadas = false;
+	mi.child_metas = null;
 	
 	mi.prestamo.desembolsoAFechaUsdP = "";
 	mi.prestamo.montoPorDesembolsarUsdP = "";
@@ -426,21 +429,31 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 										//$scope.m_componentes = response.data.componentes;
 										mi.m_existenDatos = true; 
 
-										$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+										if(mi.child_metas!=null)
+											mi.child_metas.guardar(null, null,'Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+													'Error al '+(mi.esNuevo ? 'crear' : 'guardar')+' el préstamo');
+										else{
+											$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+										}
 										mi.botones=true;
 										mi.esNuevo=false;
 									}else{
-										$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' la matriz del préstamo');
+										$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'crear' : 'guardar')+' la matriz del préstamo');
 										mi.botones=true;
 									}
 								});
 							}else{
-								$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+								if(mi.child_metas!=null)
+									mi.child_metas.guardar(null, null,'Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+											'Error al '+(mi.esNuevo ? 'crear' : 'guardar')+' el préstamo');
+								else{
+									$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+								}
 								mi.botones=true;
 							}
 							
 						}else{
-							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el préstamo');
+							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'crear' : 'guardar')+' el préstamo');
 							mi.botones=true;
 						}
 				});
@@ -496,6 +509,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		mi.gridApi.selection.clearSelectedRows();
 		mi.prestamo = [];
 		$scope.active = 0;
+		mi.metasCargadas = false;
 		
 		mi.rowCollectionComponentes = [];
 		mi.displayedCollectionComponentes = [];
@@ -505,6 +519,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		$scope.m_componentes = [];
 		mi.totalIngresado  = 0;
 		
+		mi.active = 0;
+		mi.child_metas = null;
 		mi.matriz_valid = 1;
 	};
 
@@ -514,6 +530,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			mi.esNuevo = false;
 			mi.esNuevoDocumento = false;
 			mi.active = 0;
+			mi.child_metas = null;
 			
 			$http.post('/SPrestamo',{
 				accion: 'obtenerTipos',
@@ -1134,8 +1151,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 					mi.m_organismosEjecutores = response.data.unidadesEjecutoras;
 					$scope.m_componentes = response.data.componentes;
 					mi.m_existenDatos = response.data.existenDatos;
-					
-
+					mi.metasCargadas = false;
+					mi.activeTab = 0;
 				}else{
 					$utilidades.mensaje('warning', 'No se encontraron datos con los parámetros ingresados');
 				}
@@ -1179,6 +1196,11 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			mi.rowAnterior = row;
 		};
 
+		mi.metasActivo = function(){
+			if(!mi.metasCargadas){
+				mi.metasCargadas = true;
+			}
+		}
 		
 		
 		$scope.$watch('m_componentes', function(componentes,componentesOld) {

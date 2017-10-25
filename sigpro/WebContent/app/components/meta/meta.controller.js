@@ -19,19 +19,23 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 					
 			mi.nombrePcp = "";
 			mi.nombreTipoPcp = "";
+			mi.objeto = null;
 			
 			mi.anios=[];
 			mi.anio = null;			
 			mi.planificado = null;
 			mi.real = null;
 			mi.planificadoActual = null;
+
+			mi.formatofecha = 'dd/MM/yyyy';
+			mi.altformatofecha = ['d!/M!/yyyy'];
 						
 			mi.inicializarControlador = function(){
-				var objeto = mi.obtenerDatosPadre();
-				mi.fechaInicio = objeto.fechaInicio;
-				mi.fechaFin = objeto.fechaFin;
-				var anioInicio = moment(objeto.fechaInicio).year();
-				var anioFin = moment(objeto.fechaFin).year();
+				mi.obtenerDatosPadre();
+				mi.fechaInicio = mi.objeto.fechaInicio;
+				mi.fechaFin = mi.objeto.fechaFin;
+				var anioInicio = moment(mi.objeto.fechaInicio).year();
+				var anioFin = moment(mi.objeto.fechaFin).year();
 				for(a = anioInicio; a<=anioFin; a++){
 					mi.anios.push(a);
 				}
@@ -62,7 +66,13 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 			
 			mi.obtenerDatosPadre = function(){
 				var objeto;
-				if($scope.$parent.controller){
+				if($scope.$parent.prestamoc){
+					objeto = $scope.$parent.prestamoc.prestamo;
+					mi.objeto_tipo = -1;
+					$scope.$parent.prestamoc.child_metas = $scope.metac;
+					objeto.fechaInicio=objeto.fechaDecreto!=null ? objeto.fechaDecreto : new Date();
+					objeto.fechaFin=new Date();
+				}else if($scope.$parent.controller){
 					objeto = $scope.$parent.controller.proyecto;
 					mi.objeto_tipo = 0;
 					$scope.$parent.controller.child_metas = $scope.metac;
@@ -87,9 +97,9 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 					mi.objeto_tipo = 5;
 					$scope.$parent.actividadc.child_metas = $scope.metac;
 				}
-				
+								
+				mi.objeto = objeto;
 				mi.objeto_id = objeto.id;
-				return objeto;
 			}
 			
 			mi.inicializarControlador();
@@ -146,9 +156,7 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 				mi.mostrarValores = true;
 				mi.getMetasAnio(mi.meta, mi.anio);	
 			}
-			
-			mi.formatofecha = 'dd/MM/yyyy';
-			
+						
 			mi.abrirPopupFecha = function(meta) {
 				switch(meta){
 					case 1001: mi.planificado.isOpenEnero=true; break;
@@ -623,6 +631,7 @@ app.controller('modalMetaAvances', [ '$uibModalInstance',
 		mi.datoTipo = datoTipo;
 		mi.anio = anio;
 		mi.formatofecha = 'dd/MM/yyyy';
+		mi.altformatofecha = ['d!/M!/yyyy'];
 				
 		mi.abrirPopupFecha = function(index, tipo) {
 			if(tipo==0){

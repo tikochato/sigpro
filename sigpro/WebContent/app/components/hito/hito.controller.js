@@ -19,6 +19,7 @@ app.controller('hitoController',['$scope','$http','$interval','i18nService','Uti
 		mi.proyectoNombre="";
 		mi.objetoTipoNombre="";
 		mi.formatofecha = 'dd/MM/yyyy';
+		mi.altformatofecha = ['d!/M!/yyyy'];
 		mi.hitodatotipoid = "";
 		mi.hitoresultado="";
 		mi.hitoresultadocomentario;

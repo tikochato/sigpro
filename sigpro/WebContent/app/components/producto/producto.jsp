@@ -189,8 +189,8 @@
 			        
 			        <div class="form-group">
 			            <input type="text" class="inputText" ng-model="producto.unidadEjecutoraNombre" ng-value="producto.unidadEjecutoraNombre" 
-			            	ng-click="producto.buscarUnidadEjecutora()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" />
-			            <span class="label-icon" ng-click="producto.buscarUnidadEjecutora()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+			            	ng-click="producto.prestamoId != null ? '' : producto.buscarUnidadEjecutora()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" />
+			            <span class="label-icon" ng-click="producto.prestamoId != null ? '' : producto.buscarUnidadEjecutora()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 			          <label for="campo5" class="floating-label">Unidad Ejecutora</label>
 			        </div>
 			        
@@ -244,7 +244,8 @@
 							
 						<div class="col-sm-6">
 							<div class="form-group" >
-							  <input type="text"  class="inputText" uib-datepicker-popup="{{producto.formatofecha}}" min={{producto.fechaInicioPadre}} ng-model="producto.producto.fechaInicio" is-open="producto.fi_abierto"
+							  <input type="text"  class="inputText" uib-datepicker-popup="{{producto.formatofecha}}" alt-input-formats="{{producto.altformatofecha}}"
+										min={{producto.fechaInicioPadre}} ng-model="producto.producto.fechaInicio" is-open="producto.fi_abierto"
 							            datepicker-options="producto.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="producto.cambioDuracion(producto.duracionDimension);" ng-required="true"  
 							            ng-value="producto.producto.fechaInicio" onblur="this.setAttribute('value', this.value);" 
 							            ng-readonly="producto.producto.tieneHijos"/>
@@ -257,7 +258,8 @@
 						
 						<div class="col-sm-6">
 							<div class="form-group" >
-							  <input type="text"  class="inputText" uib-datepicker-popup="{{producto.formatofecha}}" ng-model="producto.producto.fechaFin" is-open="producto.ff_abierto"
+							  <input type="text"  class="inputText" uib-datepicker-popup="{{producto.formatofecha}}" alt-input-formats="{{producto.altformatofecha}}"
+										ng-model="producto.producto.fechaFin" is-open="producto.ff_abierto"
 							            datepicker-options="producto.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true" ng-click=""
 							            ng-value="producto.producto.fechaFin" onblur="this.setAttribute('value', this.value);"
 							            ng-readonly="true"/>
@@ -290,10 +292,11 @@
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="fecha" class="form-group" >
-									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{producto.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
+									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{producto.formatofecha}}" alt-input-formats="{{producto.altformatofecha}}"
+														ng-model="campo.valor" is-open="campo.isOpen"
 														datepicker-options="producto.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="producto.abrirPopupFecha($index)"
 														ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
-														<span class="label-icon" ng-click="producto.abrirPopupFecha($index)">
+														<span class="label-icon" ng-click="producto.abrirPopupFecha($index)" tabindex="-1">
 															<i class="glyphicon glyphicon-calendar"></i>
 														</span>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>

@@ -32,6 +32,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	mi.entidadnombre="";
 	mi.camposdinamicos = {};
 	mi.formatofecha = 'dd/MM/yyyy';
+	mi.altformatofecha = ['d!/M!/yyyy'];
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
 	mi.totalProyectos = 0;
