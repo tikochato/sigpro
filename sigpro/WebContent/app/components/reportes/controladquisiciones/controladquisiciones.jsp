@@ -124,46 +124,37 @@
 						</div>
 		    		</div>
 		    		<br>
-		    		<div class="row" style="width: 100%; height: 15%">
-		    			<div class="form-group col-sm-5">
-							<select  class="inputText" ng-model="ctrladqui.prestamo"
-								ng-options="a.text for a in ctrladqui.prestamos" 
-								ng-change="ctrladqui.generar();"></select>		
-	    				</div>
-						<div class="operation_buttons" align="right">
-							<div class="btn-group" ng-hide="true">
-								<label class="btn btn-default" ng-model="ctrladqui.enMillones"  tooltip-placement="center" uib-btn-radio="true" ng-click="ctrladqui.calcularTamaniosCeldas()" uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false" ng-hide="!ctrladqui.mostrarBotones">
-									<span>MQ</span>
-								</label>
-							</div>
-							<div class="btn-group" ng-hide="true">
-								<label class="btn btn-default" ng-model="ctrladqui.enMillones" uib-btn-radio="false" ng-click="ctrladqui.calcularTamaniosCeldas()" uib-tooltip="Quetzales" role="button" tabindex="1" aria-invalid="false" ng-hide="!ctrladqui.mostrarBotones">
-									<span>Q</span>
-								</label>
-							</div>
-							<div class="btn-group" ng-hide="true">
-								<label class="btn btn-default"  ng-click="ctrladqui.agregarPagos();" uib-tooltip="Plan de pagos" tooltip-placement="center" ng-hide="!ctrladqui.mostrarBotones">
-								<span>P</span></label>
-							</div>
-							<div class="btn-group" ng-hide="true">
-								<label class="btn btn-default"  ng-click="ctrladqui.limpiar(row);" uib-tooltip="Limpiar" ng-hide="!ctrladqui.mostrarBotones">
-								<span class="glyphicon glyphicon glyphicon-erase" aria-hidden="true"></span></label>
-							</div>
-							<div class="btn-group" ng-hide="true">
-								<label class="btn btn-default"  ng-click="ctrladqui.guardarPlan();" uib-tooltip="Guardar" ng-hide="!ctrladqui.mostrarBotones">
-								<span class="glyphicon glyphicon glyphicon-floppy-disk" aria-hidden="true"></span></label>
-							</div>
-							<div class="btn-group">
-								<label class="btn btn-default"  ng-click="ctrladqui.exportarExcel();" uib-tooltip="Exportar" ng-hide="!ctrladqui.mostrarBotones">
-								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-								<label class="btn btn-default" ng-click="ctrladqui.exportarPdf()" uib-tooltip="Exportar PDF" ng-hide="true">
-								<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
+		    		<div class="row">
+		    		<div class="form-group col-sm-6" align="left">
+						<div id="prestamo" angucomplete-alt placeholder="" pause="100" selected-object="ctrladqui.cambioPrestamo"
+							  local-data="ctrladqui.lprestamos" search-fields="proyectoPrograma" title-field="proyectoPrograma" field-required="true" field-label="* Préstamo"
+							  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+							  initial-value="ctrladqui.prestamoNombre" focus-out="ctrladqui.blurPrestamo()" input-name="prestamo"></div>
+						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+						</div>
+			    	</div>
+			    	<div class="row">
+			    		<div class="form-group col-sm-6" align="left">
+							<div id="pep" angucomplete-alt placeholder="" pause="100" selected-object="ctrladqui.cambioPep"
+								  local-data="ctrladqui.peps" search-fields="nombre" title-field="nombre" field-required="true" field-label="* {{etiquetas.proyecto}}"
+								  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+								  initial-value="ctrladqui.pepNombre" focus-out="ctrladqui.blurPep()" input-name="pep"></div>
+							<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+						</div>
+						<div class="form-group col-sm-6" align="right">
+							<div class="operation_buttons">
+								<div class="btn-group">
+									<label class="btn btn-default"  ng-click="ctrladqui.exportarExcel();" uib-tooltip="Exportar" ng-hide="!ctrladqui.mostrarBotones">
+									<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
+									<label class="btn btn-default" ng-click="ctrladqui.exportarPdf()" uib-tooltip="Exportar PDF" ng-hide="true">
+									<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
+								</div>
 							</div>
 						</div>
-		    		</div>
+			    	</div>
 				</div>
 			</div>
-			<br><br><br><br><br><br><br><br>
+			<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 			<div class="col-sm-12" style="height: 80%">
 				<div ng-hide="!ctrladqui.mostrarCargando" style="width: 100%; height: 100%">
     				<div class="grid_loading" ng-hide="!ctrladqui.mostrarCargando">
@@ -317,5 +308,5 @@
 					</ol>
 				</div>
 	    	</div>
-		</div>
+    	</div>
 	</div>
