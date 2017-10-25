@@ -69,7 +69,7 @@ public class ColaboradorDAO {
 
 			pojo = new Colaborador(UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidad,codigoUnidadEjecutora),UsuarioDAO.getUsuario(usuario),
 					primerNombre, segundoNombre, primerApellido, segundoApellido, cui, 1, usuario_creacion, null, fecha_creacion, null,
-					null, null, null,null);
+					null, null, null,null,null);
 			Session session = CHibernateSession.getSessionFactory().openSession();
 			try {
 				session.beginTransaction();
@@ -308,6 +308,30 @@ public class ColaboradorDAO {
 			}
 		}catch(Exception e){
 			CLogger.write("8", ColaboradorDAO.class, e);
+		}finally {
+        	session.close();
+		}
+		
+		return ret;
+	}
+	
+	public static List<Colaborador> getColaboradorPorUnidadEjecutora(Integer ejercicio, Integer unidadEjecutora, Integer entidad ){
+		List<Colaborador> ret = new ArrayList<Colaborador>();
+		
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String str_Query = String.join(" ", "select c from Colaborador c", 
+									"where c.estado = 1", 
+									"and c.unidadEjecutora.id.ejercicio = ?1", 
+									"and c.unidadEjecutora.id.entidadentidad = ?2", 
+									"and c.unidadEjecutora.id.unidadEjecutora = ?3");
+			Query<Colaborador> criteria = session.createQuery(str_Query,Colaborador.class);
+			criteria.setParameter(1, ejercicio);
+			criteria.setParameter(2,entidad);
+			criteria.setParameter(3, unidadEjecutora);
+			ret = criteria.getResultList();
+		}catch(Exception e){
+			CLogger.write("9", ColaboradorDAO.class, e);
 		}finally {
         	session.close();
 		}

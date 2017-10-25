@@ -220,6 +220,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when("/:redireccion?",{
             	controller:"MainController"
             })
+            .when('/miembrosunidadejecutora/:proyectoId?',{
+            	template: '<div load-on-demand="\'miembrosunidadejecutoraController\'" class="all_page"></div>'
+            })
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -557,6 +560,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	       		name: 'prestamotipoController',
 	       		script: '/app/components/prestamo/prestamoTipo.controller.js',
 	       		template: '/app/components/prestamo/prestamotipo.jsp'
+	       }, 
+	       {
+	       		name: 'miembrosunidadejecutoraController',
+	       		script: '/app/components/miembrosunidadejecutora/miembrosunidadejecutora.controller.js',
+	       		template: '/app/components/miembrosunidadejecutora/miembrosunidadejecutora.jsp'
 	       }
 
 	   ];
