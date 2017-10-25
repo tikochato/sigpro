@@ -159,57 +159,70 @@
 					</div>
 				</div>
 	    	<br>
+	    	<div class="row">
+	    		<div class="form-group col-sm-6" align="left">
+					<div id="prestamo" angucomplete-alt placeholder="" pause="100" selected-object="flujoc.cambioPrestamo"
+						  local-data="flujoc.lprestamos" search-fields="proyectoPrograma" title-field="proyectoPrograma" field-required="true" field-label="* Préstamo"
+						  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+						  initial-value="flujoc.prestamoNombre" focus-out="flujoc.blurPrestamo()" input-name="prestamo"></div>
+					<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+				</div>
+	    	</div>
+	    	<div class="row">
+	    		<div class="form-group col-sm-6" align="left">
+					<div id="pep" angucomplete-alt placeholder="" pause="100" selected-object="flujoc.cambioPep"
+						  local-data="flujoc.peps" search-fields="nombre" title-field="nombre" field-required="true" field-label="* {{etiquetas.proyecto}}"
+						  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+						  initial-value="flujoc.pepNombre" focus-out="flujoc.blurPep()" input-name="pep"></div>
+					<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+				</div>
+	    	</div>
+	    	
 			<div class="row">
-					<div class="form-group col-sm-3">
-						<select  class="inputText" ng-model="flujoc.prestamo"
-							ng-options="a.text for a in flujoc.prestamos"
-							ng-change="flujoc.validar()"></select>
+				<div class="form-group col-sm-2">
+					<input type="text"  class="inputText" uib-datepicker-popup="{{flujoc.formatofecha}}" alt-input-formats="{{flujoc.altformatofecha}}"
+						ng-model="flujoc.fechaCorte" is-open="flujoc.isOpen"
+			            datepicker-options="flujoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  
+			            ng-required="true" ng-change="flujoc.validar()"
+			            ng-value="flujoc.fechaCorte" onblur="this.setAttribute('value', this.value);"/>
+			            <span class="label-icon" ng-click="flujoc.abrirPopupFecha()">
+			              <i class="glyphicon glyphicon-calendar"></i>
+			            </span>
+				  	<label for="campo.id" class="floating-label">*Fecha Corte</label>
+				</div>
+				
+				<div class="col-sm-10" align="right" ng-hide="!flujoc.mostrarDescargar">
+					<div class="form-group col-sm-1">
 					</div>
-					
-					<div class="form-group col-sm-2">
-						<input type="text"  class="inputText" uib-datepicker-popup="{{flujoc.formatofecha}}" alt-input-formats="{{flujoc.altformatofecha}}"
-							ng-model="flujoc.fechaCorte" is-open="flujoc.isOpen"
-				            datepicker-options="flujoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  
-				            ng-required="true" ng-change="flujoc.validar()"
-				            ng-value="flujoc.fechaCorte" onblur="this.setAttribute('value', this.value);"/>
-				            <span class="label-icon" ng-click="flujoc.abrirPopupFecha()">
-				              <i class="glyphicon glyphicon-calendar"></i>
-				            </span>
-					  	<label for="campo.id" class="floating-label">*Fecha Corte</label>
-					</div>
-					
-					<div class="col-sm-7" align="right" ng-hide="!flujoc.mostrarDescargar">
-						<div class="form-group col-sm-1">
+					<div class="col-sm-11">
+						<div class="btn-group">
+							<label class="btn btn-default" ng-model="flujoc.enMillones" uib-btn-radio="true" ng-click="flujoc.calcularTamaniosCeldas(); flujoc.convertirMillones();" uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false">
+							<span>MQ</span></label>
+							<label class="btn btn-default" ng-model="flujoc.enMillones" uib-btn-radio="false" ng-click="flujoc.calcularTamaniosCeldas(); flujoc.convertirMillones();" uib-tooltip="Quetzales" role="button" tabindex="1" aria-invalid="false">
+							<span>Q</span></label>
 						</div>
-						<div class="col-sm-11">
-							<div class="btn-group">
-								<label class="btn btn-default" ng-model="flujoc.enMillones" uib-btn-radio="true" ng-click="flujoc.calcularTamaniosCeldas(); flujoc.convertirMillones();" uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false">
-								<span>MQ</span></label>
-								<label class="btn btn-default" ng-model="flujoc.enMillones" uib-btn-radio="false" ng-click="flujoc.calcularTamaniosCeldas(); flujoc.convertirMillones();" uib-tooltip="Quetzales" role="button" tabindex="1" aria-invalid="false">
-								<span>Q</span></label>
-							</div>
-							<div class="btn-group" style="padding-left: 20px;">
-								<label class="btn btn-default" ng-model="flujoc.agrupacionActual" uib-btn-radio="1" ng-click="flujoc.cambiarAgrupacion(1)" uib-tooltip="Mes" role="button" tabindex="1" aria-invalid="false">
-								<span>M</span></label>
-								<label class="btn btn-default" ng-model="flujoc.agrupacionActual" uib-btn-radio="2" ng-click="flujoc.cambiarAgrupacion(2)" uib-tooltip="Bimestre" role="button" tabindex="2" aria-invalid="false">
-								<span>B</span></label>
-								<label class="btn btn-default" ng-model="flujoc.agrupacionActual" uib-btn-radio="3" ng-click="flujoc.cambiarAgrupacion(3)" uib-tooltip="Trimestre" role="button" tabindex="3" aria-invalid="false">
-								<span>T</span></label>
-								<label class="btn btn-default" ng-model="flujoc.agrupacionActual" uib-btn-radio="4" ng-click="flujoc.cambiarAgrupacion(4)" uib-tooltip="Cuatrimestre" role="button" tabindex="4" aria-invalid="false">
-								<span>C</span></label>
-								<label class="btn btn-default" ng-model="flujoc.agrupacionActual" uib-btn-radio="5" ng-click="flujoc.cambiarAgrupacion(5)" uib-tooltip="Semestre" role="button" tabindex="5" aria-invalid="false">
-								<span>S</span></label>
-								<label class="btn btn-default" ng-model="flujoc.agrupacionActual" uib-btn-radio="6" ng-click="flujoc.cambiarAgrupacion(6)" uib-tooltip="Año" role="button" tabindex="6" aria-invalid="false">
-								<span>A</span></label>
-							</div>
-							<div class="btn-group" style="padding-left: 20px;">
-								<label class="btn btn-default" ng-click="flujoc.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!flujoc.mostrarDescargar">
-								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-								<label class="btn btn-default" ng-click="flujoc.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="true">
-								<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
-							</div>
+						<div class="btn-group" style="padding-left: 20px;">
+							<label class="btn btn-default" ng-model="flujoc.agrupacionActual" uib-btn-radio="1" ng-click="flujoc.cambiarAgrupacion(1)" uib-tooltip="Mes" role="button" tabindex="1" aria-invalid="false">
+							<span>M</span></label>
+							<label class="btn btn-default" ng-model="flujoc.agrupacionActual" uib-btn-radio="2" ng-click="flujoc.cambiarAgrupacion(2)" uib-tooltip="Bimestre" role="button" tabindex="2" aria-invalid="false">
+							<span>B</span></label>
+							<label class="btn btn-default" ng-model="flujoc.agrupacionActual" uib-btn-radio="3" ng-click="flujoc.cambiarAgrupacion(3)" uib-tooltip="Trimestre" role="button" tabindex="3" aria-invalid="false">
+							<span>T</span></label>
+							<label class="btn btn-default" ng-model="flujoc.agrupacionActual" uib-btn-radio="4" ng-click="flujoc.cambiarAgrupacion(4)" uib-tooltip="Cuatrimestre" role="button" tabindex="4" aria-invalid="false">
+							<span>C</span></label>
+							<label class="btn btn-default" ng-model="flujoc.agrupacionActual" uib-btn-radio="5" ng-click="flujoc.cambiarAgrupacion(5)" uib-tooltip="Semestre" role="button" tabindex="5" aria-invalid="false">
+							<span>S</span></label>
+							<label class="btn btn-default" ng-model="flujoc.agrupacionActual" uib-btn-radio="6" ng-click="flujoc.cambiarAgrupacion(6)" uib-tooltip="Año" role="button" tabindex="6" aria-invalid="false">
+							<span>A</span></label>
+						</div>
+						<div class="btn-group" style="padding-left: 20px;">
+							<label class="btn btn-default" ng-click="flujoc.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!flujoc.mostrarDescargar">
+							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
+							<label class="btn btn-default" ng-click="flujoc.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="true">
+							<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 						</div>
 					</div>
+				</div>
     			<br><br><br>
 	    	</div>
 	    	<div style="width: 100%; height: 100%" id="reporte">

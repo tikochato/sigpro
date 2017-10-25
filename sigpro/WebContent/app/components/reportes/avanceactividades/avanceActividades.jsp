@@ -61,12 +61,24 @@
 					</div>
 				</div>
     			<br>
-    			<div class="row" style="width: 100%; height: 15%">
-		    		<div class="form-group col-sm-5">
-						<select  class="inputText" ng-model="controller.prestamo"
-							ng-options="a.text for a in controller.prestamos" ng-change="controller.generar()"></select>
+    			<div class="row">
+		    		<div class="form-group col-sm-6" align="left">
+						<div id="prestamo" angucomplete-alt placeholder="" pause="100" selected-object="controller.cambioPrestamo"
+							  local-data="controller.lprestamos" search-fields="proyectoPrograma" title-field="proyectoPrograma" field-required="true" field-label="* Préstamo"
+							  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+							  initial-value="controller.prestamoNombre" focus-out="controller.blurPrestamo()" input-name="prestamo"></div>
+						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 					</div>
-					<div class="form-group col-sm-3">
+		    	</div>
+		    	<div class="row">
+		    		<div class="form-group col-sm-6" align="left">
+						<div id="pep" angucomplete-alt placeholder="" pause="100" selected-object="controller.cambioPep"
+							  local-data="controller.peps" search-fields="nombre" title-field="nombre" field-required="true" field-label="* {{etiquetas.proyecto}}"
+							  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+							  initial-value="controller.pepNombre" focus-out="controller.blurPep()" input-name="pep"></div>
+						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+					</div>
+					<div class="form-group col-sm-3" style="margin-top: 4px;">
 						<input type="text"  class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" alt-input-formats="{{controller.altformatofecha}}"
 							ng-model="controller.fechaCorte" is-open="controller.fi_abierto"
 				            datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="controller.validarFecha(controller.fechaCorte)" 
@@ -85,7 +97,7 @@
 							<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 						</div>
 		    		</div>
-	    		</div>
+		    	</div>
 		    </div>
 		    <div class="col-sm-12" style="margin-top: 20px;">
 	    		<div ng-hide="!controller.mostrarCargando" style="width: 100%; height: 400px;">

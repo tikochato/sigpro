@@ -42,33 +42,65 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 		
 		mi.calcularTamanosPantalla();
 		
-		mi.prestamos = [
-			{'value' : 0, 'text' : 'Seleccione un '+$rootScope.etiquetas.proyecto},
-		];
+		mi.lprestamos = [];
+		
+		$http.post('/SPrestamo', {accion: 'getPrestamos', t: (new Date()).getTime()}).then(
+			function(response){
+				if(response.data.success){
+					mi.lprestamos = response.data.prestamos;
+				}	
+		});
+		
+		mi.blurPrestamo=function(){
+			if(document.getElementById("prestamo_value").defaultValue!=mi.prestamoNombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','prestamo');
+			}
+		}
+		
+		mi.cambioPrestamo=function(selected){
+			if(selected!== undefined){
+				mi.prestamoNombre = selected.originalObject.proyectoPrograma;
+				mi.prestamoId = selected.originalObject.id;
+				mi.getPeps(mi.prestamoId);
+			}
+			else{
+				mi.prestamoNombre="";
+				mi.prestamoId="";
+			}
+		}
+		
+		mi.blurPep=function(){
+			if(document.getElementById("pep_value").defaultValue!=mi.pepNombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','pep');
+			}
+		}
+		
+		mi.cambioPep=function(selected){
+			if(selected!== undefined){
+				mi.pepNombre = selected.originalObject.nombre;
+				mi.pepId = selected.originalObject.id;
+			}
+			else{
+				mi.pepNombre="";
+				mi.pepId="";
+			}
+		}
+		
+		mi.getPeps = function(prestamoId){
+			$http.post('/SProyecto',{accion: 'getProyectos', prestamoid: prestamoId}).success(
+				function(response) {
+					mi.peps = [];
+					if (response.success){
+						mi.peps = response.entidades;
+					}
+			});	
+		}
 		
 		mi.validarFecha = function(fecha1){
 			if(fecha1 != null)
 				mi.generar();
 		}
-		
-		mi.prestamo = mi.prestamos[0];
-		
-		mi.getPrestamos = function(){
-			$http.post('/SProyecto',{accion: 'getProyectos'}).success(
-				function(response) {
-					mi.prestamos = [];
-					mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un '+$rootScope.etiquetas.proyecto});
-					if (response.success){
-						for (var i = 0; i < response.entidades.length; i++){
-							mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
-						}
-						mi.prestamo = mi.prestamos[0];
-					}
-				});
-		}
-		
-		mi.getPrestamos();
-		
+				
 		mi.abrirPopupFecha = function(index) {
 			switch(index){
 				case 1000: mi.fi_abierto = true; break;
@@ -76,7 +108,7 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 		};
 		
 		mi.generar = function(){
-			if(mi.prestamo.value != 0){
+			if(mi.pepId != 0){
 				if(mi.fechaCorte != null){
 					mi.mostrardiv = false;
 					mi.rowCollectionActividades = [];
@@ -104,7 +136,7 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 					mi.mostrarCargando = true;
 					$http.post('/SAvanceActividades', {
 						accion: 'getAvance',
-						idPrestamo: mi.prestamo.value,
+						idPrestamo: mi.pepId,
 						fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY')
 					}).success(function(response){
 						if (response.success){
@@ -328,7 +360,7 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 		mi.exportarExcel = function(){
 			$http.post('/SAvanceActividades', { 
 				accion: 'exportarExcel', 	
-				idPrestamo: mi.prestamo.value,
+				idPrestamo: mi.pepId,
 				fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY'),
 				t:moment().unix()
 			  } ).then(
@@ -347,7 +379,7 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 		mi.exportarPdf=function(){
 			$http.post('/SAvanceActividades', { 
 				accion: 'exportarPdf', 	
-				idPrestamo: mi.prestamo.value,
+				idPrestamo: mi.pepId,
 				fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY'),
 				t:moment().unix()
 			  } ).then(

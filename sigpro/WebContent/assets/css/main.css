@@ -238,7 +238,7 @@ nav.navbar{
 }
 
 .gantt-chart{
-	overflow-y: scroll;
+	overflow: hidden;
 	height: calc(100% - 105px);
 	position: relative;
 }

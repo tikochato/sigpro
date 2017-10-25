@@ -153,7 +153,7 @@ public class SMetaUnidadMedida extends HttpServlet {
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0){
 				MetaUnidadMedida MetaUnidadMedida = MetaUnidadMedidaDAO.getMetaUnidadMedidaPorId(id);
-				MetaUnidadMedida.setUsuarioActualizo("admin");
+				MetaUnidadMedida.setUsuarioActualizo(usuario);
 				MetaUnidadMedida.setFechaActualizacion(new DateTime().toDate());
 				response_text = String.join("","{ \"success\": ",(MetaUnidadMedidaDAO.eliminarMetaUnidadMedida(MetaUnidadMedida) ? "true" : "false")," }");
 			}
