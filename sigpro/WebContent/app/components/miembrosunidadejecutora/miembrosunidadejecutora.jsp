@@ -20,8 +20,8 @@
 		}
 		
 		.cuerpoTablaDatos {
-		    overflow-y: scroll;
-		    overflow-x: scroll;
+		    overflow-y: auto;
+		    overflow-x: hiden;
 		    display: inline-block;
 		    text-align: left;
 		    font-size: 13px; 
