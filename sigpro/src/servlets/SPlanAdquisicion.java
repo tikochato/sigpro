@@ -29,15 +29,21 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
 import dao.CategoriaAdquisicionDAO;
+import dao.ComponenteDAO;
 import dao.PlanAdquisicionDAO;
 import dao.PlanAdquisicionPagoDAO;
 import dao.ProductoDAO;
+import dao.ProyectoDAO;
+import dao.SubComponenteDAO;
 import dao.SubproductoDAO;
 import dao.TipoAdquisicionDAO;
 import pojo.Actividad;
+import pojo.Componente;
 import pojo.PlanAdquisicion;
 import pojo.PlanAdquisicionPago;
 import pojo.Producto;
+import pojo.Proyecto;
+import pojo.Subcomponente;
 import pojo.Subproducto;
 import utilities.CLogger;
 import utilities.Utils;
@@ -165,6 +171,40 @@ public class SPlanAdquisicion extends HttpServlet {
 						PlanAdquisicionPagoDAO.eliminarPagos(new ArrayList<PlanAdquisicionPago>(pa.getPlanAdquisicionPagos()));
 					}
 					PlanAdquisicionDAO.guardarPlanAdquisicion(pa);
+					
+					switch(objetoTipo){
+						case 0:
+							Proyecto proyecto = ProyectoDAO.getProyecto(objetoId);
+							proyecto.setCosto(total);
+							ProyectoDAO.guardarProyecto(proyecto, true);
+							break;
+						case 1:
+							Componente componente = ComponenteDAO.getComponente(objetoId);
+							componente.setCosto(total);
+							ComponenteDAO.guardarComponente(componente, true);
+							break;
+						case 2:
+							Subcomponente subComponente = SubComponenteDAO.getSubComponente(objetoId);
+							subComponente.setCosto(total);
+							SubComponenteDAO.guardarSubComponente(subComponente, true);
+							break;
+						case 3:
+							Producto producto = ProductoDAO.getProductoPorId(objetoId);
+							producto.setCosto(total);
+							ProductoDAO.guardarProducto(producto, true);
+							break;
+						case 4:
+							Subproducto subProducto = SubproductoDAO.getSubproductoPorId(objetoId);
+							subProducto.setCosto(total);
+							SubproductoDAO.guardarSubproducto(subProducto, true);
+							break;
+						case 5:
+							Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
+							actividad.setCosto(total);
+							ActividadDAO.guardarActividad(actividad, true);
+							break;
+					}
+					
 					BigDecimal bpagos = new BigDecimal(0);
 					boolean tiene_pagos = false;
 					if(map.get("pagos")!=null){
