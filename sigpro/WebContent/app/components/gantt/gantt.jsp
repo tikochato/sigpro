@@ -46,7 +46,7 @@
 		</div>
 		<div class="row" align="center" style="height: 90%" id="reporte">
 			<div class="col-sm-12 tamanoDiv">
-				<div class="row" align="center" style="height: 10%">
+				<div class="row" align="center" >
 				    <div class="operation_buttons" align="right">
 				    <form>
 				    	
