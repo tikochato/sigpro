@@ -42,6 +42,9 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 							for(x in mi.desembolsos){
 								mi.desembolsos[x].fecha = moment(mi.desembolsos[x].fecha,'DD/MM/YYYY').toDate();
 							}
+							
+							mi.tipo_moneda_nombre = response.tipoMonedaNombre;
+							mi.tipo_moneda = response.tipoMonedaId;
 							mi.mostrarcargando = false;
 						});
 			};
@@ -85,7 +88,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 					id: -1,
 					monto: 0,
 					fecha: null,
-					tipo_moneda: null
+					tipo_moneda: mi.tipo_moneda
 				});
 			};
 			

@@ -28,6 +28,7 @@ import dao.DesembolsoTipoDAO;
 import dao.ProyectoDAO;
 import dao.TipoMonedaDAO;
 import pojo.Desembolso;
+import pojo.Proyecto;
 import utilities.Utils;
 
 
@@ -222,10 +223,14 @@ public class SDesembolso extends HttpServlet {
 				temp.usuarioCreo = desembolso.getUsuarioCreo();
 				stdesembolsos.add(temp);
 			}
+			
+			Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
+			Integer tipoMonedaId = proyecto.getPrestamo().getTipoMoneda().getId();
+			String tipoMonedaNombre = proyecto.getPrestamo().getTipoMoneda().getSimbolo();
 
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stdesembolsos);
 	        response_text = String.join("", "\"desembolsos\":",response_text);
-	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+	        response_text = String.join("", "{\"success\":true,", response_text,", \"tipoMonedaId\" : " + tipoMonedaId + ", \"tipoMonedaNombre\" : \"" + tipoMonedaNombre +"\" }");
 		}
 		else{
 			response_text = "{ \"success\": false }";

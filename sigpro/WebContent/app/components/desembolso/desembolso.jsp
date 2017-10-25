@@ -48,9 +48,8 @@
 												ng-value="row.monto" ng-required="true"
 												onblur="this.setAttribute('value', this.value);" ui-number-mask="2" style="text-align: right;" /></div></td>
 							<td style="padding: 0px;"><div class="form-group" style="padding: 3px;" >
-								    <input type="text" class="inputText" ng-model="row.tipo_moneda_nombre"
-									ng-click="desembolsoc.buscarTipoMoneda('Tipo de Moneda','',$index)" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
-									<span class="label-icon" ng-click="desembolsoc.buscarTipoMoneda('Tipo de Moneda','',$index)"><i class="glyphicon glyphicon-search"></i></span>
+								    <input type="text" class="inputText" ng-model="desembolsoc.tipo_moneda_nombre"
+									onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
 								</div></td>
 							<shiro:hasPermission name="9030"><td width="1%">
 					       		<label class="btn btn-default btn-xs" ng-click="desembolsoc.borrar(row)" uib-tooltip="Borrar" tooltip-placement="bottom">

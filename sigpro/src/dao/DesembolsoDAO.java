@@ -157,7 +157,7 @@ public class DesembolsoDAO {
 		List<Desembolso> ret = new ArrayList<Desembolso>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String query = "SELECT d FROM Desembolso d WHERE estado = 1 AND d.proyecto.id = :proyId ";
+			String query = "SELECT d FROM Desembolso d WHERE estado = 1 AND d.proyecto.id = :proyId ORDER BY fecha";
 			Query<Desembolso> criteria = session.createQuery(query,Desembolso.class);
 			criteria.setParameter("proyId", proyectoId);
 			ret = criteria.getResultList();
