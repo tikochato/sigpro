@@ -217,12 +217,17 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/prestamotipo/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'prestamotipoController\'" class="all_page"></div>'
             })
-            .when("/:redireccion?",{
-            	controller:"MainController"
+            .when('/rolunidadejecutora/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'rolunidadejecutoraController\'" class="all_page"></div>'
             })
             .when('/miembrosunidadejecutora/:proyectoId?',{
             	template: '<div load-on-demand="\'miembrosunidadejecutoraController\'" class="all_page"></div>'
             })
+            .when("/:redireccion?",{
+            	controller:"MainController"
+            })
+            
+            
             /*.when('/salir',{
             	templateUrl : '<div></div>',
             	resolve:{
@@ -565,6 +570,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	       		name: 'miembrosunidadejecutoraController',
 	       		script: '/app/components/miembrosunidadejecutora/miembrosunidadejecutora.controller.js',
 	       		template: '/app/components/miembrosunidadejecutora/miembrosunidadejecutora.jsp'
+	       },
+	       {
+	    	   name: 'rolunidadejecutoraController',
+	    	   script: '/app/components/rolunidadejecutora/rolunidadejecutora.controller.js',
+	    	   template: '/app/components/rolunidadejecutora/rolunidadejecutora.jsp'
 	       }
 
 	   ];
