@@ -39,9 +39,10 @@
 					<td>
 						<div class="form-group">
 							<input type="text" class="inputText" uib-datepicker-popup="{{modalAvances.formatofecha}}" alt-input-formats="{{modalAvances.altformatofecha}}"
-								ng-model="row.fechaControl" is-open="row.isOpen" min="{{modalAvances.fechaInicio}}" 
+								ng-model="row.fechaControl" is-open="row.isOpen" 
+								ng-class="{'ng-invalid': modalAvances.validarFecha(row)}"
 								datepicker-options="modalAvances.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
-								ng-change="modalAvances.guardarFecha(row)"/>
+								ng-change="modalAvances.guardarFecha(row, this)"/>
 							<span class="label-icon" ng-click="modalAvances.abrirPopupFecha($index,0)" tabindex="-1">
 								<i class="glyphicon glyphicon-calendar"></i>
 							</span>

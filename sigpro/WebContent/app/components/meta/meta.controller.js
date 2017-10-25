@@ -653,6 +653,13 @@ app.controller('modalMetaAvances', [ '$uibModalInstance',
 			row.fecha = moment(row.fechaControl).format('DD/MM/YYYY');
 			row.valorTiempo = row.valorTiempoControl!=null ? moment(row.valorTiempoControl).format('DD/MM/YYYY') : null;
 		}
+		
+		mi.validarFecha = function(row){
+			if (row.fechaControl && (row.fechaControl.getTime()<fechaInicio.getTime() || row.fechaControl.getTime()>new Date())){
+				return true;
+			}
+			return false;
+		}
 				
 		mi.nuevoAvance = function(){
 			mi.avance.push({  
