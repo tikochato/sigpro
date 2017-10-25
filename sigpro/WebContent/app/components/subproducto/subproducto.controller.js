@@ -62,12 +62,18 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 	
 	mi.objetoTipoNombre = "Producto:";
 	$http.post('/SProducto', { accion: 'obtenerProductoPorId', id: mi.productoid, t: (new Date()).getTime()}).success(
-			function(response) {
-				mi.productoid = response.id;
-				mi.productoNombre = response.nombre;
-				var fechaInicioPadre = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
-				mi.modificarFechaInicial(fechaInicioPadre);
-			});
+		function(response) {
+			mi.productoid = response.id;
+			mi.prestamoId = response.prestamoId;
+			mi.unidadEjecutora = response.unidadEjecutora;
+			mi.unidadEjecutoraNombre = response.unidadEjecutoraNombre;
+			mi.entidad = response.entidad;
+			mi.ejercicio = response.ejercicio;
+			mi.entidadnombre = response.entidadNombre;
+			mi.productoNombre = response.nombre;
+			var fechaInicioPadre = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
+			mi.modificarFechaInicial(fechaInicioPadre);
+		});
 	
 	$http.post('/SAcumulacionCosto', { accion: 'getAcumulacionesCosto', t: (new Date()).getTime()}).success(
 			function(response) {

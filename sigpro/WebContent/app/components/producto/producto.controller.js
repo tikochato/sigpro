@@ -62,6 +62,12 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		$http.post('/SComponente', { accion: 'obtenerComponentePorId', id: mi.objetoId, t: (new Date()).getTime()}).success(
 			function(response) {
 				mi.componenteid = response.id;
+				mi.prestamoId = response.prestamoId;
+				mi.unidadEjecutora = response.unidadEjecutora;
+				mi.unidadEjecutoraNombre = response.unidadEjecutoraNombre;
+				mi.entidad = response.entidad;
+				mi.ejercicio = response.ejercicio;
+				mi.entidadnombre = response.entidadNombre;
 				mi.objetoNombre = response.nombre;
 				var fechaInicioPadre = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
 				mi.modificarFechaInicial(fechaInicioPadre);
@@ -71,6 +77,13 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		$http.post('/SSubComponente', { accion: 'obtenerSubComponentePorId', id: mi.objetoId, t: (new Date()).getTime()}).success(
 				function(response) {
 					mi.subcomponenteid = response.id;
+					mi.objetoNombre = response.nombre;
+					mi.prestamoId = response.prestamoId;
+					mi.unidadEjecutora = response.unidadEjecutora;
+					mi.unidadEjecutoraNombre = response.unidadEjecutoraNombre;
+					mi.entidad = response.entidad;
+					mi.ejercicio = response.ejercicio;
+					mi.entidadnombre = response.entidadNombre;
 					mi.objetoNombre = response.nombre;
 					var fechaInicioPadre = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
 					mi.modificarFechaInicial(fechaInicioPadre);

@@ -87,6 +87,7 @@ public class SComponente extends HttpServlet {
 		BigDecimal fuenteNacional;
 		boolean tieneHijos;
 		boolean esDeSigade;
+		Integer prestamoId;
 	}
 
 	class stdatadinamico {
@@ -187,7 +188,7 @@ public class SComponente extends HttpServlet {
 				temp.fuentePrestamo = componente.getFuentePrestamo();
 				temp.fuenteDonacion = componente.getFuenteDonacion();
 				temp.fuenteNacional = componente.getFuenteNacional();
-				
+				temp.prestamoId = componente.getProyecto().getPrestamo().getId();
 				stcomponentes.add(temp);
 			}
 
@@ -249,7 +250,7 @@ public class SComponente extends HttpServlet {
 				temp.fuentePrestamo = componente.getFuentePrestamo();
 				temp.fuenteDonacion = componente.getFuenteDonacion();
 				temp.fuenteNacional = componente.getFuenteNacional();
-				
+				temp.prestamoId = componente.getProyecto().getPrestamo().getId();
 				stcomponentes.add(temp);
 			}
 
@@ -469,7 +470,7 @@ public class SComponente extends HttpServlet {
 				temp.fuentePrestamo = componente.getFuentePrestamo();
 				temp.fuenteDonacion = componente.getFuenteDonacion();
 				temp.fuenteNacional = componente.getFuenteNacional();
-				
+				temp.prestamoId = componente.getProyecto().getPrestamo().getId();
 				stcomponentes.add(temp);
 			}
 
@@ -482,7 +483,14 @@ public class SComponente extends HttpServlet {
 			Componente componente = ComponenteDAO.getComponentePorId(id,usuario);
 
 			response_text = String.join("","{ \"success\": ",(componente!=null && componente.getId()!=null ? "true" : "false"),", "
-				+ "\"id\": " + (componente!=null ? componente.getId():"0") +", " + "\"fechaInicio\": \"" + (componente!=null ? Utils.formatDate(componente.getFechaInicio()): null) +"\", "
+				+ "\"id\": " + (componente!=null ? componente.getId():"0") +", "
+				+ "\"ejercicio\": " + (componente!=null ? componente.getProyecto().getUnidadEjecutora().getId().getEjercicio() :"0") +", " 
+				+ "\"entidad\": " + (componente!=null ? componente.getProyecto().getUnidadEjecutora().getId().getEntidadentidad() :"0") +", "
+				+ "\"entidadNombre\": \"" + (componente!=null ? componente.getProyecto().getUnidadEjecutora().getEntidad().getNombre() : "") +"\", "
+				+ "\"unidadEjecutora\": " + (componente!=null ? componente.getProyecto().getUnidadEjecutora().getId().getUnidadEjecutora() :"0") +", "
+				+ "\"unidadEjecutoraNombre\": \"" + (componente!=null ? componente.getProyecto().getUnidadEjecutora().getNombre() : "") +"\", "
+				+ "\"prestamoId\": " + (componente!=null ? componente.getProyecto().getPrestamo() != null ? componente.getProyecto().getPrestamo().getId() : 0 : 0) +", "
+				+ "\"fechaInicio\": \"" + (componente!=null ? Utils.formatDate(componente.getFechaInicio()): null) +"\", "
 				+ "\"nombre\": \"" + (componente!=null ? componente.getNombre():"Indefinido") +"\" }");
 
 		}else if(accion.equals("getComponentePorId")){
@@ -538,6 +546,7 @@ public class SComponente extends HttpServlet {
 			temp.fuentePrestamo = componente.getFuentePrestamo();
 			temp.fuenteDonacion = componente.getFuenteDonacion();
 			temp.fuenteNacional = componente.getFuenteNacional();
+			temp.prestamoId = componente.getProyecto().getPrestamo().getId();
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"componente\":",response_text);

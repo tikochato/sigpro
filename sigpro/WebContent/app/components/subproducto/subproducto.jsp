@@ -200,8 +200,8 @@
 			        <div class="form-group">
 			            <input type="text" class="inputText" ng-model="subproducto.unidadEjecutoraNombre" ng-readonly="true" 
 			            	ng-value="subproducto.unidadEjecutoraNombre" onblur="this.setAttribute('value', this.value);" 
-			            	ng-click="subproducto.buscarUnidadEjecutora()"/>
-			            <span class="label-icon" ng-click="subproducto.buscarUnidadEjecutora()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+			            	ng-click="subproducto.prestamoId != null ? '' : subproducto.buscarUnidadEjecutora()"/>
+			            <span class="label-icon" ng-click="subproducto.prestamoId != null ? '' : subproducto.buscarUnidadEjecutora()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 			          <label class="floating-label">Unidad Ejecutora</label>
 			        </div>
 			        <div class="form-group" >
