@@ -154,6 +154,8 @@
 				<span class="glyphicon glyphicon-copy"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.calcularCostoFecha(controller.proyecto.id) : ''" uib-tooltip="Cálculo de costos y fechas" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-wrench"></span></label>
+				<label class="btn btn-default" ng-click="controller.botones ? controller.irAMiembrosUnidadEjecutora(controller.proyecto.id) : ''" uib-tooltip="Miembros de la Unidad Ejecutora" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-user"></span></label>
 		</div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="24020">
