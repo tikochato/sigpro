@@ -102,14 +102,24 @@
     <div class="panel panel-default">
 	  <div class="panel-heading"><h3>Mapa</h3></div>
 	</div>
-	    
-		<div class="row" style="width: 100%;">
-					<div class="form-group col-sm-4" align="left">
-						<select  class="inputText" ng-model="mapac.prestamo"
-							ng-options="a.text for a in mapac.prestamos"
-							ng-change="mapac.cargar()"></select>
-					</div>
-		</div>
+	    <div class="row">
+    		<div class="form-group col-sm-6" align="left">
+				<div id="prestamo" angucomplete-alt placeholder="" pause="100" selected-object="mapac.cambioPrestamo"
+					  local-data="mapac.lprestamos" search-fields="proyectoPrograma" title-field="proyectoPrograma" field-required="true" field-label="* Préstamo"
+					  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+					  initial-value="mapac.prestamoNombre" focus-out="mapac.blurPrestamo()" input-name="prestamo"></div>
+				<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+			</div>
+    	</div>
+    	<div class="row">
+    		<div class="form-group col-sm-6" align="left">
+				<div id="pep" angucomplete-alt placeholder="" pause="100" selected-object="mapac.cambioPep"
+					  local-data="mapac.peps" search-fields="nombre" title-field="nombre" field-required="true" field-label="* {{etiquetas.proyecto}}"
+					  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+					  initial-value="mapac.pepNombre" focus-out="mapac.blurPep()" input-name="pep"></div>
+				<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+			</div>
+    	</div>
 		<div class="row">
 	    <div class="col-sm-12 operation_buttons" align="right" style="width: 99%">
 	    
