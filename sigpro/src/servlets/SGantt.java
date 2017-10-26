@@ -60,7 +60,7 @@ import utilities.Utils;
 @WebServlet("/SGantt")
 public class SGantt extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static int OBJETO_ID_HITO = -1;
+	private static int OBJETO_ID_HITO = -2;
 	private static int OBJETO_ID_PROYECTO = 0;
 	private static int OBJETO_ID_COMPONENTE = 1;
 	private static int OBJETO_ID_SUBCOMPONENTE = 2;
