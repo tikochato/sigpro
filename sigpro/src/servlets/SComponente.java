@@ -547,6 +547,9 @@ public class SComponente extends HttpServlet {
 			temp.fuenteDonacion = componente.getFuenteDonacion();
 			temp.fuenteNacional = componente.getFuenteNacional();
 			temp.prestamoId = componente.getProyecto().getPrestamo().getId();
+			temp.descripcion = componente.getDescripcion();
+			temp.longitud = componente.getLongitud();
+			temp.latitud = componente.getLatitud();
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"componente\":",response_text);
