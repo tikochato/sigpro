@@ -79,6 +79,7 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 			if(selected!== undefined){
 				mi.pepNombre = selected.originalObject.nombre;
 				mi.pepId = selected.originalObject.id;
+				mi.validarFecha(mi.fechaCorte)
 			}
 			else{
 				mi.pepNombre="";
@@ -97,7 +98,7 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 		}
 		
 		mi.validarFecha = function(fecha1){
-			if(fecha1 != null)
+			if(fecha1 != null && mi.pepId != null)
 				mi.generar();
 		}
 				
