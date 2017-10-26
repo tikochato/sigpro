@@ -58,8 +58,8 @@ public class SubproductoDAO {
 		public Integer estado;
 		public String fechaCreacion;
 		public String usuarioCreo;
-		public String fechaactualizacion;
-		public String usuarioactualizo;
+		public String fechaActualizacion;
+		public String usuarioActualizo;
 		public String latitud;
 		public String longitud;
 		public BigDecimal costo;
@@ -283,9 +283,9 @@ public class SubproductoDAO {
 			estructuraPojo.snip = pojo.getSnip();
 			estructuraPojo.estado = pojo.getEstado();
 			estructuraPojo.usuarioCreo = pojo.getUsuarioCreo();
-			estructuraPojo.usuarioactualizo = pojo.getUsuarioActualizo();
+			estructuraPojo.usuarioActualizo = pojo.getUsuarioActualizo();
 			estructuraPojo.fechaCreacion = Utils.formatDateHour(pojo.getFechaCreacion());
-			estructuraPojo.fechaactualizacion = Utils.formatDateHour(pojo.getFechaActualizacion());
+			estructuraPojo.fechaActualizacion = Utils.formatDateHour(pojo.getFechaActualizacion());
 			estructuraPojo.latitud = pojo.getLatitud();
 			estructuraPojo.longitud = pojo.getLongitud();
 			estructuraPojo.costo = pojo.getCosto();

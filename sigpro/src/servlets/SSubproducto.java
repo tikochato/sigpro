@@ -472,9 +472,9 @@ public class SSubproducto extends HttpServlet {
 			temp.nombre = subproducto.getNombre();
 			temp.descripcion = subproducto.getDescripcion();
 			temp.usuarioCreo = subproducto.getUsuarioCreo();
-			temp.usuarioactualizo = subproducto.getUsuarioActualizo();
+			temp.usuarioActualizo = subproducto.getUsuarioActualizo();
 			temp.fechaCreacion = Utils.formatDateHour(subproducto.getFechaCreacion());
-			temp.fechaactualizacion = Utils.formatDateHour(subproducto.getFechaActualizacion());
+			temp.fechaActualizacion = Utils.formatDateHour(subproducto.getFechaActualizacion());
 			temp.estado = subproducto.getEstado();
 			temp.snip = subproducto.getSnip();
 			temp.programa = subproducto.getPrograma();
