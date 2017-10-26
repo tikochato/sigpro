@@ -54,17 +54,17 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 		
 		mi.cambioTipo=function(selected){
 			if(selected!== undefined){
-				mi.actividad.actividadtipoombre=selected.originalObject.nombre;
+				mi.actividad.actividadtiponombre=selected.originalObject.nombre;
 				mi.actividad.actividadtipoid=selected.originalObject.id;
 			}
 			else{
-				mi.actividad.actividadtipoombre="";
+				mi.actividad.actividadtiponombre="";
 				mi.actividad.actividadtipoid="";
 			}
 		}
 		
 		mi.blurTipo=function(){
-			if(document.getElementById("tipoNombre_value").defaultValue!=mi.actividad.actividadtipoombre){
+			if(document.getElementById("tipoNombre_value").defaultValue!=mi.actividad.actividadtiponombre){
 				$scope.$broadcast('angucomplete-alt:clearInput','tipoNombre');
 			}
 		}
@@ -439,12 +439,13 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 			if(!mi.esTreeview)
 				mi.gridApi.selection.clearSelectedRows();
 			mi.actividad.porcentajeavance = 0;
+			mi.actividad.actividadtiponombre = '';
 			$utilidades.setFocus(document.getElementById("inombre"));
 			mi.responsables =[];
 			mi.activeTab = 0;
 			
-			$scope.$broadcast('angucomplete-alt:clearInput','acumulacionCosto', mi.actividad.acumulacionTipoNombre);
-			$scope.$broadcast('angucomplete-alt:clearInput','tipoNombre', mi.actividad.actividadtiponombre);
+			$scope.$broadcast('angucomplete-alt:clearInput','acumulacionCosto');
+			$scope.$broadcast('angucomplete-alt:clearInput','tipoNombre');
 		};
 
 		mi.editar = function() {
@@ -457,8 +458,8 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 				mi.esnuevo = false;
 				mi.activeTab = 0;
 				
-				$scope.$broadcast('angucomplete-alt:changeInput','acumulacionCosto', mi.actividad.acumulacionTipoNombre);
-				$scope.$broadcast('angucomplete-alt:changeInput','tipoNombre', mi.actividad.actividadtiponombre);
+				$scope.$broadcast('angucomplete-alt:changeInput','acumulacionCosto');
+				$scope.$broadcast('angucomplete-alt:changeInput','tipoNombre');
 				
 				if(mi.actividad.duracionDimension.toLowerCase() == 'd'){
 					mi.duracionDimension = mi.dimensiones[0];
@@ -734,62 +735,6 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 			return resultado.promise;
 		};
 		
-
-		mi.buscarActividadTipo = function(titulo, mensaje) {
-			titulo = 'Tipo de Actividad';
-			var modalInstance = $uibModal.open({
-				animation : 'true',
-				ariaLabelledBy : 'modal-title',
-				ariaDescribedBy : 'modal-body',
-				templateUrl : 'buscarActividadTipo.jsp',
-				controller : 'modalBuscarActividadTipo',
-				controllerAs : 'modalBuscar',
-				backdrop : 'static',
-				size : 'md',
-				resolve : {
-					titulo : function() {
-						return titulo;
-					},
-					mensaje : function() {
-						return mensaje;
-					}
-				}
-			});
-
-			modalInstance.result.then(function(selectedItem) {
-				mi.actividad.actividadtipoid = selectedItem.id;
-				mi.actividad.actividadtiponombre = selectedItem.nombre;
-
-				var parametros = {
-						accion: 'getActividadPropiedadPorTipo',
-						idActividad: mi.actividad!=null ? mi.actividad.id : 0,
-						idActividadTipo: selectedItem.id, t: new Date().getTime()
-				}
-
-				$http.post('/SActividadPropiedad', parametros).then(function(response){
-					mi.camposdinamicos = response.data.actividadpropiedades;
-					for (campos in mi.camposdinamicos) {
-						switch (mi.camposdinamicos[campos].tipo){
-						case "fecha":
-							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
-							break;
-						case "entero":
-							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? Number(mi.camposdinamicos[campos].valor): null;
-							break;
-						case "decimal":
-							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? Number(mi.camposdinamicos[campos].valor) : null;
-							break;
-						case "booleano":
-							mi.camposdinamicos[campos].valor = mi.camposdinamicos[campos].valor == 'true' ? true : false;
-							break;
-						}
-
-					}
-				});
-
-			}, function() {
-			});
-	};
 
 	mi.open = function (posicionlat, posicionlong) {
 		$scope.geoposicionlat = posicionlat;
