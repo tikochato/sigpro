@@ -52,7 +52,7 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 		}
 		else{
 			mi.prestamoNombre="";
-			mi.prestamoId="";
+			mi.prestamoId=null;
 		}
 	}
 	

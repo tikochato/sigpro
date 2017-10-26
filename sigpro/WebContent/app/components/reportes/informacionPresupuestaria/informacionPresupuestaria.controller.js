@@ -50,7 +50,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 			}
 			else{
 				mi.prestamoNombre="";
-				mi.prestamoId="";
+				mi.prestamoId=null;
 			}
 		}
 		
@@ -64,6 +64,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 			if(selected!== undefined){
 				mi.pepNombre = selected.originalObject.nombre;
 				mi.pepId = selected.originalObject.id;
+				mi.validar(1);
 			}
 			else{
 				mi.pepNombre="";

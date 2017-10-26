@@ -15,6 +15,9 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 		mi.mostrarCargando = false;
 		mi.mostrardiv=false;
 		
+		mi.pepId=null;
+		mi.prestamoId=null;
+		
 		mi.formatofecha = 'dd/MM/yyyy';
 		mi.altformatofecha = ['d!/M!/yyyy'];
 		
@@ -65,7 +68,7 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 			}
 			else{
 				mi.prestamoNombre="";
-				mi.prestamoId="";
+				mi.prestamoId=null;
 			}
 		}
 		
@@ -83,7 +86,7 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 			}
 			else{
 				mi.pepNombre="";
-				mi.pepId="";
+				mi.pepId=null;
 			}
 		}
 		

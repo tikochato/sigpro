@@ -138,7 +138,7 @@
 							<div id="pep" angucomplete-alt placeholder="" pause="100" selected-object="ctrladqui.cambioPep"
 								  local-data="ctrladqui.peps" search-fields="nombre" title-field="nombre" field-required="true" field-label="* {{etiquetas.proyecto}}"
 								  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
-								  initial-value="ctrladqui.pepNombre" focus-out="ctrladqui.blurPep()" input-name="pep"></div>
+								  initial-value="ctrladqui.pepNombre" focus-out="ctrladqui.blurPep()" input-name="pep" disable-input="ctrladqui.prestamoId==null"></div>
 							<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 						</div>
 						<div class="form-group col-sm-6" align="right">

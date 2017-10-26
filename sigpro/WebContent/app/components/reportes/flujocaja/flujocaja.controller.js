@@ -109,7 +109,7 @@ app.controller('flujocajaController',['$scope','$rootScope','$http','$interval',
 		}
 		else{
 			mi.prestamoNombre="";
-			mi.prestamoId="";
+			mi.prestamoId=null;
 		}
 	}
 	

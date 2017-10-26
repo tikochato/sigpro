@@ -50,7 +50,7 @@ app.controller('mapaController',['$scope','$rootScope','$http','$interval','i18n
 		}
 		else{
 			mi.prestamoNombre="";
-			mi.prestamoId="";
+			mi.prestamoId=null;
 		}
 	}
 	

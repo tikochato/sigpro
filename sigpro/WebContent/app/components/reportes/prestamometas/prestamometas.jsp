@@ -166,7 +166,7 @@
 					<div id="pep" angucomplete-alt placeholder="" pause="100" selected-object="metasc.cambioPep"
 						  local-data="metasc.peps" search-fields="nombre" title-field="nombre" field-required="true" field-label="* {{etiquetas.proyecto}}"
 						  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
-						  initial-value="metasc.pepNombre" focus-out="metasc.blurPep()" input-name="pep"></div>
+						  initial-value="metasc.pepNombre" focus-out="metasc.blurPep()" input-name="pep" disable-input="metasc.prestamoId==null"></div>
 					<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 				</div>
 	    	</div>

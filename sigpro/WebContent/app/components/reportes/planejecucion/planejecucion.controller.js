@@ -69,7 +69,7 @@ app.controller('planejecucionController',['$scope','$rootScope','$http','$interv
 			}
 			else{
 				mi.prestamoNombre="";
-				mi.prestamoId="";
+				mi.prestamoId=null;
 			}
 		}
 		

@@ -26,6 +26,7 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
     mi.actividadesterminadas = [];
     mi.estructuraPrestamo = [];
     mi.mostrarcargando=false;
+    mi.prestamoId=null;
     
     mi.lprestamos = [];
 	
@@ -51,7 +52,7 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 		}
 		else{
 			mi.prestamoNombre="";
-			mi.prestamoId="";
+			mi.prestamoId=null;
 		}
 	}
 	
@@ -65,6 +66,7 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 		if(selected!== undefined){
 			mi.pepNombre = selected.originalObject.nombre;
 			mi.pepId = selected.originalObject.id;
+			mi.getEstructura();
 		}
 		else{
 			mi.pepNombre="";

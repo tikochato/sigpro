@@ -251,7 +251,7 @@
 							<div id="pep" angucomplete-alt placeholder="" pause="100" selected-object="racic.cambioPep"
 								  local-data="racic.peps" search-fields="nombre" title-field="nombre" field-required="true" field-label="* {{etiquetas.proyecto}}"
 								  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
-								  initial-value="racic.pepNombre" focus-out="racic.blurPep()" input-name="pep"></div>
+								  initial-value="racic.pepNombre" focus-out="racic.blurPep()" input-name="pep" disable-input="racic.prestamoId==null"></div>
 							<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 						</div>
 			    	</div>
