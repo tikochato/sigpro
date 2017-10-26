@@ -282,7 +282,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 		mi.child_adquisiciones = null;
 		mi.child_riesgos = null;
 		
-		mi.riesgos = false;
+		mi.riesgos = undefined;
 		mi.adquisicionesCargadas = false;
 		
 		mi.activeTab = 0;

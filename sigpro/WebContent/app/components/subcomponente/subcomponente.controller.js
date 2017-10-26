@@ -317,6 +317,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 				mi.gridApi.selection.clearSelectedRows();
 			$utilidades.setFocus(document.getElementById("nombre"));
 			mi.active=0;
+			mi.riesgos=undefined;
 		};
 
 		mi.editar = function() {

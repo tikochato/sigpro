@@ -309,7 +309,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		}
 		mi.metasCargadas = false;
 		mi.adquisicionesCargadas = false;
-		mi.riesgos = false;
+		mi.riesgos = undefined;
 		
 		mi.activeTab = 0;
 		$utilidades.setFocus(document.getElementById("nombre"));
