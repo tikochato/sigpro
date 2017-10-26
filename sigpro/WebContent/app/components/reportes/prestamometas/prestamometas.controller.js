@@ -114,17 +114,57 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 				mi.unidadesMedida = response.MetasUnidades;
 	});
 	
-	$http.post('/SProyecto',{accion: 'getProyectos'}).success(
-			function(response) {
-				mi.prestamos = [];
-				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un '+$rootScope.etiquetas.proyecto});
-				if (response.success){
-					for (var i = 0; i < response.entidades.length; i++){
-						mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
+	$http.post('/SPrestamo', {accion: 'getPrestamos', t: (new Date()).getTime()}).then(
+			function(response){
+				if(response.data.success){
+					mi.lprestamos = response.data.prestamos;
+				}	
+		});
+		
+		mi.blurPrestamo=function(){
+			if(document.getElementById("prestamo_value").defaultValue!=mi.prestamoNombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','prestamo');
+			}
+		}
+		
+		mi.cambioPrestamo=function(selected){
+			if(selected!== undefined){
+				mi.prestamoNombre = selected.originalObject.proyectoPrograma;
+				mi.prestamoId = selected.originalObject.id;
+				mi.getPeps(mi.prestamoId);
+			}
+			else{
+				mi.prestamoNombre="";
+				mi.prestamoId="";
+			}
+		}
+		
+		mi.blurPep=function(){
+			if(document.getElementById("pep_value").defaultValue!=mi.pepNombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','pep');
+			}
+		}
+		
+		mi.cambioPep=function(selected){
+			if(selected!== undefined){
+				mi.pepNombre = selected.originalObject.nombre;
+				mi.pepId = selected.originalObject.id;
+			}
+			else{
+				mi.pepNombre="";
+				mi.pepId="";
+			}
+		}
+		
+		mi.getPeps = function(prestamoId){
+			$http.post('/SProyecto',{accion: 'getProyectos', prestamoid: prestamoId}).success(
+				function(response) {
+					mi.peps = [];
+					if (response.success){
+						mi.peps = response.entidades;
 					}
-					mi.prestamo = mi.prestamos[0];
-				}
-			});
+			});	
+		}
 
 		mi.nombreUnidadMedida = function(id){
 			if (id != null && id > 0){
@@ -184,7 +224,7 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 			 }
 			$http.post('/SPrestamoMetas', { 
 				accion: 'exportarPdf',
-				proyectoid: mi.prestamo.value,
+				proyectoid: mi.pepId,
 				fechaInicio: mi.fechaInicio,
 				fechaFin: mi.fechaFin,
 				agrupacion: mi.agrupacionActual,
@@ -204,7 +244,7 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 		};
 		
 		mi.validar = function(noElemento){
-			if(mi.prestamo.value > 0)
+			if(mi.pepId != null && mi.pepId > 0)
 			{
 				if(mi.fechaInicio != null && mi.fechaInicio.toString().length == 4 && 
 						mi.fechaFin != null && mi.fechaFin.toString().length == 4)
@@ -276,7 +316,7 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 		mi.cargarTabla = function() {			
 			var datos = {
 				accion : 'getMetasProducto',
-				idPrestamo: mi.prestamo.value,
+				idPrestamo: mi.pepId,
 				anioInicial: mi.fechaInicio,
 				anioFinal: mi.fechaFin
 			};
@@ -387,7 +427,7 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 		}
 		
 		mi.cambiarAgrupacion = function(agrupacion){
-			if(mi.prestamo.value > 0)
+			if(mi.pepId > 0)
 			{
 				if(mi.fechaInicio != null && mi.fechaFin != null)
 				{
@@ -414,7 +454,7 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 		}
 		
 		mi.generar = function(agrupacion){
-			if(mi.prestamo.value > 0)
+			if(mi.pepId > 0)
 			{
 				if(mi.fechaInicio != null && mi.fechaFin != null)
 				{
@@ -534,7 +574,7 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 			 }
 			 $http.post('/SPrestamoMetas', { 
 				 accion: 'exportarExcel', 
-				 proyectoid: mi.prestamo.value,
+				 proyectoid: mi.pepId,
 				 fechaInicio: mi.fechaInicio,
 				 fechaFin: mi.fechaFin,
 				 agrupacion: mi.agrupacionActual,
