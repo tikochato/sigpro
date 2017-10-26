@@ -305,8 +305,8 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 		mi.nuevo = function() {
 			mi.datotipoid = "";
 			mi.datotiponombre = "";
-			mi.unidadejecutoraid="";
-			mi.unidadejecutoranombre="";
+			mi.unidadejecutoraid= mi.prestamoId != null ? mi.unidadejecutoraid :  "";
+			mi.unidadejecutoranombre= mi.prestamoId != null ? mi.unidadejecutoranombre : "";
 			mi.componentetipoid="";
 			mi.componentetiponombre="";
 			mi.mostraringreso=true;
