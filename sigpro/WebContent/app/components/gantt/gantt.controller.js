@@ -273,8 +273,8 @@ app.controller('ganttController',['$scope','$rootScope','$http','$interval','i18
 		mi.cargarProyecto = function (){
 			var formatData = new FormData();
 			 
-			formatData.append("accion",$routeParams.objeto_tipo == 1 ? 'getProyecto' : 'getPrograma');
-			formatData.append($routeParams.objeto_tipo == 1 ? "proyecto_id" : "programa_id",$routeParams.objeto_id);
+			formatData.append("accion",$routeParams.objeto_tipo == 0 ? 'getProyecto' : 'getPrograma');
+			formatData.append($routeParams.objeto_tipo == 0 ? "proyecto_id" : "programa_id",$routeParams.objeto_id);
 			formatData.append("t",new Date().getTime());
 			
 			$http.post('/SGantt', formatData, {
@@ -707,22 +707,7 @@ app.controller('ganttController',['$scope','$rootScope','$http','$interval','i18
 			}, function() {
 			});
 	};	
-	
-	mi.calcularTamanosPantalla = function(){
-		//mi.anchoPantalla = Math.floor(document.getElementById("reporte").offsetHeight);
-		mi.anchoGantt = Math.floor(document.getElementById("gantt").offsetHeight);
-		//mi.anchoPantalla = mi.anchoPantalla - (mi.anchoPantalla * 0.18);
-		//mi.anchoGantt = {"height" : + Math.round(mi.anchoGantt) + "px"};
-		mi.anchoGantt = Math.round(mi.anchoGantt - 32) + "px";
-	}
-	
-	mi.calcularTamanosPantalla();
-	
-	angular.element($window).bind('resize', function(){ 
-        mi.calcularTamanosPantalla();
-        $scope.$digest();
-    });
-	
+		
 	mi.nuevaActividad = function(objetoId, objetoTipo){
 		mi.editarActividad(0,0,objetoId,objetoTipo);
 	};
