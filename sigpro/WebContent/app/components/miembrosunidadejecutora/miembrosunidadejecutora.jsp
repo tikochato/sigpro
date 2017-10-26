@@ -95,22 +95,22 @@
 								<table st-table="miembroc.displayedCollection" st-safe-src="miembroc.rowCollection"
 										class="table table-striped tablaDatos" >
 											<thead id="divCabecerasDatos" class="theadDatos" style="width: 100%" >
-													<tr style="width: 100%">
+													<tr style="width: 100%; display: table!important;">
 														<th class="label-form2" style="width: 5%; text-align: center">No.</th>
-														<th class="label-form2" style="width: 43%; text-align: center">Nombre</th>
+														<th class="label-form2" style=" text-align: center">Nombre</th>
 														<th class="label-form2" style="width: 25%; text-align: center">Rol</th>
 														<th class="label-form2" style="width: 25%; text-align: center">Correo electrónico</th>
-														<shiro:hasPermission name="45040">
+														<shiro:hasPermission name="45030">
 															<th class="label-form2" style="width: 5%; text-align: center">Quitar</th>
 														</shiro:hasPermission>
 													</tr>
 											</thead>
 											<tbody style="max-height: 350px; width: 100% "  class="cuerpoTablaDatos" id="divTablaDatos" onmouseover="activarScroll(this.id)">
-												<tr ng-repeat="row in miembroc.displayedCollection track by $index" style="width: 100%">
+												<tr style="width: 100%; display: table!important;" ng-repeat="row in miembroc.displayedCollection track by $index" >
 													<td style="width: 5%;"> {{ $index +1 }} </td>
 													
-													<td ng-hide="!row.guardado" style="width: 43%;"  >{{row.colaboradorNombre}}</td>
-													<td ng-hide="row.guardado" style="width: 43%;">
+													<td ng-hide="!row.guardado"   >{{row.colaboradorNombre}}</td>
+													<td ng-hide="row.guardado" >
 														 <select class="inputText" ng-model="row.colaboradorId" ng-change="miembroc.seleccionarColaborador($index,col)"
 														 ng-required="true">
 														 	<option value="">Seleccione un colaborador</option>
@@ -129,7 +129,7 @@
 													</td>
 													
 													<td style="width: 25%">{{row.email}}</td>
-													<shiro:hasPermission name="45040">
+													<shiro:hasPermission name="45030">
 														<td  style="width: 5%;">
 															<label class="btn btn-default btn-xs" ng-click="miembroc.eliminarMiembro(row)" 
 															uib-tooltip="Borrar">
