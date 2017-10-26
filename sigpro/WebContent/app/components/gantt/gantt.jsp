@@ -4,31 +4,11 @@
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="ganttController as ganttc" class="maincontainer all_page" id="title">
-		<script type="text/ng-template" id="editarPrestamo.jsp">
-    		<%@ include file="/app/components/gantt/editarPrestamo.jsp"%>
-  		</script>
-  		<script type="text/ng-template" id="editarComponente.jsp">
-    		<%@ include file="/app/components/gantt/editarComponente.jsp"%>
-  		</script>
-  		<script type="text/ng-template" id="editarProducto.jsp">
-    		<%@ include file="/app/components/gantt/editarProducto.jsp"%>
-  		</script>
-  		<script type="text/ng-template" id="editarSubproducto.jsp">
-    		<%@ include file="/app/components/gantt/editarSubproducto.jsp"%>
-  		</script>
-		<script type="text/ng-template" id="editarActividad.jsp">
-    		<%@ include file="/app/components/gantt/editarActividad.jsp"%>
-			
-  		</script>
-  		
+		
   		<script type="text/ng-template" id="buscarPorProyecto.jsp">
     		<%@ include file="/app/components/pep/buscarPorProyecto.jsp"%>
   	 	</script>
-  	 	
-  	 	<script type="text/ng-template" id="pesoProducto.jsp">
-    		<%@ include file="/app/components/gantt/pesoProducto.jsp"%>
-  	 	</script>
-  		
+  	 	  		
 	    <div class="panel panel-default">
 	    	<div class="panel-heading"><h3>Gantt</h3></div>
 	    </div>
@@ -52,8 +32,7 @@
 		<div class="row" align="center" style="height: 90%" id="reporte">	
 				 <div align="center" id="gantt">
 				    <div class="gantt-chart">
-						<div ds:gantt-chart id="ganttChartView" items="items"  settings="settings" auto-refresh="{{ true }}" style="height: 400px;"
-						>
+						<div ds:gantt-chart id="ganttChartView" items="items"  settings="settings" auto-refresh="{{ true }}" style="height: 400px;">
 						</div>
 						<div class="grid_loading" ng-hide="!ganttc.mostrarcargando" style="z-index: 100">
 						  	<div class="msg">

@@ -2,10 +2,6 @@ var app = angular.module('ganttController', ['DlhSoft.ProjectData.GanttChart.Dir
 		'DlhSoft.Kanban.Angular.Components','ui.grid.edit', 'ui.grid.rowEdit','ui.bootstrap.contextMenu']);
 
 var GanttChartView = DlhSoft.Controls.GanttChartView;
-//Query string syntax: ?theme
-//Supported themes: Default, Generic-bright, Generic-blue, DlhSoft-gray, Purple-green, Steel-blue, Dark-black, Cyan-green, Blue-navy, Orange-brown, Teal-green, Purple-beige, Gray-blue, Aero.
-var queryString = window.location.search;
-var theme = queryString ? queryString.substr(1) : null;
 
 app.controller('ganttController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q',
 	function($scope, $rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q) {
