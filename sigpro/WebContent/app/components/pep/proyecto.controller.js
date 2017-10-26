@@ -547,16 +547,16 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 
 	mi.irAActividades=function(proyectoid){
 		if(mi.proyecto!=null){
-			$location.path('/actividad/'+ proyectoid +'/1' );
+			$location.path('/actividad/'+ proyectoid +'/0' );
 		}
 	};
 
 	mi.irAGantt=function(proyectoid){
 		if(mi.proyecto!=null){
 			if(mi.esTreeview)
-				$window.location='/main.jsp#!/gantt/'+ proyectoid + '/1';
+				$window.location='/main.jsp#!/gantt/'+ proyectoid + '/0';
 			else
-				$location.path('/gantt/'+ proyectoid + '/1' );
+				$location.path('/gantt/'+ proyectoid + '/0' );
 		}
 	};
 	mi.irAMapa=function(proyectoid){

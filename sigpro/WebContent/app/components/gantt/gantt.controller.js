@@ -273,8 +273,8 @@ app.controller('ganttController',['$scope','$rootScope','$http','$interval','i18
 		mi.cargarProyecto = function (){
 			var formatData = new FormData();
 			 
-			formatData.append("accion",$routeParams.objeto_tipo == 1 ? 'getProyecto' : 'getPrograma');
-			formatData.append($routeParams.objeto_tipo == 1 ? "proyecto_id" : "programa_id",$routeParams.objeto_id);
+			formatData.append("accion",$routeParams.objeto_tipo == 0 ? 'getProyecto' : 'getPrograma');
+			formatData.append($routeParams.objeto_tipo == 0 ? "proyecto_id" : "programa_id",$routeParams.objeto_id);
 			formatData.append("t",new Date().getTime());
 			
 			$http.post('/SGantt', formatData, {

@@ -45,13 +45,11 @@
 			{{ ganttc.objetoTipoNombre }} {{ ganttc.proyectoNombre }}
 		</div>
 		<div class="row" align="center" style="height: 90%" id="reporte">
-			<div class="col-sm-12 tamanoDiv">
+			<div >
 				<div class="row" align="center" >
 				    <div class="operation_buttons" align="right">
-				    <form>
-				    	
 						<div class="btn-group">
-							<label class="btn btn-default" ng-click="ganttc.pesoProducto(ganttc.proyectoid)"><span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"
+							<label class="btn btn-default" ng-click="ganttc.pesoProducto(ganttc.proyectoid)" ng-hide="true"><span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"
 								uib-tooltip="Peso de productos"></span></label>
 							<label class="btn btn-default" ng-click="ganttc.exportar()"><span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"
 								uib-tooltip="Exportar"></span> Exportar</label>
@@ -60,7 +58,6 @@
 							<label class="btn btn-default" ng-click="ganttc.zoomAlejar()"><span class="glyphicon glyphicon-zoom-out" aria-hidden="true"
 								uib-tooltip="Alejar vista"></span></label>
 						</div>
-					</form>
 					</div>			
 				</div>
 				 <div class="row" align="center" id="gantt">
