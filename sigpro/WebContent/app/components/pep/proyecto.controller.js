@@ -70,6 +70,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			if(response.success){
 				mi.prestamoNombre = response.nombre;
 				mi.objetoTipoNombre = "Préstamo";	
+				mi.prestamoid=response.id;
 			}
 	});
 
@@ -236,7 +237,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				ejecucionFisicaReal: mi.proyecto.ejecucionFisicaReal,
 				proyectoClase: $rootScope.etiquetas.id,
 				projectCargado: mi.proyecto.projectCargado,
-				prestamoId: mi.proyecto.prestamoId,
+				prestamoId: mi.prestamoid,
 				t:moment().unix()
 			};
 			$http.post('/SProyecto',param_data).then(

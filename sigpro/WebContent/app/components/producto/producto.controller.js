@@ -292,9 +292,9 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		
 		mi.tipo = null;
 		mi.tipoNombre = "";
-
-		mi.unidadEjecutora = null;
-		mi.unidadEjecutoraNombre = "";
+		
+		mi.unidadEjecutora= mi.prestamoId != null ? mi.unidadEjecutora :  null;
+		mi.unidadEjecutoraNombre= mi.prestamoId != null ? mi.unidadEjecutoraNombre : "";
 
 		mi.propiedadesValor = [];
 		mi.producto = {};
