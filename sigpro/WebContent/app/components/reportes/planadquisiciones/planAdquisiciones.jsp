@@ -181,13 +181,25 @@
 						</div>
 					</div>
 					<br>
+					<div class="row">
+			    		<div class="form-group col-sm-6" align="left">
+							<div id="prestamo" angucomplete-alt placeholder="" pause="100" selected-object="planadqui.cambioPrestamo"
+								  local-data="planadqui.lprestamos" search-fields="proyectoPrograma" title-field="proyectoPrograma" field-required="true" field-label="* Préstamo"
+								  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+								  initial-value="planadqui.prestamoNombre" focus-out="planadqui.blurPrestamo()" input-name="prestamo"></div>
+							<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+						</div>
+			    	</div>
+			    	<div class="row">
+			    		<div class="form-group col-sm-6" align="left">
+							<div id="pep" angucomplete-alt placeholder="" pause="100" selected-object="planadqui.cambioPep"
+								  local-data="planadqui.peps" search-fields="nombre" title-field="nombre" field-required="true" field-label="* {{etiquetas.proyecto}}"
+								  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+								  initial-value="planadqui.pepNombre" focus-out="planadqui.blurPep()" input-name="pep" disable-input="planadqui.prestamoId==null"></div>
+							<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+						</div>
+			    	</div>
 					<div class="row" style="width: 100%; height: 15%">
-						<div class="form-group col-sm-3" align="left">
-							<select  class="inputText" ng-model="planadqui.prestamo"
-								ng-options="a.text for a in planadqui.prestamos" 
-								ng-change="planadqui.validar(1)"></select>		
-	    				</div>
-	    				
 	    				<div align="left" class="form-group col-sm-1">
 							<input type="number"  class="inputText" ng-model="planadqui.fechaInicio" maxlength="4" 
 							ng-value="planadqui.fechaInicio" onblur="this.setAttribute('value', this.value);"
@@ -201,9 +213,8 @@
 							ng-change="planadqui.validar(3)"/>
 						  	<label for="campo.id" class="floating-label">*Año Final</label>
 						</div>
-					</div>
-					<div class="row">
-	    				<div class="col-sm-12" align="right" ng-hide="!planadqui.mostrarDescargar">
+						
+	    				<div class="col-sm-10" align="right" ng-hide="!planadqui.mostrarDescargar">
 	    					<div class="form-group col-sm-1">
 							</div>
 							<div class="col-sm-11">

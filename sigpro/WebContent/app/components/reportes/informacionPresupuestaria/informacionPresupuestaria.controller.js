@@ -26,6 +26,62 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 		mi.totales = [];
 		mi.scrollPosicion = 0;
 		
+		mi.lprestamos = [];
+		
+		
+		$http.post('/SPrestamo', {accion: 'getPrestamos', t: (new Date()).getTime()}).then(
+			function(response){
+				if(response.data.success){
+					mi.lprestamos = response.data.prestamos;
+				}	
+		});
+		
+		mi.blurPrestamo=function(){
+			if(document.getElementById("prestamo_value").defaultValue!=mi.prestamoNombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','prestamo');
+			}
+		}
+		
+		mi.cambioPrestamo=function(selected){
+			if(selected!== undefined){
+				mi.prestamoNombre = selected.originalObject.proyectoPrograma;
+				mi.prestamoId = selected.originalObject.id;
+				mi.getPeps(mi.prestamoId);
+			}
+			else{
+				mi.prestamoNombre="";
+				mi.prestamoId=null;
+			}
+		}
+		
+		mi.blurPep=function(){
+			if(document.getElementById("pep_value").defaultValue!=mi.pepNombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','pep');
+			}
+		}
+		
+		mi.cambioPep=function(selected){
+			if(selected!== undefined){
+				mi.pepNombre = selected.originalObject.nombre;
+				mi.pepId = selected.originalObject.id;
+				mi.validar(1);
+			}
+			else{
+				mi.pepNombre="";
+				mi.pepId="";
+			}
+		}
+		
+		mi.getPeps = function(prestamoId){
+			$http.post('/SProyecto',{accion: 'getProyectos', prestamoid: prestamoId}).success(
+				function(response) {
+					mi.peps = [];
+					if (response.success){
+						mi.peps = response.entidades;
+					}
+			});	
+		}
+		
 		var AGRUPACION_MES= 1;
 		var AGRUPACION_BIMESTRE = 2;
 		var AGRUPACION_TRIMESTRE = 3;
@@ -97,18 +153,6 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 			    startingDay: 1,
 			    minMode: 'year'
 		};
-		
-		$http.post('/SProyecto',{accion: 'getProyectos'}).success(
-			function(response) {
-				mi.prestamos = [];
-				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un '+$rootScope.etiquetas.proyecto});
-				if (response.success){
-					for (var i = 0; i < response.entidades.length; i++){
-						mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
-					}
-					mi.prestamo = mi.prestamos[0];
-				}
-		});
 				
 		mi.anterior = function(){
 			var elemento = document.getElementById("divTablaDatos");
@@ -149,7 +193,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 		}
 		
 		mi.validar = function(noElemento){
-			if(mi.prestamo.value > 0)
+			if(mi.pepId > 0)
 			{
 				if(mi.fechaInicio != null && mi.fechaInicio.toString().length == 4 && 
 						mi.fechaFin != null && mi.fechaFin.toString().length == 4)
@@ -219,7 +263,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 		mi.cargarTabla = function(agrupacion) {			
 			var datos = {
 				accion : 'generarInforme',
-				idPrestamo: mi.prestamo.value,
+				idPrestamo: mi.pepId,
 				anioInicial: mi.fechaInicio,
 				anioFinal: mi.fechaFin,
 				t: (new Date()).getTime()
@@ -276,7 +320,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 		mi.lineColors = ['#88b4df','#8ecf4c'];
 		
 		mi.cambiarAgrupacion = function(agrupacion){
-			if(mi.prestamo.value > 0)
+			if(mi.pepId > 0)
 			{
 				if(mi.fechaInicio != null && mi.fechaFin != null)
 				{
@@ -536,7 +580,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 			  };
 		
 		mi.generar = function(agrupacion){
-			if(mi.prestamo.value > 0)
+			if(mi.pepId > 0)
 			{
 				if(mi.fechaInicio != null && mi.fechaFin != null)
 				{
@@ -660,7 +704,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 			 }
 			$http.post('/SInformacionPresupuestaria', { 
 				accion: 'exportarPdf',
-				idPrestamo: mi.prestamo.value,
+				idPrestamo: mi.pep.value,
 				anioInicial: mi.fechaInicio,
 				anioFinal: mi.fechaFin,
 				agrupacion: mi.agrupacionActual,
@@ -688,7 +732,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 			 }
 			 $http.post('/SInformacionPresupuestaria', { 
 				 accion: 'exportarExcel', 
-				 idPrestamo: mi.prestamo.value,
+				 idPrestamo: mi.pep.value,
 				 anioInicial: mi.fechaInicio,
 				 anioFinal: mi.fechaFin,
 				 agrupacion: mi.agrupacionActual,

@@ -35,14 +35,18 @@
 		    max-height: 100%;  
 		}
 		
-		
-	
+		.label-form2 {
+	    	font-size: 15px;
+	    	opacity: 1;
+	    	color: rgba(0,0,0,0.38) !important;
+	    	font-weight: bold;
+		}
 </style>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="miembrosunidadejecutoraController as miembroc" class="maincontainer all_page" id="title">
 	
-  		<shiro:lacksPermission name="24010">
+  		<shiro:lacksPermission name="45010">
 			<span ng-init="desembolsoc.redireccionSinPermisos()"></span>
 		</shiro:lacksPermission>
 		
@@ -54,19 +58,18 @@
 				  <div class="panel-heading"><h3>Miembros de Unidad Ejecutora</h3></div>
 				</div>
 				<div class="subtitulo" ng-if="!componentec.esTreeview">
-					{{ miembroc.prestamoNombre }}
+					{{ miembroc.proyectoNombre }} - {{miembroc.unidadEjecutoraNombre}}
 				</div>				
 			</div>
-			
 			<div >
 		
-		<br/><br/><br/><br/><br/>
+		<br/><br/><br/><br/><br/><br/>
 		<div class="col-sm-12" style="height: 80%"  >
 			
 			<div class="operation_buttons">
 				<div class="btn-group" style="float: right;">
-					<shiro:hasPermission name="24020">
-						<label class="btn btn-success" ng-click="miembroc.guardar(form.$valid) " ng-disabled="!form.$valid" uib-tooltip="Guardar" tooltip-placement="bottom">
+					<shiro:hasPermission name="45020">
+						<label class="btn btn-success" ng-click="form.$valid ? miembroc.guardar(form.$valid) : '' " ng-disabled="!form.$valid" uib-tooltip="Guardar" tooltip-placement="bottom">
 						<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 					</shiro:hasPermission>
 				</div>
@@ -79,35 +82,35 @@
 			<div class="operation_buttons" align="right">
 					<br/>
 					<div class="btn-group btn-group-sm">
-				       <shiro:hasPermission name="24040">
+				       <shiro:hasPermission name="45040">
 				       		<label class="btn btn-default" ng-click="miembroc.nuevoMiembro()" uib-tooltip="Nuevo Miembro">
 							<span class="glyphicon glyphicon-plus"></span></label>
 				       </shiro:hasPermission> 
 				   	</div>				
 	    	</div>
-    	
-			
 				<div class="divTablas">
-					
 						<div class="divPadreDatos" style="height: 100%;  width: 100%">
 							<div class="divTabla">
+								<form name="form">
 								<table st-table="miembroc.displayedCollection" st-safe-src="miembroc.rowCollection"
 										class="table table-striped tablaDatos" >
 											<thead id="divCabecerasDatos" class="theadDatos" style="width: 100%" >
-													<tr style="width: 100%">
-														<th class="label-form" style="width: 5%;">No.</th>
-														<th class="label-form" style="width: 43%">Nombre</th>
-														<th class="label-form" style="width: 25%">Rol</th>
-														<th class="label-form" style="width: 25%">Correo electrónico</th>
-														<th class="label-form" style="width: 5%;">Quitar</th>
+													<tr style="width: 100%; display: table!important;">
+														<th class="label-form2" style="width: 5%; text-align: center">No.</th>
+														<th class="label-form2" style=" text-align: center">Nombre</th>
+														<th class="label-form2" style="width: 25%; text-align: center">Rol</th>
+														<th class="label-form2" style="width: 25%; text-align: center">Correo electrónico</th>
+														<shiro:hasPermission name="45030">
+															<th class="label-form2" style="width: 5%; text-align: center">Quitar</th>
+														</shiro:hasPermission>
 													</tr>
 											</thead>
 											<tbody style="max-height: 350px; width: 100% "  class="cuerpoTablaDatos" id="divTablaDatos" onmouseover="activarScroll(this.id)">
-												<tr ng-repeat="row in miembroc.displayedCollection track by $index">
+												<tr style="width: 100%; display: table!important;" ng-repeat="row in miembroc.displayedCollection track by $index" >
 													<td style="width: 5%;"> {{ $index +1 }} </td>
 													
-													<td ng-hide="!row.guardado" style="width: 43%"  >{{row.colaboradorNombre}}</td>
-													<td ng-hide="row.guardado" style="width: 43%">
+													<td ng-hide="!row.guardado"   >{{row.colaboradorNombre}}</td>
+													<td ng-hide="row.guardado" >
 														 <select class="inputText" ng-model="row.colaboradorId" ng-change="miembroc.seleccionarColaborador($index,col)"
 														 ng-required="true">
 														 	<option value="">Seleccione un colaborador</option>
@@ -126,24 +129,26 @@
 													</td>
 													
 													<td style="width: 25%">{{row.email}}</td>
-													<td  style="width: 5%;">
-														<label class="btn btn-default btn-xs" ng-click="miembroc.eliminarMiembro(row)" 
-														uib-tooltip="Borrar">
-														<span class="glyphicon glyphicon-trash"></span></label>
-												</td>
+													<shiro:hasPermission name="45030">
+														<td  style="width: 5%;">
+															<label class="btn btn-default btn-xs" ng-click="miembroc.eliminarMiembro(row)" 
+															uib-tooltip="Borrar">
+															<span class="glyphicon glyphicon-trash"></span></label>
+														</td>
+													</shiro:hasPermission>
 												</tr>
 											</tbody>
 											
 								</table>
-							</div>
-							</div>
-					
+							</form>
+						</div>
+					</div>
 				</div>
 	    	
     	<br/>
 		<div class="btn-group" style="float: right;">
-			<shiro:hasPermission name="24020">
-				<label class="btn btn-success" ng-click="miembroc.guardar(form.$valid) " ng-disabled="!form.$valid" uib-tooltip="Guardar" tooltip-placement="bottom">
+			<shiro:hasPermission name="45020">
+				<label class="btn btn-success" ng-click="form.$valid ? miembroc.guardar(form.$valid) : '' " ng-disabled="!form.$valid" uib-tooltip="Guardar" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 			</shiro:hasPermission>
 			

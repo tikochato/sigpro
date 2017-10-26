@@ -92,11 +92,11 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 	mi.cambioAcumulacionCosto=function(selected){
 		if(selected!== undefined){
 			mi.subproducto.acumulacionCostoNombre = selected.originalObject.nombre;
-			mi.subproducto.acumulacionCostoId = selected.originalObject.id;
+			mi.subproducto.acumulacionCosto = selected.originalObject.id;
 		}
 		else{
 			mi.subproducto.acumulacionCostoNombre="";
-			mi.subproducto.acumulacionCostoId="";
+			mi.subproducto.acumulacionCosto="";
 		}
 	}
 	
@@ -269,9 +269,9 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 		
 		mi.tipo = null;
 		mi.tipoNombre = "";
-
-		mi.unidadEjecutora = null;
-		mi.unidadEjecutoraNombre = "";
+		
+		mi.unidadEjecutora= mi.prestamoId != null ? mi.unidadEjecutora :  null;
+		mi.unidadEjecutoraNombre= mi.prestamoId != null ? mi.unidadEjecutoraNombre : "";
 
 		mi.propiedadesValor = [];
 		mi.subproducto = {};
@@ -282,7 +282,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 		mi.child_adquisiciones = null;
 		mi.child_riesgos = null;
 		
-		mi.riesgos = false;
+		mi.riesgos = undefined;
 		mi.adquisicionesCargadas = false;
 		
 		mi.activeTab = 0;
@@ -372,7 +372,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 				datadinamica : JSON.stringify(mi.camposdinamicos),
 				longitud: mi.subproducto.longitud,
 				costo: mi.subproducto.costo == null ? 0 : mi.subproducto.costo,
-				acumulacionCostoId: mi.subproducto.acumulacionCostoId == null ? 0 : mi.subproducto.acumulacionCostoId,
+				acumulacionCostoId: mi.subproducto.acumulacionCosto == null ? 0 : mi.subproducto.acumulacionCosto,
 				fechaInicio: moment(mi.subproducto.fechaInicio).format('DD/MM/YYYY'),
 				fechaFin: moment(mi.subproducto.fechaFin).format('DD/MM/YYYY'),
 				duaracion: mi.subproducto.duracion,
@@ -446,7 +446,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 			mi.subproductoPadre = mi.subproducto.idSubproducto;
 			mi.subproductoPadreNombre = mi.subproducto.subproducto;
 			
-			mi.unidadEjecutora = mi.subproducto.unidadEjectuora;
+			mi.unidadEjecutora = mi.subproducto.unidadEjecutora;
 			mi.unidadEjecutoraNombre = mi.subproducto.nombreUnidadEjecutora;
 			mi.ejercicio = mi.subproducto.ejercicio;
 			mi.entidad = mi.subproducto.entidadentidad;
@@ -551,7 +551,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 		
 		resultado.then(function(itemSeleccionado){
 			mi.subproducto.acumulacionCostoNombre = itemSeleccionado.nombre;
-			mi.subproducto.acumulacionCostoId = itemSeleccionado.id;
+			mi.subproducto.acumulacionCosto = itemSeleccionado.id;
 		});
 	}
 	

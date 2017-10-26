@@ -302,8 +302,8 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 		mi.nuevo = function() {
 			mi.datotipoid = "";
 			mi.datotiponombre = "";
-			mi.unidadejecutoraid="";
-			mi.unidadejecutoranombre="";
+			mi.unidadejecutoraid= mi.prestamoId != null ? mi.unidadejecutoraid :  "";
+			mi.unidadejecutoranombre= mi.prestamoId != null ? mi.unidadejecutoranombre : "";
 			mi.subcomponentetipoid="";
 			mi.subcomponentetiponombre="";
 			mi.mostraringreso=true;
@@ -317,6 +317,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 				mi.gridApi.selection.clearSelectedRows();
 			$utilidades.setFocus(document.getElementById("nombre"));
 			mi.active=0;
+			mi.riesgos=undefined;
 		};
 
 		mi.editar = function() {
@@ -376,6 +377,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 		}
 
 		mi.irATabla = function() {
+			mi.child_riesgos = null;
 			mi.mostraringreso=false;
 			mi.esnuevo=false;
 		}

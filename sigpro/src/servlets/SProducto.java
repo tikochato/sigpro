@@ -806,7 +806,9 @@ public class SProducto extends HttpServlet {
 				temp.obra = producto.getObra();
 				temp.renglon = producto.getRenglon();
 				temp.ubicacionGeografica = producto.getUbicacionGeografica();
-				
+				temp.descripcion = producto.getDescripcion();
+				temp.longitud = producto.getLongitud();
+				temp.latitud = producto.getLatitud();
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 3);
 			}
 

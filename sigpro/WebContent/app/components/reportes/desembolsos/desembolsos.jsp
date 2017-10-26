@@ -93,60 +93,68 @@
 			
 			<form name="form">
 				<div class="row">
-					<div class="form-group col-sm-4">
-						<select  class="inputText" ng-model="desembolsosc.prestamoSeleccionado"
-							ng-options="a.text for a in desembolsosc.prestamos"
-							ng-readonly="true"
-							ng-required="true"
-							ng-change="desembolsosc.validarParametros()">
-							
-							<option value="">Seleccione un {{etiquetas.proyecto}}</option>
-						</select>
+		    		<div class="form-group col-sm-6" align="left">
+						<div id="prestamo" angucomplete-alt placeholder="" pause="100" selected-object="desembolsosc.cambioPrestamo"
+							  local-data="desembolsosc.lprestamos" search-fields="proyectoPrograma" title-field="proyectoPrograma" field-required="true" field-label="* Préstamo"
+							  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+							  initial-value="desembolsosc.prestamoNombre" focus-out="desembolsosc.blurPrestamo()" input-name="prestamo"></div>
+						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 					</div>
+		    	</div>
+		    	<div class="row">
+		    		<div class="form-group col-sm-6" align="left">
+						<div id="pep" angucomplete-alt placeholder="" pause="100" selected-object="desembolsosc.cambioPep"
+							  local-data="desembolsosc.peps" search-fields="nombre" title-field="nombre" field-required="true" field-label="* {{etiquetas.proyecto}}"
+							  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+							  initial-value="desembolsosc.pepNombre" focus-out="desembolsosc.blurPep()" input-name="pep" disable-input="desembolsosc.prestamoId==null"></div>
+						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+					</div>
+		    	</div>
+				<div class="row">
 					<div class="form-group col-sm-1">
 						<input type="number"  class="inputText" ng-model="desembolsosc.anio_inicio" maxlength="4" 
-						ng-value="controller.anioInicial" onblur="this.setAttribute('value', this.value);"
+						ng-value="desembolsosc.anioInicial" onblur="this.setAttribute('value', this.value);"
 						ng-change="desembolsosc.validarParametros()"/>
 					  	<label  class="floating-label" style="left: 0">*Año Inicial</label>
 					</div>
 					<div class="form-group col-sm-1">
 						<input type="number"  class="inputText" ng-model="desembolsosc.anio_fin" maxlength="4" 
-						ng-value="controller.anio_fin" onblur="this.setAttribute('value', this.value);"
+						ng-value="desembolsosc.anio_fin" onblur="this.setAttribute('value', this.value);"
 						ng-change="desembolsosc.validarParametros()"/>
 					  	<label for="campo.id" class="floating-label" style="left: 0">*Año Final</label>
 					</div>
 					
-					<div class="col-sm-6" align="right" ng-hide="!desembolsosc.mostrar" >
-								<div class="">
-									<div class="btn-group">
-										<label class="btn btn-default" ng-model="desembolsosc.enMillones" uib-btn-radio="true"  uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false"
-										ng-click="desembolsosc.convertirMillones()">
-										<span>MQ</span></label>
-										<label class="btn btn-default" ng-model="desembolsosc.enMillones" uib-btn-radio="false"  uib-tooltip="Quetzales" role="button" tabindex="1" aria-invalid="false"
-										ng-click="desembolsosc.convertirMillones()">
-										<span>Q</span></label>
+					<div class="col-sm-10" align="right" ng-hide="!desembolsosc.mostrarBotones" >
+						<div class="">
+							<div class="btn-group">
+								<label class="btn btn-default" ng-model="desembolsosc.enMillones" uib-btn-radio="true"  uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false"
+								ng-click="desembolsosc.convertirMillones()">
+								<span>MQ</span></label>
+								<label class="btn btn-default" ng-model="desembolsosc.enMillones" uib-btn-radio="false"  uib-tooltip="Quetzales" role="button" tabindex="1" aria-invalid="false"
+								ng-click="desembolsosc.convertirMillones()">
+								<span>Q</span></label>
 							</div>
-									<div class="btn-group" style="padding-left: 20px;">
-										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="1" ng-click="desembolsosc.agruparDatos(1)" uib-tooltip="Mes" role="button" tabindex="1" aria-invalid="false">
-										<span>M</span></label>
-										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="2" ng-click="desembolsosc.agruparDatos(2)" uib-tooltip="Bimestre" role="button" tabindex="2" aria-invalid="false">
-										<span>B</span></label>
-										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="3" ng-click="desembolsosc.agruparDatos(3)" uib-tooltip="Trimestre" role="button" tabindex="3" aria-invalid="false">
-										<span>T</span></label>
-										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="4" ng-click="desembolsosc.agruparDatos(4)" uib-tooltip="Cuatrimestre" role="button" tabindex="4" aria-invalid="false">
-										<span>C</span></label>
-										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="5" ng-click="desembolsosc.agruparDatos(5)" uib-tooltip="Semestre" role="button" tabindex="5" aria-invalid="false">
-										<span>S</span></label>
-										<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="6" ng-click="desembolsosc.anio_inicio != desembolsosc.anio_fin ? desembolsosc.agruparDatos(6) : ''" 
-										uib-tooltip="Año" role="button" tabindex="6" aria-invalid="false" ng-disabled="desembolsosc.anio_inicio == desembolsosc.anio_fin">
-										<span>A</span></label>
-						</div>
+							<div class="btn-group" style="padding-left: 20px;">
+								<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="1" ng-click="desembolsosc.agruparDatos(1)" uib-tooltip="Mes" role="button" tabindex="1" aria-invalid="false">
+								<span>M</span></label>
+								<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="2" ng-click="desembolsosc.agruparDatos(2)" uib-tooltip="Bimestre" role="button" tabindex="2" aria-invalid="false">
+								<span>B</span></label>
+								<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="3" ng-click="desembolsosc.agruparDatos(3)" uib-tooltip="Trimestre" role="button" tabindex="3" aria-invalid="false">
+								<span>T</span></label>
+								<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="4" ng-click="desembolsosc.agruparDatos(4)" uib-tooltip="Cuatrimestre" role="button" tabindex="4" aria-invalid="false">
+								<span>C</span></label>
+								<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="5" ng-click="desembolsosc.agruparDatos(5)" uib-tooltip="Semestre" role="button" tabindex="5" aria-invalid="false">
+								<span>S</span></label>
+								<label class="btn btn-default" ng-model="desembolsosc.agrupacion" uib-btn-radio="6" ng-click="desembolsosc.anio_inicio != desembolsosc.anio_fin ? desembolsosc.agruparDatos(6) : ''" 
+								uib-tooltip="Año" role="button" tabindex="6" aria-invalid="false" ng-disabled="desembolsosc.anio_inicio == desembolsosc.anio_fin">
+								<span>A</span></label>
+							</div>
 									
-									<div class="btn-group" style="padding-left: 20px;">
-										<label class="btn btn-default" ng-click="desembolsosc.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!desembolsosc.mostrarDescargar">
-										<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-										<label class="btn btn-default" ng-click="desembolsosc.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="true">
-										<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
+							<div class="btn-group" style="padding-left: 20px;">
+								<label class="btn btn-default" ng-click="desembolsosc.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!desembolsosc.mostrarDescargar">
+								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
+								<label class="btn btn-default" ng-click="desembolsosc.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="true">
+								<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 							</div>
 						</div>
 			    	</div>

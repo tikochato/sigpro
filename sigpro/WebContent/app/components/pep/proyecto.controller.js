@@ -70,6 +70,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			if(response.success){
 				mi.prestamoNombre = response.nombre;
 				mi.objetoTipoNombre = "Préstamo";	
+				mi.prestamoid=response.id;
 			}
 	});
 
@@ -236,7 +237,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				ejecucionFisicaReal: mi.proyecto.ejecucionFisicaReal,
 				proyectoClase: $rootScope.etiquetas.id,
 				projectCargado: mi.proyecto.projectCargado,
-				prestamoId: mi.proyecto.prestamoId,
+				prestamoId: mi.prestamoid,
 				t:moment().unix()
 			};
 			$http.post('/SProyecto',param_data).then(
@@ -547,16 +548,16 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 
 	mi.irAActividades=function(proyectoid){
 		if(mi.proyecto!=null){
-			$location.path('/actividad/'+ proyectoid +'/1' );
+			$location.path('/actividad/'+ proyectoid +'/0' );
 		}
 	};
 
 	mi.irAGantt=function(proyectoid){
 		if(mi.proyecto!=null){
 			if(mi.esTreeview)
-				$window.location='/main.jsp#!/gantt/'+ proyectoid + '/1';
+				$window.location='/main.jsp#!/gantt/'+ proyectoid + '/0';
 			else
-				$location.path('/gantt/'+ proyectoid + '/1' );
+				$location.path('/gantt/'+ proyectoid + '/0' );
 		}
 	};
 	mi.irAMapa=function(proyectoid){
@@ -591,6 +592,14 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				$window.location='/main.jsp#!/matrizriesgo/'+ proyectoid;
 			else
 				$location.path('/matrizriesgo/'+ proyectoid );
+		}
+	};
+	mi.irAMiembrosUnidadEjecutora = function(proyectoid){
+		if(mi.proyecto!=null){
+			if(mi.esTreeview)
+				$window.location='/main.jsp#!/miembrosunidadejecutora/'+ proyectoid;
+			else
+				$location.path('/miembrosunidadejecutora/'+ proyectoid);
 		}
 	};
 

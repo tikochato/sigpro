@@ -11,14 +11,34 @@ app.controller('miembrosunidadejecutoraController',['$rootScope','$scope','$http
 	mi.colaboradores = [];
 	mi.roles = [];
 	mi.proyectoId = $routeParams.proyectoId;
+	mi.proyectoNombre;
+	mi.unidadEjecutoraNombre;
 	
 	mi.tamanoPantalla = Math.floor(document.getElementById("miemborsue").offsetWidth);
 	mi.tamanoTotal = mi.tamanoPantalla - 300; 
+	
+	
 	
 	$scope.divActivo = "";
 	mi.activarScroll = function(id){
 		$scope.divActivo = id;
     }
+	
+	
+	$http.post('/SProyecto', {
+		accion: 'getProyectoPorId',
+		id: mi.proyectoId,
+		t:moment().unix()
+	}).success(function(response){
+		if(response.success){
+			 mi.proyectoNombre = response.proyecto.nombre;
+			 mi.unidadEjecutoraNombre = response.proyecto.unidadejecutora;
+		}
+		else
+			$utilidades.mensaje('warning','No se encontraron datos para este proyecto');
+	});
+	
+	
 	
 	$http.post('/SMiembrosUnidadEjecutora', {
 		accion: 'getMiembros',
@@ -62,7 +82,10 @@ app.controller('miembrosunidadejecutoraController',['$rootScope','$scope','$http
 	
 	
 	
-	mi.guardar = function(){
+	mi.guardar = function(valido){
+		if (valido){
+			
+		
 		var param_data = {
 				accion : 'guardarMiembros',
 				proyectoId: mi.proyectoId,
@@ -80,13 +103,13 @@ app.controller('miembrosunidadejecutoraController',['$rootScope','$scope','$http
 				}
 			}
 		);
+		}
 	};
 	
 	mi.eliminarMiembro = function(row){
 		var index = mi.rowCollection.indexOf(row);
         if (index !== -1) {
             mi.rowCollection.splice(index, 1);
-            console.log(mi.displayedCollection);
         }
 	};
 	

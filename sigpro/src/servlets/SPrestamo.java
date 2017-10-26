@@ -841,7 +841,7 @@ public class SPrestamo extends HttpServlet {
 			
 			
 			Proyecto proyecto = new Proyecto(acumulacionCosto,null, etiqueta,prestamo,proyectoTipo, unidadEjecutora
-					, prestamo.getProyectoPrograma(), null, usuario, null, new Date(), null, 1, null, null, null, null, 
+					, prestamo.getNumeroPrestamo() + " - " + unidadEjecutora.getNombre(), null, usuario, null, new Date(), null, 1, null, null, null, null, 
 					null, null, null,null, null, null, null,null, null, null,null,
 					prestamo.getFechaSuscripcion(),prestamo.getFechaSuscripcion(),
 					1, "d"

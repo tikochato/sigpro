@@ -28,23 +28,61 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 		$scope.divActivo = id;
     }
 	
-	mi.prestamos = [
-		{value: 0,text: "Seleccione un "+$rootScope.etiquetas.proyecto}
-	];	
-	mi.prestamo = mi.prestamos[0];
+	mi.lprestamos = [];
 	
-	$http.post('/SProyecto',{accion: 'getProyectos'}).success(
-		function(response) {
-			mi.prestamos = [];
-			mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un '+$rootScope.etiquetas.proyecto});
-			if (response.success){
-				for (var i = 0; i < response.entidades.length; i++){
-					mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
+	
+	$http.post('/SPrestamo', {accion: 'getPrestamos', t: (new Date()).getTime()}).then(
+		function(response){
+			if(response.data.success){
+				mi.lprestamos = response.data.prestamos;
+			}	
+	});
+	
+	mi.blurPrestamo=function(){
+		if(document.getElementById("prestamo_value").defaultValue!=mi.prestamoNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','prestamo');
+		}
+	}
+	
+	mi.cambioPrestamo=function(selected){
+		if(selected!== undefined){
+			mi.prestamoNombre = selected.originalObject.proyectoPrograma;
+			mi.prestamoId = selected.originalObject.id;
+			mi.getPeps(mi.prestamoId);
+		}
+		else{
+			mi.prestamoNombre="";
+			mi.prestamoId=null;
+		}
+	}
+	
+	mi.blurPep=function(){
+		if(document.getElementById("pep_value").defaultValue!=mi.pepNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','pep');
+		}
+	}
+	
+	mi.cambioPep=function(selected){
+		if(selected!== undefined){
+			mi.pepNombre = selected.originalObject.nombre;
+			mi.pepId = selected.originalObject.id;
+			mi.generar();
+		}
+		else{
+			mi.pepNombre="";
+			mi.pepId="";
+		}
+	}
+	
+	mi.getPeps = function(prestamoId){
+		$http.post('/SProyecto',{accion: 'getProyectos', prestamoid: prestamoId}).success(
+			function(response) {
+				mi.peps = [];
+				if (response.success){
+					mi.peps = response.entidades;
 				}
-				
-				mi.prestamo = mi.prestamos[0];
-			}
-		});
+		});	
+	}
 	
 	mi.selectedRow = function(row){
 		mi.datoSeleccionado = row;
@@ -676,10 +714,10 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 	}
 	
 	mi.generar = function(){
-		if(mi.prestamo.value > 0){
+		if(mi.pepId > 0){
 			mi.mostrarCargando = true;
 			mi.mostrarTablas = false;
-			mi.idPrestamo = mi.prestamo.value;
+			mi.idPrestamo = mi.pepId;
 			$http.post('/SControlAdquisiciones',{
 				accion: 'generarPlan',
 				idPrestamo: mi.idPrestamo

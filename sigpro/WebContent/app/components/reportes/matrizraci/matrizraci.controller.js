@@ -20,30 +20,74 @@ app.controller('matrizraciController',['$scope','$rootScope','$http','$interval'
 	$window.document.title = $utilidades.sistema_nombre+' - Matriz RACI';
 	i18nService.setCurrentLang('es');
 	 
-	$http.post('/SProyecto',{accion: 'getProyectos'}).success(
-			function(response) {
-				mi.prestamos = [];
-				if (response.success){
-					for (var i = 0; i < response.entidades.length; i++){
-						mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
-					}
-				}
-	});
-	 
+	mi.lprestamos = [];
 	
+	
+	$http.post('/SPrestamo', {accion: 'getPrestamos', t: (new Date()).getTime()}).then(
+		function(response){
+			if(response.data.success){
+				mi.lprestamos = response.data.prestamos;
+			}	
+	});
+	
+	mi.blurPrestamo=function(){
+		if(document.getElementById("prestamo_value").defaultValue!=mi.prestamoNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','prestamo');
+		}
+	}
+	
+	mi.cambioPrestamo=function(selected){
+		if(selected!== undefined){
+			mi.prestamoNombre = selected.originalObject.proyectoPrograma;
+			mi.prestamoId = selected.originalObject.id;
+			mi.getPeps(mi.prestamoId);
+		}
+		else{
+			mi.prestamoNombre="";
+			mi.prestamoId=null;
+		}
+	}
+	
+	mi.blurPep=function(){
+		if(document.getElementById("pep_value").defaultValue!=mi.pepNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','pep');
+		}
+	}
+	
+	mi.cambioPep=function(selected){
+		if(selected!== undefined){
+			mi.pepNombre = selected.originalObject.nombre;
+			mi.pepId = selected.originalObject.id;
+			mi.generarMatriz();
+		}
+		else{
+			mi.pepNombre="";
+			mi.pepId="";
+		}
+	}
+	
+	mi.getPeps = function(prestamoId){
+		$http.post('/SProyecto',{accion: 'getProyectos', prestamoid: prestamoId}).success(
+			function(response) {
+				mi.peps = [];
+				if (response.success){
+					mi.peps = response.entidades;
+				}
+		});	
+	}
 	 
 	 
 	 mi.generarMatriz = function (){
 		 mi.mostrarTabla = false;
 		 mi.mostrarExport = false;
 		 
-		 if (mi.prestamoSeleccionado!=null && mi.prestamoSeleccionado!= undefined && mi.prestamoSeleccionado.value > 0){
+		 if (mi.pepId > 0){
 		
 			 mi.mostrarcargando = true;
 			 
 			 mi.inicializarVariables();
 				$http.post('/SMatrizRACI', { accion: 'getMatriz', 
-					idPrestamo: mi.prestamoSeleccionado!= null ? mi.prestamoSeleccionado.value : 0 }).success(
+					idPrestamo: mi.pepId }).success(
 				
 					function(response) {
 						mi.colaboradores = response.colaboradores;
@@ -183,7 +227,7 @@ app.controller('matrizraciController',['$scope','$rootScope','$http','$interval'
 	 mi.exportarExcel = function(){
 			$http.post('/SMatrizRACI', { 
 				 accion: 'exportarExcel', 
-				 idPrestamo: mi.prestamoSeleccionado.value, 
+				 idPrestamo: mi.pepId, 
 				 t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
@@ -201,7 +245,7 @@ app.controller('matrizraciController',['$scope','$rootScope','$http','$interval'
 	 mi.exportarPdf=function(){
 		 $http.post('/SMatrizRACI', { 
 			 accion: 'exportarPdf', 
-			 idPrestamo: mi.prestamoSeleccionado.value, 
+			 idPrestamo: mi.pepId, 
 			 t:moment().unix()
 		  } ).then(
 				  function successCallback(response) {

@@ -271,7 +271,7 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 					mi.nodos_expandidos.push(mi.treedata.children[0]);
 					mi.setParentNode(mi.treedata);
 					mi.nodo_seleccionado = mi.treedata.children[0];
-					$location.path('/pep/'+mi.proyecto.id); 
+					$location.path('/pep/'+mi.proyecto.prestamoId + '/'+mi.proyecto.id); 
 				}
 			});
 	}

@@ -152,13 +152,25 @@
 					</div>
 				</div>
 	    	<br>
-			<div class="row">
-					<div class="form-group col-sm-3">
-						<select  class="inputText" ng-model="metasc.prestamo"
-							ng-options="a.text for a in metasc.prestamos"
-							ng-change="metasc.validar(1)"></select>
-					</div>
-					
+	    	<div class="row">
+	    		<div class="form-group col-sm-6" align="left">
+					<div id="prestamo" angucomplete-alt placeholder="" pause="100" selected-object="metasc.cambioPrestamo"
+						  local-data="metasc.lprestamos" search-fields="proyectoPrograma" title-field="proyectoPrograma" field-required="true" field-label="* Préstamo"
+						  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+						  initial-value="metasc.prestamoNombre" focus-out="metasc.blurPrestamo()" input-name="prestamo"></div>
+					<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+				</div>
+	    	</div>
+	    	<div class="row">
+	    		<div class="form-group col-sm-6" align="left">
+					<div id="pep" angucomplete-alt placeholder="" pause="100" selected-object="metasc.cambioPep"
+						  local-data="metasc.peps" search-fields="nombre" title-field="nombre" field-required="true" field-label="* {{etiquetas.proyecto}}"
+						  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+						  initial-value="metasc.pepNombre" focus-out="metasc.blurPep()" input-name="pep" disable-input="metasc.prestamoId==null"></div>
+					<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+				</div>
+	    	</div>
+	    	<div class="row">	
 					<div class="form-group col-sm-1">
 						<input type="number"  class="inputText" ng-model="metasc.fechaInicio" maxlength="4" 
 						ng-value="metasc.fechaInicio" onblur="this.setAttribute('value', this.value);"
@@ -173,7 +185,7 @@
 					  	<label for="campo.id" class="floating-label">*Año Final</label>
 					</div>
 					
-					<div class="col-sm-7" align="right" ng-hide="!metasc.mostrarDescargar">
+					<div class="col-sm-10" align="right" ng-hide="!metasc.mostrarDescargar">
 						<div class="form-group col-sm-1">
 						</div>
 						<div class="col-sm-11">

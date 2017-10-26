@@ -165,6 +165,7 @@ public class SPlanAdquisicion extends HttpServlet {
 						PlanAdquisicionPagoDAO.eliminarPagos(new ArrayList<PlanAdquisicionPago>(pa.getPlanAdquisicionPagos()));
 					}
 					PlanAdquisicionDAO.guardarPlanAdquisicion(pa);
+										
 					BigDecimal bpagos = new BigDecimal(0);
 					boolean tiene_pagos = false;
 					if(map.get("pagos")!=null){

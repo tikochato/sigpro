@@ -13,6 +13,7 @@ import pojo.PlanAdquisicion;
 import pojo.PlanAdquisicionPago;
 import pojo.Producto;
 import pojo.Proyecto;
+import pojo.Subcomponente;
 import pojo.Subproducto;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -174,74 +175,88 @@ public class PlanAdquisicionDAO {
 		Integer objetoTipo = pa.getObjetoTipo();
 		List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(objetoId, objetoTipo);
 		for(Actividad actividad: actividades)
-			ret.add(actividad.getCosto());
+			ret = ret.add(actividad.getCosto());
 		switch(objetoTipo){
-			case 1: Proyecto proyecto = ProyectoDAO.getProyecto(objetoId);
+			case 0: Proyecto proyecto = ProyectoDAO.getProyecto(objetoId);
 				if(proyecto.getComponentes()==null || proyecto.getComponentes().size()==0){
-					if(pa.getPlanAdquisicionPagos()!=null && pa.getPlanAdquisicionPagos().size()>0){
-						Iterator<PlanAdquisicionPago> iPagos = pa.getPlanAdquisicionPagos().iterator();
-						while(iPagos.hasNext()){
-							PlanAdquisicionPago pago = iPagos.next();
-							ret=ret.add(pago.getPago()!=null ? pago.getPago() : new BigDecimal(0));
+					if(actividades==null || actividades.size()==0){
+						if(pa.getPlanAdquisicionPagos()!=null && pa.getPlanAdquisicionPagos().size()>0){
+							Iterator<PlanAdquisicionPago> iPagos = pa.getPlanAdquisicionPagos().iterator();
+							while(iPagos.hasNext()){
+								PlanAdquisicionPago pago = iPagos.next();
+								ret=ret.add(pago.getPago()!=null ? pago.getPago() : new BigDecimal(0));
+							}
 						}
+						else
+							ret=pa.getTotal();
 					}
-					else
-						ret=pa.getTotal();
 				}
 				else{
 					for(Componente componente:proyecto.getComponentes())
-						ret.add(componente.getCosto()!=null ? componente.getCosto() : new BigDecimal(0));
+						ret = ret.add(componente.getCosto()!=null ? componente.getCosto() : new BigDecimal(0));
 				}
 				proyecto.setCosto(ret);
 				session.saveOrUpdate(proyecto);
 				break;
-			case 2: Componente componente = ComponenteDAO.getComponente(objetoId);
-				if(componente.getProductos()==null || componente.getProductos().size()==0){
-					if(pa.getPlanAdquisicionPagos()!=null && pa.getPlanAdquisicionPagos().size()>0){
-						Iterator<PlanAdquisicionPago> iPagos = pa.getPlanAdquisicionPagos().iterator();
-						while(iPagos.hasNext()){
-							PlanAdquisicionPago pago = iPagos.next();
-							ret=ret.add(pago.getPago()!=null ? pago.getPago() : new BigDecimal(0));
+			case 1: Componente componente = ComponenteDAO.getComponente(objetoId);
+				if(componente.getProductos()==null || componente.getProductos().size()==0 || componente.getSubcomponentes()==null || componente.getSubcomponentes().size()==0 ){
+					if(actividades==null || actividades.size()==0){
+						if(pa.getPlanAdquisicionPagos()!=null && pa.getPlanAdquisicionPagos().size()>0){
+							Iterator<PlanAdquisicionPago> iPagos = pa.getPlanAdquisicionPagos().iterator();
+							while(iPagos.hasNext()){
+								PlanAdquisicionPago pago = iPagos.next();
+								ret=ret.add(pago.getPago()!=null ? pago.getPago() : new BigDecimal(0));
+							}
 						}
+						else
+							ret=pa.getTotal();
 					}
-					else
-						ret=pa.getTotal();
 				}
 				else{
-					for(Producto producto:componente.getProductos())
-						ret.add(producto.getCosto()!=null ? producto.getCosto() : new BigDecimal(0));
+					if(componente.getProductos()!=null)
+						for(Producto producto:componente.getProductos())
+							ret = ret.add(producto.getCosto()!=null ? producto.getCosto() : new BigDecimal(0));
+					if(componente.getSubcomponentes()!=null)
+						for(Subcomponente subcomponente:componente.getSubcomponentes())
+							ret = ret.add(subcomponente.getCosto()!=null ? subcomponente.getCosto() : new BigDecimal(0));
 				}
 				componente.setCosto(ret);
 				session.saveOrUpdate(componente);
 				break;
 			case 3: Producto producto = ProductoDAO.getProductoPorId(objetoId);
 				if(producto.getSubproductos()==null || producto.getSubproductos().size()==0){
-					if(pa.getPlanAdquisicionPagos()!=null && pa.getPlanAdquisicionPagos().size()>0){
-						Iterator<PlanAdquisicionPago> iPagos = pa.getPlanAdquisicionPagos().iterator();
-						while(iPagos.hasNext()){
-							PlanAdquisicionPago pago = iPagos.next();
-							ret=ret.add(pago.getPago()!=null ? pago.getPago() : new BigDecimal(0));
+					if(actividades==null || actividades.size()==0){
+						if(pa.getPlanAdquisicionPagos()!=null && pa.getPlanAdquisicionPagos().size()>0){
+							Iterator<PlanAdquisicionPago> iPagos = pa.getPlanAdquisicionPagos().iterator();
+							while(iPagos.hasNext()){
+								PlanAdquisicionPago pago = iPagos.next();
+								ret=ret.add(pago.getPago()!=null ? pago.getPago() : new BigDecimal(0));
+							}
 						}
+						else
+							ret= pa.getTotal();
 					}
-					else
-						ret= pa.getTotal();
 				}
 				else{
 					for(Subproducto subproducto:producto.getSubproductos())
-						ret.add(subproducto.getCosto()!=null ? subproducto.getCosto() : new BigDecimal(0));
+						ret = ret.add(subproducto.getCosto()!=null ? subproducto.getCosto() : new BigDecimal(0));
 				}
 				producto.setCosto(ret);
 				session.saveOrUpdate(producto);
 				break;
 			case 4:
 				Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId);
-				subproducto.setCosto(ret);
-				session.saveOrUpdate(subproducto);
+				if(actividades!=null && actividades.size()>0){
+					subproducto.setCosto(ret);
+					session.saveOrUpdate(subproducto);
+				}
 				break;
 			case 5:
 				Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
-				actividad.setCosto(ret);
-				session.saveOrUpdate(actividad);
+				if(actividades!=null && actividades.size()>0){
+					actividad.setCosto(ret);
+					session.saveOrUpdate(actividad);
+				}
 				break;
 		}
 	}

@@ -155,14 +155,26 @@
 					</div>
 				</div>
 		    	<br>
-	    		<div class="row" style="width: 100%; height: 15%">
-					<div class="form-group col-sm-3" align="left">
-						<select  class="inputText" ng-model="controller.prestamo"
-							ng-options="a.text for a in controller.prestamos"
-							ng-change="controller.validar(1)"></select>
+		    	<div class="row">
+		    		<div class="form-group col-sm-6" align="left">
+						<div id="prestamo" angucomplete-alt placeholder="" pause="100" selected-object="controller.cambioPrestamo"
+							  local-data="controller.lprestamos" search-fields="proyectoPrograma" title-field="proyectoPrograma" field-required="true" field-label="* Préstamo"
+							  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+							  initial-value="controller.prestamoNombre" focus-out="controller.blurPrestamo()" input-name="prestamo"></div>
+						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 					</div>
-					
-					<div align="left" class="form-group col-sm-1">
+		    	</div>
+		    	<div class="row">
+		    		<div class="form-group col-sm-6" align="left">
+						<div id="pep" angucomplete-alt placeholder="" pause="100" selected-object="controller.cambioPep"
+							  local-data="controller.peps" search-fields="nombre" title-field="nombre" field-required="true" field-label="* {{etiquetas.proyecto}}"
+							  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+							  initial-value="controller.pepNombre" focus-out="controller.blurPep()" input-name="pep" disable-input="controller.prestamoId==null"></div>
+						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+					</div>
+		    	</div>
+	    		<div class="row" style="width: 100%; height: 15%">
+	    			<div align="left" class="form-group col-sm-1">
 						<input type="number"  class="inputText" ng-model="controller.fechaInicio" maxlength="4" 
 						ng-value="controller.fechaInicio" onblur="this.setAttribute('value', this.value);"
 						ng-change="controller.validar(2)"/>
@@ -175,7 +187,8 @@
 						ng-change="controller.validar(3)"/>
 					  	<label for="campo.id" class="floating-label">*Año Final</label>
 					</div>
-					<div class="col-sm-7" align="right" ng-hide="!controller.mostrarDescargar">
+					
+					<div class="col-sm-10" align="right" ng-hide="!controller.mostrarDescargar">
 						<div class="">
 							<div class="btn-group">
 								<label class="btn btn-default" ng-model="controller.enMillones" uib-btn-radio="true" ng-click="controller.calcularTamaniosCeldas(); controller.convertirMillones();" uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false">
