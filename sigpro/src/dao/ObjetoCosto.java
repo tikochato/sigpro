@@ -1,6 +1,9 @@
 package dao;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joda.time.DateTime;
 
 public class ObjetoCosto {
@@ -22,6 +25,8 @@ public class ObjetoCosto {
 	Integer renglon;
 	Integer geografico;
 	String treePath;
+	ObjetoCosto parent;
+	List<ObjetoCosto> children;
 	
 	public ObjetoCosto(String nombre, Integer objeto_id, int objeto_tipo, Integer nivel, DateTime fecha_inicial,
 			DateTime fecha_final, stanio[] anios, Integer acumulacion_costoid, BigDecimal costo, BigDecimal totalPagos, Integer programa,
@@ -45,6 +50,7 @@ public class ObjetoCosto {
 		this.renglon = renglon;
 		this.geografico = geografico;
 		this.treePath = treePath;
+		children = new ArrayList<ObjetoCosto>();
 	}
 
 	
@@ -218,5 +224,25 @@ public class ObjetoCosto {
 	
 	public void setTreePath(String treePath){
 		this.treePath = treePath;
+	}
+	
+	public ObjetoCosto getParent() {
+		return parent;
+	}
+
+	public void setParent(ObjetoCosto parent) {
+		this.parent = parent;
+	}
+
+	public List<ObjetoCosto> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<ObjetoCosto> children) {
+		this.children = children;
+	}
+	
+	public void addChildren(ObjetoCosto children) {
+		this.children.add(children);
 	}
 }
