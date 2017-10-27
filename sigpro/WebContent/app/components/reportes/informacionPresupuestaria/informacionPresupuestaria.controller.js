@@ -704,7 +704,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 			 }
 			$http.post('/SInformacionPresupuestaria', { 
 				accion: 'exportarPdf',
-				idPrestamo: mi.pep.value,
+				idPrestamo: mi.pepId,
 				anioInicial: mi.fechaInicio,
 				anioFinal: mi.fechaFin,
 				agrupacion: mi.agrupacionActual,
@@ -732,7 +732,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 			 }
 			 $http.post('/SInformacionPresupuestaria', { 
 				 accion: 'exportarExcel', 
-				 idPrestamo: mi.pep.value,
+				 idPrestamo: mi.pepId,
 				 anioInicial: mi.fechaInicio,
 				 anioFinal: mi.fechaFin,
 				 agrupacion: mi.agrupacionActual,

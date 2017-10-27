@@ -301,7 +301,7 @@ public class SAvanceActividades extends HttpServlet {
 				Date inicio = new Date();
 				Date fin = new Date();
 				
-				List<?> lstActividadesProducto = EstructuraProyectoDAO.getActividadesByTreePath(producto.getTreePath(), producto.getComponente().getProyecto().getId());
+				List<?> lstActividadesProducto = EstructuraProyectoDAO.getActividadesByTreePath(producto.getTreePath(), producto.getComponente() != null ? producto.getComponente().getProyecto().getId() : producto.getSubcomponente().getComponente().getProyecto().getId());
 				List<stActividad> actividades = new ArrayList<stActividad>();
 				if (lstActividadesProducto != null){
 					stActividad tempActividad = null;
@@ -940,7 +940,7 @@ public class SAvanceActividades extends HttpServlet {
 		String headers[][];
 		
 		headers = new String[][]{
-			{"Nombre", "Estado", "Completadas", "Sin Iniciar", "En Proceso", "Retrasadas","Esperadas fin de año", "Años siguientes"},  //titulos
+			{"Nombre", "Estado", "Completadas", "Sin Iniciar", "En Proceso", "Retrasadas","Esperadas fin de aï¿½o", "Aï¿½os siguientes"},  //titulos
 			null, //mapeo
 			{"string", "string", "string", "string", "string", "string", "string", "string"}, //tipo dato
 			{"", "", "", "", "", "", "", ""}, //operaciones columnas
