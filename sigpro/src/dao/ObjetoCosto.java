@@ -13,6 +13,7 @@ public class ObjetoCosto {
 	stanio[] anios; 
 	Integer acumulacion_costoid;
 	BigDecimal costo;
+	BigDecimal totalPagos;
 	Integer programa;
 	Integer subprograma; 
 	Integer proyecto;
@@ -23,7 +24,7 @@ public class ObjetoCosto {
 	String treePath;
 	
 	public ObjetoCosto(String nombre, Integer objeto_id, int objeto_tipo, Integer nivel, DateTime fecha_inicial,
-			DateTime fecha_final, stanio[] anios, Integer acumulacion_costoid, BigDecimal costo, Integer programa,
+			DateTime fecha_final, stanio[] anios, Integer acumulacion_costoid, BigDecimal costo, BigDecimal totalPagos, Integer programa,
 			Integer subprograma, Integer proyecto, Integer actividad, Integer obra, Integer renglon, Integer geografico, String treePath) {
 		super();
 		this.nombre = nombre;
@@ -35,6 +36,7 @@ public class ObjetoCosto {
 		this.anios = anios;
 		this.acumulacion_costoid = acumulacion_costoid;
 		this.costo = costo;
+		this.totalPagos = totalPagos;
 		this.programa = programa;
 		this.subprograma = subprograma;
 		this.proyecto = proyecto;
@@ -144,6 +146,14 @@ public class ObjetoCosto {
 
 	public void setCosto(BigDecimal costo) {
 		this.costo = costo;
+	}
+	
+	public BigDecimal getTotalPagos() {
+		return totalPagos;
+	}
+
+	public void setTotalPagos(BigDecimal totalPagos) {
+		this.totalPagos = totalPagos;
 	}
 
 	public Integer getPrograma() {
