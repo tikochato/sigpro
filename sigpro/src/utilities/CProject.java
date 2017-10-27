@@ -78,6 +78,7 @@ public class CProject {
 	static int ENTIDAD_ID_DEFECTO = 0;
 	static int UNIDAD_EJECUTORA_ID_DEFECTO = 0;
 	static int COMPONENTE_TIPO_ID_DEFECTO = 1;
+	static int SUBCOMPONENTE_TIPO_ID_DEFECTO = 1;
 	static int PRODUCTO_TIPO_ID_DEFECTO = 1;
 	static int SUBPRODUCTO_TIPO__ID_DEFECTO = 1;
 	static int ACTIVIDAD_TIPO_ID_DEFECTO = 1;
@@ -206,7 +207,7 @@ public class CProject {
 	public Subcomponente crearSubComponente(Task task,Componente componente ,String usuario){
 		
 		
-		SubcomponenteTipo componenteTipo = SubComponenteTipoDAO.getSubComponenteTipoPorId(COMPONENTE_TIPO_ID_DEFECTO);
+		SubcomponenteTipo componenteTipo = SubComponenteTipoDAO.getSubComponenteTipoPorId(SUBCOMPONENTE_TIPO_ID_DEFECTO);
 		
 		int year = new DateTime().getYear();
 		UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(year, ENTIDAD_ID_DEFECTO, UNIDAD_EJECUTORA_ID_DEFECTO);
