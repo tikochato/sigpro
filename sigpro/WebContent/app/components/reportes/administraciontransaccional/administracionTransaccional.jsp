@@ -177,7 +177,7 @@
 																	<i class="glyphicon glyphicon-export"> </i>
 																</button>
 																<button type="button"
-																	ng-hide="{{row.nivel == 1}}"
+																	ng-hide="true"
 																	ng-click="admintranc.exportarPdfDetalle(row)"
 																	uib-tooltip="Exportar a PDF detalle de {{row.usuario}}" tooltip-placement="bottom"
 																	class="btn btn-default">
