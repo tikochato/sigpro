@@ -523,7 +523,7 @@ public class SPrestamoMetas extends HttpServlet {
 					datos[i][columna] = unidad!=null ? unidad.getNombre() : "";
 				}
 				columna++;
-				if(lstPrestamo.get(i).objeto_tipo == 0){ //es meta
+				if(lstPrestamo.get(i).objeto_tipo == 10){ //es meta
 					int posicion = columna;
 					BigDecimal totalAniosP = new BigDecimal(0);
 					BigDecimal totalAniosR = new BigDecimal(0);
