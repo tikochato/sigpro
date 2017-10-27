@@ -98,8 +98,7 @@
 													<tr style="width: 100%; display: table!important;">
 														<th class="label-form2" style="width: 5%; text-align: center">No.</th>
 														<th class="label-form2" style=" text-align: center">Nombre</th>
-														<th class="label-form2" style="width: 25%; text-align: center">Rol</th>
-														<th class="label-form2" style="width: 25%; text-align: center">Correo electrónico</th>
+														<th class="label-form2" style="width: 30%; text-align: center">Rol</th>
 														<shiro:hasPermission name="45030">
 															<th class="label-form2" style="width: 5%; text-align: center">Quitar</th>
 														</shiro:hasPermission>
@@ -109,26 +108,44 @@
 												<tr style="width: 100%; display: table!important;" ng-repeat="row in miembroc.displayedCollection track by $index" >
 													<td style="width: 5%;"> {{ $index +1 }} </td>
 													
-													<td ng-hide="!row.guardado"   >{{row.colaboradorNombre}}</td>
+													<td ng-hide="!row.guardado"   >{{row.primerNombre + ' ' + row.segundoNombre + ' ' + row.primerApellido + ' ' + row.segundoApellido}}</td>
 													<td ng-hide="row.guardado" >
-														 <select class="inputText" ng-model="row.colaboradorId" ng-change="miembroc.seleccionarColaborador($index,col)"
-														 ng-required="true">
-														 	<option value="">Seleccione un colaborador</option>
-														 	<option ng-repeat="col in miembroc.colaboradores"
-																	ng-value="col.id">{{col.nombre}}</option>
-														 </select>
+														<div class="row">
+														<div class="col-sm-3 form-group">
+								    						<input type="text" class="inputText" ng-model="row.primerNombre"
+								    						ng-value="row.primerNombre" onblur="this.setAttribute('value', this.value);"
+								    						ng-required="true" >
+								    						<label class="floating-label">Primer Nombre</label>
+														</div>
+														<div class="col-sm-3 form-group">
+								    						<input type="text" class="inputText" ng-model="row.segundoNombre"
+								    						ng-value="row.segundoNombre" onblur="this.setAttribute('value', this.value);"
+								    						>
+								    						<label class="floating-label">Segundo Nombre</label>
+														</div>
+														<div class="col-sm-3 form-group">
+								    						<input type="text" class="inputText" ng-model="row.primerApellido"
+								    						ng-value="row.primerApellido" onblur="this.setAttribute('value', this.value);"
+								    						ng-required="true">
+								    						<label class="floating-label">Primer Apellido</label>
+														</div>
+														<div class="col-sm-3 form-group">
+								    						<input type="text" class="inputText" ng-model="row.segundoApellido"
+								    						ng-value="row.segundoApellido" onblur="this.setAttribute('value', this.value);"
+								    						>
+								    						<label class="floating-label">Segundo Apellido</label>
+														</div>
+														</div>
 													</td>
 													
-													<td ng-hide="!row.guardado" style="width: 25%">{{row.rolUnidadEjecotoraNombre}}</td>
-													<td ng-hide="row.guardado" style="width: 25%">
+													<td ng-hide="!row.guardado" style="width: 30%">{{row.rolUnidadEjecotoraNombre}}</td>
+													<td ng-hide="row.guardado" style="width: 30%">
 														 <select class="inputText" ng-model="row.rolunidad" ng-change="miembroc.seleccionarRol($index,col)"
 														 ng-required="true" ng-options="rol as rol.nombre for rol in miembroc.roles track by rol.id" >
 														 	<option value="">Seleccione un rol</option>
 														 	
 														 </select>
 													</td>
-													
-													<td style="width: 25%">{{row.email}}</td>
 													<shiro:hasPermission name="45030">
 														<td  style="width: 5%;">
 															<label class="btn btn-default btn-xs" ng-click="miembroc.eliminarMiembro(row)" 
