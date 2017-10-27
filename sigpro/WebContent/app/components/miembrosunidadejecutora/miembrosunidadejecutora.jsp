@@ -47,11 +47,11 @@
 	<div ng-controller="miembrosunidadejecutoraController as miembroc" class="maincontainer all_page" id="title">
 	
   		<shiro:lacksPermission name="45010">
-			<span ng-init="desembolsoc.redireccionSinPermisos()"></span>
+			<span ng-init="miembroc.redireccionSinPermisos()"></span>
 		</shiro:lacksPermission>
 		
 		
-		<div class="row" id="miemborsue" style="height: 100%; width: 100%">
+		<div class="row" id="miembrosue" style="height: 100%; width: 100%">
 		
 			<div class="col-sm-12" style=" height: 20%; ">
 				<div class="panel panel-default" ng-if="!miembroc.esTreeview">

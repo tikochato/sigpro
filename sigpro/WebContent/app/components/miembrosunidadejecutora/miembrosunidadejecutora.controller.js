@@ -14,7 +14,7 @@ app.controller('miembrosunidadejecutoraController',['$rootScope','$scope','$http
 	mi.proyectoNombre;
 	mi.unidadEjecutoraNombre;
 	
-	mi.tamanoPantalla = Math.floor(document.getElementById("miemborsue").offsetWidth);
+	mi.tamanoPantalla = Math.floor(document.getElementById("miembrosue").offsetWidth);
 	mi.tamanoTotal = mi.tamanoPantalla - 300; 
 	
 	
@@ -120,6 +120,10 @@ app.controller('miembrosunidadejecutoraController',['$rootScope','$scope','$http
 			 email: "",
 			 guardado: false
 		});
+	}
+	
+	mi.redireccionSinPermisos=function(){
+		$window.location.href = '/main.jsp#!/forbidden';
 	}
 }
 ]);
