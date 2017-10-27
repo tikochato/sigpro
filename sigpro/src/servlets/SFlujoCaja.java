@@ -234,7 +234,7 @@ public class SFlujoCaja extends HttpServlet {
 			BigDecimal ejecutadoAcumulado = new BigDecimal(0);
 			for(int i=0;i<lstPrestamo.size();i++){
 				ObjetoCosto prestamo = lstPrestamo.get(i);
-				if(prestamo.getObjeto_tipo() == 1){				
+				if(prestamo.getObjeto_tipo() == 0){				
 						for(int m=0; m<12; m++){
 							BigDecimal planificadoActual = prestamo.getAnios()[0].mes[m].planificado!=null ? prestamo.getAnios()[0].mes[m].planificado : new BigDecimal(0);
 							totales.filaPlanificado[m] = planificadoActual;
