@@ -63,7 +63,7 @@
 			</div>
 			<div >
 		
-		<br/><br/><br/><br/><br/><br/>
+		<br/><br/><br/><br/><br/><br/><br/>
 		<div class="col-sm-12" style="height: 80%"  >
 			
 			<div class="operation_buttons">
@@ -111,25 +111,25 @@
 													<td ng-hide="!row.guardado"   >{{row.primerNombre + ' ' + row.segundoNombre + ' ' + row.primerApellido + ' ' + row.segundoApellido}}</td>
 													<td ng-hide="row.guardado" >
 														<div class="row">
-														<div class="col-sm-3 form-group">
+														<div class="col-sm-3 form-group" style="padding: 0px 5px 0px 5px;">
 								    						<input type="text" class="inputText" ng-model="row.primerNombre"
 								    						ng-value="row.primerNombre" onblur="this.setAttribute('value', this.value);"
 								    						ng-required="true" >
 								    						<label class="floating-label">Primer Nombre</label>
 														</div>
-														<div class="col-sm-3 form-group">
+														<div class="col-sm-3 form-group" style="padding: 0px 5px 0px 5px;">
 								    						<input type="text" class="inputText" ng-model="row.segundoNombre"
 								    						ng-value="row.segundoNombre" onblur="this.setAttribute('value', this.value);"
 								    						>
 								    						<label class="floating-label">Segundo Nombre</label>
 														</div>
-														<div class="col-sm-3 form-group">
+														<div class="col-sm-3 form-group" style="padding: 0px 5px 0px 5px;">
 								    						<input type="text" class="inputText" ng-model="row.primerApellido"
 								    						ng-value="row.primerApellido" onblur="this.setAttribute('value', this.value);"
 								    						ng-required="true">
 								    						<label class="floating-label">Primer Apellido</label>
 														</div>
-														<div class="col-sm-3 form-group">
+														<div class="col-sm-3 form-group" style="padding: 0px 5px 0px 5px;">
 								    						<input type="text" class="inputText" ng-model="row.segundoApellido"
 								    						ng-value="row.segundoApellido" onblur="this.setAttribute('value', this.value);"
 								    						>
