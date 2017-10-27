@@ -274,7 +274,7 @@
 					          				<th class="label-form">.</th>
 					         			</tr>
 		    						</thead>
-		    						<tbody class="cuerpoTablaNombres" style="max-height: 315px; min-height: 315px" id="divTablaNombres" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)">
+		    						<tbody vs-repeat class="cuerpoTablaNombres" style="max-height: 315px; min-height: 315px" id="divTablaNombres" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)">
 		    							<tr ng-repeat="row in planadqui.data" style="height: 35px; max-height: 35px; min-height: 35px">
 		    								<td nowrap style="min-width:200px; {{planadqui.padre(row)}}">
 				    							<div uib-tooltip="{{item.nombre}}" class="nombreFormat">
