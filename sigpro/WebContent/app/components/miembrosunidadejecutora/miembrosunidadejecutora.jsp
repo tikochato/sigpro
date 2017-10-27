@@ -108,7 +108,7 @@
 												<tr style="width: 100%; display: table!important;" ng-repeat="row in miembroc.displayedCollection track by $index" >
 													<td style="width: 5%;"> {{ $index +1 }} </td>
 													
-													<td ng-hide="!row.guardado"   >{{row.primerNombre + ' ' + row.segundoNombre + ' ' + row.primerApellido + ' ' + row.segundoApellido}}</td>
+													<td ng-hide="!row.guardado"   >{{row.primerNombre + ' ' + (row.segundoNombre !=null ? row.segundoNombre : '')  + ' ' + row.primerApellido + ' ' + (row.segundoApellido!=null ? row.segundoApellido : '' )  }}</td>
 													<td ng-hide="row.guardado" >
 														<div class="row">
 														<div class="col-sm-3 form-group" style="padding: 0px 5px 0px 5px;">
