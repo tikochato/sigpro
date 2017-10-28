@@ -134,7 +134,7 @@
 			         			</tr>
 							</thead>
 							<tbody >
-								<tr>
+								<tr ng-if="metac.objeto_tipo!=-1">
 						      		<td style="vertical-align: middle;">Planificado</td>
 						      		<td>
 						      			<div ng-switch="metac.meta.datoTipoId.nombre">
