@@ -940,7 +940,7 @@ public class SAvanceActividades extends HttpServlet {
 		String headers[][];
 		
 		headers = new String[][]{
-			{"Nombre", "Estado", "Completadas", "Sin Iniciar", "En Proceso", "Retrasadas","Esperadas fin de a�o", "A�os siguientes"},  //titulos
+			{"Nombre", "Estado", "Completadas", "Sin Iniciar", "En Proceso", "Retrasadas","Esperadas fin de año", "Años siguientes"},  //titulos
 			null, //mapeo
 			{"string", "string", "string", "string", "string", "string", "string", "string"}, //tipo dato
 			{"", "", "", "", "", "", "", ""}, //operaciones columnas
