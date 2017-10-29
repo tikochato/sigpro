@@ -98,7 +98,7 @@
 			
     		<div class="operation_buttons">
     		  <div class="btn-group" ng-hide="componentec.esnuevo" ng-if="!componentec.esTreeview">
-				<label class="btn btn-default" ng-click="componentec.botones && !componentec.esDeSigade ? componentec.irASubComponente(componentec.componente.id) : ''" uib-tooltip="Subcomponentes" tooltip-placement="bottom" ng-disabled="!componentec.botones || componentec.esDeSigade">
+				<label class="btn btn-default" ng-click="componentec.botones ? componentec.irASubComponente(componentec.componente.id) : ''" uib-tooltip="Subcomponentes" tooltip-placement="bottom" ng-disabled="!componentec.botones ">
 				<span class="glyphicon glyphicon-equalizer"></span></label>
 				<label class="btn btn-default" ng-click="componentec.botones ? componentec.irAProductos(componentec.componente.id) : ''" uib-tooltip="Productos" tooltip-placement="bottom" ng-disabled="!componentec.botones">
 				<span class="glyphicon glyphicon-certificate"></span></label>
