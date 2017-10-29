@@ -40,7 +40,7 @@
     		<div class="col-sm-12 operation_buttons" align="right">
 			  <div class="btn-group">
 			  <shiro:hasPermission name="5040">
-			    <label class="btn btn-primary" ng-click="componentec.nuevo()" uib-tooltip="Nuevo">
+			    <label class="btn btn-primary" ng-click="!componentec.esDeSigade ? componentec.nuevo() : ''" uib-tooltip="Nuevo" ng-disabled = "componentec.esDeSigade">
 			    <span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			  </shiro:hasPermission>
 			  <shiro:hasPermission name="5020">
@@ -48,7 +48,7 @@
 			    <span class="glyphicon glyphicon-pencil"></span> Editar</label>
 			  </shiro:hasPermission>
 			  <shiro:hasPermission name="5030">
-			    <label class="btn btn-danger" ng-click="componentec.borrar()" uib-tooltip="Borrar">
+			    <label class="btn btn-danger" ng-click="!componentec.esDeSigade ?  componentec.borrar() : ''" uib-tooltip="Borrar" ng-disabled = "componentec.esDeSigade">
 			    <span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			  </shiro:hasPermission>
 			  </div>
@@ -98,7 +98,7 @@
 			
     		<div class="operation_buttons">
     		  <div class="btn-group" ng-hide="componentec.esnuevo" ng-if="!componentec.esTreeview">
-				<label class="btn btn-default" ng-click="componentec.botones ? componentec.irASubComponente(componentec.componente.id) : ''" uib-tooltip="Subcomponentes" tooltip-placement="bottom" ng-disabled="!componentec.botones">
+				<label class="btn btn-default" ng-click="componentec.botones && !componentec.esDeSigade ? componentec.irASubComponente(componentec.componente.id) : ''" uib-tooltip="Subcomponentes" tooltip-placement="bottom" ng-disabled="!componentec.botones || componentec.esDeSigade">
 				<span class="glyphicon glyphicon-equalizer"></span></label>
 				<label class="btn btn-default" ng-click="componentec.botones ? componentec.irAProductos(componentec.componente.id) : ''" uib-tooltip="Productos" tooltip-placement="bottom" ng-disabled="!componentec.botones">
 				<span class="glyphicon glyphicon-certificate"></span></label>
@@ -108,7 +108,7 @@
 		      </div>
 			  <div class="btn-group" style="float: right;">
 			    <shiro:hasPermission name="5020">
-			      <label class="btn btn-success" ng-click="componentec.mForm.$valid && componentec.botones ? componentec.guardar() : ''" ng-disabled="!componentec.mForm.$valid || !componentec.botones" uib-tooltip="Guardar">
+			      <label class="btn btn-success" ng-click="componentec.mForm.$valid && componentec.botones   ? componentec.guardar() : ''" ng-disabled="!componentec.mForm.$valid || !componentec.botones" uib-tooltip="Guardar">
 			      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 			    </shiro:hasPermission>
 			    <label ng-if="!componentec.esTreeview" class="btn btn-primary" ng-click="componentec.botones ? componentec.irATabla() : ''" uib-tooltip="Ir a Tabla" ng-disabled="!componentec.botones">
@@ -387,7 +387,7 @@
 				<div class="col-sm-12">
 					<div class="btn-group" ng-disabled="!componentec.botones">
 						 <shiro:hasPermission name="5020">
-						      <label class="btn btn-success" ng-click="componentec.mForm.$valid && componentec.botones ? componentec.guardar() : ''" ng-disabled="!componentec.mForm.$valid || !componentec.botones" uib-tooltip="Guardar" tooltip-placement="top">
+						      <label class="btn btn-success" ng-click="componentec.mForm.$valid && componentec.botones ? componentec.guardar() : ''" ng-disabled="!componentec.mForm.$valid || !componentec.botones " uib-tooltip="Guardar" tooltip-placement="top">
 						      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 						    </shiro:hasPermission>
 						    <label ng-if="!componentec.esTreeview" class="btn btn-primary" ng-click="componentec.botones ? componentec.irATabla() :''" ng-disabled="!componentec.botones" uib-tooltip="Ir a Tabla" tooltip-placement="top">

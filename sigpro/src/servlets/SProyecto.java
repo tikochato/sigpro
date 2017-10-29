@@ -672,11 +672,11 @@ public class SProyecto extends HttpServlet {
 			Proyecto proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
 			response_text = String.join("","{ \"success\": ",(proyecto!=null && proyecto.getId()!=null ? "true" : "false"),", "
 					+ "\"id\": " + (proyecto!=null ? proyecto.getId():"0") +", "
-							+ "\"ejercicio\": " + (proyecto!=null ? proyecto.getUnidadEjecutora().getId().getEjercicio() :"0") +", " 
-							+ "\"entidad\": " + (proyecto!=null ? proyecto.getUnidadEjecutora().getId().getEntidadentidad() :"0") +", "
-							+ "\"entidadNombre\": \"" + (proyecto!=null ? proyecto.getUnidadEjecutora().getEntidad().getNombre() : "") +"\", "
-							+ "\"unidadEjecutora\": " + (proyecto!=null ? proyecto.getUnidadEjecutora().getId().getUnidadEjecutora() :"0") +", "
-							+ "\"unidadEjecutoraNombre\": \"" + (proyecto!=null ? proyecto.getUnidadEjecutora().getNombre() : "") +"\", "
+							+ "\"ejercicio\": " + (proyecto!=null && proyecto.getUnidadEjecutora() != null ? proyecto.getUnidadEjecutora().getId().getEjercicio() :"0") +", " 
+							+ "\"entidad\": " + (proyecto!=null && proyecto.getUnidadEjecutora() != null ? proyecto.getUnidadEjecutora().getId().getEntidadentidad() :"0") +", "
+							+ "\"entidadNombre\": \"" + (proyecto!=null && proyecto.getUnidadEjecutora() != null ? proyecto.getUnidadEjecutora().getEntidad().getNombre() : "") +"\", "
+							+ "\"unidadEjecutora\": " + (proyecto!=null && proyecto.getUnidadEjecutora() != null ? proyecto.getUnidadEjecutora().getId().getUnidadEjecutora() :"0") +", "
+							+ "\"unidadEjecutoraNombre\": \"" + (proyecto!=null && proyecto.getUnidadEjecutora() != null ? proyecto.getUnidadEjecutora().getNombre() : "") +"\", "
 					+ "\"prestamoId\": " + (proyecto!=null ? proyecto.getPrestamo() != null ? proyecto.getPrestamo().getId() : 0 : 0) +", "
 					+ "\"nombre\": \"" + (proyecto!=null ? proyecto.getNombre():"") +"\" }");
 

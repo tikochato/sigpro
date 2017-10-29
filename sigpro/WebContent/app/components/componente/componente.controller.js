@@ -41,6 +41,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 		mi.coordenadas = "";
 		mi.entidad='';
 		mi.ejercicio = '';
+		mi.esDeSigade = false;
 		
 		mi.riesgos=undefined;
 		mi.active=0;
@@ -187,7 +188,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 			}).success(
 					function(response) {
 						mi.componentes = response.componentes;
-						
+						mi.esDeSigade = response.esDeSigade;
 						for(x in mi.componentes){
 							if(mi.componentes[x].fechaInicio != "")
 								mi.componentes[x].fechaInicio = moment(mi.componentes[x].fechaInicio, 'DD/MM/YYYY').toDate();
@@ -475,6 +476,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 						mi.totalComponentes = response.data.totalcomponentes;
 						mi.paginaActual = 1;
 						mi.cargarTabla(mi.paginaActual);
+						
 			});
 		}
 		
