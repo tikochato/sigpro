@@ -314,7 +314,7 @@
 			    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos">
 								<thead class="theadDatos">
 									<tr>
-										<th nowrap colspan={{planadqui.colspan}} style="{{planadqui.estiloCelda}} text-align: center;" class="label-form">Total Anual</th>
+										<th nowrap colspan={{planadqui.colspan}} style="{{planadqui.estiloCelda}} text-align: center;" class="label-form">Total</th>
 				          				<th rowspan="2" style="{{planadqui.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Costo Est. de Adquisición</th>
 				          			</tr>
 				          			<tr>
