@@ -344,19 +344,6 @@
 							</div>
 						</div>
 					</div>
-					<div class="row">
-						<div class="col-sm-12">
-							<div class="form-group">
-								<input type="number"
-								 class="inputText "  
-								 ng-model="prestamoc.proyecto.ejecucionFisicaReal"
-								 ng-value="prestamoc.proyecto.ejecucionFisicaReal"
-								 onblur="this.setAttribute('value', this.value);"
-								 min="0" max="100">
-								<label class="floating-label" >Ejecucion Física %</label>
-							</div>
-						</div>
-					</div>
 					<br>
 					<div align="center">
 						<h5>Tipo de Préstamo</h5>
