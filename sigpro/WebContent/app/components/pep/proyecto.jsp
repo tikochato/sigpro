@@ -317,7 +317,19 @@
 						</div>
 					</div>
 					<br/>
-					
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group">
+								<input type="number"
+								 class="inputText "  
+								 ng-model="controller.proyecto.ejecucionFisicaReal"
+								 ng-value="controller.proyecto.ejecucionFisicaReal"
+								 onblur="this.setAttribute('value', this.value);"
+								 min="0" max="100">
+								<label class="floating-label" >Ejecucion Física %</label>
+							</div>
+						</div>
+					</div>
 					<div class="panel panel-default" ng-hide="controller.esNuevoDocumento" >
 						<div class="panel-heading label-form" style="text-align: center;">Archivos adjuntos</div>
 						<div class="panel-body">
