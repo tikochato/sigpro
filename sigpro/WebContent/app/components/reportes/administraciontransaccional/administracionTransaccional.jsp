@@ -48,6 +48,10 @@
 			overflow:hidden;		
 		}
 		
+		.table-striped>tbody>tr:nth-child(odd)>td {
+    		background-color: #f3f3f3;
+		}
+		
 		.divTabla{
 			float: left;
 			max-height: 375px;
