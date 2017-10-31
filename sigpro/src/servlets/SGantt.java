@@ -182,7 +182,7 @@ public class SGantt extends HttpServlet {
 
 		}else if(accion.equals("importar")){
 
-				String directorioTemporal = "/archivos/temporales";
+				String directorioTemporal = "/SIPRO/archivos/temporales";
 				ArrayList<FileItem> fileItems=new ArrayList<FileItem>();
 
 				Long time=  0L;

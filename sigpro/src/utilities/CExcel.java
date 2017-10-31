@@ -678,7 +678,7 @@ public class CExcel {
 		sheet_.autoSizeColumn(3);
 
 		try {
-			path = String.join("", "/archivos/temporales/temp_", ((Long) new Date().getTime()).toString(), ".xls");
+			path = String.join("", "/SIPRO/archivos/temporales/temp_", ((Long) new Date().getTime()).toString(), ".xls");
 			FileOutputStream out = new FileOutputStream(new File(path));
 			workbook_.write(out);
 			out.close();
@@ -717,7 +717,7 @@ public class CExcel {
 		sheet_.autoSizeColumn(3);
 		
 		try {
-			path = String.join("", "/archivos/temporales/temp_", ((Long) new Date().getTime()).toString(), ".xls");
+			path = String.join("", "/SIPRO/archivos/temporales/temp_", ((Long) new Date().getTime()).toString(), ".xls");
 			FileOutputStream out = new FileOutputStream(new File(path));
 			workbook_.write(out);
 			out.close();

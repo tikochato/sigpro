@@ -98,7 +98,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 		}
 		
 		mi.adjuntarDocumentos = function(){
-			$documentoAdjunto.getModalDocumento($scope, 5, mi.actividad.id)
+			$documentoAdjunto.getModalDocumento($scope,  mi.actividad.id,5)
 			.result.then(function(data) {
 				if (data != ""){
 					mi.rowCollection = [];
@@ -144,7 +144,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 				       mi.rowCollection.splice(indice, 1);		       
 				    }
 					mi.rowCollection = [];
-					mi.getDocumentosAdjuntos(5, mi.actividad.id);
+					mi.getDocumentosAdjuntos( mi.actividad.id,5);
 				}
 			});
 		};
@@ -451,7 +451,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 		mi.editar = function() {
 			if(mi.actividad!=null && mi.actividad.id!=null){
 				mi.adquisicionesCargadas = false;
-				mi.getDocumentosAdjuntos(5, mi.actividad.id);
+				mi.getDocumentosAdjuntos( mi.actividad.id,5);
 				mi.esNuevoDocumento = false;
 				mi.actividadResponsable = "";
 				mi.mostraringreso = true;

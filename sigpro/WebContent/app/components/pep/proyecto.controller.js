@@ -417,7 +417,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				
 			});
 			
-			mi.getDocumentosAdjuntos(1, mi.proyecto.id);
+			mi.getDocumentosAdjuntos( mi.proyecto.id,0);
 			$scope.active = 0;
 			
 			
@@ -427,7 +427,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	}
 
 	mi.adjuntarDocumentos = function(){
-		$documentoAdjunto.getModalDocumento($scope, 1, mi.proyecto.id)
+		$documentoAdjunto.getModalDocumento($scope, mi.proyecto.id,0)
 		.result.then(function(data) {
 			if (data != ""){
 				mi.rowCollection = [];
@@ -473,7 +473,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			       mi.rowCollection.splice(indice, 1);		       
 			    }
 				mi.rowCollection = [];
-				mi.getDocumentosAdjuntos(1, mi.proyecto.id);
+				mi.getDocumentosAdjuntos( mi.proyecto.id,0);
 			}
 		});
 	};

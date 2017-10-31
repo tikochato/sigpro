@@ -27,6 +27,7 @@ import com.google.gson.GsonBuilder;
 
 import dao.DocumentosAdjuntosDAO;
 import pojo.Documento;
+import utilities.Utils;
 
 @WebServlet("/SDocumentosAdjuntos")
 public class SDocumentosAdjuntos extends HttpServlet {
@@ -55,7 +56,7 @@ public class SDocumentosAdjuntos extends HttpServlet {
 		String response_text = "";
 		Boolean esNuevo = false;	
 		Integer objetoId = 0;
-		Integer tipoObjetoId = 0;
+		Integer tipoObjetoId = null;
 		Integer idDocumento = 0;
 		HttpSession sesionweb = request.getSession();
 		String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
@@ -72,7 +73,7 @@ public class SDocumentosAdjuntos extends HttpServlet {
 						}else if (parametro.getFieldName().compareTo("idObjeto")==0 && parametro.getString().length()>0){
 							objetoId = Integer.parseInt(parametro.getString());
 						}else if(parametro.getFieldName().compareTo("idTipoObjeto")==0 && parametro.getString().length()>0){
-							tipoObjetoId = Integer.parseInt(parametro.getString());
+							tipoObjetoId = Utils.String2Int(parametro.getString(),null);
 						}else if(parametro.getFieldName().compareTo("id")==0 && parametro.getString().length()>0){
 							idDocumento = Integer.parseInt(parametro.getString());
 						}
@@ -85,12 +86,12 @@ public class SDocumentosAdjuntos extends HttpServlet {
 					if(accion.equals("agregarDocumento")){
 						try {						
 							if(esNuevo){
-								String directorioTemporal = "/archivos/documentos/";
-								if (objetoId != 0){
-									directorioTemporal = directorioTemporal + objetoId+ "/";
-								}
-								if (tipoObjetoId != 0){
+								String directorioTemporal = "/SIPRO/archivos/documentos/";
+								if (objetoId != null){
 									directorioTemporal = directorioTemporal + tipoObjetoId + "/";
+								}
+								if (tipoObjetoId != null){
+									directorioTemporal = directorioTemporal + objetoId  + "/";
 								}
 															
 								ArrayList<FileItem> fileItems=new ArrayList<FileItem>();
@@ -214,10 +215,10 @@ public class SDocumentosAdjuntos extends HttpServlet {
 					BufferedInputStream fileIn = new BufferedInputStream(null);
 					try{
 						List<Documento> documento = DocumentosAdjuntosDAO.getDocumentoById(idDocumento);
-						String directorioTemporal = "/archivos/documentos";
+						String directorioTemporal = "/SIPRO/archivos/documentos";
 						
 						for (Documento doc : documento){
-							String filePath = directorioTemporal+"/"+doc.getIdObjeto()+"/"+doc.getIdTipoObjeto()+"/"+doc.getNombre();
+							String filePath = directorioTemporal+"/"+doc.getIdTipoObjeto()+"/"+doc.getIdObjeto()+"/"+doc.getNombre();
 							
 							File file = new File(filePath);
 

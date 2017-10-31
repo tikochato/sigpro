@@ -566,7 +566,7 @@ public class CProject {
 			}
 			
 			ProjectWriter writer = new MPXWriter();
-			path = "/archivos/temporales/Programa.mpx";
+			path = "/SIPRO/archivos/temporales/Programa.mpx";
 			writer.write(project,path);
 		}
 		return path;

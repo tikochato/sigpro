@@ -105,7 +105,7 @@ public class CPdf {
 					table_x.draw();
 					contentStream.close();
 				}
-			    path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
+			    path = String.join("","/SIPRO/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
 				FileOutputStream out = new FileOutputStream(new File(path));
 				doc.save(out);
 				doc.close();
@@ -522,7 +522,7 @@ public class CPdf {
 					table_x.draw();
 					contentStream.close();
 				}
-			    path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
+			    path = String.join("","/SIPRO/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
 				FileOutputStream out = new FileOutputStream(new File(path));
 				doc.save(out);
 				doc.close();
@@ -578,7 +578,7 @@ public class CPdf {
 				addFooter(doc, usuario);
 				
 				contentStream.close();
-				path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
+				path = String.join("","/SIPRO/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
 					FileOutputStream out = new FileOutputStream(new File(path));
 					doc.save(out);
 					doc.close();
@@ -633,7 +633,7 @@ public class CPdf {
 				}
 				table_x.draw();
 				contentStream.close();
-				path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
+				path = String.join("","/SIPRO/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
 					FileOutputStream out = new FileOutputStream(new File(path));
 					doc.save(out);
 					doc.close();
@@ -681,7 +681,7 @@ public class CPdf {
 				addFooter(doc, usuario);
 				
 				contentStream.close();
-				path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
+				path = String.join("","/SIPRO/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
 					FileOutputStream out = new FileOutputStream(new File(path));
 					doc.save(out);
 					doc.close();
@@ -730,7 +730,7 @@ public class CPdf {
 				addFooter(doc, usuario);
 				
 				contentStream.close();
-				path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
+				path = String.join("","/SIPRO/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
 					FileOutputStream out = new FileOutputStream(new File(path));
 					doc.save(out);
 					doc.close();
@@ -796,7 +796,7 @@ public class CPdf {
 				}
 				table_x.draw();
 				contentStream.close();
-				path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
+				path = String.join("","/SIPRO/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
 					FileOutputStream out = new FileOutputStream(new File(path));
 					doc.save(out);
 					doc.close();
@@ -869,7 +869,7 @@ public class CPdf {
 				
 				
 				
-				path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
+				path = String.join("","/SIPRO/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
 					FileOutputStream out = new FileOutputStream(new File(path));
 					doc.save(out);
 					doc.close();
@@ -1002,7 +1002,7 @@ public class CPdf {
 					num_col=contador==0?num_col-9:num_col-7;
 					contador=contador==0? 9:contador+7;
 				}				
-				path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
+				path = String.join("","/SIPRO/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
 					FileOutputStream out = new FileOutputStream(new File(path));
 					doc.save(out);
 					doc.close();
@@ -1097,7 +1097,7 @@ public class CPdf {
 				addFooter(doc, usuario);
 				contentStream.close();
 			}
-		    path = String.join("","/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
+		    path = String.join("","/SIPRO/archivos/temporales/temp_",((Long) new Date().getTime()).toString(),".pdf");
 			FileOutputStream out = new FileOutputStream(new File(path));
 			doc.save(out);
 			doc.close();
@@ -1112,7 +1112,7 @@ public class CPdf {
 					
 					PDPageContentStream contentStream = new PDPageContentStream(document, fpage, AppendMode.APPEND, true);
 					
-					PDStreamUtils.write(contentStream, "Ministerio de Finanzas Públicas",
+					PDStreamUtils.write(contentStream, "Ministerio de Finanzas Pï¿½blicas",
 		                    PDType1Font.HELVETICA_BOLD, 18, 50, 570, new Color(0, 0, 0));
 					
 					PDStreamUtils.write(contentStream, "SIPRO",
