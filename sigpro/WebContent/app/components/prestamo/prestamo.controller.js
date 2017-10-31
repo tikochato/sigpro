@@ -451,6 +451,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 								}
 								mi.botones=true;
 							}
+							mi.esNuevo=false;
 							
 						}else{
 							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'crear' : 'guardar')+' el préstamo');
