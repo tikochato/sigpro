@@ -37,10 +37,12 @@ import dao.EstructuraProyectoDAO;
 import dao.HitoDAO;
 import dao.HitoResultadoDAO;
 import dao.ProductoDAO;
+import dao.ProyectoDAO;
 import pojo.AsignacionRaci;
 import pojo.Hito;
 import pojo.HitoResultado;
 import pojo.Producto;
+import pojo.Proyecto;
 import utilities.CExcel;
 import utilities.CPdf;
 import utilities.CLogger;
@@ -927,7 +929,8 @@ public class SAvanceActividades extends HttpServlet {
 			headers = generarHeaders();
 			datos = generarDatos(idPrestamo, fechaCorte, usuario);
 			excel = new CExcel("Reporte de Avance", false, null);
-			wb=excel.generateExcelOfData(datos, "Reporte de Avance de Actividades e Hitos", headers, null, true, usuario);
+			Proyecto proyecto = ProyectoDAO.getProyecto(idPrestamo);
+			wb=excel.generateExcelOfData(datos, "Reporte de Avance de Actividades e Hitos - "+proyecto.getNombre(), headers, null, true, usuario);
 			wb.write(outByteStream);
 			outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){

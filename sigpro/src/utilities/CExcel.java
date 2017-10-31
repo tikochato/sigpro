@@ -68,6 +68,7 @@ public class CExcel {
 	Font font_min;
 	DataFormat dataformat;
 	CellStyle cs_currency_bold;
+	CellStyle cs_currency_border;
 	CellStyle cs_percent_bold;
 	CellStyle cs_estiloVariable;
 	boolean HasGroup;
@@ -138,6 +139,15 @@ public class CExcel {
 		cs_percent_bold.setFont(font_bold);
 		cs_currency_bold.setDataFormat(dataformat.getFormat("Q #,##0.00"));
 		cs_percent_bold.setDataFormat(dataformat.getFormat("0.00%"));
+		
+		cs_currency_border = workbook.createCellStyle();
+		cs_currency_border.setFont(font);
+		dataformat = workbook.createDataFormat();
+		cs_currency_border.setDataFormat(dataformat.getFormat("Q #,##0.00"));
+		cs_currency_border.setBorderTop(BorderStyle.THIN);
+		cs_currency_border.setBorderLeft(BorderStyle.THIN);
+		cs_currency_border.setBorderRight(BorderStyle.THIN);
+		cs_currency_border.setBorderBottom(BorderStyle.THIN);
 
 		cs_bold = workbook.createCellStyle();
 		cs_bold.setFont(font_bold);
@@ -176,14 +186,8 @@ public class CExcel {
 				? sheet.getRow(irow).getCell(icell) : sheet.getRow(irow).createCell(icell))
 				: sheet.createRow(irow).createCell(icell);
 		cell.setCellValue(value);
-		cs_estiloVariable.cloneStyleFrom(bold ? cs_currency_bold : cs_currency);
-		if(borde){
-			cs_estiloVariable.setBorderTop(BorderStyle.THIN);
-			cs_estiloVariable.setBorderLeft(BorderStyle.THIN);
-			cs_estiloVariable.setBorderRight(BorderStyle.THIN);
-			cs_estiloVariable.setBorderBottom(BorderStyle.THIN);
-		}
-		cell.setCellStyle(cs_estiloVariable);
+		CellStyle estiloCelda = borde ? cs_currency_border : cs_currency;
+		cell.setCellStyle(estiloCelda);
 	}
 
 	public void setCellValueDouble(double value, int irow, int icell, boolean borde) {

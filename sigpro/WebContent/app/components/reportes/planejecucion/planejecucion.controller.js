@@ -43,10 +43,7 @@ app.controller('planejecucionController',['$scope','$rootScope','$http','$interv
 		    [0, 0, 0]  //real
 		  ];
 	  
-	
-	 
 	  mi.lprestamos = [];
-		
 		
 		$http.post('/SPrestamo', {accion: 'getPrestamos', t: (new Date()).getTime()}).then(
 			function(response){
@@ -65,42 +62,14 @@ app.controller('planejecucionController',['$scope','$rootScope','$http','$interv
 			if(selected!== undefined){
 				mi.prestamoNombre = selected.originalObject.proyectoPrograma;
 				mi.prestamoId = selected.originalObject.id;
-				mi.getPeps(mi.prestamoId);
+				mi.generarReporte();
 			}
 			else{
 				mi.prestamoNombre="";
 				mi.prestamoId=null;
 			}
 		}
-		
-		mi.blurPep=function(){
-			if(document.getElementById("pep_value").defaultValue!=mi.pepNombre){
-				$scope.$broadcast('angucomplete-alt:clearInput','pep');
-			}
-		}
-		
-		mi.cambioPep=function(selected){
-			if(selected!== undefined){
-				mi.pepNombre = selected.originalObject.nombre;
-				mi.pepId = selected.originalObject.id;
-				mi.generarReporte();
-			}
-			else{
-				mi.pepNombre="";
-				mi.pepId="";
-			}
-		}
-		
-		mi.getPeps = function(prestamoId){
-			$http.post('/SProyecto',{accion: 'getProyectos', prestamoid: prestamoId}).success(
-				function(response) {
-					mi.peps = [];
-					if (response.success){
-						mi.peps = response.entidades;
-					}
-			});	
-		}
-	
+			
 	mi.inicializarDatos = function (){
 		mi.proyectoid = "";
 		mi.proyectoNombre = "";
@@ -115,49 +84,39 @@ app.controller('planejecucionController',['$scope','$rootScope','$http','$interv
 	mi.generarReporte = function (){
 		mi.mostrarExport = false;
 		mi.mostrar=false;
-		if (mi.pepId > 0){
 			mi.inicializarDatos();
-			$http.post('/SProyecto', { accion: 'obtenerProyectoPorId', id: mi.pepId,t:moment().unix() }).success(
-				function(response) {
-					mi.proyectoid = response.id;
-					mi.proyectoNombre = response.nombre;
-					mi.objetoTipoNombre = "Proyecto";
-					
-					$http.post('/SPrestamo', { accion: 'getPrestamo', objetoId:mi.pepId,
-						objetoTipo:1,
-						t: (new Date()).getTime()})
-					 .then(function(response){
-						 if (response.data.success && response.data.prestamo != null 
-								 && response.data.prestamo != undefined){
-						 mi.prestamo = response.data.prestamo;
-						 //mi.tabla.push({'etiqueta1',})
-						 mi.setPorcentaje(1);
-						 mi.setPorcentaje(2);
-						 mi.setPorcentaje(3);
-						 mi.setPorcentaje(4);
-						 mi.setPorcentaje(5);
-						 mi.mostrarCargando = true;
-						 $http.post('/SPlanEjecucion', { accion: 'getDatosPlan', proyectoId:mi.proyectoid,
-								t: (new Date()).getTime()})
-							 .then(function(response){
-								 var fecha_actual = moment(response.data.fecha,'DD/MM/YYYY').toDate();
-								 mi.dataRadar[1][0] = Number(response.data.ejecucionFisicaR);
-								 mi.dataRadar[0][0] = Number(response.data.ejecucionFisicaP);
-								 mi.dataRadar[0][2] = Number(response.data.ejecucionFinancieraP);
-								 mi.dataRadar[0][1] = Number(response.data.plazoEjecucionP);
-								 mi.mesReportado = mi.obtenerMes(Number(moment(fecha_actual).format('MM')));
-								 mi.anioFiscal = Number(moment(fecha_actual).format('YYYY'));
-								 mi.mostrar = true; 
-								 mi.mostrarCargando = false;
-								 mi.mostrarExport = true;
-							});
-						 
-						 }else{
-							 $utilidades.mensaje('warning','No se encontro datos del ' + $rootScope.etiquetas.proyecto);
-						 }
-					});		
-			});	
-		}
+				$http.post('/SPrestamo', { accion: 'getPrestamo', prestamoId: mi.prestamoId,
+					t: (new Date()).getTime()})
+				 .then(function(response){
+					 if (response.data.success && response.data.prestamo != null 
+							 && response.data.prestamo != undefined){
+					 mi.prestamo = response.data.prestamo;
+					 //mi.tabla.push({'etiqueta1',})
+					 mi.setPorcentaje(1);
+					 mi.setPorcentaje(2);
+					 mi.setPorcentaje(3);
+					 mi.setPorcentaje(4);
+					 mi.setPorcentaje(5);
+					 mi.mostrarCargando = true;
+					 $http.post('/SPlanEjecucion', { accion: 'getDatosPlan', prestamoId: mi.prestamoId,
+							t: (new Date()).getTime()})
+						 .then(function(response){
+							 var fecha_actual = moment(response.data.fecha,'DD/MM/YYYY').toDate();
+							 mi.dataRadar[1][0] = Number(response.data.ejecucionFisicaR);
+							 mi.dataRadar[0][0] = Number(response.data.ejecucionFisicaP);
+							 mi.dataRadar[0][2] = Number(response.data.ejecucionFinancieraP);
+							 mi.dataRadar[0][1] = Number(response.data.plazoEjecucionP);
+							 mi.mesReportado = mi.obtenerMes(Number(moment(fecha_actual).format('MM')));
+							 mi.anioFiscal = Number(moment(fecha_actual).format('YYYY'));
+							 mi.mostrar = true; 
+							 mi.mostrarCargando = false;
+							 mi.mostrarExport = true;
+						});
+					 
+					 }else{
+						 $utilidades.mensaje('warning','No se encontro datos del ' + $rootScope.etiquetas.proyecto);
+					 }
+				});		
 	}
 	
 
@@ -167,7 +126,7 @@ app.controller('planejecucionController',['$scope','$rootScope','$http','$interv
 		
 		$http.post('/SPlanEjecucion', { 
 			accion: 'exportarExcel', 
-			id: mi.pepId,
+			id: mi.prestamoId,
 			ejecucionFisicaPlan : mi.dataRadar[0][0],
 			plazoEjecucionPlan: mi.dataRadar[0][1],
 			ejecucionFinancieraPlan : mi.dataRadar[0][2],

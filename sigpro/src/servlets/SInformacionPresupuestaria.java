@@ -28,6 +28,8 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.ObjetoCosto;
 import dao.ObjetoDAO;
+import dao.ProyectoDAO;
+import pojo.Proyecto;
 import utilities.CExcel;
 import utilities.CGraficaExcel;
 import utilities.CLogger;
@@ -182,7 +184,8 @@ public class SInformacionPresupuestaria extends HttpServlet {
 			datosInforme = generarDatosReporte(lstPrestamo, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
 			CGraficaExcel grafica = generarGrafica(datosInforme, tipoVisualizacion, agrupacion, anioInicio, anioFin);
 			excel = new CExcel("Ejecucion presupuestaria", false, grafica);
-			wb=excel.generateExcelOfData(datosInforme, "Ejecucion presupuestaria", headers, null, true, usuario);
+			Proyecto proyecto = ProyectoDAO.getProyecto(prestamoId);
+			wb=excel.generateExcelOfData(datosInforme, "Ejecucion presupuestaria - "+proyecto.getNombre(), headers, null, true, usuario);
 			wb.write(outByteStream);
 			outByteStream.close();
 			outArray = Base64.encode(outByteStream.toByteArray());

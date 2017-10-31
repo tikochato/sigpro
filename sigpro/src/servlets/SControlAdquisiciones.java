@@ -31,8 +31,10 @@ import com.google.gson.reflect.TypeToken;
 import dao.ActividadDAO;
 import dao.EstructuraProyectoDAO;
 import dao.PlanAdquisicionDAO;
+import dao.ProyectoDAO;
 import pojo.Actividad;
 import pojo.PlanAdquisicion;
+import pojo.Proyecto;
 import utilities.CExcel;
 import utilities.CLogger;
 import utilities.CPdf;
@@ -338,7 +340,8 @@ public class SControlAdquisiciones extends HttpServlet {
 			headers = generarHeaders();
 			datos = generarDatos(idPrestamo, usuario);
 			excel = new CExcel("Control de Adquisiciones", false, null);
-			wb=excel.generateExcelOfData(datos, "Control de Adquisiciones", headers, null, true, usuario);
+			Proyecto proyecto = ProyectoDAO.getProyecto(idPrestamo);
+			wb=excel.generateExcelOfData(datos, "Control de Adquisiciones - "+proyecto.getNombre(), headers, null, true, usuario);
 		
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
