@@ -25,8 +25,8 @@ public class ObjetoCosto {
 	Integer renglon;
 	Integer geografico;
 	String treePath;
-	ObjetoCosto parent;
-	List<ObjetoCosto> children;
+	transient ObjetoCosto parent;
+	transient List<ObjetoCosto> children;
 	
 	public ObjetoCosto(String nombre, Integer objeto_id, int objeto_tipo, Integer nivel, DateTime fecha_inicial,
 			DateTime fecha_final, stanio[] anios, Integer acumulacion_costoid, BigDecimal costo, BigDecimal totalPagos, Integer programa,
@@ -69,6 +69,18 @@ public class ObjetoCosto {
 			temp.anio = anioInicial+i;
 			anios[i] = temp;
 		}
+	}
+		
+	public List<ObjetoCosto> getListado(ObjetoCosto nodo){
+		List<ObjetoCosto> lstPrestamo = new ArrayList<>();
+		lstPrestamo.add(nodo);
+		if(nodo.getChildren()!=null && !nodo.getChildren().isEmpty()){
+			for(int h=0; h<nodo.getChildren().size();h++){
+				lstPrestamo.addAll((List<ObjetoCosto>)getListado(nodo.getChildren().get(h)));
+			}
+			
+		}
+		return lstPrestamo;
 	}
 	
 	public class stpresupuesto{

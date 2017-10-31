@@ -265,6 +265,7 @@ public class ObjetoDAO {
 		if(obtenerPlanificado){
 			root = obtenerPlanificado(root, anioInicial, anioFinal);
 		}		
+		lstPrestamo = root.getListado(root);
 		return lstPrestamo;
 	}
 	
