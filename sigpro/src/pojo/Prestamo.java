@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 31, 2017 11:02:39 AM by Hibernate Tools 5.2.3.Final
+// Generated Nov 1, 2017 10:04:00 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class Prestamo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3852748822059411813L;
+	private static final long serialVersionUID = -4518008958640817528L;
 	private Integer id;
 	private AutorizacionTipo autorizacionTipo;
 	private Cooperante cooperante;
@@ -110,10 +110,8 @@ public class Prestamo implements java.io.Serializable {
 	public Prestamo(Cooperante cooperante, TipoMoneda tipoMoneda, long codigoPresupuestario, String numeroPrestamo,
 			BigDecimal montoContratado, String usuarioCreo, int estado, String proyectoPrograma, Date fechaDecreto,
 			Date fechaSuscripcion, Date fechaElegibilidadUe, Date fechaCierreOrigianlUe, Date fechaCierreActualUe,
-			int mesesProrrogaUe, BigDecimal montoAsignadoUe, Date fechaVigencia, BigDecimal montoContratadoUsd,
-			BigDecimal montoContratadoQtz, BigDecimal desembolsoAFechaUsd, BigDecimal montoPorDesembolsarUsd,
-			BigDecimal montoAsignadoUeUsd, BigDecimal montoAsignadoUeQtz, BigDecimal desembolsoAFechaUeUsd,
-			BigDecimal montoPorDesembolsarUeUsd) {
+			int mesesProrrogaUe, Date fechaVigencia, BigDecimal montoContratadoUsd, BigDecimal montoContratadoQtz,
+			BigDecimal montoPorDesembolsarUsd) {
 		this.cooperante = cooperante;
 		this.tipoMoneda = tipoMoneda;
 		this.codigoPresupuestario = codigoPresupuestario;
@@ -128,16 +126,10 @@ public class Prestamo implements java.io.Serializable {
 		this.fechaCierreOrigianlUe = fechaCierreOrigianlUe;
 		this.fechaCierreActualUe = fechaCierreActualUe;
 		this.mesesProrrogaUe = mesesProrrogaUe;
-		this.montoAsignadoUe = montoAsignadoUe;
 		this.fechaVigencia = fechaVigencia;
 		this.montoContratadoUsd = montoContratadoUsd;
 		this.montoContratadoQtz = montoContratadoQtz;
-		this.desembolsoAFechaUsd = desembolsoAFechaUsd;
 		this.montoPorDesembolsarUsd = montoPorDesembolsarUsd;
-		this.montoAsignadoUeUsd = montoAsignadoUeUsd;
-		this.montoAsignadoUeQtz = montoAsignadoUeQtz;
-		this.desembolsoAFechaUeUsd = desembolsoAFechaUeUsd;
-		this.montoPorDesembolsarUeUsd = montoPorDesembolsarUeUsd;
 	}
 
 	public Prestamo(AutorizacionTipo autorizacionTipo, Cooperante cooperante, EjecucionEstado ejecucionEstado,
@@ -772,7 +764,7 @@ public class Prestamo implements java.io.Serializable {
 		this.plazoEjecucionUe = plazoEjecucionUe;
 	}
 
-	@Column(name = "monto_asignado_ue", nullable = false, precision = 15)
+	@Column(name = "monto_asignado_ue", precision = 15)
 	public BigDecimal getMontoAsignadoUe() {
 		return this.montoAsignadoUe;
 	}
@@ -827,7 +819,7 @@ public class Prestamo implements java.io.Serializable {
 		this.montoContratadoQtz = montoContratadoQtz;
 	}
 
-	@Column(name = "desembolso_a_fecha_usd", nullable = false, precision = 15)
+	@Column(name = "desembolso_a_fecha_usd", precision = 15)
 	public BigDecimal getDesembolsoAFechaUsd() {
 		return this.desembolsoAFechaUsd;
 	}
@@ -845,7 +837,7 @@ public class Prestamo implements java.io.Serializable {
 		this.montoPorDesembolsarUsd = montoPorDesembolsarUsd;
 	}
 
-	@Column(name = "monto_asignado_ue_usd", nullable = false, precision = 15)
+	@Column(name = "monto_asignado_ue_usd", precision = 15)
 	public BigDecimal getMontoAsignadoUeUsd() {
 		return this.montoAsignadoUeUsd;
 	}
@@ -854,7 +846,7 @@ public class Prestamo implements java.io.Serializable {
 		this.montoAsignadoUeUsd = montoAsignadoUeUsd;
 	}
 
-	@Column(name = "monto_asignado_ue_qtz", nullable = false, precision = 15)
+	@Column(name = "monto_asignado_ue_qtz", precision = 15)
 	public BigDecimal getMontoAsignadoUeQtz() {
 		return this.montoAsignadoUeQtz;
 	}
@@ -863,7 +855,7 @@ public class Prestamo implements java.io.Serializable {
 		this.montoAsignadoUeQtz = montoAsignadoUeQtz;
 	}
 
-	@Column(name = "desembolso_a_fecha_ue_usd", nullable = false, precision = 15)
+	@Column(name = "desembolso_a_fecha_ue_usd", precision = 15)
 	public BigDecimal getDesembolsoAFechaUeUsd() {
 		return this.desembolsoAFechaUeUsd;
 	}
@@ -872,7 +864,7 @@ public class Prestamo implements java.io.Serializable {
 		this.desembolsoAFechaUeUsd = desembolsoAFechaUeUsd;
 	}
 
-	@Column(name = "monto_por_desembolsar_ue_usd", nullable = false, precision = 15)
+	@Column(name = "monto_por_desembolsar_ue_usd", precision = 15)
 	public BigDecimal getMontoPorDesembolsarUeUsd() {
 		return this.montoPorDesembolsarUeUsd;
 	}
