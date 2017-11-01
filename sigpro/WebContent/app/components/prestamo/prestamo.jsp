@@ -1014,7 +1014,7 @@
 						</tbody>
 					</table>
 				</uib-tab>
-				<uib-tab  index="prestamoc.ordenTab+5" heading="Matriz" ng-if="prestamoc.mostrarPrestamo">
+				<uib-tab  index="prestamoc.ordenTab+5" heading="Distribución de Unidad Ejecutora" ng-if="prestamoc.mostrarPrestamo">
 					<div style="margin-top: 15px;">
 						<div class="row">
 						
