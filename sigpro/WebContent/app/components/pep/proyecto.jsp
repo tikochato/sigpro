@@ -265,14 +265,14 @@
 							<input  ng-model="controller.proyecto.objetivoEspecifico"
 								class="inputText" 
 								ng-value="controller.proyecto.objetivoEspecifico" onblur="this.setAttribute('value', this.value);">
-							<label for="objetivo" class="floating-label">Objetivos específicos</label>
+							<label for="objetivo" class="floating-label">Objetivos específicos del PEP</label>
 					</div>
 					
 					<div class="form-group" >
 							<input  ng-model="controller.proyecto.visionGeneral"
 								class="inputText" 
 								ng-value="controller.proyecto.visionGeneral" onblur="this.setAttribute('value', this.value);">
-							<label for="objetivo" class="floating-label">Visión general</label>
+							<label for="objetivo" class="floating-label">Visión general del PEP</label>
 					</div>
 					<div ng-repeat="campo in controller.camposdinamicos" >
 						<div ng-switch="campo.tipo">
