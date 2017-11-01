@@ -173,7 +173,7 @@
 							</div>
 						</div>
 						
-						<div class="form-group">
+						<div class="form-group" ng-hide="true">
 						   <input type="number" name="snip"  class="inputText" id="snip" 
 						     ng-model="componentec.componente.snip" ng-value="componentec.componente.snip"   
 						     onblur="this.setAttribute('value', this.value);" ng-required="false" >
