@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 24, 2017 11:46:58 AM by Hibernate Tools 5.2.3.Final
+// Generated Oct 31, 2017 11:02:39 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class Prestamo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7405930237316864773L;
+	private static final long serialVersionUID = -3852748822059411813L;
 	private Integer id;
 	private AutorizacionTipo autorizacionTipo;
 	private Cooperante cooperante;
@@ -100,6 +100,7 @@ public class Prestamo implements java.io.Serializable {
 	private BigDecimal desembolsoAFechaUeUsd;
 	private BigDecimal montoPorDesembolsarUeUsd;
 	private Set<PrestamoTipoPrestamo> prestamoTipoPrestamos = new HashSet<PrestamoTipoPrestamo>(0);
+	private Set<PrestamoUsuario> prestamoUsuarios = new HashSet<PrestamoUsuario>(0);
 	private Set<ObjetoPrestamo> objetoPrestamos = new HashSet<ObjetoPrestamo>(0);
 	private Set<Proyecto> proyectos = new HashSet<Proyecto>(0);
 
@@ -161,7 +162,7 @@ public class Prestamo implements java.io.Serializable {
 			BigDecimal montoContratadoQtz, BigDecimal desembolsoAFechaUsd, BigDecimal montoPorDesembolsarUsd,
 			BigDecimal montoAsignadoUeUsd, BigDecimal montoAsignadoUeQtz, BigDecimal desembolsoAFechaUeUsd,
 			BigDecimal montoPorDesembolsarUeUsd, Set<PrestamoTipoPrestamo> prestamoTipoPrestamos,
-			Set<ObjetoPrestamo> objetoPrestamos, Set<Proyecto> proyectos) {
+			Set<PrestamoUsuario> prestamoUsuarios, Set<ObjetoPrestamo> objetoPrestamos, Set<Proyecto> proyectos) {
 		this.autorizacionTipo = autorizacionTipo;
 		this.cooperante = cooperante;
 		this.ejecucionEstado = ejecucionEstado;
@@ -231,6 +232,7 @@ public class Prestamo implements java.io.Serializable {
 		this.desembolsoAFechaUeUsd = desembolsoAFechaUeUsd;
 		this.montoPorDesembolsarUeUsd = montoPorDesembolsarUeUsd;
 		this.prestamoTipoPrestamos = prestamoTipoPrestamos;
+		this.prestamoUsuarios = prestamoUsuarios;
 		this.objetoPrestamos = objetoPrestamos;
 		this.proyectos = proyectos;
 	}
@@ -886,6 +888,15 @@ public class Prestamo implements java.io.Serializable {
 
 	public void setPrestamoTipoPrestamos(Set<PrestamoTipoPrestamo> prestamoTipoPrestamos) {
 		this.prestamoTipoPrestamos = prestamoTipoPrestamos;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "prestamo")
+	public Set<PrestamoUsuario> getPrestamoUsuarios() {
+		return this.prestamoUsuarios;
+	}
+
+	public void setPrestamoUsuarios(Set<PrestamoUsuario> prestamoUsuarios) {
+		this.prestamoUsuarios = prestamoUsuarios;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "prestamo")
