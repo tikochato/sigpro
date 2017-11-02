@@ -99,9 +99,10 @@
     						<label class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
-    						<input type="text" class="inputText"  ng-model="metaunidadc.medida.descripcion"
-    						ng-value="metaunidadc.medida.descripcion" onblur="this.setAttribute('value', this.value);">
-    						<label class="floating-label">Descripción</label>
+						   <textarea class="inputText" rows="4"
+						   ng-model="metaunidadc.medida.descripcion" ng-value="metaunidadc.medida.descripcion"   
+						   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+						   <label class="floating-label">Descripción</label>
 						</div>
 						<div class="form-group">
     						<input type="text" class="inputText" ng-model="metaunidadc.medida.simbolo"

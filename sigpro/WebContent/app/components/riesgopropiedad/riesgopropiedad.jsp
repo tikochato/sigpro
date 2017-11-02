@@ -103,9 +103,10 @@
 							<label class="floating-label">* Tipo dato</label>
 						</div>
 						<div class="form-group">
-    						<input type="text" class="inputText" id="descripcion" ng-model="riesgopropiedadc.riesgopropiedad.descripcion"
-    							ng-value="riesgopropiedadc.riesgopropiedad.descripcion" onblur="this.setAttribute('value', this.value);">
-    						<label class="floating-label">Descripción</label>
+						   <textarea class="inputText" rows="4"
+						   ng-model="riesgopropiedadc.riesgopropiedad.descripcion" ng-value="riesgopropiedadc.riesgopropiedad.descripcion"   
+						   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+						   <label class="floating-label">Descripción</label>
 						</div>
 						<div class="panel panel-default">
 					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>

@@ -201,10 +201,6 @@
 			          	<label  class="floating-label">Coordenadas</label>
 					</div>
 						
-					<div class="form-group" >
-						<input type="text" class="inputText" ng-model="producto.producto.descripcion" ng-value="producto.producto.descripcion" onblur="this.setAttribute('value', this.value);"/>
-						<label for="campo2" class="floating-label"> Descripción</label> 
-					</div>
 			        <div class="form-group" >
 				       <input type="text" class="inputText" ng-model="producto.producto.costo" ng-value="producto.producto.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left"
 				       		ng-required="producto.producto.acumulacionCostoNombre != null"
@@ -310,6 +306,13 @@
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 							</div>
+					</div>
+					
+					<div class="form-group">
+					   <textarea class="inputText" rows="4"
+					   ng-model="producto.producto.descripcion" ng-value="producto.producto.descripcion"   
+					   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+					   <label class="floating-label">Descripción</label>
 					</div>
 				<div class="panel panel-default">
 					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>

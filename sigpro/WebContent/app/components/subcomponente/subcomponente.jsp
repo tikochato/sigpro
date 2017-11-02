@@ -201,13 +201,6 @@
 							<label for="campo3" class="floating-label">Coordenadas</label>
 						</div>
 						
-						<div class="form-group">
-						   <input type="text" name="idescrip"  class="inputText" id="idescrip" 
-						     ng-model="subcomponentec.subcomponente.descripcion" ng-value="subcomponentec.subcomponente.descripcion"   
-						     onblur="this.setAttribute('value', this.value);" ng-required="false" >
-						   <label class="floating-label">Descripción</label>
-						</div>
-						
 						<div class="form-group" >
 					       <input type="text" class="inputText" ng-model="subcomponentec.subcomponente.costo" ng-value="subcomponentec.subcomponente.costo" ui-number-mask="2"
 					       ng-required="subcomponentec.subcomponente.acumulacionCostoId > 0" onblur="this.setAttribute('value', this.value);" style="text-align: left" 
@@ -313,6 +306,13 @@
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 							</div>
+						</div>
+						
+						<div class="form-group">
+						   <textarea class="inputText" rows="4"
+						   ng-model="subcomponentec.subcomponente.descripcion" ng-value="subcomponentec.subcomponente.descripcion"   
+						   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+						   <label class="floating-label">Descripción</label>
 						</div>
 						<div class="panel panel-default">
 							<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>

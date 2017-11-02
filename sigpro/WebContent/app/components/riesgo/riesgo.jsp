@@ -133,11 +133,6 @@
     						<input type="checkbox"  ng-model="riesgoc.ejecutado" /> 
     						<label class="floating-label">Ejecutado</label>   						
 						</div>
-						<div class="form-group">
-    						<input type="text" class="inputText" id="descripcion" ng-model="riesgoc.riesgo.descripcion"
-    						ng-value="riesgoc.riesgo.descripcion" onblur="this.setAttribute('value', this.value);">
-    						<label class="floating-label">Descripción</label>
-						</div>
 						<div class="form-group" ng-repeat="campo in riesgoc.riesgo.camposdinamicos">
 							<div ng-switch="campo.tipo">
 								<div ng-switch-when="1" class="form-group" >
@@ -178,6 +173,13 @@
 									<label class="floating-label">{{ campo.nombre }}</label>
 								</div>
 							</div>
+						</div>
+						
+						<div class="form-group">
+						   <textarea class="inputText" rows="4"
+						   ng-model="riesgoc.riesgo.descripcion" ng-value="riesgoc.riesgo.descripcion"   
+						   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+						   <label class="floating-label">Descripción</label>
 						</div>
 						<input type="hidden" ng-model="riesgoc.form_valid" name="form_valid" ng-required="riesgoc.mostraringreso" />
 			</div>

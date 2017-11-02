@@ -93,10 +93,10 @@
 				</div>
 				
 				<div class="form-group">
-					<input type="text" ng-model="controller.responsableTipo.descripcion"
-						class="inputText" id="campo2" 
-						ng-value="controller.responsableTipo.descripcion" onblur="this.setAttribute('value', this.value);">
-					<label for="campo2" class="floating-label">Descripción</label>
+				   <textarea class="inputText" rows="4"
+				   ng-model="controller.responsableTipo.descripcion" ng-value="controller.responsableTipo.descripcion"   
+				   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+				   <label class="floating-label">Descripción</label>
 				</div>
 				
 				<div class="panel panel-default">
