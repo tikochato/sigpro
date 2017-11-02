@@ -394,6 +394,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 					desembolsoReal: mi.prestamo.desembolsoReal,
 					ejecucionEstadoId: mi.prestamo.ejecucionEstadoId != undefined ? mi.prestamo.ejecucionEstadoId : undefined,
 					fechaCorte : mi.prestamo.fechaCorte != undefined ? moment(mi.prestamo.fechaCorte).format('DD/MM/YYYY') : undefined,
+					objetivo : mi.prestamo.objetivo,
+					objetivoEspecifico : mi.prestamo.objetivoEspecifico,
 					idPrestamoTipos: idPrestamoTipos,
 					t:moment().unix()
 				};
