@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,13 +26,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import dao.EstructuraProyectoDAO;
 import dao.MetaDAO;
 import dao.MetaUnidadMedidaDAO;
+import dao.PrestamoDAO;
 import dao.PrestamoMetasDAO;
 import dao.ProyectoDAO;
 import pojo.Meta;
 import pojo.MetaUnidadMedida;
+import pojo.Prestamo;
 import utilities.CExcel;
 import utilities.CLogger;
 import utilities.Utils;
@@ -215,48 +215,43 @@ public class SPrestamoIndicadores extends HttpServlet {
 	
 	private List<stprestamo> getIndicadoresPrestamo(int idPrestamo, int anioInicial, int anioFinal, String usuario){
 		List<stprestamo> lstPrestamo= new ArrayList<>();
-		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
-		for(Object objeto : estructuraProyecto){
-			Object[] obj = (Object[]) objeto;
-			Integer nivel = (obj[3]!=null) ? ((String)obj[3]).length()/8 : 0;
-			if(nivel!= null){
+		if(idPrestamo>0){
+			Prestamo prestamo = PrestamoDAO.getPrestamoById(idPrestamo);
+			if(prestamo!=null){
 				stprestamo tempPrestamo =  new stprestamo();
-				tempPrestamo.objeto_id = (Integer)obj[0];
-				tempPrestamo.nombre = (String)obj[1];
-				tempPrestamo.nivel = nivel;
-				tempPrestamo.objeto_tipo = ((BigInteger) obj[2]).intValue();
-				if(tempPrestamo.objeto_tipo == 0){
-					ArrayList<ArrayList<BigDecimal>> indicadorValores = new ArrayList<ArrayList<BigDecimal>>();
-					tempPrestamo = getIndicadores(indicadorValores, anioInicial, anioFinal, tempPrestamo);
-					lstPrestamo.add(tempPrestamo);
-					List<Meta> indicadores = MetaDAO.getMetasObjeto(tempPrestamo.objeto_id, tempPrestamo.objeto_tipo);
-					if(indicadores!=null){
-						Iterator<Meta> iterator = indicadores.iterator();
-			    	    while(iterator.hasNext()) {
-			    	    	Meta indicador = iterator.next();
-			    	    	if(indicador!=null){
-								stprestamo tempIndicador =  new stprestamo();
-								tempIndicador.objeto_id = tempPrestamo.objeto_id;
-								tempIndicador.nombre = indicador.getNombre();
-								tempIndicador.nivel = nivel +2;
-								tempIndicador.objeto_tipo = 10;
-								if(indicador.getMetaUnidadMedida()!=null){
-									tempIndicador.unidadDeMedida = indicador.getMetaUnidadMedida().getId();
-								}
-								if(indicador.getDatoTipo()!=null && indicador.getDatoTipo().getId().equals(2)){
-									tempIndicador.metaFinal = indicador.getMetaFinalEntero()!=null ? new BigDecimal(indicador.getMetaFinalEntero()) : null;
-								}else if(indicador.getDatoTipo()!=null && indicador.getDatoTipo().getId().equals(3)){
-									tempIndicador.metaFinal = indicador.getMetaFinalDecimal();
-								}
-								tempIndicador.porcentajeAvance = PrestamoMetasDAO.getPorcentajeAvanceMeta(indicador);
-								indicadorValores = new ArrayList<ArrayList<BigDecimal>>();
-								indicadorValores = PrestamoMetasDAO.getMetaValores(indicador.getId(), anioInicial, anioFinal);
-								tempIndicador = getIndicadores(indicadorValores, anioInicial, anioFinal, tempIndicador);
-								lstPrestamo.add(tempIndicador);
-			    	    	}
-						}
+				tempPrestamo.objeto_id = prestamo.getId();
+				tempPrestamo.nombre = prestamo.getProyectoPrograma();
+				tempPrestamo.nivel = 1;
+				tempPrestamo.objeto_tipo = -1;
+				ArrayList<ArrayList<BigDecimal>> indicadorValores = new ArrayList<ArrayList<BigDecimal>>();
+				tempPrestamo = getIndicadores(indicadorValores, anioInicial, anioFinal, tempPrestamo);
+				lstPrestamo.add(tempPrestamo);
+				List<Meta> indicadores = MetaDAO.getMetasObjeto(tempPrestamo.objeto_id, tempPrestamo.objeto_tipo);
+				if(indicadores!=null){
+					Iterator<Meta> iterator = indicadores.iterator();
+		    	    while(iterator.hasNext()) {
+		    	    	Meta indicador = iterator.next();
+		    	    	if(indicador!=null){
+							stprestamo tempIndicador =  new stprestamo();
+							tempIndicador.objeto_id = tempPrestamo.objeto_id;
+							tempIndicador.nombre = indicador.getNombre();
+							tempIndicador.nivel = 2;
+							tempIndicador.objeto_tipo = 10;
+							if(indicador.getMetaUnidadMedida()!=null){
+								tempIndicador.unidadDeMedida = indicador.getMetaUnidadMedida().getId();
+							}
+							if(indicador.getDatoTipo()!=null && indicador.getDatoTipo().getId().equals(2)){
+								tempIndicador.metaFinal = indicador.getMetaFinalEntero()!=null ? new BigDecimal(indicador.getMetaFinalEntero()) : null;
+							}else if(indicador.getDatoTipo()!=null && indicador.getDatoTipo().getId().equals(3)){
+								tempIndicador.metaFinal = indicador.getMetaFinalDecimal();
+							}
+							tempIndicador.porcentajeAvance = PrestamoMetasDAO.getPorcentajeAvanceMeta(indicador);
+							indicadorValores = new ArrayList<ArrayList<BigDecimal>>();
+							indicadorValores = PrestamoMetasDAO.getMetaValores(indicador.getId(), anioInicial, anioFinal);
+							tempIndicador = getIndicadores(indicadorValores, anioInicial, anioFinal, tempIndicador);
+							lstPrestamo.add(tempIndicador);
+		    	    	}
 					}
-					break;
 				}
 			}
 		}

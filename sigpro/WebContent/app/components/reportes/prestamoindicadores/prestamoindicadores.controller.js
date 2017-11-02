@@ -18,7 +18,7 @@ app.controller('prestamoindicadoresController',['$scope','$rootScope','$http','$
 	mi.limiteAnios = 5;
 	mi.tamanioMinimoColumna = 125;
 	mi.tamanioMinimoColumnaMillones = 60;
-	mi.grupoMostrado= {"planificado":true,"real":true};
+	mi.grupoMostrado= {"planificado":false,"real":true};
 	mi.estiloAlineacion="text-align: center;";
 	mi.porcentajeCeldaValor = "width: 45%; float: left;";
 	mi.porcentajeCeldaPipe = "width: 10%; float: left;";
@@ -132,7 +132,7 @@ app.controller('prestamoindicadoresController',['$scope','$rootScope','$http','$
 			if(selected!== undefined){
 				mi.prestamoNombre = selected.originalObject.proyectoPrograma;
 				mi.prestamoId = selected.originalObject.id;
-				mi.getPeps(mi.prestamoId);
+				mi.validar(1);
 			}
 			else{
 				mi.prestamoNombre="";
@@ -140,34 +140,6 @@ app.controller('prestamoindicadoresController',['$scope','$rootScope','$http','$
 			}
 		}
 		
-		mi.blurPep=function(){
-			if(document.getElementById("pep_value").defaultValue!=mi.pepNombre){
-				$scope.$broadcast('angucomplete-alt:clearInput','pep');
-			}
-		}
-		
-		mi.cambioPep=function(selected){
-			if(selected!== undefined){
-				mi.pepNombre = selected.originalObject.nombre;
-				mi.pepId = selected.originalObject.id;
-				mi.validar(1);
-			}
-			else{
-				mi.pepNombre="";
-				mi.pepId="";
-			}
-		}
-		
-		mi.getPeps = function(prestamoId){
-			$http.post('/SProyecto',{accion: 'getProyectos', prestamoid: prestamoId}).success(
-				function(response) {
-					mi.peps = [];
-					if (response.success){
-						mi.peps = response.entidades;
-					}
-			});	
-		}
-
 		mi.nombreUnidadMedida = function(id){
 			if (id != null && id > 0){
 				for (i=0; i<mi.unidadesMedida.length; i++){
@@ -226,7 +198,7 @@ app.controller('prestamoindicadoresController',['$scope','$rootScope','$http','$
 			 }
 			$http.post('/SPrestamoIndicadores', { 
 				accion: 'exportarPdf',
-				proyectoid: mi.pepId,
+				proyectoid: mi.prestamoId,
 				fechaInicio: mi.fechaInicio,
 				fechaFin: mi.fechaFin,
 				agrupacion: mi.agrupacionActual,
@@ -246,7 +218,7 @@ app.controller('prestamoindicadoresController',['$scope','$rootScope','$http','$
 		};
 		
 		mi.validar = function(noElemento){
-			if(mi.pepId != null && mi.pepId > 0)
+			if(mi.prestamoId != null && mi.prestamoId > 0)
 			{
 				if(mi.fechaInicio != null && mi.fechaInicio.toString().length == 4 && 
 						mi.fechaFin != null && mi.fechaFin.toString().length == 4)
@@ -318,7 +290,7 @@ app.controller('prestamoindicadoresController',['$scope','$rootScope','$http','$
 		mi.cargarTabla = function() {			
 			var datos = {
 				accion : 'getIndicadores',
-				idPrestamo: mi.pepId,
+				idPrestamo: mi.prestamoId,
 				anioInicial: mi.fechaInicio,
 				anioFinal: mi.fechaFin
 			};
@@ -429,7 +401,7 @@ app.controller('prestamoindicadoresController',['$scope','$rootScope','$http','$
 		}
 		
 		mi.cambiarAgrupacion = function(agrupacion){
-			if(mi.pepId > 0)
+			if(mi.prestamoId > 0)
 			{
 				if(mi.fechaInicio != null && mi.fechaFin != null)
 				{
@@ -456,7 +428,7 @@ app.controller('prestamoindicadoresController',['$scope','$rootScope','$http','$
 		}
 		
 		mi.generar = function(agrupacion){
-			if(mi.pepId > 0)
+			if(mi.prestamoId > 0)
 			{
 				if(mi.fechaInicio != null && mi.fechaFin != null)
 				{
@@ -576,7 +548,7 @@ app.controller('prestamoindicadoresController',['$scope','$rootScope','$http','$
 			 }
 			 $http.post('/SPrestamoIndicadores', { 
 				 accion: 'exportarExcel', 
-				 proyectoid: mi.pepId,
+				 proyectoid: mi.prestamoId,
 				 fechaInicio: mi.fechaInicio,
 				 fechaFin: mi.fechaFin,
 				 agrupacion: mi.agrupacionActual,

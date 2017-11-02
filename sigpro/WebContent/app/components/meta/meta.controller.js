@@ -4,7 +4,10 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 		function($scope,$rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,$mdDialog, $uibModal, $dialogoConfirmacion) {
 			var mi=this;
 			
-			$window.document.title = $utilidades.sistema_nombre+' - Metas';
+			mi.titulo= "Meta";
+			mi.tituloP= "Metas";
+			
+			$window.document.title = $utilidades.sistema_nombre+' - '+mi.titulo;
 			i18nService.setCurrentLang('es');
 			mi.mostrarcargando=true;
 			mi.metas = [];
@@ -21,7 +24,6 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 			mi.nombreTipoPcp = "";
 			mi.objeto = null;
 			
-			mi.anios=[];
 			mi.anio = null;			
 			mi.planificado = null;
 			mi.real = null;
@@ -31,6 +33,7 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 			mi.altformatofecha = ['d!/M!/yyyy'];
 						
 			mi.inicializarControlador = function(){
+				mi.anios=[];
 				mi.obtenerDatosPadre();
 				mi.fechaInicio = mi.objeto.fechaInicio;
 				mi.fechaFin = mi.objeto.fechaFin;
@@ -72,6 +75,8 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 					$scope.$parent.prestamoc.child_metas = $scope.metac;
 					objeto.fechaInicio=objeto.fechaDecreto!=null ? objeto.fechaDecreto : new Date();
 					objeto.fechaFin=new Date();
+					mi.titulo = "Indicador"
+					mi.tituloP = "Indicadores"
 				}else if($scope.$parent.controller){
 					objeto = $scope.$parent.controller.proyecto;
 					mi.objeto_tipo = 0;
@@ -558,7 +563,7 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 			mi.borrarMeta = function(meta) {
 				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
 							, "Confirmación de Borrado"
-							, '¿Desea borrar la Meta "'+ (meta.nombre != null ? meta.nombre : '') +'"?'
+							, '¿Desea borrar '+mi.titulo+' "'+ (meta.nombre != null ? meta.nombre : '') +'"?'
 							, "Borrar"
 							, "Cancelar")
 					.result.then(function(data) {
@@ -589,6 +594,9 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 					backdrop : 'static',
 					size : 'md',
 					resolve: {
+						titulo: function(){
+							return mi.titulo;
+						},
 					    avance: function(){
 					    	return mi.meta.avance;
 					    },
@@ -620,12 +628,13 @@ app.controller('metaController',['$scope','$rootScope','$http','$interval','i18n
 
 app.controller('modalMetaAvances', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log','dialogoConfirmacion', 'avance', 'nombreMeta', 'datoTipo', 'anio', 'fechaInicio',
+	'$timeout', '$log','dialogoConfirmacion', 'titulo', 'avance', 'nombreMeta', 'datoTipo', 'anio', 'fechaInicio',
 	function ($uibModalInstance, $scope, $http, $interval,
-		i18nService, $utilidades, $timeout, $log,$dialogoConfirmacion, avance, nombreMeta, datoTipo, anio, fechaInicio) {
+		i18nService, $utilidades, $timeout, $log,$dialogoConfirmacion, titulo, avance, nombreMeta, datoTipo, anio, fechaInicio) {
 	
 		var mi = this;
 		
+		mi.titulo = titulo;
 		mi.avance = avance;
 		mi.nombreMeta = nombreMeta;
 		mi.datoTipo = datoTipo;

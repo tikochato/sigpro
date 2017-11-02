@@ -10,7 +10,7 @@
 	</style>
 <div class="modal-body" id="modal-body" style="height: 90vh;">
 <div class="row">
-  	<div class="col-sm-12 page-header" style="font-weight: bold;">Avances de Meta</div>
+  	<div class="col-sm-12 page-header" style="font-weight: bold;">Avances de {{modalAvances.titulo}}</div>
   	<div class="col-sm-12" style="font-weight: bold;">{{modalAvances.nombreMeta}}</div>
   </div>
   <div>

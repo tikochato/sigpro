@@ -148,7 +148,7 @@
 		<div style="width: 100%; height: 100%">
 	    		<div class="row">
 					<div class="panel panel-default">
-						<div class="panel-heading"><h3>Avance de Metas</h3></div>
+						<div class="panel-heading"><h3>Avance de Indicadores</h3></div>
 					</div>
 				</div>
 	    	<br>
@@ -158,15 +158,6 @@
 						  local-data="indicadoresc.lprestamos" search-fields="proyectoPrograma" title-field="proyectoPrograma" field-required="true" field-label="* Préstamo"
 						  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
 						  initial-value="indicadoresc.prestamoNombre" focus-out="indicadoresc.blurPrestamo()" input-name="prestamo"></div>
-					<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
-				</div>
-	    	</div>
-	    	<div class="row">
-	    		<div class="form-group col-sm-6" align="left">
-					<div id="pep" angucomplete-alt placeholder="" pause="100" selected-object="indicadoresc.cambioPep"
-						  local-data="indicadoresc.peps" search-fields="nombre" title-field="nombre" field-required="true" field-label="* {{etiquetas.proyecto}}"
-						  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
-						  initial-value="indicadoresc.pepNombre" focus-out="indicadoresc.blurPep()" input-name="pep" disable-input="indicadoresc.prestamoId==null"></div>
 					<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 				</div>
 	    	</div>
@@ -203,7 +194,7 @@
 								<label class="btn btn-default" ng-model="indicadoresc.agrupacionActual" uib-btn-radio="6" ng-click="indicadoresc.cambiarAgrupacion(6)" uib-tooltip="Año" role="button" tabindex="6" aria-invalid="false">
 								<span>A</span></label>
 							</div>
-							<div class=" btn-group" style="padding-left: 20px;">
+							<div class=" btn-group" style="padding-left: 20px;" ng-hide="true">
 								<label class="btn btn-default" ng-model="indicadoresc.grupoMostrado.planificado"  uib-btn-checkbox ng-click="indicadoresc.verificaSeleccionTipo(1)" uib-tooltip="Planificado" role="button" tabindex="7" aria-invalid="false">
 								<span>P</span></label>
 								<label class="btn btn-default" ng-model="indicadoresc.grupoMostrado.real"  uib-btn-checkbox ng-click="indicadoresc.verificaSeleccionTipo(2)" uib-tooltip="Real" role="button" tabindex="8" aria-invalid="false">
