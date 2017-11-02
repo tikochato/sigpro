@@ -28,7 +28,6 @@ import dao.DesembolsoTipoDAO;
 import dao.ProyectoDAO;
 import dao.TipoMonedaDAO;
 import pojo.Desembolso;
-import pojo.Proyecto;
 import utilities.Utils;
 
 
