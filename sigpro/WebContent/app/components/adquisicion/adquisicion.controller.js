@@ -279,6 +279,12 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 				resolve: {
 				    pagos: function(){
 				    	return mi.adquisicion.pagos;
+				    },
+				    totalPagos: function(){
+				    	return mi.totalPagos;
+				    },
+				    montoContrato: function(){
+				    	return mi.adquisicion.montoContrato;
 				    }
 				  }
 			});
@@ -337,9 +343,9 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 
 app.controller('modalPlanadquisicionPagos', [ '$uibModalInstance',
 	'$scope', '$http', '$interval',  'Utilidades',
-	'$timeout', '$log','dialogoConfirmacion', 'pagos', 
+	'$timeout', '$log','dialogoConfirmacion', 'pagos', 'totalPagos','montoContrato',
 	function ($uibModalInstance, $scope, $http, $interval,
-		$utilidades, $timeout, $log,$dialogoConfirmacion, pagos, totalPagos) {
+		$utilidades, $timeout, $log,$dialogoConfirmacion, pagos, totalPagos, montoContrato) {
 	
 		var mi = this;
 		
@@ -348,7 +354,8 @@ app.controller('modalPlanadquisicionPagos', [ '$uibModalInstance',
 		mi.formatofecha = 'dd/MM/yyyy';
 		mi.altformatofecha = ['d!/M!/yyyy'];
 		mi.totalPagos=0;
-				
+		mi.montoContrato = montoContrato;
+		
 		mi.abrirPopupFecha = function(index, tipo) {
 			if(tipo==0){
 				mi.pagos[index].isOpen = true;
@@ -400,7 +407,13 @@ app.controller('modalPlanadquisicionPagos', [ '$uibModalInstance',
 		     var total = 0;
 		     if (array) {
 		         mi.totalPagos = array.reduce(function(total,item) {
-		             return total + item.pago;
+		        	 if(total+item.pago <= mi.montoContrato)
+		        		 return total + item.pago;
+		        	 else{
+		        		 $utilidades.mensaje('warning','Los pagos sobrepasan el Monto del Contrato');
+		        		 $scope.pagos.splice($scope.pagos.length-1, 1);
+		        		 return total;
+		        	 }
 		         },0);
 		     } 
 		 }, true);
