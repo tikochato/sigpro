@@ -18,6 +18,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	mi.esNuevoDocumento = true;
 	mi.campos = {};
 	mi.esColapsado = false;
+	mi.esNuevoDocumento = true;
 	mi.mostrarcargando= (mi.esTreeview) ? false : true;
 	mi.paginaActual = 1;
 	mi.cooperantes = [];
@@ -434,6 +435,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 													'Error al '+(mi.esNuevo ? 'crear' : 'guardar')+' el préstamo');
 										else{
 											$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+											
+											mi.esNuevoDocumento = false;
 										}
 										mi.botones=true;
 										mi.esNuevo=false;
@@ -527,6 +530,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 
 	mi.editar = function() {
 		if(mi.prestamo!=null && mi.prestamo.id!=null){
+			mi.esNuevoDocumento = false;
 			mi.esColapsado = true;
 			mi.esNuevo = false;
 			mi.esNuevoDocumento = false;
@@ -563,62 +567,12 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			})
 			
 			mi.cargarMatriz();
+			
+			mi.getDocumentosAdjuntos( mi.prestamo.id,-1);
 		}
 		else
 			$utilidades.mensaje('warning','Debe seleccionar el préstamo que desea editar');
 	}
-
-	mi.adjuntarDocumentos = function(){
-		$documentoAdjunto.getModalDocumento($scope, 1, mi.prestamo.id)
-		.result.then(function(data) {
-			if (data != ""){
-				mi.rowCollection = [];
-				mi.rowCollection = data;
-		        mi.displayedCollection = [].concat(mi.rowCollection);
-			}
-		}, function(){
-			
-		});
-	}
-
-	mi.getDocumentosAdjuntos = function(objetoId, tipoObjetoId){
-		mi.rowCollection = [];
-		var formatData = new FormData();
-		formatData.append("accion","getDocumentos");
-		formatData.append("idObjeto", objetoId);
-		formatData.append("idTipoObjeto", tipoObjetoId);
-		formatData.append("t", moment().unix());
-		
-		
-		$http.post('/SDocumentosAdjuntos', formatData, {
-			headers: {'Content-Type': undefined},
-			transformRequest: angular.identity,
-		}).then(function(response) {
-			if (response.data.success) {
-				 mi.rowCollection = response.data.documentos;
-		         mi.displayedCollection = [].concat(mi.rowCollection);
-			}
-		});
-	}
-	
-	mi.descargarDocumento= function(row){
-		var url = "/SDocumentosAdjuntos?accion=getDescarga&id="+row.id;
-		window.location.href = url;
-	}
-	
-	mi.eliminarDocumento= function(row){
-		$http.post('/SDocumentosAdjuntos?accion=eliminarDocumento&id='+row.id)
-		.then(function successCAllback(response){
-			if (response.data.success){
-				var indice = mi.rowCollection.indexOf(row);
-				if (indice !== -1) {
-			       mi.rowCollection.splice(indice, 1);		       
-			    }
-				mi.rowCollection = [];
-				mi.getDocumentosAdjuntos(1, mi.prestamo.id);
-			}
-		});
-	};
 
 	mi.irATabla = function() {
 		mi.esColapsado=false;
@@ -1218,7 +1172,57 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		     }
 		 },true);
 		
+		mi.adjuntarDocumentos = function(){
+			$documentoAdjunto.getModalDocumento($scope, mi.prestamo.id,-1)
+			.result.then(function(data) {
+				if (data != ""){
+					mi.rowCollection = [];
+					mi.rowCollection = data;
+			        mi.displayedCollection = [].concat(mi.rowCollection);
+				}
+			}, function(){
+				
+			});
+		}
+
+		mi.getDocumentosAdjuntos = function(objetoId, tipoObjetoId){
+			mi.rowCollection = [];
+			var formatData = new FormData();
+			formatData.append("accion","getDocumentos");
+			formatData.append("idObjeto", objetoId);
+			formatData.append("idTipoObjeto", tipoObjetoId);
+			formatData.append("t", moment().unix());
+			
+			
+			$http.post('/SDocumentosAdjuntos', formatData, {
+				headers: {'Content-Type': undefined},
+				transformRequest: angular.identity,
+			}).then(function(response) {
+				if (response.data.success) {
+					 mi.rowCollection = response.data.documentos;
+			         mi.displayedCollection = [].concat(mi.rowCollection);
+				}
+			});
+		}
 		
+		mi.descargarDocumento= function(row){
+			var url = "/SDocumentosAdjuntos?accion=getDescarga&id="+row.id;
+			window.location.href = url;
+		}
+		
+		mi.eliminarDocumento= function(row){
+			$http.post('/SDocumentosAdjuntos?accion=eliminarDocumento&id='+row.id)
+			.then(function successCAllback(response){
+				if (response.data.success){
+					var indice = mi.rowCollection.indexOf(row);
+					if (indice !== -1) {
+				       mi.rowCollection.splice(indice, 1);		       
+				    }
+					mi.rowCollection = [];
+					mi.getDocumentosAdjuntos( mi.prestamo.id,-1);
+				}
+			});
+		};
 } ]);
 
 app.controller('buscarPorPrestamo', [ '$uibModalInstance',

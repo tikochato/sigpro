@@ -13,13 +13,18 @@
   	<div class="col-sm-12 page-header" style="font-weight: bold;">Pagos de la Adquisición</div>
   </div>
   <div>
+  	<div class="col-sm-5">
+		<div class="form-group">
+			<input type="text" class="inputText input-money" ng-model="modalPagos.montoContrato" ui-number-mask="2" 
+			ng-value="modalPagos.montoContrato" onblur="this.setAttribute('value', this.value);" ng-readonly="true"/>
+				<label class="floating-label" >Monto del contrato</label>
+		</div>
+	</div>
   	<div class="operation_buttons" align="right">
-		<br/>
-		<div class="btn-group btn-group-sm">
-	       
-	       		<label class="btn btn-default" ng-click="modalPagos.nuevoPago()" uib-tooltip="Nuevo Pago" tooltip-placement="left">
-				<span class="glyphicon glyphicon-plus"></span></label>
-	        
+	<br/>
+		<div class="btn-group btn-group-sm">	       
+      		<label class="btn btn-default" ng-click="modalPagos.nuevoPago()" uib-tooltip="Nuevo Pago" tooltip-placement="left">
+			<span class="glyphicon glyphicon-plus"></span></label>
 	   	</div>				
 	</div>
   </div>
