@@ -1,5 +1,5 @@
 package pojo;
-// Generated Nov 2, 2017 8:47:48 AM by Hibernate Tools 5.2.3.Final
+// Generated Nov 2, 2017 9:36:21 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -28,7 +28,7 @@ public class PlanAdquisicion implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 815042937245476358L;
+	private static final long serialVersionUID = 5464981326344776264L;
 	private Integer id;
 	private CategoriaAdquisicion categoriaAdquisicion;
 	private TipoAdquisicion tipoAdquisicion;
@@ -63,13 +63,14 @@ public class PlanAdquisicion implements java.io.Serializable {
 	}
 
 	public PlanAdquisicion(TipoAdquisicion tipoAdquisicion, int objetoId, int objetoTipo, String usuarioCreo,
-			Date fechaCreacion, int estado) {
+			Date fechaCreacion, int estado, BigDecimal montoContrato) {
 		this.tipoAdquisicion = tipoAdquisicion;
 		this.objetoId = objetoId;
 		this.objetoTipo = objetoTipo;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
+		this.montoContrato = montoContrato;
 	}
 
 	public PlanAdquisicion(CategoriaAdquisicion categoriaAdquisicion, TipoAdquisicion tipoAdquisicion,
@@ -361,7 +362,7 @@ public class PlanAdquisicion implements java.io.Serializable {
 		this.numeroContrato = numeroContrato;
 	}
 
-	@Column(name = "monto_contrato", precision = 15)
+	@Column(name = "monto_contrato", nullable = false, precision = 15)
 	public BigDecimal getMontoContrato() {
 		return this.montoContrato;
 	}
