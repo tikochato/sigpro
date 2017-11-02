@@ -422,6 +422,30 @@
 							</div>
 						</div>
 					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group" >
+									<textarea class="inputText" rows="4"  
+										ng-model="prestamoc.prestamo.objetivo"
+										class="inputText" id="objetivo"
+										ng-value="prestamoc.prestamo.objetivo" onblur="this.setAttribute('value', this.value);">
+									</textarea>
+									<label for="objetivo" class="floating-label">Objetivo del Prŕestamo</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group" >
+									<textarea class="inputText" rows="4"  
+									    ng-model="prestamoc.prestamo.objetivoEspecifico"
+										class="inputText" 
+										ng-value="prestamoc.prestamo.objetivoEspecifico" onblur="this.setAttribute('value', this.value);">
+									</textarea>
+									<label for="objetivo" class="floating-label">Objetivos específicos del Préstamo</label>
+							</div>
+							</div>
+					</div>
 					<br>
 					<div align="center">
 						<h5>Tipo de Préstamo</h5>

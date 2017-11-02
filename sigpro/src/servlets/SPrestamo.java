@@ -136,6 +136,8 @@ public class SPrestamo extends HttpServlet {
 		String usuarioActualizo;
 		String fechaCreacion;
 		String fechaActualizacion;
+		String objetivo;
+		String objetivoEspecifico;
 		
 	}
 	
@@ -281,6 +283,8 @@ public class SPrestamo extends HttpServlet {
 						temp.usuarioActualizo = prestamo.getUsuarioActualizo();
 						temp.fechaCreacion = Utils.formatDateHour(prestamo.getFechaCreacion());
 						temp.fechaActualizacion = Utils.formatDateHour(prestamo.getFechaActualizacion());
+						temp.objetivo = prestamo.getObjetivo();
+						temp.objetivoEspecifico = prestamo.getObjetivoEspecifico();
 						
 						lstprestamo.add(temp);
 						
@@ -376,6 +380,8 @@ public class SPrestamo extends HttpServlet {
 			BigDecimal presupuestoPagadoInv = Utils.String2BigDecimal(map.get("presupuestoPagadoInversion"), null);
 			BigDecimal saldoCuentas = Utils.String2BigDecimal(map.get("saldoCuentas"), null);
 			BigDecimal desembolsadoReal = Utils.String2BigDecimal(map.get("desembolsoReal"), null);
+			String objetivo = map.get("objetivo");
+			String objetivoEspecifico = map.get("objetivoEspecifico");
 			
 			
 			AutorizacionTipo autorizacionTipo = null;
@@ -416,7 +422,7 @@ public class SPrestamo extends HttpServlet {
 						fechaSuscripcion, fechaElegibilidadUe, fechaCierreOrigianlUe, fechaCierreActualUe, mesesProrrogaUe,
 						null, montoAsignadoUe, desembolsoAFechaUe, montoPorDesembolsarUe, fechaVigencia, 
 						montoContratadoUsd, montoContratadoQtz, desembolsoAFechaUsd, montoPorDesembolsarUsd, montoAsignadoUeUsd, 
-						montoAsignadoUeQtz, desembolsoAFechaUeUsd, montoPorDesembolsarUeUsd, null,null,null,null);
+						montoAsignadoUeQtz, desembolsoAFechaUeUsd, montoPorDesembolsarUeUsd,objetivo,objetivoEspecifico, null,null,null,null);
 				result = PrestamoDAO.guardarPrestamo(prestamo);
 				
 			}else{
@@ -485,6 +491,8 @@ public class SPrestamo extends HttpServlet {
 				prestamo.setDesembolsoAFechaUeUsd(desembolsoAFechaUeUsd);
 				prestamo.setMontoPorDesembolsarUeUsd(montoPorDesembolsarUeUsd);
 				prestamo.setCooperante(cooperanteUe);
+				prestamo.setObjetivo(objetivo);
+				prestamo.setObjetivoEspecifico(objetivoEspecifico);
 				result = PrestamoDAO.guardarPrestamo(prestamo);
 				
 			}
@@ -605,6 +613,8 @@ public class SPrestamo extends HttpServlet {
 				temp.usuarioActualizo = prestamo.getUsuarioActualizo();
 				temp.fechaCreacion = Utils.formatDateHour(prestamo.getFechaCreacion());
 				temp.fechaActualizacion = Utils.formatDateHour(prestamo.getFechaActualizacion());
+				temp.objetivo = prestamo.getObjetivo();
+				temp.objetivoEspecifico = prestamo.getObjetivoEspecifico();
 				lstprestamo.add(temp);
 			}
 			
@@ -894,6 +904,8 @@ public class SPrestamo extends HttpServlet {
 				temp.usuarioActualizo = prestamo.getUsuarioActualizo();
 				temp.fechaCreacion = Utils.formatDateHour(prestamo.getFechaCreacion());
 				temp.fechaActualizacion = Utils.formatDateHour(prestamo.getFechaActualizacion());
+				temp.objetivo = prestamo.getObjetivo();
+				temp.objetivoEspecifico = prestamo.getObjetivoEspecifico();
 				
 				response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 		        response_text = String.join("", "\"prestamo\":",response_text);
