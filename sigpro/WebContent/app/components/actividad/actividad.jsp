@@ -257,12 +257,6 @@
 						</div>
 						
 						
-						<div class="form-group">
-						   <input type="text" name="inombre"  class="inputText" id="idescripcion" 
-						     ng-model="actividadc.actividad.descripcion" ng-value="actividadc.actividad.descripcion"   
-						     onblur="this.setAttribute('value', this.value);" >
-						   <label class="floating-label">Descripción</label>
-						</div>
 						<div ng-repeat="campo in actividadc.camposdinamicos">
 							<div ng-switch="campo.tipo">
 								<div ng-switch-when="texto" class="form-group" >
@@ -303,6 +297,13 @@
 									<label class="floating-label">{{ campo.label }}</label>
 								</div>
 							</div>
+						</div>
+						
+						<div class="form-group">
+						   <textarea class="inputText" rows="4"
+						   ng-model="actividadc.actividad.descripcion" ng-value="actividadc.actividad.descripcion"   
+						   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+						   <label class="floating-label">Descripción</label>
 						</div>
 				<br/>
 				

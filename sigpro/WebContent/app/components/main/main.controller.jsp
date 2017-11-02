@@ -31,6 +31,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/prestamometas',{
             	template: '<div load-on-demand="\'prestamometasController\'" class="all_page"></div>'
             })
+            .when('/prestamoindicadores',{
+            	template: '<div load-on-demand="\'prestamoindicadoresController\'" class="all_page"></div>'
+            })
             .when('/entidad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloEntidad\'" class="all_page"></div>'
             })
@@ -267,6 +270,10 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'prestamometasController',
 	    	   script: '/app/components/reportes/prestamometas/prestamometas.controller.js',
 	    	   template: '/app/components/reportes/prestamometas/prestamometas.jsp'
+	       }, {
+	    	   name: 'prestamoindicadoresController',
+	    	   script: '/app/components/reportes/prestamoindicadores/prestamoindicadores.controller.js',
+	    	   template: '/app/components/reportes/prestamoindicadores/prestamoindicadores.jsp'
 	       }, {
 	    	   name: 'moduloEntidad',
 	    	   script: '/app/components/entidades/entidades.controller.js',

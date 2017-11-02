@@ -206,13 +206,6 @@
 							<label for="campo3" class="floating-label">Coordenadas</label>
 						</div>
 						
-						<div class="form-group">
-						   <input type="text" name="idescrip"  class="inputText" id="idescrip" 
-						     ng-model="componentec.componente.descripcion" ng-value="componentec.componente.descripcion"   
-						     onblur="this.setAttribute('value', this.value);" ng-required="false" >
-						   <label class="floating-label">Descripción</label>
-						</div>
-						
 						<div class="form-group" >
 					       <input type="text" class="inputText" ng-model="componentec.componente.costo" ng-value="componentec.componente.costo" ui-number-mask="2"
 					       ng-required="componentec.componente.acumulacionCostoId > 0" onblur="this.setAttribute('value', this.value);" style="text-align: left" 
@@ -341,6 +334,14 @@
 								</div>
 							</div>
 						</div>
+						
+						<div class="form-group">
+						   <textarea class="inputText" rows="4"
+						   ng-model="componentec.componente.descripcion" ng-value="componentec.componente.descripcion"   
+						   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+						   <label class="floating-label">Descripción</label>
+						</div>
+						
 						<div class="panel panel-default">
 							<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 							<div class="panel-body">

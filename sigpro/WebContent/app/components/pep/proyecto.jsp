@@ -422,10 +422,10 @@
 				<uib-tab index="controller.ordenTab+1" heading="Adicionales" ng-if="controller.mostrarPrestamo" >
 					<div class="row" style="margin-top: 15px">
 						<div class="form-group">
-							<input type="text" ng-model="controller.proyecto.descripcion"
-								class="inputText" id="campo2" 
-								ng-value="controller.proyecto.descripcion" onblur="this.setAttribute('value', this.value);">
-							<label for="campo2" class="floating-label">Descripción</label>
+						   <textarea class="inputText" rows="4"
+						   ng-model="controller.proyecto.descripcion" ng-value="controller.proyecto.descripcion"   
+						   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+						   <label class="floating-label">Descripción</label>
 						</div>
 					</div>
 		

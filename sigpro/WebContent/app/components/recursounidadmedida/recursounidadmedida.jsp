@@ -93,8 +93,10 @@
     						<label class="floating-label">Símbolo</label>
 						</div>
 						<div class="form-group">
-    						<input type="text" class="inputText" id="descripcion" onblur="this.setAttribute('value', this.value);" ng-model="recursounidadc.medida.descripcion" ng-value="recursounidadc.medida.descripcion">
-    						<label class="floating-label">Descripción</label>
+						   <textarea class="inputText" rows="4"
+						   ng-model="recursounidadc.medida.descripcion" ng-value="recursounidadc.medida.descripcion"   
+						   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+						   <label class="floating-label">Descripción</label>
 						</div>
 						<br/>
 						<div class="panel panel-default">

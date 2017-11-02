@@ -124,10 +124,11 @@
 					        
 						</div>
 						<div class="form-group">
-    						<input type="text" class="inputText" ng-model="hitoc.hito.descripcion" 
-    						ng-value="hitoc.hito.descripcion" onblur="this.setAttribute('value', this.value);">
-    						<label class="floating-label">Descripción</label>
-						</div>
+							   <textarea class="inputText" rows="4"
+							   ng-model="hitoc.hito.descripcion" ng-value="hitoc.hito.descripcion"   
+							   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+							   <label class="floating-label">Descripción</label>
+							</div>
 						<div class="form-group"> 
 			            	<input type="text" class="inputText"  ng-model="hitoc.hitotipoNombre" ng-readonly="true" ng-required="true"
 			            	ng-click="hitoc.buscarHitoTipo()"

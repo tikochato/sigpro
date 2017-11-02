@@ -258,16 +258,20 @@ nav.navbar{
 
 input:focus ~ .floating-label,
 input:not([value='']) ~ .floating-label,
-input:focus:not([value]) ~ .floating-label{
+input:focus:not([value]) ~ .floating-label,
+textarea:focus ~ .floating-label,
+textarea:not([value='']) ~ .floating-label,
+textarea:focus:not([value]) ~ .floating-label{
   top: -2px;
   bottom: 10px;
-  font-size: 11px;
+  font-size: 13px;
   opacity: 1;
   border: none;
   outline-width: 0;
 }
 
-input:not([value]) ~ .floating-label{
+input:not([value]) ~ .floating-label,
+textarea:not([value]) ~ .floating-label{
   font-size: 14px;
   position: absolute;
   pointer-events: none;
@@ -278,12 +282,19 @@ input:not([value]) ~ .floating-label{
   font-weight: bold;
 }
 
-input:focus ~ .floating-label{
+input:focus ~ .floating-label,
+textarea:focus ~ .floating-label{
   color: rgb(63, 81, 181);
 }
 
-input:focus{
-	outline-width: 0;
+textarea:focus, input:focus, .uneditable-input:focus {  
+  outline: 0 none !important;
+}
+
+textarea{	
+  box-shadow: 0 0px 0px inset, 0 0 0px !important;    
+  height: auto !important;
+  margin-top: 8px !important;
 }
 
 select ~ .floating-label{
@@ -327,6 +338,7 @@ input[type='checkbox'] ~ .floating-label {
   background: transparent;
   z-index: 2;
   position: relative;
+  margin-top: 3px;
 }
 		
 .form-group {

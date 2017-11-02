@@ -175,12 +175,6 @@
 				            	<span class="label-icon" ng-click="subproducto.open(subproducto.subproducto.latitud, subproducto.subproducto.longitud); " tabindex="-1"><i class="glyphicon glyphicon-map-marker"></i></span>
 				            	<label class="floating-label">Coordenadas</label>
 					</div>
-
-					<div class="form-group" >
-						<input type="text" class="inputText" ng-model="subproducto.subproducto.descripcion" 
-							ng-value="subproducto.subproducto.descripcion" onblur="this.setAttribute('value', this.value);"/>
-						<label for="campo2" class="floating-label">Descripción</label>
-					</div>
 					
 					<div class="form-group" >
 			            <input type="text" class="inputText" ng-model="subproducto.tipoNombre" ng-readonly="true" ng-required="true" 
@@ -308,6 +302,12 @@
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 							</div>
+					</div>
+					<div class="form-group">
+					   <textarea class="inputText" rows="4"
+					   ng-model="subproducto.subproducto.descripcion" ng-value="subproducto.subproducto.descripcion"   
+					   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+					   <label class="floating-label">Descripción</label>
 					</div>
 				<div class="panel panel-default">
 					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
