@@ -224,9 +224,11 @@ public class SDesembolso extends HttpServlet {
 				stdesembolsos.add(temp);
 			}
 			
-			Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
-			Integer tipoMonedaId = proyecto.getPrestamo().getTipoMoneda().getId();
-			String tipoMonedaNombre = proyecto.getPrestamo().getTipoMoneda().getSimbolo();
+			Integer tipoMonedaId;
+			String tipoMonedaNombre;
+			tipoMonedaId = 1;
+			tipoMonedaNombre = "GTQ";
+			
 
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stdesembolsos);
 	        response_text = String.join("", "\"desembolsos\":",response_text);
