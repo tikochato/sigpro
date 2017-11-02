@@ -184,18 +184,6 @@ app.controller('gestionAdquisicionesController',['$scope', '$rootScope', '$http'
 		mi.mostrarCargando = false;
 	}
 	
-	mi.sumarPadre = function(total, objetoIdPadre, objetoTipoPadre, lstTotales){
-		var cont = 0;
-		for(y in mi.data){
-			if(mi.data[y].objetoId == objetoIdPadre && mi.data[y].objetoTipo == objetoTipoPadre){
-				lstTotales[cont].anio[0].valor.planificado += total;
-				return;
-			}else{
-				cont++;
-			}
-		}
-	}
-	
 	mi.cambiarAgrupacion = function(agrupacion){
 		if(mi.pepId > 0)
 		{
@@ -305,7 +293,6 @@ app.controller('gestionAdquisicionesController',['$scope', '$rootScope', '$http'
 				 totalFinalPlanificado += totalAnualPlanificado;
 				 tot = {"valor": {"planificado": totalAnualPlanificado}};
 				 fila.push(tot);
-				 mi.sumarPadre(totalAnualPlanificado, mi.data[x].objetoIdPadre, mi.data[x].objetoTipoPadre, mi.totales);
 			 }
 			 if(mi.data[x].objetoTipo != null){
 				 if(tot == null){
@@ -431,11 +418,9 @@ app.controller('gestionAdquisicionesController',['$scope', '$rootScope', '$http'
 		}
 		
 		for(x in mi.data){
-			if(mi.data[x].objetoTipo == 1){
-				for(y in mi.data[x].anioTotalPlan){
-					if(mi.data[x].anioTotalPlan[y].anio == mi.sumTotalesAnuales[y].anio){
-						 mi.sumTotalesAnuales[y].total += mi.data[x].anioTotalPlan[y].total[0].planificado; 
-					}
+			for(y in mi.data[x].anioTotalGestion){
+				if(mi.data[x].anioTotalGestion[y].anio == mi.sumTotalesAnuales[y].anio){
+					 mi.sumTotalesAnuales[y].total += mi.data[x].anioTotalGestion[y].total[0].planificado; 
 				}
 			}
 		}
@@ -444,14 +429,15 @@ app.controller('gestionAdquisicionesController',['$scope', '$rootScope', '$http'
 	mi.calcularTotalGeneral = function(){
 		mi.totalGeneral = 0;
 		for(x in mi.data){
-			if(mi.data[x].objetoTipo == 1){
-				mi.totalGeneral += mi.data[x].total;
-			}
+			mi.totalGeneral += mi.data[x].total;
 		}
 	}
 	
 	mi.calcularTotalCantidad = function(){
 		mi.totalCantidad = 0;
+		for(x in mi.data){
+			mi.totalCantidad += mi.data[x].cantidadAdquisiciones;	
+		}
 	}
 	
 	mi.renderizaTabla = function(){
@@ -549,8 +535,8 @@ app.controller('gestionAdquisicionesController',['$scope', '$rootScope', '$http'
 		mes = Math.floor((indice)/mi.aniosTotal.length);
 		anio = indice - (mes*mi.aniosTotal.length);
 		var valor;
-		if(item.anioTotalPlan != null){
-			valor = item.anioTotalPlan[anio].total[0];
+		if(item.anioTotalGestion != null){
+			valor = item.anioTotalGestion[anio].total[0];
 		}
 		
 		if(valor != undefined && valor.planificado == 0){
@@ -637,5 +623,25 @@ app.controller('gestionAdquisicionesController',['$scope', '$rootScope', '$http'
         $scope.$digest();
       });
     $scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
-
+    
+    mi.exportarExcel = function(){
+		$http.post('/SGestionAdquisiciones', { 
+			accion: 'exportarExcel', 
+			agrupacion: mi.agrupacionActual,
+			fechaInicio: mi.fechaInicio,
+			fechaFin: mi.fechaFin,
+			tipoVisualizacion: 0,
+			idPrestamo: mi.pepId,
+			t:moment().unix()
+		}).then(
+			function successCallback(response) {
+				var anchor = angular.element('<a/>');
+				anchor.attr({
+					href: 'data:application/ms-excel;base64,' + response.data,
+					target: '_blank',
+					download: 'GestionDeAdquisiciones.xls'
+				})[0].click();
+			}.bind(this), function errorCallback(response){ }
+		);
+	};
 }]);

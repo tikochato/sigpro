@@ -329,8 +329,10 @@
 											<span ng-show="gestionadqui.grupoMostrado.planificado" class="colorPlanificado">{{gestionadqui.getTotalPlanificado(item,$index).planificado | formatoMillones : gestionadqui.enMillones}}</span>
 							      			</div>
 							      		</td>
-							      		<td>
-											{{item.cantidadProcesos}}
+							      		<td style="{{gestionadqui.estiloCelda}} {{gestionadqui.estiloAlineacion}}">
+							      			<div style="{{gestionadqui.estiloCelda}}">
+												{{item.cantidadAdquisiciones}}
+											</div>
 										</td>
 							      		<td style="{{gestionadqui.estiloCelda}} {{gestionadqui.estiloAlineacion}}">
 							      			<div style="{{gestionadqui.estiloCelda}} text-align: center;">
