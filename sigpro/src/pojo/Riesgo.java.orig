@@ -34,6 +34,17 @@ public class Riesgo implements java.io.Serializable {
 	private RiesgoTipo riesgoTipo;
 	private String nombre;
 	private String descripcion;
+<<<<<<< HEAD
+	private Integer impacto;
+	private Integer probabilidad;
+	private BigDecimal impactoMonto;
+	private BigDecimal impactoTiempo;
+	private String gatillo;
+	private String consecuencia;
+	private String solucion;
+	private String riesgosSegundarios;
+	private Integer ejecutado;
+=======
 	private BigDecimal impacto;
 	private BigDecimal probabilidad;
 	private BigDecimal impactoMonto;
@@ -43,6 +54,7 @@ public class Riesgo implements java.io.Serializable {
 	private String solucion;
 	private String riesgosSegundarios;
 	private int ejecutado;
+>>>>>>> refs/heads/master_develop
 	private Date fechaEjecucion;
 	private String resultado;
 	private String observaciones;
@@ -69,9 +81,17 @@ public class Riesgo implements java.io.Serializable {
 		this.estado = estado;
 	}
 
+<<<<<<< HEAD
+	
+
+	public Riesgo(Colaborador colaborador, RiesgoTipo riesgoTipo, String nombre, String descripcion,
+			Integer impacto, Integer probabilidad, BigDecimal impactoMonto, BigDecimal impactoTiempo, String gatillo,
+			String consecuencia, String solucion, String riesgosSegundarios, Integer ejecutado, Date fechaEjecucion,
+=======
 	public Riesgo(Colaborador colaborador, RiesgoTipo riesgoTipo, String nombre, String descripcion, BigDecimal impacto,
 			BigDecimal probabilidad, BigDecimal impactoMonto, BigDecimal impactoTiempo, String gatillo,
 			String consecuencia, String solucion, String riesgosSegundarios, int ejecutado, Date fechaEjecucion,
+>>>>>>> refs/heads/master_develop
 			String resultado, String observaciones, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, int estado, Set<ObjetoRiesgo> objetoRiesgos,
 			Set<RiesgoPropiedadValor> riesgoPropiedadValors) {
@@ -304,6 +324,111 @@ public class Riesgo implements java.io.Serializable {
 
 	public void setEstado(int estado) {
 		this.estado = estado;
+<<<<<<< HEAD
+	}
+
+	@Column(name = "impacto")
+	public Integer getImpacto() {
+		return this.impacto;
+	}
+
+	public void setImpacto(Integer impacto) {
+		this.impacto = impacto;
+	}
+
+	@Column(name = "probabilidad")
+	public Integer getProbabilidad() {
+		return this.probabilidad;
+	}
+
+	public void setProbabilidad(Integer probabilidad) {
+		this.probabilidad = probabilidad;
+	}
+
+	@Column(name = "riesgos_segundarios", length = 1000)
+	public String getRiesgosSegundarios() {
+		return this.riesgosSegundarios;
+	}
+
+	public void setRiesgosSegundarios(String riesgosSegundarios) {
+		this.riesgosSegundarios = riesgosSegundarios;
+	}
+
+	@Column(name = "ejecutado")
+	public Integer getEjecutado() {
+		return this.ejecutado;
+	}
+
+	public void setEjecutado(Integer ejecutado) {
+		this.ejecutado = ejecutado;
+	}
+
+	public BigDecimal getImpactoMonto() {
+		return impactoMonto;
+	}
+
+	public void setImpactoMonto(BigDecimal impactoMonto) {
+		this.impactoMonto = impactoMonto;
+	}
+
+	public BigDecimal getImpactoTiempo() {
+		return impactoTiempo;
+	}
+
+	public void setImpactoTiempo(BigDecimal impactoTiempo) {
+		this.impactoTiempo = impactoTiempo;
+	}
+
+	public String getGatillo() {
+		return gatillo;
+	}
+
+	public void setGatillo(String gatillo) {
+		this.gatillo = gatillo;
+	}
+
+	public String getConsecuencia() {
+		return consecuencia;
+	}
+
+	public void setConsecuencia(String consecuencia) {
+		this.consecuencia = consecuencia;
+	}
+
+	public String getSolucion() {
+		return solucion;
+	}
+
+	public void setSolucion(String solucion) {
+		this.solucion = solucion;
+	}
+
+	public String getResultado() {
+		return resultado;
+	}
+
+	public void setResultado(String resultado) {
+		this.resultado = resultado;
+	}
+
+	public String getObservaciones() {
+		return observaciones;
+	}
+
+	public void setObservaciones(String observaciones) {
+		this.observaciones = observaciones;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_ejecucion", length = 19)
+	public Date getFechaEjecucion() {
+		return this.fechaEjecucion;
+	}
+
+	public void setFechaEjecucion(Date fechaEjecucion) {
+		this.fechaEjecucion = fechaEjecucion;
+=======
+>>>>>>> refs/heads/master_develop
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "riesgo")
