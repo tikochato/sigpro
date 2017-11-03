@@ -61,16 +61,16 @@
 							<label for="id" class="floating-label id_class">ID {{ riesgoc.riesgo.id }}</label>
     						<br/><br/>
 						</div>
-						<div class="form-group">
-    						<input type="text" class="inputText" id="nombre" ng-model="riesgoc.riesgo.nombre" ng-value="riesgoc.riesgo.nombre" onblur="this.setAttribute('value', this.value);" ng-required="riesgoc.mostraringreso">
-    						<label class="floating-label">* Nombre</label>
-						</div>
 						
 						<div class="form-group">
 				            	<input type="text" class="inputText" id="irietipo" name="irietipo" ng-model="riesgoc.riesgoTipoNombre" ng-value="riesgoc.riesgoTipoNombre"
 				            	onblur="this.setAttribute('value', this.value);" ng-click="riesgoc.buscarRiesgoTipo()" ng-readonly="true" ng-required="riesgoc.mostraringreso"/>
 				            	<span class="label-icon" ng-click="riesgoc.buscarRiesgoTipo()"><i class="glyphicon glyphicon-search"></i></span>
 								<label class="floating-label">* Tipo Riesgo</label>
+						</div>
+						<div class="form-group">
+    						<input type="text" class="inputText" id="nombre" ng-model="riesgoc.riesgo.nombre" ng-value="riesgoc.riesgo.nombre" onblur="this.setAttribute('value', this.value);" ng-required="riesgoc.mostraringreso">
+    						<label class="floating-label">* Nombre</label>
 						</div>
 						
 						<div class="form-group">

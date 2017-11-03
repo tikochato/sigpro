@@ -7,8 +7,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,11 +42,8 @@ public class SMatrizRiesgo extends HttpServlet {
 		String nombre;
 		Integer tipoId;
 		String tipoNombre;
-		String impactoProyectado;
 		Integer impacto;
-		Integer puntuacionImpacto;
 		Integer probabilidad;
-		Double punteoPrioridad;
 		String gatillosSintomas;
 		String respuesta;
 		Integer colaboradorId;
@@ -96,12 +91,8 @@ public class SMatrizRiesgo extends HttpServlet {
 				temp.nombre = riesgo.getNombre();
 				temp.tipoId = riesgo.getRiesgoTipo().getId();
 				temp.tipoNombre = riesgo.getRiesgoTipo().getNombre();
-				temp.impactoProyectado = riesgo.getImapctoProyectado();
 				temp.impacto = riesgo.getImpacto();
-				temp.puntuacionImpacto = riesgo.getPuntuacionImpacto();
 				temp.probabilidad = riesgo.getProbabilidad();
-				temp.gatillosSintomas = riesgo.getGatillosSintomas();
-				temp.respuesta = riesgo.getRespuesta();
 				temp.colaboradorNombre = riesgo.getColaborador()!=null ? riesgo.getColaborador().getPnombre() : "";
 				temp.riesgosSecundarios = riesgo.getRiesgosSegundarios();
 				temp.ejecutado = riesgo.getEjecutado();
@@ -118,30 +109,12 @@ public class SMatrizRiesgo extends HttpServlet {
 				if (objetoRiesgo!=null){
 					temp.objetoTipo = objetoRiesgo.getId().getObjetoTipo();
 					switch (temp.objetoTipo){
-					case 1: temp.objetoTipoNombre = "Proyecto"; break;
-					case 2: temp.objetoTipoNombre = "Componente"; break;
+					case 0: temp.objetoTipoNombre = "Proyecto"; break;
+					case 1: temp.objetoTipoNombre = "Componente"; break;
+					case 2: temp.objetoTipoNombre = "Subcomponente"; break;
 					case 3: temp.objetoTipoNombre = "Producto"; break;
 					case 4: temp.objetoTipoNombre = "Subproducto"; break;
 					case 5: temp.objetoTipoNombre = "Actividad"; break;
-					}
-				}
-				if (temp.probabilidad!=null){
-					switch (temp.probabilidad){
-						case 1: temp.punteoPrioridad = temp.puntuacionImpacto * 0.3;
-								temp.punteoPrioridad =  BigDecimal.valueOf(temp.punteoPrioridad)
-									    .setScale(2, RoundingMode.HALF_UP)
-									    .doubleValue();
-						break;
-						case 2: temp.punteoPrioridad = temp.puntuacionImpacto * 0.6;
-								temp.punteoPrioridad =  BigDecimal.valueOf(temp.punteoPrioridad)
-							    .setScale(2, RoundingMode.HALF_UP)
-							    .doubleValue();
-								break;
-						case 3: temp.punteoPrioridad = temp.puntuacionImpacto * 0.9;
-							temp.punteoPrioridad =  BigDecimal.valueOf(temp.punteoPrioridad)
-						    .setScale(2, RoundingMode.HALF_UP)
-						    .doubleValue();
-							break;
 					}
 				}
 				matriz.add(temp);
@@ -189,26 +162,9 @@ public class SMatrizRiesgo extends HttpServlet {
 					}
 				}
 				Double punteoPrioridad =  new Double("0");
-				switch (riesgo.getProbabilidad()){
-					case 1: punteoPrioridad = riesgo.getPuntuacionImpacto() * 0.3;
-						punteoPrioridad =  BigDecimal.valueOf(punteoPrioridad)
-								    .setScale(2, RoundingMode.HALF_UP)
-								    .doubleValue();
-					break;
-					case 2:punteoPrioridad = riesgo.getPuntuacionImpacto() * 0.6;
-						punteoPrioridad =  BigDecimal.valueOf(punteoPrioridad)
-						    .setScale(2, RoundingMode.HALF_UP)
-						    .doubleValue();
-							break;
-					case 3: punteoPrioridad = riesgo.getPuntuacionImpacto() * 0.9;
-						punteoPrioridad =  BigDecimal.valueOf(punteoPrioridad)
-						    .setScale(2, RoundingMode.HALF_UP)
-						    .doubleValue();
-						break;
-				}
 				datos.put(fila+"", new Object [] {riesgo.getId(),riesgo.getNombre(),objetoTipoNombre,riesgo.getRiesgoTipo().getNombre(),
-						riesgo.getImapctoProyectado(),riesgo.getImpacto(),riesgo.getPuntuacionImpacto(),riesgo.getProbabilidad(),
-						punteoPrioridad, riesgo.getGatillosSintomas(),riesgo.getRespuesta(),responsable,riesgo.getRiesgosSegundarios(),
+						riesgo.getImpacto(),riesgo.getImpacto(),riesgo.getImpacto(),riesgo.getProbabilidad(),
+						punteoPrioridad, riesgo.getGatillo(),riesgo.getSolucion(),responsable,riesgo.getRiesgosSegundarios(),
 						riesgo.getEjecutado(),riesgo.getFechaEjecucion()});
 				fila++;
 				

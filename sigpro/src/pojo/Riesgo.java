@@ -1,6 +1,7 @@
 package pojo;
 // Generated Nov 2, 2017 9:36:21 AM by Hibernate Tools 5.2.3.Final
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,20 +34,23 @@ public class Riesgo implements java.io.Serializable {
 	private RiesgoTipo riesgoTipo;
 	private String nombre;
 	private String descripcion;
+	private Integer impacto;
+	private Integer probabilidad;
+	private BigDecimal impactoMonto;
+	private BigDecimal impactoTiempo;
+	private String gatillo;
+	private String consecuencia;
+	private String solucion;
+	private String riesgosSegundarios;
+	private Integer ejecutado;
+	private Date fechaEjecucion;
+	private String resultado;
+	private String observaciones;
 	private String usuarioCreo;
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
-	private String imapctoProyectado;
-	private Integer impacto;
-	private Integer puntuacionImpacto;
-	private Integer probabilidad;
-	private String gatillosSintomas;
-	private String respuesta;
-	private String riesgosSegundarios;
-	private Integer ejecutado;
-	private Date fechaEjecucion;
 	private Set<ObjetoRiesgo> objetoRiesgos = new HashSet<ObjetoRiesgo>(0);
 	private Set<RiesgoPropiedadValor> riesgoPropiedadValors = new HashSet<RiesgoPropiedadValor>(0);
 
@@ -61,29 +65,35 @@ public class Riesgo implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	public Riesgo(Colaborador colaborador, RiesgoTipo riesgoTipo, String nombre, String descripcion, String usuarioCreo,
-			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, String imapctoProyectado,
-			Integer impacto, Integer puntuacionImpacto, Integer probabilidad, String gatillosSintomas, String respuesta,
-			String riesgosSegundarios, Integer ejecutado, Date fechaEjecucion, Set<ObjetoRiesgo> objetoRiesgos,
+	
+
+	public Riesgo(Colaborador colaborador, RiesgoTipo riesgoTipo, String nombre, String descripcion,
+			Integer impacto, Integer probabilidad, BigDecimal impactoMonto, BigDecimal impactoTiempo, String gatillo,
+			String consecuencia, String solucion, String riesgosSegundarios, Integer ejecutado, Date fechaEjecucion,
+			String resultado, String observaciones, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
+			Date fechaActualizacion, int estado, Set<ObjetoRiesgo> objetoRiesgos,
 			Set<RiesgoPropiedadValor> riesgoPropiedadValors) {
 		this.colaborador = colaborador;
 		this.riesgoTipo = riesgoTipo;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
+		this.impacto = impacto;
+		this.probabilidad = probabilidad;
+		this.impactoMonto = impactoMonto;
+		this.impactoTiempo = impactoTiempo;
+		this.gatillo = gatillo;
+		this.consecuencia = consecuencia;
+		this.solucion = solucion;
+		this.riesgosSegundarios = riesgosSegundarios;
+		this.ejecutado = ejecutado;
+		this.fechaEjecucion = fechaEjecucion;
+		this.resultado = resultado;
+		this.observaciones = observaciones;
 		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
-		this.imapctoProyectado = imapctoProyectado;
-		this.impacto = impacto;
-		this.puntuacionImpacto = puntuacionImpacto;
-		this.probabilidad = probabilidad;
-		this.gatillosSintomas = gatillosSintomas;
-		this.respuesta = respuesta;
-		this.riesgosSegundarios = riesgosSegundarios;
-		this.ejecutado = ejecutado;
-		this.fechaEjecucion = fechaEjecucion;
 		this.objetoRiesgos = objetoRiesgos;
 		this.riesgoPropiedadValors = riesgoPropiedadValors;
 	}
@@ -185,15 +195,6 @@ public class Riesgo implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	@Column(name = "imapcto_proyectado", length = 1000)
-	public String getImapctoProyectado() {
-		return this.imapctoProyectado;
-	}
-
-	public void setImapctoProyectado(String imapctoProyectado) {
-		this.imapctoProyectado = imapctoProyectado;
-	}
-
 	@Column(name = "impacto")
 	public Integer getImpacto() {
 		return this.impacto;
@@ -203,15 +204,6 @@ public class Riesgo implements java.io.Serializable {
 		this.impacto = impacto;
 	}
 
-	@Column(name = "puntuacion_impacto")
-	public Integer getPuntuacionImpacto() {
-		return this.puntuacionImpacto;
-	}
-
-	public void setPuntuacionImpacto(Integer puntuacionImpacto) {
-		this.puntuacionImpacto = puntuacionImpacto;
-	}
-
 	@Column(name = "probabilidad")
 	public Integer getProbabilidad() {
 		return this.probabilidad;
@@ -219,24 +211,6 @@ public class Riesgo implements java.io.Serializable {
 
 	public void setProbabilidad(Integer probabilidad) {
 		this.probabilidad = probabilidad;
-	}
-
-	@Column(name = "gatillos_sintomas", length = 1000)
-	public String getGatillosSintomas() {
-		return this.gatillosSintomas;
-	}
-
-	public void setGatillosSintomas(String gatillosSintomas) {
-		this.gatillosSintomas = gatillosSintomas;
-	}
-
-	@Column(name = "respuesta", length = 1000)
-	public String getRespuesta() {
-		return this.respuesta;
-	}
-
-	public void setRespuesta(String respuesta) {
-		this.respuesta = respuesta;
 	}
 
 	@Column(name = "riesgos_segundarios", length = 1000)
@@ -255,6 +229,62 @@ public class Riesgo implements java.io.Serializable {
 
 	public void setEjecutado(Integer ejecutado) {
 		this.ejecutado = ejecutado;
+	}
+
+	public BigDecimal getImpactoMonto() {
+		return impactoMonto;
+	}
+
+	public void setImpactoMonto(BigDecimal impactoMonto) {
+		this.impactoMonto = impactoMonto;
+	}
+
+	public BigDecimal getImpactoTiempo() {
+		return impactoTiempo;
+	}
+
+	public void setImpactoTiempo(BigDecimal impactoTiempo) {
+		this.impactoTiempo = impactoTiempo;
+	}
+
+	public String getGatillo() {
+		return gatillo;
+	}
+
+	public void setGatillo(String gatillo) {
+		this.gatillo = gatillo;
+	}
+
+	public String getConsecuencia() {
+		return consecuencia;
+	}
+
+	public void setConsecuencia(String consecuencia) {
+		this.consecuencia = consecuencia;
+	}
+
+	public String getSolucion() {
+		return solucion;
+	}
+
+	public void setSolucion(String solucion) {
+		this.solucion = solucion;
+	}
+
+	public String getResultado() {
+		return resultado;
+	}
+
+	public void setResultado(String resultado) {
+		this.resultado = resultado;
+	}
+
+	public String getObservaciones() {
+		return observaciones;
+	}
+
+	public void setObservaciones(String observaciones) {
+		this.observaciones = observaciones;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
