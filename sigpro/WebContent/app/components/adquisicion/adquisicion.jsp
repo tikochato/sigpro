@@ -87,7 +87,7 @@
 							<div class="col-sm-3">
 								<div class="form-group">
 									<input type="text" class="inputText input-money" ng-model="adquisicionc.adquisicion.montoContrato" ui-number-mask="2" 
-									ng-value="adquisicionc.adquisicion.montoContrato" onblur="this.setAttribute('value', this.value);" ng-required="true"/>
+									ng-value="adquisicionc.adquisicion.montoContrato" onblur="this.setAttribute('value', this.value);" ng-required="adquisicionc.requerido"/>
 										<label class="floating-label" >Monto del contrato</label>
 								</div>
 							</div>
