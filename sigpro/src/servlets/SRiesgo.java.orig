@@ -28,16 +28,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
-import dao.ColaboradorDAO;
+
 import dao.RiesgoDAO;
 import dao.RiesgoPropiedadDAO;
 import dao.RiesgoPropiedadValorDAO;
-import pojo.Colaborador;
 import pojo.Riesgo;
 import pojo.RiesgoPropiedad;
 import pojo.RiesgoPropiedadValor;
 import pojo.RiesgoPropiedadValorId;
-import pojo.RiesgoTipo;
 import utilities.CLogger;
 import utilities.Utils;
 
@@ -47,14 +45,15 @@ import utilities.Utils;
 @WebServlet("/SRiesgo")
 public class SRiesgo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+
 	class striesgo{
 		Integer id;
 		String nombre;
 		String descripcion;
 		Integer riesgotipoid;
 		String riesgotiponombre;
-		BigDecimal impacto;
-		BigDecimal probabilidad;
+		Integer impacto;
+		Integer probabilidad;
 		BigDecimal impactoMonto;
 		BigDecimal impactoTiempo;
 		String gatillo;
@@ -132,6 +131,10 @@ public class SRiesgo extends HttpServlet {
 				temp.descripcion = riesgo.getDescripcion();
 				temp.riesgotipoid = riesgo.getRiesgoTipo().getId();
 				temp.riesgotiponombre = riesgo.getRiesgoTipo().getNombre();
+<<<<<<< HEAD
+=======
+				/*temp.impactoProyectado = riesgo.getImapctoProyectado();
+>>>>>>> refs/heads/master_develop
 				temp.impacto = riesgo.getImpacto();
 				temp.probabilidad = riesgo.getProbabilidad();
 				temp.impactoMonto = riesgo.getImpactoMonto();
@@ -140,6 +143,11 @@ public class SRiesgo extends HttpServlet {
 				temp.consecuencia = riesgo.getConsecuencia();
 				temp.solucion = riesgo.getSolucion();
 				temp.riesgosSecundarios = riesgo.getRiesgosSegundarios();
+<<<<<<< HEAD
+=======
+				temp.gatillosSintomas = riesgo.getGatillosSintomas();
+				temp.respuesta = riesgo.getRespuesta();*/
+>>>>>>> refs/heads/master_develop
 				temp.ejecutado = riesgo.getEjecutado();
 				temp.fechaEjecucion = Utils.formatDate(riesgo.getFechaEjecucion());
 				temp.resultado = riesgo.getResultado();
@@ -209,13 +217,22 @@ public class SRiesgo extends HttpServlet {
 				temp.descripcion = riesgo.getDescripcion();
 				temp.riesgotipoid = riesgo.getRiesgoTipo().getId();
 				temp.riesgotiponombre = riesgo.getRiesgoTipo().getNombre();
+<<<<<<< HEAD
+=======
+				/*temp.impactoProyectado = riesgo.getImapctoProyectado();
+>>>>>>> refs/heads/master_develop
 				temp.impacto = riesgo.getImpacto();
 				temp.probabilidad = riesgo.getProbabilidad();
+<<<<<<< HEAD
 				temp.impactoMonto = riesgo.getImpactoMonto();
 				temp.impactoTiempo = riesgo.getImpactoTiempo();
 				temp.gatillo = riesgo.getGatillo();
 				temp.consecuencia = riesgo.getConsecuencia();
 				temp.solucion = riesgo.getSolucion();
+=======
+				temp.gatillosSintomas = riesgo.getGatillosSintomas();
+				temp.respuesta = riesgo.getRespuesta();*/
+>>>>>>> refs/heads/master_develop
 				temp.riesgosSecundarios = riesgo.getRiesgosSegundarios();
 				temp.ejecutado = riesgo.getEjecutado();
 				temp.fechaEjecucion = Utils.formatDate(riesgo.getFechaEjecucion());
@@ -250,14 +267,14 @@ public class SRiesgo extends HttpServlet {
 				JsonParser parser = new JsonParser();
 				JsonArray riesgos = parser.parse(sriesgos).getAsJsonArray();
 				ArrayList<Integer> ids=new ArrayList<Integer>();
-				for(int i=0; i<riesgos.size(); i++){
+				for(int i=0; i<riesgos.size(); i++){					
 					JsonObject objeto = riesgos.get(i).getAsJsonObject();
 					Integer id = objeto.get("id").isJsonNull() ? null : objeto.get("id").getAsInt();
-					String nombre = objeto.get("nombre").isJsonNull() ? null : objeto.get("nombre").getAsString();
+					/*String nombre = objeto.get("nombre").isJsonNull() ? null : objeto.get("nombre").getAsString();
 					String descripcion = objeto.get("descripcion")!=null ? objeto.get("descripcion")!=null && objeto.get("descripcion").isJsonNull() ? null : objeto.get("descripcion").getAsString() : null;
 					int riesgotipoid = objeto.get("riesgotipoid").isJsonNull() ? 0 : objeto.get("riesgotipoid").getAsInt();
-					BigDecimal impacto = objeto.get("impacto").isJsonNull() ? null : objeto.get("impacto").getAsBigDecimal(); 
-					BigDecimal probabilidad = objeto.get("probabilidad").isJsonNull() ? null : objeto.get("probabilidad").getAsBigDecimal();
+				    Integer impacto = objeto.get("impacto").isJsonNull() ? null : objeto.get("impacto").getAsInt(); 
+				    Integer probabilidad = objeto.get("probabilidad").isJsonNull() ? null : objeto.get("probabilidad").getAsInt();
 				    BigDecimal impactoMonto = objeto.get("impactoMonto").isJsonNull() ? null : objeto.get("impactoMonto").getAsBigDecimal();
 				    BigDecimal impactoTiempo = objeto.get("impactoTiempo").isJsonNull() ? null : objeto.get("impactoTiempo").getAsBigDecimal();
 				    String gatillo = objeto.get("gatillo")!=null ? objeto.get("gatillo").isJsonNull() ? null : objeto.get("gatillo").getAsString() : null;
@@ -269,22 +286,32 @@ public class SRiesgo extends HttpServlet {
 				    String resultado = objeto.get("resultado")!=null ? objeto.get("resultado").isJsonNull() ? null : objeto.get("resultado").getAsString() : null;
 				    String observaciones = objeto.get("observaciones")!=null ? objeto.get("observaciones").isJsonNull() ? null : objeto.get("observaciones").getAsString() : null;
 				    
+				    RiesgoTipo riesgoTipo= new RiesgoTipo();
+					riesgoTipo.setId(riesgotipoid);
+					
+				   
 				    Colaborador colaborador = null;
 				    Integer colobaradorId = objeto.get("colaboradorid").isJsonNull() || objeto.get("colaboradorid").getAsString().length()==0 ? null : objeto.get("colaboradorid").getAsInt(); 
 				    if (colobaradorId!=null){
 				    	colaborador = ColaboradorDAO.getColaborador(colobaradorId);
 				    }
 				    
-				    RiesgoTipo riesgoTipo= new RiesgoTipo();
-					riesgoTipo.setId(riesgotipoid);
+				   */ 
 					
 					type = new TypeToken<List<stdatadinamico>>() {
 					}.getType();
 	
 					List<stdatadinamico> datos = gson.fromJson(objeto.get("camposdinamicos"), type);
+<<<<<<< HEAD
 					Riesgo riesgo = new Riesgo(colaborador, riesgoTipo, nombre, descripcion, impacto, probabilidad, impactoMonto, impactoTiempo,
 							gatillo, consecuencia, solucion, riesgosSecundarios, ejecutado, fechaEjecucion, resultado, observaciones,
 							usuario, null, new Date(), null, 1, null, null);
+=======
+					/*Riesgo riesgo = new Riesgo(colaborador, riesgoTipo, nombre, descripcion, usuario, null, new Date(), null, 1,
+							impactoProyectado, impacto, puntuacionImpacto, probabilidad, gatillosOSintomas, respuesta,
+							riesgosSecundarios, ejecutado, fechaEjecucion, null, null);*/
+					Riesgo riesgo = new Riesgo();
+>>>>>>> refs/heads/master_develop
 					if(id!=0){
 						riesgo.setId(id);
 						riesgo.setUsuarioActualizo(usuario);

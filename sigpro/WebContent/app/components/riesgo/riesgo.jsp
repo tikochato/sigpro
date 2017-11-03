@@ -61,9 +61,17 @@
 							<label for="id" class="floating-label id_class">ID {{ riesgoc.riesgo.id }}</label>
     						<br/><br/>
 						</div>
+						
 						<div class="form-group">
     						<input type="text" class="inputText" id="nombre" ng-model="riesgoc.riesgo.nombre" ng-value="riesgoc.riesgo.nombre" onblur="this.setAttribute('value', this.value);" ng-required="riesgoc.mostraringreso">
     						<label class="floating-label">* Nombre</label>
+						</div>
+						
+						<div class="form-group">
+						   <textarea class="inputText" rows="4"
+						   ng-model="riesgoc.riesgo.descripcion" ng-value="riesgoc.riesgo.descripcion"   
+						   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+						   <label class="floating-label">Descripción</label>
 						</div>
 						
 						<div class="form-group">
@@ -72,50 +80,50 @@
 				            	<span class="label-icon" ng-click="riesgoc.buscarRiesgoTipo()"><i class="glyphicon glyphicon-search"></i></span>
 								<label class="floating-label">* Tipo Riesgo</label>
 						</div>
-						
 						<div class="form-group">
-    						<input type="text" class="inputText" ng-model="riesgoc.riesgo.impactoProyectado" ng-value="riesgoc.riesgo.impactoProyectado" onblur="this.setAttribute('value', this.value);" ng-required="riesgoc.mostraringreso">
-    						<label class="floating-label">* Impacto proyectado</label>
+							<input type="number" class="inputText" ng-model="riesgoc.riesgo.impacto"  ng-value="riesgoc.riesgo.impacto" 
+							onblur="this.setAttribute('value', this.value);" ng-required="riesgoc.mostraringreso"
+							min="0.01" max="0.99" step="0.05">
+							<label class="floating-label">* Riesgo</label>
 						</div>
 						
 						<div class="form-group">
-							<input type="number" class="inputText" ng-model="riesgoc.riesgo.impacto"  ng-value="riesgoc.riesgo.impacto" onblur="this.setAttribute('value', this.value);" ng-required="riesgoc.mostraringreso">
-							<label class="floating-label">* Impacto</label>
+							<input type="number" class="inputText" ng-model="riesgoc.riesgo.probabilidad"  ng-value="riesgoc.riesgo.probabilidad" 
+							onblur="this.setAttribute('value', this.value);" ng-required="riesgoc.mostraringreso"
+							min="0.01" max="0.99" step="0.05">
+							<label class="floating-label">* Probabilidad</label>
+						</div>
+												
+						<div class="form-group">
+							<input type="text" class="inputText" ng-model="riesgoc.riesgo.impactoMonto"  ng-value="riesgoc.riesgo.impactoMonto" 
+							onblur="this.setAttribute('value', this.value);" ng-required="riesgoc.mostraringreso"
+							 ui-number-mask="2">
+							<label class="floating-label">Impacto Monto (GTQ)</label>
 						</div>
 						
 						<div class="form-group">
-							<input type="number"  class="inputText" ng-model="riesgoc.riesgo.puntuacionImpacto" ng-value="riesgoc.riesgo.puntuacionImpacto" onblur="this.setAttribute('value', this.value);" 
-							min="1" max="10" ng-required="riesgoc.mostraringreso">
-							<label class="floating-label">* Puntuación de impacto</label>
+							<input type="number" class="inputText" ng-model="riesgoc.riesgo.impactoTiempo"  ng-value="riesgoc.riesgo.impactoTiempo" 
+							onblur="this.setAttribute('value', this.value);" ng-required="riesgoc.mostraringreso"
+							min="0.00" step="0.5">
+							<label class="floating-label">Impacto Tiempo (días)</label>
+						</div>
+						
+						
+						<div class="form-group">
+    						<input type="text" class="inputText" ng-model="riesgoc.riesgo.gatillo" ng-value="riesgoc.riesgo.gatillo" onblur="this.setAttribute('value', this.value);">
+    						<label class="floating-label">Evento iniciador del riesgo</label>
 						</div>
 						
 						<div class="form-group">
-							<select class="inputText" ng-model="riesgoc.probabilidad"
-								ng-options="probabilidad as probabilidad.nombre for probabilidad in riesgoc.probabilidades track by probabilidad.valor"
-								ng-required="riesgoc.mostraringreso">
-								<option value="">Seleccione probabilidad</option>
-							</select>
-							<label  class="floating-label">* Probabilidad</label>
-						</div>
-						<div class="form-group">
-							<input type="text" class="inputText" uib-datepicker-popup="{{riesgoc.formatofecha}}" alt-input-formats="{{riesgoc.altformatofecha}}"
-									ng-model="riesgoc.fechaEjecucion" is-open="riesgoc.fe_abierto"
-									datepicker-options="riesgoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="riesgoc.mostraringreso"
-									ng-value="riesgoc.riesgo.fechaEjecucion" onblur="this.setAttribute('value', this.value);"/>
-								<span class="label-icon" ng-click="riesgoc.abrirPopupFecha(1000)">
-										<i class="glyphicon glyphicon-calendar"></i>
-								</span><label class="floating-label">* Fecha de ejecución</label>
-						</div>
-						<div class="form-group">
-    						<input type="text" class="inputText" ng-model="riesgoc.riesgo.gatillosSintomas" ng-value="riesgoc.riesgo.gatillosSintomas" onblur="this.setAttribute('value', this.value);">
-    						<label class="floating-label">Gatillos / sintomas</label>
+    						<input type="text" class="inputText" ng-model="riesgoc.riesgo.consecuencia" ng-value="riesgoc.riesgo.consecuencia" onblur="this.setAttribute('value', this.value);">
+    						<label class="floating-label">Consecuencias</label>
 						</div>
 						
 						<div class="form-group">
-    						<input type="text" class="inputText" ng-model="riesgoc.riesgo.respuesta" ng-value="riesgoc.riesgo.respuesta" onblur="this.setAttribute('value', this.value);">
-    						<label class="floating-label">Respuesta</label>
+    						<input type="text" class="inputText" ng-model="riesgoc.riesgo.solucion" ng-value="riesgoc.riesgo.solucion" onblur="this.setAttribute('value', this.value);">
+    						<label class="floating-label">Solución de Mitigación</label>
 						</div>
-						
+												
 						<div class="form-group">
 			            	<input type="text" class="inputText" ng-model="riesgoc.colaboradorNombre" 
 			            	ng-click="riesgoc.buscarColaborador()" ng-value="riesgoc.colaboradorNombre" 
@@ -133,6 +141,28 @@
     						<input type="checkbox"  ng-model="riesgoc.ejecutado" /> 
     						<label class="floating-label">Ejecutado</label>   						
 						</div>
+
+						<div class="form-group">
+							<input type="text" class="inputText" uib-datepicker-popup="{{riesgoc.formatofecha}}" alt-input-formats="{{riesgoc.altformatofecha}}"
+									ng-model="riesgoc.fechaEjecucion" is-open="riesgoc.fe_abierto"
+									datepicker-options="riesgoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="riesgoc.mostraringreso"
+									ng-value="riesgoc.riesgo.fechaEjecucion" onblur="this.setAttribute('value', this.value);"/>
+								<span class="label-icon" ng-click="riesgoc.abrirPopupFecha(1000)">
+										<i class="glyphicon glyphicon-calendar"></i>
+								</span><label class="floating-label">* Fecha de ejecución</label>
+						</div>
+						
+						<div class="form-group">
+    						<input type="text" class="inputText" ng-model="riesgoc.riesgo.resultado" ng-value="riesgoc.riesgo.resultado" onblur="this.setAttribute('value', this.value);">
+    						<label class="floating-label">Resultado</label>
+						</div>
+						
+						
+						<div class="form-group">
+    						<input type="text" class="inputText" ng-model="riesgoc.riesgo.observaciones" ng-value="riesgoc.riesgo.observaciones" onblur="this.setAttribute('value', this.value);">
+    						<label class="floating-label">Observaciones</label>
+						</div>
+						
 						<div class="form-group" ng-repeat="campo in riesgoc.riesgo.camposdinamicos">
 							<div ng-switch="campo.tipo">
 								<div ng-switch-when="1" class="form-group" >
@@ -173,13 +203,6 @@
 									<label class="floating-label">{{ campo.nombre }}</label>
 								</div>
 							</div>
-						</div>
-						
-						<div class="form-group">
-						   <textarea class="inputText" rows="4"
-						   ng-model="riesgoc.riesgo.descripcion" ng-value="riesgoc.riesgo.descripcion"   
-						   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
-						   <label class="floating-label">Descripción</label>
 						</div>
 						<input type="hidden" ng-model="riesgoc.form_valid" name="form_valid" ng-required="riesgoc.mostraringreso" />
 			</div>

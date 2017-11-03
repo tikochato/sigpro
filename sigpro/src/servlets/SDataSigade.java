@@ -109,6 +109,7 @@ public class SDataSigade extends HttpServlet {
 		BigDecimal montoPorDesembolsarUeUsd;
 		int cooperanteid;
 		String cooperantenombre;
+		String objetivo;
 	}
        
     public SDataSigade() {
@@ -162,6 +163,7 @@ public class SDataSigade extends HttpServlet {
 			temp.montoContratadoQtz = inf.getId().getMontoContratadoGtq();
 			temp.desembolsoAFechaUsd = inf.getId().getDesembolsosUsd();
 			temp.montoPorDesembolsarUsd = inf.getId().getPorDesembolsarUsd();
+			temp.objetivo = inf.getId().getObjetivo();
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"prestamo\":",response_text);

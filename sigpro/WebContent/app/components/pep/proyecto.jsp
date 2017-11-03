@@ -254,21 +254,21 @@
 				          	<label class="floating-label">Coordenadas</label>
 					</div>
 					
-					<div class="form-group" >
+					<div class="form-group" ng-if="false" >
 							<input  ng-model="controller.proyecto.objetivo"
 								class="inputText" id="objetivo"
 								ng-value="controller.proyecto.objetivo" onblur="this.setAttribute('value', this.value);">
 							<label for="objetivo" class="floating-label">Objetivo</label>
 					</div>
 					
-					<div class="form-group" >
+					<div class="form-group" ng-if="false" >
 							<input  ng-model="controller.proyecto.objetivoEspecifico"
 								class="inputText" 
 								ng-value="controller.proyecto.objetivoEspecifico" onblur="this.setAttribute('value', this.value);">
 							<label for="objetivo" class="floating-label">Objetivos específicos del PEP</label>
 					</div>
 					
-					<div class="form-group" >
+					<div class="form-group" ng-if="false" >
 							<input  ng-model="controller.proyecto.visionGeneral"
 								class="inputText" 
 								ng-value="controller.proyecto.visionGeneral" onblur="this.setAttribute('value', this.value);">
@@ -320,7 +320,7 @@
 					<div class="row">
 						<div class="col-sm-12">
 							<div class="form-group">
-								<input type="number"
+								<input type="number" style="text-align: right;"
 								 class="inputText "  
 								 ng-model="controller.proyecto.ejecucionFisicaReal"
 								 ng-value="controller.proyecto.ejecucionFisicaReal"
@@ -330,6 +330,46 @@
 							</div>
 						</div>
 					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group money-input">
+								<input type="text" 
+								 class="inputText input-money"  
+								 ng-model="controller.proyecto.costo"
+								 ng-value="controller.proyecto.costo"
+								 onblur="this.setAttribute('value', this.value);" 
+								 ui-number-mask="2"
+								 ng-readonly="true"
+								 >
+								<label class="floating-label" >Costo</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group money-input">
+								<input type="text" class="inputText "  
+								 ng-model="controller.proyecto.fechaInicio"
+								 ng-value="controller.proyecto.fechaInicio"
+								 onblur="this.setAttribute('value', this.value);"
+								 ng-readonly="true"
+								 >
+								<label class="floating-label" >Fecha Inicio</label>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group money-input">
+								<input type="text" class="inputText "  
+								 ng-model="controller.proyecto.fechaFin"
+								 ng-value="controller.proyecto.fechaFin"
+								 onblur="this.setAttribute('value', this.value);"
+								 ng-readonly="true"
+								 >
+								<label class="floating-label" >Fecha Fin</label>
+							</div>
+						</div>
+					</div>
+					
 					<div class="panel panel-default" ng-hide="controller.esNuevoDocumento" >
 						<div class="panel-heading label-form" style="text-align: center;">Archivos adjuntos</div>
 						<div class="panel-body">
@@ -423,9 +463,9 @@
 					<div class="row" style="margin-top: 15px">
 						<div class="form-group">
 						   <textarea class="inputText" rows="4"
-						   ng-model="controller.proyecto.descripcion" ng-value="controller.proyecto.descripcion"   
+						   ng-model="controller.proyecto.observaciones" ng-value="controller.proyecto.observaciones"   
 						   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
-						   <label class="floating-label">Descripción</label>
+						   <label class="floating-label">Observaciones</label>
 						</div>
 					</div>
 		

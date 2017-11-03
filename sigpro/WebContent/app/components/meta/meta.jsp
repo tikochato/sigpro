@@ -19,7 +19,7 @@
 				<br/>
 				<div class="btn-group btn-group-sm">
 			       <shiro:hasPermission name="17040">
-			       		<label class="btn btn-default" ng-click="metac.nuevaMeta()" uib-tooltip="Nueva Meta">
+			       		<label class="btn btn-default" ng-click="metac.nuevaMeta()" uib-tooltip="Nueva">
 						<span class="glyphicon glyphicon-plus"></span></label>
 			       </shiro:hasPermission> 
 			   	</div>				

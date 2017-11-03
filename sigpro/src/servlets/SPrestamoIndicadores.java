@@ -30,7 +30,6 @@ import dao.MetaDAO;
 import dao.MetaUnidadMedidaDAO;
 import dao.PrestamoDAO;
 import dao.PrestamoMetasDAO;
-import dao.ProyectoDAO;
 import pojo.Meta;
 import pojo.MetaUnidadMedida;
 import pojo.Prestamo;
@@ -346,7 +345,7 @@ public class SPrestamoIndicadores extends HttpServlet {
 			excel = new CExcel("Avance de Indicadores", false, null);
 			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
 			datosIndicadores = generarDatosIndicadores(prestamoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
-			wb=excel.generateExcelOfData(datosIndicadores, "Avance de Indicadores - "+ProyectoDAO.getProyecto(prestamoId).getNombre(), headers, null, true, usuario);
+			wb=excel.generateExcelOfData(datosIndicadores, "Avance de Indicadores - "+PrestamoDAO.getPrestamoById(prestamoId).getProyectoPrograma(), headers, null, true, usuario);
 		
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
