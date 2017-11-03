@@ -349,8 +349,8 @@
 						<div class="col-sm-6">
 							<div class="form-group money-input">
 								<input type="text" class="inputText "  
-								 ng-model="controller.proyecto.fechaInicio"
-								 ng-value="controller.proyecto.fechaInicio"
+								 ng-model="controller.fechaInicioTmep"
+								 ng-value="controller.fechaInicioTmep"
 								 onblur="this.setAttribute('value', this.value);"
 								 ng-readonly="true"
 								 >
@@ -360,8 +360,8 @@
 						<div class="col-sm-6">
 							<div class="form-group money-input">
 								<input type="text" class="inputText "  
-								 ng-model="controller.proyecto.fechaFin"
-								 ng-value="controller.proyecto.fechaFin"
+								 ng-model="controller.fehcaFinalTemp"
+								 ng-value="controller.fehcaFinalTemp"
 								 onblur="this.setAttribute('value', this.value);"
 								 ng-readonly="true"
 								 >

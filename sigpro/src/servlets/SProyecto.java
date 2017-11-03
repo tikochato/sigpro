@@ -763,6 +763,7 @@ public class SProyecto extends HttpServlet {
 				dato.projectCargado = proyecto.getProjectCargado();
 				dato.fechaInicio = proyecto.getFechaInicio() != null ? Utils.formatDate(proyecto.getFechaInicio()) : null;
 				dato.fechaFin = proyecto.getFechaFin() != null ? Utils.formatDate(proyecto.getFechaFin()) : null;
+				dato.costo = proyecto.getCosto();
 				dato.observaciones = proyecto.getObservaciones();
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(dato);
