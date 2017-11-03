@@ -238,6 +238,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				proyectoClase: $rootScope.etiquetas.id,
 				projectCargado: mi.proyecto.projectCargado,
 				prestamoId: mi.prestamoid,
+				observaciones : mi.proyecto.observaciones,
 				t:moment().unix()
 			};
 			$http.post('/SProyecto',param_data).then(

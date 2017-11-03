@@ -463,9 +463,9 @@
 					<div class="row" style="margin-top: 15px">
 						<div class="form-group">
 						   <textarea class="inputText" rows="4"
-						   ng-model="controller.proyecto.descripcion" ng-value="controller.proyecto.descripcion"   
+						   ng-model="controller.proyecto.observaciones" ng-value="controller.proyecto.observaciones"   
 						   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
-						   <label class="floating-label">Descripción</label>
+						   <label class="floating-label">Observaciones</label>
 						</div>
 					</div>
 		
