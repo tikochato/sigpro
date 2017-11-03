@@ -226,6 +226,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/miembrosunidadejecutora/:proyectoId?',{
             	template: '<div load-on-demand="\'miembrosunidadejecutoraController\'" class="all_page"></div>'
             })
+            .when('/gestionadquisiciones/',{
+            	template: '<div load-on-demand="\'gestionAdquisicionesController\'" class="all_page"></div>'
+            })
             .when("/:redireccion?",{
             	controller:"MainController"
             })
@@ -582,6 +585,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'rolunidadejecutoraController',
 	    	   script: '/app/components/rolunidadejecutora/rolunidadejecutora.controller.js',
 	    	   template: '/app/components/rolunidadejecutora/rolunidadejecutora.jsp'
+	       },
+	       {
+	    	   name: 'gestionAdquisicionesController',
+	    	   script: '/app/components/reportes/gestionadquisiciones/gestionAdquisiciones.controller.js',
+	    	   template: '/app/components/reportes/gestionadquisiciones/gestionAdquisiciones.jsp'
 	       }
 
 	   ];
