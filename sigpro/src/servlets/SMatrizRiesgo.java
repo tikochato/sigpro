@@ -1,16 +1,14 @@
 package servlets;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -20,9 +18,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import org.apache.shiro.codec.Base64;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -31,7 +27,6 @@ import com.google.gson.reflect.TypeToken;
 import dao.RiesgoDAO;
 import pojo.ObjetoRiesgo;
 import pojo.Riesgo;
-import utilities.CExcel;
 import utilities.Utils;
 
 @WebServlet("/SMatrizRiesgo")
@@ -71,8 +66,8 @@ public class SMatrizRiesgo extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
-		HttpSession sesionweb = request.getSession();
-		String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
+		
+		
 		Gson gson = new Gson();
 		Type type = new TypeToken<Map<String, String>>(){}.getType();
 		StringBuilder sb = new StringBuilder();
@@ -96,12 +91,12 @@ public class SMatrizRiesgo extends HttpServlet {
 				temp.nombre = riesgo.getNombre();
 				temp.tipoId = riesgo.getRiesgoTipo().getId();
 				temp.tipoNombre = riesgo.getRiesgoTipo().getNombre();
-				temp.impactoProyectado = riesgo.getImapctoProyectado();
-				temp.impacto = riesgo.getImpacto();
-				temp.puntuacionImpacto = riesgo.getPuntuacionImpacto();
-				temp.probabilidad = riesgo.getProbabilidad();
-				temp.gatillosSintomas = riesgo.getGatillosSintomas();
-				temp.respuesta = riesgo.getRespuesta();
+				//temp.impactoProyectado = riesgo.getImapctoProyectado();
+				//temp.impacto = riesgo.getImpacto();
+				//temp.puntuacionImpacto = riesgo.getPuntuacionImpacto();
+				//temp.probabilidad = riesgo.getProbabilidad();
+				//temp.gatillosSintomas = riesgo.getGatillosSintomas();
+				//temp.respuesta = riesgo.getRespuesta();
 				temp.colaboradorNombre = riesgo.getColaborador()!=null ? riesgo.getColaborador().getPnombre() : "";
 				temp.riesgosSecundarios = riesgo.getRiesgosSegundarios();
 				temp.ejecutado = riesgo.getEjecutado();
@@ -160,7 +155,7 @@ public class SMatrizRiesgo extends HttpServlet {
 	        output.close();
 	        
 		} else if (accion.equals("exportarExcel")){
-			CExcel excel = new CExcel("MatrizRiesgos",false,null);
+			/*CExcel excel = new CExcel("MatrizRiesgos",false,null);
 			int proyectoId = Utils.String2Int(map.get("proyectoid"), 0);
 			List<Riesgo> riesgos = RiesgoDAO.getMatrizRiesgo(proyectoId);
 			Map<String,Object[]> datos = new HashMap<>();
@@ -256,7 +251,7 @@ public class SMatrizRiesgo extends HttpServlet {
 	            
 			}
 			
-			
+			*/
 			
 		}
 		

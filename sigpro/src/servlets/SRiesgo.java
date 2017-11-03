@@ -27,16 +27,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
-import dao.ColaboradorDAO;
+
 import dao.RiesgoDAO;
 import dao.RiesgoPropiedadDAO;
 import dao.RiesgoPropiedadValorDAO;
-import pojo.Colaborador;
 import pojo.Riesgo;
 import pojo.RiesgoPropiedad;
 import pojo.RiesgoPropiedadValor;
 import pojo.RiesgoPropiedadValorId;
-import pojo.RiesgoTipo;
 import utilities.CLogger;
 import utilities.Utils;
 
@@ -78,18 +76,12 @@ public class SRiesgo extends HttpServlet {
 		String valor;
 		String valor_f;
 	}
-
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+    
     public SRiesgo() {
         super();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String response_text = "{ \"success\": false }";
 
@@ -103,9 +95,7 @@ public class SRiesgo extends HttpServlet {
         output.close();
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		HttpSession sesionweb = request.getSession();
@@ -141,13 +131,13 @@ public class SRiesgo extends HttpServlet {
 				temp.usuarioCreo = riesgo.getUsuarioCreo();
 				temp.riesgotipoid = riesgo.getRiesgoTipo().getId();
 				temp.riesgotiponombre = riesgo.getRiesgoTipo().getNombre();
-				temp.impactoProyectado = riesgo.getImapctoProyectado();
+				/*temp.impactoProyectado = riesgo.getImapctoProyectado();
 				temp.impacto = riesgo.getImpacto();
 				temp.puntuacionImpacto = riesgo.getPuntuacionImpacto();
 				temp.probabilidad = riesgo.getProbabilidad();
 				temp.riesgosSecundarios = riesgo.getRiesgosSegundarios();
 				temp.gatillosSintomas = riesgo.getGatillosSintomas();
-				temp.respuesta = riesgo.getRespuesta();
+				temp.respuesta = riesgo.getRespuesta();*/
 				temp.ejecutado = riesgo.getEjecutado();
 				temp.fechaEjecucion = Utils.formatDate(riesgo.getFechaEjecucion());
 				
@@ -215,12 +205,12 @@ public class SRiesgo extends HttpServlet {
 				temp.usuarioCreo = riesgo.getUsuarioCreo();
 				temp.riesgotipoid = riesgo.getRiesgoTipo().getId();
 				temp.riesgotiponombre = riesgo.getRiesgoTipo().getNombre();
-				temp.impactoProyectado = riesgo.getImapctoProyectado();
+				/*temp.impactoProyectado = riesgo.getImapctoProyectado();
 				temp.impacto = riesgo.getImpacto();
 				temp.puntuacionImpacto = riesgo.getPuntuacionImpacto();
 				temp.probabilidad = riesgo.getProbabilidad();
 				temp.gatillosSintomas = riesgo.getGatillosSintomas();
-				temp.respuesta = riesgo.getRespuesta();
+				temp.respuesta = riesgo.getRespuesta();*/
 				temp.riesgosSecundarios = riesgo.getRiesgosSegundarios();
 				temp.ejecutado = riesgo.getEjecutado();
 				temp.fechaEjecucion = Utils.formatDate(riesgo.getFechaEjecucion());
@@ -251,7 +241,7 @@ public class SRiesgo extends HttpServlet {
 				for(int i=0; i<riesgos.size(); i++){
 					JsonObject objeto = riesgos.get(i).getAsJsonObject();
 					Integer id = objeto.get("id").isJsonNull() ? null : objeto.get("id").getAsInt();
-					String nombre = objeto.get("nombre").isJsonNull() ? null : objeto.get("nombre").getAsString();
+					/*String nombre = objeto.get("nombre").isJsonNull() ? null : objeto.get("nombre").getAsString();
 					String descripcion = objeto.get("descripcion")!=null ? objeto.get("descripcion")!=null && objeto.get("descripcion").isJsonNull() ? null : objeto.get("descripcion").getAsString() : null;
 					int riesgotipoid = objeto.get("riesgotipoid").isJsonNull() ? 0 : objeto.get("riesgotipoid").getAsInt();
 				    String impactoProyectado = objeto.get("impactoProyectado").isJsonNull() ? null : objeto.get("impactoProyectado").getAsString();
@@ -264,22 +254,26 @@ public class SRiesgo extends HttpServlet {
 				    Integer ejecutado = objeto.get("ejecutado").isJsonNull() ? null : objeto.get("ejecutado").getAsInt();
 				    Date fechaEjecucion =  objeto.get("fechaEjecucion").isJsonNull() ? null : Utils.stringToDateZ(objeto.get("fechaEjecucion").getAsString());
 				    
+				    RiesgoTipo riesgoTipo= new RiesgoTipo();
+					riesgoTipo.setId(riesgotipoid);
+					
+				   
 				    Colaborador colaborador = null;
 				    Integer colobaradorId = objeto.get("colaboradorid").isJsonNull() || objeto.get("colaboradorid").getAsString().length()==0 ? null : objeto.get("colaboradorid").getAsInt(); 
 				    if (colobaradorId!=null){
 				    	colaborador = ColaboradorDAO.getColaborador(colobaradorId);
 				    }
 				    
-				    RiesgoTipo riesgoTipo= new RiesgoTipo();
-					riesgoTipo.setId(riesgotipoid);
+				   */ 
 					
 					type = new TypeToken<List<stdatadinamico>>() {
 					}.getType();
 	
 					List<stdatadinamico> datos = gson.fromJson(objeto.get("camposdinamicos"), type);
-					Riesgo riesgo = new Riesgo(colaborador, riesgoTipo, nombre, descripcion, usuario, null, new Date(), null, 1,
+					/*Riesgo riesgo = new Riesgo(colaborador, riesgoTipo, nombre, descripcion, usuario, null, new Date(), null, 1,
 							impactoProyectado, impacto, puntuacionImpacto, probabilidad, gatillosOSintomas, respuesta,
-							riesgosSecundarios, ejecutado, fechaEjecucion, null, null);
+							riesgosSecundarios, ejecutado, fechaEjecucion, null, null);*/
+					Riesgo riesgo = new Riesgo();
 					if(id!=0){
 						riesgo.setId(id);
 						riesgo.setUsuarioActualizo(usuario);

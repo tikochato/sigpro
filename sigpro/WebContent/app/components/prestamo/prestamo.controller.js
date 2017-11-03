@@ -1171,6 +1171,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		    	 mi.totalIngresado = mi.totalIngresado + totalUnidades;
 		    	 mi.matriz_valid = mi.matriz_valid==1 &&  totalUnidades <= componentes[x].techo ? 1 : null;
 		    	 
+		    	 mi.componentes[x].totalIngesado = mi.totalIngresado;
+		    	 
 		     }
 		 },true);
 		
