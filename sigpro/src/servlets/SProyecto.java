@@ -97,6 +97,9 @@ public class SProyecto extends HttpServlet {
 		Integer proyectoClase;
 		Integer projectCargado;
 		Integer prestamoId;
+		String fechaInicio;
+		String fechaFin;
+		
 	};
 
 	class stdatadinamico {
@@ -211,6 +214,8 @@ public class SProyecto extends HttpServlet {
 				dato.proyectoClase = proyecto.getEtiqueta().getId();
 				dato.projectCargado = proyecto.getProjectCargado();
 				dato.prestamoId = proyecto.getPrestamo() != null ? proyecto.getPrestamo().getId() : null;
+				dato.fechaInicio = proyecto.getFechaInicio() != null ? Utils.formatDate(proyecto.getFechaInicio()) : null;
+				dato.fechaFin = proyecto.getFechaFin() != null ? Utils.formatDate(proyecto.getFechaFin()) : null;
 				datos_.add(dato);
 			}
 
@@ -269,6 +274,8 @@ public class SProyecto extends HttpServlet {
 				dato.proyectoClase = proyecto.getEtiqueta().getId();
 				dato.projectCargado = proyecto.getProjectCargado();
 				dato.prestamoId = proyecto.getPrestamo() != null ? proyecto.getPrestamo().getId() : null;
+				dato.fechaInicio = proyecto.getFechaInicio() != null ? Utils.formatDate(proyecto.getFechaInicio()) : null;
+				dato.fechaFin = proyecto.getFechaFin() != null ? Utils.formatDate(proyecto.getFechaFin()) : null;
 				datos_.add(dato);
 			}
 
@@ -330,6 +337,9 @@ public class SProyecto extends HttpServlet {
 				dato.proyectoClase = proyecto.getEtiqueta().getId();
 				dato.projectCargado = proyecto.getProjectCargado();
 				dato.prestamoId = proyecto.getPrestamo() != null ? proyecto.getPrestamo().getId() : null;
+				dato.costo = proyecto.getCosto();
+				dato.fechaInicio = proyecto.getFechaInicio() != null ? Utils.formatDate(proyecto.getFechaInicio()) : null;
+				dato.fechaFin = proyecto.getFechaFin() != null ? Utils.formatDate(proyecto.getFechaFin()) : null;
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -388,6 +398,8 @@ public class SProyecto extends HttpServlet {
 				dato.proyectoClase = proyecto.getEtiqueta().getId();
 				dato.projectCargado = proyecto.getProjectCargado();
 				dato.prestamoId = proyecto.getPrestamo() != null ? proyecto.getPrestamo().getId() : null;
+				dato.fechaInicio = proyecto.getFechaInicio() != null ? Utils.formatDate(proyecto.getFechaInicio()) : null;
+				dato.fechaFin = proyecto.getFechaFin() != null ? Utils.formatDate(proyecto.getFechaFin()) : null;
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -742,6 +754,8 @@ public class SProyecto extends HttpServlet {
 				dato.ejecucionFisicaReal = proyecto.getEjecucionFisicaReal();
 				dato.proyectoClase = proyecto.getEtiqueta().getId();
 				dato.projectCargado = proyecto.getProjectCargado();
+				dato.fechaInicio = proyecto.getFechaInicio() != null ? Utils.formatDate(proyecto.getFechaInicio()) : null;
+				dato.fechaFin = proyecto.getFechaFin() != null ? Utils.formatDate(proyecto.getFechaFin()) : null;
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(dato);
 	        response_text = String.join("", "\"proyecto\":",response_text);
