@@ -423,6 +423,22 @@
 						</div>
 					</div>
 					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+							   	<input type="number" class="inputText" ng-model="prestamoc.prestamo.saldoCuentas"
+							   	ng-value="prestamoc.prestamo.saldoCuentas" onblur="this.setAttribute('value', this.value);"/>
+							   	<label class="floating-label">Saldo de Cuentas </label>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+							   	<input  type="text" class="inputText"   ng-model="prestamoc.prestamo.numeroAutorizacion" 
+							   	onblur="this.setAttribute('value', this.value);" ng-value="prestamoc.prestamo.numeroAutorizacion">
+							   	<label class="floating-label">Número de Decreto</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
 						<div class="col-sm-12">
 							<div class="form-group" >
 									<textarea class="inputText" rows="4"  
@@ -577,6 +593,7 @@
 				</uib-tab>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="43010">
+				
 				<uib-tab ng-click="prestamoc.getPorcentajes();" index="prestamoc.ordenTab+1" heading="Configuraciones Préstamo" ng-if="false">
 							
 							<div class="row">
@@ -679,16 +696,42 @@
 							</div>
 				
 				</uib-tab>
-				<uib-tab index="prestamoc.ordenTab+2" heading="Adicionales" ng-if="prestamoc.mostrarPrestamo" >
+				
+				<uib-tab index="prestamoc.ordenTab+2" heading="Presupuesto" ng-if="prestamoc.mostrarPrestamo" >
+				
 					<div class="row" style="margin-top: 15px;">
-						<div class="col-sm-3">
+						<div class="col-sm-12">
 							<div class="form-group">
-							   	<input  type="text" class="inputText"   ng-model="prestamoc.prestamo.numeroAutorizacion" 
-							   	onblur="this.setAttribute('value', this.value);" ng-value="prestamoc.prestamo.numeroAutorizacion">
-							   	<label class="floating-label">Número Autorización</label>
+							   	<input type="number"  class="inputText"  ng-model="prestamoc.prestamo.presupuestoAsignadoFuncionamiento" 
+								ng-value="prestamoc.prestamo.presupuestoAsignadoFuncionamiento" onblur="this.setAttribute('value', this.value);"/>
+							   	<label class="floating-label">P. Asignado Funcionamiento</label>
 							</div>
 						</div>
+					</div>
 					
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group">
+							   	<input type="number" class="inputText" ng-model="prestamoc.prestamo.presupuestoVigenteFun" 
+							   	ng-value="prestamoc.prestamo.presupuestoVigenteFun" onblur="this.setAttribute('value', this.value);"/>
+							   	<label  class="floating-label">P. Vigente Funcionamiento</label>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row" >
+						<div class="col-sm-12">
+							<div class="form-group">
+							   	<input type="number" class="inputText" ng-model="prestamoc.prestamo.presupuestoDevengadoFun" 
+							   	ng-value="prestamoc.prestamo.presupuestoDevengadoFun" onblur="this.setAttribute('value', this.value);"/>
+							   	<label class="floating-label">P. Devengado Funcionamiento</label>
+							</div>
+						</div>
+					</div>
+					
+					<div ng-if="false" >
+				
+					<div class="row" style="margin-top: 15px;" >
 						<div class="col-sm-3">
 							<div class="form-group">
 							   	<input type="text" class="inputText"  ng-model="prestamoc.prestamo.destino" 
@@ -712,7 +755,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row" ng-show="false">
 						<div class="col-sm-6">
 							<div class="form-group">
 								<input type="text" class="inputText"  uib-datepicker-popup="{{prestamoc.formatofecha}}"  alt-input-formats="{{prestamoc.altformatofecha}}"
@@ -739,7 +782,7 @@
 						</div>
 					</div>
 					
-					<div class="row">
+					<div class="row" ng-show="false">
 						<div class="col-sm-6">
 							<div class="form-group">
 							   	<input  type="number" class="inputText" ng-model="prestamoc.prestamo.aniosPlazo" max="100" min="0" 
@@ -757,7 +800,7 @@
 						</div>
 					</div>
 					
-					<div class="row">
+					<div class="row" ng-show="false">
 						<div class="col-sm-6">
 							<div class="form-group">
 								<input type="text" class="inputText"  uib-datepicker-popup="{{prestamoc.formatofecha}}"  alt-input-formats="{{prestamoc.altformatofecha}}"
@@ -786,7 +829,7 @@
 						</div>
 					</div>
 					
-					<div class="row">
+					<div class="row" ng-show="false">
 						<div class="col-sm-6">
 							<div class="form-group">
 				            	<input type="text" class="inputText" ng-model="prestamoc.prestamo.tipoInteresNombre" ng-readonly="true"
@@ -808,7 +851,7 @@
 						</div>
 					</div>
 					
-					<div class="row">
+					<div class="row" ng-show="false">
 						<div class="col-sm-6">
 							<div class="form-group">
 							   	<input  class="inputText" type="number"  ng-model="prestamoc.prestamo.periodoEjecucion" max="100" min="0" 
@@ -825,7 +868,7 @@
 						</div>
 					</div>
 					
-					<div class="row">
+					<div class="row" ng-show="false">
 						<div class="col-sm-3">
 							<div class="form-group">
 							   	<input type="number" class="inputText" ng-model="prestamoc.prestamo.amortizado"  
@@ -851,7 +894,7 @@
 						</div>
 					</div>
 					
-					<div class="row">						
+					<div class="row" >						
 						<div class="col-sm-3">
 							<div class="form-group">
 							   	<input type="number" class="inputText" ng-model="prestamoc.prestamo.interesesAnio"  
@@ -885,8 +928,8 @@
 						</div>
 					</div>
 					
-					<div class="row"> 
-						<div class="col-sm-3">
+					<div class="row" > 
+						<div class="col-sm-3" >
 							<div class="form-group">
 							   	<input type="number"  class="inputText"  ng-model="prestamoc.prestamo.interesesAcumulados" 
 							   	ng-value="prestamoc.prestamo.interesesAcumulados" onblur="this.setAttribute('value', this.value);"/>
@@ -911,33 +954,7 @@
 						</div>					
 					</div>
 					
-					<div class="row">
-						<div class="col-sm-6">
-							<div class="form-group">
-							   	<input type="number"  class="inputText"  ng-model="prestamoc.prestamo.presupuestoAsignadoFuncionamiento" 
-								ng-value="prestamoc.prestamo.presupuestoAsignadoFuncionamiento" onblur="this.setAttribute('value', this.value);"/>
-							   	<label class="floating-label">P. Asignado Funcionamiento</label>
-							</div>
-						</div>
-					
-						<div class="col-sm-6">
-							<div class="form-group">
-							   	<input type="number" class="inputText"  ng-model="prestamoc.prestamo.presupuestoModificadoFun"  
-							   	ng-value="prestamoc.prestamo.presupuestoModificadoFun" onblur="this.setAttribute('value', this.value);"/>
-							   	<label class="floating-label">P. Modificado Funcionamiento</label>
-							</div>
-						</div>
-					</div>
-					
-					<div class="row">
-						<div class="col-sm-3">
-							<div class="form-group">
-							   	<input type="number" class="inputText" ng-model="prestamoc.prestamo.presupuestoVigenteFun" 
-							   	ng-value="prestamoc.prestamo.presupuestoVigenteFun" onblur="this.setAttribute('value', this.value);"/>
-							   	<label  class="floating-label">P. Vigente Funcionamiento</label>
-							</div>
-						</div>
-						
+					<div class="row">	
 						<div class="col-sm-3">
 							<div class="form-group">
 							   	<input type="number"   class="inputText" ng-model="prestamoc.prestamo.presupuestoAsignadoInversion"  
@@ -966,14 +983,6 @@
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group">
-							   	<input type="number" class="inputText" ng-model="prestamoc.prestamo.presupuestoDevengadoFun" 
-							   	ng-value="prestamoc.prestamo.presupuestoDevengadoFun" onblur="this.setAttribute('value', this.value);"/>
-							   	<label class="floating-label">P. Devengado Funcionamiento</label>
-							</div>
-						</div>
-					
-						<div class="col-sm-6">
-							<div class="form-group">
 							   	<input type="number"  class="inputText" ng-model="prestamoc.prestamo.presupuestoDevengadoInv"  
 							   	ng-value="prestamoc.prestamo.presupuestoDevengadoInv" onblur="this.setAttribute('value', this.value);"/>
 							   	<label class="floating-label">P. Devengado Inversión</label>
@@ -997,13 +1006,7 @@
 							</div>
 						</div>
 
-						<div class="col-sm-3">
-							<div class="form-group">
-							   	<input type="number" class="inputText" ng-model="prestamoc.prestamo.saldoCuentas"
-							   	ng-value="prestamoc.prestamo.saldoCuentas" onblur="this.setAttribute('value', this.value);"/>
-							   	<label class="floating-label">Saldo de Cuentas </label>
-							</div>
-						</div>
+						
 						<div class="col-sm-3">
 							<div class="form-group">
 							   	<input type="number" class="inputText" ng-model="prestamoc.prestamo.desembolsoReal"
@@ -1038,6 +1041,7 @@
 		            	onblur="this.setAttribute('value', this.value);" ng-value="prestamoc.prestamo.ejecucionEstadoNombre" />
 		            	<span class="label-icon" ng-click="prestamoc.buscarEstadoEjecucion()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 			          	<label class="floating-label">Estado de Ejecución</label>
+					</div>
 					</div>
 				</uib-tab>
 				</shiro:hasPermission>

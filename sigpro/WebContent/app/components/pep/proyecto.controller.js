@@ -43,6 +43,8 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	mi.filtros = [];
 	mi.orden = null;
 	mi.prestamo = [];
+	mi.fechaInicioTmep = '';
+	mi.fehcaFinalTemp = '';
 	
 	mi.prestamo.desembolsoAFechaUsdP = "";
 	mi.prestamo.montoPorDesembolsarUsdP = "";
@@ -238,6 +240,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				proyectoClase: $rootScope.etiquetas.id,
 				projectCargado: mi.proyecto.projectCargado,
 				prestamoId: mi.prestamoid,
+				observaciones : mi.proyecto.observaciones,
 				t:moment().unix()
 			};
 			$http.post('/SProyecto',param_data).then(
@@ -344,6 +347,11 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			(mi.proyecto.latitud!=null ? ', ' : '') + (mi.proyecto.longitud!=null ? mi.proyecto.longitud : '');
 			mi.impactos =[];
 			mi.miembros = [];
+			if (mi.fechaInicioTmep == ''){
+				mi.fechaInicioTmep = mi.proyecto.fechaInicio;
+				mi.fehcaFinalTemp = mi.proyecto.fechaFin;
+			}
+			
 			var parametros = {
 					accion: 'getProyectoPropiedadPorTipo',
 					idProyecto: mi.proyecto!=''?mi.proyecto.id:0,
@@ -1003,11 +1011,14 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			  $http.post('/SProyecto', { accion : 'getProyectoPorId', id: $routeParams.id, t: (new Date()).getTime() }).then(function(response) {
 						if (response.data.success) {
 							mi.proyecto = response.data.proyecto;
+							mi.fechaInicioTmep = mi.proyecto.fechaInicio;
+							mi.fehcaFinalTemp = mi.proyecto.fechaFin;							
 							if(mi.proyecto.fechaInicio != "")
 								mi.proyecto.fechaInicio = moment(mi.proyecto.fechaInicio, 'DD/MM/YYYY').toDate();
 							if(mi.proyecto.fechaFin != "")
 								mi.proyecto.fechaFin = moment(mi.proyecto.fechaFin, 'DD/MM/YYYY').toDate();
 							mi.editar();
+							
 						}
 					});
 		  }
