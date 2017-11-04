@@ -239,12 +239,12 @@
 					       <input type="text" class="inputText" ng-model="actividadc.actividad.costo" ng-value="actividadc.actividad.costo" ui-number-mask="2"
 					       	onblur="this.setAttribute('value', this.value);" style="text-align: left" ng-required="actividadc.actividad.acumulacionCostoId > 0" 
 					       	ng-readonly="actividadc.actividad.tieneHijos"/>
-					       <label for="iprog" class="floating-label">{{actividadc.actividad.acumulacionCostoId > 0 ? "* Costo" : "Costo"}}</label>
+					       <label for="iprog" class="floating-label">{{actividadc.actividad.acumulacionCostoId > 0 ? "* Monto Planificado" : "Monto Planificado"}}</label>
 						</div>
 						<div class="form-group" >
 							<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="actividadc.cambioAcumulacionCosto"
 									local-data="actividadc.acumulacionCostos" search-fields="nombre" title-field="nombre" field-required="actividadc.actividad.costo!=null && actividadc.actividad.costo>0" 
-						  			field-label="{{actividadc.actividad.costo!=null && actividadc.actividad.costo>0 ? '* ':''}}Tipo Acumulación de Costo"
+						  			field-label="{{actividadc.actividad.costo!=null && actividadc.actividad.costo>0 ? '* ':''}}Tipo Acumulación de Monto Planificado"
 									minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
 									initial-value="actividadc.actividad.acumulacionCostoNombre" focus-out="actividadc.blurAcumulacionCosto()" input-name="acumulacionCosto"></div>
 							<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>

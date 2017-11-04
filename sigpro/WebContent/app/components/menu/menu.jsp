@@ -30,7 +30,6 @@
 	                    		<li class="dropdown-submenu">
 	                    			<a><span class="glyphicon" aria-hidden="true"></span> Catálogos</a>
 			                        <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
-			                         <shiro:hasPermission name="39010"><li role="menuitem"><a href="/main.jsp#!/prestamotipo">Tipo de Programa</a></li></shiro:hasPermission>
 			                         	<shiro:hasPermission name="3010"><li role="menuitem"><a href="/main.jsp#!/actividadtipo">Tipo de Actividad</a></li></shiro:hasPermission>                         	
 			                         	<shiro:hasPermission name="7010"><li role="menuitem"><a href="/main.jsp#!/componentetipo">Tipo de Componente</a></li></shiro:hasPermission>
 			                         	<shiro:hasPermission name="7010"><li role="menuitem"><a href="/main.jsp#!/subcomponentetipo">Tipo de Subcomponente</a></li></shiro:hasPermission>
@@ -50,7 +49,7 @@
 	                    		<li class="dropdown-submenu">
 	                    			<a><span class="glyphicon" aria-hidden="true"></span> Propiedades</a>
 			                        <ul uib-dropdown-menu role="menu" aria-labelledby="split-button">
-			                         	<shiro:hasPermission name="38010"><li role="menuitem"><a href="/main.jsp#!/prestamopropiedad">Programa</a></li></shiro:hasPermission>
+			                         	<shiro:hasPermission name="38010"><li role="menuitem"><a href="/main.jsp#!/prestamopropiedad">Préstamo</a></li></shiro:hasPermission>
 			                         	<shiro:hasPermission name="2010"><li role="menuitem"><a href="/main.jsp#!/actividadpropiedad">Actividad</a></li></shiro:hasPermission>	                      
 				                        <shiro:hasPermission name="6010"> <li role="menuitem"><a href="/main.jsp#!/componentepropiedad">Componente</a></li></shiro:hasPermission>
 				                        <shiro:hasPermission name="6010"> <li role="menuitem"><a href="/main.jsp#!/subcomponentepropiedad">Subcomponente</a></li></shiro:hasPermission>	                       

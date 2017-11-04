@@ -201,13 +201,13 @@
 			        <div class="form-group" >
 				       <input type="text" class="inputText" ng-model="subproducto.subproducto.costo" ng-value="subproducto.subproducto.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left" ui-number-mask="2"
 				        ng-readonly="subproducto.subproducto.tieneHijos"/>
-				       <label for="iprog" class="floating-label">Costo</label>
+				       <label for="iprog" class="floating-label">Monto Planificado</label>
 					</div>
 					
 					<div class="form-group">
 	            		<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="subproducto.cambioAcumulacionCosto"
 						  local-data="subproducto.acumulacionesCosto" search-fields="nombre" title-field="nombre" field-required="subproducto.subproducto.costo!=null && subproducto.subproducto.costo>0" 
-						  field-label="{{subproducto.subproducto.costo!=null && subproducto.subproducto.costo>0 ? '* ':''}}Tipo Acumulación de Costo"
+						  field-label="{{subproducto.subproducto.costo!=null && subproducto.subproducto.costo>0 ? '* ':''}}Tipo Acumulación de Monto Planificado"
 						  minlength="1" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
 						  initial-value="subproducto.subproducto.acumulacionCostoNombre" focus-out="subproducto.blurCategoria()" input-name="acumulacionCosto"></div>
 					</div>
