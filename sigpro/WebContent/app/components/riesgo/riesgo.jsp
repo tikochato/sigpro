@@ -64,7 +64,7 @@
 						
 						<div class="form-group">
     						<input type="text" class="inputText" id="nombre" ng-model="riesgoc.riesgo.nombre" ng-value="riesgoc.riesgo.nombre" onblur="this.setAttribute('value', this.value);" ng-required="riesgoc.mostraringreso">
-    						<label class="floating-label">* Nombre</label>
+    						<label class="floating-label">* Riesgo</label>
 						</div>
 						
 						<div class="form-group">
@@ -84,26 +84,26 @@
 							<input type="number" class="inputText" ng-model="riesgoc.riesgo.impacto"  ng-value="riesgoc.riesgo.impacto" 
 							onblur="this.setAttribute('value', this.value);" ng-required="riesgoc.mostraringreso"
 							min="0.01" max="0.99" step="0.05">
-							<label class="floating-label">* Riesgo</label>
+							<label class="floating-label">* Porcentaje de Riesgo</label>
 						</div>
 						
 						<div class="form-group">
 							<input type="number" class="inputText" ng-model="riesgoc.riesgo.probabilidad"  ng-value="riesgoc.riesgo.probabilidad" 
 							onblur="this.setAttribute('value', this.value);" ng-required="riesgoc.mostraringreso"
 							min="0.01" max="0.99" step="0.05">
-							<label class="floating-label">* Probabilidad</label>
+							<label class="floating-label">* Porcentaje de Probabilidad</label>
 						</div>
 												
 						<div class="form-group">
 							<input type="text" class="inputText" ng-model="riesgoc.riesgo.impactoMonto"  ng-value="riesgoc.riesgo.impactoMonto" 
-							onblur="this.setAttribute('value', this.value);" ng-required="riesgoc.mostraringreso"
+							onblur="this.setAttribute('value', this.value);"
 							 ui-number-mask="2">
-							<label class="floating-label">Impacto Monto (GTQ)</label>
+							<label class="floating-label">Impacto Monto (Q)</label>
 						</div>
 						
 						<div class="form-group">
 							<input type="number" class="inputText" ng-model="riesgoc.riesgo.impactoTiempo"  ng-value="riesgoc.riesgo.impactoTiempo" 
-							onblur="this.setAttribute('value', this.value);" ng-required="riesgoc.mostraringreso"
+							onblur="this.setAttribute('value', this.value);"
 							min="0.00" step="0.5">
 							<label class="floating-label">Impacto Tiempo (días)</label>
 						</div>
@@ -120,6 +120,11 @@
 						</div>
 						
 						<div class="form-group">
+    						<input type="text" class="inputText" ng-model="riesgoc.riesgo.riesgosSecundarios" ng-value="riesgoc.riesgo.riesgosSecundarios" onblur="this.setAttribute('value', this.value);">
+    						<label class="floating-label">Riesgos secundarios</label>
+						</div>
+						
+						<div class="form-group">
     						<input type="text" class="inputText" ng-model="riesgoc.riesgo.solucion" ng-value="riesgoc.riesgo.solucion" onblur="this.setAttribute('value', this.value);">
     						<label class="floating-label">Solución de Mitigación</label>
 						</div>
@@ -133,11 +138,6 @@
 						</div>
 						
 						<div class="form-group">
-    						<input type="text" class="inputText" ng-model="riesgoc.riesgo.riesgosSecundarios" ng-value="riesgoc.riesgo.riesgosSecundarios" onblur="this.setAttribute('value', this.value);">
-    						<label class="floating-label">Riesgos secundarios</label>
-						</div>
-						
-						<div class="form-group">
     						<input type="checkbox"  ng-model="riesgoc.ejecutado" /> 
     						<label class="floating-label">Ejecutado</label>   						
 						</div>
@@ -145,11 +145,11 @@
 						<div class="form-group">
 							<input type="text" class="inputText" uib-datepicker-popup="{{riesgoc.formatofecha}}" alt-input-formats="{{riesgoc.altformatofecha}}"
 									ng-model="riesgoc.fechaEjecucion" is-open="riesgoc.fe_abierto"
-									datepicker-options="riesgoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="riesgoc.mostraringreso"
+									datepicker-options="riesgoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
 									ng-value="riesgoc.riesgo.fechaEjecucion" onblur="this.setAttribute('value', this.value);"/>
 								<span class="label-icon" ng-click="riesgoc.abrirPopupFecha(1000)">
 										<i class="glyphicon glyphicon-calendar"></i>
-								</span><label class="floating-label">* Fecha de ejecución</label>
+								</span><label class="floating-label">Fecha de ejecución</label>
 						</div>
 						
 						<div class="form-group">
