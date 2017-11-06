@@ -122,4 +122,22 @@ app.controller('planEstructuralProyectoController',['$scope', '$rootScope', '$ht
 		mi.mostrarDescargar = true;
 	}
 	
+	mi.exportarExcel = function(){
+		$http.post('/SPlanEstructuralProyecto', { 
+			 accion: 'exportarExcel', 
+			 proyectoId: mi.pepId, 
+			 t:moment().unix()
+		  } ).then(
+				  function successCallback(response) {
+					  var anchor = angular.element('<a/>');
+					  anchor.attr({
+				         href: 'data:application/ms-excel;base64,' + response.data,
+				         target: '_blank',
+				         download: 'PlanEstructuraPréstamo.xls'
+					  })[0].click();
+				  }.bind(this), function errorCallback(response){
+			 	}
+		  	);
+		};
+	
 }])
