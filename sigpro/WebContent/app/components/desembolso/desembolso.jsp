@@ -49,12 +49,11 @@
 		<div align="center">
     		<shiro:hasPermission name="9010">
     		<div align="center">
-				<table st-table="desembolsoc.display_desembolsos" st-safe-src="desembolsoc.desembolsos" class="table" >
+				<table st-table="desembolsoc.display_desembolsos" st-safe-src="desembolsos" class="table" >
 					<thead>
 						<tr>
 							<th st-sort="fecha">Fecha</th>
-							<th st-sort="monto">Monto</th>
-							<th st-sort="tipo_moneda" >T. Moneda</th>
+							<th st-sort="monto">Monto</th>							
 							<shiro:hasPermission name="9030">
 							<th width="1%"></th>
 							</shiro:hasPermission>
@@ -73,10 +72,6 @@
 							<td style="padding: 0px 5px 0px 5px;"><div class="form-group" style="padding: 3px;"><input type="text" class="inputText" ng-model="row.monto" ng-required="true"
 												ng-value="row.monto" ng-required="true"
 												onblur="this.setAttribute('value', this.value);" ui-number-mask="2" style="text-align: right;" /></div></td>
-							<td style="padding: 0px;"><div class="form-group" style="padding: 3px;" >
-								    <input type="text" class="inputText" ng-model="desembolsoc.tipo_moneda_nombre"
-									onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
-								</div></td>
 							<shiro:hasPermission name="9030"><td width="1%">
 					       		<label class="btn btn-default btn-xs" ng-click="desembolsoc.borrar(row)" uib-tooltip="Borrar" tooltip-placement="bottom">
 								<span class="glyphicon glyphicon-trash"></span></label>
