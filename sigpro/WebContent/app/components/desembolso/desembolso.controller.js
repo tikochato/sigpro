@@ -12,6 +12,10 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			mi.desembolsonombre;
 			mi.objetoTipoNombre=""
 			mi.proyectoid = $scope.$parent.controller.proyecto.id;
+			mi.montoPorDesembolsar = $scope.$parent.controller.montoPorDesembolsar;
+			mi.fechaCierreActual = $scope.$parent.controller.fechaCierreActualUe;
+			mi.desembolsoAFechaUsd = $scope.$parent.controller.desembolsoAFechaUsd;
+			mi.totalDesembolsos = 0;
 			mi.fecha = new Date();
 			mi.formatofecha = 'dd/MM/yyyy';
 			mi.altformatofecha = ['d!/M!/yyyy'];

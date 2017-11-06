@@ -12,15 +12,41 @@
   		<shiro:lacksPermission name="9010">
 			<span ng-init="desembolsoc.redireccionSinPermisos()"></span>
 		</shiro:lacksPermission>
+		<div class="col-sm-12" align="center" style="padding-left: 0px;">
+			<div class="row">
+				<div align="left" class="col-sm-3">
+					<div class="form-group">
+						<input type="text" class="inputText input-money" ng-model="desembolsoc.montoPorDesembolsar" ui-number-mask="0" 
+						ng-value="desembolsoc.montoPorDesembolsar" onblur="this.setAttribute('value', this.value);" ng-readonly="true"/>
+						<label class="floating-label" >Monto por Desembolsar $</label>
+					</div>
+				</div>
+				<div align="left" class="col-sm-3">
+					<div class="form-group">
+						<input type="text" class="inputText input-money" ng-model="desembolsoc.desembolsoAFechaUsd" ui-number-mask="0" 
+						ng-value="desembolsoc.desembolsoAFechaUsd" onblur="this.setAttribute('value', this.value);" ng-readonly="true"/>
+						<label class="floating-label" >Desembolso a la Fecha $</label>
+					</div>
+				</div>
+				<div align="left" class="col-sm-3">
+					<div class="form-group">
+						<input type="text" class="inputText" ng-model="desembolsoc.fechaCierreActual"
+							ng-readonly="true"	ng-value="desembolsoc.fechaCierreActual" onblur="this.setAttribute('value', this.value);"/>
+						<label class="floating-label" >Fecha de Cierre Actual</label>
+					</div>
+				</div>
+				<div class="operation_buttons" align="right">
+					<div class="btn-group btn-group-sm">
+				       <shiro:hasPermission name="9040">
+				       		<label class="btn btn-default" ng-click="desembolsoc.nuevo()" uib-tooltip="Nuevo" tooltip-placement="bottom">
+							<span class="glyphicon glyphicon-plus"></span></label>
+				       </shiro:hasPermission> 
+				    </div>				
+	    		</div>	
+			</div>
+		</div>
+
 		<div align="center">
-			<div class="operation_buttons" align="right">
-				<div class="btn-group btn-group-sm">
-			       <shiro:hasPermission name="9040">
-			       		<label class="btn btn-default" ng-click="desembolsoc.nuevo()" uib-tooltip="Nuevo" tooltip-placement="bottom">
-						<span class="glyphicon glyphicon-plus"></span></label>
-			       </shiro:hasPermission> 
-			    </div>				
-    		</div>
     		<shiro:hasPermission name="9010">
     		<div align="center">
 				<table st-table="desembolsoc.display_desembolsos" st-safe-src="desembolsoc.desembolsos" class="table" >
@@ -62,6 +88,11 @@
     		</shiro:hasPermission>
     		
 		</div>
-		
+		<br>
+		<div class="row">
+			<div class="col-sm-6">
+				Total: {{ desembolsoc.totalDesembolsos | currency:" ":2 }}
+			</div>
+	  </div>
 		
 	</div>
