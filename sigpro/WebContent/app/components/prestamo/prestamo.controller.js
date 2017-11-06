@@ -422,6 +422,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 								var parametros = {
 										accion: 'guardarMatriz',
 										estructura: JSON.stringify($scope.m_componentes),
+										componentes: JSON.stringify(mi.rowCollectionComponentes),
+										unidadesEjecutoras : JSON.stringify(mi.rowCollectionUE),
 										prestamoId: mi.prestamo.id,
 									    t:moment().unix()
 								};
@@ -736,6 +738,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		}
 
 	};
+	
+	
 	
 	mi.buscarUnidadEjecutoraPrestamo = function() {	
 		var resultado = mi.llamarModalBusqueda('Unidades Ejecutoras','/SUnidadEjecutora', {
@@ -1165,14 +1169,15 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			mi.totalIngresado  = 0;
 		     for (x in componentes){
 		    	 var  totalUnidades = 0;
+		    	 var totalAsignado = 0;
 		    	 for (j in componentes[x].unidadesEjecutoras){
 		    		 totalUnidades = totalUnidades +  componentes[x].unidadesEjecutoras[j].prestamo;
 		    	 }
+		    	 totalAsignado = totalUnidades;
 		    	 mi.totalIngresado = mi.totalIngresado + totalUnidades;
 		    	 mi.matriz_valid = mi.matriz_valid==1 &&  totalUnidades <= componentes[x].techo ? 1 : null;
 		    	 
-		    	 mi.componentes[x].totalIngesado = mi.totalIngresado;
-		    	 
+		    	 $scope.m_componentes[x].totalIngesado = totalAsignado;
 		     }
 		 },true);
 		
@@ -1227,6 +1232,28 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 				}
 			});
 		};
+		
+		mi.cambiarCoordinador = function (pos){
+			for (x in mi.rowCollectionUE){
+				mi.rowCollectionUE[x].esCoordinador = false;
+			}
+			
+			mi.rowCollectionUE[pos].esCoordinador = true;
+			
+		};
+		
+		mi.abrirPopupFechaFE = function(index) {
+			mi.rowCollectionUE[index].fe_abierto = true;
+		}
+		
+		mi.abrirPopupFechaFC = function(index) {
+			mi.rowCollectionUE[index].fc_abierto = true;
+		};
+		
+		mi.seleccionarComponente = function(index){
+			
+			mi.rowCollectionComponentes[index].mostrar = !mi.rowCollectionComponentes[index].mostrar; 
+		}
 } ]);
 
 app.controller('buscarPorPrestamo', [ '$uibModalInstance',
