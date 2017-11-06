@@ -668,7 +668,8 @@ public class SPrestamo extends HttpServlet {
 				
 				UnidadEjecutora EU = UnidadEjecutoraDAO.getUnidadEjecutora((Integer)objEU[1], (Integer)objEU[2], (Integer)objEU[3]);
 				if(EU != null){
-					temp.id = EU.getId().getEjercicio();
+					temp.id = EU.getId().getUnidadEjecutora();
+					temp.ejercicio = EU.getId().getEjercicio();
 					temp.entidad = EU.getEntidad().getNombre();
 					temp.nombre = EU.getNombre();
 					lstunidadesejecutoras.add(temp);
@@ -737,6 +738,8 @@ public class SPrestamo extends HttpServlet {
 			Integer prestamoId = Utils.String2Int(map.get("prestamoId"));
 			Prestamo prestamo = PrestamoDAO.getPrestamoById(prestamoId);
 			String data = map.get("estructura");
+			String componentes = map.get("componentes");
+			String unidadesEjecutroas = map.get("unidadesEjecutoras");
 			boolean ret = false;
 			guardarComponentesSigade(prestamo.getCodigoPresupuestario() + "", usuario);
 			
@@ -745,6 +748,8 @@ public class SPrestamo extends HttpServlet {
 			
 			JsonParser parser = new JsonParser();
 			JsonArray estructuras_ = parser.parse(data).getAsJsonArray();
+			JsonArray est_unidadesEjecutoras_ = parser.parse(unidadesEjecutroas).getAsJsonArray();
+			JsonArray est_componentes_ = parser.parse(componentes).getAsJsonArray();
 			
 			ArrayList<Proyecto> proyectos = new ArrayList<Proyecto>();
 			int k = 0;
@@ -763,7 +768,7 @@ public class SPrestamo extends HttpServlet {
 					BigDecimal fuenteDonacion = !unidad.get("donacion").isJsonNull() ?  Utils.String2BigDecimal(unidad.get("donacion").getAsString(), new BigDecimal(0)): new BigDecimal(0);
 					BigDecimal fuenteNacional = !unidad.get("nacional").isJsonNull() ? Utils.String2BigDecimal(unidad.get("nacional").getAsString(), new BigDecimal(0)): new BigDecimal(0); 
 					if(posicion== -1){
-						proyectos.add(crearProyecto(unidad,prestamo,usuario));
+						proyectos.add(crearProyecto(unidad,prestamo,usuario,est_unidadesEjecutoras_));
 						ret = proyectos.size()>0;
 						if (fuentePrestamo.compareTo(BigDecimal.ZERO) > 0 || 
 								fuenteDonacion.compareTo(BigDecimal.ZERO) > 0 || 
@@ -925,8 +930,23 @@ public class SPrestamo extends HttpServlet {
         output.close();
 	}
 	
-	private Proyecto crearProyecto(JsonObject unidad,Prestamo prestamo,String usuario){
+	private Proyecto crearProyecto(JsonObject unidad,Prestamo prestamo,String usuario, JsonArray est_unidadesEjecutoras){
 		Proyecto ret = null;
+		Integer esCoordinador = null;
+		Date fechaElegibilidad = null;
+		Date fechaCierre = null;
+		int i = 0;
+		for(int j=0; j<est_unidadesEjecutoras.size(); j++){
+			JsonObject unidad_ = est_unidadesEjecutoras.get(i).getAsJsonObject();
+			if (unidad.get("ejercicio").getAsString().equals(unidad_.get("ejercicio").getAsString()) &&
+					unidad.get("entidad").getAsString().equals(unidad_.get("entidad").getAsString()) && 
+					unidad.get("id").getAsString().equals(unidad_.get("id").getAsString())){
+				esCoordinador = Utils.String2Int(unidad.get("esCoordinador").getAsString(),null);
+				fechaElegibilidad = Utils.stringToDate(unidad.get("fechaElegibilidad").getAsString());
+				fechaCierre = Utils.stringToDate(unidad.get("").getAsString());
+				break;
+			}
+		}
 		
 		UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(
 				Utils.String2Int(unidad.get("ejercicio").getAsString()),
@@ -944,7 +964,7 @@ public class SPrestamo extends HttpServlet {
 					null, null, null,null, null, null, null,null, null, null,null,
 					prestamo.getFechaSuscripcion(),prestamo.getFechaSuscripcion(),
 					1, "d"
-					,null,null,0,0,0, null,null,null,null,null,null,null,null,null,null,null);
+					,null,null,0,0,0, null,esCoordinador,fechaElegibilidad,fechaCierre,null,null,null,null,null,null,null,null,null,null);
 			
 			return ProyectoDAO.guardarProyecto(proyecto, false) ? proyecto : null;
 		}

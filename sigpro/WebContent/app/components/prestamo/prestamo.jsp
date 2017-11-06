@@ -447,7 +447,7 @@
 										class="inputText" id="objetivo"
 										ng-value="prestamoc.prestamo.objetivo" onblur="this.setAttribute('value', this.value);">
 									</textarea>
-									<label for="objetivo" class="floating-label">Objetivo del Prŕestamo</label>
+									<label for="objetivo" class="floating-label">Objetivo del Préstamo</label>
 							</div>
 						</div>
 					</div>
@@ -1066,30 +1066,78 @@
 	    								<div style="text-align: left">{{row.entidad}}</div>
 	    							</div>
 	    						</td>
+	    						<td>
+	    							<input type="checkbox"  ng-model="row.esCoordinador" ng-change = "prestamoc.cambiarCoordinador($index)" />
+	    						</td>
+	    						<td>
+	    							<div class="form-group">    						
+										<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}" alt-input-formats="{{prestamoc.altformatofecha}}"
+											ng-model="row.fechaElegibilidad" is-open="row.fe_abierto"
+											datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
+											ng-value="row.fechaElegibilidad" onblur="this.setAttribute('value', this.value);"
+										/>
+										<span class="label-icon" ng-click="prestamoc.abrirPopupFechaFE($index)" tabindex="-1">	
+											<i class="glyphicon glyphicon-calendar"></i>
+										</span>
+									</div>
+	    						</td>
+	    						<td>
+	    							<div class="form-group">    						
+										<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}" alt-input-formats="{{prestamoc.altformatofecha}}"
+											ng-model="row.fechaCierre" is-open="row.fc_abierto"
+											datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
+											ng-value="row.fechaCierre" onblur="this.setAttribute('value', this.value);"
+										/>
+										<span class="label-icon" ng-click="prestamoc.abrirPopupFechaFC($index)" tabindex="-1">	
+											<i class="glyphicon glyphicon-calendar"></i>
+										</span>
+									</div>
+	    						</td>
 							</tr>
+							
 						</tbody>
 					</table>
 				</uib-tab>
 				<uib-tab  index="prestamoc.ordenTab+4" heading="Componentes" ng-if="prestamoc.mostrarPrestamo">
-					<table st-table="prestamoc.displayedCollectionComponentes" st-safe-src="prestamoc.rowCollectionComponentes" class="table table-striped" style="margin-top: 15px;">
+					<table st-table="prestamoc.displayedCollectionComponentes" st-safe-src="prestamoc.rowCollectionComponentes" class="table table-striped table-hover" style="margin-top: 15px;">
 						<thead>
 							<tr>
-								<th class="label-form" style="text-align: center; min-width:300px;">Nombre</th>
-								<th class="label-form" style="text-align: center;">Tipo Moneda</th>
-								<th class="label-form" style="text-align: center; min-width: 155px;">Techo</th>
+								<th class="label-form" style="text-align: center; ">Nombre</th>
+								<th class="label-form" style="text-align: center; width: 100px;">Tipo Moneda</th>
+								<th class="label-form" style="text-align: center; width: 155px;">Techo</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="row in prestamoc.rowCollectionComponentes">
-								<td style="min-width:300px; text-align: left;">
-	    							{{row.nombre}}
-	    						</td>
-	    						<td style="text-align: center;">
-	    							{{row.tipoMoneda}}
-	    						</td>
-	    						<td style="text-align: right;">
-	    							{{row.techo | formatoMillonesSinTipo : prestamoc.enMillones}}
-	    						</td>
+							<tr ng-repeat="row in prestamoc.rowCollectionComponentes" >
+								<td colspan="3">
+									<table style="width: 100%">
+										<tr ng-click="prestamoc.seleccionarComponente($index)">
+											<td style=" text-align: left;">
+				    							{{row.nombre}}
+				    						</td>
+				    						<td style="text-align: center; width: 80px;">
+				    							{{row.tipoMoneda}}
+				    						</td>
+				    						<td style="text-align: right; width: 130px;">
+				    							{{row.techo | formatoMillonesSinTipo : prestamoc.enMillones}}
+				    						</td>
+										</tr>
+										<tr ng-hide="!row.mostrar">
+											<td colspan="3" style="padding: 10px 0px 0px 0px;">
+												<div class="form-group" >
+													<textarea class="inputText" rows="4"  
+														ng-model="row.descripcion"
+														class="inputText" 
+														ng-value="row.descripcion" onblur="this.setAttribute('value', this.value);"
+														ng-maxlength="4000" style=" resize: none;">
+													</textarea>
+													<label  class="floating-label">Descripción</label>
+												</div>
+												
+											</td>
+										</tr>
+									</table>
+								</td>
 							</tr>
 						</tbody>
 					</table>
@@ -1106,6 +1154,7 @@
 								 			style="text-align: center; vertical-align: middle;">
 								 			<div>{{ organismo.nombre }}</div>
 								 		</th>
+								 		<th rowspan="2" class="label-form" style="text-align: center; vertical-align: middle;">Total Asignado</th>
 								 		<th rowspan="2" class="label-form" style="text-align: center; vertical-align: middle;">TECHO</th>
 								 	</tr>
 								 	<tr>
@@ -1159,9 +1208,30 @@
 								 				<tr>
 								 			</table>
 								 		</td>
+								 		<td style="min-width: 100px; text-align: right;"
+								 		 	class="label-form"> {{ row.totalIngesado | formatoMillonesSinTipo : prestamoc.enMillones }} 
+								 		 </td>
 								 		<td style="width: 155px; text-align: right;"
 								 		 	class="label-form"> {{ row.techo | formatoMillonesSinTipo : prestamoc.enMillones }} 
 								 		 </td>
+								 		 
+								 	</tr>
+								 	<tr ng-if="false">
+								 		<td class="label-form">
+								 			Total Asignado
+								 		</td>
+								 		<td  colspan="3" ng-repeat= "organismo in prestamoc.m_organismosEjecutores"
+								 			class="label-form">
+								 			<div>
+								 				{{ organismo.totalAsignadoPrestamo | formatoMillonesSinTipo : prestamoc.enMillones }}
+								 			</div>
+								 			<div>
+								 				{{ organismo.totalAsignadoDonacion | formatoMillonesSinTipo : prestamoc.enMillones }}
+								 			</div>
+								 			<div>
+								 				{{ organismo.totalAsignadoNacional | formatoMillonesSinTipo : prestamoc.enMillones }}
+								 			</div>
+								 		</td>
 								 	</tr>
 								</table>
 							</div>
