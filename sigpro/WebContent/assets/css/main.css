@@ -300,7 +300,7 @@ textarea{
 select ~ .floating-label{
   top: -2px;
   bottom: 10px;
-  font-size: 11px;
+  font-size: 13px;
   opacity: 1;
   border: none;
   outline-width: 0;
@@ -319,7 +319,7 @@ input[type='checkbox'] ~ .floating-label {
 	top: -5px !important;
 	top: -2px;
 	bottom: 10px;
-	font-size: 11px;
+	font-size: 13px;
 	opacity: 1;
 	border: none;
 	outline-width: 0;
@@ -339,6 +339,10 @@ input[type='checkbox'] ~ .floating-label {
   z-index: 2;
   position: relative;
   margin-top: 3px;
+}
+
+input[type="checkbox"] {
+    margin: 10px 0 0;
 }
 		
 .form-group {
@@ -372,7 +376,7 @@ input[type='checkbox'] ~ .floating-label {
 }
 
 .label-form{
-	 font-size: 11px;
+	 font-size: 13px;
 	 opacity: 1;
 	 color: rgba(0,0,0,0.38) !important;
 	 font-weight: bold;
