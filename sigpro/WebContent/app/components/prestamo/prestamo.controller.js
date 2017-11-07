@@ -419,6 +419,9 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 							}
 							
 							if (mi.matriz_valid && !mi.m_existenDatos && mi.totalIngresado  > 0 && $scope.m_componentes.length > 0 ){
+								for(c=0; c<$scope.m_componentes.length; c++){
+									$scope.m_componentes[c].descripcion = mi.rowCollectionComponentes[c]!=null ? mi.rowCollectionComponentes[c].descripcion : null;
+								}
 								var parametros = {
 										accion: 'guardarMatriz',
 										estructura: JSON.stringify($scope.m_componentes),
@@ -1024,6 +1027,9 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 						mi.unidadesEjecutoras = response.data.unidadesEjecutoras;
 						mi.rowCollectionUE = mi.unidadesEjecutoras;
 						mi.displayCollectionUE = [].concat(mi.rowCollectionUE);
+						if(mi.rowCollectionUE.length>0){
+							mi.rowCollectionUE[0].esCoordinador=true;
+						}
 					})
 				}
 				
@@ -1175,7 +1181,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		    	 }
 		    	 totalAsignado = totalUnidades;
 		    	 mi.totalIngresado = mi.totalIngresado + totalUnidades;
-		    	 mi.matriz_valid = mi.matriz_valid==1 &&  totalUnidades <= componentes[x].techo ? 1 : null;
+		    	 mi.matriz_valid = mi.matriz_valid==1 &&  totalUnidades == componentes[x].techo ? 1 : null;
 		    	 
 		    	 $scope.m_componentes[x].totalIngesado = totalAsignado;
 		     }

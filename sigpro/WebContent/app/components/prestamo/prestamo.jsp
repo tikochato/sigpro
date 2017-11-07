@@ -1050,24 +1050,27 @@
 					<table st-table="prestamoc.displayCollectionUE" st-safe-src="prestamoc.rowCollectionUE" class="table table-striped" style="margin-top: 15px;">
 						<thead>
 							<tr>
-								<th class="label-form" style="text-align: center; min-width:300px; max-width:300px;">Organismo ejecutor</th>
-								<th class="label-form" style="text-align: center; min-width:30px; max-width:30px;">Entidad</th>
+								<th class="label-form" style="text-align: center;">Coordinadora</th>
+								<th class="label-form" style="text-align: center;">Organismo ejecutor</th>
+								<th class="label-form" style="text-align: center;">Entidad</th>
+								<th class="label-form" style="text-align: center;">Fecha Elegibilidad</th>
+								<th class="label-form" style="text-align: center;">Fecha Cierre</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr ng-repeat="row in prestamoc.rowCollectionUE">
-								<td class="divisionColumna truncate" style="min-width:300px;max-width:300px;">
+	    						<td>
+	    							<input type="checkbox"  ng-model="row.esCoordinador" ng-change = "prestamoc.cambiarCoordinador($index)" />
+	    						</td>
+								<td class="divisionColumna truncate" style="">
 	    							<div style="height: 25px;">
 	    								<div style="text-align: left">{{row.nombre}}</div>
 	    							</div>
 	    						</td>
-	    						<td class="divisionColumna truncate" style="min-width:300px;max-width:300px;">
+	    						<td class="divisionColumna truncate" style="">
 	    							<div style="height: 25px;">
 	    								<div style="text-align: left">{{row.entidad}}</div>
 	    							</div>
-	    						</td>
-	    						<td>
-	    							<input type="checkbox"  ng-model="row.esCoordinador" ng-change = "prestamoc.cambiarCoordinador($index)" />
 	    						</td>
 	    						<td>
 	    							<div class="form-group">    						
@@ -1113,6 +1116,8 @@
 									<table style="width: 100%">
 										<tr ng-click="prestamoc.seleccionarComponente($index)">
 											<td style=" text-align: left;">
+												<span class="glyphicon glyphicon-plus-sign" ng-hide="row.mostrar"></span>
+												<span class="glyphicon glyphicon-minus-sign" ng-hide="!row.mostrar"></span>
 				    							{{row.nombre}}
 				    						</td>
 				    						<td style="text-align: center; width: 80px;">
