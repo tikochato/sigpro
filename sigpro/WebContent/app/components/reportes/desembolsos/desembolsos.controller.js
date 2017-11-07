@@ -254,7 +254,7 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 			case 1:
 				totalItems = (mi.anio_fin - mi.anio_inicio +1) * 12;
 				
-				costoPlan.push ("Costo planificado");
+				costoPlan.push ("Monto planificado");
 				costoPlan.push (...costo.slice());
 			
 				desembolsoPlanificado.push("Desembolso Planificado");
@@ -308,7 +308,7 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 			case 2:
 				totalItems = (mi.anio_fin - mi.anio_inicio +1) * 6;
 				
-				costoPlan.push ("Costo");
+				costoPlan.push ("Monto");
 				desembolsoPlanificado.push("Planificado");
 				desembolsoReal.push("Real");
 				desembolsoReald.push("Real ($)");
@@ -379,7 +379,7 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 			case 3:
 				totalItems = (mi.anio_fin - mi.anio_inicio +1) * 4;
 				
-				costoPlan.push ("Costo");
+				costoPlan.push ("Monto");
 				desembolsoPlanificado.push("Planificado");
 				desembolsoReal.push("Real");
 				desembolsoReald.push("Real ($)");
@@ -450,7 +450,7 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 			case 4:
 				totalItems = (mi.anio_fin - mi.anio_inicio +1) * 3;
 				
-				costoPlan.push ("Costo");
+				costoPlan.push ("Monto");
 				desembolsoPlanificado.push("Planificado");
 				desembolsoReal.push("Real");
 				desembolsoReald.push("Real ($)");
@@ -521,7 +521,7 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 			case 5:
 				totalItems = (mi.anio_fin - mi.anio_inicio +1) * 2;
 				
-				costoPlan.push ("Costo");
+				costoPlan.push ("Monto");
 				desembolsoPlanificado.push("Planificado");
 				desembolsoReal.push("Real");
 				desembolsoReald.push("Real ($)");
@@ -592,7 +592,7 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 			case 6:
 				totalItems = (mi.anio_fin - mi.anio_inicio +1) * 1;
 				
-				costoPlan.push ("Costo");
+				costoPlan.push ("Monto");
 				desembolsoPlanificado.push("Planificado");
 				desembolsoReal.push("Real");
 				desembolsoReald.push("Real ($)");

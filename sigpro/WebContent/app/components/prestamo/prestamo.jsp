@@ -120,10 +120,10 @@
 			</div>
 		<div class="operation_buttons">
 			<div class="btn-group" ng-hide="prestamoc.esNuevo">
-				<label class="btn btn-default" ng-if="!prestamoc.esTreeview" ng-click="prestamoc.botones ? prestamoc.irAPepsArbol(prestamoc.prestamo.id) : ''" uib-tooltip="PEPs Árbol" tooltip-placement="bottom">
-				<span class="glyphicon">A</span></label>
-				<label class="btn btn-default" ng-if="!prestamoc.esTreeview" ng-click="prestamoc.botones ? prestamoc.irAPeps(prestamoc.prestamo.id) : ''" uib-tooltip="PEPs Lista" tooltip-placement="bottom">
-				<span class="glyphicon">L</span></label>
+				<label class="btn btn-default" ng-if="!prestamoc.esTreeview" ng-click="prestamoc.botones ? prestamoc.irAPepsArbol(prestamoc.prestamo.id) : ''" uib-tooltip="Ver PEPs en Vista Árbol" tooltip-placement="bottom">
+				Vista de Árbol</label>
+				<label class="btn btn-default" ng-if="!prestamoc.esTreeview" ng-click="prestamoc.botones ? prestamoc.irAPeps(prestamoc.prestamo.id) : ''" uib-tooltip="Ver PEPs en Vista de Lista" tooltip-placement="bottom">
+				Vista de Lista</label>
 			</div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="24020">
@@ -205,18 +205,18 @@
 						
 					<div class="row">
 						<div class="col-sm-4">
-							<div class="form-group">    						
-								<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}" alt-input-formats="{{prestamoc.altformatofecha}}"
-									ng-model="prestamoc.prestamo.fechaDecreto" is-open="prestamoc.fd_abierto"
-									datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
-									ng-value="prestamoc.prestamo.fechaDecreto" onblur="this.setAttribute('value', this.value);"
-								/>
-								<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1007)" tabindex="-1">	
-									<i class="glyphicon glyphicon-calendar"></i>
+							<div class="form-group">
+								<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}"  alt-input-formats="{{prestamoc.altformatofecha}}"
+									ng-model="prestamoc.prestamo.fechaElegibilidadUe" is-open="prestamoc.fe_abierto"
+									datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="prestamoc.setPorcentaje(5);"
+									ng-value="prestamoc.prestamo.fechaElegibilidadUe" onblur="this.setAttribute('value', this.value);" />
+								<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1009)" tabindex="-1">
+										<i class="glyphicon glyphicon-calendar"></i>
 								</span>
-								<label class="floating-label">* Fecha Decreto</label>
+								<label class="floating-label">* Fecha de Elegibilidad</label>
 							</div>
 						</div>
+								
 						<div class="col-sm-4">
 							<div class="form-group">
 								<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}"  alt-input-formats="{{prestamoc.altformatofecha}}"
@@ -250,19 +250,6 @@
 					<div class="row" style="margin-top: 15px;">
 								<div class="col-sm-4">
 									<div class="form-group">
-										<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}"  alt-input-formats="{{prestamoc.altformatofecha}}"
-											ng-model="prestamoc.prestamo.fechaElegibilidadUe" is-open="prestamoc.fe_abierto"
-											datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="prestamoc.setPorcentaje(5);"
-											ng-value="prestamoc.prestamo.fechaElegibilidadUe" onblur="this.setAttribute('value', this.value);" />
-										<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1009)" tabindex="-1">
-												<i class="glyphicon glyphicon-calendar"></i>
-										</span>
-										<label class="floating-label">* Fecha de Elegibilidad</label>
-									</div>
-								</div>
-								
-								<div class="col-sm-4">
-									<div class="form-group">
 											<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}"  alt-input-formats="{{prestamoc.altformatofecha}}"
 												ng-model="prestamoc.prestamo.fechaCierreOrigianlUe" is-open="prestamoc.fco_abierto"
 												datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true" ng-change="prestamoc.setPorcentaje(5);"
@@ -288,9 +275,7 @@
 										<label  class="floating-label">* Fecha de Cierre Actual</label>
 									</div>
 								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-6">
+								<div class="col-sm-4">
 									<div class="form-group">
 										<input type="text" 
 										class="inputText input-money" 
@@ -303,11 +288,21 @@
 										<label class="floating-label">* Meses de Prórroga</label>
 									</div>
 								</div>
+								
+							</div>
+							<div class="row">
 								<div class="col-sm-6">
 									<div class="form-group">
 										<input type="text" class="inputText input-money"   ng-model="prestamoc.prestamo.plazoEjecucionUe" ng-disabled="true"
 										ng-value="prestamoc.prestamo.plazoEjecucionUe" onblur="this.setAttribute('value', this.value);" ui-number-mask="2"/>
 										<label class="floating-label">Plazo de Ejecución %</label>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group">
+									   	<input type="number" class="inputText" ng-model="prestamoc.prestamo.saldoCuentas"
+									   	ng-value="prestamoc.prestamo.saldoCuentas" onblur="this.setAttribute('value', this.value);"/>
+									   	<label class="floating-label">Saldo de Cuentas </label>
 									</div>
 								</div>
 							</div>
@@ -424,10 +419,16 @@
 					</div>
 					<div class="row">
 						<div class="col-sm-6">
-							<div class="form-group">
-							   	<input type="number" class="inputText" ng-model="prestamoc.prestamo.saldoCuentas"
-							   	ng-value="prestamoc.prestamo.saldoCuentas" onblur="this.setAttribute('value', this.value);"/>
-							   	<label class="floating-label">Saldo de Cuentas </label>
+							<div class="form-group">    						
+								<input type="text" class="inputText" uib-datepicker-popup="{{prestamoc.formatofecha}}" alt-input-formats="{{prestamoc.altformatofecha}}"
+									ng-model="prestamoc.prestamo.fechaDecreto" is-open="prestamoc.fd_abierto"
+									datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
+									ng-value="prestamoc.prestamo.fechaDecreto" onblur="this.setAttribute('value', this.value);"
+								/>
+								<span class="label-icon" ng-click="prestamoc.abrirPopupFecha(1007)" tabindex="-1">	
+									<i class="glyphicon glyphicon-calendar"></i>
+								</span>
+								<label class="floating-label">* Fecha Decreto</label>
 							</div>
 						</div>
 						<div class="col-sm-6">

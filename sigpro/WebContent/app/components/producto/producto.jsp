@@ -205,13 +205,13 @@
 				       <input type="text" class="inputText" ng-model="producto.producto.costo" ng-value="producto.producto.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left"
 				       		ng-required="producto.producto.acumulacionCostoNombre != null"
 							ui-number-mask="2" ng-readonly="producto.producto.tieneHijos"/>
-				       <label for="iprog" class="floating-label">{{producto.producto.acumulacionCostoNombre  != null ?"* Costo":"Costo"}}</label>
+				       <label for="iprog" class="floating-label">{{producto.producto.acumulacionCostoNombre  != null ?"* Monto Planificado":"Monto Planificado"}}</label>
 					</div>
 						
 				    <div class="form-group">
 	            		<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="producto.cambioAcumulacionCosto"
 						  local-data="producto.acumulacionesCosto" search-fields="nombre" title-field="nombre" field-required="producto.producto.costo!=null && producto.producto.costo>0" 
-						  field-label="{{producto.producto.costo!=null && producto.producto.costo>0 ? '* ':''}}Tipo de Acumulación Costo"
+						  field-label="{{producto.producto.costo!=null && producto.producto.costo>0 ? '* ':''}}Tipo de Acumulación Monto Planificado"
 						  minlength="1" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
 						  initial-value="producto.producto.acumulacionCostoNombre" focus-out="producto.blurCategoria()" input-name="acumulacionCosto"></div>
 					</div>

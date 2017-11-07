@@ -73,6 +73,9 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				mi.prestamoNombre = response.nombre;
 				mi.objetoTipoNombre = "Préstamo";	
 				mi.prestamoid=response.id;
+				mi.montoPorDesembolsar = response.montoPorDesembolsar;
+				mi.fechaCierreActualUe = response.fechaCierreActualUe;
+				mi.desembolsoAFechaUsd = response.desembolsoAFechaUsd;
 			}
 	});
 

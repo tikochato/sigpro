@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,20 +38,25 @@ public class SMatrizRiesgo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	class stmatriz {
 		Integer idRiesgo;
+		String nombre;
 		Integer objetoTipo;
 		String objetoTipoNombre;
-		String nombre;
 		Integer tipoId;
 		String tipoNombre;
-		Integer impacto;
-		Integer probabilidad;
-		String gatillosSintomas;
-		String respuesta;
-		Integer colaboradorId;
-		String colaboradorNombre;
+		BigDecimal impacto;
+		BigDecimal probabilidad;
+		BigDecimal impactoMonto;
+		BigDecimal impactoTiempo;
+		String gatillos;
+		String consecuencia;
+		String solucion;
 		String riesgosSecundarios;
 		Integer ejecutado;
 		String fechaEjecucion;
+		Integer colaboradorId;
+		String colaboradorNombre;
+		String resultado;
+		String observaciones;		
 	}
        
     public SMatrizRiesgo() {
@@ -91,10 +97,19 @@ public class SMatrizRiesgo extends HttpServlet {
 				temp.nombre = riesgo.getNombre();
 				temp.tipoId = riesgo.getRiesgoTipo().getId();
 				temp.tipoNombre = riesgo.getRiesgoTipo().getNombre();
-				temp.colaboradorNombre = riesgo.getColaborador()!=null ? riesgo.getColaborador().getPnombre() : "";
+				temp.impacto = riesgo.getImpacto();
+				temp.probabilidad = riesgo.getProbabilidad();
+				temp.impactoMonto = riesgo.getImpactoMonto()!=null ? riesgo.getImpactoMonto() : new BigDecimal(0);
+				temp.impactoTiempo = riesgo.getImpactoTiempo()!=null ? riesgo.getImpactoTiempo() : new BigDecimal(0);
+				temp.gatillos = riesgo.getGatillo();
+				temp.consecuencia = riesgo.getConsecuencia();
+				temp.solucion = riesgo.getSolucion();
 				temp.riesgosSecundarios = riesgo.getRiesgosSegundarios();
 				temp.ejecutado = riesgo.getEjecutado();
 				temp.fechaEjecucion = Utils.formatDate(riesgo.getFechaEjecucion());
+				temp.resultado = riesgo.getResultado();
+				temp.observaciones = riesgo.getObservaciones();
+				temp.colaboradorNombre = riesgo.getColaborador()!=null ? riesgo.getColaborador().getPnombre() : "";
 				if (riesgo.getColaborador()!=null ){
 					temp.colaboradorId = riesgo.getColaborador().getId();	
 					temp.colaboradorNombre = String.join(" ", riesgo.getColaborador().getPnombre(),
@@ -107,7 +122,8 @@ public class SMatrizRiesgo extends HttpServlet {
 				if (objetoRiesgo!=null){
 					temp.objetoTipo = objetoRiesgo.getId().getObjetoTipo();
 					switch (temp.objetoTipo){
-					case 0: temp.objetoTipoNombre = "Proyecto"; break;
+					case -1: temp.objetoTipoNombre = "Préstamo"; break;
+					case 0: temp.objetoTipoNombre = "Pep"; break;
 					case 1: temp.objetoTipoNombre = "Componente"; break;
 					case 2: temp.objetoTipoNombre = "Subcomponente"; break;
 					case 3: temp.objetoTipoNombre = "Producto"; break;
@@ -152,8 +168,10 @@ public class SMatrizRiesgo extends HttpServlet {
 				ObjetoRiesgo objetoRiesgo = RiesgoDAO.getObjetoRiesgo(riesgo.getId());
 				if (objetoRiesgo!=null){
 					switch (objetoRiesgo.getId().getObjetoTipo()){
-					case 1: objetoTipoNombre = "Proyecto"; break;
-					case 2: objetoTipoNombre = "Componente"; break;
+					case -1: objetoTipoNombre = "Préstamo"; break;
+					case 0: objetoTipoNombre = "Pep"; break;
+					case 1: objetoTipoNombre = "Componente"; break;
+					case 2: objetoTipoNombre = "Subcomponente"; break;
 					case 3: objetoTipoNombre = "Producto"; break;
 					case 4: objetoTipoNombre = "Subproducto"; break;
 					case 5: objetoTipoNombre = "Actividad"; break;

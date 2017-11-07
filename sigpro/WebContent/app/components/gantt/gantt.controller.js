@@ -211,7 +211,7 @@ app.controller('ganttController',['$scope','$rootScope','$http','$interval','i18
 		
 		//columns.push({ header: 'Costo Planificado (Q)', width: 110, cellTemplate: DlhSoft.Controls.GanttChartView.getCostColumnTemplate(84) });
 		columns.splice(9, 0, {
-		    header: 'Costo Planificado (Q)', 
+		    header: 'Monto Planificado (Q)', 
 		    width: 110,
 		    isReadOnly: true,
 		    cellStyle: 'text-align: right;',
