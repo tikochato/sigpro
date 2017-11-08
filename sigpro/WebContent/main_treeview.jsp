@@ -18,7 +18,7 @@
 			<div class="col-sm-12">
 			<div style="font-size: 11px; color: rgb(63,81,131); font-weight: bold; padding-left: 15px; margin-bottom: 5px;">{{etiquetas.proyecto}}</div>
 				<div angucomplete-alt id="ex1"
-					  placeholder="Buscar {{etiquetas.proyecto}}s"
+					  placeholder="Ingrese el nombre del {{etiquetas.proyecto}}"
 					  pause="100"
 					  selected-object="mainController.cambioProyecto"
 					  local-data="mainController.proyectos"

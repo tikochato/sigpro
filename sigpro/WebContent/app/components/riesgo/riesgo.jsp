@@ -83,8 +83,8 @@
 						<div class="form-group">
 							<input type="number" class="inputText" ng-model="riesgoc.riesgo.impacto"  ng-value="riesgoc.riesgo.impacto" 
 							onblur="this.setAttribute('value', this.value);" ng-required="riesgoc.mostraringreso"
-							min="0.01" max="0.99" step="0.05">
-							<label class="floating-label">* Porcentaje de Riesgo</label>
+							min="0.01" max="0.99" step="0.05">							
+							<label class="floating-label">* Calificación de Riesgo</label>
 						</div>
 						
 						<div class="form-group">
