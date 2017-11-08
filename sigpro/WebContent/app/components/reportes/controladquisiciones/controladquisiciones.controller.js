@@ -175,10 +175,9 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 		if(mi.pepId > 0){
 			mi.mostrarCargando = true;
 			mi.mostrarTablas = false;
-			mi.idPrestamo = mi.pepId;
 			$http.post('/SControlAdquisiciones',{
 				accion: 'generarPlan',
-				idPrestamo: mi.idPrestamo
+				proyectoId: mi.pepId
 			}).success(function(response){
 				if(response.success){
 					mi.crearArbol(response.proyecto);
