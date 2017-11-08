@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import dao.CooperanteDAO;
 import dao.TipoAdquisicionDAO;
 import pojo.TipoAdquisicion;
 import utilities.Utils;
@@ -36,6 +37,7 @@ public class STipoAdquisicion extends HttpServlet {
     class stTipoAdquisicion{
     	Integer id;
     	String nombre;
+    	String cooperanteNombre;
     	Integer cooperanteCodigo;
     	String usuarioCreo;
     	String usuarioActualizo;
@@ -81,6 +83,7 @@ public class STipoAdquisicion extends HttpServlet {
 			for(TipoAdquisicion tipoAdquisicion : tipoAdquisiciones){
 				stTipoAdquisicion temp =new stTipoAdquisicion();
 				temp.id = tipoAdquisicion.getId();
+				
 				temp.cooperanteCodigo = tipoAdquisicion.getCooperantecodigo();
 				temp.nombre = tipoAdquisicion.getNombre();
 				temp.estado = tipoAdquisicion.getEstado();
@@ -156,6 +159,36 @@ public class STipoAdquisicion extends HttpServlet {
 			boolean result = false;
 			result = TipoAdquisicionDAO.borrarTipoAdquisicion(tipoAdquisicion);
 			response_text = String.join("","{ \"success\": ",(result ? "true" : "false"), "}");
+		} else if(accion.equals("getTipoAdquisicionPagina")){
+			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
+			int numeroTipoAdquisicion = map.get("numeroTipoAdquisicion")!=null  ? Integer.parseInt(map.get("numeroTipoAdquisicion")) : 0;
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_cooperante = map.get("filtro_cooperante");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			String columna_ordenada = map.get("columna_ordenada");
+			String orden_direccion = map.get("orden_direccion");
+			
+			List<TipoAdquisicion> tipoAdquisiciones = TipoAdquisicionDAO.getTipoAdquisicionPagina(pagina, numeroTipoAdquisicion, filtro_cooperante, filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
+			List<stTipoAdquisicion> stTipoAdquisicion=new ArrayList<stTipoAdquisicion>();
+			
+			for(TipoAdquisicion tipoAdquisicion : tipoAdquisiciones){
+				stTipoAdquisicion temp =new stTipoAdquisicion();
+				temp.id = tipoAdquisicion.getId();
+				temp.cooperanteCodigo = tipoAdquisicion.getCooperantecodigo();				
+				temp.cooperanteNombre = CooperanteDAO.getCooperantePorCodigo(tipoAdquisicion.getCooperantecodigo()).getNombre();
+				temp.nombre = tipoAdquisicion.getNombre();
+				temp.estado = tipoAdquisicion.getEstado();
+				temp.fechaActualizacion = Utils.formatDateHour(tipoAdquisicion.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(tipoAdquisicion.getFechaCreacion());
+				temp.usuarioActualizo = tipoAdquisicion.getUsuarioActualizo();
+				temp.usuarioCreo = tipoAdquisicion.getUsuarioCreo();
+				stTipoAdquisicion.add(temp);
+			}
+			
+			response_text=new GsonBuilder().serializeNulls().create().toJson(stTipoAdquisicion);
+	        response_text = String.join("", "\"tipoAdquisicion\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		
 		response.setHeader("Content-Encoding", "gzip");
