@@ -71,11 +71,11 @@
 						<td>{{row.objetoTipoNombre}}</td>
 						<td>{{row.impacto}}</td>
 						<td>{{row.probabilidad}}</td>
-						<td>{{row.impacto * row.probabilidad}} </td>
+						<td>{{(row.impacto * row.probabilidad).toFixed(2)}} </td>
 						<td>{{row.impactoTiempo}}</td>
-						<td>{{row.impacto * row.probabilidad * row.impactoTiempo}}</td>
+						<td>{{(row.impacto * row.probabilidad * row.impactoTiempo).toFixed(2)}}</td>
 						<td>{{row.impactoMonto}}</td>
-						<td>{{row.impacto * row.probabilidad * row.impactoMonto}}</td>
+						<td>{{(row.impacto * row.probabilidad * row.impactoMonto).toFixed(2)}}</td>
 						<td>{{row.gatillo}}</td>
 						<td>{{row.consecuencias}}</td>
 						<td>{{row.riesgosSecundarios}}</td>
