@@ -164,11 +164,12 @@ public class SPrestamo extends HttpServlet {
     	Integer id;
     	String nombre;
     	String entidad;
+    	Integer entidadId;
 		Integer ejercicio;
 		Double prestamo;
 		Double donacion;
 		Double nacional;
-		int coordinador;
+		int esCoordinador;
 		Date fechaElegibilidad;
 		Date fechaCierre;
     }
@@ -661,6 +662,7 @@ public class SPrestamo extends HttpServlet {
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}else if(accion.equals("getUnidadesEjecutoras")){
 			String codigoPresupuestario = map.get("codigoPresupuestario");
+			Integer proyectoId = Utils.String2Int(map.get("proyectoId"), 0);
 			int ejercicio = Year.now().getValue();
 			
 			List<?> unidadesEjecutoras = DataSigadeDAO.getUnidadesEjecutoras(codigoPresupuestario, ejercicio);
@@ -675,7 +677,18 @@ public class SPrestamo extends HttpServlet {
 					temp.id = EU.getId().getUnidadEjecutora();
 					temp.ejercicio = EU.getId().getEjercicio();
 					temp.entidad = EU.getEntidad().getNombre();
+					temp.entidadId = EU.getEntidad().getId().getEntidad();
 					temp.nombre = EU.getNombre();
+
+					if(proyectoId>0){
+						Proyecto proyecto = ProyectoDAO.getProyectoPorUnidadEjecutora(temp.id, proyectoId, temp.entidadId);
+						if(proyecto!=null){
+							temp.esCoordinador = proyecto.getCoordinador()!=null ? proyecto.getCoordinador() : 0;
+							temp.fechaElegibilidad = proyecto.getFechaElegibilidad();
+							temp.fechaCierre = proyecto.getFechaCierre();
+						}
+					}
+					
 					lstunidadesejecutoras.add(temp);
 				}
 			}
@@ -710,9 +723,9 @@ public class SPrestamo extends HttpServlet {
 							stunidadejecutora temp_ = new stunidadejecutora();
 							temp_.id = unidade.getId().getUnidadEjecutora();
 							temp_.entidad = unidade.getId().getEntidadentidad() + "";
+							temp_.entidadId = unidade.getId().getEntidadentidad();
 							temp_.ejercicio = unidade.getId().getEjercicio();
 							temp_.nombre = unidade.getNombre();
-							//TODO: obtener proyectos para coordinador, fechas
 														
 							Componente compTemp = ComponenteDAO.obtenerComponentePorEntidad(codigoPresupuestario,temp_.ejercicio,
 									Integer.valueOf(temp_.entidad),temp_.id,temp.orden,prestamoId);
@@ -938,15 +951,14 @@ public class SPrestamo extends HttpServlet {
 		Integer esCoordinador = null;
 		Date fechaElegibilidad = null;
 		Date fechaCierre = null;
-		int i = 0;
 		for(int j=0; j<est_unidadesEjecutoras.size(); j++){
-			JsonObject unidad_ = est_unidadesEjecutoras.get(i).getAsJsonObject();
+			JsonObject unidad_ = est_unidadesEjecutoras.get(j).getAsJsonObject();
 			if (unidad.get("ejercicio").getAsString().equals(unidad_.get("ejercicio").getAsString()) &&
-					unidad.get("entidad").getAsString().equals(unidad_.get("entidad").getAsString()) && 
+					unidad.get("entidad").getAsString().equals(unidad_.get("entidadId").getAsString()) && 
 					unidad.get("id").getAsString().equals(unidad_.get("id").getAsString())){
-				esCoordinador = Utils.String2Int(unidad.get("coordinador").getAsString(),null);
-				fechaElegibilidad = Utils.stringToDate(unidad.get("fechaElegibilidad").getAsString());
-				fechaCierre = Utils.stringToDate(unidad.get("fechaCierre").getAsString());
+				esCoordinador = Utils.String2Boolean(unidad_.get("esCoordinador").getAsString(), 0);
+				fechaElegibilidad = Utils.stringToDateZ(unidad_.get("fechaElegibilidad").getAsString());
+				fechaCierre = Utils.stringToDateZ(unidad_.get("fechaCierre").getAsString());
 				break;
 			}
 		}

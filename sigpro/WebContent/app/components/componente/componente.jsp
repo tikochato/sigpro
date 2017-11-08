@@ -338,7 +338,7 @@
 						<div class="form-group">
 						   <textarea class="inputText" rows="4"
 						   ng-model="componentec.componente.descripcion" ng-value="componentec.componente.descripcion"   
-						   onblur="this.setAttribute('value', this.value);" ng-required="false" ng-readonly="true"></textarea>
+						   onblur="this.setAttribute('value', this.value);" ng-required="false" ng-readonly="componentec.componente.esDeSigade"></textarea>
 						   <label class="floating-label">Descripción</label>
 						</div>
 						

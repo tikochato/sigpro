@@ -24,6 +24,14 @@
 		    margin-top: 40px;
 		    overflow-x: auto;
 		}
+		
+		.totalCorrecto{
+			border-bottom: 1px solid #398439;
+		}
+		
+		.totalError{
+			border-bottom: 1px solid #a94442;
+		}
 	
 	</style>
 <%@ page import="org.apache.shiro.SecurityUtils" %>
@@ -1214,9 +1222,11 @@
 								 			</table>
 								 		</td>
 								 		<td style="min-width: 100px; text-align: right;"
+								 			ng-class="row.totalIngesado==row.techo ? 'totalCorrecto':'totalError'"
 								 		 	class="label-form"> {{ row.totalIngesado | formatoMillonesSinTipo : prestamoc.enMillones }} 
 								 		 </td>
 								 		<td style="width: 155px; text-align: right;"
+								 			ng-class="row.totalIngesado==row.techo ? 'totalCorrecto':'totalError'"
 								 		 	class="label-form"> {{ row.techo | formatoMillonesSinTipo : prestamoc.enMillones }} 
 								 		 </td>
 								 		 

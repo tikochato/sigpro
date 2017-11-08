@@ -566,7 +566,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			
 			$http.post('/SPrestamo',{
 				accion: 'getUnidadesEjecutoras',
-				codigoPresupuestario : mi.prestamo.codigoPresupuestario
+				codigoPresupuestario : mi.prestamo.codigoPresupuestario,
+				proyectoId : $routeParams.id
 			}).then(function(response){
 				mi.unidadesEjecutoras = response.data.unidadesEjecutoras;
 				mi.rowCollectionUE = mi.unidadesEjecutoras;
@@ -1022,14 +1023,15 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 					
 					$http.post('/SPrestamo',{
 						accion: 'getUnidadesEjecutoras',
-						codigoPresupuestario : mi.prestamo.codigoPresupuestario
+						codigoPresupuestario : mi.prestamo.codigoPresupuestario,
+						proyectoId : $routeParams.id
 					}).then(function(response){
 						mi.unidadesEjecutoras = response.data.unidadesEjecutoras;
 						mi.rowCollectionUE = mi.unidadesEjecutoras;
-						mi.displayCollectionUE = [].concat(mi.rowCollectionUE);
 						if(mi.rowCollectionUE.length>0){
 							mi.rowCollectionUE[0].esCoordinador=true;
 						}
+						mi.displayCollectionUE = [].concat(mi.rowCollectionUE);
 					})
 				}
 				
