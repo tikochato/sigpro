@@ -102,12 +102,12 @@ public class SControlAdquisiciones extends HttpServlet {
 			String accion = map.get("accion")!=null ? map.get("accion") : "";
 			String response_text = "";
 			
-			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
+			Integer proyectoId = Utils.String2Int(map.get("proyectoId"),0);
 			
 			if (accion.equals("generarPlan")){
 				
 				try{
-					List<stcontroladquisiciones> lstprestamo = generarPlan(idPrestamo, usuario);
+					List<stcontroladquisiciones> lstprestamo = generarPlan(proyectoId, usuario);
 										
 					response_text=new GsonBuilder().serializeNulls().create().toJson(lstprestamo);
 			        response_text = String.join("", "\"proyecto\":",response_text);
@@ -119,7 +119,7 @@ public class SControlAdquisiciones extends HttpServlet {
 			}else if(accion.equals("exportarExcel")){
 				Integer idPlanAdquisicion = Utils.String2Int(map.get("idPlanAdquisicion"), null);
 				try{ 
-					byte [] outArray = exportarExcel(idPlanAdquisicion, idPrestamo, usuario);
+					byte [] outArray = exportarExcel(idPlanAdquisicion, proyectoId, usuario);
 					
 					response.setContentType("application/ms-excel");
 					response.setContentLength(outArray.length);
@@ -136,7 +136,7 @@ public class SControlAdquisiciones extends HttpServlet {
 				String headers[][];
 				String datos[][];
 				headers = generarHeaders();
-				datos = generarDatos(idPrestamo, usuario);
+				datos = generarDatos(proyectoId, usuario);
 				String path = archivo.exportarPlanAdquisiciones(headers, datos,usuario);
 				File file=new File(path);
 				if(file.exists()){
@@ -197,10 +197,10 @@ public class SControlAdquisiciones extends HttpServlet {
 		}
 	}
 	
-	private List<stcontroladquisiciones> generarPlan(Integer idPrestamo, String usuario) throws Exception{
+	private List<stcontroladquisiciones> generarPlan(Integer IdProyecto, String usuario) throws Exception{
 		try{
 			List<stcontroladquisiciones> lstPrestamo = new ArrayList<>();
-			List<?> estruturaProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
+			List<?> estruturaProyecto = EstructuraProyectoDAO.getEstructuraProyecto(IdProyecto);
 			stcontroladquisiciones temp = null;
 			Integer proyectoId = 0;
 			Integer componenteId = 0;

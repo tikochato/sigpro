@@ -24,6 +24,14 @@
 		    margin-top: 40px;
 		    overflow-x: auto;
 		}
+		
+		.totalCorrecto{
+			border-bottom: 1px solid #398439;
+		}
+		
+		.totalError{
+			border-bottom: 1px solid #a94442;
+		}
 	
 	</style>
 <%@ page import="org.apache.shiro.SecurityUtils" %>
@@ -1050,24 +1058,29 @@
 					<table st-table="prestamoc.displayCollectionUE" st-safe-src="prestamoc.rowCollectionUE" class="table table-striped" style="margin-top: 15px;">
 						<thead>
 							<tr>
-								<th class="label-form" style="text-align: center; min-width:300px; max-width:300px;">Organismo ejecutor</th>
-								<th class="label-form" style="text-align: center; min-width:30px; max-width:30px;">Entidad</th>
+								<th class="label-form" style="text-align: center;">Coordinadora</th>
+								<th class="label-form" style="text-align: center;">Organismo ejecutor</th>
+								<th class="label-form" style="text-align: center;">Entidad</th>
+								<th class="label-form" style="text-align: center;">Fecha Elegibilidad</th>
+								<th class="label-form" style="text-align: center;">Fecha Cierre</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr ng-repeat="row in prestamoc.rowCollectionUE">
-								<td class="divisionColumna truncate" style="min-width:300px;max-width:300px;">
+	    						<td>
+	    							<input type="checkbox"  ng-model="row.esCoordinador" 
+	    							ng-change = "prestamoc.cambiarCoordinador($index)" 
+									ng-readonly="prestamoc.m_existenDatos"/>
+	    						</td>
+								<td class="divisionColumna truncate" style="">
 	    							<div style="height: 25px;">
 	    								<div style="text-align: left">{{row.nombre}}</div>
 	    							</div>
 	    						</td>
-	    						<td class="divisionColumna truncate" style="min-width:300px;max-width:300px;">
+	    						<td class="divisionColumna truncate" style="">
 	    							<div style="height: 25px;">
 	    								<div style="text-align: left">{{row.entidad}}</div>
 	    							</div>
-	    						</td>
-	    						<td>
-	    							<input type="checkbox"  ng-model="row.esCoordinador" ng-change = "prestamoc.cambiarCoordinador($index)" />
 	    						</td>
 	    						<td>
 	    							<div class="form-group">    						
@@ -1075,6 +1088,7 @@
 											ng-model="row.fechaElegibilidad" is-open="row.fe_abierto"
 											datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
 											ng-value="row.fechaElegibilidad" onblur="this.setAttribute('value', this.value);"
+											ng-readonly="prestamoc.m_existenDatos"
 										/>
 										<span class="label-icon" ng-click="prestamoc.abrirPopupFechaFE($index)" tabindex="-1">	
 											<i class="glyphicon glyphicon-calendar"></i>
@@ -1087,6 +1101,7 @@
 											ng-model="row.fechaCierre" is-open="row.fc_abierto"
 											datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
 											ng-value="row.fechaCierre" onblur="this.setAttribute('value', this.value);"
+											ng-readonly="prestamoc.m_existenDatos"
 										/>
 										<span class="label-icon" ng-click="prestamoc.abrirPopupFechaFC($index)" tabindex="-1">	
 											<i class="glyphicon glyphicon-calendar"></i>
@@ -1113,6 +1128,8 @@
 									<table style="width: 100%">
 										<tr ng-click="prestamoc.seleccionarComponente($index)">
 											<td style=" text-align: left;">
+												<span class="glyphicon glyphicon-plus-sign" ng-hide="row.mostrar"></span>
+												<span class="glyphicon glyphicon-minus-sign" ng-hide="!row.mostrar"></span>
 				    							{{row.nombre}}
 				    						</td>
 				    						<td style="text-align: center; width: 80px;">
@@ -1183,6 +1200,7 @@
 															onblur="this.setAttribute('value', this.value);"
 															ui-number-mask="2"
 															ng-readonly="prestamoc.m_existenDatos"
+															ng-change="prestamoc.actualizarTotalesUE()"
 														/>
 								 					</td>
 								 					<td style="text-align: center;">
@@ -1193,6 +1211,7 @@
 															onblur="this.setAttribute('value', this.value);"
 															ui-number-mask="2"
 															ng-readonly="prestamoc.m_existenDatos"
+															ng-change="prestamoc.actualizarTotalesUE()"
 														/>
 								 					</td>
 								 					<td style="text-align: center; border-right: 1px solid #ddd;">
@@ -1203,34 +1222,40 @@
 															onblur="this.setAttribute('value', this.value);"
 															ui-number-mask="2"
 															ng-readonly="prestamoc.m_existenDatos"
+															ng-change="prestamoc.actualizarTotalesUE()"
 														/>
 								 					</td>
 								 				<tr>
 								 			</table>
 								 		</td>
 								 		<td style="min-width: 100px; text-align: right;"
+								 			ng-class="row.totalIngesado==row.techo ? 'totalCorrecto':'totalError'"
 								 		 	class="label-form"> {{ row.totalIngesado | formatoMillonesSinTipo : prestamoc.enMillones }} 
 								 		 </td>
 								 		<td style="width: 155px; text-align: right;"
+								 			ng-class="row.totalIngesado==row.techo ? 'totalCorrecto':'totalError'"
 								 		 	class="label-form"> {{ row.techo | formatoMillonesSinTipo : prestamoc.enMillones }} 
 								 		 </td>
 								 		 
 								 	</tr>
-								 	<tr ng-if="false">
-								 		<td class="label-form">
+								 	<tr style="border-top: 3px double #ddd;" ng-show="false">
+								 		<td style="min-width: 200px;" class="label-form">
 								 			Total Asignado
 								 		</td>
-								 		<td  colspan="3" ng-repeat= "organismo in prestamoc.m_organismosEjecutores"
-								 			class="label-form">
-								 			<div>
-								 				{{ organismo.totalAsignadoPrestamo | formatoMillonesSinTipo : prestamoc.enMillones }}
-								 			</div>
-								 			<div>
-								 				{{ organismo.totalAsignadoDonacion | formatoMillonesSinTipo : prestamoc.enMillones }}
-								 			</div>
-								 			<div>
-								 				{{ organismo.totalAsignadoNacional | formatoMillonesSinTipo : prestamoc.enMillones }}
-								 			</div>
+								 		<td  colspan="3" ng-repeat = "organismo in prestamoc.m_organismosEjecutores">
+								 			<table style="width: 100%;">
+								 				<tr>
+								 					<td style="text-align: center;">
+								 						{{ organismo.totalAsignadoPrestamo | formatoMillonesSinTipo : prestamoc.enMillones }}
+								 					</td>
+								 					<td style="text-align: center;">
+								 						{{ organismo.totalAsignadoDonacion | formatoMillonesSinTipo : prestamoc.enMillones }}
+								 					</td>
+								 					<td style="text-align: center; border-right: 1px single #ddd;">
+								 						{{ organismo.totalAsignadoNacional | formatoMillonesSinTipo : prestamoc.enMillones }}
+								 					</td>
+								 				<tr>
+								 			</table>
 								 		</td>
 								 	</tr>
 								</table>

@@ -80,6 +80,7 @@
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/matrizraci">Matriz RACI</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/planadquisiciones">Plan de adquisiciones</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/planejecucion">Plan de ejecución</a></li></shiro:hasPermission>
+                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/planestructuralproyecto">Plan estructural de préstamo</a></li></shiro:hasPermission>
                     	</ul>
                     </li>
                     <shiro:hasPermission name="4010">

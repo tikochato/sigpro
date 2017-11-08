@@ -419,6 +419,9 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 							}
 							
 							if (mi.matriz_valid && !mi.m_existenDatos && mi.totalIngresado  > 0 && $scope.m_componentes.length > 0 ){
+								for(c=0; c<$scope.m_componentes.length; c++){
+									$scope.m_componentes[c].descripcion = mi.rowCollectionComponentes[c]!=null ? mi.rowCollectionComponentes[c].descripcion : null;
+								}
 								var parametros = {
 										accion: 'guardarMatriz',
 										estructura: JSON.stringify($scope.m_componentes),
@@ -563,11 +566,16 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			
 			$http.post('/SPrestamo',{
 				accion: 'getUnidadesEjecutoras',
-				codigoPresupuestario : mi.prestamo.codigoPresupuestario
+				codigoPresupuestario : mi.prestamo.codigoPresupuestario,
+				proyectoId : mi.prestamo.id
 			}).then(function(response){
 				mi.unidadesEjecutoras = response.data.unidadesEjecutoras;
 				mi.rowCollectionUE = mi.unidadesEjecutoras;
+				for(ue=0; ue<mi.rowCollectionUE.length; ue++){
+					mi.rowCollectionUE[ue].esCoordinador = mi.rowCollectionUE[ue].esCoordinador==1;
+				}
 				mi.displayCollectionUE = [].concat(mi.rowCollectionUE);
+
 			})
 			
 			mi.cargarMatriz();
@@ -591,6 +599,22 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		$http.post('/SEstadoTabla', tabla_data).then(function(response){
 
 		});
+	}
+	
+	mi.actualizarTotalesUE = function(){
+		var totalPrestamo = 0;
+		var totalDonacion = 0;
+		var totalNacional = 0;
+		for(c=0; c<$scope.m_componentes.length; c++){
+			for(ue=0; ue<$scope.m_componentes[c].unidadesEjecutoras.length; ue++){
+				totalPrestamo += $scope.m_componentes[c].unidadesEjecutoras[ue].prestamo;
+				mi.m_organismosEjecutores[ue].totalAsignadoPrestamo = totalPrestamo;
+				totalDonacion += $scope.m_componentes[c].unidadesEjecutoras[ue].donacion;
+				mi.m_organismosEjecutores[ue].totalAsignadoDonacion = totalDonacion;
+				totalNacional += $scope.m_componentes[c].unidadesEjecutoras[ue].nacional;
+				mi.m_organismosEjecutores[ue].totalAsignadoNacional = totalNacional;
+			}
+		}
 	}
 	
 	mi.cambioPagina=function(){
@@ -1019,11 +1043,16 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 					
 					$http.post('/SPrestamo',{
 						accion: 'getUnidadesEjecutoras',
-						codigoPresupuestario : mi.prestamo.codigoPresupuestario
+						codigoPresupuestario : mi.prestamo.codigoPresupuestario,
+						proyectoId : $routeParams.id
 					}).then(function(response){
 						mi.unidadesEjecutoras = response.data.unidadesEjecutoras;
 						mi.rowCollectionUE = mi.unidadesEjecutoras;
+						if(mi.rowCollectionUE.length>0){
+							mi.rowCollectionUE[0].esCoordinador=true;
+						}
 						mi.displayCollectionUE = [].concat(mi.rowCollectionUE);
+
 					})
 				}
 				
@@ -1114,6 +1143,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 					mi.m_existenDatos = response.data.existenDatos;
 					mi.metasCargadas = false;
 					mi.activeTab = 0;
+
+					mi.actualizarTotalesUE();
 				}else{
 					$utilidades.mensaje('warning', 'No se encontraron datos con los parámetros ingresados');
 				}
@@ -1175,7 +1206,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		    	 }
 		    	 totalAsignado = totalUnidades;
 		    	 mi.totalIngresado = mi.totalIngresado + totalUnidades;
-		    	 mi.matriz_valid = mi.matriz_valid==1 &&  totalUnidades <= componentes[x].techo ? 1 : null;
+		    	 mi.matriz_valid = mi.matriz_valid==1 &&  totalUnidades == componentes[x].techo ? 1 : null;
 		    	 
 		    	 $scope.m_componentes[x].totalIngesado = totalAsignado;
 		     }

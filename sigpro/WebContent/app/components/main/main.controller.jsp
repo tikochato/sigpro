@@ -229,6 +229,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/gestionadquisiciones/',{
             	template: '<div load-on-demand="\'gestionAdquisicionesController\'" class="all_page"></div>'
             })
+            .when('/planestructuralproyecto/',{
+            	template: '<div load-on-demand="\'planEstructuralProyectoController\'" class="all_page"></div>'
+            })
             .when("/:redireccion?",{
             	controller:"MainController"
             })
@@ -590,6 +593,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'gestionAdquisicionesController',
 	    	   script: '/app/components/reportes/gestionadquisiciones/gestionAdquisiciones.controller.js',
 	    	   template: '/app/components/reportes/gestionadquisiciones/gestionAdquisiciones.jsp'
+	       },
+	       {
+	    	   name: 'planEstructuralProyectoController',
+	    	   script: '/app/components/reportes/planestructuraproyecto/planestructuralproyecto.controller.js',
+	    	   template: '/app/components/reportes/planestructuraproyecto/planestructuralproyecto.jsp'
 	       }
 
 	   ];
