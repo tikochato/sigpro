@@ -170,8 +170,8 @@ public class SPrestamo extends HttpServlet {
 		Double donacion;
 		Double nacional;
 		int esCoordinador;
-		Date fechaElegibilidad;
-		Date fechaCierre;
+		String fechaElegibilidad;
+		String fechaCierre;
     }
     
     public SPrestamo() {
@@ -684,8 +684,8 @@ public class SPrestamo extends HttpServlet {
 						Proyecto proyecto = ProyectoDAO.getProyectoPorUnidadEjecutora(temp.id, proyectoId, temp.entidadId);
 						if(proyecto!=null){
 							temp.esCoordinador = proyecto.getCoordinador()!=null ? proyecto.getCoordinador() : 0;
-							temp.fechaElegibilidad = proyecto.getFechaElegibilidad();
-							temp.fechaCierre = proyecto.getFechaCierre();
+							temp.fechaElegibilidad = Utils.formatDate(proyecto.getFechaElegibilidad());
+							temp.fechaCierre = Utils.formatDate(proyecto.getFechaCierre());
 						}
 					}
 					

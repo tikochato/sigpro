@@ -567,11 +567,15 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			$http.post('/SPrestamo',{
 				accion: 'getUnidadesEjecutoras',
 				codigoPresupuestario : mi.prestamo.codigoPresupuestario,
-				proyectoId : $routeParams.id
+				proyectoId : mi.prestamo.id
 			}).then(function(response){
 				mi.unidadesEjecutoras = response.data.unidadesEjecutoras;
 				mi.rowCollectionUE = mi.unidadesEjecutoras;
+				for(ue=0; ue<mi.rowCollectionUE.length; ue++){
+					mi.rowCollectionUE[ue].esCoordinador = mi.rowCollectionUE[ue].esCoordinador==1;
+				}
 				mi.displayCollectionUE = [].concat(mi.rowCollectionUE);
+
 			})
 			
 			mi.cargarMatriz();
@@ -595,6 +599,22 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		$http.post('/SEstadoTabla', tabla_data).then(function(response){
 
 		});
+	}
+	
+	mi.actualizarTotalesUE = function(){
+		var totalPrestamo = 0;
+		var totalDonacion = 0;
+		var totalNacional = 0;
+		for(c=0; c<$scope.m_componentes.length; c++){
+			for(ue=0; ue<$scope.m_componentes[c].unidadesEjecutoras.length; ue++){
+				totalPrestamo += $scope.m_componentes[c].unidadesEjecutoras[ue].prestamo;
+				mi.m_organismosEjecutores[ue].totalAsignadoPrestamo = totalPrestamo;
+				totalDonacion += $scope.m_componentes[c].unidadesEjecutoras[ue].donacion;
+				mi.m_organismosEjecutores[ue].totalAsignadoDonacion = totalDonacion;
+				totalNacional += $scope.m_componentes[c].unidadesEjecutoras[ue].nacional;
+				mi.m_organismosEjecutores[ue].totalAsignadoNacional = totalNacional;
+			}
+		}
 	}
 	
 	mi.cambioPagina=function(){
@@ -1032,6 +1052,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 							mi.rowCollectionUE[0].esCoordinador=true;
 						}
 						mi.displayCollectionUE = [].concat(mi.rowCollectionUE);
+
 					})
 				}
 				
@@ -1122,6 +1143,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 					mi.m_existenDatos = response.data.existenDatos;
 					mi.metasCargadas = false;
 					mi.activeTab = 0;
+
+					mi.actualizarTotalesUE();
 				}else{
 					$utilidades.mensaje('warning', 'No se encontraron datos con los parámetros ingresados');
 				}

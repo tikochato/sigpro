@@ -1068,7 +1068,9 @@
 						<tbody>
 							<tr ng-repeat="row in prestamoc.rowCollectionUE">
 	    						<td>
-	    							<input type="checkbox"  ng-model="row.esCoordinador" ng-change = "prestamoc.cambiarCoordinador($index)" />
+	    							<input type="checkbox"  ng-model="row.esCoordinador" 
+	    							ng-change = "prestamoc.cambiarCoordinador($index)" 
+									ng-readonly="prestamoc.m_existenDatos"/>
 	    						</td>
 								<td class="divisionColumna truncate" style="">
 	    							<div style="height: 25px;">
@@ -1086,6 +1088,7 @@
 											ng-model="row.fechaElegibilidad" is-open="row.fe_abierto"
 											datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
 											ng-value="row.fechaElegibilidad" onblur="this.setAttribute('value', this.value);"
+											ng-readonly="prestamoc.m_existenDatos"
 										/>
 										<span class="label-icon" ng-click="prestamoc.abrirPopupFechaFE($index)" tabindex="-1">	
 											<i class="glyphicon glyphicon-calendar"></i>
@@ -1098,6 +1101,7 @@
 											ng-model="row.fechaCierre" is-open="row.fc_abierto"
 											datepicker-options="prestamoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
 											ng-value="row.fechaCierre" onblur="this.setAttribute('value', this.value);"
+											ng-readonly="prestamoc.m_existenDatos"
 										/>
 										<span class="label-icon" ng-click="prestamoc.abrirPopupFechaFC($index)" tabindex="-1">	
 											<i class="glyphicon glyphicon-calendar"></i>
@@ -1196,6 +1200,7 @@
 															onblur="this.setAttribute('value', this.value);"
 															ui-number-mask="2"
 															ng-readonly="prestamoc.m_existenDatos"
+															ng-change="prestamoc.actualizarTotalesUE()"
 														/>
 								 					</td>
 								 					<td style="text-align: center;">
@@ -1206,6 +1211,7 @@
 															onblur="this.setAttribute('value', this.value);"
 															ui-number-mask="2"
 															ng-readonly="prestamoc.m_existenDatos"
+															ng-change="prestamoc.actualizarTotalesUE()"
 														/>
 								 					</td>
 								 					<td style="text-align: center; border-right: 1px solid #ddd;">
@@ -1216,6 +1222,7 @@
 															onblur="this.setAttribute('value', this.value);"
 															ui-number-mask="2"
 															ng-readonly="prestamoc.m_existenDatos"
+															ng-change="prestamoc.actualizarTotalesUE()"
 														/>
 								 					</td>
 								 				<tr>
@@ -1231,21 +1238,24 @@
 								 		 </td>
 								 		 
 								 	</tr>
-								 	<tr ng-if="false">
-								 		<td class="label-form">
+								 	<tr style="border-top: 3px double #ddd;" ng-show="false">
+								 		<td style="min-width: 200px;" class="label-form">
 								 			Total Asignado
 								 		</td>
-								 		<td  colspan="3" ng-repeat= "organismo in prestamoc.m_organismosEjecutores"
-								 			class="label-form">
-								 			<div>
-								 				{{ organismo.totalAsignadoPrestamo | formatoMillonesSinTipo : prestamoc.enMillones }}
-								 			</div>
-								 			<div>
-								 				{{ organismo.totalAsignadoDonacion | formatoMillonesSinTipo : prestamoc.enMillones }}
-								 			</div>
-								 			<div>
-								 				{{ organismo.totalAsignadoNacional | formatoMillonesSinTipo : prestamoc.enMillones }}
-								 			</div>
+								 		<td  colspan="3" ng-repeat = "organismo in prestamoc.m_organismosEjecutores">
+								 			<table style="width: 100%;">
+								 				<tr>
+								 					<td style="text-align: center;">
+								 						{{ organismo.totalAsignadoPrestamo | formatoMillonesSinTipo : prestamoc.enMillones }}
+								 					</td>
+								 					<td style="text-align: center;">
+								 						{{ organismo.totalAsignadoDonacion | formatoMillonesSinTipo : prestamoc.enMillones }}
+								 					</td>
+								 					<td style="text-align: center; border-right: 1px single #ddd;">
+								 						{{ organismo.totalAsignadoNacional | formatoMillonesSinTipo : prestamoc.enMillones }}
+								 					</td>
+								 				<tr>
+								 			</table>
 								 		</td>
 								 	</tr>
 								</table>
