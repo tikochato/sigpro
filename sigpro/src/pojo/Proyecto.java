@@ -1,5 +1,5 @@
 package pojo;
-// Generated Nov 3, 2017 10:12:01 AM by Hibernate Tools 5.2.3.Final
+// Generated Nov 6, 2017 8:46:06 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class Proyecto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5826257789950173175L;
+	private static final long serialVersionUID = 3858660725248599825L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Colaborador colaborador;
@@ -69,6 +69,9 @@ public class Proyecto implements java.io.Serializable {
 	private Integer ejecucionFisicaReal;
 	private Integer projectCargado;
 	private String observaciones;
+	private Integer coordinador;
+	private Date fechaElegibilidad;
+	private Date fechaCierre;
 	private Set<Desembolso> desembolsos = new HashSet<Desembolso>(0);
 	private Set<Hito> hitos = new HashSet<Hito>(0);
 	private Set<ProgramaProyecto> programaProyectos = new HashSet<ProgramaProyecto>(0);
@@ -102,10 +105,11 @@ public class Proyecto implements java.io.Serializable {
 			String objetivoEspecifico, String visionGeneral, Integer renglon, Integer ubicacionGeografica,
 			Date fechaInicio, Date fechaFin, int duracion, String duracionDimension, Integer orden, String treePath,
 			Integer nivel, Integer ejecucionFisicaReal, Integer projectCargado, String observaciones,
-			Set<Desembolso> desembolsos, Set<Hito> hitos, Set<ProgramaProyecto> programaProyectos,
-			Set<MatrizRaci> matrizRacis, Set<ProyectoMiembro> proyectoMiembros, Set<ProyectoImpacto> proyectoImpactos,
-			Set<ProyectoRolColaborador> proyectoRolColaboradors, Set<ProyectoPropiedadValor> proyectoPropiedadValors,
-			Set<ProyectoUsuario> proyectoUsuarios, Set<Componente> componentes) {
+			Integer coordinador, Date fechaElegibilidad, Date fechaCierre, Set<Desembolso> desembolsos, Set<Hito> hitos,
+			Set<ProgramaProyecto> programaProyectos, Set<MatrizRaci> matrizRacis, Set<ProyectoMiembro> proyectoMiembros,
+			Set<ProyectoImpacto> proyectoImpactos, Set<ProyectoRolColaborador> proyectoRolColaboradors,
+			Set<ProyectoPropiedadValor> proyectoPropiedadValors, Set<ProyectoUsuario> proyectoUsuarios,
+			Set<Componente> componentes) {
 		this.acumulacionCosto = acumulacionCosto;
 		this.colaborador = colaborador;
 		this.etiqueta = etiqueta;
@@ -144,6 +148,9 @@ public class Proyecto implements java.io.Serializable {
 		this.ejecucionFisicaReal = ejecucionFisicaReal;
 		this.projectCargado = projectCargado;
 		this.observaciones = observaciones;
+		this.coordinador = coordinador;
+		this.fechaElegibilidad = fechaElegibilidad;
+		this.fechaCierre = fechaCierre;
 		this.desembolsos = desembolsos;
 		this.hitos = hitos;
 		this.programaProyectos = programaProyectos;
@@ -520,6 +527,35 @@ public class Proyecto implements java.io.Serializable {
 
 	public void setObservaciones(String observaciones) {
 		this.observaciones = observaciones;
+	}
+
+	@Column(name = "coordinador")
+	public Integer getCoordinador() {
+		return this.coordinador;
+	}
+
+	public void setCoordinador(Integer coordinador) {
+		this.coordinador = coordinador;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_elegibilidad", length = 19)
+	public Date getFechaElegibilidad() {
+		return this.fechaElegibilidad;
+	}
+
+	public void setFechaElegibilidad(Date fechaElegibilidad) {
+		this.fechaElegibilidad = fechaElegibilidad;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_cierre", length = 19)
+	public Date getFechaCierre() {
+		return this.fechaCierre;
+	}
+
+	public void setFechaCierre(Date fechaCierre) {
+		this.fechaCierre = fechaCierre;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")

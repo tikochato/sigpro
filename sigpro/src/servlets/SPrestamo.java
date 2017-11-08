@@ -156,6 +156,7 @@ public class SPrestamo extends HttpServlet {
     	String tipoMoneda;
     	BigDecimal techo;
     	int orden;
+    	String descripcion;
 		List<stunidadejecutora> unidadesEjecutoras;
     }
     
@@ -163,10 +164,14 @@ public class SPrestamo extends HttpServlet {
     	Integer id;
     	String nombre;
     	String entidad;
+    	Integer entidadId;
 		Integer ejercicio;
 		Double prestamo;
 		Double donacion;
 		Double nacional;
+		int esCoordinador;
+		String fechaElegibilidad;
+		String fechaCierre;
     }
     
     public SPrestamo() {
@@ -657,6 +662,7 @@ public class SPrestamo extends HttpServlet {
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}else if(accion.equals("getUnidadesEjecutoras")){
 			String codigoPresupuestario = map.get("codigoPresupuestario");
+			Integer proyectoId = Utils.String2Int(map.get("proyectoId"), 0);
 			int ejercicio = Year.now().getValue();
 			
 			List<?> unidadesEjecutoras = DataSigadeDAO.getUnidadesEjecutoras(codigoPresupuestario, ejercicio);
@@ -668,9 +674,21 @@ public class SPrestamo extends HttpServlet {
 				
 				UnidadEjecutora EU = UnidadEjecutoraDAO.getUnidadEjecutora((Integer)objEU[1], (Integer)objEU[2], (Integer)objEU[3]);
 				if(EU != null){
-					temp.id = EU.getId().getEjercicio();
+					temp.id = EU.getId().getUnidadEjecutora();
+					temp.ejercicio = EU.getId().getEjercicio();
 					temp.entidad = EU.getEntidad().getNombre();
+					temp.entidadId = EU.getEntidad().getId().getEntidad();
 					temp.nombre = EU.getNombre();
+
+					if(proyectoId>0){
+						Proyecto proyecto = ProyectoDAO.getProyectoPorUnidadEjecutora(temp.id, proyectoId, temp.entidadId);
+						if(proyecto!=null){
+							temp.esCoordinador = proyecto.getCoordinador()!=null ? proyecto.getCoordinador() : 0;
+							temp.fechaElegibilidad = Utils.formatDate(proyecto.getFechaElegibilidad());
+							temp.fechaCierre = Utils.formatDate(proyecto.getFechaCierre());
+						}
+					}
+					
 					lstunidadesejecutoras.add(temp);
 				}
 			}
@@ -705,16 +723,17 @@ public class SPrestamo extends HttpServlet {
 							stunidadejecutora temp_ = new stunidadejecutora();
 							temp_.id = unidade.getId().getUnidadEjecutora();
 							temp_.entidad = unidade.getId().getEntidadentidad() + "";
+							temp_.entidadId = unidade.getId().getEntidadentidad();
 							temp_.ejercicio = unidade.getId().getEjercicio();
 							temp_.nombre = unidade.getNombre();
-							
-							
+														
 							Componente compTemp = ComponenteDAO.obtenerComponentePorEntidad(codigoPresupuestario,temp_.ejercicio,
 									Integer.valueOf(temp_.entidad),temp_.id,temp.orden,prestamoId);
 							if (compTemp != null){
 								temp_.prestamo = compTemp.getFuentePrestamo().doubleValue();
 								temp_.donacion = compTemp.getFuenteDonacion().doubleValue();
 								temp_.nacional = compTemp.getFuenteNacional().doubleValue();
+								temp.descripcion = compTemp.getDescripcion();
 								existenDatos = true;
 							}
 								
@@ -737,6 +756,7 @@ public class SPrestamo extends HttpServlet {
 			Integer prestamoId = Utils.String2Int(map.get("prestamoId"));
 			Prestamo prestamo = PrestamoDAO.getPrestamoById(prestamoId);
 			String data = map.get("estructura");
+			String unidadesEjecutoras = map.get("unidadesEjecutoras");
 			boolean ret = false;
 			guardarComponentesSigade(prestamo.getCodigoPresupuestario() + "", usuario);
 			
@@ -745,6 +765,7 @@ public class SPrestamo extends HttpServlet {
 			
 			JsonParser parser = new JsonParser();
 			JsonArray estructuras_ = parser.parse(data).getAsJsonArray();
+			JsonArray est_unidadesEjecutoras_ = parser.parse(unidadesEjecutoras).getAsJsonArray();
 			
 			ArrayList<Proyecto> proyectos = new ArrayList<Proyecto>();
 			int k = 0;
@@ -763,12 +784,12 @@ public class SPrestamo extends HttpServlet {
 					BigDecimal fuenteDonacion = !unidad.get("donacion").isJsonNull() ?  Utils.String2BigDecimal(unidad.get("donacion").getAsString(), new BigDecimal(0)): new BigDecimal(0);
 					BigDecimal fuenteNacional = !unidad.get("nacional").isJsonNull() ? Utils.String2BigDecimal(unidad.get("nacional").getAsString(), new BigDecimal(0)): new BigDecimal(0); 
 					if(posicion== -1){
-						proyectos.add(crearProyecto(unidad,prestamo,usuario));
+						proyectos.add(crearProyecto(unidad,prestamo,usuario,est_unidadesEjecutoras_));
 						ret = proyectos.size()>0;
 						if (fuentePrestamo.compareTo(BigDecimal.ZERO) > 0 || 
 								fuenteDonacion.compareTo(BigDecimal.ZERO) > 0 || 
 								fuenteNacional.compareTo(BigDecimal.ZERO)  > 0){
-							ret = ret && crearComponente(proyectos.get(proyectos.size() -1),(String) estructura.get("nombre"),
+							ret = ret && crearComponente(proyectos.get(proyectos.size() -1),(String) estructura.get("nombre"), (String) estructura.get("descripcion"),
 									fuentePrestamo, fuenteDonacion, fuenteNacional,usuario,
 									prestamo.getCodigoPresupuestario(),((Double) estructura.get("orden")).intValue());
 						}
@@ -776,7 +797,7 @@ public class SPrestamo extends HttpServlet {
 						if (fuentePrestamo.compareTo(BigDecimal.ZERO) > 0 || 
 								fuenteDonacion.compareTo(BigDecimal.ZERO) > 0 || 
 								fuenteNacional.compareTo(BigDecimal.ZERO)  > 0){
-							ret = ret && crearComponente(proyectos.get(posicion),(String) estructura.get("nombre"),
+							ret = ret && crearComponente(proyectos.get(posicion),(String) estructura.get("nombre"), (String) estructura.get("descripcion"),
 									fuentePrestamo, fuenteDonacion, fuenteNacional,usuario,
 									prestamo.getCodigoPresupuestario(),((Double) estructura.get("orden")).intValue());
 						}
@@ -928,8 +949,22 @@ public class SPrestamo extends HttpServlet {
         output.close();
 	}
 	
-	private Proyecto crearProyecto(JsonObject unidad,Prestamo prestamo,String usuario){
+	private Proyecto crearProyecto(JsonObject unidad,Prestamo prestamo,String usuario, JsonArray est_unidadesEjecutoras){
 		Proyecto ret = null;
+		Integer esCoordinador = null;
+		Date fechaElegibilidad = null;
+		Date fechaCierre = null;
+		for(int j=0; j<est_unidadesEjecutoras.size(); j++){
+			JsonObject unidad_ = est_unidadesEjecutoras.get(j).getAsJsonObject();
+			if (unidad.get("ejercicio").getAsString().equals(unidad_.get("ejercicio").getAsString()) &&
+					unidad.get("entidad").getAsString().equals(unidad_.get("entidadId").getAsString()) && 
+					unidad.get("id").getAsString().equals(unidad_.get("id").getAsString())){
+				esCoordinador = Utils.String2Boolean(unidad_.get("esCoordinador").getAsString(), 0);
+				fechaElegibilidad = Utils.stringToDateZ(unidad_.get("fechaElegibilidad").getAsString());
+				fechaCierre = Utils.stringToDateZ(unidad_.get("fechaCierre").getAsString());
+				break;
+			}
+		}
 		
 		UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(
 				Utils.String2Int(unidad.get("ejercicio").getAsString()),
@@ -947,7 +982,7 @@ public class SPrestamo extends HttpServlet {
 					null, null, null,null, null, null, null,null, null, null,null,
 					prestamo.getFechaSuscripcion(),prestamo.getFechaSuscripcion(),
 					1, "d"
-					,null,null,0,0,0, null,null,null,null,null,null,null,null,null,null,null);
+					,null,null,0,0,0, null,esCoordinador,fechaElegibilidad,fechaCierre,null,null,null,null,null,null,null,null,null,null);
 			
 			return ProyectoDAO.guardarProyecto(proyecto, false) ? proyecto : null;
 		}
@@ -955,7 +990,7 @@ public class SPrestamo extends HttpServlet {
 		return ret;
 	}
 	
-	private boolean  crearComponente(Proyecto proyecto,String nombreComponente, BigDecimal fPrestamo,
+	private boolean  crearComponente(Proyecto proyecto,String nombreComponente, String descripcion, BigDecimal fPrestamo,
 			BigDecimal donacion,BigDecimal nacional, String usuario, Long codigoPresupuestario,int orden){
 		ComponenteTipo componenteTipo = ComponenteTipoDAO.getComponenteTipoPorId(1);
 		
@@ -964,7 +999,7 @@ public class SPrestamo extends HttpServlet {
 		AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
 		
 		Componente componente = new Componente(acumulacionCosto,componenteSigade,componenteTipo, proyecto, proyecto.getUnidadEjecutora(), nombreComponente
-				, null,usuario, null, new Date(), null, 1, null, null, null, null, null, null, null, null, 
+				, descripcion,usuario, null, new Date(), null, 1, null, null, null, null, null, null, null, null, 
 				null,null,null,proyecto.getFechaInicio(), proyecto.getFechaFin(),1
 				, "d",null,null,1,1,fPrestamo,donacion,nacional,null,null,null,null);
 		

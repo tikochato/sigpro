@@ -340,6 +340,38 @@ public class ProyectoDAO implements java.io.Serializable  {
 		return ret;
 	}
 	
+	public static Proyecto getProyectoPorUnidadEjecutora(int unidadEjecutoraId, int prestamoId, Integer entidad){
+		Proyecto ret = null;
+		List<Proyecto> listRet = new ArrayList<Proyecto>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "select p from Proyecto p "
+					+ "inner join p.unidadEjecutora pp "
+					+ "where p.estado=1 "
+					+ "and p.prestamo.id=:prestamoId "
+					+ "and pp.id.unidadEjecutora=:unidadEjecutora ";			
+			query += (entidad!=null && entidad>0) ? "and pp.entidad.id.entidad=:entidad " : " ";
+			
+			Query<Proyecto> criteria = session.createQuery(query, Proyecto.class);
+			criteria.setParameter("unidadEjecutora", unidadEjecutoraId);
+			criteria.setParameter("prestamoId", prestamoId);
+			if(entidad!=null && entidad>0)
+				criteria.setParameter("entidad", entidad);
+			listRet =   criteria.getResultList();
+
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
+		}
+		catch(Throwable e){
+			e.printStackTrace();
+			CLogger.write("12", Proyecto.class, e);
+		}
+		finally{
+			session.close();
+		}
+
+		return ret;
+	}
+	
 	public static Proyecto getProyectoOrden(int id, Session session){
 		Proyecto ret = null;
 		try{
