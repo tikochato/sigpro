@@ -56,6 +56,8 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 		Integer duracion;
 		String fechaInicial;
 		String fechaFinal;
+		String fechaInicialReal;
+		String fechaFinReal;
 		Integer avance;
 		String acumulacionCosto;
 		BigDecimal presupuestoAprobado;
@@ -176,7 +178,7 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 			lstprestamo = generarPlan(proyectoId, usuario);
 			
 			if (lstprestamo != null && !lstprestamo.isEmpty()){ 
-				datos = new String[lstprestamo.size()][11];
+				datos = new String[lstprestamo.size()][13];
 				for (int i=0; i<lstprestamo.size(); i++){
 					
 					String sangria="";
@@ -187,13 +189,15 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 						datos[i][1] = lstprestamo.get(i).duracion.toString();
 						datos[i][2] = lstprestamo.get(i).fechaInicial;
 						datos[i][3] = lstprestamo.get(i).fechaFinal;
-						datos[i][4] = lstprestamo.get(i).avance != null ? lstprestamo.get(i).avance.toString() : null;
-						datos[i][5] = lstprestamo.get(i).acumulacionCosto;
-						datos[i][6] = lstprestamo.get(i).presupuestoAprobado != null ? lstprestamo.get(i).presupuestoAprobado.toString() : "0";
-						datos[i][7] = lstprestamo.get(i).costoPlanificado != null ? lstprestamo.get(i).costoPlanificado.toString() : "0";
-						datos[i][8] = lstprestamo.get(i).asignacionPresupuestariaVigente != null ? lstprestamo.get(i).asignacionPresupuestariaVigente.toString() : "0";
-						datos[i][9] = lstprestamo.get(i).presupuestoDevengado != null ? lstprestamo.get(i).presupuestoDevengado.toString() : "0";
-						datos[i][10] = new Double(lstprestamo.get(i).avanceFinanciero).toString();
+						datos[i][4] = lstprestamo.get(i).fechaInicialReal;
+						datos[i][5] = lstprestamo.get(i).fechaFinReal;
+						datos[i][6] = lstprestamo.get(i).avance != null ? lstprestamo.get(i).avance.toString() : null;
+						datos[i][7] = lstprestamo.get(i).acumulacionCosto;
+						datos[i][8] = lstprestamo.get(i).presupuestoAprobado != null ? lstprestamo.get(i).presupuestoAprobado.toString() : "0";
+						datos[i][9] = lstprestamo.get(i).costoPlanificado != null ? lstprestamo.get(i).costoPlanificado.toString() : "0";
+						datos[i][10] = lstprestamo.get(i).asignacionPresupuestariaVigente != null ? lstprestamo.get(i).asignacionPresupuestariaVigente.toString() : "0";
+						datos[i][11] = lstprestamo.get(i).presupuestoDevengado != null ? lstprestamo.get(i).presupuestoDevengado.toString() : "0";
+						datos[i][12] = new Double(lstprestamo.get(i).avanceFinanciero).toString();
 
 				}
 			}
@@ -223,6 +227,8 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 					temp.duracion = (Integer)obj[6];
 					temp.fechaInicial = Utils.formatDate((Date)obj[4]);
 					temp.fechaFinal = Utils.formatDate((Date)obj[5]);
+					temp.fechaInicialReal = Utils.formatDate((Date)obj[16]);
+					temp.fechaFinReal = Utils.formatDate((Date)obj[17]);
 					
 					switch(temp.objetoTipo){
 					case 1:
