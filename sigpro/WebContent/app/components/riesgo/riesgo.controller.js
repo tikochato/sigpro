@@ -235,12 +235,11 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 					mi.form_valid = 1;
 				}
 				else if(mi.parentController.mForm.$valid || mi.parentController.mForm.$error.required[0].$name=='form_valid'){
-					mi.riesgo.colaboradorNombre = mi.colbaoradorNombre;
+					mi.riesgo.colaboradorNombre = mi.colaboradorNombre;
 					mi.riesgo.colaboradorid = mi.colaboradorid;
 					mi.riesgo.ejecutado = mi.ejecutado ? 1 : 0;
 					mi.riesgo.riesgotipoid = mi.riesgoTipoid;
 					mi.riesgo.riesgotiponombre = mi.riesgoTipoNombre;
-					mi.riesgo.probabilidad = mi.probabilidad.valor;
 					mi.riesgo.fechaEjecucion = mi.fechaEjecucion;
 					mi.mostraringreso=false;
 					mi.esnuevo = false;
