@@ -226,11 +226,39 @@
 								  <label class="floating-label">* Fecha de Fin</label>
 								</div>
 							</div>
+							
+							<div class="col-sm-6">
+								<div class="form-group" >
+								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" alt-input-formats="{{actividadc.altformatofecha}}"
+								  			ng-model="actividadc.actividad.fechaInicioReal"
+								            datepicker-options="actividadc.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  
+								            ng-value="actividadc.actividad.fechaInicioReal" onblur="this.setAttribute('value', this.value);"
+							            	readonly="readonly"/>
+								            <span class="label-icon" tabindex="-1">
+								              <i class="glyphicon glyphicon-calendar"></i>
+								            </span>
+								  <label class="floating-label">Fecha de Inicio Real</label>
+								</div>
+							</div>
+							
+							<div class="col-sm-6">
+							
+								<div class="form-group" >
+								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}"
+								  			ng-model="actividadc.actividad.fechaFinReal" is-open="actividadc.ff_abierto"
+								            datepicker-options="actividadc.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+								            readonly="readonly" ng-value="actividadc.actividad.fechaFinReal" onblur="this.setAttribute('value', this.value);"/>
+								            <span class="label-icon" tabindex="-1">
+								              <i class="glyphicon glyphicon-calendar"></i>
+								            </span>
+								  <label class="floating-label">Fecha de Fin Real</label>
+								</div>
+							</div>
 						</div>
 											
 						<div class="form-group">
 						   <input type="number" name="iavance"  class="inputText" id="inombre" 
-						     ng-model="actividadc.actividad.porcentajeavance" ng-value="actividadc.actividad.porcentajeavance"   
+						     ng-model="actividadc.actividad.porcentajeavance" ng-value="actividadc.actividad.porcentajeavance" 
 						     onblur="this.setAttribute('value', this.value);"  min="0" max="100" ng-required="true" >
 						   <label class="floating-label">* Avance %</label>
 						</div>

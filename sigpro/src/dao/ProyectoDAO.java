@@ -541,15 +541,21 @@ public class ProyectoDAO implements java.io.Serializable  {
 				Double costo=0.0d;
 				Timestamp fecha_maxima=new Timestamp(0);
 				Timestamp fecha_minima=new Timestamp((new DateTime(2999,12,31,0,0,0)).getMillis());
+				Timestamp fecha_maxima_real=null;
+				Timestamp fecha_minima_real=null;
 				for(Nodo nodo_hijo:nodo.children){
 					costo += nodo_hijo.costo;
 					fecha_minima = (nodo_hijo.fecha_inicio.getTime()<fecha_minima.getTime()) ? nodo_hijo.fecha_inicio : fecha_minima;
 					fecha_maxima = (nodo_hijo.fecha_fin.getTime()>fecha_maxima.getTime()) ? nodo_hijo.fecha_fin : fecha_maxima;
+					fecha_minima_real = nodo_hijo.fecha_inicio_real != null ? fecha_minima_real != null ? ((nodo_hijo.fecha_inicio_real.getTime()<fecha_minima_real.getTime()) ? nodo_hijo.fecha_inicio_real : fecha_minima_real) : nodo_hijo.fecha_inicio_real : null;
+					fecha_maxima_real = nodo_hijo.fecha_fin_real != null ? fecha_maxima_real != null ? ((nodo_hijo.fecha_fin_real.getTime() > fecha_maxima_real.getTime()) ? nodo_hijo.fecha_fin_real : fecha_maxima_real) : nodo_hijo.fecha_fin_real : null;
 				}
 				nodo.objeto = ObjetoDAO.getObjetoPorIdyTipo(nodo.id, nodo.objeto_tipo);
 				if(nodo.children!=null && nodo.children.size()>0){
 					nodo.fecha_inicio = fecha_minima;
 					nodo.fecha_fin = fecha_maxima;
+					nodo.fecha_inicio_real = fecha_minima_real;
+					nodo.fecha_fin_real = fecha_maxima_real;
 					nodo.costo = costo;
 				}
 				else{
@@ -557,7 +563,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 					nodo.costo = (costo_temp!=null) ? costo_temp.doubleValue(): 0;
 				}
 				nodo.duracion = Utils.getWorkingDays(new DateTime(nodo.fecha_inicio), new DateTime(nodo.fecha_fin));
-				setDatosCalculados(nodo.objeto,nodo.fecha_inicio,nodo.fecha_fin,nodo.costo, nodo.duracion);
+				setDatosCalculados(nodo.objeto,nodo.fecha_inicio,nodo.fecha_fin,nodo.costo, nodo.duracion, nodo.fecha_inicio_real, nodo.fecha_fin_real);
 			}
 			ret = true;
 		}
@@ -565,13 +571,15 @@ public class ProyectoDAO implements java.io.Serializable  {
 		return ret;
 	}
 	
-	private static void setDatosCalculados(Object objeto,Timestamp fecha_inicio, Timestamp fecha_fin, Double costo, int duracion){
+	private static void setDatosCalculados(Object objeto,Timestamp fecha_inicio, Timestamp fecha_fin, Double costo, int duracion, Timestamp fecha_inicio_real, Timestamp fecha_fin_real){
 		try{
 			if(objeto!=null){
 				Method setFechaInicio =objeto.getClass().getMethod("setFechaInicio",Date.class);
 				Method setFechaFin =  objeto.getClass().getMethod("setFechaFin",Date.class);
 				Method setCosto = objeto.getClass().getMethod("setCosto",BigDecimal.class);
 				Method setDuracion = objeto.getClass().getMethod("setDuracion", int.class);
+				Method setFechaInicioReal = objeto.getClass().getMethod("setFechaInicioReal", Date.class);
+				Method setFechaFinReal = objeto.getClass().getMethod("setFechaFinReal", Date.class);
 				if(fecha_inicio!=null)
 					setFechaInicio.invoke(objeto, new Date(fecha_inicio.getTime()));
 				if(fecha_fin!=null)
@@ -579,6 +587,10 @@ public class ProyectoDAO implements java.io.Serializable  {
 				if(costo!=null)
 					setCosto.invoke(objeto, new BigDecimal(costo));
 				setDuracion.invoke(objeto, duracion);
+				if(fecha_inicio_real!=null)
+					setFechaInicioReal.invoke(objeto, new Date(fecha_inicio_real.getTime()));
+				if(fecha_fin_real!=null)
+					setFechaFinReal.invoke(objeto, new Date(fecha_fin_real.getTime()));
 			}
 		}
 		catch(Throwable e){

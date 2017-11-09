@@ -88,6 +88,8 @@ public class SActividad extends HttpServlet {
 		int estado;
 		Integer proyectoBase;
 		boolean tieneHijos;
+		String fechaInicioReal;
+		String fechaFinReal;
 	}
 
 	class stdatadinamico {
@@ -183,7 +185,8 @@ public class SActividad extends HttpServlet {
 				temp.acumulacionCostoId = actividad.getAcumulacionCosto().getId();
 				temp.acumulacionCostoNombre = actividad.getAcumulacionCosto().getNombre();
 				temp.proyectoBase = actividad.getProyectoBase();
-				
+				temp.fechaInicioReal = Utils.formatDate(actividad.getFechaInicioReal());
+				temp.fechaFinReal = Utils.formatDate(actividad.getFechaFinReal());
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
 				stactividads.add(temp);
 			}
@@ -223,7 +226,8 @@ public class SActividad extends HttpServlet {
 				temp.fechaInicio = Utils.formatDate(actividad.getFechaInicio());
 				temp.fechaFin = Utils.formatDate(actividad.getFechaFin());
 				temp.proyectoBase = actividad.getProyectoBase();
-				
+				temp.fechaInicioReal = actividad.getFechaInicioReal() != null ? Utils.formatDate(actividad.getFechaInicioReal()) : null;
+				temp.fechaFinReal = actividad.getFechaFinReal() != null ? Utils.formatDate(actividad.getFechaFinReal()) : null;
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
 				stactividads.add(temp);
 			}
@@ -308,10 +312,18 @@ public class SActividad extends HttpServlet {
 						duracion = (int) ((fechaFin.getTime()-fechaInicio.getTime())/86400000);
 						duracionDimension = "d";
 						
+						Date fechaInicioReal = null;
+						Date fechaFinReal = null;
+						
+						if(porcentajeAvance > 0 && porcentajeAvance < 100)
+							fechaInicioReal = new Date();
+						else if(porcentajeAvance == 100)
+							fechaFinReal = new Date();
+						
 						actividad = new Actividad(actividadTipo, acumulacionCosto, nombre, descripcion, fechaInicio, fechaFin,
 								porcentajeAvance, usuario, null, new Date(), null, 1, snip, programa, subprograma, proyecto, iactividad, obra,
 								objetoId,objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,costo,renglon, ubicacionGeografica, null, null,null
-								, proyectoBase,componenteBase,productoBase,null,null,null,null);
+								, proyectoBase,componenteBase,productoBase,fechaInicioReal,fechaFinReal,null,null);
 					}
 					else{
 						actividad = ActividadDAO.getActividadPorId(id);
@@ -339,6 +351,11 @@ public class SActividad extends HttpServlet {
 						actividad.setProyectoBase(proyectoBase);
 						actividad.setComponenteBase(componenteBase);
 						actividad.setProductoBase(productoBase);
+						
+						if(porcentajeAvance > 0 && porcentajeAvance < 100 && actividad.getFechaInicioReal() == null)
+							actividad.setFechaInicioReal(new Date());
+						else if(porcentajeAvance == 100 && actividad.getFechaFinReal() == null)
+							actividad.setFechaFinReal(new Date());
 					}
 					
 					result = ActividadDAO.guardarActividad(actividad, true);
@@ -431,8 +448,10 @@ public class SActividad extends HttpServlet {
 							, "\"usuarioCreo\": \"" , actividad.getUsuarioCreo(),"\","
 							, "\"fechaCreacion\":\" " , Utils.formatDateHour(actividad.getFechaCreacion()),"\","
 							, "\"usuarioactualizo\": \"" , actividad.getUsuarioActualizo() != null ? actividad.getUsuarioActualizo() : "","\","
-							, "\"fechaactualizacion\": \"" , Utils.formatDateHour(actividad.getFechaActualizacion()),"\""+
-							" }");
+							, "\"fechaactualizacion\": \"" , Utils.formatDateHour(actividad.getFechaActualizacion()),"\","
+							, "\"fechaInicioReal\": " , actividad.getFechaInicioReal() != null ? "\"" + Utils.formatDate(actividad.getFechaInicioReal()) + "\"" : null, ","
+							, "\"fechaFinReal\": " , actividad.getFechaFinReal() != null ? "\"" + Utils.formatDate(actividad.getFechaFinReal()) + "\"" : null
+							, " }");
 				}
 				else
 					response_text = "{ \"success\": false }";
@@ -511,7 +530,8 @@ public class SActividad extends HttpServlet {
 				temp.duracion = actividad.getDuracion();
 				temp.duracionDimension = actividad.getDuracionDimension();
 				temp.proyectoBase = actividad.getProyectoBase();
-				
+				temp.fechaInicioReal = actividad.getFechaInicioReal() != null ? Utils.formatDate(actividad.getFechaInicioReal()) : null;
+				temp.fechaFinReal = actividad.getFechaFinReal() != null ? Utils.formatDate(actividad.getFechaFinReal()) : null;
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
 				stactividads.add(temp);
 			}
@@ -563,7 +583,8 @@ public class SActividad extends HttpServlet {
 			temp.acumulacionCostoId = actividad.getAcumulacionCosto()!=null ? actividad.getAcumulacionCosto().getId(): null;
 			temp.acumulacionCostoNombre = actividad.getAcumulacionCosto()!=null ? actividad.getAcumulacionCosto().getNombre(): null;
 			temp.proyectoBase = actividad.getProyectoBase();
-			
+			temp.fechaInicioReal = actividad.getFechaInicioReal() != null ? Utils.formatDate(actividad.getFechaInicioReal()) : null;
+			temp.fechaFinReal = actividad.getFechaFinReal() != null ? Utils.formatDate(actividad.getFechaFinReal()) : null;
 			temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);

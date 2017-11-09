@@ -30,6 +30,10 @@ public class Nodo {
 	public Double costo;
 	@Expose(serialize = false)
 	public Object objeto;
+	@Expose(serialize = false)
+	public Timestamp fecha_inicio_real;
+	@Expose(serialize = false)
+	public Timestamp fecha_fin_real;
 	
 	public Nodo(int id, int objeto_tipo, String nombre, int nivel, ArrayList<Nodo> children, Nodo parent, boolean estado) {
 		super();
@@ -43,7 +47,7 @@ public class Nodo {
 	}
 	
 	public Nodo(int id, int objeto_tipo, String nombre, int nivel, ArrayList<Nodo> children, Nodo parent, boolean estado, Timestamp fecha_inicio,
-			Timestamp fecha_fin, Double costo, int duracion) {
+			Timestamp fecha_fin, Double costo, int duracion, Timestamp fecha_inicio_real, Timestamp fecha_fin_real) {
 		super();
 		this.id = id;
 		this.objeto_tipo = objeto_tipo;
@@ -56,5 +60,7 @@ public class Nodo {
 		this.fecha_fin = fecha_fin;
 		this.costo = costo;
 		this.duracion = duracion;
+		this.fecha_inicio_real = fecha_inicio_real;
+		this.fecha_fin_real = fecha_fin_real;
 	}
 }
