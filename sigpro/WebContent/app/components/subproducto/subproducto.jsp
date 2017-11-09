@@ -261,6 +261,34 @@
 							  <label for="campo.id" class="floating-label">* Fecha de Fin</label>
 							</div>
 						</div>
+						
+						<div class="col-sm-6">
+								<div class="form-group" >
+								  <input type="text"  class="inputText" uib-datepicker-popup="{{subproducto.formatofecha}}" alt-input-formats="{{subproducto.altformatofecha}}"
+								  			ng-model="subproducto.subproducto.fechaInicioReal"
+								            datepicker-options="subproducto.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  
+								            ng-value="subproducto.subproducto.fechaInicioReal" onblur="this.setAttribute('value', this.value);"
+							            	readonly="readonly"/>
+								            <span class="label-icon" tabindex="-1">
+								              <i class="glyphicon glyphicon-calendar"></i>
+								            </span>
+								  <label class="floating-label">Fecha de Inicio Real</label>
+								</div>
+							</div>
+							
+							<div class="col-sm-6">
+							
+								<div class="form-group" >
+								  <input type="text"  class="inputText" uib-datepicker-popup="{{subproducto.formatofecha}}"
+								  			ng-model="subproducto.subproducto.fechaFinReal"
+								            datepicker-options="subproducto.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+								            readonly="readonly" ng-value="subproducto.subproducto.fechaFinReal" onblur="this.setAttribute('value', this.value);"/>
+								            <span class="label-icon" tabindex="-1">
+								              <i class="glyphicon glyphicon-calendar"></i>
+								            </span>
+								  <label class="floating-label">Fecha de Fin Real</label>
+								</div>
+							</div>
 					</div>
 					<div class="form-group" ng-repeat="campo in subproducto.camposdinamicos">
 						<div ng-switch="campo.tipo">

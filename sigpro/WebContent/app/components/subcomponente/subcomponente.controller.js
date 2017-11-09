@@ -692,6 +692,10 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 								mi.subcomponente.fechaInicio = moment(mi.subcomponente.fechaInicio, 'DD/MM/YYYY').toDate();
 							if(mi.subcomponente.fechaFin != "")
 								mi.subcomponente.fechaFin = moment(mi.subcomponente.fechaFin, 'DD/MM/YYYY').toDate();
+							if(mi.subcomponente.fechaInicioReal != "")
+								mi.subcomponente.fechaInicioReal = moment(mi.subcomponente.fechaInicioReal, 'DD/MM/YYYY').toDate();
+							if(mi.subcomponente.fechaFinReal != "")
+								mi.subcomponente.fechaFinReal = moment(mi.subcomponente.fechaFinReal, 'DD/MM/YYYY').toDate();
 							mi.editar();
 						}
 					});

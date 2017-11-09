@@ -88,6 +88,8 @@ public class SComponente extends HttpServlet {
 		boolean tieneHijos;
 		boolean esDeSigade;
 		Integer prestamoId;
+		String fechaInicioReal;
+		String fechaFinReal;
 	}
 
 	class stdatadinamico {
@@ -189,6 +191,9 @@ public class SComponente extends HttpServlet {
 				temp.fuenteDonacion = componente.getFuenteDonacion();
 				temp.fuenteNacional = componente.getFuenteNacional();
 				temp.prestamoId = componente.getProyecto().getPrestamo().getId();
+				temp.fechaInicioReal = Utils.formatDate(componente.getFechaInicioReal());
+				temp.fechaFinReal = Utils.formatDate(componente.getFechaFinReal());
+				
 				stcomponentes.add(temp);
 			}
 
@@ -251,6 +256,9 @@ public class SComponente extends HttpServlet {
 				temp.fuenteDonacion = componente.getFuenteDonacion();
 				temp.fuenteNacional = componente.getFuenteNacional();
 				temp.prestamoId = componente.getProyecto().getPrestamo().getId();
+				temp.fechaInicioReal = Utils.formatDate(componente.getFechaInicioReal());
+				temp.fechaFinReal = Utils.formatDate(componente.getFechaFinReal());
+				
 				stcomponentes.add(temp);
 			}
 
@@ -473,6 +481,8 @@ public class SComponente extends HttpServlet {
 				temp.fuenteNacional = componente.getFuenteNacional();
 				temp.prestamoId = componente.getProyecto().getPrestamo().getId();
 				esDeSigade = esDeSigade || temp.esDeSigade;
+				temp.fechaInicioReal = Utils.formatDate(componente.getFechaInicioReal());
+				temp.fechaFinReal = Utils.formatDate(componente.getFechaFinReal());
 				
 				stcomponentes.add(temp);
 			}
@@ -554,6 +564,8 @@ public class SComponente extends HttpServlet {
 			temp.descripcion = componente.getDescripcion();
 			temp.longitud = componente.getLongitud();
 			temp.latitud = componente.getLatitud();
+			temp.fechaInicioReal = Utils.formatDate(componente.getFechaInicioReal());
+			temp.fechaFinReal = Utils.formatDate(componente.getFechaFinReal());
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"componente\":",response_text);

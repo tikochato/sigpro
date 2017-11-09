@@ -92,6 +92,8 @@ public class SProducto extends HttpServlet {
 		Integer acumulacionCostoId;
 		String acumulacionCostoNombre;
 		boolean tieneHijos;
+		String fechaInicioReal;
+		String fechaFinReal;
 	}
 	
 	class stdatadinamico {
@@ -236,6 +238,9 @@ public class SProducto extends HttpServlet {
 				}
 
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 3);
+				temp.fechaInicioReal = Utils.formatDate(producto.getFechaInicioReal());
+				temp.fechaFinReal = Utils.formatDate(producto.getFechaFinReal());
+				
 				listaProducto.add(temp);
 			}
 
@@ -496,6 +501,8 @@ public class SProducto extends HttpServlet {
 					}
 
 					temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 3);
+					temp.fechaInicioReal = Utils.formatDate(producto.getFechaInicioReal());
+					temp.fechaFinReal = Utils.formatDate(producto.getFechaFinReal());
 					
 					listaProducto.add(temp);
 				}
@@ -607,6 +614,8 @@ public class SProducto extends HttpServlet {
 				}
 
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 3);
+				temp.fechaInicioReal = Utils.formatDate(producto.getFechaInicioReal());
+				temp.fechaFinReal = Utils.formatDate(producto.getFechaFinReal());
 				
 				listaProducto.add(temp);
 			}
@@ -705,6 +714,8 @@ public class SProducto extends HttpServlet {
 				}
 
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 3);
+				temp.fechaInicioReal = Utils.formatDate(producto.getFechaInicioReal());
+				temp.fechaFinReal = Utils.formatDate(producto.getFechaFinReal());
 				
 				stproductos.add(temp);
 			}
@@ -810,6 +821,8 @@ public class SProducto extends HttpServlet {
 				temp.longitud = producto.getLongitud();
 				temp.latitud = producto.getLatitud();
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 3);
+				temp.fechaInicioReal = Utils.formatDate(producto.getFechaInicioReal());
+				temp.fechaFinReal = Utils.formatDate(producto.getFechaFinReal());
 			}
 
 			response_text = new GsonBuilder().serializeNulls().create().toJson(temp);
@@ -922,6 +935,8 @@ public class SProducto extends HttpServlet {
 				temp.duracionDimension = producto.getDuracionDimension();
 				
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 3);
+				temp.fechaInicioReal = Utils.formatDate(producto.getFechaInicioReal());
+				temp.fechaFinReal = Utils.formatDate(producto.getFechaFinReal());
 				
 				response_text = new GsonBuilder().serializeNulls().create().toJson(temp);
 				response_text = String.join("", "\"producto\":",response_text);

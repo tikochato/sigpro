@@ -317,8 +317,10 @@ public class SActividad extends HttpServlet {
 						
 						if(porcentajeAvance > 0 && porcentajeAvance < 100)
 							fechaInicioReal = new Date();
-						else if(porcentajeAvance == 100)
+						else if(porcentajeAvance == 100){
 							fechaFinReal = new Date();
+							fechaInicioReal = new Date();
+						}
 						
 						actividad = new Actividad(actividadTipo, acumulacionCosto, nombre, descripcion, fechaInicio, fechaFin,
 								porcentajeAvance, usuario, null, new Date(), null, 1, snip, programa, subprograma, proyecto, iactividad, obra,
@@ -354,8 +356,12 @@ public class SActividad extends HttpServlet {
 						
 						if(porcentajeAvance > 0 && porcentajeAvance < 100 && actividad.getFechaInicioReal() == null)
 							actividad.setFechaInicioReal(new Date());
-						else if(porcentajeAvance == 100 && actividad.getFechaFinReal() == null)
+						else if(porcentajeAvance == 100 && actividad.getFechaFinReal() == null){
 							actividad.setFechaFinReal(new Date());
+							
+							if(actividad.getFechaInicioReal() == null)
+								actividad.setFechaInicioReal(new Date());
+						}
 					}
 					
 					result = ActividadDAO.guardarActividad(actividad, true);

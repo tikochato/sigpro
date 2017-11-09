@@ -245,7 +245,7 @@
 							
 								<div class="form-group" >
 								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}"
-								  			ng-model="actividadc.actividad.fechaFinReal" is-open="actividadc.ff_abierto"
+								  			ng-model="actividadc.actividad.fechaFinReal"
 								            datepicker-options="actividadc.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
 								            readonly="readonly" ng-value="actividadc.actividad.fechaFinReal" onblur="this.setAttribute('value', this.value);"/>
 								            <span class="label-icon" tabindex="-1">

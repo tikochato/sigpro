@@ -95,6 +95,8 @@ public class SSubproducto extends HttpServlet {
 		Integer acumulacionCosto;
 		String acumulacionCostoNombre;
 		boolean tieneHijos;
+		String fechaInicioReal;
+		String fechaFinReal;
 	}
 	
 	
@@ -416,6 +418,9 @@ public class SSubproducto extends HttpServlet {
 			
 			temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 4);
 			
+			temp.fechaInicioReal = Utils.formatDate(subproducto.getFechaInicioReal());
+			temp.fechaFinReal = Utils.formatDate(subproducto.getFechaFinReal());
+			
 			listaSubProducto.add(temp);
 		}
 		
@@ -516,6 +521,9 @@ public class SSubproducto extends HttpServlet {
 			}
 			
 			temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 4);
+			
+			temp.fechaInicioReal = Utils.formatDate(subproducto.getFechaInicioReal());
+			temp.fechaFinReal = Utils.formatDate(subproducto.getFechaFinReal());
 			
 			resultadoJson = new GsonBuilder().serializeNulls().create().toJson(temp);
 			resultadoJson = "{\"success\":true," +" \"subproducto\": " + resultadoJson + "}";	

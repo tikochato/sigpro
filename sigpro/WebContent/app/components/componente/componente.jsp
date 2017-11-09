@@ -292,6 +292,34 @@
 								  <label for="campo.id" class="floating-label">* Fecha de Fin</label>
 								</div>
 							</div>
+							
+							<div class="col-sm-6">
+							<div class="form-group" >
+							  <input type="text"  class="inputText" uib-datepicker-popup="{{componentec.formatofecha}}" alt-input-formats="{{componentec.altformatofecha}}"
+							  			ng-model="componentec.componente.fechaInicioReal"
+							            datepicker-options="componentec.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  
+							            ng-value="componentec.componente.fechaInicioReal" onblur="this.setAttribute('value', this.value);"
+						            	readonly="readonly"/>
+							            <span class="label-icon" tabindex="-1">
+							              <i class="glyphicon glyphicon-calendar"></i>
+							            </span>
+							  <label class="floating-label">Fecha de Inicio Real</label>
+							</div>
+						</div>
+							
+						<div class="col-sm-6">
+							<div class="form-group" >
+							  <input type="text"  class="inputText" uib-datepicker-popup="{{componentec.formatofecha}}"
+							  			ng-model="componentec.componente.fechaFinReal"
+							            datepicker-options="componentec.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+							            readonly="readonly" ng-value="componentec.componente.fechaFinReal" onblur="this.setAttribute('value', this.value);"/>
+							            <span class="label-icon" tabindex="-1">
+							              <i class="glyphicon glyphicon-calendar"></i>
+							            </span>
+							  <label class="floating-label">Fecha de Fin Real</label>
+							</div>
+						</div>
+						
 						</div>
 						<div ng-repeat="campo in componentec.camposdinamicos">
 							<div ng-switch="campo.tipo">
