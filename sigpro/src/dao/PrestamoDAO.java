@@ -9,6 +9,7 @@ import pojo.ObjetoPrestamo;
 import pojo.Prestamo;
 import pojo.PrestamoUsuario;
 import pojo.PrestamoUsuarioId;
+import pojo.Usuario;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
@@ -67,7 +68,8 @@ public class PrestamoDAO {
 			session.beginTransaction();
 			session.saveOrUpdate(prestamo);
 			
-			PrestamoUsuario pu = new PrestamoUsuario(new PrestamoUsuarioId(prestamo.getId(), prestamo.getUsuarioCreo()), prestamo);
+			Usuario usu = UsuarioDAO.getUsuario( prestamo.getUsuarioCreo());
+			PrestamoUsuario pu = new PrestamoUsuario(new PrestamoUsuarioId(prestamo.getId(), prestamo.getUsuarioCreo()), prestamo,usu);
 			session.saveOrUpdate(pu);
 			
 			session.getTransaction().commit();
