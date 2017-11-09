@@ -30,8 +30,9 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 	mi.enMillonesAux = true; 
 	
 	mi.datosOrigniales;
-	
 	mi.lprestamos = [];
+	mi.acumulacion = [];
+	mi.datosAcumulacionTabla = [];
 	
 	
 	$http.post('/SPrestamo', {accion: 'getPrestamos', t: (new Date()).getTime()}).then(
@@ -106,7 +107,6 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 		{id:4,nombre:"Cuatrimestral"},{id:5,nombre:"Semestral"},{id:6,nombre:"Anual"}];
 	
 	mi.optionsMillones = {
-			
 			legend: {
 				display: true,
 				position: 'bottom'
@@ -119,7 +119,6 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 			          display: true,
 			          position: 'left',
 			          ticks: {
-	                        
 			        	     callback: function (value) {
 			        	    	 if (mi.enMillones)
 			        	    		 value = value / 1000000;
@@ -130,7 +129,6 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 	                       display: true,
 	                       labelString: 'Monto'
 	                     }
-			        	
 			        }
 			      ],
 			      xAxes: [{
@@ -145,7 +143,6 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 	
 	
 	mi.options = {
-			
 			legend: {
 				display: true,
 				position: 'bottom'
@@ -167,7 +164,6 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 	                       display: true,
 	                       labelString: 'Monto'
 	                     }
-			        	
 			        }
 			      ],
 			      xAxes: [{
@@ -200,7 +196,6 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 	}
 	
 	mi.generarReporte = function (){
-		
 		mi.inicializarDatos();
 		mi.mostrarDescargar = false;
 		
@@ -228,7 +223,6 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 					$utilidades.mensaje('warning','No se encontraron datos para el '+$rootScope.etiquetas.proyecto);
 					mi.mostrar = false;
 				}
-					
 			});	
 		}else{
 			mi.mostrar = false
@@ -236,7 +230,6 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 	}
 	
 	mi.asignarSerie2 = function (planificado, real,costo, reald,agrupacion){
-		
 		var totalReal=0;
 		var totalReald=0;
 		var totalPlanificado=0;
@@ -248,7 +241,13 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 		var desembolsoReal = [];
 		var desembolsoReald = [];
 		var costoPlan = [];
+		var desembolsosAcumuladosReal = [];
+		var desembolsosAcumuladosPlan = [];
+		
 		mi.tabla=[];
+		mi.tablaAcumulado=[];
+		mi.datosAcumulacionTabla = [];
+				
 		var totalItems = 0;
 		
 		switch (agrupacion){
@@ -666,13 +665,31 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 				break;
 		}
 		
+		
+		mi.columnasAcumulado=[];
+		mi.columnasAcumulado.push(...mi.columnas.slice(0,mi.columnas.length -1));
+		
 		mi.tabla[4][totalItems+1] = mi.tabla[1][totalItems+1] - mi.tabla[2][totalItems+1];
-		 
 		
 		mi.tabla[5][[totalItems+1]] = (mi.tabla[4][totalItems+1] != 0 ? 
 				(mi.tabla[4][totalItems+1] / 
 						(mi.tabla[4][totalItems+1]  > 0 ? mi.tabla[1][totalItems+1] : 
 							mi.tabla[2][totalItems+1] ) * 100 ).toFixed(2) : "0") + "%";
+		
+		
+		
+		desembolsosAcumuladosReal.push("Desembolsos Acumulados Real");
+		desembolsosAcumuladosPlan.push("Desembolsos Acumulados Planificado");
+		
+		for (x in mi.tabla[1]){
+			if(x>0 && x< mi.tabla[1].length -1){
+			desembolsosAcumuladosReal.push(x == 1 ? mi.tabla[2][x] : desembolsosAcumuladosReal[x-1] + mi.tabla[2][x] );
+			desembolsosAcumuladosPlan.push(x == 1 ? mi.tabla[1][x] : desembolsosAcumuladosPlan[x-1] + mi.tabla[1][x] );
+			}
+		}
+		
+		mi.tablaAcumulado.push(desembolsosAcumuladosPlan);
+		mi.tablaAcumulado.push(desembolsosAcumuladosReal);
 		
 		
 	}
@@ -804,12 +821,7 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 	
 	mi.agruparDatos = function(agrupacion){
 		mi.asignarSerie2(mi.datosOrigniales.planificado, mi.datosOrigniales.real,mi.datosOrigniales.costos,mi.datosOrigniales.reald,agrupacion);
-		
 	};
-	
-	
-	
-	
 	
 	
 	mi.abrirPopupFecha = function(index) {
@@ -850,26 +862,37 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 		 }
 	 }
 	 
-	 
 	 mi.convertirMillones = function(){
 		 mi.desembolsosGrafica = [];
 		 mi.desembolsosGrafica[0] = [];
 		 mi.desembolsosGrafica[1] = [];
+		 mi.acumulacion[0] = [];
+		 mi.acumulacion[1] = [];
+		 mi.datosAcumulacionTabla[0] = [];
+		 mi.datosAcumulacionTabla[1] = [];
 		
 		 mi.desembolsosGrafica[0].push(...mi.tabla[1].slice(1,mi.tabla[1].length -1));
 		 mi.desembolsosGrafica[1].push(...mi.tabla[2].slice(1,mi.tabla[2].length -1));
 		 
 		 for (y = 0; y<mi.datosOrigniales.planificado.length ; y++){
+			 
+			 mi.datosAcumulacionTabla[0][y] = y==0 ? mi.desembolsosGrafica[0][y] : mi.datosAcumulacionTabla[0][y -1] + mi.desembolsosGrafica[0][y];
+			 mi.datosAcumulacionTabla[1][y] = y==0 ? mi.desembolsosGrafica[1][y] : mi.datosAcumulacionTabla[1][y -1] + mi.desembolsosGrafica[1][y];
+			 
 			 if (mi.enMillones){
 				 mi.desembolsosGrafica[0][y] = mi.desembolsosGrafica[0][y] / 1000000;
 				 mi.desembolsosGrafica[1][y] = mi.desembolsosGrafica[1][y] / 1000000;
-			 }else
-				 break;
-		 }  
+			 }
+			  
+			 mi.acumulacion[0][y] = y==0 ? mi.desembolsosGrafica[0][y] : mi.acumulacion[0][y -1] + mi.desembolsosGrafica[0][y];
+			 mi.acumulacion[1][y] = y==0 ? mi.desembolsosGrafica[1][y] : mi.acumulacion[1][y -1] + mi.desembolsosGrafica[1][y];
+		 } 
+		 
+		 
 	 }
 	 
 
-		mi.exportarExcel = function(){
+	mi.exportarExcel = function(){
 			 $http.post('/SDesembolsos', { 
 				 accion: 'exportarExcel',
 				 agrupacion: mi.agrupacion,
@@ -923,7 +946,6 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 			if(mi.anio_inicio != null && mi.anio_inicio.toString().length == 4 && 
 					mi.anio_fin != null && mi.anio_fin.toString().length == 4)
 			{
-
 				if (mi.anio_inicio <= mi.anio_fin){
 					
 					mi.generarReporte();
@@ -931,6 +953,5 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 					$utilidades.mensaje('warning','La fecha inicial es mayor a la fecha final');
 				}
 			}
-		}
-	 
+		};
 }]);

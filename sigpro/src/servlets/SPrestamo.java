@@ -982,7 +982,7 @@ public class SPrestamo extends HttpServlet {
 					null, null, null,null, null, null, null,null, null, null,null,
 					prestamo.getFechaSuscripcion(),prestamo.getFechaSuscripcion(),
 					1, "d"
-					,null,null,0,0,0, null,esCoordinador,fechaElegibilidad,fechaCierre,null,null,null,null,null,null,null,null,null,null);
+					,null,null,0,0,0, null,esCoordinador,fechaElegibilidad,fechaCierre,null,null,null,null,null,null,null,null,null,null,null,null);
 			
 			return ProyectoDAO.guardarProyecto(proyecto, false) ? proyecto : null;
 		}
@@ -1001,7 +1001,7 @@ public class SPrestamo extends HttpServlet {
 		Componente componente = new Componente(acumulacionCosto,componenteSigade,componenteTipo, proyecto, proyecto.getUnidadEjecutora(), nombreComponente
 				, descripcion,usuario, null, new Date(), null, 1, null, null, null, null, null, null, null, null, 
 				null,null,null,proyecto.getFechaInicio(), proyecto.getFechaFin(),1
-				, "d",null,null,1,1,fPrestamo,donacion,nacional,null,null,null,null);
+				, "d",null,null,1,1,fPrestamo,donacion,nacional,null,null,null,null,null,null);
 		
 		return ComponenteDAO.guardarComponente(componente, false);
 	}
@@ -1074,7 +1074,7 @@ public class SPrestamo extends HttpServlet {
 						Componente componente = new Componente(acumulacionCosto,null,componenteTipo, proyecto, unidadEjecutora,
 								(String)componenteSigade[2], null, usuario, null, new Date(), null, 1, null, null, 
 								null, null, null, null, null, null, null,null,null,fechaSuscripcion,fechaSuscripcion,1, 
-								null,null,null,1,1,null,null,null,null,null,null,null);
+								null,null,null,1,1,null,null,null,null,null,null,null,null,null);
 						
 						ret = ret && ComponenteDAO.guardarComponente(componente, true);
 					}
