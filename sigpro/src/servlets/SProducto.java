@@ -306,7 +306,7 @@ public class SProducto extends HttpServlet {
 					producto = new Producto(acumulacionCosto, componente, productoTipo,subcomponente, unidadEjecutora, nombre, descripcion, 
 							usuario, null, new DateTime().toDate(), null, 1, snip, programa, subprograma, proyecto_, 
 							actividad, obra, latitud, longitud,null,costo, renglon, ubicacionGeografica,fechaInicio, 
-							fechaFin, duracion, duracionDimension,null,null,null,null,null,null);
+							fechaFin, duracion, duracionDimension,null,null,null,null,null,null,null,null);
 					
 				}else{
 					producto = ProductoDAO.getProductoPorId(id);
