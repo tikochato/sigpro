@@ -5,13 +5,16 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import pojo.Actividad;
 import pojo.Componente;
+import pojo.Prestamo;
 import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subcomponente;
@@ -269,6 +272,73 @@ public class EstructuraProyectoDAO {
 		return root;
 	}
 	
+	public static Nodo getEstructuraPrestamoProyectoArbolProyectosComponentesProductos(int id,String usuario){
+		Nodo root = null;
+		Prestamo prestamo = PrestamoDAO.getPrestamoById(id);
+		if(prestamo != null){
+			Set<Proyecto> proyectos = prestamo.getProyectos();
+			if(proyectos != null && proyectos.size() > 0){
+				int id_ = prestamo.getId();
+				int objeto_tipo = -1;
+				String nombre = prestamo.getProyectoPrograma();
+				int nivel = 0;
+				boolean estado= checkPermiso(id,objeto_tipo, usuario);
+				root = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, estado);
+				
+				Iterator<Proyecto> iterador = proyectos.iterator();
+				while(iterador.hasNext()){
+					Proyecto proyecto = iterador.next();
+					List<?> estructuras = EstructuraProyectoDAO.getEstructuraProyecto(proyecto.getId());
+					
+					if(estructuras.size()>0){
+						try{
+							Object[] dato = (Object[]) estructuras.get(0);
+							id_ = dato[0]!=null ? (Integer)dato[0] : 0;
+							objeto_tipo = dato[2]!=null ? ((BigInteger)dato[2]).intValue() : 0;
+							nombre = dato[1]!=null ? (String)dato[1] : null;
+							nivel = (dato[3]!=null) ? (((String)dato[3]).length()/8)+1 : 1;
+							estado = checkPermiso(id,objeto_tipo,usuario);
+							Nodo nodo = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, estado);
+							nodo.parent = root;
+							root.children.add(nodo);
+
+							Nodo nivel_actual_estructura = root;
+							//Nodo nivel_actual_estructura = root;
+							for(int i=1; i<estructuras.size(); i++){
+								dato = (Object[]) estructuras.get(i);
+								id_ = dato[0]!=null ? (Integer)dato[0] : 0;
+								objeto_tipo = dato[2]!=null ? ((BigInteger)dato[2]).intValue() : 0;
+								nombre = dato[1]!=null ? (String)dato[1] : null;
+								nivel = (dato[3]!=null) ? (((String)dato[3]).length()/8)+ 1 : 1;
+								estado = checkPermiso(id_,objeto_tipo,usuario);
+								if(objeto_tipo<4){
+									nodo = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, estado);
+									if(nodo.nivel!=nivel_actual_estructura.nivel+1){
+										if(nodo.nivel>nivel_actual_estructura.nivel){
+											nivel_actual_estructura = nivel_actual_estructura.children.get(nivel_actual_estructura.children.size()-1);
+										}
+										else{
+											int retornar = nivel_actual_estructura.nivel-nodo.nivel+1;
+											for(int j=0; j<(retornar); j++)
+												nivel_actual_estructura=nivel_actual_estructura.parent;
+										}
+									}
+									nodo.parent = nivel_actual_estructura;
+									nivel_actual_estructura.children.add(nodo);
+								}
+							}
+						}catch(Throwable e){
+							root = null;
+							CLogger.write("3", EstructuraProyectoDAO.class, e);
+						}
+					}
+				}
+			}
+		}
+		
+		return root;
+	}
+	
 	public static List<?> getActividadesProyecto(Integer prestamoId){
 		List<?> ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -328,9 +398,23 @@ public class EstructuraProyectoDAO {
 		return (ret.size()>0 ? ret : null);
 	}
 	
+	public static ArrayList<Nodo> getEstructuraPrestamosArbol(String usuario){
+		ArrayList<Nodo> ret = new ArrayList<Nodo>();
+		List<Prestamo> prestamos = PrestamoDAO.getPrestamos();
+		if(prestamos!= null){
+			for(int i=0; i<prestamos.size(); i++){
+				Nodo prestamo = getEstructuraPrestamoProyectoArbolProyectosComponentesProductos(prestamos.get(i).getId(), usuario);
+				if(prestamo!=null)
+					ret.add(prestamo);
+			}
+		}
+		return (ret.size()>0 ? ret : null);
+	}
+	
 	public static boolean checkPermiso(int id, int objeto_tipo, String usuario){
 		boolean ret = false;
 		switch(objeto_tipo){
+			case -1: ret = UsuarioDAO.checkUsuarioPrestamo(usuario,id); break;
 			case 0: ret = UsuarioDAO.checkUsuarioProyecto(usuario,id); break;
 			case 1: ret = UsuarioDAO.checkUsuarioComponente(usuario,id); break;
 			case 2: ret = UsuarioDAO.checkUsuarioSubComponente(usuario,id); break;
