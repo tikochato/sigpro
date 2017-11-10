@@ -146,12 +146,12 @@ public class PrestamoDAO {
 			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
 				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(p.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
-//			if(usuario!=null)
-//				query = String.join("", query, " AND p.id in (SELECT u.id.prestamoid from PrestamoUsuario u where u.id.usuario=:usuario )");
+			if(usuario!=null)
+				query = String.join("", query, " AND p.id in (SELECT u.id.prestamoid from PrestamoUsuario u where u.id.usuario=:usuario )");
 			Query<Long> criteria = session.createQuery(query,Long.class);
-//			if(usuario != null){
-//				criteria.setParameter("usuario", usuario);	
-//			}			
+			if(usuario != null){
+				criteria.setParameter("usuario", usuario);	
+			}			
 			ret = criteria.getSingleResult();
 		}
 		catch(Throwable e){
