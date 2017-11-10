@@ -139,11 +139,7 @@
 		.btn-default.active{
 			font-weight: bold;
 		}
-		
-		::-webkit-scrollbar {
-		 	display: none;
-		 }
-		
+				
 	</style>
 
 <div ng-controller="flujocajaController as flujoc" class="maincontainer all_page" id="title">
@@ -242,7 +238,7 @@
 			    			<table class="table table-striped tablaDatos"  style="height: 100%">
 								<thead class="theadDatos">
 									<tr>
-				          				<th style="text-align: center; vertical-align: top; width:300px; height: 72px;" class="label-form">Nombre</th>
+				          				<th style="text-align: center; vertical-align: top; width:300px; height: 74px;" class="label-form">Nombre</th>
 				         			</tr>
 								</thead>
 								<tbody vs-repeat class="cuerpoTablaNombres" id="divTablaNombres" style="max-height: 300px;" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)">
@@ -307,10 +303,10 @@
 			    			<table class="table table-striped tablaDatos"  style="height: 100%">
 								<tbody class="cuerpoTablaNombres">
 									<tr>
-							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Total Planificado</td>
+							      		<td class="colorPlanificado" style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Total Planificado</td>
 							      	</tr>
 							      	<tr>
-							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Total Planificado Acumulado</td>
+							      		<td class="colorPlanificado" style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Total Planificado Acumulado</td>
 							      	</tr>
 							      	<tr>
 							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Total Ejecutado</td>
@@ -325,10 +321,10 @@
 							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">%</td>
 							      	</tr>
 							      	<tr>
-							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Desembolsos Ejecutados</td>
+							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Desembolsos Reales</td>
 							      	</tr>
 							      	<tr>
-							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Desembolsos</td>
+							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Desembolsos Planificados</td>
 							      	</tr>
 							      	<tr>
 							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Saldo</td>
