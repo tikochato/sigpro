@@ -158,9 +158,9 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 		String headers[][];
 		
 		headers = new String[][]{
-			{"Nombre", "Duración", "Fecha Inicial", "Fecha Final", "% de Avance", "Acumulación Costo", "Presupuesto Aprobado", "Costo Planificado", "Asignación Presupuestaria Vigente", "Presupuesto Devengado","% Avance Financiero"},  //titulos
+			{"Nombre", "Duración", "Fecha Inicial", "Fecha Final", "Fecha Inicial Real", "Fecha Fin Real", "% de Avance", "Acumulación Costo", "Presupuesto Aprobado", "Costo Planificado", "Asignación Presupuestaria Vigente", "Presupuesto Devengado","% Avance Financiero"},  //titulos
 			null, //mapeo
-			{"string", "int", "string", "string", "double", "string", "double", "double", "double", "double", "double"}, //tipo dato
+			{"string", "int", "string", "string", "string", "string", "double", "string", "double", "double", "double", "double", "double"}, //tipo dato
 			null, //operaciones columnas
 			null, //operaciones div
 			null,
@@ -233,24 +233,24 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 					switch(temp.objetoTipo){
 					case 1:
 						Componente componente = ComponenteDAO.getComponente(temp.objetoId);
-						temp.acumulacionCosto = componente.getAcumulacionCosto().getNombre();
+						temp.acumulacionCosto = componente.getAcumulacionCosto() != null ? componente.getAcumulacionCosto().getNombre() : null;
 						break;
 					case 2:
 						Subcomponente subcomponente = SubComponenteDAO.getSubComponente(temp.objetoId);
-						temp.acumulacionCosto = subcomponente.getAcumulacionCosto().getNombre();
+						temp.acumulacionCosto = subcomponente.getAcumulacionCosto() != null ? subcomponente.getAcumulacionCosto().getNombre() : null;
 						break;
 					case 3:
 						Producto producto = ProductoDAO.getProductoPorId(temp.objetoId);
-						temp.acumulacionCosto = producto.getAcumulacionCosto().getNombre();
+						temp.acumulacionCosto = producto.getAcumulacionCosto() != null ? producto.getAcumulacionCosto().getNombre() : null;
 						break;
 					case 4:
 						Subproducto subproducto = SubproductoDAO.getSubproductoPorId(temp.objetoId);
-						temp.acumulacionCosto = subproducto.getAcumulacionCosto().getNombre();
+						temp.acumulacionCosto = subproducto.getAcumulacionCosto() != null ? subproducto.getAcumulacionCosto().getNombre() : null;
 						break;
 					case 5:
 						Actividad actividad = ActividadDAO.getActividadPorId(temp.objetoId);
 						temp.avance = actividad.getPorcentajeAvance();
-						temp.acumulacionCosto = actividad.getAcumulacionCosto().getNombre();
+						temp.acumulacionCosto = actividad.getAcumulacionCosto() != null ? actividad.getAcumulacionCosto().getNombre() : null;
 						break;
 					}
 					

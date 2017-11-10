@@ -211,7 +211,7 @@
 							    				{{row.fechaInicialReal}}
 							    			</td>
 							    			<td class="divisionColumna" style="min-width: 140px; max-width: 140px;">
-							    				{{row.fechaFinalReal}}								    				
+							    				{{row.fechaFinReal}}								    				
 							    			</td>
 							    			<td class="divisionColumna" style="min-width: 90px; max-width: 90px;">
 							    				{{row.avance}}								    				

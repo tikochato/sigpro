@@ -203,7 +203,8 @@ public class UsuarioDAO {
 			
 			for(int i =0; i<prestamos.size();i++){
 				Prestamo prestamo = PrestamoDAO.getPrestamoById(prestamos.get(i));
-				PrestamoUsuario pu = new PrestamoUsuario(new PrestamoUsuarioId(prestamos.get(i), usuario),prestamo, usuario_creo,null, new Date(), null);
+				PrestamoUsuario pu = new PrestamoUsuario(new PrestamoUsuarioId(prestamos.get(i), usuario),prestamo, UsuarioDAO.getUsuario(usuario),
+						usuario_creo,null, new Date(), null);
 				pu.setPrestamo(prestamo);
 				session.save(pu);
 			}			
