@@ -23,6 +23,9 @@ import pojo.ComponenteUsuario;
 import pojo.ComponenteUsuarioId;
 import pojo.Cooperante;
 import pojo.Permiso;
+import pojo.Prestamo;
+import pojo.PrestamoUsuario;
+import pojo.PrestamoUsuarioId;
 import pojo.Producto;
 import pojo.ProductoUsuario;
 import pojo.ProductoUsuarioId;
@@ -191,6 +194,7 @@ public class UsuarioDAO {
 		
 		return ret;
 	}
+	
 	public static boolean asignarPrestamos(String usuario, List <Integer> prestamos, String usuario_creo){
 		boolean ret =false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -198,8 +202,34 @@ public class UsuarioDAO {
 			session.beginTransaction();
 			
 			for(int i =0; i<prestamos.size();i++){
-				Proyecto proyecto = ProyectoDAO.getProyecto(prestamos.get(i));
-				ProyectoUsuario pu = new ProyectoUsuario(new ProyectoUsuarioId(prestamos.get(i), usuario), proyecto, UsuarioDAO.getUsuario(usuario),
+				Prestamo prestamo = PrestamoDAO.getPrestamoById(prestamos.get(i));
+				PrestamoUsuario pu = new PrestamoUsuario(new PrestamoUsuarioId(prestamos.get(i), usuario),prestamo, UsuarioDAO.getUsuario(usuario),
+						usuario_creo,null, new Date(), null);
+				pu.setPrestamo(prestamo);
+				session.save(pu);
+			}			
+			session.getTransaction().commit();
+			ret = true;
+		}catch(Throwable e){
+			CLogger.write("8", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return ret;
+	}
+	
+	
+	public static boolean asignarProyectos(String usuario, List <Integer> proyectos, String usuario_creo){
+		boolean ret =false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			
+			for(int i =0; i<proyectos.size();i++){
+				Proyecto proyecto = ProyectoDAO.getProyecto(proyectos.get(i));
+				ProyectoUsuario pu = new ProyectoUsuario(new ProyectoUsuarioId(proyectos.get(i), usuario), proyecto, UsuarioDAO.getUsuario(usuario),
 						usuario_creo,null, new Date(), null);
 				pu.setProyecto(proyecto);
 				session.save(pu);
@@ -656,6 +686,24 @@ public class UsuarioDAO {
 		return ret;
 	}
 	
+	public static boolean checkUsuarioPrestamo(String usuario, int prestmoid){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		boolean ret = false;
+		try {
+			Query <PrestamoUsuario> criteria = session.createQuery("FROM PrestamoUsuario where usuario.usuario=:usuario and prestamo.id=:id", PrestamoUsuario.class);
+			criteria.setParameter("usuario",usuario);
+			criteria.setParameter("id", prestmoid);
+			List<PrestamoUsuario> listRet = null;
+			listRet = criteria.getResultList();
+			ret = !listRet.isEmpty() ? true : false;
+		} catch (Throwable e) {
+			CLogger.write("28", UsuarioDAO.class, e);
+		} finally {
+			session.close();
+		}
+		return ret;
+	}
+	
 	public static boolean checkUsuarioProyecto(String usuario, int proyectoid){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		boolean ret = false;
@@ -757,12 +805,18 @@ public class UsuarioDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
+			Query<?> criteria_prs = session.createQuery("delete PrestamoUsuario where id.usuario=:usuario ");
+			criteria_prs.setParameter("usuario", usuario);
+			criteria_prs.executeUpdate();
 			Query<?> criteria = session.createQuery("delete ProyectoUsuario where id.usuario=:usuario ");
 			criteria.setParameter("usuario", usuario);
 			criteria.executeUpdate();
 			Query<?> criteria_c = session.createQuery("delete ComponenteUsuario where id.usuario=:usuario ");
 			criteria_c.setParameter("usuario", usuario);
 			criteria_c.executeUpdate();
+			Query<?> criteria_sc = session.createQuery("delete SubcomponenteUsuario where id.usuario=:usuario ");
+			criteria_sc.setParameter("usuario", usuario);
+			criteria_sc.executeUpdate();
 			Query<?> criteria_u = session.createQuery("delete ProductoUsuario where id.usuario=:usuario ");
 			criteria_u.setParameter("usuario", usuario);
 			criteria_u.executeUpdate();

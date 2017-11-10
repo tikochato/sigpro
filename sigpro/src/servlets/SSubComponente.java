@@ -83,6 +83,8 @@ public class SSubComponente extends HttpServlet {
 		Integer acumulacionCostoId;
 		String acumulacionCostoNombre;
 		boolean tieneHijos;
+		String fechaInicioReal;
+		String fechaFinReal;
 	}
 
 	class stdatadinamico {
@@ -179,7 +181,8 @@ public class SSubComponente extends HttpServlet {
 				temp.acumulacionCostoNombre = subcomponente.getAcumulacionCosto().getNombre();
 				
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
-				
+				temp.fechaInicioReal = Utils.formatDate(subcomponente.getFechaInicioReal());
+				temp.fechaFinReal = Utils.formatDate(subcomponente.getFechaFinReal());
 				stsubcomponentes.add(temp);
 			}
 
@@ -237,6 +240,8 @@ public class SSubComponente extends HttpServlet {
 				temp.duracion = subcomponente.getDuracion();
 				temp.duracionDimension = subcomponente.getDuracionDimension();
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
+				temp.fechaInicioReal = Utils.formatDate(subcomponente.getFechaInicioReal());
+				temp.fechaFinReal = Utils.formatDate(subcomponente.getFechaFinReal());
 				
 				stsubcomponentes.add(temp);
 			}
@@ -452,6 +457,8 @@ public class SSubComponente extends HttpServlet {
 				temp.duracionDimension = subcomponente.getDuracionDimension();
 				
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
+				temp.fechaInicioReal = Utils.formatDate(subcomponente.getFechaInicioReal());
+				temp.fechaFinReal = Utils.formatDate(subcomponente.getFechaFinReal());
 				
 				stsubcomponentes.add(temp);
 			}
@@ -523,6 +530,8 @@ public class SSubComponente extends HttpServlet {
 			temp.duracionDimension = subcomponente.getDuracionDimension();
 			
 			temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
+			temp.fechaInicioReal = Utils.formatDate(subcomponente.getFechaInicioReal());
+			temp.fechaFinReal = Utils.formatDate(subcomponente.getFechaFinReal());
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"subcomponente\":",response_text);
