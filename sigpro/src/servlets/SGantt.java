@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.zip.GZIPOutputStream;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -21,6 +22,7 @@ import java.util.Map;
 
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -134,6 +136,7 @@ public class SGantt extends HttpServlet {
 				;
 				map = gson.fromJson(sb.toString(), type);
 				accion = map.get("accion");
+				proyectoId = Utils.String2Int(map.get("proyecto_id"));
 			}
 
 		if(accion.equals("getProyecto")){
@@ -238,48 +241,33 @@ public class SGantt extends HttpServlet {
 				CProject project = new CProject("");
 				String path = project.exportarProject(proyectoId, usuario);
 
-				File file=new File(path);
-				if(file.exists()){
-			        FileInputStream is = null;
-			        try {
-			        	is = new FileInputStream(file);
-			        }
-			        catch (Exception e) {
+				File xml=new File(path);
+				if(xml.exists()){
+				ServletOutputStream	stream = response.getOutputStream();
+				     
+				      response.setContentType("text/xml");
+				      
+				      response.addHeader(
+				        "Content-Disposition","attachment;" );
 
-			        }
-			        //
-			        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+				      response.setContentLength( (int) xml.length() );
+				      
+				     FileInputStream input = new FileInputStream(xml);
+				     BufferedInputStream buf = new BufferedInputStream(input);
+				     int readBytes = 0;
 
-			        int readByte = 0;
-			        byte[] buffer = new byte[2024];
+				     //read from the file; write to the ServletOutputStream
+				     while((readBytes = buf.read()) != -1)
+				        stream.write(readBytes);
 
-	                while(true)
-	                {
-	                    readByte = is.read(buffer);
-	                    if(readByte == -1)
-	                    {
-	                        break;
-	                    }
-	                    outByteStream.write(buffer);
-	                }
-
-	                file.delete();
-
-	                is.close();
-	                outByteStream.flush();
-	                outByteStream.close();
-
-			        byte [] outArray = Base64.encode(outByteStream.toByteArray());
-					response.setContentType("application/ms-excel");
-					response.setContentLength(outArray.length);
-					response.setHeader("Cache-Control", "no-cache");
-					response.setHeader("Content-Disposition", "attachment; Prestamo.xls");
-					OutputStream outStream = response.getOutputStream();
-					outStream.write(outArray);
-					outStream.flush();
+				     if(stream != null)
+				         stream.close();
+				      if(buf != null)
+				          buf.close();
+				          }
 				}
 
-			}catch(Exception e){
+			catch(Exception e){
 				e.printStackTrace();
 			}
 		}

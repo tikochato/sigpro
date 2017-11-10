@@ -2,14 +2,11 @@ package servlets;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -21,16 +18,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.codec.Base64;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import dao.ProyectoDAO;
 import dao.RiesgoDAO;
 import pojo.ObjetoRiesgo;
 import pojo.Riesgo;
 import utilities.CExcel;
+import utilities.CLogger;
 import utilities.Utils;
 
 @WebServlet("/SMatrizRiesgo")
@@ -147,27 +147,129 @@ public class SMatrizRiesgo extends HttpServlet {
 	        output.close();
 	        
 		} else if (accion.equals("exportarExcel")){
-			CExcel excel = new CExcel("MatrizRiesgos",false,null);
 			int proyectoId = Utils.String2Int(map.get("proyectoid"), 0);
-			List<Riesgo> riesgos = RiesgoDAO.getMatrizRiesgo(proyectoId);
-			Map<String,Object[]> datos = new HashMap<>();
-			datos.put("0",   new Object[] {"Id Riesgo", "Nombre","Nivel", "Categoría","Impacto Proyectado","Impacto",
-					"Puntuación Impacto","Probabilidad","Punteo Probabilidad","Gatillos/Sintomas",
-					"Respuesta","Responsable","Riesgos Secundarios","¿Ha sido ejecutado?","Fecha de Ejecucion"});
-			int fila = 1;
-			for (Riesgo riesgo : riesgos){
-				String responsable = "";
-				String objetoTipoNombre="";
+			
+			try{
+		        byte [] outArray = exportarExcel(proyectoId, usuario);
+			
+				response.setContentType("application/ms-excel");
+				response.setContentLength(outArray.length);
+				response.setHeader("Cache-Control", "no-cache"); 
+				response.setHeader("Content-Disposition", "attachment; Matriz_de_Riesgos.xls");
+				OutputStream outStream = response.getOutputStream();
+				outStream.write(outArray);
+				outStream.flush();
+			}catch(Exception e){
+				CLogger.write("1", SMatrizRiesgo.class, e);
+			}
+		}
+	}
+	
+	private byte[] exportarExcel(int proyectoId, String usuario) throws IOException{
+		byte [] outArray = null;
+		CExcel excel=null;
+		String headers[][];
+		String datos[][];
+		
+		Workbook wb=null;
+		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+		try{		
+			excel = new CExcel("Matriz de Riesgos", false, null);
+			headers = generarHeaders();
+			datos = generarDatos(proyectoId,headers[0].length);
+			wb=excel.generateExcelOfData(datos, "Matriz de Riesgos - "+ProyectoDAO.getProyecto(proyectoId).getNombre(), headers, null, true, usuario);
+		
+		wb.write(outByteStream);
+		outArray = Base64.encode(outByteStream.toByteArray());
+		}catch(Exception e){
+			CLogger.write("2", SMatrizRiesgo.class, e);
+		}
+		return outArray;
+	}
+	
+	private String[][] generarHeaders(){
+		String headers[][];				
+		String titulo[] = new String[21];
+		String tipo[] = new String[21];
+		
+		titulo[0]="Id";
+		tipo[0]="int";
+		titulo[1]="Riesgo";
+		tipo[1]="string";
+		titulo[2]="Descripción";
+		tipo[2]="string";
+		titulo[3]="Categoría";
+		tipo[3]="string";
+		titulo[4]="Nivel";
+		tipo[4]="string";
+		titulo[5]="Impacto";
+		tipo[5]="double";
+		titulo[6]="Probabilidad";
+		tipo[6]="double";
+		titulo[7]="Calificación";
+		tipo[7]="double";
+		titulo[8]="Impacto en Tiempo";
+		tipo[8]="double";
+		titulo[9]="Contingenica en Tiempo";
+		tipo[9]="double";
+		titulo[10]="Impacto en Monto (Q)";
+		tipo[10]="double";
+		titulo[11]="Contingencia en Monto (Q)";
+		tipo[11]="double";
+		titulo[12]="Evento Iniciador";
+		tipo[12]="string";
+		titulo[13]="Consecuencias";
+		tipo[13]="string";
+		titulo[14]="Riesgos Secundarios";
+		tipo[14]="string";
+		titulo[15]="Solución";
+		tipo[15]="string";
+		titulo[16]="Responsable";
+		tipo[16]="string";
+		titulo[17]="¿Ha sido ejecutado?";
+		tipo[17]="string";
+		titulo[18]="Fecha de Ejecución";
+		tipo[18]="string";
+		titulo[19]="Resultado";
+		tipo[19]="string";
+		titulo[20]="Observaciones";
+		tipo[20]="string";
+		
+		headers = new String[][]{
+			titulo,  //titulos
+			{""}, //mapeo
+			tipo, //tipo dato
+			{""}, //operaciones columnas
+			{""}, //operaciones div
+			null,
+			null,
+			null
+			};
+			
+		return headers;
+	}
+	
+	public String[][] generarDatos(int proyectoId, int columnasTotal){
+		String[][] datos = null;
+		List<Riesgo> riesgos = RiesgoDAO.getMatrizRiesgo(proyectoId);		
+		if (riesgos != null && !riesgos.isEmpty()){
+			datos = new String[riesgos.size()][columnasTotal];
+			for (int i=0; i<riesgos.size(); i++){
+				Riesgo riesgo = riesgos.get(i);
+				
+				String colaboradorNombre = riesgo.getColaborador()!=null ? riesgo.getColaborador().getPnombre() : "";
 				if (riesgo.getColaborador()!=null ){
-					responsable = String.join(" ", riesgo.getColaborador().getPnombre(),
+					colaboradorNombre = String.join(" ", riesgo.getColaborador().getPnombre(),
 						riesgo.getColaborador().getSnombre() !=null ? riesgo.getColaborador().getSnombre() : "",
 						riesgo.getColaborador().getPapellido()!=null ? riesgo.getColaborador().getPapellido() : "",
 						riesgo.getColaborador().getSapellido()!=null ? riesgo.getColaborador().getSapellido() : ""	
 					);
 				}
 				ObjetoRiesgo objetoRiesgo = RiesgoDAO.getObjetoRiesgo(riesgo.getId());
+				String objetoTipoNombre="";
 				if (objetoRiesgo!=null){
-					switch (objetoRiesgo.getId().getObjetoTipo()){
+					int objetoTipo = objetoRiesgo.getId().getObjetoTipo();
+					switch (objetoTipo){
 					case -1: objetoTipoNombre = "Préstamo"; break;
 					case 0: objetoTipoNombre = "Pep"; break;
 					case 1: objetoTipoNombre = "Componente"; break;
@@ -177,62 +279,34 @@ public class SMatrizRiesgo extends HttpServlet {
 					case 5: objetoTipoNombre = "Actividad"; break;
 					}
 				}
-				Double punteoPrioridad =  new Double("0");
-				datos.put(fila+"", new Object [] {riesgo.getId(),riesgo.getNombre(),objetoTipoNombre,riesgo.getRiesgoTipo().getNombre(),
-						riesgo.getImpacto(),riesgo.getImpacto(),riesgo.getImpacto(),riesgo.getProbabilidad(),
-						punteoPrioridad, riesgo.getGatillo(),riesgo.getSolucion(),responsable,riesgo.getRiesgosSegundarios(),
-						riesgo.getEjecutado(),riesgo.getFechaEjecucion()});
-				fila++;
-				
-			}
-			String path = excel.ExportarExcel(datos, "Matriz de Riesgos",usuario);
-			File file=new File(path);
-			if(file.exists()){
-		        FileInputStream is = null;
-		        try {
-		        	is = new FileInputStream(file);
-		        }
-		        catch (Exception e) {
-		        	
-		        }
-		        //
-		        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
-		        
-		        int readByte = 0;
-		        byte[] buffer = new byte[2024];
+				BigDecimal calificacion = (riesgo.getImpacto().multiply(riesgo.getProbabilidad())).setScale(2, BigDecimal.ROUND_DOWN);
+				BigDecimal contingenciaMonto = (calificacion.multiply(riesgo.getImpactoMonto()!=null?riesgo.getImpactoMonto():new BigDecimal(0))).setScale(2, BigDecimal.ROUND_DOWN);
+				BigDecimal contingenciaTiempo = (calificacion.multiply(riesgo.getImpactoTiempo()!=null?riesgo.getImpactoTiempo():new BigDecimal(0))).setScale(2, BigDecimal.ROUND_DOWN);
 
-                while(true)
-                {
-                    readByte = is.read(buffer);
-                    if(readByte == -1)
-                    {
-                        break;
-                    }
-                    outByteStream.write(buffer);
-                }
-                
-                file.delete();
-                
-                is.close();
-                outByteStream.flush();
-                outByteStream.close();
-                
-		        byte [] outArray = Base64.encode(outByteStream.toByteArray());
-				response.setContentType("application/ms-excel");
-				response.setContentLength(outArray.length);
-				response.setHeader("Cache-Control", "no-cache"); // eliminates browser caching
-				response.setHeader("Content-Disposition", "attachment; Matriz_de_Riesgos.xls");
-				OutputStream outStream = response.getOutputStream();
-				outStream.write(outArray);
-				outStream.flush();
-	            
+				datos[i][0] = riesgo.getId().toString();
+				datos[i][1] = riesgo.getNombre();
+				datos[i][2] = riesgo.getDescripcion();
+				datos[i][3] = riesgo.getRiesgoTipo().getNombre();
+				datos[i][4] = objetoTipoNombre;
+				datos[i][5] = riesgo.getImpacto().setScale(2, BigDecimal.ROUND_FLOOR).toString();
+				datos[i][6] = riesgo.getProbabilidad().setScale(2, BigDecimal.ROUND_FLOOR).toString();
+				datos[i][7] = calificacion.toString();
+				datos[i][8] = riesgo.getImpactoTiempo()!=null ? riesgo.getImpactoTiempo().toString() : "0";
+				datos[i][9] = contingenciaTiempo.toString();
+				datos[i][10] = riesgo.getImpactoMonto()!=null ? riesgo.getImpactoMonto().toString() : "0";
+				datos[i][11] = contingenciaMonto.toString();
+				datos[i][12] = riesgo.getGatillo();
+				datos[i][13] = riesgo.getConsecuencia();
+				datos[i][14] = riesgo.getRiesgosSegundarios();
+				datos[i][15] = riesgo.getSolucion();
+				datos[i][16] = colaboradorNombre;
+				datos[i][17] = riesgo.getEjecutado()==1 ? "Si" : "No";
+				datos[i][18] = Utils.formatDate(riesgo.getFechaEjecucion());
+				datos[i][19] = riesgo.getResultado();
+				datos[i][20] = riesgo.getObservaciones();
 			}
-			
-			
-			
 		}
-		
-		
+		return datos;
 	}
 
 }
