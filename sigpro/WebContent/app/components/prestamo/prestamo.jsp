@@ -70,6 +70,10 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 			<shiro:hasPermission name="24040">
+				<label class="btn btn-primary" ng-click="prestamoc.jasper()" uib-tooltip="Jasper">
+				<span class="glyphicon glyphicon-plus"></span> Jasper</label>
+			</shiro:hasPermission>
+			<shiro:hasPermission name="24040">
 				<label class="btn btn-primary" ng-click="prestamoc.nuevo()" uib-tooltip="Nuevo">
 				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			</shiro:hasPermission>

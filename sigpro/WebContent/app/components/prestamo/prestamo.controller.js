@@ -585,6 +585,23 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		else
 			$utilidades.mensaje('warning','Debe seleccionar el préstamo que desea editar');
 	}
+	
+	mi.jasper = function(){
+		 $http.post('/SPrestamoMetas', { 
+			 accion: 'exportarJasper', 
+			 t:moment().unix()
+		  } ).then(
+				  function successCallback(response) {
+					  var anchor = angular.element('<a/>');
+					  anchor.attr({
+				         href: 'data:application/ms-excel;base64,' + response.data,
+				         target: '_blank',
+				         download: 'Jasper.pdf'
+					  })[0].click();
+				  }.bind(this), function errorCallback(response){
+			 	}
+		  	);
+	}
 
 	mi.irATabla = function() {
 		mi.esColapsado=false;
