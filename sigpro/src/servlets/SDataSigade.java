@@ -28,6 +28,7 @@ import dao.DataSigadeDAO;
 import dao.TipoMonedaDAO;
 import pojo.Cooperante;
 import pojo.TipoMoneda;
+import pojoSigade.DtmAvanceFisfinanDetDti;
 import pojoSigade.DtmAvanceFisfinanDti;
 import utilities.Utils;
 
@@ -111,6 +112,20 @@ public class SDataSigade extends HttpServlet {
 		String cooperantenombre;
 		String objetivo;
 	}
+	
+	class stdesembolsos{
+		Long ejercicioFiscal;
+		Integer mesDesembolso;
+		String codigoPresupuestario;
+		Integer entidadSicoin;
+		Integer unidadEjecutoraSicoin;
+		String monedaDesembolso;
+		BigDecimal mesDesembolsoMoneda;
+		BigDecimal tipoCambioUSD;
+		BigDecimal mesDesembolsoMonedaUSD;
+		BigDecimal tipoCambioGTQ;
+		BigDecimal mesDesembolsoMonedaGTQ;
+	}
        
     public SDataSigade() {
         super();
@@ -186,7 +201,65 @@ public class SDataSigade extends HttpServlet {
 			response_text=new GsonBuilder().serializeNulls().create().toJson(codigos);
 	        response_text = String.join("", "\"prestamo\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+		}else if(accion.equals("getDesembolsosUE")){
+			String codPrep = map.get("codPrep");
+			Integer ejercicio = Utils.String2Int(map.get("ejercicio"));
+			Integer entidad = Utils.String2Int(map.get("entidad"));
+			Integer ue = Utils.String2Int(map.get("ue"));
+			List<DtmAvanceFisfinanDetDti> lstDesembolsos = DataSigadeDAO.getInfPorUnidadEjecutora(codPrep,ejercicio,entidad, ue);
+			List<stdesembolsos> lstDesembolsosUE = new ArrayList<stdesembolsos>();
+			for(DtmAvanceFisfinanDetDti desembolso : lstDesembolsos){
+				stdesembolsos temp = new stdesembolsos();
+				temp.codigoPresupuestario = desembolso.getId().getCodigoPresupuestario();
+				temp.ejercicioFiscal = desembolso.getId().getEjercicioFiscal();
+				temp.entidadSicoin = desembolso.getId().getEntidadSicoin();
+				temp.mesDesembolso = Utils.String2Int(desembolso.getId().getMesDesembolso());
+				temp.mesDesembolsoMoneda = desembolso.getId().getDesembolsosMesMoneda();
+				temp.mesDesembolsoMonedaGTQ = desembolso.getId().getDesembolsosMesGtq();
+				temp.mesDesembolsoMonedaUSD = desembolso.getId().getDesembolsosMesUsd();
+				temp.monedaDesembolso = desembolso.getId().getMonedaDesembolso();
+				temp.tipoCambioUSD = desembolso.getId().getTcMonUsd();
+				temp.tipoCambioGTQ = desembolso.getId().getTcUsdGtq();
+				
+				lstDesembolsosUE.add(temp);
+			}
+			
+			response_text=new GsonBuilder().serializeNulls().create().toJson(lstDesembolsosUE);
+	        response_text = String.join("", "\"desembolsosUE\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+		}else if(accion.equals("getMontoDesembolsosUE")){
+			String codPrep = map.get("codPrep");
+			Integer ejercicio = Utils.String2Int(map.get("ejercicio"));
+			Integer entidad = Utils.String2Int(map.get("entidad"));
+			Integer ue = Utils.String2Int(map.get("ue"));
+			List<DtmAvanceFisfinanDetDti> lstDesembolsos = DataSigadeDAO.getInfPorUnidadEjecutora(codPrep,ejercicio,entidad, ue);
+			
+			BigDecimal montoDesembolsado = new BigDecimal(0);
+			
+			for(DtmAvanceFisfinanDetDti desembolso : lstDesembolsos){
+				montoDesembolsado = montoDesembolsado.add(desembolso.getId().getDesembolsosMesUsd());				
+			}
+			
+			response_text=new GsonBuilder().serializeNulls().create().toJson(montoDesembolsado);
+	        response_text = String.join("", "\"montoDesembolsadoUE\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+		}else if(accion.equals("getMontoDesembolsosUEALaFecha")){
+			String codPrep = map.get("codPrep");
+			Integer entidad = Utils.String2Int(map.get("entidad"));
+			Integer ue = Utils.String2Int(map.get("ue"));
+			List<DtmAvanceFisfinanDetDti> lstDesembolsos = DataSigadeDAO.getInfPorUnidadEjecutoraALaFecha(codPrep, entidad, ue);
+			
+			BigDecimal montoDesembolsado = new BigDecimal(0);
+			
+			for(DtmAvanceFisfinanDetDti desembolso : lstDesembolsos){
+				montoDesembolsado = montoDesembolsado.add(desembolso.getId().getDesembolsosMesUsd());				
+			}
+			
+			response_text=new GsonBuilder().serializeNulls().create().toJson(montoDesembolsado);
+	        response_text = String.join("", "\"montoDesembolsadoUEALaFecha\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
+		
 		else{
 			
 	        response_text =  "{\"success\":false}";

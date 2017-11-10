@@ -8,8 +8,10 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletException;
@@ -834,7 +836,27 @@ public class SProyecto extends HttpServlet {
 	        response_text = String.join("", "\"componentes\":",componentes_text,response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 			
-		}else
+		} else if(accion.equals("obtenerMontoTechos")){
+			Integer proyectoId = Utils.String2Int(map.get("id"));
+			BigDecimal techoTotal = new BigDecimal(0);
+			Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
+			if(proyecto.getPrestamo() != null){
+				
+				Set<Componente> componentes = proyecto.getComponentes();
+				if(componentes != null && componentes.size() > 0){
+					Iterator<Componente> iterator = componentes.iterator();
+					while(iterator.hasNext()){
+						Componente componente = iterator.next();
+						techoTotal = techoTotal.add(componente.getFuentePrestamo()).add(componente.getFuenteNacional()).add(componente.getFuenteDonacion());
+					}
+				}
+			}
+			
+			response_text = new GsonBuilder().serializeNulls().create().toJson(techoTotal);
+			response_text = String.join("", "\"techoPep\":",response_text);
+			response_text = String.join("", "{\"success\":true,", response_text,"}");
+		}
+		else
 			response_text = "{ \"success\": false }";
 		response.setHeader("Content-Encoding", "gzip");
 		response.setCharacterEncoding("UTF-8");

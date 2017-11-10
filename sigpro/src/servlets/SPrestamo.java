@@ -819,6 +819,7 @@ public class SPrestamo extends HttpServlet {
             Prestamo prestamo = PrestamoDAO.getPrestamoById(id);
             response_text = String.join("","{ \"success\": ",(prestamo!=null && prestamo.getId()!=null ? "true" : "false"),", "
                     + "\"id\": " + (prestamo!=null ? prestamo.getId():"0") +", "
+            		+ "\"codigoPresupuestario\": " + (prestamo!=null ? prestamo.getCodigoPresupuestario():" ") +", "
             		+ "\"montoPorDesembolsar\": " + (prestamo!=null ? prestamo.getMontoPorDesembolsarUsd():"0") +", "
     				+ "\"desembolsoAFechaUsd\": \"" + (prestamo!=null ? prestamo.getDesembolsoAFechaUsd():" ") +"\", "
     				+ "\"fechaCierreActualUe\": \"" + (prestamo!=null ? Utils.formatDate(prestamo.getFechaCierreActualUe()):" ") +"\", "					
