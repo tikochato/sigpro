@@ -379,14 +379,14 @@ app.controller('ganttController',['$scope','$rootScope','$http','$interval','i18
 		mi.exportar=function(){
 			var formatData = new FormData();
 			
-			$http.post('/SDownload', { accion: 'exportar', proyectoid:$routeParams.objeto_id,t:moment().unix()
+			$http.post('/SGantt', { accion: 'exportar', proyecto_id:$routeParams.objeto_id,t:moment().unix()
 			  }).then(
 					 function successCallback(response) {
 							var anchor = angular.element('<a/>');
 						    anchor.attr({
-						         href: 'data:application/ms-project;base64,' + response.data,
+						         href: 'data:application/xml,' + response.data,
 						         target: '_blank',
-						         download: 'Programa.mpx'
+						         download: 'Programa.xml'
 						     })[0].click();
 						  }.bind(this), function errorCallback(response){
 						 		

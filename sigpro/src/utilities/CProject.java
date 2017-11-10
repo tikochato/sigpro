@@ -28,6 +28,8 @@ import net.sf.mpxj.Relation;
 import net.sf.mpxj.Task;
 import net.sf.mpxj.mpp.MPPReader;
 import net.sf.mpxj.mpx.MPXWriter;
+import net.sf.mpxj.mspdi.MSPDIWriter;
+import net.sf.mpxj.planner.PlannerWriter;
 import net.sf.mpxj.reader.ProjectReader;
 import net.sf.mpxj.writer.ProjectWriter;
 import pojo.Actividad;
@@ -565,8 +567,9 @@ public class CProject {
 				t.setPercentageComplete(actividad.getPorcentajeAvance());
 			}
 			
-			ProjectWriter writer = new MPXWriter();
-			path = "/SIPRO/archivos/temporales/Programa.mpx";
+			
+			MSPDIWriter writer = new MSPDIWriter();
+			path = "/SIPRO/archivos/temporales/Programa.xml";
 			writer.write(project,path);
 		}
 		return path;
