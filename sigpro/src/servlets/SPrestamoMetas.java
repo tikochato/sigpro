@@ -10,7 +10,6 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -29,23 +28,16 @@ import org.apache.shiro.codec.Base64;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 import dao.EstructuraProyectoDAO;
 import dao.MetaDAO;
 import dao.MetaUnidadMedidaDAO;
 import dao.PrestamoMetasDAO;
 import dao.ProyectoDAO;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
 import pojo.Meta;
 import pojo.MetaUnidadMedida;
 import utilities.CExcel;
 import utilities.CLogger;
-import utilities.CMariaDB;
 import utilities.Utils;
 import utilities.CPdf;
 
@@ -149,20 +141,6 @@ public class SPrestamoMetas extends HttpServlet {
 				response.setContentLength(outArray.length);
 				response.setHeader("Cache-Control", "no-cache"); 
 				response.setHeader("Content-Disposition", "attachment; Avance_de_Metas.xls");
-				OutputStream outStream = response.getOutputStream();
-				outStream.write(outArray);
-				outStream.flush();
-			}catch(Exception e){
-				CLogger.write("1", SPrestamoMetas.class, e);
-			}
-		}else if (accion.equals("exportarJasper")){
-			try{
-		        byte [] outArray = reporteJasper();
-			
-		        response.setContentType("application/pdf");
-				response.setContentLength(outArray.length);
-				response.setHeader("Cache-Control", "no-cache");  
-				response.setHeader("Content-Disposition", "in-line; 'Avance_de_Metas.pdf'");
 				OutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
 				outStream.flush();
@@ -731,26 +709,6 @@ public class SPrestamoMetas extends HttpServlet {
 			}
 		}
 		return datos;
-	}
-	
-	public byte[] reporteJasper() throws JRException, SQLException{
-		byte[] outArray = null;
-		String reportFileName = "/SIPRO/archivos/plantillas/Metas.jasper";
-		File reportFile = new File(reportFileName);
-		if (!reportFile.exists())
-			CLogger.write_simple("3", SPrestamoMetas.class, "Error al abrir el archivo "+reportFileName);
-
-       Map<String, Object> parameters = new HashMap<String, Object>();
-       
-       if(CMariaDB.connect()){
-			Connection conn = CMariaDB.getConnection();
-	       JasperPrint jasperPrint = JasperFillManager.fillReport(reportFileName, parameters, conn);
-//	       JasperExportManager.exportReportToPdfFile(jasperPrint, "/logs/salida.pdf");
-	       outArray = Base64.encode(JasperExportManager.exportReportToPdf(jasperPrint));
-
-           conn.close();
-       }
-       return outArray;
 	}
 	
 }
