@@ -961,8 +961,8 @@ public class SPrestamo extends HttpServlet {
 					unidad.get("entidad").getAsString().equals(unidad_.get("entidadId").getAsString()) && 
 					unidad.get("id").getAsString().equals(unidad_.get("id").getAsString())){
 				esCoordinador = Utils.String2Boolean(unidad_.get("esCoordinador").getAsString(), 0);
-				fechaElegibilidad = Utils.stringToDateZ(unidad_.get("fechaElegibilidad").getAsString());
-				fechaCierre = Utils.stringToDateZ(unidad_.get("fechaCierre").getAsString());
+				fechaElegibilidad = !unidad_.get("fechaElegibilidad").isJsonNull() ? Utils.stringToDateZ(unidad_.get("fechaElegibilidad").getAsString()) : null;
+				fechaCierre = !unidad_.get("fechaCierre").isJsonNull() ? Utils.stringToDateZ(unidad_.get("fechaCierre").getAsString()) : null;
 				break;
 			}
 		}
