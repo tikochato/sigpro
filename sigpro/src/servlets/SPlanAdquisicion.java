@@ -76,6 +76,17 @@ public class SPlanAdquisicion extends HttpServlet {
 		String firmaContratoReal;
 		stpago pagos[];
 	}
+	
+	class stnog{
+		Integer nog;
+		String numeroContrato;
+		BigDecimal montoContrato;
+		String preparacionDocumentosReal;
+		String lanzamientoEventoReal;
+		String recepcionOfertasReal;
+		String adjudicacionReal;
+		String firmaContratoReal;
+	}
 		
     public SPlanAdquisicion() {
         super();
@@ -234,7 +245,7 @@ public class SPlanAdquisicion extends HttpServlet {
 						temp.lanzamientoEventoPlanificada = Utils.formatDate(adquisicion.getLanzamientoEventoPlanificado());
 						temp.lanzamientoEventoReal = Utils.formatDate(adquisicion.getLanzamientoEventoReal());
 						temp.medidaNombre = adquisicion.getUnidadMedida();
-						temp.montoContrato = adquisicion.getMontoContrato();
+						temp.montoContrato = adquisicion.getMontoContrato().compareTo(BigDecimal.ZERO) != 0 ? adquisicion.getMontoContrato() : null;
 						temp.nog = adquisicion.getNog();
 						temp.numeroContrato = adquisicion.getNumeroContrato();
 						temp.precioUnitario = adquisicion.getPrecioUnitario();
@@ -274,6 +285,32 @@ public class SPlanAdquisicion extends HttpServlet {
 				Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
 				PlanAdquisicionDAO.borrarTodosPlan(objetoId, objetoTipo);
 				response_text = String.join("", "{\"success\":true }");
+			}
+			else if(accion.equals("getInfoNog")){
+				Integer nog = Utils.String2Int(map.get("nog"));
+				
+				List<?> infoNogObj = PlanAdquisicionDAO.getInfoNog(nog);
+				List<stnog> lstnog = new ArrayList<stnog>();
+				if(infoNogObj!= null && infoNogObj.size() > 0){
+					stnog temp = new stnog();
+					for(Object objetoNog : infoNogObj){
+						Object[] obj = (Object[])objetoNog;
+						temp = new stnog();
+						temp.nog = (Integer)obj[0];
+						temp.numeroContrato = (String)obj[1];
+						temp.montoContrato = (BigDecimal)obj[2];
+						temp.preparacionDocumentosReal = Utils.formatDate((Date)obj[3]);
+						temp.lanzamientoEventoReal = Utils.formatDate((Date)obj[4]);
+						temp.recepcionOfertasReal = Utils.formatDate((Date)obj[5]);
+						temp.adjudicacionReal = Utils.formatDate((Date)obj[6]);
+						temp.firmaContratoReal = Utils.formatDate((Date)obj[7]);
+						lstnog.add(temp);
+					}	
+				}
+				
+				response_text = new GsonBuilder().serializeNulls().create().toJson(lstnog);
+				response_text = String.join("", "\"nogInfo\":",response_text);
+		        response_text = String.join("", "{\"success\":", lstnog.size() > 0 ? "true," : "false,", response_text, "}");
 			}
 			
 			response.setHeader("Content-Encoding", "gzip");

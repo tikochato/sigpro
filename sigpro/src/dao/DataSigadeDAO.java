@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import pojoSigade.DtmAvanceFisfinanDetDti;
 import pojoSigade.DtmAvanceFisfinanDti;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -211,5 +212,52 @@ public class DataSigadeDAO {
 		}
 		return ret;
 	}
-
+	
+	public static List<DtmAvanceFisfinanDetDti> getInfPorUnidadEjecutora(String codigoPresupuestario, Integer ejercicio, Integer entidad, Integer UE){
+		List<DtmAvanceFisfinanDetDti> ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query =String.join("", "SELECT * FROM sipro_analytic.dtm_avance_fisfinan_det_dti d ",
+					"where d.codigo_presupuestario = ?1 ",
+					"and d.ejercicio_fiscal = ?2 ",
+					"and d.entidad_sicoin = ?3 ",
+					"and d.unidad_ejecutora_sicoin= ?4 ");
+			Query<DtmAvanceFisfinanDetDti> criteria = session.createNativeQuery(query, DtmAvanceFisfinanDetDti.class);
+			criteria.setParameter("1", codigoPresupuestario);
+			criteria.setParameter("2", ejercicio);
+			criteria.setParameter("3", entidad);
+			criteria.setParameter("4", UE);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("2", DataSigadeDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static List<DtmAvanceFisfinanDetDti> getInfPorUnidadEjecutoraALaFecha(String codigoPresupuestario, Integer entidad, Integer UE){
+		List<DtmAvanceFisfinanDetDti> ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query =String.join("", "SELECT * FROM sipro_analytic.dtm_avance_fisfinan_det_dti d ",
+					"where d.codigo_presupuestario = ?1 ",
+					"and d.entidad_sicoin = ?2 ",
+					"and d.unidad_ejecutora_sicoin= ?3 ");
+			Query<DtmAvanceFisfinanDetDti> criteria = session.createNativeQuery(query, DtmAvanceFisfinanDetDti.class);
+			criteria.setParameter("1", codigoPresupuestario);
+			criteria.setParameter("2", entidad);
+			criteria.setParameter("3", UE);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("2", DataSigadeDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 }

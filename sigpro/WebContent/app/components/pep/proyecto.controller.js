@@ -73,12 +73,11 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				mi.prestamoNombre = response.nombre;
 				mi.objetoTipoNombre = "Préstamo";	
 				mi.prestamoid=response.id;
-				mi.montoPorDesembolsar = response.montoPorDesembolsar;
+				mi.codigoPresupuestario = response.codigoPresupuestario;
 				mi.fechaCierreActualUe = response.fechaCierreActualUe;
-				mi.desembolsoAFechaUsd = response.desembolsoAFechaUsd;
 			}
 	});
-
+	
 	mi.fechaOptions = {
 			formatYear : 'yy',
 			maxDate : new Date(2050, 12, 31),
@@ -428,6 +427,33 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				
 			});
 			
+			if(mi.prestamoid != null){
+				$http.post('/SProyecto', { accion: 'obtenerMontoTechos', id: mi.proyecto.id }).then(
+					function(response){
+					if(response.data.success){
+						mi.MontoTechos = response.data.techoPep;	
+						
+						$http.post('/SDataSigade', { accion: 'getMontoDesembolsosUE', codPrep: mi.codigoPresupuestario, ejercicio: mi.proyecto.ejercicio, entidad: mi.proyecto.entidadentidad, ue: mi.proyecto.unidadejecutoraid}).then(
+							function(response){
+								if(response.data.success){
+									mi.montoDesembolsadoUE = response.data.montoDesembolsadoUE;
+									
+									mi.montoPorDesembolsar = mi.MontoTechos - mi.montoDesembolsadoUE;
+									
+									$http.post('/SDataSigade', { accion: 'getMontoDesembolsosUEALaFecha', codPrep: mi.codigoPresupuestario, entidad: mi.proyecto.entidadentidad, ue: mi.proyecto.unidadejecutoraid}).then(
+										function(response){
+											if(response.data.success){
+												mi.desembolsoAFechaUsd = response.data.montoDesembolsadoUEALaFecha;
+											}
+										}
+											
+									)
+								}
+							}
+						);
+					}
+				})
+			}
 			mi.getDocumentosAdjuntos( mi.proyecto.id,0);
 			$scope.active = 0;
 			
