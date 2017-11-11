@@ -386,7 +386,7 @@ app.controller('ganttController',['$scope','$rootScope','$http','$interval','i18
 						    anchor.attr({
 						         href: 'data:application/xml,' + response.data,
 						         target: '_blank',
-						         download: 'Programa.xml'
+						         download: mi.proyectoNombre + '.xml'
 						     })[0].click();
 						  }.bind(this), function errorCallback(response){
 						 		
