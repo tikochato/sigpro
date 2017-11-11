@@ -57,6 +57,7 @@ public class PlanAdquisicion implements java.io.Serializable {
 	private String numeroContrato;
 	private BigDecimal montoContrato;
 	private Long nog;
+	private Integer tipoRevision;
 	private Set<PlanAdquisicionPago> planAdquisicionPagos = new HashSet<PlanAdquisicionPago>(0);
 
 	public PlanAdquisicion() {
@@ -80,7 +81,7 @@ public class PlanAdquisicion implements java.io.Serializable {
 			Date adjudicacionPlanificado, Date adjudicacionReal, Date firmaContratoPlanificado, Date firmaContratoReal,
 			int objetoId, int objetoTipo, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, int estado, Integer bloqueado, String numeroContrato, BigDecimal montoContrato,
-			Long nog, Set<PlanAdquisicionPago> planAdquisicionPagos) {
+			Long nog, Integer tipoRevision, Set<PlanAdquisicionPago> planAdquisicionPagos) {
 		this.categoriaAdquisicion = categoriaAdquisicion;
 		this.tipoAdquisicion = tipoAdquisicion;
 		this.unidadMedida = unidadMedida;
@@ -108,6 +109,7 @@ public class PlanAdquisicion implements java.io.Serializable {
 		this.numeroContrato = numeroContrato;
 		this.montoContrato = montoContrato;
 		this.nog = nog;
+		this.tipoRevision = tipoRevision;
 		this.planAdquisicionPagos = planAdquisicionPagos;
 	}
 
@@ -378,6 +380,15 @@ public class PlanAdquisicion implements java.io.Serializable {
 
 	public void setNog(Long nog) {
 		this.nog = nog;
+	}
+	
+	@Column(name = "tipo_revision")
+	public Integer getTipoRevision() {
+		return this.tipoRevision;
+	}
+
+	public void setTipoRevision(Integer tipoRevision) {
+		this.tipoRevision = tipoRevision;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "planAdquisicion")

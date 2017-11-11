@@ -70,6 +70,18 @@
 							</div>
 						</div>
 						<div class="row">
+    							<div class="col-sm-3">
+    								<input type="radio" ng-model="adquisicionc.adquisicion.tipoRevision" 
+    								value="1" />
+									<label class="label-form">Revisión ex-ante</label>
+    							</div>
+    							<div class="col-sm-3">
+    								<input type="radio" ng-model="adquisicionc.adquisicion.tipoRevision"
+    								value="2" />
+									<label class="label-form">Revisión ex-post</label>
+    							</div>
+    						</div>
+						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group">
 									<input type="number" class="inputText" ng-model="adquisicionc.adquisicion.nog" style="text-align: right;"
@@ -80,14 +92,16 @@
 							<div class="col-sm-3">
 								<div class="form-group">
 									<input type="text" class="inputText" ng-model="adquisicionc.adquisicion.numeroContrato" style="text-align: left;" 
-									ng-value="adquisicionc.adquisicion.numeroContrato" onblur="this.setAttribute('value', this.value);"/>
+									ng-value="adquisicionc.adquisicion.numeroContrato" onblur="this.setAttribute('value', this.value);"
+									ng-disabled="adquisicionc.adquisicion.montoContrato != null"/>
 										<label class="floating-label" >Número de contrato</label>
 								</div>
 							</div>
 							<div class="col-sm-3">
 								<div class="form-group">
 									<input type="text" class="inputText input-money" ng-model="adquisicionc.adquisicion.montoContrato" ui-number-mask="2" 
-									ng-value="adquisicionc.adquisicion.montoContrato" onblur="this.setAttribute('value', this.value);" ng-required="adquisicionc.requerido"/>
+									ng-value="adquisicionc.adquisicion.montoContrato" onblur="this.setAttribute('value', this.value);"
+									ng-disabled="adquisicionc.adquisicion.montoContrato != null"/>
 										<label class="floating-label" >Monto del contrato</label>
 								</div>
 							</div>

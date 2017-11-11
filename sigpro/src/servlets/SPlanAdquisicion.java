@@ -75,6 +75,8 @@ public class SPlanAdquisicion extends HttpServlet {
 		String firmaContratoPlanificada;
 		String firmaContratoReal;
 		stpago pagos[];
+		Integer tipoRevision;
+		String tipoRevisionNombre;
 	}
 	
 	class stnog{
@@ -138,6 +140,7 @@ public class SPlanAdquisicion extends HttpServlet {
 					Integer tipoId = map.get("tipoId")!=null ? Utils.String2Int(map.get("tipoId").toString()) : null;
 					BigDecimal total = map.get("total")!=null ? Utils.String2BigDecimal(map.get("total").toString(),null) : null;
 					String unidadMedida =  map.get("medidaNombre")!=null ? map.get("medidaNombre").toString() : null;
+					Integer tipoRevision = Utils.String2Int(map.get("tipoRevision"));
 					PlanAdquisicion pa;
 					if(id==null || id == -1)
 						pa = new PlanAdquisicion(CategoriaAdquisicionDAO.getCategoriaPorId(categoriaId), 
@@ -145,7 +148,7 @@ public class SPlanAdquisicion extends HttpServlet {
 							preparacionDocPlanificado, preparacionDocReal, lanzamientoEventoPlanificado, lanzamientoEventoReal, 
 							recepcionOfertasPlanificado, recepcionOfertasReal, adjudicacionPlanificado, adjudicacionReal, 
 							firmaContratoPlanificado, firmaContratoReal, objetoId, objetoTipo,usuario, null, 
-							new DateTime().toDate(), null, 1, 0, numeroContrato, montoContrato, nog, null);
+							new DateTime().toDate(), null, 1, 0, numeroContrato, montoContrato, nog, tipoRevision, null);
 					else{
 						pa = PlanAdquisicionDAO.getPlanAdquisicionById(id);
 						pa.setCategoriaAdquisicion(CategoriaAdquisicionDAO.getCategoriaPorId(categoriaId));
@@ -173,6 +176,7 @@ public class SPlanAdquisicion extends HttpServlet {
 						pa.setNumeroContrato(numeroContrato);
 						pa.setMontoContrato(montoContrato);
 						pa.setNog(nog);
+						pa.setTipoRevision(tipoRevision);
 						PlanAdquisicionPagoDAO.eliminarPagos(new ArrayList<PlanAdquisicionPago>(pa.getPlanAdquisicionPagos()));
 					}
 					PlanAdquisicionDAO.guardarPlanAdquisicion(pa);
@@ -256,6 +260,9 @@ public class SPlanAdquisicion extends HttpServlet {
 						temp.tipoId = adquisicion.getTipoAdquisicion().getId();
 						temp.tipoNombre = adquisicion.getTipoAdquisicion().getNombre();
 						temp.total = adquisicion.getTotal()!= null ? adquisicion.getTotal() : new BigDecimal(0);
+						temp.tipoRevision = adquisicion.getTipoRevision();
+						temp.tipoRevisionNombre = temp.tipoRevision == 1 ? "Ex-ante" : temp.tipoRevision == 2 ? "Ex-Post" : null;
+						
 						
 						List<PlanAdquisicionPago> lstpagos = PlanAdquisicionDAO.getPagos(adquisicion.getId());
 						if(lstpagos!=null && lstpagos.size()>0){
