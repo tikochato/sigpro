@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.4.3.final using JasperReports Library version 6.4.3  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PlanAdquisiciones" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="73042684-c3ac-4208-9480-fd57f4d99e72">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PlanAdquisiciones" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="73042684-c3ac-4208-9480-fd57f4d99e72">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="sipro"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
 	<parameter name="usuario" class="java.lang.String"/>
 	<parameter name="proyectoId" class="java.lang.Integer"/>
+	<parameter name="esSubreporte" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT c.nombre componente, pr.nombre producto, sp.nombre subproducto, ta.nombre metodo, 
 CASE WHEN pa.preparacion_doc_planificado 
@@ -167,7 +170,7 @@ WHERE p.id= $P{proyectoId}]]>
 		<groupExpression><![CDATA[$F{componente}]]></groupExpression>
 		<groupHeader>
 			<band height="30">
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement mode="Opaque" x="0" y="0" width="730" height="30" backcolor="#919191" uuid="311e2d87-cce2-44e1-8d80-f443db161b66">
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					</reportElement>
@@ -190,7 +193,7 @@ WHERE p.id= $P{proyectoId}]]>
 		<groupExpression><![CDATA[$F{producto}]]></groupExpression>
 		<groupHeader>
 			<band height="30">
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement x="0" y="0" width="730" height="30" backcolor="#FFFFFF" uuid="5b909622-f77f-4d39-8c3a-7cf10f6d01d9">
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					</reportElement>
@@ -488,7 +491,7 @@ WHERE p.id= $P{proyectoId}]]>
 	</columnHeader>
 	<detail>
 		<band height="31" splitType="Stretch">
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="130" height="30" uuid="1405552e-1510-4650-bea5-5aa163d8add6">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f9f767b1-937e-47c3-af0a-f736b635fff5"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
@@ -499,13 +502,13 @@ WHERE p.id= $P{proyectoId}]]>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement>
+				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 					<paragraph leftIndent="3"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{subproducto}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="130" y="0" width="100" height="30" uuid="81e564a9-dce5-4a89-b35e-5c411bdde958">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="254190b6-a039-49a4-9115-a1f15e54493f"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -523,7 +526,7 @@ WHERE p.id= $P{proyectoId}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{metodo}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="230" y="0" width="50" height="30" uuid="952e0040-8aa9-4aa1-98e1-c00fe6aaa0d7">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6d85e84c-df25-4d49-bc44-df7ca1767614"/>
 				</reportElement>
@@ -538,7 +541,7 @@ WHERE p.id= $P{proyectoId}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{preparacion_doc_planificado}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="380" y="0" width="50" height="30" uuid="2c736043-d938-4a54-996d-a1fdbc450354">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a7cf3e1a-f40b-45e6-8fac-e19a8d5b3f2f"/>
 				</reportElement>
@@ -553,7 +556,7 @@ WHERE p.id= $P{proyectoId}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{lanzamiento_evento_real}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="430" y="0" width="50" height="30" uuid="0f2c2468-b42c-4327-aa94-2c0dd712c112">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="52279a09-0e01-4a6e-8402-8728ac810511"/>
 				</reportElement>
@@ -568,7 +571,7 @@ WHERE p.id= $P{proyectoId}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{recepcion_ofertas_planificado}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="480" y="0" width="50" height="30" uuid="86a551e3-750e-4565-84c9-494ea7ac3bdb">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f8b72547-dadc-4849-82a1-f36dda580f7f"/>
 				</reportElement>
@@ -583,7 +586,7 @@ WHERE p.id= $P{proyectoId}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{recepcion_ofertas_real}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="530" y="0" width="50" height="30" uuid="39112fb3-1ea4-4bf3-aaee-47a8d01ae31b">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="87694f6b-e5cb-4257-8693-c7dfd91ff245"/>
 				</reportElement>
@@ -598,7 +601,7 @@ WHERE p.id= $P{proyectoId}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{adjudicacion_planificado}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="580" y="0" width="50" height="30" uuid="c3207a36-8337-4c30-87e8-5569599226e5">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="47b92033-082b-49e3-bff4-f77648b6817b"/>
 				</reportElement>
@@ -613,7 +616,7 @@ WHERE p.id= $P{proyectoId}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{adjudicacion_real}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="630" y="0" width="50" height="30" uuid="008cef1a-ab5a-49be-9eca-6e54a6e63e73">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="60c4d96e-3666-4817-a073-c72b92f3163a"/>
 				</reportElement>
@@ -628,7 +631,7 @@ WHERE p.id= $P{proyectoId}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{firma_contrato_planificado}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="680" y="0" width="50" height="30" uuid="fa3fc5f8-c68f-4e68-9de5-c116f3d49818">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="dcb61081-f1f3-4740-90d1-12a496d2cb01"/>
 				</reportElement>
@@ -643,7 +646,7 @@ WHERE p.id= $P{proyectoId}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{firma_contrato_real}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="280" y="0" width="50" height="30" uuid="6c33f93e-0740-4fc2-bd4e-2e15c8b72f73">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ba7e5aa4-a033-4b40-a7cb-16f9ca16fc89"/>
 				</reportElement>
@@ -658,7 +661,7 @@ WHERE p.id= $P{proyectoId}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{preparacion_doc_real}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="330" y="0" width="50" height="30" uuid="64c212e1-83aa-4cd3-b464-5bc398ec1749">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d0243e8f-a239-4cf4-8055-94deae5d7118"/>
 				</reportElement>
@@ -677,6 +680,7 @@ WHERE p.id= $P{proyectoId}]]>
 	</detail>
 	<pageFooter>
 		<band height="54" splitType="Stretch">
+			<printWhenExpression><![CDATA[$P{esSubreporte}==false]]></printWhenExpression>
 			<textField>
 				<reportElement x="450" y="44" width="300" height="10" uuid="1b66fa04-0b2e-45bf-99ce-4b634c6a4009">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
