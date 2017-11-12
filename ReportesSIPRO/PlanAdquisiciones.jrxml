@@ -7,6 +7,9 @@
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
 	<parameter name="usuario" class="java.lang.String"/>
 	<parameter name="proyectoId" class="java.lang.Integer"/>
+	<parameter name="esSubreporte" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT c.nombre componente, pr.nombre producto, sp.nombre subproducto, ta.nombre metodo, 
 CASE WHEN pa.preparacion_doc_planificado IS NOT NULL
@@ -667,6 +670,7 @@ WHERE p.id= $P{proyectoId} ;]]>
 	</detail>
 	<pageFooter>
 		<band height="35" splitType="Stretch">
+			<printWhenExpression><![CDATA[$P{esSubreporte}==false]]></printWhenExpression>
 			<textField>
 				<reportElement x="450" y="22" width="300" height="10" uuid="1b66fa04-0b2e-45bf-99ce-4b634c6a4009">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
