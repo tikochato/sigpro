@@ -391,15 +391,6 @@ public class PlanAdquisicion implements java.io.Serializable {
 		this.tipoRevision = tipoRevision;
 	}
 
-	@Column(name = "tipo_revision")
-	public Integer getTipoRevision() {
-		return this.tipoRevision;
-	}
-
-	public void setTipoRevision(Integer tipoRevision) {
-		this.tipoRevision = tipoRevision;
-	}
-
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "planAdquisicion")
 	public Set<PlanAdquisicionPago> getPlanAdquisicionPagos() {
 		return this.planAdquisicionPagos;
