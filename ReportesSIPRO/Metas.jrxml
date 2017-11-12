@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.4.3.final using JasperReports Library version 6.4.3  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Metas" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4bdf33d4-8f50-4f98-bcf6-3e335fb31299">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Metas" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4bdf33d4-8f50-4f98-bcf6-3e335fb31299">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SiproMDB"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -16,7 +16,7 @@
 	<parameter name="proyectoId" class="java.lang.Integer" isForPrompting="false">
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
 	</parameter>
-	<parameter name="esSubreporte" class="java.lang.Boolean">
+	<parameter name="esSubreporte" class="java.lang.Boolean" isForPrompting="false">
 		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
@@ -281,7 +281,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 		<groupExpression><![CDATA[$F{producto}]]></groupExpression>
 		<groupHeader>
 			<band height="30">
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement mode="Opaque" x="0" y="0" width="750" height="30" backcolor="#D6D4D4" uuid="027f21ea-c3d8-4b20-973e-1e0accfae0d0">
 						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="893fff96-e6c6-4357-b8e0-22b093e33f14"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -620,7 +620,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{unidadmedida}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="154" height="30" uuid="4dd43cd3-2a0e-4f03-b63c-5fb2f3bae734">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="62b6767f-7649-436d-8f36-c9bd077d8c6c"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
