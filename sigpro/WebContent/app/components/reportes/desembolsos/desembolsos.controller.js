@@ -121,8 +121,8 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 			          ticks: {
 			        	     callback: function (value) {
 			        	    	 if (mi.enMillones)
-			        	    		 value = value / 1000000;
-			        	    	 return numeral(value).format('$ 0,0')
+			        	    		 value = (value / 1000000).toFixed(2);
+			        	    	 return '$'+numeral(value).format(' 0.0')
 	                        }
 	                   },
 	                   scaleLabel: {
@@ -157,7 +157,7 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 			          ticks: {
 	                        
 			        	     callback: function (value) {
-			        	    	 return numeral(value).format('$ 0,0')
+			        	    	 return '$'+numeral(value).format(' 0.0')
 	                        }
 	                   },
 	                   scaleLabel: {
