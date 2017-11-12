@@ -29,12 +29,12 @@ WHEN m.dato_tipoid=2 THEN SUM(ma.valor_entero)
 WHEN m.dato_tipoid=3 THEN SUM(ma.valor_decimal) 
 WHEN m.dato_tipoid=4 THEN ma.valor_tiempo
 ELSE SUM(ma.valor_entero) END AS avanceTotal 
-FROM meta m
-JOIN producto p ON m.objeto_id = p.id
-JOIN componente c ON p.componenteid = c.id
-JOIN proyecto py ON c.proyectoid = py.id
-JOIN meta_unidad_medida um ON m.meta_unidad_medidaid = um.id
-LEFT JOIN meta_avance ma on ma.metaid=m.id
+FROM sipro.meta m
+JOIN sipro.producto p ON m.objeto_id = p.id
+JOIN sipro.componente c ON p.componenteid = c.id
+JOIN sipro.proyecto py ON c.proyectoid = py.id
+JOIN sipro.meta_unidad_medida um ON m.meta_unidad_medidaid = um.id
+LEFT JOIN sipro.meta_avance ma on ma.metaid=m.id
 WHERE m.objeto_tipo=3 AND py.id =  $P{proyectoId} 
 AND m.estado=1 AND p.estado=1 AND c.estado=1 AND py.estado=1
 group by m.id
@@ -50,13 +50,13 @@ WHEN m.dato_tipoid=2 THEN SUM(ma.valor_entero)
 WHEN m.dato_tipoid=3 THEN SUM(ma.valor_decimal) 
 WHEN m.dato_tipoid=4 THEN ma.valor_tiempo
 ELSE SUM(ma.valor_entero) END AS avanceTotal 
-FROM meta m
-JOIN producto p ON m.objeto_id = p.id
-JOIN subcomponente sc ON p.subcomponenteid = sc.id
-JOIN componente c ON sc.componenteid = c.id
-JOIN proyecto py ON c.proyectoid = py.id
-JOIN meta_unidad_medida um ON m.meta_unidad_medidaid = um.id
-LEFT JOIN meta_avance ma on ma.metaid=m.id
+FROM sipro. meta m
+JOIN sipro.producto p ON m.objeto_id = p.id
+JOIN sipro.subcomponente sc ON p.subcomponenteid = sc.id
+JOIN sipro.componente c ON sc.componenteid = c.id
+JOIN sipro.proyecto py ON c.proyectoid = py.id
+JOIN sipro.meta_unidad_medida um ON m.meta_unidad_medidaid = um.id
+LEFT JOIN sipro.meta_avance ma on ma.metaid=m.id
 WHERE m.objeto_tipo=3 AND py.id =  $P{proyectoId} 
 AND m.estado=1 AND p.estado=1 AND sc.estado=1 AND c.estado=1 AND py.estado=1
 group by m.id ) meta
@@ -92,8 +92,8 @@ WHEN m.dato_tipoid = 3 THEN mp.noviembre_decimal ELSE 0  END noviembreP ,
 CASE WHEN m.dato_tipoid = 2 THEN mp.diciembre_entero
 WHEN m.dato_tipoid = 3 THEN mp.diciembre_decimal ELSE 0  END diciembreP ,
 0 eneroR, 0 febreroR, 0 marzoR, 0 abrilR, 0 mayoR, 0 junioR, 0 julioR, 0 agostoR, 0 septiembreR, 0 octubreR, 0 noviembreR, 0 diciembreR
-from meta_planificado mp
-join meta m on mp.metaid = m.id
+from sipro.meta_planificado mp
+join sipro.meta m on mp.metaid = m.id
 where ejercicio = YEAR(now())
 union
 select t1.metaid, t1.anio ejercicio,
@@ -116,8 +116,8 @@ CASE
 WHEN m.dato_tipoid = 2 THEN ma.valor_entero
 WHEN m.dato_tipoid = 3 THEN ma.valor_decimal
 END valor
-from meta_avance ma
-join meta m on ma.metaid = m.id
+from sipro.meta_avance ma
+join sipro.meta m on ma.metaid = m.id
 where ma.estado = 1
 and YEAR(ma.fecha) = YEAR(now())
 ) t1
