@@ -338,10 +338,10 @@
 			    			<table class="table table-striped tablaDatos" style="max-width: {{flujoc.tamanoTotal}}px; height:100%;" >
 								<tbody class="cuerpoTablaDatos" id="cuerpoTotalesDatos">
 							      	<tr>
-							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaPlanificado track by $index" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>
+							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaPlanificado track by $index" class="colorPlanificado" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>
 							      	</tr>
 							      	<tr>
-							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaPlanificadoAcumulado track by $index" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>
+							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaPlanificadoAcumulado track by $index" class="colorPlanificado" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>
 							      	</tr>
 							      	<tr>
 							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaEjecutado track by $index" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>
@@ -372,10 +372,10 @@
 		    			<table class="table table-striped tablaDatos" style="max-width: {{flujoc.tamanoTotal}}px; height:100%;" >
 							<tbody class="cuerpoTablaTotales bordeIzquierda">
 								<tr>
-									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span>{{flujoc.resumenTotales.totalPlanificado | formatoMillones : flujoc.enMillones}}</span></td>
+									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span class="colorPlanificado">{{flujoc.resumenTotales.totalPlanificado | formatoMillones : flujoc.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span>{{flujoc.resumenTotales.totalPlanificadoAcumulado | formatoMillones : flujoc.enMillones}}</span></td>
+									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span class="colorPlanificado">{{flujoc.resumenTotales.totalPlanificadoAcumulado | formatoMillones : flujoc.enMillones}}</span></td>
 								</tr>
 								<tr>
 									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span>{{flujoc.resumenTotales.totalEjecutado | formatoMillones : flujoc.enMillones}}</span></td>
@@ -387,7 +387,7 @@
 									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span>{{flujoc.resumenTotales.totalVariacion | formatoMillones : flujoc.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span>{{flujoc.resumenTotales.totalVariacionPorcentaje | formatoMillones : flujoc.enMillones}}</span></td>
+									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span></span></td>
 								</tr>
 								<tr>
 									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span>{{flujoc.resumenTotales.totalDesembolsosReal | formatoMillones : flujoc.enMillones}}</span></td>

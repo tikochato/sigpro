@@ -16,6 +16,9 @@
 	<parameter name="proyectoId" class="java.lang.Integer" isForPrompting="false">
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
 	</parameter>
+	<parameter name="esSubreporte" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT meta.*, valores.*
 FROM (SELECT c.nombre componente, p.nombre producto, um.nombre unidadmedida, m.id, m.nombre meta, 
@@ -29,12 +32,12 @@ WHEN m.dato_tipoid=2 THEN SUM(ma.valor_entero)
 WHEN m.dato_tipoid=3 THEN SUM(ma.valor_decimal) 
 WHEN m.dato_tipoid=4 THEN ma.valor_tiempo
 ELSE SUM(ma.valor_entero) END AS avanceTotal 
-FROM meta m
-JOIN producto p ON m.objeto_id = p.id
-JOIN componente c ON p.componenteid = c.id
-JOIN proyecto py ON c.proyectoid = py.id
-JOIN meta_unidad_medida um ON m.meta_unidad_medidaid = um.id
-LEFT JOIN meta_avance ma on ma.metaid=m.id
+FROM sipro.meta m
+JOIN sipro.producto p ON m.objeto_id = p.id
+JOIN sipro.componente c ON p.componenteid = c.id
+JOIN sipro.proyecto py ON c.proyectoid = py.id
+JOIN sipro.meta_unidad_medida um ON m.meta_unidad_medidaid = um.id
+LEFT JOIN sipro.meta_avance ma on ma.metaid=m.id
 WHERE m.objeto_tipo=3 AND py.id =  $P{proyectoId} 
 AND m.estado=1 AND p.estado=1 AND c.estado=1 AND py.estado=1
 group by m.id
@@ -50,13 +53,13 @@ WHEN m.dato_tipoid=2 THEN SUM(ma.valor_entero)
 WHEN m.dato_tipoid=3 THEN SUM(ma.valor_decimal) 
 WHEN m.dato_tipoid=4 THEN ma.valor_tiempo
 ELSE SUM(ma.valor_entero) END AS avanceTotal 
-FROM meta m
-JOIN producto p ON m.objeto_id = p.id
-JOIN subcomponente sc ON p.subcomponenteid = sc.id
-JOIN componente c ON sc.componenteid = c.id
-JOIN proyecto py ON c.proyectoid = py.id
-JOIN meta_unidad_medida um ON m.meta_unidad_medidaid = um.id
-LEFT JOIN meta_avance ma on ma.metaid=m.id
+FROM sipro. meta m
+JOIN sipro.producto p ON m.objeto_id = p.id
+JOIN sipro.subcomponente sc ON p.subcomponenteid = sc.id
+JOIN sipro.componente c ON sc.componenteid = c.id
+JOIN sipro.proyecto py ON c.proyectoid = py.id
+JOIN sipro.meta_unidad_medida um ON m.meta_unidad_medidaid = um.id
+LEFT JOIN sipro.meta_avance ma on ma.metaid=m.id
 WHERE m.objeto_tipo=3 AND py.id =  $P{proyectoId} 
 AND m.estado=1 AND p.estado=1 AND sc.estado=1 AND c.estado=1 AND py.estado=1
 group by m.id ) meta
@@ -92,8 +95,8 @@ WHEN m.dato_tipoid = 3 THEN mp.noviembre_decimal ELSE 0  END noviembreP ,
 CASE WHEN m.dato_tipoid = 2 THEN mp.diciembre_entero
 WHEN m.dato_tipoid = 3 THEN mp.diciembre_decimal ELSE 0  END diciembreP ,
 0 eneroR, 0 febreroR, 0 marzoR, 0 abrilR, 0 mayoR, 0 junioR, 0 julioR, 0 agostoR, 0 septiembreR, 0 octubreR, 0 noviembreR, 0 diciembreR
-from meta_planificado mp
-join meta m on mp.metaid = m.id
+from sipro.meta_planificado mp
+join sipro.meta m on mp.metaid = m.id
 where ejercicio = YEAR(now())
 union
 select t1.metaid, t1.anio ejercicio,
@@ -116,8 +119,8 @@ CASE
 WHEN m.dato_tipoid = 2 THEN ma.valor_entero
 WHEN m.dato_tipoid = 3 THEN ma.valor_decimal
 END valor
-from meta_avance ma
-join meta m on ma.metaid = m.id
+from sipro.meta_avance ma
+join sipro.meta m on ma.metaid = m.id
 where ma.estado = 1
 and YEAR(ma.fecha) = YEAR(now())
 ) t1
@@ -249,7 +252,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 		<variableExpression><![CDATA[($V{R1}.add($V{R2}.add( $V{R3} ) )).setScale(2, BigDecimal.ROUND_HALF_UP)]]></variableExpression>
 	</variable>
 	<variable name="porcentajeAvance" class="java.math.BigDecimal">
-		<variableExpression><![CDATA[($F{meta_final}!=null?(($F{avanceTotal}!=null?$F{avanceTotal}:new BigDecimal(0)).divide($F{meta_final} )):new BigDecimal(0)).setScale(2, BigDecimal.ROUND_HALF_UP)]]></variableExpression>
+		<variableExpression><![CDATA[($F{meta_final}!=null?(($F{avanceTotal}!=null?$F{avanceTotal}:new BigDecimal(0)).divide($F{meta_final} )):new BigDecimal(0)).multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP)]]></variableExpression>
 	</variable>
 	<group name="Group1">
 		<groupExpression><![CDATA[$F{componente}]]></groupExpression>
@@ -303,11 +306,11 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="75" splitType="Stretch">
+		<band height="42" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Transparent" x="250" y="17" width="290" height="40" backcolor="#0D0D0D" uuid="f16d3680-349f-4247-a4ad-b7ebcf351e51"/>
+				<reportElement mode="Transparent" x="235" y="0" width="290" height="30" backcolor="#0D0D0D" uuid="f16d3680-349f-4247-a4ad-b7ebcf351e51"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font fontName="Arial" size="25" isBold="false"/>
+					<font fontName="Arial" size="16" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Metas Año Fiscal]]></text>
 			</staticText>
@@ -788,12 +791,13 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<font fontName="Arial" size="9" isBold="true"/>
 					<paragraph leftIndent="4"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{porcentajeAvance}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{porcentajeAvance}+"%"]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<pageFooter>
 		<band height="40" splitType="Stretch">
+			<printWhenExpression><![CDATA[$P{esSubreporte}==false]]></printWhenExpression>
 			<textField pattern="dd/MM/yyyy hh:mm:ss a">
 				<reportElement x="70" y="20" width="143" height="10" uuid="6c270576-b034-4e07-9e24-7279e28b981b">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>

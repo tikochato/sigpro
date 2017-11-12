@@ -121,8 +121,8 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 			          ticks: {
 			        	     callback: function (value) {
 			        	    	 if (mi.enMillones)
-			        	    		 value = value / 1000000;
-			        	    	 return numeral(value).format('$ 0,0')
+			        	    		 value = (value / 1000000).toFixed(2);
+			        	    	 return '$'+numeral(value).format(' 0.0')
 	                        }
 	                   },
 	                   scaleLabel: {
@@ -157,7 +157,7 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 			          ticks: {
 	                        
 			        	     callback: function (value) {
-			        	    	 return numeral(value).format('$ 0,0')
+			        	    	 return '$'+numeral(value).format(' 0.0')
 	                        }
 	                   },
 	                   scaleLabel: {
@@ -257,7 +257,7 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 				costoPlan.push ("Monto planificado");
 				costoPlan.push (...costo.slice());
 			
-				desembolsoPlanificado.push("Desembolso Planificado");
+				desembolsoPlanificado.push("Desembolso Planificado ($)");
 				desembolsoPlanificado.push(...planificado.slice());
 				
 				desembolsoReal.push("Desembolso Real");
@@ -274,12 +274,12 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 					totalReal = totalReal + desembolsoReal[x];
 					totalReald = totalReald + desembolsoReald[x];
 					totalCostoPlan= totalCostoPlan + costoPlan[x];
-					var variacion = desembolsoPlanificado[x] - desembolsoReal[x];
+					var variacion = desembolsoPlanificado[x] - desembolsoReald[x];
 					var var1 = variacion / desembolsoPlanificado[x];
-					var var2 = variacion / desembolsoReal[x];
+					var var2 = variacion / desembolsoReald[x];
 					var1 = (var1 * 100).toFixed(2);
 					var2 = (var2 * 100).toFixed(2);
-					var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsoPlanificado[x] : desembolsoReal[x] ) * 100).toFixed(2);
+					var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsoPlanificado[x] : desembolsoReald[x] ) * 100).toFixed(2);
 					
 					variaciones.push (variacion)
 					porcentajeVariaciones.push(isNaN(porcentajeVariacion) ? "0%" :porcentajeVariacion+"%" );
@@ -309,7 +309,7 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 				totalItems = (mi.anio_fin - mi.anio_inicio +1) * 6;
 				
 				costoPlan.push ("Monto");
-				desembolsoPlanificado.push("Planificado");
+				desembolsoPlanificado.push("Planificado ($)");
 				desembolsoReal.push("Real");
 				desembolsoReald.push("Real ($)");
 				variaciones.push("Variación");
@@ -345,12 +345,12 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 					totalReal = totalReal + desembolsoReal[x];
 					totalReald = totalReald + desembolsoReald[x];
 					totalCostoPlan= totalCostoPlan + costoPlan[x];
-					var variacion = desembolsoPlanificado[x] - desembolsoReal[x];
+					var variacion = desembolsoPlanificado[x] - desembolsoReald[x];
 					var var1 = variacion / desembolsoPlanificado[x];
-					var var2 = variacion / desembolsoReal[x];
+					var var2 = variacion / desembolsoReald[x];
 					var1 = (var1 * 100).toFixed(2);
 					var2 = (var2 * 100).toFixed(2);
-					var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsoPlanificado[x] : desembolsoReal[x] ) * 100).toFixed(2);
+					var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsoPlanificado[x] : desembolsoReald[x] ) * 100).toFixed(2);
 					
 					variaciones.push (variacion)
 					porcentajeVariaciones.push(isNaN(porcentajeVariacion) ? "0%" :porcentajeVariacion+"%" );
@@ -380,7 +380,7 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 				totalItems = (mi.anio_fin - mi.anio_inicio +1) * 4;
 				
 				costoPlan.push ("Monto");
-				desembolsoPlanificado.push("Planificado");
+				desembolsoPlanificado.push("Planificado ($)");
 				desembolsoReal.push("Real");
 				desembolsoReald.push("Real ($)");
 				variaciones.push("Variación");
@@ -416,12 +416,12 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 					totalReal = totalReal + desembolsoReal[x];
 					totalReald = totalReald + desembolsoReald[x];
 					totalCostoPlan= totalCostoPlan + costoPlan[x];
-					var variacion = desembolsoPlanificado[x] - desembolsoReal[x];
+					var variacion = desembolsoPlanificado[x] - desembolsoReald[x];
 					var var1 = variacion / desembolsoPlanificado[x];
-					var var2 = variacion / desembolsoReal[x];
+					var var2 = variacion / desembolsoReald[x];
 					var1 = (var1 * 100).toFixed(2);
 					var2 = (var2 * 100).toFixed(2);
-					var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsoPlanificado[x] : desembolsoReal[x] ) * 100).toFixed(2);
+					var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsoPlanificado[x] : desembolsoReald[x] ) * 100).toFixed(2);
 					
 					variaciones.push (variacion)
 					porcentajeVariaciones.push(isNaN(porcentajeVariacion) ? "0%" :porcentajeVariacion+"%" );
@@ -451,7 +451,7 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 				totalItems = (mi.anio_fin - mi.anio_inicio +1) * 3;
 				
 				costoPlan.push ("Monto");
-				desembolsoPlanificado.push("Planificado");
+				desembolsoPlanificado.push("Planificado ($)");
 				desembolsoReal.push("Real");
 				desembolsoReald.push("Real ($)");
 				variaciones.push("Variación");
@@ -487,12 +487,12 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 					totalReal = totalReal + desembolsoReal[x];
 					totalReald = totalReald + desembolsoReald[x];
 					totalCostoPlan= totalCostoPlan + costoPlan[x];
-					var variacion = desembolsoPlanificado[x] - desembolsoReal[x];
+					var variacion = desembolsoPlanificado[x] - desembolsoReald[x];
 					var var1 = variacion / desembolsoPlanificado[x];
-					var var2 = variacion / desembolsoReal[x];
+					var var2 = variacion / desembolsoReald[x];
 					var1 = (var1 * 100).toFixed(2);
 					var2 = (var2 * 100).toFixed(2);
-					var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsoPlanificado[x] : desembolsoReal[x] ) * 100).toFixed(2);
+					var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsoPlanificado[x] : desembolsoReald[x] ) * 100).toFixed(2);
 					
 					variaciones.push (variacion)
 					porcentajeVariaciones.push(isNaN(porcentajeVariacion) ? "0%" :porcentajeVariacion+"%" );
@@ -522,7 +522,7 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 				totalItems = (mi.anio_fin - mi.anio_inicio +1) * 2;
 				
 				costoPlan.push ("Monto");
-				desembolsoPlanificado.push("Planificado");
+				desembolsoPlanificado.push("Planificado ($)");
 				desembolsoReal.push("Real");
 				desembolsoReald.push("Real ($)");
 				variaciones.push("Variación");
@@ -669,12 +669,12 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 		mi.columnasAcumulado=[];
 		mi.columnasAcumulado.push(...mi.columnas.slice(0,mi.columnas.length -1));
 		
-		mi.tabla[4][totalItems+1] = mi.tabla[1][totalItems+1] - mi.tabla[2][totalItems+1];
+		mi.tabla[4][totalItems+1] = mi.tabla[1][totalItems+1] - mi.tabla[3][totalItems+1];
 		
 		mi.tabla[5][[totalItems+1]] = (mi.tabla[4][totalItems+1] != 0 ? 
 				(mi.tabla[4][totalItems+1] / 
 						(mi.tabla[4][totalItems+1]  > 0 ? mi.tabla[1][totalItems+1] : 
-							mi.tabla[2][totalItems+1] ) * 100 ).toFixed(2) : "0") + "%";
+							mi.tabla[3][totalItems+1] ) * 100 ).toFixed(3) : "0") + "%";
 		
 		
 		
@@ -683,7 +683,7 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 		
 		for (x in mi.tabla[1]){
 			if(x>0 && x< mi.tabla[1].length -1){
-			desembolsosAcumuladosReal.push(x == 1 ? mi.tabla[2][x] : desembolsosAcumuladosReal[x-1] + mi.tabla[2][x] );
+			desembolsosAcumuladosReal.push(x == 1 ? mi.tabla[3][x] : desembolsosAcumuladosReal[x-1] + mi.tabla[3][x] );
 			desembolsosAcumuladosPlan.push(x == 1 ? mi.tabla[1][x] : desembolsosAcumuladosPlan[x-1] + mi.tabla[1][x] );
 			}
 		}
@@ -872,7 +872,7 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 		 mi.datosAcumulacionTabla[1] = [];
 		
 		 mi.desembolsosGrafica[0].push(...mi.tabla[1].slice(1,mi.tabla[1].length -1));
-		 mi.desembolsosGrafica[1].push(...mi.tabla[2].slice(1,mi.tabla[2].length -1));
+		 mi.desembolsosGrafica[1].push(...mi.tabla[3].slice(1,mi.tabla[3].length -1));
 		 
 		 for (y = 0; y<mi.datosOrigniales.planificado.length ; y++){
 			 

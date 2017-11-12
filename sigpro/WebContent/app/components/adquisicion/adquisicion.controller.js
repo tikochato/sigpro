@@ -184,7 +184,7 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 					id: mi.adquisicion.id,
 					lanzamientoEventoPlanificada: mi.adquisicion.lanzamientoEventoPlanificada,
 					lanzamientoEventoReal: mi.adquisicion.lanzamientoEventoReal,
-					montoContrato: mi.adquisicion.montoContrato,
+					montoContrato: mi.adquisicion.montoContrato != null ? mi.adquisicion.montoContrato : 0,
 					nog: mi.adquisicion.nog,
 					numeroContrato: mi.adquisicion.numeroContrato,
 					precioUnitario: mi.adquisicion.precioUnitario,
@@ -196,6 +196,7 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 					total: mi.adquisicion.total,
 					medidaNombre: mi.adquisicion.medidaNombre,
 					pagos: JSON.stringify(mi.adquisicion.pagos),
+					tipoRevision: mi.adquisicion.tipoRevision,
 					t: (new Date()).getTime()
 				}).success(function(response){
 					if(response.success){
