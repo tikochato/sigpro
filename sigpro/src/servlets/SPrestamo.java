@@ -290,9 +290,7 @@ public class SPrestamo extends HttpServlet {
 						temp.fechaActualizacion = Utils.formatDateHour(prestamo.getFechaActualizacion());
 						temp.objetivo = prestamo.getObjetivo();
 						temp.objetivoEspecifico = prestamo.getObjetivoEspecifico();
-						
 						lstprestamo.add(temp);
-						
 					}
 					
 					response_text=new GsonBuilder().serializeNulls().create().toJson(lstprestamo);
@@ -745,11 +743,14 @@ public class SPrestamo extends HttpServlet {
 					stcomponentes.add(temp);
 				}
 			}
+			
+			Integer diferencia = DataSigadeDAO.getDiferenciaMontos(codigoPresupuestario);
 
 			String unidades_text=new GsonBuilder().serializeNulls().create().toJson(unidadesEjecutroas);
 			String componentes_text = new GsonBuilder().serializeNulls().create().toJson(stcomponentes);
 	        response_text = String.join("", ",\"unidadesEjecutoras\":",unidades_text);
 	        response_text = String.join("", "\"componentes\":",componentes_text,response_text);
+	        response_text = String.join("", "\"diferencia\":",diferencia + ",",response_text);
 	        response_text = String.join("", "\"existenDatos\":",existenDatos + ",",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		} else if(accion.equals("guardarMatriz")){
@@ -757,54 +758,62 @@ public class SPrestamo extends HttpServlet {
 			Prestamo prestamo = PrestamoDAO.getPrestamoById(prestamoId);
 			String data = map.get("estructura");
 			String unidadesEjecutoras = map.get("unidadesEjecutoras");
+			int existenDatos = Utils.String2Boolean(map.get("existenDatos"), 0);
+			
+			
 			boolean ret = false;
-			guardarComponentesSigade(prestamo.getCodigoPresupuestario() + "", usuario);
 			
-			Type listType = new TypeToken<List<Map<String, Object>>>() {}.getType();
-			List<Map<String, Object>> estructuras = gson.fromJson(data, listType);
-			
-			JsonParser parser = new JsonParser();
-			JsonArray estructuras_ = parser.parse(data).getAsJsonArray();
-			JsonArray est_unidadesEjecutoras_ = parser.parse(unidadesEjecutoras).getAsJsonArray();
-			
-			ArrayList<Proyecto> proyectos = new ArrayList<Proyecto>();
-			int k = 0;
-			for (Map<String, Object> estructura : estructuras){
-				JsonObject estructura_ = estructuras_.get(k).getAsJsonObject();
-				k++;
-				parser = new JsonParser();
-				JsonArray unidades = estructura_.get("unidadesEjecutoras").getAsJsonArray() ;
-				listType = new TypeToken<List<Map<String, Object>>>() {}.getType();
+				guardarComponentesSigade(prestamo.getCodigoPresupuestario() + "", usuario,existenDatos);
+				Type listType = new TypeToken<List<Map<String, Object>>>() {}.getType();
+				List<Map<String, Object>> estructuras = gson.fromJson(data, listType);
 				
-				for(int j=0; j<unidades.size(); j++){
-					JsonObject unidad = unidades.get(j).getAsJsonObject();
-					int posicion = existeUnidad(proyectos,unidad);
+				JsonParser parser = new JsonParser();
+				JsonArray estructuras_ = parser.parse(data).getAsJsonArray();
+				JsonArray est_unidadesEjecutoras_ = parser.parse(unidadesEjecutoras).getAsJsonArray();
+				
+				ArrayList<Proyecto> proyectos = new ArrayList<Proyecto>();
+				int k = 0;
+				for (Map<String, Object> estructura : estructuras){
+					JsonObject estructura_ = estructuras_.get(k).getAsJsonObject();
+					k++;
+					parser = new JsonParser();
+					JsonArray unidades = estructura_.get("unidadesEjecutoras").getAsJsonArray() ;
+					listType = new TypeToken<List<Map<String, Object>>>() {}.getType();
 					
-					BigDecimal fuentePrestamo =!unidad.get("prestamo").isJsonNull() ?   Utils.String2BigDecimal(unidad.get("prestamo").getAsString(), new BigDecimal(0)) : new BigDecimal(0);
-					BigDecimal fuenteDonacion = !unidad.get("donacion").isJsonNull() ?  Utils.String2BigDecimal(unidad.get("donacion").getAsString(), new BigDecimal(0)): new BigDecimal(0);
-					BigDecimal fuenteNacional = !unidad.get("nacional").isJsonNull() ? Utils.String2BigDecimal(unidad.get("nacional").getAsString(), new BigDecimal(0)): new BigDecimal(0); 
-					if(posicion== -1){
-						proyectos.add(crearProyecto(unidad,prestamo,usuario,est_unidadesEjecutoras_));
-						ret = proyectos.size()>0;
-						if (fuentePrestamo.compareTo(BigDecimal.ZERO) > 0 || 
-								fuenteDonacion.compareTo(BigDecimal.ZERO) > 0 || 
-								fuenteNacional.compareTo(BigDecimal.ZERO)  > 0){
-							ret = ret && crearComponente(proyectos.get(proyectos.size() -1),(String) estructura.get("nombre"), (String) estructura.get("descripcion"),
-									fuentePrestamo, fuenteDonacion, fuenteNacional,usuario,
-									prestamo.getCodigoPresupuestario(),((Double) estructura.get("orden")).intValue());
-						}
-					}else{
-						if (fuentePrestamo.compareTo(BigDecimal.ZERO) > 0 || 
-								fuenteDonacion.compareTo(BigDecimal.ZERO) > 0 || 
-								fuenteNacional.compareTo(BigDecimal.ZERO)  > 0){
-							ret = ret && crearComponente(proyectos.get(posicion),(String) estructura.get("nombre"), (String) estructura.get("descripcion"),
-									fuentePrestamo, fuenteDonacion, fuenteNacional,usuario,
-									prestamo.getCodigoPresupuestario(),((Double) estructura.get("orden")).intValue());
+					for(int j=0; j<unidades.size(); j++){
+						JsonObject unidad = unidades.get(j).getAsJsonObject();
+						int posicion = existeUnidad(proyectos,unidad);
+						
+						BigDecimal fuentePrestamo =!unidad.get("prestamo").isJsonNull() ?   Utils.String2BigDecimal(unidad.get("prestamo").getAsString(), new BigDecimal(0)) : new BigDecimal(0);
+						BigDecimal fuenteDonacion = !unidad.get("donacion").isJsonNull() ?  Utils.String2BigDecimal(unidad.get("donacion").getAsString(), new BigDecimal(0)): new BigDecimal(0);
+						BigDecimal fuenteNacional = !unidad.get("nacional").isJsonNull() ? Utils.String2BigDecimal(unidad.get("nacional").getAsString(), new BigDecimal(0)): new BigDecimal(0); 
+						if(posicion== -1){
+							proyectos.add(crearEditarProyecto(unidad,prestamo,usuario,est_unidadesEjecutoras_,existenDatos));
+							ret = proyectos.size()>0;
+							if (fuentePrestamo.compareTo(BigDecimal.ZERO) > 0 || 
+									fuenteDonacion.compareTo(BigDecimal.ZERO) > 0 || 
+									fuenteNacional.compareTo(BigDecimal.ZERO)  > 0){
+								ret = ret && crearEditarComponente(proyectos.get(proyectos.size() -1),(String) estructura.get("nombre"), (String) estructura.get("descripcion"),
+										fuentePrestamo, fuenteDonacion, fuenteNacional,usuario,
+										prestamo.getCodigoPresupuestario(),((Double) estructura.get("orden")).intValue());
+							}
+						}else{
+							if (fuentePrestamo.compareTo(BigDecimal.ZERO) > 0 || 
+									fuenteDonacion.compareTo(BigDecimal.ZERO) > 0 || 
+									fuenteNacional.compareTo(BigDecimal.ZERO)  > 0){
+								ret = ret && crearEditarComponente(proyectos.get(posicion),(String) estructura.get("nombre"), (String) estructura.get("descripcion"),
+										fuentePrestamo, fuenteDonacion, fuenteNacional,usuario,
+										prestamo.getCodigoPresupuestario(),((Double) estructura.get("orden")).intValue());
+							}
 						}
 					}
 				}
-			}
-			 response_text = String.join("", "{\"success\":",ret ? "true" : "false", response_text,"}");
+			
+			Integer diferencia = DataSigadeDAO.getDiferenciaMontos(prestamo.getCodigoPresupuestario()+"");
+			
+			 response_text = String.join("", "{\"success\":",ret ? "true" : "false", response_text,
+					 ",\"diferencia\":",diferencia + "",
+					 "}");
 			
 		} else if(accion.equals("crearComponentesSigade")){
 			
@@ -950,7 +959,7 @@ public class SPrestamo extends HttpServlet {
         output.close();
 	}
 	
-	private Proyecto crearProyecto(JsonObject unidad,Prestamo prestamo,String usuario, JsonArray est_unidadesEjecutoras){
+	private Proyecto crearEditarProyecto(JsonObject unidad,Prestamo prestamo,String usuario, JsonArray est_unidadesEjecutoras,int existeData){
 		Proyecto ret = null;
 		Integer esCoordinador = null;
 		Date fechaElegibilidad = null;
@@ -972,18 +981,29 @@ public class SPrestamo extends HttpServlet {
 				Utils.String2Int(unidad.get("entidad").getAsString()),
 				Utils.String2Int(unidad.get("id").getAsString()));
 		if (unidadEjecutora != null){
-			ProyectoTipo proyectoTipo = ProyectoTipoDAO.getProyectoTipoPorId(1);
-			Etiqueta etiqueta = new Etiqueta();
-			etiqueta.setId(1);
-			AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
-			
-			
-			Proyecto proyecto = new Proyecto(acumulacionCosto,null, etiqueta,prestamo,proyectoTipo, unidadEjecutora
-					, prestamo.getNumeroPrestamo() + " - " + unidadEjecutora.getNombre(), null, usuario, null, new Date(), null, 1, null, null, null, null, 
-					null, null, null,null, null, null, null,null, null, null,null,
-					prestamo.getFechaSuscripcion(),prestamo.getFechaSuscripcion(),
-					1, "d"
-					,null,null,0,0,0, null,esCoordinador,fechaElegibilidad,fechaCierre,null,null,null,null,null,null,null,null,null,null,null,null);
+			Proyecto proyecto = null;
+			if(existeData == 0){
+				ProyectoTipo proyectoTipo = ProyectoTipoDAO.getProyectoTipoPorId(1);
+				Etiqueta etiqueta = new Etiqueta();
+				etiqueta.setId(1);
+				AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
+				
+				
+				proyecto = new Proyecto(acumulacionCosto,null, etiqueta,prestamo,proyectoTipo, unidadEjecutora
+						, prestamo.getNumeroPrestamo() + " - " + unidadEjecutora.getNombre(), null, usuario, null, new Date(), null, 1, null, null, null, null, 
+						null, null, null,null, null, null, null,null, null, null,null,
+						prestamo.getFechaSuscripcion(),prestamo.getFechaSuscripcion(),
+						1, "d"
+						,null,null,0,0,0, null,esCoordinador,fechaElegibilidad,fechaCierre,null,null,null,null,null,null,null,null,null,null,null,null);
+			}else{
+				proyecto = ProyectoDAO.getProyectoPorUnidadEjecutora(unidadEjecutora.getId().getUnidadEjecutora(), prestamo.getId(), unidadEjecutora.getId().getEntidadentidad());
+				proyecto.setCoordinador(esCoordinador);
+				proyecto.setFechaElegibilidad(fechaElegibilidad);
+				proyecto.setFechaCierre(fechaCierre);
+				proyecto.setFechaActualizacion(new Date());
+				proyecto.setUsuarioActualizo(usuario);
+				
+			}
 			
 			return ProyectoDAO.guardarProyecto(proyecto, false) ? proyecto : null;
 		}
@@ -991,19 +1011,30 @@ public class SPrestamo extends HttpServlet {
 		return ret;
 	}
 	
-	private boolean  crearComponente(Proyecto proyecto,String nombreComponente, String descripcion, BigDecimal fPrestamo,
+	private boolean  crearEditarComponente(Proyecto proyecto,String nombreComponente, String descripcion, BigDecimal fPrestamo,
 			BigDecimal donacion,BigDecimal nacional, String usuario, Long codigoPresupuestario,int orden){
-		ComponenteTipo componenteTipo = ComponenteTipoDAO.getComponenteTipoPorId(1);
 		
 		ComponenteSigade componenteSigade = ComponenteSigadeDAO.getComponenteSigadePorCodigoNumero(codigoPresupuestario + "", orden);
 		
-		AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
+		Componente componente = ComponenteDAO.getComponentePorProyectoYComponenteSigade(proyecto.getId(), componenteSigade!= null ? componenteSigade.getId() : 0);
 		
-		Componente componente = new Componente(acumulacionCosto,componenteSigade,componenteTipo, proyecto, proyecto.getUnidadEjecutora(), nombreComponente
-				, descripcion,usuario, null, new Date(), null, 1, null, null, null, null, null, null, null, null, 
-				null,null,null,proyecto.getFechaInicio(), proyecto.getFechaFin(),1
-				, "d",null,null,1,1,fPrestamo,donacion,nacional,null,null,null,null,null,null);
+		if (componente == null){
 		
+			ComponenteTipo componenteTipo = ComponenteTipoDAO.getComponenteTipoPorId(1);
+			
+			AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
+			
+			componente = new Componente(acumulacionCosto,componenteSigade,componenteTipo, proyecto, proyecto.getUnidadEjecutora(), nombreComponente
+					, descripcion,usuario, null, new Date(), null, 1, null, null, null, null, null, null, null, null, 
+					null,null,null,proyecto.getFechaInicio(), proyecto.getFechaFin(),1
+					, "d",null,null,1,1,fPrestamo,donacion,nacional,null,null,null,null,null,null);
+		}else{
+			componente.setFuentePrestamo(fPrestamo);
+			componente.setFuenteDonacion(donacion);
+			componente.setFuenteNacional(nacional);
+			componente.setFechaActualizacion(new Date());
+			componente.setUsuarioCreo(usuario);
+		}
 		return ComponenteDAO.guardarComponente(componente, false);
 	}
 	
@@ -1024,7 +1055,7 @@ public class SPrestamo extends HttpServlet {
 		return -1;
 	}
 	
-	private boolean guardarComponentesSigade(String codigoPresupuestario,String usuario){
+	private boolean guardarComponentesSigade(String codigoPresupuestario,String usuario,int existeData){
 		boolean ret = true;
 		List<?> componentesSigade = DataSigadeDAO.getComponentes(codigoPresupuestario);
 		
@@ -1041,8 +1072,14 @@ public class SPrestamo extends HttpServlet {
 			temp.setUsuaraioCreo(usuario);
 			
 			ComponenteSigade comp= ComponenteSigadeDAO.getComponenteSigadePorCodigoNumero(temp.getCodigoPresupuestario(), temp.getNumeroComponente());
-			if (comp == null)
+			if (comp == null )
 				ret = ret && ComponenteSigadeDAO.guardarComponenteSigade(temp);
+			else if (comp!= null && existeData == 1){
+				comp.setMontoComponente(temp.getMontoComponente());
+				comp.setFechaActualizacion(new Date());
+				comp.setUsuarioActualizo(usuario);
+				ret = ret && ComponenteSigadeDAO.guardarComponenteSigade(comp);
+			}
 			
 		}
 		return ret;

@@ -537,5 +537,27 @@ public class ComponenteDAO {
 		return ret;
 	}
 	
+	public static Componente getComponentePorProyectoYComponenteSigade(int proyectoId,int componenteSigadeId){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		Componente ret = null;
+		List<Componente> listRet = null;
+		try{
+			Query<Componente> criteria = session.createQuery("SELECT c "
+					+ "FROM Componente c where c.proyecto.id = :proyId "
+					+ "and c.componenteSigade.id = :compSigId", Componente.class);
+			criteria.setParameter("proyId", proyectoId);
+			criteria.setParameter("compSigId", componenteSigadeId);
+			listRet = criteria.getResultList();
+			 
+			 ret = !listRet.isEmpty() ? listRet.get(0) : null;
+		} catch(Throwable e){
+			CLogger.write("23", ComponenteDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
 	
 }
