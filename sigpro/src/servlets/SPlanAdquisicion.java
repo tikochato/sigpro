@@ -145,7 +145,7 @@ public class SPlanAdquisicion extends HttpServlet {
 							preparacionDocPlanificado, preparacionDocReal, lanzamientoEventoPlanificado, lanzamientoEventoReal, 
 							recepcionOfertasPlanificado, recepcionOfertasReal, adjudicacionPlanificado, adjudicacionReal, 
 							firmaContratoPlanificado, firmaContratoReal, objetoId, objetoTipo,usuario, null, 
-							new DateTime().toDate(), null, 1, 0, numeroContrato, montoContrato, nog, null);
+							new DateTime().toDate(), null, 1, 0, numeroContrato, montoContrato, nog, null, null);
 					else{
 						pa = PlanAdquisicionDAO.getPlanAdquisicionById(id);
 						pa.setCategoriaAdquisicion(CategoriaAdquisicionDAO.getCategoriaPorId(categoriaId));
