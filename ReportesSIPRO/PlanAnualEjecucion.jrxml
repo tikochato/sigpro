@@ -57,6 +57,38 @@
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["Metas.jasper"]]></subreportExpression>
 			</subreport>
+			<break>
+				<reportElement x="0" y="230" width="791" height="1" uuid="bf23fc17-2f0b-4cd5-9507-32729eed15b6"/>
+			</break>
+		</band>
+		<band height="311">
+			<break>
+				<reportElement x="0" y="306" width="790" height="1" uuid="c177de91-4c96-47cc-b588-616f463293f3"/>
+			</break>
+			<subreport>
+				<reportElement x="0" y="0" width="789" height="300" uuid="574c8ca8-18b6-4b4f-9f89-03b86713212b"/>
+				<subreportParameter name="esSubreporte">
+					<subreportParameterExpression><![CDATA[$P{esSubreporte}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="proyectoId">
+					<subreportParameterExpression><![CDATA[$P{proyectoId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["PlanAdquisiciones.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="240">
+			<subreport>
+				<reportElement x="0" y="0" width="791" height="240" uuid="bee5ea71-9538-4cef-94dc-c4b5dd31006f"/>
+				<subreportParameter name="esSubreporte">
+					<subreportParameterExpression><![CDATA[$P{esSubreporte}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="proyectoId">
+					<subreportParameterExpression><![CDATA[$P{proyectoId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["Desembolsos.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</detail>
 	<pageFooter>

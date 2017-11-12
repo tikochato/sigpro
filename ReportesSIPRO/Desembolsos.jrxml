@@ -39,6 +39,9 @@ ORDER BY mes asc]]>
 	<parameter name="proyectoId" class="java.lang.Integer" isForPrompting="false">
 		<defaultValueExpression><![CDATA[29]]></defaultValueExpression>
 	</parameter>
+	<parameter name="esSubreporte" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[select SUM(eneroP) eneroP, SUM(eneroR) eneroR, SUM(febreroP) febreroP, SUM(febreroR) febreroR,
 SUM(marzoP) marzoP, SUM(marzoR) marzoR, SUM(abrilP) abrilP, SUM(abrilR) abrilR, SUM(mayoP) mayoP, SUM(mayoR) mayoR, SUM(junioP) junioP, SUM(junioR) junioR,
@@ -1262,6 +1265,7 @@ group by t1.anio
 	</title>
 	<pageFooter>
 		<band height="40" splitType="Stretch">
+			<printWhenExpression><![CDATA[$P{esSubreporte}==false]]></printWhenExpression>
 			<staticText>
 				<reportElement x="0" y="30" width="70" height="10" uuid="bb31fbbf-4ff8-4e11-80ed-ff4ad82fe79c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
