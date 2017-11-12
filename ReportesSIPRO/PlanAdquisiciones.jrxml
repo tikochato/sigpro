@@ -51,6 +51,53 @@ JOIN subproducto sp on sp.id=pa.objeto_id
 JOIN producto pr on pr.id=sp.productoid
 JOIN subcomponente sc on sc.id=pr.subcomponenteid
 JOIN componente c on c.id=sc.componenteid
+JOIN tipo_adquisicion ta on pa.tipo_adquisicion=ta.id
+UNION
+SELECT c.nombre componente, pr.nombre producto, sp.nombre subproducto, ta.nombre metodo, 
+CASE WHEN pa.preparacion_doc_planificado IS NOT NULL
+	THEN DATE_FORMAT(pa.preparacion_doc_planificado, "%d/%m/%Y")
+	ELSE ''
+END AS preparacion_doc_planificado,
+CASE WHEN pa.preparacion_doc_real IS NOT NULL
+	THEN DATE_FORMAT(pa.preparacion_doc_real, "%d/%m/%Y")
+	ELSE '' 
+END AS preparacion_doc_real,
+CASE WHEN pa.lanzamiento_evento_planificado
+	THEN DATE_FORMAT(pa.lanzamiento_evento_planificado, "%d/%m/%Y")
+	ELSE ''
+END AS lanzamiento_evento_planificado, 
+CASE WHEN pa.lanzamiento_evento_real
+	THEN DATE_FORMAT(pa.lanzamiento_evento_real, "%d/%m/%Y")
+	ELSE ''
+END AS lanzamiento_evento_real, 
+CASE WHEN pa.recepcion_ofertas_planificado
+	THEN DATE_FORMAT(pa.recepcion_ofertas_planificado, "%d/%m/%Y")
+	ELSE ''
+END AS recepcion_ofertas_planificado,
+CASE WHEN pa.recepcion_ofertas_real
+	THEN DATE_FORMAT(pa.recepcion_ofertas_real, "%d/%m/%Y")
+	ELSE ''
+END AS recepcion_ofertas_real, 
+CASE WHEN pa.adjudicacion_planificado
+	THEN DATE_FORMAT(pa.adjudicacion_planificado, "%d/%m/%Y")
+	ELSE ''
+END AS adjudicacion_planificado, 
+CASE WHEN pa.adjudicacion_real
+	THEN DATE_FORMAT(pa.adjudicacion_real, "%d/%m/%Y")
+	ELSE ''
+END AS adjudicacion_real, 
+CASE WHEN pa.firma_contrato_planificado
+	THEN DATE_FORMAT(pa.firma_contrato_planificado, "%d/%m/%Y")
+	ELSE ''
+END AS firma_contrato_planificado,
+CASE WHEN pa.firma_contrato_real
+	THEN DATE_FORMAT(pa.firma_contrato_real, "%d/%m/%Y")
+	ELSE ''
+END AS firma_contrato_real
+FROM plan_adquisicion pa
+JOIN subproducto sp on sp.id=pa.objeto_id
+JOIN producto pr on pr.id=sp.productoid
+JOIN componente c on c.id=pr.componenteid
 JOIN tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 	</queryString>
 	<field name="componente" class="java.lang.String">
