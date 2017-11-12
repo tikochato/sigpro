@@ -51,7 +51,7 @@
 		    			<div class="btn-group" role="group" aria-label="" >
 							<label class="btn btn-default" ng-click="planc.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!planc.mostrarExport">
 							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-							<label class="btn btn-default" ng-click="planc.exportarJasper()" uib-tooltip="Exportar a PDF" ng-hide="!planc.mostrarExport" >
+							<label class="btn btn-default" ng-click="planc.exportarJasper()" uib-tooltip="Exportar a PDF" ng-hide="true" >
 								<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 						</div>
 		    		</div>

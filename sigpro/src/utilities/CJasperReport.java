@@ -13,8 +13,12 @@ import net.sf.jasperreports.engine.JasperPrint;
 
 public class CJasperReport {
 	
-	public static final String PLANTILLA_METAS = "/SIPRO/archivos/plantillas/Metas.jasper";
+	public static final String PLANTILLA_PLANANUAL = "/SIPRO/archivos/plantillas/PlanAnualEjecucion.jasper";
 	public static final String PLANTILLA_INFORMACIONGENERAL = "/SIPRO/archivos/plantillas/InformacionGeneral.jasper";
+	public static final String PLANTILLA_INFORMACIONGENERALCUADRO2 = "/SIPRO/archivos/plantillas/InformacionGeneral_Cuadro2.jasper";
+	public static final String PLANTILLA_METAS = "/SIPRO/archivos/plantillas/Metas.jasper";
+	public static final String PLANTILLA_DESEMBOLSOS = "/SIPRO/archivos/plantillas/Desembolsos.jasper";
+	public static final String PLANTILLA_PLANADQUISICIONES = "/SIPRO/archivos/plantillas/PlanAdquisiciones.jasper";
 	
 
 	public CJasperReport(){
