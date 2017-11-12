@@ -33,18 +33,31 @@
 				<subreportExpression><![CDATA["InformacionGeneral.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
-		<band height="184" splitType="Stretch">
+		<band height="204">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<subreport>
-				<reportElement x="0" y="0" width="792" height="184" uuid="9ac98812-e061-4ef8-b0fa-cffadad9e5d4"/>
+				<reportElement x="0" y="0" width="792" height="203" uuid="9ac98812-e061-4ef8-b0fa-cffadad9e5d4"/>
 				<subreportParameter name="esSubreporte">
 					<subreportParameterExpression><![CDATA[$P{esSubreporte}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["InformacionGeneral_Cuadro2.jasper"]]></subreportExpression>
 			</subreport>
+			<break>
+				<reportElement x="0" y="203" width="792" height="1" uuid="291cde69-24f9-41f5-9be5-9fa00d7f0122"/>
+			</break>
 		</band>
-		<band height="101"/>
+		<band height="237">
+			<subreport>
+				<reportElement x="-1" y="0" width="792" height="217" uuid="06b0ab75-034b-4311-b9e1-ac695e5b0c17"/>
+				<subreportParameter name="esSubreporte">
+					<subreportParameterExpression><![CDATA[$P{esSubreporte}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["Metas.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
 	</detail>
 	<pageFooter>
 		<band height="30" splitType="Stretch">

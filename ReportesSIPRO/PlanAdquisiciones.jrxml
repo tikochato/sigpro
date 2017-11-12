@@ -161,7 +161,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 		<groupHeader>
 			<band height="30">
 				<textField>
-					<reportElement mode="Opaque" x="0" y="0" width="730" height="30" backcolor="#919191" uuid="311e2d87-cce2-44e1-8d80-f443db161b66"/>
+					<reportElement mode="Opaque" x="0" y="0" width="750" height="30" backcolor="#919191" uuid="311e2d87-cce2-44e1-8d80-f443db161b66"/>
 					<box>
 						<topPen lineWidth="1.0"/>
 						<leftPen lineWidth="1.0"/>
@@ -181,7 +181,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 		<groupHeader>
 			<band height="30">
 				<textField>
-					<reportElement x="0" y="0" width="730" height="30" backcolor="#FFFFFF" uuid="5b909622-f77f-4d39-8c3a-7cf10f6d01d9"/>
+					<reportElement x="0" y="0" width="750" height="30" backcolor="#FFFFFF" uuid="5b909622-f77f-4d39-8c3a-7cf10f6d01d9"/>
 					<box>
 						<topPen lineWidth="1.0"/>
 						<leftPen lineWidth="1.0"/>
@@ -213,7 +213,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 	<columnHeader>
 		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="0" width="130" height="30" backcolor="#C9CDD1" uuid="41695d1d-c227-4dcb-b607-e490ddb02bc7">
+				<reportElement mode="Opaque" x="0" y="0" width="150" height="30" backcolor="#C9CDD1" uuid="41695d1d-c227-4dcb-b607-e490ddb02bc7">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box padding="0">
@@ -225,7 +225,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<text><![CDATA[Adquisición]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="130" y="0" width="100" height="30" backcolor="#C9CDD1" uuid="6a22b496-0f53-4d66-bd28-18e9e5f6cb53">
+				<reportElement mode="Opaque" x="150" y="0" width="100" height="30" backcolor="#C9CDD1" uuid="6a22b496-0f53-4d66-bd28-18e9e5f6cb53">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -240,7 +240,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<text><![CDATA[Método]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="230" y="0" width="100" height="15" backcolor="#C9CDD1" uuid="ffd0760e-916c-494f-8bfb-4ae7d2ec9195">
+				<reportElement mode="Opaque" x="250" y="0" width="100" height="15" backcolor="#C9CDD1" uuid="ffd0760e-916c-494f-8bfb-4ae7d2ec9195">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -255,7 +255,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<text><![CDATA[Preparación de documentos]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="430" y="0" width="100" height="15" backcolor="#C9CDD1" uuid="9dd7348a-255f-4255-ba51-74d15b1910e6">
+				<reportElement mode="Opaque" x="450" y="0" width="100" height="15" backcolor="#C9CDD1" uuid="9dd7348a-255f-4255-ba51-74d15b1910e6">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -270,7 +270,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<text><![CDATA[Recepción y evaluación de Ofertas]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="530" y="0" width="100" height="15" backcolor="#C9CDD1" uuid="32072724-745c-444a-a4d8-c791ea1d018e">
+				<reportElement mode="Opaque" x="550" y="0" width="100" height="15" backcolor="#C9CDD1" uuid="32072724-745c-444a-a4d8-c791ea1d018e">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -285,7 +285,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<text><![CDATA[Adjudicación]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="630" y="0" width="100" height="15" backcolor="#C9CDD1" uuid="b5d95fcd-0ed9-4c1c-bba9-4cbd0a1b5516">
+				<reportElement mode="Opaque" x="650" y="0" width="100" height="15" backcolor="#C9CDD1" uuid="b5d95fcd-0ed9-4c1c-bba9-4cbd0a1b5516">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -300,7 +300,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<text><![CDATA[Firma de contrato]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="230" y="15" width="50" height="15" backcolor="#C9CDD1" uuid="b83c55c3-dce2-49be-87de-930ae80651f7">
+				<reportElement mode="Opaque" x="250" y="15" width="50" height="15" backcolor="#C9CDD1" uuid="b83c55c3-dce2-49be-87de-930ae80651f7">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -315,7 +315,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<text><![CDATA[Planificado]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="280" y="15" width="50" height="15" backcolor="#C9CDD1" uuid="88c41d4c-4d69-476a-999f-87781117d78a">
+				<reportElement mode="Opaque" x="300" y="15" width="50" height="15" backcolor="#C9CDD1" uuid="88c41d4c-4d69-476a-999f-87781117d78a">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -330,7 +330,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<text><![CDATA[Real]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="330" y="15" width="50" height="15" backcolor="#C9CDD1" uuid="8d3b43ce-c177-4f79-91ef-5f1fd08318ba">
+				<reportElement mode="Opaque" x="350" y="15" width="50" height="15" backcolor="#C9CDD1" uuid="8d3b43ce-c177-4f79-91ef-5f1fd08318ba">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -346,7 +346,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<text><![CDATA[Planificado]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="380" y="15" width="50" height="15" backcolor="#C9CDD1" uuid="33db3ca7-0c92-4a2a-b47b-7fb731f45628">
+				<reportElement mode="Opaque" x="400" y="15" width="50" height="15" backcolor="#C9CDD1" uuid="33db3ca7-0c92-4a2a-b47b-7fb731f45628">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -362,7 +362,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<text><![CDATA[Real]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="430" y="15" width="50" height="15" backcolor="#C9CDD1" uuid="14705286-abbe-4621-aa31-5a4f8a1ba0ff">
+				<reportElement mode="Opaque" x="450" y="15" width="50" height="15" backcolor="#C9CDD1" uuid="14705286-abbe-4621-aa31-5a4f8a1ba0ff">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -378,7 +378,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<text><![CDATA[Planificado]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="480" y="15" width="50" height="15" backcolor="#C9CDD1" uuid="21ea2918-94e7-42f0-ad48-81725f4f2751">
+				<reportElement mode="Opaque" x="500" y="15" width="50" height="15" backcolor="#C9CDD1" uuid="21ea2918-94e7-42f0-ad48-81725f4f2751">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -395,7 +395,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<text><![CDATA[Real]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="530" y="15" width="50" height="15" backcolor="#C9CDD1" uuid="2959c1ea-f540-4ebe-907c-52a3f9203d0c">
+				<reportElement mode="Opaque" x="550" y="15" width="50" height="15" backcolor="#C9CDD1" uuid="2959c1ea-f540-4ebe-907c-52a3f9203d0c">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -411,7 +411,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<text><![CDATA[Planificado]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="580" y="15" width="50" height="15" backcolor="#C9CDD1" uuid="2e6af8eb-3dac-4890-868f-b09998c3a813">
+				<reportElement mode="Opaque" x="600" y="15" width="50" height="15" backcolor="#C9CDD1" uuid="2e6af8eb-3dac-4890-868f-b09998c3a813">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -427,7 +427,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<text><![CDATA[Real]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="630" y="15" width="50" height="15" backcolor="#C9CDD1" uuid="b0ce6cfd-2ead-43e6-8294-9619a94d5dca">
+				<reportElement mode="Opaque" x="650" y="15" width="50" height="15" backcolor="#C9CDD1" uuid="b0ce6cfd-2ead-43e6-8294-9619a94d5dca">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -442,7 +442,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<text><![CDATA[Planificado]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="680" y="15" width="50" height="15" backcolor="#C9CDD1" uuid="c1bfe549-5c04-4eb4-a443-f45feb0febf3">
+				<reportElement mode="Opaque" x="700" y="15" width="50" height="15" backcolor="#C9CDD1" uuid="c1bfe549-5c04-4eb4-a443-f45feb0febf3">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -457,7 +457,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<text><![CDATA[Real]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="330" y="0" width="100" height="15" backcolor="#C9CDD1" uuid="3953ea2d-c9e4-48bc-a737-e548aed78b20">
+				<reportElement mode="Opaque" x="350" y="0" width="100" height="15" backcolor="#C9CDD1" uuid="3953ea2d-c9e4-48bc-a737-e548aed78b20">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -476,7 +476,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 	<detail>
 		<band height="31" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="130" height="30" uuid="1405552e-1510-4650-bea5-5aa163d8add6">
+				<reportElement x="0" y="0" width="150" height="30" uuid="1405552e-1510-4650-bea5-5aa163d8add6">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f9f767b1-937e-47c3-af0a-f736b635fff5"/>
 				</reportElement>
 				<box>
@@ -491,7 +491,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<textFieldExpression><![CDATA[$F{subproducto}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="130" y="0" width="100" height="30" uuid="81e564a9-dce5-4a89-b35e-5c411bdde958">
+				<reportElement x="150" y="0" width="100" height="30" uuid="81e564a9-dce5-4a89-b35e-5c411bdde958">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="254190b6-a039-49a4-9115-a1f15e54493f"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -507,7 +507,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<textFieldExpression><![CDATA[$F{metodo}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="230" y="0" width="50" height="30" uuid="952e0040-8aa9-4aa1-98e1-c00fe6aaa0d7">
+				<reportElement x="250" y="0" width="50" height="30" uuid="952e0040-8aa9-4aa1-98e1-c00fe6aaa0d7">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6d85e84c-df25-4d49-bc44-df7ca1767614"/>
 				</reportElement>
 				<box>
@@ -522,7 +522,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<textFieldExpression><![CDATA[$F{preparacion_doc_planificado}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="380" y="0" width="50" height="30" uuid="2c736043-d938-4a54-996d-a1fdbc450354">
+				<reportElement x="400" y="0" width="50" height="30" uuid="2c736043-d938-4a54-996d-a1fdbc450354">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a7cf3e1a-f40b-45e6-8fac-e19a8d5b3f2f"/>
 				</reportElement>
 				<box>
@@ -537,7 +537,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<textFieldExpression><![CDATA[$F{lanzamiento_evento_real}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="430" y="0" width="50" height="30" uuid="0f2c2468-b42c-4327-aa94-2c0dd712c112">
+				<reportElement x="450" y="0" width="50" height="30" uuid="0f2c2468-b42c-4327-aa94-2c0dd712c112">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="52279a09-0e01-4a6e-8402-8728ac810511"/>
 				</reportElement>
 				<box>
@@ -552,7 +552,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<textFieldExpression><![CDATA[$F{recepcion_ofertas_planificado}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="480" y="0" width="50" height="30" uuid="86a551e3-750e-4565-84c9-494ea7ac3bdb">
+				<reportElement x="500" y="0" width="50" height="30" uuid="86a551e3-750e-4565-84c9-494ea7ac3bdb">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f8b72547-dadc-4849-82a1-f36dda580f7f"/>
 				</reportElement>
 				<box>
@@ -567,7 +567,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<textFieldExpression><![CDATA[$F{recepcion_ofertas_real}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="530" y="0" width="50" height="30" uuid="39112fb3-1ea4-4bf3-aaee-47a8d01ae31b">
+				<reportElement x="550" y="0" width="50" height="30" uuid="39112fb3-1ea4-4bf3-aaee-47a8d01ae31b">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="87694f6b-e5cb-4257-8693-c7dfd91ff245"/>
 				</reportElement>
 				<box>
@@ -582,7 +582,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<textFieldExpression><![CDATA[$F{adjudicacion_planificado}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="580" y="0" width="50" height="30" uuid="c3207a36-8337-4c30-87e8-5569599226e5">
+				<reportElement x="600" y="0" width="50" height="30" uuid="c3207a36-8337-4c30-87e8-5569599226e5">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="47b92033-082b-49e3-bff4-f77648b6817b"/>
 				</reportElement>
 				<box>
@@ -597,7 +597,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<textFieldExpression><![CDATA[$F{adjudicacion_real}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="630" y="0" width="50" height="30" uuid="008cef1a-ab5a-49be-9eca-6e54a6e63e73">
+				<reportElement x="650" y="0" width="50" height="30" uuid="008cef1a-ab5a-49be-9eca-6e54a6e63e73">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="60c4d96e-3666-4817-a073-c72b92f3163a"/>
 				</reportElement>
 				<box>
@@ -612,7 +612,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<textFieldExpression><![CDATA[$F{firma_contrato_planificado}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="680" y="0" width="50" height="30" uuid="fa3fc5f8-c68f-4e68-9de5-c116f3d49818">
+				<reportElement x="700" y="0" width="50" height="30" uuid="fa3fc5f8-c68f-4e68-9de5-c116f3d49818">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="dcb61081-f1f3-4740-90d1-12a496d2cb01"/>
 				</reportElement>
 				<box>
@@ -627,7 +627,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<textFieldExpression><![CDATA[$F{firma_contrato_real}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="280" y="0" width="50" height="30" uuid="6c33f93e-0740-4fc2-bd4e-2e15c8b72f73">
+				<reportElement x="300" y="0" width="50" height="30" uuid="6c33f93e-0740-4fc2-bd4e-2e15c8b72f73">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ba7e5aa4-a033-4b40-a7cb-16f9ca16fc89"/>
 				</reportElement>
 				<box>
@@ -642,7 +642,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<textFieldExpression><![CDATA[$F{preparacion_doc_real}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="330" y="0" width="50" height="30" uuid="64c212e1-83aa-4cd3-b464-5bc398ec1749">
+				<reportElement x="350" y="0" width="50" height="30" uuid="64c212e1-83aa-4cd3-b464-5bc398ec1749">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d0243e8f-a239-4cf4-8055-94deae5d7118"/>
 				</reportElement>
 				<box>
@@ -659,9 +659,9 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="54" splitType="Stretch">
+		<band height="35" splitType="Stretch">
 			<textField>
-				<reportElement x="450" y="44" width="300" height="10" uuid="1b66fa04-0b2e-45bf-99ce-4b634c6a4009">
+				<reportElement x="450" y="22" width="300" height="10" uuid="1b66fa04-0b2e-45bf-99ce-4b634c6a4009">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
@@ -670,7 +670,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="34" width="70" height="10" uuid="577f8266-5a3a-42fb-a448-c708fd42b71b">
+				<reportElement x="0" y="12" width="70" height="10" uuid="577f8266-5a3a-42fb-a448-c708fd42b71b">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
@@ -679,7 +679,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<text><![CDATA[Fecha generación:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="44" width="70" height="10" uuid="7294edfa-128e-4069-b68d-ea2e7e8be777">
+				<reportElement x="0" y="22" width="70" height="10" uuid="7294edfa-128e-4069-b68d-ea2e7e8be777">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
@@ -688,7 +688,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<text><![CDATA[Usuario:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="70" y="44" width="143" height="10" uuid="53e6bf4a-fc6a-42aa-9fa5-1c015b8d9f14">
+				<reportElement x="70" y="22" width="143" height="10" uuid="53e6bf4a-fc6a-42aa-9fa5-1c015b8d9f14">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
@@ -697,7 +697,7 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy hh:mm:ss a">
-				<reportElement x="70" y="34" width="143" height="10" uuid="bd44d2d5-e2d8-4dc3-bd5b-e308004151a2">
+				<reportElement x="70" y="12" width="143" height="10" uuid="bd44d2d5-e2d8-4dc3-bd5b-e308004151a2">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
@@ -707,7 +707,4 @@ JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 			</textField>
 		</band>
 	</pageFooter>
-	<summary>
-		<band height="42" splitType="Stretch"/>
-	</summary>
 </jasperReport>
