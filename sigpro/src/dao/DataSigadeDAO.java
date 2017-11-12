@@ -205,7 +205,7 @@ public class DataSigadeDAO {
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
-			CLogger.write("5", DataSigadeDAO.class, e);
+			CLogger.write("6", DataSigadeDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -230,7 +230,7 @@ public class DataSigadeDAO {
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
-			CLogger.write("2", DataSigadeDAO.class, e);
+			CLogger.write("7", DataSigadeDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -253,7 +253,32 @@ public class DataSigadeDAO {
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
-			CLogger.write("2", DataSigadeDAO.class, e);
+			CLogger.write("8", DataSigadeDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Integer getDiferenciaMontos(String codigo_presupuestario){
+		Integer ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		
+		try{
+			String query ="select sum(cmp.monto_componente-cs.monto_componente) diferencia " +
+						"from sipro_analytic.dtm_avance_fisfinan_cmp cmp,sipro.componente_sigade cs " +
+						"where cmp.codigo_presupuestario = cs.codigo_presupuestario " +
+						
+						"and cmp.codigo_presupuestario = ?1 " +
+						"and cs.estado = 1";
+			Query<?> criteria = session.createNativeQuery(query);
+			criteria.setParameter("1", codigo_presupuestario);
+			BigDecimal total = (BigDecimal) criteria.getSingleResult();
+			ret = total.intValue();
+		}
+		catch(Throwable e){
+			CLogger.write("9", DataSigadeDAO.class, e);
 		}
 		finally{
 			session.close();
