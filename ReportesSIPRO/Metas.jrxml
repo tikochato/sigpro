@@ -249,7 +249,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 		<variableExpression><![CDATA[($V{R1}.add($V{R2}.add( $V{R3} ) )).setScale(2, BigDecimal.ROUND_HALF_UP)]]></variableExpression>
 	</variable>
 	<variable name="porcentajeAvance" class="java.math.BigDecimal">
-		<variableExpression><![CDATA[($F{meta_final}!=null?(($F{avanceTotal}!=null?$F{avanceTotal}:new BigDecimal(0)).divide($F{meta_final} )):new BigDecimal(0)).setScale(2, BigDecimal.ROUND_HALF_UP)]]></variableExpression>
+		<variableExpression><![CDATA[($F{meta_final}!=null?(($F{avanceTotal}!=null?$F{avanceTotal}:new BigDecimal(0)).divide($F{meta_final} )):new BigDecimal(0)).multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP)]]></variableExpression>
 	</variable>
 	<group name="Group1">
 		<groupExpression><![CDATA[$F{componente}]]></groupExpression>
@@ -788,7 +788,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<font fontName="Arial" size="9" isBold="true"/>
 					<paragraph leftIndent="4"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{porcentajeAvance}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{porcentajeAvance}+"%"]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

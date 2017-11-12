@@ -179,7 +179,7 @@ group by t1.anio
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="422" splitType="Stretch">
+		<band height="493" splitType="Stretch">
 			<staticText>
 				<reportElement mode="Transparent" x="235" y="0" width="290" height="30" backcolor="#0D0D0D" uuid="1a7a0892-ae96-4935-a3ec-dbace311c26e"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
@@ -189,7 +189,7 @@ group by t1.anio
 			</staticText>
 			<areaChart>
 				<chart evaluationTime="Report" renderType="draw" theme="default">
-					<reportElement stretchType="ContainerBottom" x="115" y="40" width="530" height="200" uuid="42d7dbbe-4260-4ff9-a775-00d3fb791994"/>
+					<reportElement stretchType="ContainerBottom" x="115" y="80" width="530" height="200" uuid="42d7dbbe-4260-4ff9-a775-00d3fb791994"/>
 					<chartTitle/>
 					<chartSubtitle/>
 					<chartLegend>
@@ -227,7 +227,7 @@ group by t1.anio
 				</areaPlot>
 			</areaChart>
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="259" width="61" height="25" backcolor="#D9D4D4" uuid="958b09db-8401-4fcb-bae2-6f7b38cf991c">
+				<reportElement mode="Opaque" x="0" y="357" width="61" height="25" backcolor="#D9D4D4" uuid="958b09db-8401-4fcb-bae2-6f7b38cf991c">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -243,7 +243,7 @@ group by t1.anio
 				<text><![CDATA[Mes]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="61" y="259" width="53" height="25" backcolor="#D9D4D4" uuid="036f7ea9-6d2c-48fb-b56f-2da87ce98ab8">
+				<reportElement mode="Opaque" x="61" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="036f7ea9-6d2c-48fb-b56f-2da87ce98ab8">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -260,7 +260,7 @@ group by t1.anio
 				<text><![CDATA[Enero]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="114" y="259" width="53" height="25" backcolor="#D9D4D4" uuid="9f846ab1-aeb2-4602-86bc-801b4a6b8bf1">
+				<reportElement mode="Opaque" x="114" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="9f846ab1-aeb2-4602-86bc-801b4a6b8bf1">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -277,7 +277,7 @@ group by t1.anio
 				<text><![CDATA[Febrero]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="167" y="259" width="53" height="25" backcolor="#D9D4D4" uuid="fa3c5977-317e-4224-bb57-4e69ed81e6cc">
+				<reportElement mode="Opaque" x="167" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="fa3c5977-317e-4224-bb57-4e69ed81e6cc">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -294,7 +294,7 @@ group by t1.anio
 				<text><![CDATA[Marzo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="220" y="259" width="53" height="25" backcolor="#D9D4D4" uuid="2ce5340f-89dc-4f0a-a8bf-c7c844e42815">
+				<reportElement mode="Opaque" x="220" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="2ce5340f-89dc-4f0a-a8bf-c7c844e42815">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -311,7 +311,7 @@ group by t1.anio
 				<text><![CDATA[Abril]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="485" y="259" width="53" height="25" backcolor="#D9D4D4" uuid="d11618b3-791c-4af6-a60e-95d7a58c6f76">
+				<reportElement mode="Opaque" x="485" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="d11618b3-791c-4af6-a60e-95d7a58c6f76">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -328,7 +328,7 @@ group by t1.anio
 				<text><![CDATA[Septiembre]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="273" y="259" width="53" height="25" backcolor="#D9D4D4" uuid="7da7c261-9a23-4571-b67c-605b83e1c72e">
+				<reportElement mode="Opaque" x="273" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="7da7c261-9a23-4571-b67c-605b83e1c72e">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -345,7 +345,7 @@ group by t1.anio
 				<text><![CDATA[Mayo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="432" y="259" width="53" height="25" backcolor="#D9D4D4" uuid="3129a4ed-1a0e-4d7f-a821-8c4ef915a6ba">
+				<reportElement mode="Opaque" x="432" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="3129a4ed-1a0e-4d7f-a821-8c4ef915a6ba">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -362,7 +362,7 @@ group by t1.anio
 				<text><![CDATA[Agosto]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="326" y="259" width="53" height="25" backcolor="#D9D4D4" uuid="7113c755-0269-44f2-8084-e0efa7338b4d">
+				<reportElement mode="Opaque" x="326" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="7113c755-0269-44f2-8084-e0efa7338b4d">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -379,7 +379,7 @@ group by t1.anio
 				<text><![CDATA[Junio]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="379" y="259" width="53" height="25" backcolor="#D9D4D4" uuid="ee0c0f62-8e66-4aa8-9aa0-71bda9699d89">
+				<reportElement mode="Opaque" x="379" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="ee0c0f62-8e66-4aa8-9aa0-71bda9699d89">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -396,7 +396,7 @@ group by t1.anio
 				<text><![CDATA[Julio]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="644" y="259" width="53" height="25" backcolor="#D9D4D4" uuid="23760b7d-c7b7-4e6f-8f46-cbf69351d6c6">
+				<reportElement mode="Opaque" x="644" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="23760b7d-c7b7-4e6f-8f46-cbf69351d6c6">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -413,7 +413,7 @@ group by t1.anio
 				<text><![CDATA[Diciembre]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="591" y="259" width="53" height="25" backcolor="#D9D4D4" uuid="63289b28-d96c-495c-af43-80f5298c38f4">
+				<reportElement mode="Opaque" x="591" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="63289b28-d96c-495c-af43-80f5298c38f4">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -430,7 +430,7 @@ group by t1.anio
 				<text><![CDATA[Noviembre]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="538" y="259" width="53" height="25" backcolor="#D9D4D4" uuid="329b4f2b-0122-4fb7-8443-5edcbba22f58">
+				<reportElement mode="Opaque" x="538" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="329b4f2b-0122-4fb7-8443-5edcbba22f58">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -447,7 +447,7 @@ group by t1.anio
 				<text><![CDATA[Octubre]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="284" width="61" height="25" backcolor="#FFFFFF" uuid="e7a427c9-5770-481f-bea6-4635042ce511">
+				<reportElement mode="Opaque" x="0" y="382" width="61" height="25" backcolor="#FFFFFF" uuid="e7a427c9-5770-481f-bea6-4635042ce511">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
@@ -465,7 +465,7 @@ group by t1.anio
 				<text><![CDATA[Planificado ($)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="309" width="61" height="25" backcolor="#FFFFFF" uuid="8a8fb67b-708c-421d-a744-16af8409ca75">
+				<reportElement mode="Opaque" x="0" y="407" width="61" height="25" backcolor="#FFFFFF" uuid="8a8fb67b-708c-421d-a744-16af8409ca75">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
@@ -483,7 +483,7 @@ group by t1.anio
 				<text><![CDATA[Real ($)]]></text>
 			</staticText>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="591" y="284" width="53" height="25" backcolor="#FFFFFF" uuid="0a434d4d-40bf-4f55-8b90-d4d13f5b6208">
+				<reportElement mode="Opaque" x="591" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="0a434d4d-40bf-4f55-8b90-d4d13f5b6208">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -502,7 +502,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{noviembreP}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="167" y="284" width="53" height="25" backcolor="#FFFFFF" uuid="f89852ef-1b15-4900-a9db-de2860b141ef">
+				<reportElement mode="Opaque" x="167" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="f89852ef-1b15-4900-a9db-de2860b141ef">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -521,7 +521,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{marzoP}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="273" y="284" width="53" height="25" backcolor="#FFFFFF" uuid="d3c7c644-a805-4214-84ec-4c9d34183bff">
+				<reportElement mode="Opaque" x="273" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="d3c7c644-a805-4214-84ec-4c9d34183bff">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -540,7 +540,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{mayoP}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="591" y="309" width="53" height="25" backcolor="#FFFFFF" uuid="9733f706-46f5-4c39-830a-bc68add75401">
+				<reportElement mode="Opaque" x="591" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="9733f706-46f5-4c39-830a-bc68add75401">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -559,7 +559,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{noviembreR}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="644" y="284" width="53" height="25" backcolor="#FFFFFF" uuid="97232b10-fe87-4617-8849-af3da117fcd5">
+				<reportElement mode="Opaque" x="644" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="97232b10-fe87-4617-8849-af3da117fcd5">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -578,7 +578,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{diciembreP}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="379" y="284" width="53" height="25" backcolor="#FFFFFF" uuid="2385fcbd-54a0-48a3-9f97-528fb9b06280">
+				<reportElement mode="Opaque" x="379" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="2385fcbd-54a0-48a3-9f97-528fb9b06280">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -597,7 +597,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{julioP}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="644" y="309" width="53" height="25" backcolor="#FFFFFF" uuid="b015e92f-5224-405d-b4e0-339ca1f19c36">
+				<reportElement mode="Opaque" x="644" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="b015e92f-5224-405d-b4e0-339ca1f19c36">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -616,7 +616,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{diciembreR}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="538" y="284" width="53" height="25" backcolor="#FFFFFF" uuid="8900d4fe-963d-4256-8cef-aa5302db7bfb">
+				<reportElement mode="Opaque" x="538" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="8900d4fe-963d-4256-8cef-aa5302db7bfb">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -635,7 +635,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{octubreP}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="379" y="309" width="53" height="25" backcolor="#FFFFFF" uuid="f1cab967-6b9e-42d0-a335-5971adcc2689">
+				<reportElement mode="Opaque" x="379" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="f1cab967-6b9e-42d0-a335-5971adcc2689">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -654,7 +654,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{julioR}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="167" y="309" width="53" height="25" backcolor="#FFFFFF" uuid="08f74e88-2109-4db2-a6ed-3ea7f8050b84">
+				<reportElement mode="Opaque" x="167" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="08f74e88-2109-4db2-a6ed-3ea7f8050b84">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -673,7 +673,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{marzoR}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="326" y="284" width="53" height="25" backcolor="#FFFFFF" uuid="565a960c-1a3e-41dc-a0b0-ae70a9f2cf8e">
+				<reportElement mode="Opaque" x="326" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="565a960c-1a3e-41dc-a0b0-ae70a9f2cf8e">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -692,7 +692,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{junioP}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="485" y="284" width="53" height="25" backcolor="#FFFFFF" uuid="7b348111-fa8f-4012-bc7e-a770f4bb9b04">
+				<reportElement mode="Opaque" x="485" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="7b348111-fa8f-4012-bc7e-a770f4bb9b04">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -711,7 +711,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{septiembreP}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="114" y="284" width="53" height="25" backcolor="#FFFFFF" uuid="f3f6bcb0-5110-4c94-8676-4fb7eb3ee976">
+				<reportElement mode="Opaque" x="114" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="f3f6bcb0-5110-4c94-8676-4fb7eb3ee976">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -730,7 +730,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{febreroP}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="432" y="284" width="53" height="25" backcolor="#FFFFFF" uuid="ab401b29-f2fe-4aed-8f9e-22a89e30d556">
+				<reportElement mode="Opaque" x="432" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="ab401b29-f2fe-4aed-8f9e-22a89e30d556">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -749,7 +749,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{agostoP}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="432" y="309" width="53" height="25" backcolor="#FFFFFF" uuid="733cfe5a-61e4-40db-963f-48bd73e5af67">
+				<reportElement mode="Opaque" x="432" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="733cfe5a-61e4-40db-963f-48bd73e5af67">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -768,7 +768,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{agostoR}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="114" y="309" width="53" height="25" backcolor="#FFFFFF" uuid="60273fc0-fa71-44d9-b58a-4671c548c0d6">
+				<reportElement mode="Opaque" x="114" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="60273fc0-fa71-44d9-b58a-4671c548c0d6">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -787,7 +787,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{febreroR}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="61" y="309" width="53" height="25" backcolor="#FFFFFF" uuid="4cdff616-e832-4053-a1de-1166f9fb2506">
+				<reportElement mode="Opaque" x="61" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="4cdff616-e832-4053-a1de-1166f9fb2506">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -806,7 +806,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{eneroR}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="220" y="284" width="53" height="25" backcolor="#FFFFFF" uuid="5626bb0c-d3f9-483e-a6d8-074506111896">
+				<reportElement mode="Opaque" x="220" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="5626bb0c-d3f9-483e-a6d8-074506111896">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -825,7 +825,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{abrilP}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="273" y="309" width="53" height="25" backcolor="#FFFFFF" uuid="e694efb4-a454-41cd-bdc5-82bc430c7f67">
+				<reportElement mode="Opaque" x="273" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="e694efb4-a454-41cd-bdc5-82bc430c7f67">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -844,7 +844,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{mayoR}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="61" y="284" width="53" height="25" backcolor="#FFFFFF" uuid="4866c386-c370-4671-a196-d51a10735ea8">
+				<reportElement mode="Opaque" x="61" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="4866c386-c370-4671-a196-d51a10735ea8">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -863,7 +863,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{eneroP}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="220" y="309" width="53" height="25" backcolor="#FFFFFF" uuid="f8dfc207-bdd4-435a-8773-ac39785f7654">
+				<reportElement mode="Opaque" x="220" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="f8dfc207-bdd4-435a-8773-ac39785f7654">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -882,7 +882,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{abrilR}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="326" y="309" width="53" height="25" backcolor="#FFFFFF" uuid="88afec5f-07c0-46bb-a4a0-5001d030762b">
+				<reportElement mode="Opaque" x="326" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="88afec5f-07c0-46bb-a4a0-5001d030762b">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -901,7 +901,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{junioR}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="538" y="309" width="53" height="25" backcolor="#FFFFFF" uuid="a833131d-1c2e-421e-b901-9c859195ad29">
+				<reportElement mode="Opaque" x="538" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="a833131d-1c2e-421e-b901-9c859195ad29">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -920,7 +920,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{octubreR}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="485" y="309" width="53" height="25" backcolor="#FFFFFF" uuid="cca533c4-d7f6-4e7e-a49a-0e63dd1ae44a">
+				<reportElement mode="Opaque" x="485" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="cca533c4-d7f6-4e7e-a49a-0e63dd1ae44a">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -939,7 +939,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{septiembreR}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="697" y="284" width="53" height="25" backcolor="#FFFFFF" uuid="0e761418-fdd7-4f18-b4d2-0da070c622eb">
+				<reportElement mode="Opaque" x="697" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="0e761418-fdd7-4f18-b4d2-0da070c622eb">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -958,7 +958,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{totalP}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Opaque" x="697" y="259" width="53" height="25" backcolor="#D9D4D4" uuid="ae58dadd-ed72-4cfc-8a0b-001d8dbd1bbb">
+				<reportElement mode="Opaque" x="697" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="ae58dadd-ed72-4cfc-8a0b-001d8dbd1bbb">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -975,7 +975,7 @@ group by t1.anio
 				<text><![CDATA[Total]]></text>
 			</staticText>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="697" y="309" width="53" height="25" backcolor="#FFFFFF" uuid="8ea18ac5-e666-4b9f-b20d-bc94d9190c0c">
+				<reportElement mode="Opaque" x="697" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="8ea18ac5-e666-4b9f-b20d-bc94d9190c0c">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -994,7 +994,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{totalR}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="697" y="334" width="53" height="25" backcolor="#FFFFFF" uuid="3a62fe0c-b91b-45ed-97ad-cd5304c8ba2a">
+				<reportElement mode="Opaque" x="697" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="3a62fe0c-b91b-45ed-97ad-cd5304c8ba2a">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1013,7 +1013,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{totalP}.subtract($F{totalR})]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="485" y="334" width="53" height="25" backcolor="#FFFFFF" uuid="a50bd0cb-56d8-4551-85f3-455c4a143513">
+				<reportElement mode="Opaque" x="485" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="a50bd0cb-56d8-4551-85f3-455c4a143513">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1032,7 +1032,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{septiembreP}.subtract($F{septiembreR} )]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="432" y="334" width="53" height="25" backcolor="#FFFFFF" uuid="c51ff36d-8759-4830-bb33-21265fdbcbdc">
+				<reportElement mode="Opaque" x="432" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="c51ff36d-8759-4830-bb33-21265fdbcbdc">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1051,7 +1051,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{agostoP}.subtract( $F{agostoR} )]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="114" y="334" width="53" height="25" backcolor="#FFFFFF" uuid="23f9ed3b-9e00-46e2-b651-9a79346b87c0">
+				<reportElement mode="Opaque" x="114" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="23f9ed3b-9e00-46e2-b651-9a79346b87c0">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1070,7 +1070,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{febreroP}.subtract($F{febreroR} )]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="273" y="334" width="53" height="25" backcolor="#FFFFFF" uuid="dec30ae7-5b4c-40de-9100-4ed4107f3734">
+				<reportElement mode="Opaque" x="273" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="dec30ae7-5b4c-40de-9100-4ed4107f3734">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -1089,7 +1089,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{mayoP}.subtract( $F{mayoR} )]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="334" width="61" height="25" backcolor="#FFFFFF" uuid="eeb4ffdb-b6dc-40e9-96ba-9e07fda6f77e">
+				<reportElement mode="Opaque" x="0" y="432" width="61" height="25" backcolor="#FFFFFF" uuid="eeb4ffdb-b6dc-40e9-96ba-9e07fda6f77e">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
@@ -1107,7 +1107,7 @@ group by t1.anio
 				<text><![CDATA[Variación]]></text>
 			</staticText>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="326" y="334" width="53" height="25" backcolor="#FFFFFF" uuid="9d130297-2baf-41c7-b1d5-8b74859b605f">
+				<reportElement mode="Opaque" x="326" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="9d130297-2baf-41c7-b1d5-8b74859b605f">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -1126,7 +1126,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{junioP}.subtract( $F{junioR})]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="220" y="334" width="53" height="25" backcolor="#FFFFFF" uuid="ecad7a5b-0f53-48df-91c3-cd8ef2539596">
+				<reportElement mode="Opaque" x="220" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="ecad7a5b-0f53-48df-91c3-cd8ef2539596">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1145,7 +1145,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{abrilP}.subtract( $F{abrilR} )]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="644" y="334" width="53" height="25" backcolor="#FFFFFF" uuid="8b47c2a8-e7c3-4f21-998b-4e5ecfdb3e95">
+				<reportElement mode="Opaque" x="644" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="8b47c2a8-e7c3-4f21-998b-4e5ecfdb3e95">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1164,7 +1164,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{diciembreP}.subtract($F{diciembreR} )]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="61" y="334" width="53" height="25" backcolor="#FFFFFF" uuid="970e9bb8-349d-4c63-85c3-9f745c661b1f">
+				<reportElement mode="Opaque" x="61" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="970e9bb8-349d-4c63-85c3-9f745c661b1f">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -1183,7 +1183,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{eneroP}.subtract( $F{eneroR} )]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="379" y="334" width="53" height="25" backcolor="#FFFFFF" uuid="dc667f5c-03e7-4642-8cf4-b9b21e4ab799">
+				<reportElement mode="Opaque" x="379" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="dc667f5c-03e7-4642-8cf4-b9b21e4ab799">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1202,7 +1202,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{julioP}.subtract($F{julioR})]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="591" y="334" width="53" height="25" backcolor="#FFFFFF" uuid="03e10493-ec2d-48a9-8c3a-972b1a66e935">
+				<reportElement mode="Opaque" x="591" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="03e10493-ec2d-48a9-8c3a-972b1a66e935">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1221,7 +1221,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{noviembreP}.subtract( $F{noviembreR})]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="538" y="334" width="53" height="25" backcolor="#FFFFFF" uuid="84952045-fca0-4aac-9682-dcdce3a3dff0">
+				<reportElement mode="Opaque" x="538" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="84952045-fca0-4aac-9682-dcdce3a3dff0">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1240,7 +1240,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{octubreP}.subtract($F{octubreR})]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="167" y="334" width="53" height="25" backcolor="#FFFFFF" uuid="81805f31-67fe-44fd-9fe4-c53620297d9a">
+				<reportElement mode="Opaque" x="167" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="81805f31-67fe-44fd-9fe4-c53620297d9a">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
