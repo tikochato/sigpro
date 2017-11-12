@@ -381,6 +381,15 @@ public class PlanAdquisicion implements java.io.Serializable {
 	public void setNog(Long nog) {
 		this.nog = nog;
 	}
+	
+	@Column(name = "tipo_revision")
+	public Integer getTipoRevision() {
+		return this.tipoRevision;
+	}
+
+	public void setTipoRevision(Integer tipoRevision) {
+		this.tipoRevision = tipoRevision;
+	}
 
 	@Column(name = "tipo_revision")
 	public Integer getTipoRevision() {
