@@ -585,7 +585,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		else
 			$utilidades.mensaje('warning','Debe seleccionar el préstamo que desea editar');
 	}
-
+	
 	mi.irATabla = function() {
 		mi.esColapsado=false;
 		mi.esNuevo = false;
