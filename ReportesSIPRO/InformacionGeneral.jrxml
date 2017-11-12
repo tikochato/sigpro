@@ -895,7 +895,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 				</textField>
 			</frame>
 			<componentElement>
-				<reportElement key="" style="Estilo_grafica" x="171" y="331" width="410" height="200" uuid="3d766d39-d772-4720-9237-8124bf961e82"/>
+				<reportElement key="" style="Estilo_grafica" x="171" y="331" width="410" height="200" uuid="5c15a487-1c37-45b2-b22c-08d93cdd011a"/>
 				<sc:spiderChart xmlns:sc="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<sc:chartSettings>
 						<chartTitle/>
@@ -904,7 +904,10 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 					</sc:chartSettings>
 					<sc:spiderDataset>
 						<dataset>
-							<datasetRun subDataset="Dataset1" uuid="b2cfa81a-e5c4-4842-934a-70a1cc01c624">
+							<datasetRun subDataset="Dataset1" uuid="77683b0a-8232-430f-a9b9-3f51cdcdffad">
+								<datasetParameter name="proyectoId">
+									<datasetParameterExpression><![CDATA[$P{proyectoId}]]></datasetParameterExpression>
+								</datasetParameter>
 								<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 							</datasetRun>
 						</dataset>
