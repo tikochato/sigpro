@@ -105,7 +105,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="true"/>
+						<font size="10" isBold="true"/>
 						<paragraph leftIndent="2"/>
 					</textElement>
 					<text><![CDATA[Total]]></text>
@@ -123,7 +123,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="true"/>
+						<font size="10" isBold="true"/>
 						<paragraph leftIndent="2"/>
 					</textElement>
 					<text><![CDATA[Indicadores de Avance Anuales]]></text>
@@ -141,7 +141,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="true"/>
+						<font size="10" isBold="true"/>
 						<paragraph leftIndent="2"/>
 					</textElement>
 					<text><![CDATA[Desembolsos Mensuales ]]></text>
@@ -159,7 +159,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="true"/>
+						<font size="10" isBold="true"/>
 						<paragraph leftIndent="2"/>
 					</textElement>
 					<text><![CDATA[Ejecución Presupuestaria Anual]]></text>
@@ -177,7 +177,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font size="10" isBold="false"/>
 						<paragraph leftIndent="2"/>
 					</textElement>
 					<text><![CDATA[]]></text>
@@ -195,7 +195,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font size="10" isBold="false"/>
 						<paragraph leftIndent="2"/>
 					</textElement>
 					<text><![CDATA[]]></text>
@@ -213,7 +213,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font size="10" isBold="false"/>
 						<paragraph leftIndent="2"/>
 					</textElement>
 					<text><![CDATA[]]></text>
@@ -231,7 +231,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font size="10" isBold="false"/>
 						<paragraph leftIndent="2"/>
 					</textElement>
 					<text><![CDATA[]]></text>
@@ -249,7 +249,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font size="10" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Ejecución Financiera]]></text>
@@ -297,7 +297,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="9" isBold="false"/>
+						<font size="9" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Desembolsos Anuales vs. Presupuesto Vigente Actual]]></text>
@@ -315,7 +315,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font size="10" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Plazo de ejecución actual]]></text>
@@ -333,7 +333,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Porcentaje de Gastos Realizados en el Año vs. Porcentaje de Gastos]]></text>
@@ -351,7 +351,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Porcentaje de desembolsos realizados en el año vs. Porcentaje de desembolsos]]></text>
@@ -369,7 +369,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font size="10" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Desembolsos Acumulados del Año]]></text>
@@ -411,7 +411,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font size="10" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Presupuesto planificado próximo]]></text>
@@ -429,7 +429,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font size="10" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Próximo desembolso del mes]]></text>
@@ -447,7 +447,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font size="10" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Diferencia]]></text>
@@ -465,7 +465,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font size="10" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Desembolos realizado en el mes]]></text>
@@ -483,7 +483,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font size="10" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Desembolso planificado en el mes]]></text>
@@ -501,7 +501,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font size="10" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[]]></text>
@@ -519,7 +519,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font size="10" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Porcentaje de Ejecución Física]]></text>
@@ -537,7 +537,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font size="10" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Presupuesto Devengado]]></text>
@@ -555,7 +555,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font size="10" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Presupuesto Vigente anual]]></text>
@@ -573,7 +573,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font size="10" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Asignación Presupuestaria]]></text>
@@ -611,7 +611,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font size="10"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{ejecucion_fisica}]]></textFieldExpression>
@@ -629,7 +629,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font size="10"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[IF($F{desembolso_planificado_mes}!=null, $F{desembolso_planificado_mes}, 0)]]></textFieldExpression>
@@ -647,7 +647,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font size="10"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[IF($F{desembolso_realizado_mes}!=null,$F{desembolso_realizado_mes},0)]]></textFieldExpression>
@@ -665,7 +665,7 @@ from dual]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font size="10"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{desembolso_planificado_mes}!=null ?
@@ -686,7 +686,7 @@ $F{desembolso_planificado_mes}.subtract($F{desembolso_realizado_mes}) : (
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font size="10"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[IF($F{desembolso_planificado_proximo_mes}!=null, $F{desembolso_planificado_proximo_mes}, 0)]]></textFieldExpression>
@@ -711,7 +711,7 @@ $F{desembolso_planificado_mes}.subtract($F{desembolso_realizado_mes}) : (
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font size="10"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[IF($F{desembolsos_acumulados_ano}!=null, $F{desembolsos_acumulados_ano}, 0)]]></textFieldExpression>
@@ -727,7 +727,7 @@ $F{desembolso_planificado_mes}.subtract($F{desembolso_realizado_mes}) : (
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="8"/>
+					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
@@ -736,7 +736,7 @@ $F{desembolso_planificado_mes}.subtract($F{desembolso_realizado_mes}) : (
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
-					<font fontName="Arial" size="8"/>
+					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
@@ -745,7 +745,7 @@ $F{desembolso_planificado_mes}.subtract($F{desembolso_realizado_mes}) : (
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
-					<font fontName="Arial" size="8"/>
+					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Fecha generación:]]></text>
 			</staticText>
@@ -754,7 +754,7 @@ $F{desembolso_planificado_mes}.subtract($F{desembolso_realizado_mes}) : (
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
-					<font fontName="Arial" size="8"/>
+					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Usuario:]]></text>
 			</staticText>
@@ -763,7 +763,7 @@ $F{desembolso_planificado_mes}.subtract($F{desembolso_realizado_mes}) : (
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
-					<font fontName="Arial" size="8"/>
+					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
 			</textField>
