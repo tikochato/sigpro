@@ -12,10 +12,90 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Estilo_grafica">
+		<pen lineWidth="0.0"/>
+	</style>
 	<subDataset name="Dataset1" uuid="9638d801-570c-425b-a3d4-d37c8cf36a51">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MariaDB Server"/>
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<parameter name="proyectoId" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[8]]></defaultValueExpression>
+		</parameter>
 		<queryString>
-			<![CDATA[]]>
+			<![CDATA[select "Plazo Ejecucion" categoria, 
+(
+	select DATEDIFF(py.fecha_inicio,CURRENT_DATE)/DATEDIFF(py.fecha_inicio,py.fecha_fin)*100
+	from sipro.proyecto py
+	where py.id = $P{proyectoId}	
+) valor_plan,
+(
+	select DATEDIFF(ps.fecha_elegibilidad_ue, CURRENT_DATE)/DATEDIFF(ps.fecha_elegibilidad_ue,ps.fecha_cierre_actual_ue)*100 
+	from sipro.prestamo ps, sipro.proyecto py 
+	where ps.id = py.prestamoid 
+	and py.id = $P{proyectoId}		
+) valor_real from dual
+union
+select "Ejecucion Financiera", 
+(select desembolsos_a_la_fecha/ (desembolsos_a_la_fecha+ if(desembolsos_futuros is null, 0, desembolsos_futuros)) ejecucion_financiera_planificada
+from (
+select sum(desembolsos_mes_usd) desembolsos_a_la_fecha,(
+	select sum(d.monto)
+    from sipro.desembolso d, sipro.proyecto p
+    where d.proyectoid = p.id
+    and p.id = 1
+    and fecha > current_timestamp()
+) desembolsos_futuros
+from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro.proyecto py, sipro.prestamo ps
+where des.codigo_presupuestario= ps.codigo_presupuestario
+and py.prestamoid = ps.id
+and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora
+and des.entidad_sicoin = py.entidad
+and py.id = $P{proyectoId}	
+and ( (	des.mes_desembolso<= month(current_timestamp()) and des.ejercicio_fiscal=year(current_timestamp()))
+			OR (des.ejercicio_fiscal<year(current_timestamp())))
+) t1),
+ (select sum(desembolsos_mes_usd)/ 
+(select sum(c.fuente_prestamo)
+	from sipro.componente c
+    where c.proyectoid = py.id
+)*100 ejecucion_financiera_real
+from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro.proyecto py, sipro.prestamo ps
+where des.codigo_presupuestario= ps.codigo_presupuestario
+and py.prestamoid = ps.id
+and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora
+and des.entidad_sicoin = py.entidad
+and py.id = $P{proyectoId}	) from dual
+union
+select "Ejecucion Fisica", 
+(select
+	if(p_avance_entero is null, if(p_avance_decimal is null, 0, p_avance_decimal), if(p_avance_decimal is null, p_avance_entero, (p_avance_entero+p_avance_decimal)/2)) ejecucion_fisica_planificada
+	from (
+	select  
+	avg(if(dato_tipoid=2,if(p_avance_entero is null, 0, if(p_avance_entero>100,100, p_avance_entero)),null)) p_avance_entero,
+	avg(if(dato_tipoid=3,if(p_avance_decimal is null, 0, if(p_avance_decimal>100, 100, p_avance_decimal)),null)) p_avance_decimal
+	from (
+	select m.id, m.dato_tipoid, m.meta_final_entero, m.meta_final_decimal,
+	sum(ma.valor_entero)/if(m.meta_final_entero>0, m.meta_final_entero, 1) p_avance_entero,
+	sum(valor_decimal)/if(m.meta_final_decimal>0, m.meta_final_decimal, 1) p_avance_decimal
+	from sipro.meta m left outer join sipro.meta_avance ma
+	on ( ma.metaid = m.id ), 
+	sipro.producto p
+	where m.objeto_tipo=3 and m.objeto_id = p.id
+	and p.treepath like  CONCAT(CAST((10000000+$P{proyectoId}) AS char),'%')
+	and m.dato_tipoid in (2,3)
+	group by m.id, m.dato_tipoid, m.meta_final_entero, m.meta_final_decimal
+	) t1
+) t2)*100, (select py.ejecucion_fisica_real from sipro.proyecto py where py.id = $P{proyectoId})  from dual]]>
 		</queryString>
+		<field name="categoria" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="categoria"/>
+		</field>
+		<field name="valor_plan" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="valor_plan"/>
+		</field>
+		<field name="valor_real" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="valor_real"/>
+		</field>
 	</subDataset>
 	<parameter name="proyectoId" class="java.lang.Integer" isForPrompting="false">
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
@@ -31,15 +111,27 @@ CASE WHEN py.fecha_elegibilidad IS NULL THEN ps.fecha_elegibilidad_ue
 	ELSE py.fecha_elegibilidad END AS fecha_elegibilidad,
 CASE WHEN py.fecha_cierre IS NULL THEN ps.fecha_cierre_actual_ue
 	ELSE py.fecha_cierre END AS fecha_cierre,
-ps.meses_prorroga_ue
+ps.meses_prorroga_ue,
+sum(c.fuente_prestamo) monto_unidad_ejecutora,
+(
+	select sum(desembolsos_mes_usd)
+	from sipro_analytic.dtm_avance_fisfinan_det_dti des
+	where des.codigo_presupuestario = ps.codigo_presupuestario
+	and des.entidad_sicoin = py.entidad
+	and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora
+) desembolsos_a_la_fecha,
+DATEDIFF(py.fecha_inicio,CURRENT_DATE)/DATEDIFF(py.fecha_inicio,py.fecha_fin) plazo_ejecucion,
+py.ejecucion_fisica_real
 FROM sipro.proyecto py
 JOIN sipro.prestamo ps ON py.prestamoid = ps.id
-JOIN sipro.unidad_ejecutora ue ON py.unidad_ejecutoraunidad_ejecutora = ue.unidad_ejecutora
+JOIN sipro.unidad_ejecutora ue ON (ue.entidadentidad = py.entidad and py.unidad_ejecutoraunidad_ejecutora = ue.unidad_ejecutora)
 JOIN sipro.cooperante co ON ps.cooperanteid = co.id
 JOIN sipro.tipo_moneda tm ON ps.tipo_monedaid = tm.id
-JOIN sipro.componente c ON c.proyectoid = py.id
-WHERE py.estado=1 and py.id=  $P{proyectoId}
-group by c.proyectoid]]>
+JOIN sipro.componente c ON (c.proyectoid = py.id)
+WHERE py.estado=1 and py.id= $P{proyectoId}
+group by ps.proyecto_programa,ue.nombre, ps.numero_prestamo, ps.codigo_presupuestario, co.nombre, 
+tm.simbolo, ps.monto_contratado, py.fecha_actualizacion, py.fecha_creacion, py.fecha_elegibilidad, ps.fecha_elegibilidad_ue,
+py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_ue, py.ejecucion_fisica_real]]>
 	</queryString>
 	<field name="proyecto" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="proyecto"/>
@@ -95,6 +187,21 @@ group by c.proyectoid]]>
 		<property name="com.jaspersoft.studio.field.label" value="meses_prorroga_ue"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="prestamo"/>
 	</field>
+	<field name="monto_unidad_ejecutora" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="monto_unidad_ejecutora"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="prestamo"/>
+	</field>
+	<field name="desembolsos_a_la_fecha" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="desembolsos_a_la_fecha"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="prestamo"/>
+	</field>
+	<field name="plazo_ejecucion" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="plazo_ejecucion"/>
+	</field>
+	<field name="ejecucion_fisica_real" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="ejecucion_fisica_real"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="proyecto"/>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -140,29 +247,6 @@ group by c.proyectoid]]>
 				</textElement>
 				<text><![CDATA[Organismo Ejecutor:]]></text>
 			</staticText>
-			<componentElement>
-				<reportElement stretchType="RelativeToTallestObject" x="181" y="330" width="390" height="191" uuid="45767788-ba0b-44ca-b5d3-405092f62b9f"/>
-				<sc:spiderChart xmlns:sc="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<sc:chartSettings>
-						<chartTitle/>
-						<chartSubtitle/>
-						<chartLegend/>
-					</sc:chartSettings>
-					<sc:spiderDataset>
-						<categorySeries>
-							<seriesExpression><![CDATA["Planificado"]]></seriesExpression>
-							<categoryExpression><![CDATA["Categoria"]]></categoryExpression>
-							<valueExpression><![CDATA[1]]></valueExpression>
-						</categorySeries>
-						<categorySeries>
-							<seriesExpression><![CDATA["Real"]]></seriesExpression>
-							<categoryExpression><![CDATA[0]]></categoryExpression>
-							<valueExpression><![CDATA[0]]></valueExpression>
-						</categorySeries>
-					</sc:spiderDataset>
-					<sc:spiderPlot isWebFilled="true"/>
-				</sc:spiderChart>
-			</componentElement>
 			<textField isBlankWhenNull="true">
 				<reportElement x="110" y="77" width="640" height="20" uuid="0444b10f-6f7d-4259-ab99-e5a96fb534b3">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -197,30 +281,6 @@ group by c.proyectoid]]>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<rectangle>
-					<reportElement x="525" y="175" width="175" height="25" uuid="0ec18d89-f02d-455f-a6d1-214fc248103a">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					</reportElement>
-				</rectangle>
-				<rectangle>
-					<reportElement x="175" y="175" width="175" height="25" uuid="8b812219-1c11-4474-af5a-8cebceea2a73">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					</reportElement>
-				</rectangle>
-				<rectangle>
-					<reportElement x="175" y="150" width="175" height="25" uuid="b5d8206d-e37c-4caf-a4fe-aafb85b7aa3d">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					</reportElement>
-				</rectangle>
-				<rectangle>
-					<reportElement x="175" y="125" width="175" height="25" uuid="89642c1f-5561-40d8-a32e-cb53c52ffac8">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					</reportElement>
-				</rectangle>
 				<textField isBlankWhenNull="true">
 					<reportElement x="525" y="150" width="175" height="25" uuid="d7634783-8e44-4901-b727-759285152ffd">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -725,7 +785,148 @@ group by c.proyectoid]]>
 					</textElement>
 					<text><![CDATA[Número de Préstamo]]></text>
 				</staticText>
+				<textField pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement x="175" y="125" width="175" height="25" uuid="b71a8375-daf1-480a-b10a-7b9204dca0d9">
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="10"/>
+						<paragraph rightIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{monto_unidad_ejecutora}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement x="175" y="150" width="125" height="25" uuid="fc1379df-6bf0-4605-8a61-258e37165a90">
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="10"/>
+						<paragraph rightIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{desembolsos_a_la_fecha}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00#%" isBlankWhenNull="true">
+					<reportElement x="300" y="150" width="50" height="25" uuid="5f2d4bf0-d079-47a0-9876-da9a058cb703">
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="10"/>
+						<paragraph rightIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{desembolsos_a_la_fecha}.divide($F{monto_unidad_ejecutora},4,BigDecimal.ROUND_HALF_UP)]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement x="175" y="175" width="125" height="25" uuid="d14f0630-d52d-4fd7-9210-b86000c85a7f">
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="10"/>
+						<paragraph rightIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{monto_unidad_ejecutora}.subtract($F{desembolsos_a_la_fecha})]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00#%" isBlankWhenNull="true">
+					<reportElement x="300" y="175" width="50" height="25" uuid="013afd87-5cb6-4e8c-9e8b-ac2e0b95efce">
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="10"/>
+						<paragraph rightIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new BigDecimal(1).subtract($F{desembolsos_a_la_fecha}.divide($F{monto_unidad_ejecutora},4,BigDecimal.ROUND_HALF_UP))]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00#%" isBlankWhenNull="true">
+					<reportElement x="525" y="175" width="175" height="25" uuid="e4d741f6-4f81-4cd7-83d3-5f3e2d070b53">
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="10"/>
+						<paragraph rightIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{plazo_ejecucion}]]></textFieldExpression>
+				</textField>
 			</frame>
+			<componentElement>
+				<reportElement key="" style="Estilo_grafica" x="171" y="331" width="410" height="200" uuid="5c15a487-1c37-45b2-b22c-08d93cdd011a"/>
+				<sc:spiderChart xmlns:sc="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<sc:chartSettings>
+						<chartTitle/>
+						<chartSubtitle/>
+						<chartLegend/>
+					</sc:chartSettings>
+					<sc:spiderDataset>
+						<dataset>
+							<datasetRun subDataset="Dataset1" uuid="77683b0a-8232-430f-a9b9-3f51cdcdffad">
+								<datasetParameter name="proyectoId">
+									<datasetParameterExpression><![CDATA[$P{proyectoId}]]></datasetParameterExpression>
+								</datasetParameter>
+								<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+							</datasetRun>
+						</dataset>
+						<categorySeries>
+							<seriesExpression><![CDATA["Planificado"]]></seriesExpression>
+							<categoryExpression><![CDATA[$F{categoria}]]></categoryExpression>
+							<valueExpression><![CDATA[$F{valor_plan}]]></valueExpression>
+							<labelExpression><![CDATA["Planificado"]]></labelExpression>
+						</categorySeries>
+						<categorySeries>
+							<seriesExpression><![CDATA["Real"]]></seriesExpression>
+							<categoryExpression><![CDATA[$F{categoria}]]></categoryExpression>
+							<valueExpression><![CDATA[$F{valor_real}]]></valueExpression>
+							<labelExpression><![CDATA["Real"]]></labelExpression>
+						</categorySeries>
+					</sc:spiderDataset>
+					<sc:spiderPlot isWebFilled="true" axisLineWidth="1.0"/>
+				</sc:spiderChart>
+			</componentElement>
 		</band>
 	</title>
 	<pageFooter>
