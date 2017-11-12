@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.4.3.final using JasperReports Library version 6.4.3  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EjecucionPresupuestaria" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3be1768b-39b9-4818-9259-816746f57f02">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EjecucionPresupuestaria" pageWidth="792" pageHeight="590" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3be1768b-39b9-4818-9259-816746f57f02">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MariaDB Server"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<style name="Estilo_grafica">
 		<pen lineWidth="0.0"/>
 	</style>
@@ -101,6 +93,9 @@ select "Ejecucion Fisica",
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
 	</parameter>
 	<parameter name="usuario" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="esSubreporte" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT ps.proyecto_programa proyecto,  ue.nombre unidad_ejecutora, ps.numero_prestamo, ps.codigo_presupuestario, co.nombre organismo_financiero,
 tm.simbolo moneda, ps.monto_contratado,
@@ -202,11 +197,8 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 		<property name="com.jaspersoft.studio.field.label" value="ejecucion_fisica_real"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="proyecto"/>
 	</field>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
 	<title>
-		<band height="531" splitType="Stretch">
+		<band height="490" splitType="Stretch">
 			<staticText>
 				<reportElement x="198" y="0" width="357" height="27" uuid="e0ac754a-2089-4233-ab37-bd971b7a1193"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -215,7 +207,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 				<text><![CDATA[Plan Anual de Ejecución]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="37" width="110" height="20" uuid="83805290-584e-4bce-89d2-6ee7166ef956">
+				<reportElement x="0" y="31" width="110" height="20" uuid="83805290-584e-4bce-89d2-6ee7166ef956">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
@@ -224,7 +216,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 				<text><![CDATA[Mes Reportado:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="57" width="110" height="20" uuid="0178c696-4e32-47c2-bf86-4c2210529df1">
+				<reportElement x="0" y="51" width="110" height="20" uuid="0178c696-4e32-47c2-bf86-4c2210529df1">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -239,7 +231,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 				<text><![CDATA[Proyecto/Programa:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="77" width="110" height="20" uuid="0f3de771-7a9d-4520-972f-c15628be1c2c">
+				<reportElement x="0" y="71" width="110" height="20" uuid="0f3de771-7a9d-4520-972f-c15628be1c2c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
@@ -248,7 +240,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 				<text><![CDATA[Organismo Ejecutor:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="110" y="77" width="640" height="20" uuid="0444b10f-6f7d-4259-ab99-e5a96fb534b3">
+				<reportElement x="110" y="71" width="640" height="20" uuid="0444b10f-6f7d-4259-ab99-e5a96fb534b3">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
@@ -257,7 +249,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 				<textFieldExpression><![CDATA[$F{unidad_ejecutora}]]></textFieldExpression>
 			</textField>
 			<textField pattern="MMMM / yyyy">
-				<reportElement x="110" y="37" width="640" height="20" uuid="d5604622-5efa-453d-919b-99a11a5e57d6">
+				<reportElement x="110" y="31" width="640" height="20" uuid="d5604622-5efa-453d-919b-99a11a5e57d6">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement markup="none">
@@ -266,7 +258,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="110" y="57" width="640" height="20" uuid="8b8d6f07-5327-48cc-8ffd-b3f869d51c33">
+				<reportElement x="110" y="51" width="640" height="20" uuid="8b8d6f07-5327-48cc-8ffd-b3f869d51c33">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
@@ -275,7 +267,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 				<textFieldExpression><![CDATA[$F{proyecto}]]></textFieldExpression>
 			</textField>
 			<frame>
-				<reportElement x="26" y="110" width="700" height="200" uuid="24c74833-9b99-4366-bd2b-a64378613f3c">
+				<reportElement x="26" y="105" width="700" height="200" uuid="24c74833-9b99-4366-bd2b-a64378613f3c">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -895,7 +887,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 				</textField>
 			</frame>
 			<componentElement>
-				<reportElement key="" style="Estilo_grafica" x="171" y="331" width="410" height="200" uuid="5c15a487-1c37-45b2-b22c-08d93cdd011a"/>
+				<reportElement key="" style="Estilo_grafica" x="171" y="312" width="410" height="169" uuid="5c15a487-1c37-45b2-b22c-08d93cdd011a"/>
 				<sc:spiderChart xmlns:sc="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<sc:chartSettings>
 						<chartTitle/>
@@ -930,9 +922,10 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 		</band>
 	</title>
 	<pageFooter>
-		<band height="41" splitType="Stretch">
+		<band height="30" splitType="Stretch">
+			<printWhenExpression><![CDATA[$P{esSubreporte}==false]]></printWhenExpression>
 			<textField>
-				<reportElement x="453" y="31" width="300" height="10" uuid="118179b7-1b25-4d3d-8ca3-7172c99336b9">
+				<reportElement x="453" y="12" width="300" height="10" uuid="118179b7-1b25-4d3d-8ca3-7172c99336b9">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
@@ -941,7 +934,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy hh:mm:ss a">
-				<reportElement x="70" y="21" width="143" height="10" uuid="00972570-8da3-4b2d-96c0-e850c840c9f5">
+				<reportElement x="70" y="2" width="143" height="10" uuid="00972570-8da3-4b2d-96c0-e850c840c9f5">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
@@ -950,7 +943,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="21" width="70" height="10" uuid="9652239a-fafb-43da-9fd4-474038a03829">
+				<reportElement x="0" y="2" width="70" height="10" uuid="9652239a-fafb-43da-9fd4-474038a03829">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
@@ -959,7 +952,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 				<text><![CDATA[Fecha generación:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="31" width="70" height="10" uuid="be50c394-2253-40b8-b86d-32d03280634e">
+				<reportElement x="0" y="12" width="70" height="10" uuid="be50c394-2253-40b8-b86d-32d03280634e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
@@ -968,7 +961,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 				<text><![CDATA[Usuario:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="70" y="31" width="143" height="10" uuid="a7f58cd1-ea7a-4362-a1b8-b68990429d97">
+				<reportElement x="70" y="12" width="143" height="10" uuid="a7f58cd1-ea7a-4362-a1b8-b68990429d97">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
@@ -978,7 +971,4 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 			</textField>
 		</band>
 	</pageFooter>
-	<summary>
-		<band height="39"/>
-	</summary>
 </jasperReport>
