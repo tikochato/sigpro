@@ -60,6 +60,27 @@ public class PrestamoDAO {
 		}
 		return ret;
 	}
+	
+	public static Prestamo getObjetoPrestamoPorId(int idPrestamo){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		Prestamo ret = null;
+		try{
+			Query<Prestamo> criteria = session.createQuery("FROM Prestamo p "
+					+ " where p.id= :idPrestamo "
+					+ " and p.estado= 1", Prestamo.class);
+			criteria.setParameter("idPrestamo", idPrestamo);
+			ret = criteria.getSingleResult();
+		} catch (NoResultException e){
+		}
+		catch(Throwable e){
+			e.printStackTrace();
+			CLogger.write("1", PrestamoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 
 	public static boolean guardarPrestamo(Prestamo prestamo){
 		boolean ret = false;

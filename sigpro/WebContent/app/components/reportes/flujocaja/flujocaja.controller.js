@@ -220,7 +220,8 @@ app.controller('flujocajaController',['$scope','$rootScope','$http','$interval',
 	mi.cargarTabla = function() {			
 		var datos = {
 				accion : 'getFlujoCaja',
-				idPrestamo: mi.pepId,
+				idPrestamo: mi.prestamoId,
+				idProyecto: mi.pepId,
 				fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY'),
 				t: (new Date()).getTime()
 		};
@@ -552,7 +553,8 @@ app.controller('flujocajaController',['$scope','$rootScope','$http','$interval',
 
 	mi.exportarExcel = function(){
 		$http.post('/SFlujoCaja', { 
-			accion: 'exportarExcel', 
+			accion: 'exportarExcel',
+			prestamoid: mi.prestamoId,
 			proyectoid: mi.pepId,
 			fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY'),
 			agrupacion: mi.agrupacionActual,
@@ -573,6 +575,7 @@ app.controller('flujocajaController',['$scope','$rootScope','$http','$interval',
 	mi.exportarPdf=function(){
 		$http.post('/SFlujoCaja', { 
 			accion: 'exportarPdf',
+			prestamoid: mi.prestamoId,
 			proyectoid: mi.pepId,
 			fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY'),
 			agrupacion: mi.agrupacionActual,
