@@ -303,11 +303,11 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="75" splitType="Stretch">
+		<band height="42" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Transparent" x="250" y="17" width="290" height="40" backcolor="#0D0D0D" uuid="f16d3680-349f-4247-a4ad-b7ebcf351e51"/>
+				<reportElement mode="Transparent" x="235" y="0" width="290" height="30" backcolor="#0D0D0D" uuid="f16d3680-349f-4247-a4ad-b7ebcf351e51"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font fontName="Arial" size="25" isBold="false"/>
+					<font fontName="Arial" size="16" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Metas Año Fiscal]]></text>
 			</staticText>
