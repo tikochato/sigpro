@@ -3,6 +3,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PlanAdquisiciones" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="73042684-c3ac-4208-9480-fd57f4d99e72">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="sipro"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="usuario" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT c.nombre componente, pr.nombre producto, sp.nombre subproducto, ta.nombre metodo, 
 CASE WHEN pa.preparacion_doc_planificado IS NOT NULL
@@ -610,11 +611,54 @@ JOIN tipo_adquisicion ta on pa.tipo_adquisicion=ta.id]]>
 			</textField>
 		</band>
 	</detail>
-	<columnFooter>
-		<band height="105" splitType="Stretch"/>
-	</columnFooter>
 	<pageFooter>
-		<band height="54" splitType="Stretch"/>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement x="450" y="44" width="300" height="10" uuid="1b66fa04-0b2e-45bf-99ce-4b634c6a4009">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="34" width="70" height="10" uuid="577f8266-5a3a-42fb-a448-c708fd42b71b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Fecha generación:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="44" width="70" height="10" uuid="7294edfa-128e-4069-b68d-ea2e7e8be777">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Usuario:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="70" y="44" width="143" height="10" uuid="53e6bf4a-fc6a-42aa-9fa5-1c015b8d9f14">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy hh:mm:ss a">
+				<reportElement x="70" y="34" width="143" height="10" uuid="bd44d2d5-e2d8-4dc3-bd5b-e308004151a2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
 	</pageFooter>
 	<summary>
 		<band height="42" splitType="Stretch"/>
