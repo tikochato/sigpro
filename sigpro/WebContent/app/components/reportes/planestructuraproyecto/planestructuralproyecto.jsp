@@ -182,9 +182,11 @@
 				    						<th class="label-form" style="text-align: center; min-width:90px; max-width:90px;">Duración</th>
 				    						<th class="label-form" style="text-align: center; min-width: 90px; max-width: 90px;">Fecha Inicial</th>
 				    						<th class="label-form" style="text-align: center; min-width: 90px; max-width: 90px;">Fecha Final</th>
+				    						<th class="label-form" style="text-align: center; min-width: 140px; max-width: 140px;">Fecha Inicial Real</th>
+				    						<th class="label-form" style="text-align: center; min-width: 140px; max-width: 140px;">Fecha Final Real</th>
 				    						<th class="label-form" style="text-align: center; min-width: 90px; max-width: 90px;">% de Avance</th>
-				    						<th class="label-form" style="text-align: center; min-width: 120px; max-width: 120px;">Acumulación Costo</th>
-				    						<th class="label-form" style="text-align: center; min-width: 140px; max-width: 140px">Presupuesto Aprobado</th>
+				    						<th class="label-form" style="text-align: center; min-width: 140px; max-width: 140px;">Acumulación Costo</th>
+				    						<th class="label-form" style="text-align: center; min-width: 140px; max-width: 140px">Presupuesto Apr.</th>
 				    						<th class="label-form" style="text-align: center; min-width: 140px; max-width: 140px">Costo Planificado</th>
 				    						<th class="label-form" style="text-align: center; min-width: 140px; max-width: 140px">Asignación Prep. V.</th>
 				    						<th class="label-form" style="text-align: center; min-width: 140px; max-width: 140px">Presupuesto Dev.</th>
@@ -205,10 +207,16 @@
 							    			<td class="divisionColumna" style="min-width: 90px; max-width: 90px;">
 							    				{{row.fechaFinal}}								    				
 							    			</td>
+							    			<td class="divisionColumna" style="min-width: 140px; max-width: 140px;">
+							    				{{row.fechaInicialReal}}
+							    			</td>
+							    			<td class="divisionColumna" style="min-width: 140px; max-width: 140px;">
+							    				{{row.fechaFinReal}}								    				
+							    			</td>
 							    			<td class="divisionColumna" style="min-width: 90px; max-width: 90px;">
 							    				{{row.avance}}								    				
 							    			</td>
-							    			<td class="divisionColumna" style="min-width: 120px; max-width: 120px;">
+							    			<td class="divisionColumna" style="min-width: 140px; max-width: 140px;">
 							    				{{row.acumulacionCosto}}								    				
 							    			</td>			
 				    						<td class="divisionColumna" style="text-align: right; min-width: 140px; max-width: 140px">

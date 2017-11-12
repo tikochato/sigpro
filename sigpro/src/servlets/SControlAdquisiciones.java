@@ -74,6 +74,8 @@ public class SControlAdquisiciones extends HttpServlet {
 		String numeroContrato;
 		BigDecimal montoContrato;
 		List<String> hijos;
+		Integer tipoRevision;
+		String tipoRevisionNombre;
 	}
 	
     public SControlAdquisiciones() {
@@ -289,11 +291,14 @@ public class SControlAdquisiciones extends HttpServlet {
 							temp.cantidad = adquisicion.getCantidad() != null ? adquisicion.getCantidad() : 0;
 							temp.costo = adquisicion.getPrecioUnitario() != null ? adquisicion.getPrecioUnitario() : new BigDecimal(0);
 							temp.total = adquisicion.getTotal() != null ? adquisicion.getTotal() : new BigDecimal(0);
+							temp.tipoRevision = adquisicion.getTipoRevision();
+							temp.tipoRevisionNombre = temp.tipoRevision != null ? temp.tipoRevision == 1 ? "Ex-ante" : temp.tipoRevision == 2 ? "Ex-Post" : null : null;
 							temp.nog = adquisicion.getNog();
+							temp.numeroContrato = adquisicion.getNumeroContrato();
+							temp.montoContrato = adquisicion.getMontoContrato().compareTo(BigDecimal.ZERO) > 0 ? adquisicion.getMontoContrato() : null;							
 						}
-					}
-					
-					lstPrestamo.add(temp);
+						lstPrestamo.add(temp);
+					}	
 				}
 			}
 			return lstPrestamo;

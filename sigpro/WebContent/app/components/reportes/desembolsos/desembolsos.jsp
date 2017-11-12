@@ -180,34 +180,70 @@
 			
 			<br/><br/>
 			<div class="divTabla"  >
-			<table st-table="desembolsosc.desembolsos" class="table table-striped table-hover table-condensed table-responsive cuerpoTablaNombres "
-				ng-hide="!desembolsosc.mostrar">
-				<thead class="theadDatos">
-				<tr >
-					<th ng-repeat="n in desembolsosc.columnas track by $index" style="text-align: center" class="label-form">
-					{{n}}
-					</th>
-				</tr>
-				</thead>
-				<tbody >
-				<tr class = "{{desembolsosc.clase($index)}}" ng-repeat="row in desembolsosc.tabla track by $index" style="text-align: right;">
-					<td ng-repeat = "col in row track by $index" 
-					 	 nowrap style="font-weight: bold; border-right: 1px solid #ddd; min-width:125px;">
-					 	 <div ng-if=" desembolsosc.esNumero(col) && $parent.$index != 3" >
-					 	 	{{col | formatoMillones : desembolsosc.enMillones }}
-					 	 </div>
-					 	 <div ng-if="! desembolsosc.esNumero(col)" >
-					 	 	{{col}}
-					 	 </div>
-					 	 <div ng-if="desembolsosc.esNumero(col) && $parent.$index == 3" >
-					 	 	{{col | formatoMillonesDolares : desembolsosc.enMillones }}
-					 	 </div>
-					 </td>
-				</tr>
-				</tbody>
-			</table>
+				<table st-table="desembolsosc.desembolsos" class="table table-striped table-hover table-condensed table-responsive cuerpoTablaNombres "
+					ng-hide="!desembolsosc.mostrar">
+					<thead class="theadDatos">
+					<tr >
+						<th ng-repeat="n in desembolsosc.columnas track by $index" style="text-align: center" class="label-form">
+						{{n}}
+						</th>
+					</tr>
+					</thead>
+					<tbody >
+					<tr class = "{{desembolsosc.clase($index)}}" ng-repeat="row in desembolsosc.tabla track by $index" style="text-align: right;">
+						<td ng-repeat = "col in row track by $index" 
+						 	 nowrap style="font-weight: bold; border-right: 1px solid #ddd; min-width:125px;">
+						 	 <div ng-if=" desembolsosc.esNumero(col) && $parent.$index != 3" >
+						 	 	{{col | formatoMillones : desembolsosc.enMillones }}
+						 	 </div>
+						 	 <div ng-if="! desembolsosc.esNumero(col)" >
+						 	 	{{col}}
+						 	 </div>
+						 	 <div ng-if="desembolsosc.esNumero(col) && $parent.$index == 3" >
+						 	 	{{col | formatoMillonesDolares : desembolsosc.enMillones }}
+						 	 </div>
+						 </td>
+					</tr>
+					</tbody>
+				</table>
 			</div>
-			<br/>
+			<br/> <br/>
+			
+			<div style="width: 70%">
+				<label class="label-form"  ng-hide="!desembolsosc.mostrar">Acumulación de Desembolsos </label>
+				<canvas id="line" class="chart chart-line" chart-data="desembolsosc.acumulacion" ng-hide="!desembolsosc.mostrar"
+				chart-labels="desembolsosc.etiqutas" chart-series="desembolsosc.series" chart-options="desembolsosc.options"
+				chart-dataset-override="desembolsosc.datasetOverride" 
+				 chart-colors = "desembolsosc.radarColors" chart-legend="true">
+				</canvas>
+			</div>
+			
+			<br/><br/>
+			<div class="divTabla"  >
+				<table st-table="desembolsosc.desembolsos" class="table table-striped table-hover table-condensed table-responsive cuerpoTablaNombres "
+					ng-hide="!desembolsosc.mostrar">
+					<thead class="theadDatos">
+					<tr >
+						<th ng-repeat="n in desembolsosc.columnasAcumulado track by $index" style="text-align: center" class="label-form">
+						{{n}}
+						</th>
+					</tr>
+					</thead>
+					<tbody >
+					<tr class = "{{desembolsosc.clase($index + 1)}}" ng-repeat="row in desembolsosc.tablaAcumulado track by $index" style="text-align: right;">
+						<td ng-repeat = "col in row track by $index" 
+						 	 nowrap style="font-weight: bold; border-right: 1px solid #ddd; min-width:125px;">
+						 	 <div ng-if=" desembolsosc.esNumero(col) && $parent.$index != 3" >
+						 	 	{{col | formatoMillones : desembolsosc.enMillones }}
+						 	 </div>
+						 	 <div ng-if="! desembolsosc.esNumero(col)" >
+						 	 	{{col}}
+						 	 </div>
+						 </td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
 			
 		</div>
 		  

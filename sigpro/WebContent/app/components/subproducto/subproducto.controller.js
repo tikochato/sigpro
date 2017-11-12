@@ -766,6 +766,10 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 								mi.subproducto.fechaInicio = moment(mi.subproducto.fechaInicio, 'DD/MM/YYYY').toDate();
 							if(mi.subproducto.fechaFin != "")
 								mi.subproducto.fechaFin = moment(mi.subproducto.fechaFin, 'DD/MM/YYYY').toDate();
+							if(mi.subproducto.fechaInicioReal != "")
+								mi.subproducto.fechaInicioReal = moment(mi.subproducto.fechaInicioReal, 'DD/MM/YYYY').toDate();
+							if(mi.subproducto.fechaFinReal != "")
+								mi.subproducto.fechaFinReal = moment(mi.subproducto.fechaFinReal, 'DD/MM/YYYY').toDate();
 							mi.editar();
 						}
 					});

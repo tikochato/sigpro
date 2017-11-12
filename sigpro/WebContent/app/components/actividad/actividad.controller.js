@@ -366,6 +366,10 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 						mi.actividad.fechaCreacion=response.fechaCreacion;
 						mi.actividad.usuarioActualizo=response.usuarioactualizo;
 						mi.actividad.fechaActualizacion=response.fechaactualizacion;
+						if(response.fechaInicioReal != null)
+							mi.actividad.fechaInicioReal = moment(response.fechaInicioReal, 'DD/MM/YYYY').toDate();
+						if(response.fechaFinReal != null)
+							mi.actividad.fechaFinReal = moment(response.fechaFinReal, 'DD/MM/YYYY').toDate();
 						if(!mi.esTreeview)
 							mi.obtenerTotalActividades();
 						else{
@@ -799,6 +803,10 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 								mi.actividad.fechaInicio = moment(mi.actividad.fechaInicio, 'DD/MM/YYYY').toDate();
 							if(mi.actividad.fechaFin != "")
 								mi.actividad.fechaFin = moment(mi.actividad.fechaFin, 'DD/MM/YYYY').toDate();
+							if(mi.actividad.fechaInicioReal != null)
+								mi.actividad.fechaInicioReal = moment(mi.actividad.fechaInicioReal, 'DD/MM/YYYY').toDate();
+							if(mi.actividad.fechaFinReal != null)
+								mi.actividad.fechaFinReal = moment(mi.actividad.fechaFinReal, 'DD/MM/YYYY').toDate();
 							mi.editar();
 						}
 					});

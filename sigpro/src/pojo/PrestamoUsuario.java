@@ -1,5 +1,5 @@
 package pojo;
-// Generated Nov 6, 2017 8:46:06 AM by Hibernate Tools 5.2.3.Final
+// Generated Nov 12, 2017 1:30:38 AM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import javax.persistence.AttributeOverride;
@@ -24,9 +24,10 @@ public class PrestamoUsuario implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 2197213712057589121L;
+	private static final long serialVersionUID = -6432023552387382857L;
 	private PrestamoUsuarioId id;
 	private Prestamo prestamo;
+	private Usuario usuario;
 	private String usuarioCreo;
 	private String usuarioActualizo;
 	private Date fechaCreacion;
@@ -35,15 +36,17 @@ public class PrestamoUsuario implements java.io.Serializable {
 	public PrestamoUsuario() {
 	}
 
-	public PrestamoUsuario(PrestamoUsuarioId id, Prestamo prestamo) {
+	public PrestamoUsuario(PrestamoUsuarioId id, Prestamo prestamo, Usuario usuario) {
 		this.id = id;
 		this.prestamo = prestamo;
+		this.usuario = usuario;
 	}
 
-	public PrestamoUsuario(PrestamoUsuarioId id, Prestamo prestamo, String usuarioCreo, String usuarioActualizo,
-			Date fechaCreacion, Date fechaActualizacion) {
+	public PrestamoUsuario(PrestamoUsuarioId id, Prestamo prestamo, Usuario usuario, String usuarioCreo,
+			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion) {
 		this.id = id;
 		this.prestamo = prestamo;
+		this.usuario = usuario;
 		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
@@ -71,6 +74,16 @@ public class PrestamoUsuario implements java.io.Serializable {
 
 	public void setPrestamo(Prestamo prestamo) {
 		this.prestamo = prestamo;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "usuario", nullable = false, insertable = false, updatable = false)
+	public Usuario getUsuario() {
+		return this.usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 
 	@Column(name = "usuario_creo", length = 30)

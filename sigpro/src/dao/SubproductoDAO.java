@@ -66,6 +66,8 @@ public class SubproductoDAO {
 		public Integer acumulacionCosto;
 		public String acumulacionCostoNombre;
 		public boolean tieneHijos;
+		public String fechaInicioReal;
+		public String fechaFinReal;
 	}
 
 	public static List<Subproducto> getSubproductos(String usuario) {
@@ -318,6 +320,9 @@ public class SubproductoDAO {
 			}
 			
 			estructuraPojo.tieneHijos = ObjetoDAO.tieneHijos(estructuraPojo.id, 4);
+			
+			estructuraPojo.fechaInicioReal = Utils.formatDate(pojo.getFechaInicioReal());
+			estructuraPojo.fechaFinReal = Utils.formatDate(pojo.getFechaFinReal());
 			listaEstructuraPojos.add(estructuraPojo);
 		}
 

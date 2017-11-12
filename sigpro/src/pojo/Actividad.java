@@ -1,5 +1,5 @@
 package pojo;
-// Generated Nov 6, 2017 8:46:06 AM by Hibernate Tools 5.2.3.Final
+// Generated Nov 12, 2017 1:30:38 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -28,7 +28,7 @@ public class Actividad implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7628925243171847983L;
+	private static final long serialVersionUID = -878428124887664953L;
 	private Integer id;
 	private ActividadTipo actividadTipo;
 	private AcumulacionCosto acumulacionCosto;
@@ -65,6 +65,8 @@ public class Actividad implements java.io.Serializable {
 	private Integer proyectoBase;
 	private Integer componenteBase;
 	private Integer productoBase;
+	private Date fechaInicioReal;
+	private Date fechaFinReal;
 	private Set<ActividadPropiedadValor> actividadPropiedadValors = new HashSet<ActividadPropiedadValor>(0);
 	private Set<ActividadUsuario> actividadUsuarios = new HashSet<ActividadUsuario>(0);
 
@@ -94,8 +96,9 @@ public class Actividad implements java.io.Serializable {
 			Integer proyecto, Integer actividad, Integer obra, int objetoId, int objetoTipo, int duracion,
 			String duracionDimension, Integer predObjetoId, Integer predObjetoTipo, String latitud, String longitud,
 			BigDecimal costo, Integer renglon, Integer ubicacionGeografica, Integer orden, String treePath,
-			Integer nivel, Integer proyectoBase, Integer componenteBase, Integer productoBase,
-			Set<ActividadPropiedadValor> actividadPropiedadValors, Set<ActividadUsuario> actividadUsuarios) {
+			Integer nivel, Integer proyectoBase, Integer componenteBase, Integer productoBase, Date fechaInicioReal,
+			Date fechaFinReal, Set<ActividadPropiedadValor> actividadPropiedadValors,
+			Set<ActividadUsuario> actividadUsuarios) {
 		this.actividadTipo = actividadTipo;
 		this.acumulacionCosto = acumulacionCosto;
 		this.nombre = nombre;
@@ -131,6 +134,8 @@ public class Actividad implements java.io.Serializable {
 		this.proyectoBase = proyectoBase;
 		this.componenteBase = componenteBase;
 		this.productoBase = productoBase;
+		this.fechaInicioReal = fechaInicioReal;
+		this.fechaFinReal = fechaFinReal;
 		this.actividadPropiedadValors = actividadPropiedadValors;
 		this.actividadUsuarios = actividadUsuarios;
 	}
@@ -466,6 +471,26 @@ public class Actividad implements java.io.Serializable {
 
 	public void setProductoBase(Integer productoBase) {
 		this.productoBase = productoBase;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_inicio_real", length = 19)
+	public Date getFechaInicioReal() {
+		return this.fechaInicioReal;
+	}
+
+	public void setFechaInicioReal(Date fechaInicioReal) {
+		this.fechaInicioReal = fechaInicioReal;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_fin_real", length = 19)
+	public Date getFechaFinReal() {
+		return this.fechaFinReal;
+	}
+
+	public void setFechaFinReal(Date fechaFinReal) {
+		this.fechaFinReal = fechaFinReal;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "actividad")

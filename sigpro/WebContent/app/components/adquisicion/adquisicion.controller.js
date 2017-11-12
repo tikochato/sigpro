@@ -184,7 +184,7 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 					id: mi.adquisicion.id,
 					lanzamientoEventoPlanificada: mi.adquisicion.lanzamientoEventoPlanificada,
 					lanzamientoEventoReal: mi.adquisicion.lanzamientoEventoReal,
-					montoContrato: mi.adquisicion.montoContrato,
+					montoContrato: mi.adquisicion.montoContrato != null ? mi.adquisicion.montoContrato : 0,
 					nog: mi.adquisicion.nog,
 					numeroContrato: mi.adquisicion.numeroContrato,
 					precioUnitario: mi.adquisicion.precioUnitario,
@@ -196,6 +196,7 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 					total: mi.adquisicion.total,
 					medidaNombre: mi.adquisicion.medidaNombre,
 					pagos: JSON.stringify(mi.adquisicion.pagos),
+					tipoRevision: mi.adquisicion.tipoRevision,
 					t: (new Date()).getTime()
 				}).success(function(response){
 					if(response.success){
@@ -267,33 +268,36 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		};
 		
 		mi.agregarPagos = function() {
-			var modalInstance = $uibModal.open({
-				animation : 'true',
-				ariaLabelledBy : 'modal-title',
-				ariaDescribedBy : 'modal-body',
-				templateUrl : 'pago.jsp',
-				controller : 'modalPlanadquisicionPagos',
-				controllerAs : 'modalPagos',
-				backdrop : 'static',
-				size : 'md',
-				resolve: {
-				    pagos: function(){
-				    	return mi.adquisicion.pagos;
-				    },
-				    totalPagos: function(){
-				    	return mi.totalPagos;
-				    },
-				    montoContrato: function(){
-				    	return mi.adquisicion.montoContrato;
-				    }
-				  }
-			});
+			if(mi.adquisicion.montoContrato != null){
+				var modalInstance = $uibModal.open({
+					animation : 'true',
+					ariaLabelledBy : 'modal-title',
+					ariaDescribedBy : 'modal-body',
+					templateUrl : 'pago.jsp',
+					controller : 'modalPlanadquisicionPagos',
+					controllerAs : 'modalPagos',
+					backdrop : 'static',
+					size : 'md',
+					resolve: {
+					    pagos: function(){
+					    	return mi.adquisicion.pagos;
+					    },
+					    totalPagos: function(){
+					    	return mi.totalPagos;
+					    },
+					    montoContrato: function(){
+					    	return mi.adquisicion.montoContrato;
+					    }
+					  }
+				});
 
-			modalInstance.result.then(function() {
-			   
-			}, function() {
-			});
+				modalInstance.result.then(function() {
+				   
+				}, function() {
+				});
 
+			}else
+				$utilidades.mensaje('warning','Para agregar pagos, ingrese Monto del contrato');
 		};
 		
 		mi.actualizaMontos=function(control){
@@ -338,7 +342,28 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 				mi.requerido=false;
 		}
 		
+		mi.getInfoNog = function(){
+			if(mi.adquisicion.nog != null){
+				$http.post('/SPlanAdquisicion', { accion: 'getInfoNog', nog: mi.adquisicion.nog}).success(
+					function(response){
+						if(response.success){
+							mi.adquisicion.numeroContrato = response.nogInfo[0].numeroContrato;
+							mi.adquisicion.montoContrato = response.nogInfo[0].montoContrato;
+							mi.adquisicion.preparacionDocumentosReal = moment(response.nogInfo[0].preparacionDocumentosReal, 'DD/MM/YYYY').toDate();
+							mi.adquisicion.lanzamientoEventoReal = moment(response.nogInfo[0].lanzamientoEventoReal, 'DD/MM/YYYY').toDate();
+							mi.adquisicion.recepcionOfertasReal = moment(response.nogInfo[0].recepcionOfertasReal, 'DD/MM/YYYY').toDate();
+							mi.adquisicion.adjudicacionReal = moment(response.nogInfo[0].adjudicacionReal, 'DD/MM/YYYY').toDate();
+							mi.adquisicion.firmaContratoReal = moment(response.nogInfo[0].firmaContratoReal, 'DD/MM/YYYY').toDate();
+							mi.nogValido = false;
+						}else{
+							$utilidades.mensaje('warning','No existe información para ese NOG');
+							mi.adquisicion.nog = null;
+						}
+					}
+				)
 			
+			}
+		}
 } ]);
 
 app.controller('modalPlanadquisicionPagos', [ '$uibModalInstance',
@@ -410,7 +435,7 @@ app.controller('modalPlanadquisicionPagos', [ '$uibModalInstance',
 		        	 if(total+item.pago <= mi.montoContrato)
 		        		 return total + item.pago;
 		        	 else{
-		        		 $utilidades.mensaje('warning','Los pagos sobrepasan el Monto del Contrato');
+		        		 $utilidades.mensaje('warning','Los pagos sobrepasan el Monto del contrato');
 		        		 $scope.pagos.splice($scope.pagos.length-1, 1);
 		        		 return total;
 		        	 }

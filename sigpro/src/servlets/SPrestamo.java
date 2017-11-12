@@ -819,6 +819,7 @@ public class SPrestamo extends HttpServlet {
             Prestamo prestamo = PrestamoDAO.getPrestamoById(id);
             response_text = String.join("","{ \"success\": ",(prestamo!=null && prestamo.getId()!=null ? "true" : "false"),", "
                     + "\"id\": " + (prestamo!=null ? prestamo.getId():"0") +", "
+            		+ "\"codigoPresupuestario\": " + (prestamo!=null ? prestamo.getCodigoPresupuestario():" ") +", "
             		+ "\"montoPorDesembolsar\": " + (prestamo!=null ? prestamo.getMontoPorDesembolsarUsd():"0") +", "
     				+ "\"desembolsoAFechaUsd\": \"" + (prestamo!=null ? prestamo.getDesembolsoAFechaUsd():" ") +"\", "
     				+ "\"fechaCierreActualUe\": \"" + (prestamo!=null ? Utils.formatDate(prestamo.getFechaCierreActualUe()):" ") +"\", "					
@@ -960,8 +961,8 @@ public class SPrestamo extends HttpServlet {
 					unidad.get("entidad").getAsString().equals(unidad_.get("entidadId").getAsString()) && 
 					unidad.get("id").getAsString().equals(unidad_.get("id").getAsString())){
 				esCoordinador = Utils.String2Boolean(unidad_.get("esCoordinador").getAsString(), 0);
-				fechaElegibilidad = Utils.stringToDateZ(unidad_.get("fechaElegibilidad").getAsString());
-				fechaCierre = Utils.stringToDateZ(unidad_.get("fechaCierre").getAsString());
+				fechaElegibilidad = !unidad_.get("fechaElegibilidad").isJsonNull() ? Utils.stringToDateZ(unidad_.get("fechaElegibilidad").getAsString()) : null;
+				fechaCierre = !unidad_.get("fechaCierre").isJsonNull() ? Utils.stringToDateZ(unidad_.get("fechaCierre").getAsString()) : null;
 				break;
 			}
 		}
@@ -982,7 +983,7 @@ public class SPrestamo extends HttpServlet {
 					null, null, null,null, null, null, null,null, null, null,null,
 					prestamo.getFechaSuscripcion(),prestamo.getFechaSuscripcion(),
 					1, "d"
-					,null,null,0,0,0, null,esCoordinador,fechaElegibilidad,fechaCierre,null,null,null,null,null,null,null,null,null,null);
+					,null,null,0,0,0, null,esCoordinador,fechaElegibilidad,fechaCierre,null,null,null,null,null,null,null,null,null,null,null,null);
 			
 			return ProyectoDAO.guardarProyecto(proyecto, false) ? proyecto : null;
 		}
@@ -1001,7 +1002,7 @@ public class SPrestamo extends HttpServlet {
 		Componente componente = new Componente(acumulacionCosto,componenteSigade,componenteTipo, proyecto, proyecto.getUnidadEjecutora(), nombreComponente
 				, descripcion,usuario, null, new Date(), null, 1, null, null, null, null, null, null, null, null, 
 				null,null,null,proyecto.getFechaInicio(), proyecto.getFechaFin(),1
-				, "d",null,null,1,1,fPrestamo,donacion,nacional,null,null,null,null);
+				, "d",null,null,1,1,fPrestamo,donacion,nacional,null,null,null,null,null,null);
 		
 		return ComponenteDAO.guardarComponente(componente, false);
 	}
@@ -1074,7 +1075,7 @@ public class SPrestamo extends HttpServlet {
 						Componente componente = new Componente(acumulacionCosto,null,componenteTipo, proyecto, unidadEjecutora,
 								(String)componenteSigade[2], null, usuario, null, new Date(), null, 1, null, null, 
 								null, null, null, null, null, null, null,null,null,fechaSuscripcion,fechaSuscripcion,1, 
-								null,null,null,1,1,null,null,null,null,null,null,null);
+								null,null,null,1,1,null,null,null,null,null,null,null,null,null);
 						
 						ret = ret && ComponenteDAO.guardarComponente(componente, true);
 					}

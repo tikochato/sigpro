@@ -812,6 +812,10 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 								mi.producto.fechaInicio = moment(mi.producto.fechaInicio, 'DD/MM/YYYY').toDate();
 							if(mi.producto.fechaFin != "")
 								mi.producto.fechaFin = moment(mi.producto.fechaFin, 'DD/MM/YYYY').toDate();
+							if(mi.producto.fechaInicioReal != "")
+								mi.producto.fechaInicioReal = moment(mi.producto.fechaInicioReal, 'DD/MM/YYYY').toDate();
+							if(mi.producto.fechaFinReal != "")
+								mi.producto.fechaFinReal = moment(mi.producto.fechaFinReal, 'DD/MM/YYYY').toDate();
 							mi.editar();
 						}
 					});
