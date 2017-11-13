@@ -19,6 +19,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			mi.fecha = new Date();
 			mi.formatofecha = 'dd/MM/yyyy';
 			mi.altformatofecha = ['d!/M!/yyyy'];
+			mi.desembolsosValidos=true;
 			
 			mi.mostrarcargando=false;
 			
@@ -162,15 +163,36 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			$scope.$watch('desembolsos', function() {
 			    var total = 0;
 			        mi.totalDesembolsos = $scope.desembolsos.reduce(function(total,item) {
-			        	if(total+item.monto <= mi.montoPorDesembolsar)
 			       	 	 	return total + item.monto;
-			        	else{
-			        		$utilidades.mensaje('warning','Los desembolsos sobrepasan el Monto por desembolsar');
-			        		 $scope.desembolsos.splice($scope.desembolsos.length-1, 1);
-			        		 return total;
-			        	}
 			        },0);
 			}, true);
+			
+			mi.validarMonto = function(row){
+				var total = 0;
+				for(x in $scope.desembolsos){
+					total += $scope.desembolsos[x].monto;
+					if(total >= mi.montoPorDesembolsar){
+						if(mi.desembolsosValidos == true){
+							$utilidades.mensaje('warning','Los desembolsos sobrepasan el Monto por desembolsar');
+							mi.desembolsosValidos = false;
+						}
+						return true;
+					}
+				}
+				
+				return false;
+			}
+			
+			for(x in $scope.desembolsos){
+				total += $scope.desembolsos[x].monto;
+				if(total >= mi.montoPorDesembolsar){
+					if(mi.desembolsosValidos == true){
+						$utilidades.mensaje('warning','Los desembolsos sobrepasan el Monto por desembolsar');
+						mi.desembolsosValidos = false;
+					}
+					return true;
+				}
+			}
 } ]);
 
 
