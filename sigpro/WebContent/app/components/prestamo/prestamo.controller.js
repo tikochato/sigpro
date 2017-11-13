@@ -437,7 +437,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 									if (response.data.success){
 										//mi.m_organismosEjecutores = response.data.unidadesEjecutoras;
 										//$scope.m_componentes = response.data.componentes;
-										mi.diferenciaCambios = response.data.diferencia;
+										mi.diferenciaCambios = true;
 										mi.m_existenDatos = true; 
 
 										if(mi.child_metas!=null)

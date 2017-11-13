@@ -544,7 +544,8 @@ public class ComponenteDAO {
 		try{
 			Query<Componente> criteria = session.createQuery("SELECT c "
 					+ "FROM Componente c where c.proyecto.id = :proyId "
-					+ "and c.componenteSigade.id = :compSigId", Componente.class);
+					+ "and c.componenteSigade.id = :compSigId "
+					+ "and c.estado = 1 ", Componente.class);
 			criteria.setParameter("proyId", proyectoId);
 			criteria.setParameter("compSigId", componenteSigadeId);
 			listRet = criteria.getResultList();
