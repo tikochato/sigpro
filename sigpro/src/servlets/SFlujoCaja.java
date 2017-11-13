@@ -253,7 +253,7 @@ public class SFlujoCaja extends HttpServlet {
 							totales.totalEjecutadoAcumulado = ejecutadoAcumulado;
 							
 							totales.filaVariacion[m] = planificadoActual.subtract(ejecutadoActual);
-							totales.filaVariacionPorcentaje[m] = planificadoActual.compareTo(BigDecimal.ZERO)==0 ? new BigDecimal(0) : totales.filaVariacion[m].divide(planificadoActual);
+							totales.filaVariacionPorcentaje[m] = (planificadoActual.compareTo(BigDecimal.ZERO)==0 || totales.filaVariacion[m]==null) ? new BigDecimal(0) : totales.filaVariacion[m].divide(planificadoActual, 2, BigDecimal.ROUND_HALF_UP);
 							totales.totalVariacion = totales.totalVariacion.add(totales.filaVariacion[m]);
 						}
 	
