@@ -36,7 +36,7 @@ public class ComponenteSigadeDAO {
 		List<ComponenteSigade> listRet = null;
 		try{
 			String Str_query = String.join(" ", "Select c FROM ComponenteSigade c",
-					"where c.codigoPresupuestario = ?1 and c.numeroComponente = ?2");
+					"where c.codigoPresupuestario = ?1 and c.numeroComponente = ?2 and c.estado = 1");
 			
 			Query<ComponenteSigade> criteria = session.createQuery(Str_query, ComponenteSigade.class);
 			criteria.setParameter(1, codigoPresupuestario);
