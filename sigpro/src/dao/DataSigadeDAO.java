@@ -269,7 +269,7 @@ public class DataSigadeDAO {
 			String query ="select sum(cmp.monto_componente-cs.monto_componente) diferencia " +
 						"from sipro_analytic.dtm_avance_fisfinan_cmp cmp,sipro.componente_sigade cs " +
 						"where cmp.codigo_presupuestario = cs.codigo_presupuestario " +
-						
+						"and cmp.numero_componente = cs.numero_componente " + 
 						"and cmp.codigo_presupuestario = ?1 " +
 						"and cs.estado = 1";
 			Query<?> criteria = session.createNativeQuery(query);

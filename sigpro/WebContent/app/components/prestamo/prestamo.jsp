@@ -148,7 +148,7 @@
 				<div class="componente_sigade">Estructura importada desde un archivo de Project</div>
 		</div>
 		<br>
-		<div class="col-sm-12" ng-if="prestamoc.diferenciaCambios>0 && !prestamo.esNuevo">
+		<div class="col-sm-12" ng-if="prestamoc.diferenciaCambios != 0 && !prestamo.esNuevo">
 				<div class="alert alert-warning" style="text-align: center;">Cambios en techos de componentes de sigade, ajuste los montos</div>
 		</div>
 		<br>
