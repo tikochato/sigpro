@@ -349,11 +349,11 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 						if(response.success){
 							mi.adquisicion.numeroContrato = response.nogInfo[0].numeroContrato;
 							mi.adquisicion.montoContrato = response.nogInfo[0].montoContrato;
-							mi.adquisicion.preparacionDocumentosReal = moment(response.nogInfo[0].preparacionDocumentosReal, 'DD/MM/YYYY').toDate();
-							mi.adquisicion.lanzamientoEventoReal = moment(response.nogInfo[0].lanzamientoEventoReal, 'DD/MM/YYYY').toDate();
-							mi.adquisicion.recepcionOfertasReal = moment(response.nogInfo[0].recepcionOfertasReal, 'DD/MM/YYYY').toDate();
-							mi.adquisicion.adjudicacionReal = moment(response.nogInfo[0].adjudicacionReal, 'DD/MM/YYYY').toDate();
-							mi.adquisicion.firmaContratoReal = moment(response.nogInfo[0].firmaContratoReal, 'DD/MM/YYYY').toDate();
+							mi.adquisicion.preparacionDocumentosReal = response.nogInfo[0].preparacionDocumentosReal != undefined && response.nogInfo[0].preparacionDocumentosReal !='' ? moment(response.nogInfo[0].preparacionDocumentosReal, 'DD/MM/YYYY').toDate() : null;
+							mi.adquisicion.lanzamientoEventoReal = response.nogInfo[0].lanzamientoEventoReal != undefined && response.nogInfo[0].lanzamientoEventoReal != '' ? moment(response.nogInfo[0].lanzamientoEventoReal, 'DD/MM/YYYY').toDate() : null;
+							mi.adquisicion.recepcionOfertasReal = response.nogInfo[0].recepcionOfertasReal != undefined && response.nogInfo[0].recepcionOfertasReal != '' ? moment(response.nogInfo[0].recepcionOfertasReal, 'DD/MM/YYYY').toDate() : null;
+							mi.adquisicion.adjudicacionReal = response.nogInfo[0].adjudicacionReal != undefined && response.nogInfo[0].adjudicacionReal != '' ? moment(response.nogInfo[0].adjudicacionReal, 'DD/MM/YYYY').toDate() : null;
+							mi.adquisicion.firmaContratoReal = response.nogInfo[0].firmaContratoReal != undefined && response.nogInfo[0].firmaContratoReal != '' ? moment(response.nogInfo[0].firmaContratoReal, 'DD/MM/YYYY').toDate() : null;
 							mi.nogValido = false;
 						}else{
 							$utilidades.mensaje('warning','No existe información para ese NOG');
