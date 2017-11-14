@@ -70,6 +70,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	mi.m_organismosEjecutores = [];
 	$scope.m_componentes = [];
 	mi.totalIngresado  = 0;
+	mi.diferenciaCambios = 0;
 	
 	mi.matriz_valid = 1;
 	
@@ -404,7 +405,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 				$http.post('/SPrestamo',param_data).then(
 					function(response) {
 						if (response.data.success) {
-							
+							mi.diferenciaCambios = 0;
 							mi.prestamo.usuarioCreo = response.data.usuarioCreo;
 							mi.prestamo.fechaCreacion = response.data.fechaCreacion;
 							mi.prestamo.fechaActualizacion = response.data.fechaActualizacion;
@@ -418,7 +419,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 								mi.obtenerTotalPrestamos();
 							}
 							
-							if (mi.matriz_valid && !mi.m_existenDatos && mi.totalIngresado  > 0 && $scope.m_componentes.length > 0 ){
+							if (mi.matriz_valid && mi.totalIngresado  > 0 && $scope.m_componentes.length > 0 ){
 								for(c=0; c<$scope.m_componentes.length; c++){
 									$scope.m_componentes[c].descripcion = mi.rowCollectionComponentes[c]!=null ? mi.rowCollectionComponentes[c].descripcion : null;
 								}
@@ -428,6 +429,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 										componentes: JSON.stringify(mi.rowCollectionComponentes),
 										unidadesEjecutoras : JSON.stringify(mi.rowCollectionUE),
 										prestamoId: mi.prestamo.id,
+										existenDatos: mi.m_existenDatos ? 'true' : 'false',
 									    t:moment().unix()
 								};
 					
@@ -435,6 +437,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 									if (response.data.success){
 										//mi.m_organismosEjecutores = response.data.unidadesEjecutoras;
 										//$scope.m_componentes = response.data.componentes;
+										mi.diferenciaCambios = true;
 										mi.m_existenDatos = true; 
 
 										if(mi.child_metas!=null)
@@ -585,7 +588,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		else
 			$utilidades.mensaje('warning','Debe seleccionar el préstamo que desea editar');
 	}
-
+	
 	mi.irATabla = function() {
 		mi.esColapsado=false;
 		mi.esNuevo = false;
@@ -1128,6 +1131,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		
 		mi.cargarMatriz = function(){
 			mi.matriz_valid = null;
+			mi.diferenciaCambios = 0;
 			var parametros = {
 					accion: 'obtenerMatriz',
 					prestamoId: mi.prestamo.id,
@@ -1143,7 +1147,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 					mi.m_existenDatos = response.data.existenDatos;
 					mi.metasCargadas = false;
 					mi.activeTab = 0;
-
+					mi.diferenciaCambios = response.data.diferencia;
 					mi.actualizarTotalesUE();
 				}else{
 					$utilidades.mensaje('warning', 'No se encontraron datos con los parámetros ingresados');

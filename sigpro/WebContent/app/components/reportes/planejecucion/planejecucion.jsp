@@ -30,7 +30,7 @@
 		</shiro:lacksPermission>
 		
 		<div class="panel panel-default">
-			<div class="panel-heading"><h3>Plan de Ejecución</h3></div>
+			<div class="panel-heading"><h3>Información General</h3></div>
 		</div>
 		
 		<br>
@@ -51,7 +51,7 @@
 		    			<div class="btn-group" role="group" aria-label="" >
 							<label class="btn btn-default" ng-click="planc.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!planc.mostrarExport">
 							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-							<label class="btn btn-default" ng-click="planc.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="true" >
+							<label class="btn btn-default" ng-click="planc.exportarJasper()" uib-tooltip="Exportar a PDF" ng-hide="true" >
 								<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 						</div>
 		    		</div>

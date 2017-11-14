@@ -847,7 +847,7 @@ public class SProyecto extends HttpServlet {
 					Iterator<Componente> iterator = componentes.iterator();
 					while(iterator.hasNext()){
 						Componente componente = iterator.next();
-						techoTotal = techoTotal.add(componente.getFuentePrestamo()).add(componente.getFuenteNacional()).add(componente.getFuenteDonacion());
+						techoTotal = componente.getFuentePrestamo() != null && componente.getFuenteDonacion() !=null && componente.getFuenteNacional() != null ? techoTotal.add(componente.getFuentePrestamo()).add(componente.getFuenteNacional()).add(componente.getFuenteDonacion()): null;
 					}
 				}
 			}

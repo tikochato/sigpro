@@ -55,7 +55,7 @@
 								<thead>
 									<tr>
 										<th st-sort="fecha">Fecha</th>
-										<th st-sort="monto">Monto</th>							
+										<th st-sort="monto">Monto ($)</th>							
 										<shiro:hasPermission name="9030">
 										<th width="1%"></th>
 										</shiro:hasPermission>

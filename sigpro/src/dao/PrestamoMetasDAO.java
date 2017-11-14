@@ -4,16 +4,23 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperPrint;
 import pojo.Meta;
 import pojo.MetaAvance;
+import pojo.Proyecto;
 import utilities.CHibernateSession;
+import utilities.CJasperReport;
 import utilities.CLogger;
 import utilities.CMariaDB;
  
@@ -192,5 +199,18 @@ public class PrestamoMetasDAO {
     	}
     	return totalAvance;
     }
+    
+    public static JasperPrint generarJasper(Integer proyectoId, String usuario) throws JRException, SQLException{
+		JasperPrint jasperPrint = null;
+		Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
+		if (proyecto!=null){
+
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("proyectoId",proyectoId);
+			parameters.put("usuario",usuario);
+			jasperPrint = CJasperReport.reporteJasperPrint(CJasperReport.PLANTILLA_METAS, parameters);
+		}
+		return jasperPrint;
+	}
     
 }

@@ -193,13 +193,13 @@
 					<tr class = "{{desembolsosc.clase($index)}}" ng-repeat="row in desembolsosc.tabla track by $index" style="text-align: right;">
 						<td ng-repeat = "col in row track by $index" 
 						 	 nowrap style="font-weight: bold; border-right: 1px solid #ddd; min-width:125px;">
-						 	 <div ng-if=" desembolsosc.esNumero(col) && $parent.$index != 3" >
+						 	 <div ng-if=" desembolsosc.esNumero(col) && ($parent.$index == 0 || $parent.$index == 2)" >
 						 	 	{{col | formatoMillones : desembolsosc.enMillones }}
 						 	 </div>
 						 	 <div ng-if="! desembolsosc.esNumero(col)" >
 						 	 	{{col}}
 						 	 </div>
-						 	 <div ng-if="desembolsosc.esNumero(col) && $parent.$index == 3" >
+						 	 <div ng-if="desembolsosc.esNumero(col) && $parent.$index != 0 && $parent.$index != 2" >
 						 	 	{{col | formatoMillonesDolares : desembolsosc.enMillones }}
 						 	 </div>
 						 </td>
@@ -234,7 +234,7 @@
 						<td ng-repeat = "col in row track by $index" 
 						 	 nowrap style="font-weight: bold; border-right: 1px solid #ddd; min-width:125px;">
 						 	 <div ng-if=" desembolsosc.esNumero(col) && $parent.$index != 3" >
-						 	 	{{col | formatoMillones : desembolsosc.enMillones }}
+						 	 	{{col | formatoMillonesDolares : desembolsosc.enMillones }}
 						 	 </div>
 						 	 <div ng-if="! desembolsosc.esNumero(col)" >
 						 	 	{{col}}

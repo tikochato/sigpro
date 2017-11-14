@@ -24,7 +24,7 @@ app.controller('planejecucionController',['$scope','$rootScope','$http','$interv
 	
 	mi.radarColors = ['#88b4df','#8ecf4c'];
 	 
-	$window.document.title = $utilidades.sistema_nombre+' - Plan de Ejecución';
+	$window.document.title = $utilidades.sistema_nombre+' - Información General';
 	i18nService.setCurrentLang('es');
 	
 	mi.radarOptions = {
@@ -147,6 +147,13 @@ app.controller('planejecucionController',['$scope','$rootScope','$http','$interv
 			 	}
 		  	);
 		};
+		
+		mi.exportarJasper = function(){
+			var anchor = angular.element('<a/>');
+			  anchor.attr({
+		         href: '/app/components/reportes/jasper/reporte.jsp?reporte=1&proyecto='+mi.prestamoId
+			  })[0].click();
+		}
 		
 	
 	mi.setPorcentaje = function(tipo){

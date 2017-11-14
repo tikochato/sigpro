@@ -146,7 +146,11 @@
 		</div>
 		<div class="col-sm-12" ng-if="prestamoc.proyecto.projectCargado==1">
 				<div class="componente_sigade">Estructura importada desde un archivo de Project</div>
-			</div>
+		</div>
+		<br>
+		<div class="col-sm-12" ng-if="prestamoc.diferenciaCambios != 0 && !prestamo.esNuevo">
+				<div class="alert alert-warning" style="text-align: center;">Cambios en techos de componentes de sigade, ajuste los montos</div>
+		</div>
 		<br>
 		<div class="col-sm-12">
 			<form name="prestamoc.mForm" style="margin-top: 10px;">
@@ -252,7 +256,6 @@
 							</div>
 						</div>
 					</div>
-					
 					
 					
 					<div class="row" style="margin-top: 15px;">
@@ -1199,7 +1202,6 @@
 															ng-value="ue.prestamo"
 															onblur="this.setAttribute('value', this.value);"
 															ui-number-mask="2"
-															ng-readonly="prestamoc.m_existenDatos"
 															ng-change="prestamoc.actualizarTotalesUE()"
 														/>
 								 					</td>

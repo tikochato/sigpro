@@ -1093,6 +1093,13 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			$rootScope.$emit("recargarArbol",mi.proyecto.id);
 		}
 		
+		mi.exportarJasper = function(){
+			var anchor = angular.element('<a/>');
+			  anchor.attr({
+		         href: '/app/components/reportes/jasper/reporte.jsp?reporte=0&proyecto='+mi.proyecto.id
+			  })[0].click();
+		}
+		
 } ]);
 
 app.controller('buscarPorProyecto', [ '$uibModalInstance',

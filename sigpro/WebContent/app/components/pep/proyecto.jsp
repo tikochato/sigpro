@@ -141,8 +141,10 @@
 				<span class="glyphicon glyphicon-time"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAMapa(controller.proyecto.id) : ''" uib-tooltip="Mapa" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-globe"></span></label>
-				<label class="btn btn-default" ng-click="controller.botones ? controller.irAGantt(controller.proyecto.id) : ''" uib-tooltip="Gantt" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-click="controller.botones ? controller.irAGantt(controller.proyecto.id) : ''" uib-tooltip="Ir a Gantt" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-indent-left"></span></label>
+				<label class="btn btn-default" ng-click="ganttc.exportar()"><span class="glyphicon glyphicon-paste" aria-hidden="true"
+				uib-tooltip="Exportar Gantt"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAKanban(controller.proyecto.id) : ''" uib-tooltip="Cartelera de Actividades" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-blackboard"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAAgenda(controller.proyecto.id) : ''" uib-tooltip="Agenda" tooltip-placement="bottom">
@@ -156,6 +158,8 @@
 				<span class="glyphicon glyphicon-wrench"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAMiembrosUnidadEjecutora(controller.proyecto.id) : ''" uib-tooltip="Miembros de la Unidad Ejecutora" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-user"></span></label>
+				<label class="btn btn-default" ng-click="controller.exportarJasper()" uib-tooltip="Plan Anual de Ejecución">
+				<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 		</div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="24020">
