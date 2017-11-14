@@ -269,7 +269,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font isBold="true"/>
+						<font fontName="Arial" isBold="true"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Componente: ".concat( $F{componente})]]></textFieldExpression>
@@ -294,7 +294,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font isBold="true"/>
+						<font fontName="Arial" isBold="true"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Producto: ".concat( $F{producto})]]></textFieldExpression>
@@ -310,7 +310,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 			<staticText>
 				<reportElement mode="Transparent" x="235" y="0" width="290" height="30" backcolor="#0D0D0D" uuid="f16d3680-349f-4247-a4ad-b7ebcf351e51"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font size="16" isBold="true"/>
+					<font fontName="Arial" size="16" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Metas Año Fiscal]]></text>
 			</staticText>
@@ -330,7 +330,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
+					<font fontName="Arial" size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Meta]]></text>
 			</staticText>
@@ -346,7 +346,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
+					<font fontName="Arial" size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[% Avance]]></text>
 			</staticText>
@@ -364,7 +364,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#050505"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Real]]></text>
 			</staticText>
@@ -382,7 +382,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#050505"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Planificado]]></text>
 			</staticText>
@@ -400,7 +400,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#050505"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Real]]></text>
 			</staticText>
@@ -418,7 +418,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#050505"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Planificado]]></text>
 			</staticText>
@@ -436,7 +436,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#050505"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Real]]></text>
 			</staticText>
@@ -452,7 +452,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
+					<font fontName="Arial" size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Unidad de Medida]]></text>
 			</staticText>
@@ -470,7 +470,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#050505"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Planificado]]></text>
 			</staticText>
@@ -488,7 +488,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#050505"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Planificado]]></text>
 			</staticText>
@@ -506,7 +506,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#050505"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Real]]></text>
 			</staticText>
@@ -522,7 +522,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
+					<font fontName="Arial" size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Meta Final]]></text>
 			</staticText>
@@ -540,7 +540,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#050505"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Cuatrimestre I]]></text>
 			</staticText>
@@ -558,7 +558,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#050505"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Cuatrimestre II]]></text>
 			</staticText>
@@ -576,7 +576,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#050505"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Cuatrimestre III]]></text>
 			</staticText>
@@ -594,7 +594,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#050505"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Meta Anual]]></text>
 			</staticText>
@@ -615,7 +615,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="9"/>
+					<font fontName="Arial" size="9"/>
 					<paragraph leftIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{unidadmedida}]]></textFieldExpression>
@@ -633,7 +633,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="9"/>
+					<font fontName="Arial" size="9"/>
 					<paragraph leftIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{meta}]]></textFieldExpression>
@@ -650,7 +650,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
+					<font fontName="Arial" size="9" isBold="true"/>
 					<paragraph leftIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{meta_final}]]></textFieldExpression>
@@ -667,7 +667,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="9"/>
+					<font fontName="Arial" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{P1}]]></textFieldExpression>
 			</textField>
@@ -683,7 +683,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="9"/>
+					<font fontName="Arial" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{P2}]]></textFieldExpression>
 			</textField>
@@ -699,7 +699,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="9"/>
+					<font fontName="Arial" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{P3}]]></textFieldExpression>
 			</textField>
@@ -714,7 +714,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="9"/>
+					<font fontName="Arial" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{R1}]]></textFieldExpression>
 			</textField>
@@ -730,7 +730,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="9"/>
+					<font fontName="Arial" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{R1}]]></textFieldExpression>
 			</textField>
@@ -746,7 +746,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="9"/>
+					<font fontName="Arial" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{R1}]]></textFieldExpression>
 			</textField>
@@ -759,7 +759,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
+					<font fontName="Arial" size="9" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PAnual}]]></textFieldExpression>
 			</textField>
@@ -772,7 +772,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
+					<font fontName="Arial" size="9" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{RAnual}]]></textFieldExpression>
 			</textField>
@@ -788,7 +788,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
+					<font fontName="Arial" size="9" isBold="true"/>
 					<paragraph leftIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{porcentajeAvance}+"%"]]></textFieldExpression>
@@ -803,7 +803,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
@@ -812,7 +812,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[Fecha generación:]]></text>
 			</staticText>
@@ -821,7 +821,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
@@ -830,7 +830,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
 			</textField>
@@ -839,7 +839,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[Usuario:]]></text>
 			</staticText>

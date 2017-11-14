@@ -181,7 +181,7 @@ WHERE p.id= $P{proyectoId}]]>
 						<rightPen lineWidth="1.0"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font size="8"/>
+						<font fontName="Arial" size="8"/>
 						<paragraph leftIndent="3"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{componente}]]></textFieldExpression>
@@ -204,7 +204,7 @@ WHERE p.id= $P{proyectoId}]]>
 						<rightPen lineWidth="1.0"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font size="8"/>
+						<font fontName="Arial" size="8"/>
 						<paragraph leftIndent="3"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{producto}]]></textFieldExpression>
@@ -220,7 +220,7 @@ WHERE p.id= $P{proyectoId}]]>
 			<staticText>
 				<reportElement x="193" y="27" width="373" height="33" uuid="a0dd8337-f70d-477e-83dc-c094766289d7"/>
 				<textElement markup="none">
-					<font size="25"/>
+					<font fontName="Arial" size="25"/>
 				</textElement>
 				<text><![CDATA[Plan de Adquisiciones año Fiscal]]></text>
 			</staticText>
@@ -236,7 +236,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[Adquisición]]></text>
 			</staticText>
@@ -251,7 +251,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<leftPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[Método]]></text>
 			</staticText>
@@ -266,7 +266,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<leftPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[Preparación de documentos]]></text>
 			</staticText>
@@ -281,7 +281,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<leftPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[Recepción y evaluación de Ofertas]]></text>
 			</staticText>
@@ -296,7 +296,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<leftPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[Adjudicación]]></text>
 			</staticText>
@@ -311,7 +311,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<leftPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[Firma de contrato]]></text>
 			</staticText>
@@ -326,7 +326,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<leftPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[Planificado]]></text>
 			</staticText>
@@ -341,7 +341,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<leftPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[Real]]></text>
 			</staticText>
@@ -357,7 +357,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<leftPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[Planificado]]></text>
 			</staticText>
@@ -373,7 +373,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<leftPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[Real]]></text>
 			</staticText>
@@ -389,7 +389,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<leftPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[Planificado]]></text>
 			</staticText>
@@ -406,7 +406,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[Real]]></text>
 			</staticText>
@@ -422,7 +422,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<leftPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[Planificado]]></text>
 			</staticText>
@@ -438,7 +438,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<leftPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[Real]]></text>
 			</staticText>
@@ -453,7 +453,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<leftPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[Planificado]]></text>
 			</staticText>
@@ -468,7 +468,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<leftPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[Real]]></text>
 			</staticText>
@@ -483,7 +483,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<leftPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[Lanzamiento de Evento]]></text>
 			</staticText>
@@ -503,7 +503,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 					<paragraph leftIndent="3"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{subproducto}]]></textFieldExpression>
@@ -521,7 +521,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 					<paragraph leftIndent="3"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{metodo}]]></textFieldExpression>
@@ -537,7 +537,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{preparacion_doc_planificado}]]></textFieldExpression>
 			</textField>
@@ -552,7 +552,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{lanzamiento_evento_real}]]></textFieldExpression>
 			</textField>
@@ -567,7 +567,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{recepcion_ofertas_planificado}]]></textFieldExpression>
 			</textField>
@@ -582,7 +582,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{recepcion_ofertas_real}]]></textFieldExpression>
 			</textField>
@@ -597,7 +597,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{adjudicacion_planificado}]]></textFieldExpression>
 			</textField>
@@ -612,7 +612,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{adjudicacion_real}]]></textFieldExpression>
 			</textField>
@@ -627,7 +627,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{firma_contrato_planificado}]]></textFieldExpression>
 			</textField>
@@ -642,7 +642,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{firma_contrato_real}]]></textFieldExpression>
 			</textField>
@@ -657,7 +657,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{preparacion_doc_real}]]></textFieldExpression>
 			</textField>
@@ -672,7 +672,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{lanzamiento_evento_planificado}]]></textFieldExpression>
 			</textField>
@@ -686,7 +686,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
@@ -695,7 +695,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[Fecha generación:]]></text>
 			</staticText>
@@ -704,7 +704,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[Usuario:]]></text>
 			</staticText>
@@ -713,7 +713,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
 			</textField>
@@ -722,7 +722,7 @@ WHERE p.id= $P{proyectoId}]]>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
-					<font size="8"/>
+					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
