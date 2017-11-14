@@ -1110,7 +1110,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 						    anchor.attr({
 						         href: 'data:application/xml,' + response.data,
 						         target: '_blank',
-						         download: mi.proyectoNombre + '.xml'
+						         download: mi.proyecto.nombre + '.xml'
 						     })[0].click();
 						  }.bind(this), function errorCallback(response){
 						 		
