@@ -271,7 +271,8 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		};
 		
 		mi.agregarPagos = function() {
-			if(mi.adquisicion.montoContrato != null){
+			var montoContrato = mi.montoContrato();
+			if(montoContrato != null && montoContrato > 0){
 				var modalInstance = $uibModal.open({
 					animation : 'true',
 					ariaLabelledBy : 'modal-title',
@@ -289,7 +290,8 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 					    	return mi.totalPagos;
 					    },
 					    montoContrato: function(){
-					    	return mi.adquisicion.montoContrato;
+					    	//return mi.adquisicion.montoContrato;
+					    	return mi.montoContrato();
 					    }
 					  }
 				});
@@ -302,6 +304,18 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 			}else
 				$utilidades.mensaje('warning','Para agregar pagos, ingrese Monto del contrato');
 		};
+		
+		mi.montoContrato = function(){
+			var totalMonto = 0;
+			if(mi.adquisicion.montoContrato != null && mi.adquisicion.montoContrato > 0)
+				return mi.adquisicion.montoContrato;
+			else{
+				for(x in mi.infoNogs){
+					totalMonto += mi.infoNogs[x].montoContrato;
+				}
+				return totalMonto;
+			}
+		}
 		
 		mi.actualizaMontos=function(control){
 			switch(control){
