@@ -19,7 +19,7 @@
 				<br/>
 				<div class="btn-group btn-group-sm">
 			       <shiro:hasPermission name="17040">
-			       		<label class="btn btn-default" ng-click="metac.nuevaMeta()" uib-tooltip="Nueva Meta">
+			       		<label class="btn btn-default" ng-click="metac.nuevaMeta()" uib-tooltip="Nueva">
 						<span class="glyphicon glyphicon-plus"></span></label>
 			       </shiro:hasPermission> 
 			   	</div>				
@@ -134,7 +134,7 @@
 			         			</tr>
 							</thead>
 							<tbody >
-								<tr>
+								<tr ng-if="metac.objeto_tipo!=-1">
 						      		<td style="vertical-align: middle;">Planificado</td>
 						      		<td>
 						      			<div ng-switch="metac.meta.datoTipoId.nombre">

@@ -36,7 +36,7 @@ public class ComponenteSigadeDAO {
 		List<ComponenteSigade> listRet = null;
 		try{
 			String Str_query = String.join(" ", "Select c FROM ComponenteSigade c",
-					"where c.codigoPresupuestario = ?1 and c.numeroComponente = ?2");
+					"where c.codigoPresupuestario = ?1 and c.numeroComponente = ?2 and c.estado = 1");
 			
 			Query<ComponenteSigade> criteria = session.createQuery(Str_query, ComponenteSigade.class);
 			criteria.setParameter(1, codigoPresupuestario);
@@ -54,6 +54,26 @@ public class ComponenteSigadeDAO {
 		return ret;
 	}
 	
-	
+	public static ComponenteSigade getComponenteSigadePorId(Integer id){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		ComponenteSigade ret = null;
+		List<ComponenteSigade> listRet = null;
+		try{
+			String Str_query = String.join(" ", "Select c FROM ComponenteSigade c",
+					"where c.id = ?1");
+			
+			Query<ComponenteSigade> criteria = session.createQuery(Str_query, ComponenteSigade.class);
+			criteria.setParameter(1, id);
+			listRet = criteria.getResultList();
+			if(listRet != null && !listRet.isEmpty()){
+				ret = listRet.get(0);
+			}
+		}catch(Exception e){
+			CLogger.write("3", ComponenteSigadeDAO.class, e);
+		}finally{
+			session.close();
+		}
+		return ret;
+	}
 
 }

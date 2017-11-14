@@ -101,7 +101,9 @@
 					   <label class="floating-label">* Nombre</label>
 					</div>
 					<div class="form-group">
-					   <input type="text" name="inombre"  class="inputText" id="inombre" ng-model="controller.categoriaAdquisicion.descripcion" ng-value="controller.categoriaAdquisicion.descripcion"  onblur="this.setAttribute('value', this.value);">
+					   <textarea class="inputText" rows="4"
+					   ng-model="controller.categoriaAdquisicion.descripcion" ng-value="controller.categoriaAdquisicion.descripcion"   
+					   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
 					   <label class="floating-label">Descripción</label>
 					</div>
 				</div>

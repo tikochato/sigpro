@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 24, 2017 11:46:58 AM by Hibernate Tools 5.2.3.Final
+// Generated Nov 12, 2017 1:30:38 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class Subcomponente implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8737237607204197616L;
+	private static final long serialVersionUID = 743912262643170449L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Componente componente;
@@ -60,6 +60,8 @@ public class Subcomponente implements java.io.Serializable {
 	private Integer orden;
 	private String treePath;
 	private Integer nivel;
+	private Date fechaInicioReal;
+	private Date fechaFinReal;
 	private Set<SubcomponenteUsuario> subcomponenteUsuarios = new HashSet<SubcomponenteUsuario>(0);
 	private Set<Producto> productos = new HashSet<Producto>(0);
 	private Set<SubcomponentePropiedadValor> subcomponentePropiedadValors = new HashSet<SubcomponentePropiedadValor>(0);
@@ -84,8 +86,8 @@ public class Subcomponente implements java.io.Serializable {
 			Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra, String latitud,
 			String longitud, BigDecimal costo, Integer renglon, Integer ubicacionGeografica, Date fechaInicio,
 			Date fechaFin, int duracion, String duracionDimension, Integer orden, String treePath, Integer nivel,
-			Set<SubcomponenteUsuario> subcomponenteUsuarios, Set<Producto> productos,
-			Set<SubcomponentePropiedadValor> subcomponentePropiedadValors) {
+			Date fechaInicioReal, Date fechaFinReal, Set<SubcomponenteUsuario> subcomponenteUsuarios,
+			Set<Producto> productos, Set<SubcomponentePropiedadValor> subcomponentePropiedadValors) {
 		this.acumulacionCosto = acumulacionCosto;
 		this.componente = componente;
 		this.subcomponenteTipo = subcomponenteTipo;
@@ -115,6 +117,8 @@ public class Subcomponente implements java.io.Serializable {
 		this.orden = orden;
 		this.treePath = treePath;
 		this.nivel = nivel;
+		this.fechaInicioReal = fechaInicioReal;
+		this.fechaFinReal = fechaFinReal;
 		this.subcomponenteUsuarios = subcomponenteUsuarios;
 		this.productos = productos;
 		this.subcomponentePropiedadValors = subcomponentePropiedadValors;
@@ -401,6 +405,26 @@ public class Subcomponente implements java.io.Serializable {
 
 	public void setNivel(Integer nivel) {
 		this.nivel = nivel;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_inicio_real", length = 19)
+	public Date getFechaInicioReal() {
+		return this.fechaInicioReal;
+	}
+
+	public void setFechaInicioReal(Date fechaInicioReal) {
+		this.fechaInicioReal = fechaInicioReal;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_fin_real", length = 19)
+	public Date getFechaFinReal() {
+		return this.fechaFinReal;
+	}
+
+	public void setFechaFinReal(Date fechaFinReal) {
+		this.fechaFinReal = fechaFinReal;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "subcomponente")

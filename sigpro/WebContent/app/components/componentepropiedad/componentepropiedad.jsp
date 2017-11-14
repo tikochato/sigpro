@@ -103,9 +103,9 @@
 						    <label for="nombre" class="floating-label">* Tipo dato</label>
 						</div>
 						<div class="form-group">
-						   <input type="text" name="descripcion"  class="inputText" id="descripcion" 
-						     ng-model="componentepropiedadc.componentepropiedad.descripcion" ng-value="componentepropiedadc.componentepropiedad.descripcion"   
-						     onblur="this.setAttribute('value', this.value);"  >
+						   <textarea class="inputText" rows="4"
+						   ng-model="componentepropiedadc.componentepropiedad.descripcion" ng-value="componentepropiedadc.componentepropiedad.descripcion"   
+						   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
 						   <label class="floating-label">Descripción</label>
 						</div>
 						<br/>

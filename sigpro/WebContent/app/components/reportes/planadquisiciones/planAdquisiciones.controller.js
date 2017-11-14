@@ -647,6 +647,7 @@ app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http',
 				fechaInicio: mi.fechaInicio,
 				fechaFin: mi.fechaFin,
 				tipoVisualizacion: 0,
+				idPrestamo: mi.pepId,
 				t:moment().unix()
 			}).then(
 				function successCallback(response) {

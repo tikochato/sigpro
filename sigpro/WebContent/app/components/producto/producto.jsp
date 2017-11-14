@@ -201,21 +201,17 @@
 			          	<label  class="floating-label">Coordenadas</label>
 					</div>
 						
-					<div class="form-group" >
-						<input type="text" class="inputText" ng-model="producto.producto.descripcion" ng-value="producto.producto.descripcion" onblur="this.setAttribute('value', this.value);"/>
-						<label for="campo2" class="floating-label"> Descripción</label> 
-					</div>
 			        <div class="form-group" >
 				       <input type="text" class="inputText" ng-model="producto.producto.costo" ng-value="producto.producto.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left"
 				       		ng-required="producto.producto.acumulacionCostoNombre != null"
 							ui-number-mask="2" ng-readonly="producto.producto.tieneHijos"/>
-				       <label for="iprog" class="floating-label">{{producto.producto.acumulacionCostoNombre  != null ?"* Costo":"Costo"}}</label>
+				       <label for="iprog" class="floating-label">{{producto.producto.acumulacionCostoNombre  != null ?"* Monto Planificado":"Monto Planificado"}}</label>
 					</div>
 						
 				    <div class="form-group">
 	            		<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="producto.cambioAcumulacionCosto"
 						  local-data="producto.acumulacionesCosto" search-fields="nombre" title-field="nombre" field-required="producto.producto.costo!=null && producto.producto.costo>0" 
-						  field-label="{{producto.producto.costo!=null && producto.producto.costo>0 ? '* ':''}}Tipo de Acumulación Costo"
+						  field-label="{{producto.producto.costo!=null && producto.producto.costo>0 ? '* ':''}}Tipo de Acumulación Monto Planificado"
 						  minlength="1" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
 						  initial-value="producto.producto.acumulacionCostoNombre" focus-out="producto.blurCategoria()" input-name="acumulacionCosto"></div>
 					</div>
@@ -269,6 +265,33 @@
 							  <label for="campo.id" class="floating-label">* Fecha de Fin</label>
 							</div>
 						</div>
+						
+						<div class="col-sm-6">
+							<div class="form-group" >
+							  <input type="text"  class="inputText" uib-datepicker-popup="{{producto.formatofecha}}" alt-input-formats="{{producto.altformatofecha}}"
+							  			ng-model="producto.producto.fechaInicioReal"
+							            datepicker-options="producto.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  
+							            ng-value="producto.producto.fechaInicioReal" onblur="this.setAttribute('value', this.value);"
+						            	readonly="readonly"/>
+							            <span class="label-icon" tabindex="-1">
+							              <i class="glyphicon glyphicon-calendar"></i>
+							            </span>
+							  <label class="floating-label">Fecha de Inicio Real</label>
+							</div>
+						</div>
+							
+						<div class="col-sm-6">
+							<div class="form-group" >
+							  <input type="text"  class="inputText" uib-datepicker-popup="{{producto.formatofecha}}"
+							  			ng-model="producto.producto.fechaFinReal"
+							            datepicker-options="producto.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+							            readonly="readonly" ng-value="producto.producto.fechaFinReal" onblur="this.setAttribute('value', this.value);"/>
+							            <span class="label-icon" tabindex="-1">
+							              <i class="glyphicon glyphicon-calendar"></i>
+							            </span>
+							  <label class="floating-label">Fecha de Fin Real</label>
+							</div>
+						</div>
 					</div>
 					<div class="form-group" ng-repeat="campo in producto.camposdinamicos">
 						<div ng-switch="campo.tipo">
@@ -310,6 +333,13 @@
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 							</div>
+					</div>
+					
+					<div class="form-group">
+					   <textarea class="inputText" rows="4"
+					   ng-model="producto.producto.descripcion" ng-value="producto.producto.descripcion"   
+					   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+					   <label class="floating-label">Descripción</label>
 					</div>
 				<div class="panel panel-default">
 					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>

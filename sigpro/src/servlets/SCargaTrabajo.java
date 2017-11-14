@@ -533,8 +533,9 @@ public class SCargaTrabajo extends HttpServlet {
 			headers = generarHeaders();
 			datos = generarDatos(idPrestamos, idComponentes, idSubComponentes, idProductos, idSubproductos, anio_inicio, anio_fin, usuario);
 			CGraficaExcel grafica = generarGrafica(datos);
-			excel = new CExcel("Administración Transaccional", false, grafica);
-			wb=excel.generateExcelOfData(datos, "Carga de Trabajo", headers, null, true, usuario);
+			excel = new CExcel("Carga de Trabajo", false, grafica);
+			Proyecto proyecto = ProyectoDAO.getProyecto(idPrestamos);
+			wb=excel.generateExcelOfData(datos, "Carga de Trabajo - "+proyecto.getNombre(), headers, null, true, usuario);
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){

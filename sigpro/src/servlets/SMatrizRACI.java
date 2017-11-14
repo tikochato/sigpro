@@ -400,7 +400,8 @@ public class SMatrizRACI extends HttpServlet {
 			headers = generarHeaders(colaboradores);
 			datos = generarDatos(idPrestamo, colaboradores, usuario);
 			excel = new CExcel("Matriz RACI", false, null);
-			wb=excel.generateExcelOfData(datos, "Matriz RACI", headers, null, true, usuario);
+			Proyecto proyecto = ProyectoDAO.getProyecto(idPrestamo);
+			wb=excel.generateExcelOfData(datos, "Matriz RACI - "+proyecto.getNombre(), headers, null, true, usuario);
 			wb.write(outByteStream);
 			outArray = Base64.encode(outByteStream.toByteArray());
 			

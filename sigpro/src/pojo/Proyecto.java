@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 24, 2017 11:46:58 AM by Hibernate Tools 5.2.3.Final
+// Generated Nov 12, 2017 1:30:38 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class Proyecto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 2187852469205990698L;
+	private static final long serialVersionUID = -5881891740626602873L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Colaborador colaborador;
@@ -68,6 +68,12 @@ public class Proyecto implements java.io.Serializable {
 	private Integer nivel;
 	private Integer ejecucionFisicaReal;
 	private Integer projectCargado;
+	private String observaciones;
+	private Integer coordinador;
+	private Date fechaElegibilidad;
+	private Date fechaCierre;
+	private Date fechaInicioReal;
+	private Date fechaFinReal;
 	private Set<Desembolso> desembolsos = new HashSet<Desembolso>(0);
 	private Set<Hito> hitos = new HashSet<Hito>(0);
 	private Set<ProgramaProyecto> programaProyectos = new HashSet<ProgramaProyecto>(0);
@@ -100,9 +106,10 @@ public class Proyecto implements java.io.Serializable {
 			String latitud, String longitud, String objetivo, String enunciadoAlcance, BigDecimal costo,
 			String objetivoEspecifico, String visionGeneral, Integer renglon, Integer ubicacionGeografica,
 			Date fechaInicio, Date fechaFin, int duracion, String duracionDimension, Integer orden, String treePath,
-			Integer nivel, Integer ejecucionFisicaReal, Integer projectCargado, Set<Desembolso> desembolsos,
-			Set<Hito> hitos, Set<ProgramaProyecto> programaProyectos, Set<MatrizRaci> matrizRacis,
-			Set<ProyectoMiembro> proyectoMiembros, Set<ProyectoImpacto> proyectoImpactos,
+			Integer nivel, Integer ejecucionFisicaReal, Integer projectCargado, String observaciones,
+			Integer coordinador, Date fechaElegibilidad, Date fechaCierre, Date fechaInicioReal, Date fechaFinReal,
+			Set<Desembolso> desembolsos, Set<Hito> hitos, Set<ProgramaProyecto> programaProyectos,
+			Set<MatrizRaci> matrizRacis, Set<ProyectoMiembro> proyectoMiembros, Set<ProyectoImpacto> proyectoImpactos,
 			Set<ProyectoRolColaborador> proyectoRolColaboradors, Set<ProyectoPropiedadValor> proyectoPropiedadValors,
 			Set<ProyectoUsuario> proyectoUsuarios, Set<Componente> componentes) {
 		this.acumulacionCosto = acumulacionCosto;
@@ -142,6 +149,12 @@ public class Proyecto implements java.io.Serializable {
 		this.nivel = nivel;
 		this.ejecucionFisicaReal = ejecucionFisicaReal;
 		this.projectCargado = projectCargado;
+		this.observaciones = observaciones;
+		this.coordinador = coordinador;
+		this.fechaElegibilidad = fechaElegibilidad;
+		this.fechaCierre = fechaCierre;
+		this.fechaInicioReal = fechaInicioReal;
+		this.fechaFinReal = fechaFinReal;
 		this.desembolsos = desembolsos;
 		this.hitos = hitos;
 		this.programaProyectos = programaProyectos;
@@ -509,6 +522,64 @@ public class Proyecto implements java.io.Serializable {
 
 	public void setProjectCargado(Integer projectCargado) {
 		this.projectCargado = projectCargado;
+	}
+
+	@Column(name = "observaciones", length = 2000)
+	public String getObservaciones() {
+		return this.observaciones;
+	}
+
+	public void setObservaciones(String observaciones) {
+		this.observaciones = observaciones;
+	}
+
+	@Column(name = "coordinador")
+	public Integer getCoordinador() {
+		return this.coordinador;
+	}
+
+	public void setCoordinador(Integer coordinador) {
+		this.coordinador = coordinador;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_elegibilidad", length = 19)
+	public Date getFechaElegibilidad() {
+		return this.fechaElegibilidad;
+	}
+
+	public void setFechaElegibilidad(Date fechaElegibilidad) {
+		this.fechaElegibilidad = fechaElegibilidad;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_cierre", length = 19)
+	public Date getFechaCierre() {
+		return this.fechaCierre;
+	}
+
+	public void setFechaCierre(Date fechaCierre) {
+		this.fechaCierre = fechaCierre;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_inicio_real", length = 19)
+	public Date getFechaInicioReal() {
+		return this.fechaInicioReal;
+	}
+
+	public void setFechaInicioReal(Date fechaInicioReal) {
+		this.fechaInicioReal = fechaInicioReal;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_fin_real", length = 19)
+	public Date getFechaFinReal() {
+		return this.fechaFinReal;
+	}
+
+	public void setFechaFinReal(Date fechaFinReal) {
+		this.fechaFinReal = fechaFinReal;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")

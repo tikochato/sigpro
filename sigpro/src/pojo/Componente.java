@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 24, 2017 11:46:58 AM by Hibernate Tools 5.2.3.Final
+// Generated Nov 12, 2017 1:30:38 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class Componente implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5917901801607604939L;
+	private static final long serialVersionUID = 4278172737016883203L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private ComponenteSigade componenteSigade;
@@ -65,6 +65,8 @@ public class Componente implements java.io.Serializable {
 	private BigDecimal fuentePrestamo;
 	private BigDecimal fuenteDonacion;
 	private BigDecimal fuenteNacional;
+	private Date fechaInicioReal;
+	private Date fechaFinReal;
 	private Set<ComponenteUsuario> componenteUsuarios = new HashSet<ComponenteUsuario>(0);
 	private Set<Producto> productos = new HashSet<Producto>(0);
 	private Set<ComponentePropiedadValor> componentePropiedadValors = new HashSet<ComponentePropiedadValor>(0);
@@ -91,9 +93,9 @@ public class Componente implements java.io.Serializable {
 			Integer actividad, Integer obra, String latitud, String longitud, BigDecimal costo, Integer renglon,
 			Integer ubicacionGeografica, Date fechaInicio, Date fechaFin, int duracion, String duracionDimension,
 			Integer orden, String treePath, Integer nivel, Integer esDeSigade, BigDecimal fuentePrestamo,
-			BigDecimal fuenteDonacion, BigDecimal fuenteNacional, Set<ComponenteUsuario> componenteUsuarios,
-			Set<Producto> productos, Set<ComponentePropiedadValor> componentePropiedadValors,
-			Set<Subcomponente> subcomponentes) {
+			BigDecimal fuenteDonacion, BigDecimal fuenteNacional, Date fechaInicioReal, Date fechaFinReal,
+			Set<ComponenteUsuario> componenteUsuarios, Set<Producto> productos,
+			Set<ComponentePropiedadValor> componentePropiedadValors, Set<Subcomponente> subcomponentes) {
 		this.acumulacionCosto = acumulacionCosto;
 		this.componenteSigade = componenteSigade;
 		this.componenteTipo = componenteTipo;
@@ -128,6 +130,8 @@ public class Componente implements java.io.Serializable {
 		this.fuentePrestamo = fuentePrestamo;
 		this.fuenteDonacion = fuenteDonacion;
 		this.fuenteNacional = fuenteNacional;
+		this.fechaInicioReal = fechaInicioReal;
+		this.fechaFinReal = fechaFinReal;
 		this.componenteUsuarios = componenteUsuarios;
 		this.productos = productos;
 		this.componentePropiedadValors = componentePropiedadValors;
@@ -461,6 +465,26 @@ public class Componente implements java.io.Serializable {
 
 	public void setFuenteNacional(BigDecimal fuenteNacional) {
 		this.fuenteNacional = fuenteNacional;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_inicio_real", length = 19)
+	public Date getFechaInicioReal() {
+		return this.fechaInicioReal;
+	}
+
+	public void setFechaInicioReal(Date fechaInicioReal) {
+		this.fechaInicioReal = fechaInicioReal;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_fin_real", length = 19)
+	public Date getFechaFinReal() {
+		return this.fechaFinReal;
+	}
+
+	public void setFechaFinReal(Date fechaFinReal) {
+		this.fechaFinReal = fechaFinReal;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "componente")

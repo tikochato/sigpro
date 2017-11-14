@@ -277,4 +277,22 @@ public class PlanAdquisicionDAO {
 		return ret;
 	}
 	
+	public static List<?> getInfoNog(Integer nog){
+		List<?> ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "Select * from sipro_analytic.mv_gc_adquisiciones",
+					"where nog=?1");
+			Query<?> criteria = session.createNativeQuery(query);
+			criteria.setParameter("1", nog);
+			ret = criteria.getResultList();
+		}catch(Exception e){
+			CLogger.write("9", PlanAdquisicionDAO.class, e);
+		}finally{
+			session.close();
+		}
+		
+		return ret;
+	}
+	
 }

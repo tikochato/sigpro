@@ -4,8 +4,12 @@ import java.util.List;
 import javax.persistence.NoResultException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+
 import pojo.ObjetoPrestamo;
 import pojo.Prestamo;
+import pojo.PrestamoUsuario;
+import pojo.PrestamoUsuarioId;
+import pojo.Usuario;
 import utilities.CHibernateSession;
 import utilities.CLogger;
 
@@ -56,6 +60,27 @@ public class PrestamoDAO {
 		}
 		return ret;
 	}
+	
+	public static Prestamo getObjetoPrestamoPorId(int idPrestamo){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		Prestamo ret = null;
+		try{
+			Query<Prestamo> criteria = session.createQuery("FROM Prestamo p "
+					+ " where p.id= :idPrestamo "
+					+ " and p.estado= 1", Prestamo.class);
+			criteria.setParameter("idPrestamo", idPrestamo);
+			ret = criteria.getSingleResult();
+		} catch (NoResultException e){
+		}
+		catch(Throwable e){
+			e.printStackTrace();
+			CLogger.write("1", PrestamoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 
 	public static boolean guardarPrestamo(Prestamo prestamo){
 		boolean ret = false;
@@ -63,6 +88,11 @@ public class PrestamoDAO {
 		try{
 			session.beginTransaction();
 			session.saveOrUpdate(prestamo);
+			
+			Usuario usu = UsuarioDAO.getUsuario( prestamo.getUsuarioCreo());
+			PrestamoUsuario pu = new PrestamoUsuario(new PrestamoUsuarioId(prestamo.getId(), prestamo.getUsuarioCreo()), prestamo,usu);
+			session.saveOrUpdate(pu);
+			
 			session.getTransaction().commit();
 			ret = true;
 		}
@@ -95,8 +125,8 @@ public class PrestamoDAO {
 			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
 				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(p.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
-//			if(usuario!=null)
-//				query = String.join("", query, " AND p.id in (SELECT u.id.prestamoid from PrestamoUsuario u where u.id.usuario=:usuario )");
+			if(usuario!=null)
+				query = String.join("", query, " AND p.id in (SELECT u.id.prestamoid from PrestamoUsuario u where u.id.usuario=:usuario )");
 			
 			query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) :
 				String.join(" ", query, "ORDER BY fecha_creacion ASC");
@@ -104,9 +134,9 @@ public class PrestamoDAO {
 			Query<Prestamo> criteria = session.createQuery(query, Prestamo.class);
 			criteria.setFirstResult(((pagina-1)*(elementosPorPagina)));
 			criteria.setMaxResults(elementosPorPagina);
-//			if(usuario != null){
-//				criteria.setParameter("usuario", usuario);
-//			}
+			if(usuario != null){
+				criteria.setParameter("usuario", usuario);
+			}
 			ret = criteria.getResultList();
 		}catch(Exception e){
 			ret = null;
@@ -137,12 +167,12 @@ public class PrestamoDAO {
 			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
 				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(p.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
 			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
-//			if(usuario!=null)
-//				query = String.join("", query, " AND p.id in (SELECT u.id.prestamoid from PrestamoUsuario u where u.id.usuario=:usuario )");
+			if(usuario!=null)
+				query = String.join("", query, " AND p.id in (SELECT u.id.prestamoid from PrestamoUsuario u where u.id.usuario=:usuario )");
 			Query<Long> criteria = session.createQuery(query,Long.class);
-//			if(usuario != null){
-//				criteria.setParameter("usuario", usuario);	
-//			}			
+			if(usuario != null){
+				criteria.setParameter("usuario", usuario);	
+			}			
 			ret = criteria.getSingleResult();
 		}
 		catch(Throwable e){

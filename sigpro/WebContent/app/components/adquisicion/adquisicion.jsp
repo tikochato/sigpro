@@ -2,12 +2,33 @@
 	pageEncoding="UTF-8"%>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
+	
+	<style>
+  	    .cuerpoTablaDatos {
+		    overflow-y: scroll;
+		    overflow-x: hidden;
+		    text-align: center;
+		}
+		
+		.theadDatos {
+			flex-shrink: 0; overflow-x: hidden;
+		}
+		
+		.divTabla{
+			float: left;
+			max-height: 300px;
+			overflow-y:hidden;
+			overflow-x:hidden;
+		}
+
+ 	</style>
+	
 	<div ng-controller="adquisicionController as adquisicionc" class="maincontainer_treeview all_page" id="title">
 	    <script type="text/ng-template" id="pago.jsp">
     		<%@ include file="/app/components/adquisicion/pago.jsp"%>
   	    </script>
   	    
-		<br/>
+  	    <br/>
 		<div class="row">
 			<div class="page-header">
 				<h2 ng-if="adquisicionc.esnuevo"><small>Nueva adquisición</small></h2>
@@ -69,25 +90,41 @@
 								</div>
 							</div>
 						</div>
+						<br/>
+						<div class="row">
+    							<div class="col-sm-3">
+    								<input type="radio" ng-model="adquisicionc.adquisicion.tipoRevision" 
+    								value="1" />
+									<label class="label-form">Revisión ex-ante</label>
+    							</div>
+    							<div class="col-sm-3">
+    								<input type="radio" ng-model="adquisicionc.adquisicion.tipoRevision"
+    								value="2" />
+									<label class="label-form">Revisión ex-post</label>
+    							</div>
+    						</div>
+						<br/>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group">
 									<input type="number" class="inputText" ng-model="adquisicionc.adquisicion.nog" style="text-align: right;"
-									ng-value="adquisicionc.adquisicion.nog" onblur="this.setAttribute('value', this.value);"/>
+									ng-value="adquisicionc.adquisicion.nog" onblur="this.setAttribute('value', this.value);" ng-blur="adquisicionc.getInfoNog();"/>
 										<label class="floating-label" >NOG (Número de Orden Guatecompra)</label>
 								</div>
 							</div>
 							<div class="col-sm-3">
 								<div class="form-group">
-									<input type="text" class="inputText" ng-model="adquisicionc.adquisicion.numeroContrato" style="text-align: right;" 
-									ng-value="adquisicionc.adquisicion.numeroContrato" onblur="this.setAttribute('value', this.value);"/>
+									<input type="text" class="inputText" ng-model="adquisicionc.adquisicion.numeroContrato" style="text-align: left;" 
+									ng-value="adquisicionc.adquisicion.numeroContrato" onblur="this.setAttribute('value', this.value);" ng-disabled="adquisicionc.inhabilitarFechas"
+									ng-disabled="adquisicionc.adquisicion.montoContrato != null"/>
 										<label class="floating-label" >Número de contrato</label>
 								</div>
 							</div>
 							<div class="col-sm-3">
 								<div class="form-group">
 									<input type="text" class="inputText input-money" ng-model="adquisicionc.adquisicion.montoContrato" ui-number-mask="2" 
-									ng-value="adquisicionc.adquisicion.montoContrato" onblur="this.setAttribute('value', this.value);"/>
+									ng-value="adquisicionc.adquisicion.montoContrato" onblur="this.setAttribute('value', this.value);" ng-disabled="adquisicionc.inhabilitarFechas"
+									ng-disabled="adquisicionc.adquisicion.montoContrato != null"/>
 										<label class="floating-label" >Monto del contrato</label>
 								</div>
 							</div>
@@ -110,7 +147,7 @@
 										<input type="text" class="inputText" uib-datepicker-popup="{{adquisicionc.formatofecha}}" alt-input-formats="{{adquisicionc.altformatofecha}}"
 										 	ng-model="adquisicionc.adquisicion.preparacionDocumentosReal" is-open="adquisicionc.popup_fechas[1]"
 											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
-											ng-value="adquisicionc.adquisicion.preparacionDocumentoReal" onblur="this.setAttribute('value', this.value);"/>
+											ng-value="adquisicionc.adquisicion.preparacionDocumentosReal" onblur="this.setAttribute('value', this.value);" ng-disabled="adquisicionc.inhabilitarFechas"/>
 											<span class="label-icon" ng-click="adquisicionc.abrirPopupFecha(1)" tabindex="-1">
 												<i class="glyphicon glyphicon-calendar"></i>
 											</span>
@@ -136,7 +173,7 @@
 										<input type="text" class="inputText" uib-datepicker-popup="{{adquisicionc.formatofecha}}" alt-input-formats="{{adquisicionc.altformatofecha}}"
 										 	ng-model="adquisicionc.adquisicion.lanzamientoEventoReal" is-open="adquisicionc.popup_fechas[3]"
 											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
-											ng-value="adquisicionc.adquisicion.lanzamientoEventoReal" onblur="this.setAttribute('value', this.value);"/>
+											ng-value="adquisicionc.adquisicion.lanzamientoEventoReal" onblur="this.setAttribute('value', this.value);" ng-disabled="adquisicionc.inhabilitarFechas"/>
 											<span class="label-icon" ng-click="adquisicionc.abrirPopupFecha(3)" tabindex="-1">
 												<i class="glyphicon glyphicon-calendar"></i>
 											</span>
@@ -162,7 +199,7 @@
 										<input type="text" class="inputText" uib-datepicker-popup="{{adquisicionc.formatofecha}}" alt-input-formats="{{adquisicionc.altformatofecha}}"
 										 	ng-model="adquisicionc.adquisicion.recepcionOfertasReal" is-open="adquisicionc.popup_fechas[5]"
 											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
-											ng-value="adquisicionc.adquisicion.recepcionOfertasReal" onblur="this.setAttribute('value', this.value);"/>
+											ng-value="adquisicionc.adquisicion.recepcionOfertasReal" onblur="this.setAttribute('value', this.value);" ng-disabled="adquisicionc.inhabilitarFechas"/>
 											<span class="label-icon" ng-click="adquisicionc.abrirPopupFecha(5)" tabindex="-1">
 												<i class="glyphicon glyphicon-calendar"></i>
 											</span>
@@ -188,7 +225,7 @@
 										<input type="text" class="inputText" uib-datepicker-popup="{{adquisicionc.formatofecha}}" alt-input-formats="{{adquisicionc.altformatofecha}}"
 										 	ng-model="adquisicionc.adquisicion.adjudicacionReal" is-open="adquisicionc.popup_fechas[7]"
 											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
-											ng-value="adquisicionc.adquisicion.adjudicacionReal" onblur="this.setAttribute('value', this.value);"/>
+											ng-value="adquisicionc.adquisicion.adjudicacionReal" onblur="this.setAttribute('value', this.value);" ng-disabled="adquisicionc.inhabilitarFechas"/>
 											<span class="label-icon" ng-click="adquisicionc.abrirPopupFecha(7)" tabindex="-1">
 												<i class="glyphicon glyphicon-calendar"></i>
 											</span>
@@ -214,13 +251,46 @@
 										<input type="text" class="inputText" uib-datepicker-popup="{{adquisicionc.formatofecha}}" alt-input-formats="{{adquisicionc.altformatofecha}}"
 										 	ng-model="adquisicionc.adquisicion.firmaContratoReal" is-open="adquisicionc.popup_fechas[9]"
 											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
-											ng-value="adquisicionc.adquisicion.firmaContratoReal" onblur="this.setAttribute('value', this.value);"/>
+											ng-value="adquisicionc.adquisicion.firmaContratoReal" onblur="this.setAttribute('value', this.value);" ng-disabled="adquisicionc.inhabilitarFechas"/>
 											<span class="label-icon" ng-click="adquisicionc.abrirPopupFecha(9)" tabindex="-1">
 												<i class="glyphicon glyphicon-calendar"></i>
 											</span>
 											<label class="floating-label">Firma contrato (Real)</label>
 									</div>
     							</div>
+    						</div>
+    						<br/>
+    						<div class="row" ng-if="adquisicionc.listaNog">
+    							<div class="col-sm-12" style="text-align: center">
+    								<Label class="label-form">Información general del NOG (Número de Orden Guatecompra)</Label>
+    							</div>
+    							<br/>
+    							<div class="divTabla">
+	    							<table st-table="adquisicionc.displayedInfoNog" st-safe-src="adquisicionc.infoNogs" class="table table-striped smart-table">
+										<thead class="theadDatos">
+											<tr>
+												<th class="label-form" style="text-align: center; width: 14%;">No. Contrato</th>
+												<th class="label-form" style="text-align: center; width: 14%;">Monto</th>
+												<th class="label-form" style="text-align: center; width: 14%">Prep. de doctos (Real)</th>
+												<th class="label-form" style="text-align: center; width: 14%">Lanzamiento de evento (Real)</th>
+												<th class="label-form" style="text-align: center; width: 14%;">Recepción de ofertas (Real)</th>
+												<th class="label-form" style="text-align: center; width: 14%;">Adjudicación (Real)</th>
+												<th class="label-form" style="text-align: center; width: 14%;">Firma contrato (Real)</th>
+											</tr>
+										</thead>
+										<tbody class="cuerpoTablaDatos">
+											<tr st-select-row="row" ng-repeat="row in adquisicionc.displayedInfoNog">
+												<td style="text-align: right">{{row.numeroContrato}}</td>
+												<td style="text-align: right">{{row.montoContrato | formatoMillones : false}}</td>
+												<td style="text-align: center">{{row.preparacionDocumentosReal}}</td>
+												<td style="text-align: center">{{row.lanzamientoEventoReal}}</td>
+												<td style="text-align: center">{{row.recepcionOfertasReal}}</td>
+												<td style="text-align: center">{{row.adjudicacionReal}}</td>
+												<td style="text-align: center">{{row.firmaContratoReal}}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
     						</div>
 			</div>
 		</div>

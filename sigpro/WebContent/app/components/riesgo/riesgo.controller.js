@@ -29,7 +29,6 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		mi.ordenDireccion = null;
 		mi.filtros = [];
 		mi.orden = null;
-		mi.probabilidades = [{valor:1, nombre:"Bajo"},{valor:2,nombre:"Medio"},{valor:3,nombre:"Alto"}];
 		
 		mi.objetoId=null;
 		mi.objetoTipo=null;
@@ -165,7 +164,6 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			mi.productoid="";
 			mi.productoNombre="";
 			mi.camposdinamicos = {};
-			mi.probabilidad=null; 
 			mi.fechaEjecucion=null;
 			$utilidades.setFocus(document.getElementById("nombre"));
 		};
@@ -182,15 +180,6 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 				mi.colaboradorNombre = mi.riesgo.colaboradorNombre;
 				mi.colaboradorId = mi.riesgo.colaboradorid;
 				mi.fechaEjecucion = mi.riesgo.fechaEjecucion;
-				$utilidades.setFocus(document.getElementById("nombre"));
-				if (mi.riesgo.probabilidad !=null && mi.riesgo.probabilidad > 0){
-					mi.probabilidad = {
-							"valor" : mi.riesgo.probabilidad,
-							"nombre" : mi.probabilidades[mi.riesgo.probabilidad - 1].nombre
-					}
-				}else {
-					mi.probabilidad = {};
-				}
 				mi.ejecutado = mi.riesgo.ejecutado == 1;
 				$utilidades.setFocus(document.getElementById("nombre"));
 				for (campos in mi.riesgo.camposdinamicos) {
@@ -215,40 +204,42 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 					if(mi.parentController.mForm.$valid || 
 							(mi.parentController.mForm.$error.required.length==1 && mi.parentController.mForm.$error.required[0].$name=='form_valid'))
 						mi.riesgos.push({
-							colaboradorNombre: mi.colaboradorNombre,
-							colaboradorid: mi.colaboradorid,
-							descripcion: mi.riesgo.descripcion == null ? "" : mi.riesgo.descripcion,
-							ejecutado: mi.ejecutado ? 1 : 0,
-							estado: 1,
-							fechaActualizacion: null,
-							fechaCreacion: null,
-							fechaEjecucion:  mi.fechaEjecucion,
-							gatillosSintomas: mi.riesgo.gatillosSintomas,
 							id: 0,
-							impacto: mi.riesgo.impacto,
-							impactoProyectado: mi.riesgo.impactoProyectado,
 							nombre: mi.riesgo.nombre,
-							probabilidad: mi.probabilidad.valor,
-							puntuacionImpacto: mi.riesgo.puntuacionImpacto,
-							respuesta: mi.riesgo.respuesta,
-							riesgosSecundarios: mi.riesgo.riesgosSecundarios,
+							descripcion: mi.riesgo.descripcion == null ? "" : mi.riesgo.descripcion,
 							riesgotipoid: mi.riesgoTipoid,
 							riesgotiponombre: mi.riesgoTipoNombre,
-							usuarioActualizo: null,
+							impacto: mi.riesgo.impacto,
+							probabilidad: mi.riesgo.probabilidad,
+							impactoMonto: mi.riesgo.impactoMonto,
+							impactoTiempo: mi.riesgo.impactoTiempo,
+							gatillo: mi.riesgo.gatillo,
+							consecuencia: mi.riesgo.consecuencia,
+							solucion: mi.riesgo.solucion,
+							riesgosSecundarios: mi.riesgo.riesgosSecundarios,
+							ejecutado: mi.ejecutado ? 1 : 0,
+							fechaEjecucion:  mi.fechaEjecucion,
+							resultado: mi.riesgo.resultado,
+							observaciones: mi.riesgo.observaciones,
+							colaboradorid: mi.colaboradorid,
+							colaboradorNombre: mi.colaboradorNombre,
 							usuarioCreo: null,
-							camposdinamicos: mi.camposdinamicos
+							usuarioActualizo: null,
+							fechaCreacion: null,
+							fechaActualizacion: null,
+							camposdinamicos: mi.camposdinamicos,
+							estado: 1
 						});
 					mi.mostraringreso=false;
 					mi.esnuevo = false;
 					mi.form_valid = 1;
 				}
 				else if(mi.parentController.mForm.$valid || mi.parentController.mForm.$error.required[0].$name=='form_valid'){
-					mi.riesgo.colaboradorNombre = mi.colbaoradorNombre;
+					mi.riesgo.colaboradorNombre = mi.colaboradorNombre;
 					mi.riesgo.colaboradorid = mi.colaboradorid;
 					mi.riesgo.ejecutado = mi.ejecutado ? 1 : 0;
 					mi.riesgo.riesgotipoid = mi.riesgoTipoid;
 					mi.riesgo.riesgotiponombre = mi.riesgoTipoNombre;
-					mi.riesgo.probabilidad = mi.probabilidad.valor;
 					mi.riesgo.fechaEjecucion = mi.fechaEjecucion;
 					mi.mostraringreso=false;
 					mi.esnuevo = false;

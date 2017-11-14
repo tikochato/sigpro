@@ -141,8 +141,10 @@
 				<span class="glyphicon glyphicon-time"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAMapa(controller.proyecto.id) : ''" uib-tooltip="Mapa" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-globe"></span></label>
-				<label class="btn btn-default" ng-click="controller.botones ? controller.irAGantt(controller.proyecto.id) : ''" uib-tooltip="Gantt" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-click="controller.botones ? controller.irAGantt(controller.proyecto.id) : ''" uib-tooltip="Ir a Gantt" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-indent-left"></span></label>
+				<label class="btn btn-default" ng-click="controller.botones ? controller.exportar() : ''"><span class="glyphicon glyphicon-paste" aria-hidden="true"
+				uib-tooltip="Exportar Gantt"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAKanban(controller.proyecto.id) : ''" uib-tooltip="Cartelera de Actividades" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-blackboard"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAAgenda(controller.proyecto.id) : ''" uib-tooltip="Agenda" tooltip-placement="bottom">
@@ -156,6 +158,8 @@
 				<span class="glyphicon glyphicon-wrench"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAMiembrosUnidadEjecutora(controller.proyecto.id) : ''" uib-tooltip="Miembros de la Unidad Ejecutora" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-user"></span></label>
+				<label class="btn btn-default" ng-click="controller.exportarJasper()" uib-tooltip="Plan Anual de Ejecución">
+				<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 		</div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="24020">
@@ -254,25 +258,25 @@
 				          	<label class="floating-label">Coordenadas</label>
 					</div>
 					
-					<div class="form-group" >
+					<div class="form-group" ng-if="false" >
 							<input  ng-model="controller.proyecto.objetivo"
 								class="inputText" id="objetivo"
 								ng-value="controller.proyecto.objetivo" onblur="this.setAttribute('value', this.value);">
 							<label for="objetivo" class="floating-label">Objetivo</label>
 					</div>
 					
-					<div class="form-group" >
+					<div class="form-group" ng-if="false" >
 							<input  ng-model="controller.proyecto.objetivoEspecifico"
 								class="inputText" 
 								ng-value="controller.proyecto.objetivoEspecifico" onblur="this.setAttribute('value', this.value);">
-							<label for="objetivo" class="floating-label">Objetivos específicos</label>
+							<label for="objetivo" class="floating-label">Objetivos específicos del PEP</label>
 					</div>
 					
-					<div class="form-group" >
+					<div class="form-group" ng-if="false" >
 							<input  ng-model="controller.proyecto.visionGeneral"
 								class="inputText" 
 								ng-value="controller.proyecto.visionGeneral" onblur="this.setAttribute('value', this.value);">
-							<label for="objetivo" class="floating-label">Visión general</label>
+							<label for="objetivo" class="floating-label">Visión general del PEP</label>
 					</div>
 					<div ng-repeat="campo in controller.camposdinamicos" >
 						<div ng-switch="campo.tipo">
@@ -317,6 +321,58 @@
 						</div>
 					</div>
 					<br/>
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group">
+								<input type="number" style="text-align: right;"
+								 class="inputText "  
+								 ng-model="controller.proyecto.ejecucionFisicaReal"
+								 ng-value="controller.proyecto.ejecucionFisicaReal"
+								 onblur="this.setAttribute('value', this.value);"
+								 min="0" max="100">
+								<label class="floating-label" >Ejecucion Física %</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group money-input">
+								<input type="text" 
+								 class="inputText input-money"  
+								 ng-model="controller.proyecto.costo"
+								 ng-value="controller.proyecto.costo"
+								 onblur="this.setAttribute('value', this.value);" 
+								 ui-number-mask="2"
+								 ng-readonly="true"
+								 >
+								<label class="floating-label" >Costo</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group money-input">
+								<input type="text" class="inputText "  
+								 ng-model="controller.fechaInicioTmep"
+								 ng-value="controller.fechaInicioTmep"
+								 onblur="this.setAttribute('value', this.value);"
+								 ng-readonly="true"
+								 >
+								<label class="floating-label" >Fecha Inicio</label>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group money-input">
+								<input type="text" class="inputText "  
+								 ng-model="controller.fehcaFinalTemp"
+								 ng-value="controller.fehcaFinalTemp"
+								 onblur="this.setAttribute('value', this.value);"
+								 ng-readonly="true"
+								 >
+								<label class="floating-label" >Fecha Fin</label>
+							</div>
+						</div>
+					</div>
 					
 					<div class="panel panel-default" ng-hide="controller.esNuevoDocumento" >
 						<div class="panel-heading label-form" style="text-align: center;">Archivos adjuntos</div>
@@ -410,10 +466,10 @@
 				<uib-tab index="controller.ordenTab+1" heading="Adicionales" ng-if="controller.mostrarPrestamo" >
 					<div class="row" style="margin-top: 15px">
 						<div class="form-group">
-							<input type="text" ng-model="controller.proyecto.descripcion"
-								class="inputText" id="campo2" 
-								ng-value="controller.proyecto.descripcion" onblur="this.setAttribute('value', this.value);">
-							<label for="campo2" class="floating-label">Descripción</label>
+						   <textarea class="inputText" rows="4"
+						   ng-model="controller.proyecto.observaciones" ng-value="controller.proyecto.observaciones"   
+						   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+						   <label class="floating-label">Observaciones</label>
 						</div>
 					</div>
 		

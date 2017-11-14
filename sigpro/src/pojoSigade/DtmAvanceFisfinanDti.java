@@ -1,5 +1,5 @@
 package pojoSigade;
-// Generated Sep 29, 2017 10:37:44 PM by Hibernate Tools 5.2.3.Final
+// Generated Nov 2, 2017 2:45:37 PM by Hibernate Tools 5.2.3.Final
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -50,7 +50,8 @@ public class DtmAvanceFisfinanDti implements java.io.Serializable {
 			@AttributeOverride(name = "porDesembolsar", column = @Column(name = "por_desembolsar", precision = 15)),
 			@AttributeOverride(name = "porDesembolsarUsd", column = @Column(name = "por_desembolsar_usd", precision = 15)),
 			@AttributeOverride(name = "porDesembolsarGtq", column = @Column(name = "por_desembolsar_gtq", precision = 15)),
-			@AttributeOverride(name = "estadoPrestamo", column = @Column(name = "estado_prestamo", length = 45)) })
+			@AttributeOverride(name = "estadoPrestamo", column = @Column(name = "estado_prestamo", length = 45)),
+			@AttributeOverride(name = "objetivo", column = @Column(name = "objetivo", length = 4000)) })
 	public DtmAvanceFisfinanDtiId getId() {
 		return this.id;
 	}

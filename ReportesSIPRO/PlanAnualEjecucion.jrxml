@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.3.final using JasperReports Library version 6.4.3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PlanAnualEjecucion" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="792" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="76da67da-1700-440f-9f96-4bfa2e0fc2b6">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MariaDB Server"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="usuario" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="proyectoId" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[2]]></defaultValueExpression>
+	</parameter>
+	<parameter name="esSubreporte" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select 1 from dual]]>
+	</queryString>
+	<field name="1" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="1"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="371">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+			<subreport>
+				<reportElement x="0" y="0" width="792" height="371" uuid="245709a4-997d-4e21-bcaf-22139f907f45"/>
+				<subreportParameter name="esSubreporte">
+					<subreportParameterExpression><![CDATA[$P{esSubreporte}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="proyectoId">
+					<subreportParameterExpression><![CDATA[$P{proyectoId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["InformacionGeneral.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="204">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<subreport>
+				<reportElement x="0" y="0" width="792" height="203" uuid="9ac98812-e061-4ef8-b0fa-cffadad9e5d4"/>
+				<subreportParameter name="esSubreporte">
+					<subreportParameterExpression><![CDATA[$P{esSubreporte}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="proyectoId">
+					<subreportParameterExpression><![CDATA[$P{proyectoId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["InformacionGeneral_Cuadro2.jasper"]]></subreportExpression>
+			</subreport>
+			<break>
+				<reportElement x="0" y="203" width="792" height="1" uuid="291cde69-24f9-41f5-9be5-9fa00d7f0122"/>
+			</break>
+		</band>
+		<band height="237">
+			<subreport>
+				<reportElement x="-1" y="0" width="792" height="217" uuid="06b0ab75-034b-4311-b9e1-ac695e5b0c17"/>
+				<subreportParameter name="esSubreporte">
+					<subreportParameterExpression><![CDATA[$P{esSubreporte}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="proyectoId">
+					<subreportParameterExpression><![CDATA[$P{proyectoId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["Metas.jasper"]]></subreportExpression>
+			</subreport>
+			<break>
+				<reportElement x="0" y="230" width="791" height="1" uuid="bf23fc17-2f0b-4cd5-9507-32729eed15b6"/>
+			</break>
+		</band>
+		<band height="311">
+			<break>
+				<reportElement x="0" y="306" width="790" height="1" uuid="c177de91-4c96-47cc-b588-616f463293f3"/>
+			</break>
+			<subreport>
+				<reportElement x="0" y="0" width="789" height="300" uuid="5216c751-c1c1-4af6-904a-455724ca5ccc"/>
+				<subreportParameter name="esSubreporte">
+					<subreportParameterExpression><![CDATA[$P{esSubreporte}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="proyectoId">
+					<subreportParameterExpression><![CDATA[$P{proyectoId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["PlanAdquisiciones.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="240">
+			<subreport>
+				<reportElement x="0" y="0" width="791" height="240" uuid="bee5ea71-9538-4cef-94dc-c4b5dd31006f"/>
+				<subreportParameter name="esSubreporte">
+					<subreportParameterExpression><![CDATA[$P{esSubreporte}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="proyectoId">
+					<subreportParameterExpression><![CDATA[$P{proyectoId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["Desembolsos.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="30" splitType="Stretch">
+			<textField evaluationTime="Master">
+				<reportElement x="472" y="11" width="300" height="10" uuid="b8d45f95-405f-423f-97f7-4797150fc735">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página " + $V{MASTER_CURRENT_PAGE} + " de " + $V{MASTER_TOTAL_PAGES}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy hh:mm:ss a">
+				<reportElement x="89" y="1" width="143" height="10" uuid="d42bfc62-d209-4860-821a-a01060635b3e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="19" y="1" width="70" height="10" uuid="8f215174-78b6-4c64-ab2a-024b808e03d9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Fecha generación:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="19" y="11" width="70" height="10" uuid="dc01ed55-d2e2-4b37-9917-dd3147fc61bc">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Usuario:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="89" y="11" width="143" height="10" uuid="f5080052-55d8-46cd-a227-5e63b15e2a9e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

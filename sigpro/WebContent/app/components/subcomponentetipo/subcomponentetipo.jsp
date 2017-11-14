@@ -103,9 +103,9 @@
 				</div>
 				
 				<div class="form-group">
-				   <input type="text" name="idescrip"  class="inputText" id="idescrip" 
-				     ng-model="subcomponentetipoc.subcomponentetipo.descripcion" value="{{subcomponentetipoc.subcomponentetipo.descripcion}}"   
-				     onblur="this.setAttribute('value', this.value);" ng-required="false" >
+				   <textarea class="inputText" rows="4"
+				   ng-model="subcomponentetipoc.subcomponentetipo.descripcion" ng-value="subcomponentetipoc.subcomponentetipo.descripcion"   
+				   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
 				   <label class="floating-label">Descripción</label>
 				</div>
 				<br/>

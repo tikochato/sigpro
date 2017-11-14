@@ -106,11 +106,10 @@
 				</div>
 				
 				<div class="form-group">
-					<input type="text"
-						class="inputText" id="descripcion" 
-						ng-model="formularioc.formulario.descripcion"
-						ng-value="formularioc.formulario.descripcion" onblur="this.setAttribute('value', this.value);">
-					<label for="descripcion" class="floating-label">Descripción</label> 
+				   <textarea class="inputText" rows="4"
+				   ng-model="formularioc.formulario.descripcion" ng-value="formularioc.formulario.descripcion"   
+				   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+				   <label class="floating-label">Descripción</label>
 				</div>
 				<div class="panel panel-default">
 					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>

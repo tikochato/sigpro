@@ -31,6 +31,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/prestamometas',{
             	template: '<div load-on-demand="\'prestamometasController\'" class="all_page"></div>'
             })
+            .when('/prestamoindicadores',{
+            	template: '<div load-on-demand="\'prestamoindicadoresController\'" class="all_page"></div>'
+            })
             .when('/entidad/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'moduloEntidad\'" class="all_page"></div>'
             })
@@ -223,6 +226,12 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/miembrosunidadejecutora/:proyectoId?',{
             	template: '<div load-on-demand="\'miembrosunidadejecutoraController\'" class="all_page"></div>'
             })
+            .when('/gestionadquisiciones/',{
+            	template: '<div load-on-demand="\'gestionAdquisicionesController\'" class="all_page"></div>'
+            })
+            .when('/planestructuralproyecto/',{
+            	template: '<div load-on-demand="\'planEstructuralProyectoController\'" class="all_page"></div>'
+            })
             .when("/:redireccion?",{
             	controller:"MainController"
             })
@@ -267,6 +276,10 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'prestamometasController',
 	    	   script: '/app/components/reportes/prestamometas/prestamometas.controller.js',
 	    	   template: '/app/components/reportes/prestamometas/prestamometas.jsp'
+	       }, {
+	    	   name: 'prestamoindicadoresController',
+	    	   script: '/app/components/reportes/prestamoindicadores/prestamoindicadores.controller.js',
+	    	   template: '/app/components/reportes/prestamoindicadores/prestamoindicadores.jsp'
 	       }, {
 	    	   name: 'moduloEntidad',
 	    	   script: '/app/components/entidades/entidades.controller.js',
@@ -575,6 +588,16 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'rolunidadejecutoraController',
 	    	   script: '/app/components/rolunidadejecutora/rolunidadejecutora.controller.js',
 	    	   template: '/app/components/rolunidadejecutora/rolunidadejecutora.jsp'
+	       },
+	       {
+	    	   name: 'gestionAdquisicionesController',
+	    	   script: '/app/components/reportes/gestionadquisiciones/gestionAdquisiciones.controller.js',
+	    	   template: '/app/components/reportes/gestionadquisiciones/gestionAdquisiciones.jsp'
+	       },
+	       {
+	    	   name: 'planEstructuralProyectoController',
+	    	   script: '/app/components/reportes/planestructuraproyecto/planestructuralproyecto.controller.js',
+	    	   template: '/app/components/reportes/planestructuraproyecto/planestructuralproyecto.jsp'
 	       }
 
 	   ];

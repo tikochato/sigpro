@@ -14,6 +14,10 @@
 	    .ui-grid-tree-header-row {
 	        font-weight: normal !important;
 	    }
+	    
+	    .table-striped>tbody>tr:nth-child(odd)>td {
+    		background-color: #f3f3f3;
+		}
 	   
 	    .ui-grid-tree-padre {
 	        font-weight: bold;
@@ -181,7 +185,10 @@
 				    						<th class="label-form" rowspan="2" style="text-align: center; min-width: 75px; max-width: 75px">Cant.</th>
 				    						<th class="label-form" rowspan="2" style="text-align: center; min-width: 140px; max-width: 140px">Costo</th>
 				    						<th class="label-form" rowspan="2" style="text-align: center; min-width: 140px; max-width: 140px">Total</th>
+				    						<th class="label-form" rowspan="2" style="text-align: center; min-width: 140px; max-width: 140px">Tipo de Revisión</th>
 				    						<th class="label-form" rowspan="2" style="text-align: center; min-width: 140px; max-width: 140px">NOG</th>
+				    						<th class="label-form" rowspan="2" style="text-align: center; min-width: 140px; max-width: 140px">Número de Contrato</th>
+				    						<th class="label-form" rowspan="2" style="text-align: center; min-width: 140px; max-width: 140px">Monto de Contrato</th>				    						
 				    						<th class="label-form" colspan="2" style="text-align: center">Prep. de docs.</th>
 				    						<th class="label-form" colspan="2" style="text-align: center">Lanz. de evento</th>
 				    						<th class="label-form" colspan="2" style="text-align: center">Recep. y eval. ofertas</th>
@@ -204,94 +211,67 @@
 		    						<tbody vs-repeat class="cuerpoTablaDatos" id="divTablaDatos" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)">
 		    							<tr ng-repeat="row in ctrladqui.rowCollectionPrestamo">
 		    								<td class="divisionColumna truncate" style="min-width:300px;max-width:300px;">
-				    							<div style="height: 25px;">
-				    								<div style="text-align: left" uib-tooltip="{{row.nombre}}"><span style="float: left;margin-left: {{row.nivel-1}}em;" ng-class="ctrladqui.claseIcon(row);" uib-tooltip="{{ctrladqui.tooltipObjetoTipo[row.objetoTipo]}}"></span>{{row.nombre}}</div>
-				    							</div>
+			    								<div style="text-align: left" uib-tooltip="{{row.nombre}}"><span style="float: left;" ng-class="ctrladqui.claseIcon(row);" uib-tooltip="{{ctrladqui.tooltipObjetoTipo[row.objetoTipo]}}"></span>{{row.nombre}}</div>
 				    						</td>
 		    								<td class="divisionColumna" style="min-width: 200px; max-width: 200px">
-		    									<div style="height: 25px;">
-			    									{{row.tipoAdquisicionNombre}}
-							    				</div>
+		    									{{row.tipoAdquisicionNombre}}
 		    								</td>		    								
 							    			<td class="divisionColumna" style="min-width: 150px; max-width: 150px">
-								    			<div style="height: 25px;">
-								    				{{row.unidadMedida}}
-								    			</div>
+							    				{{row.unidadMedida}}
 							    			</td>
 							    			<td class="divisionColumna" style="min-width: 200px; max-width: 200px">
-								    			<div style="height: 25px;">
-								    				{{row.categoriaAdquisicionNombre}}								    				
-								    			</div>
+							    				{{row.categoriaAdquisicionNombre}}								    				
 							    			</td>			
 				    						<td class="divisionColumna" style="text-align: right; min-width: 75px; max-width: 75px">
-					    						<div style="height: 25px;">
-					    							{{row.cantidad || 0}}
-					    						</div>
+				    							{{row.cantidad || 0}}
 				    						</td>
 				    						<td class="divisionColumna" style="text-align: right; min-width: 140px; max-width: 140px">
-					    						<div style="height: 25px;">
-					    							{{row.costo || 0 | formatoMillones : ctrladqui.enMillones}}
-					    						</div>
+				    							{{row.costo || 0 | formatoMillones : ctrladqui.enMillones}}
 				    						</td>
 				    						<td class="divisionColumna" style="min-width: 140px; max-width: 140px; text-align: right">
-					    						<div style="height: 25px;">
-					    							{{row.total | formatoMillones : ctrladqui.enMillones}}
-					    						</div>
+				    							{{row.total | formatoMillones : ctrladqui.enMillones}}
+				    						</td>
+				    						<td class="divisionColumna" style="min-width: 140px; max-width: 140px; text-align: center">
+			    								{{row.tipoRevisionNombre}}
 				    						</td>
 				    						<td class="divisionColumna" style="min-width: 140px; max-width: 140px; text-align: right">
-				    							<div style="height: 25px;">
-				    								{{row.nog}}
-				    							</div>
+			    								{{row.nog}}
+				    						</td>
+				    						<td class="divisionColumna" style="min-width: 140px; max-width: 140px; text-align: right">
+			    								{{row.numeroContrato}}
+				    						</td>
+				    						<td class="divisionColumna" style="min-width: 140px; max-width: 140px; text-align: right">
+			    								{{row.montoContrato}}
 				    						</td>
 				    						<td class="colorPlanificado divisionColumna" style="text-align: left; min-width: 90px; max-width: 90px;">
-					    						<div style="height: 25px;">
-					    							{{row.planificadoDocs}}
-					    						</div>
+				    							{{row.planificadoDocs}}
 				    						</td>
 				    						<td class="colorReal divisionColumna" style="text-align: left; min-width: 90px; max-width: 90px;">
-					    						<div style="height: 25px;">
-					    							{{row.realDocs}}
-					    						</div>
+				    							{{row.realDocs}}
 				    						</td>
 				    						<td class="colorPlanificado divisionColumna" style="text-align: left;min-width: 90px; max-width: 90px;">
-					    						<div style="height: 25px;">
-					    							{{row.planificadoLanzamiento}}
-					    						</div>
+				    							{{row.planificadoLanzamiento}}
 				    						</td>
 				    						<td class="colorReal divisionColumna" style="text-align: left; min-width: 90px; max-width: 90px;">
-					    						<div style="height: 25px;">
-					    							{{row.realLanzamiento}}
-					    						</div>
+				    							{{row.realLanzamiento}}
 				    						</td>
 				    						<td class="colorPlanificado divisionColumna" style="text-align: left; min-width: 90px; max-width: 90px;">
-					    						<div style="height: 25px;">
-					    							{{row.planificadoRecepcionEval}}
-					    						</div>
+				    							{{row.planificadoRecepcionEval}}
 				    						</td>
 				    						<td class="colorReal divisionColumna" style="text-align: left; min-width: 90px; max-width: 90px;">
-					    						<div style="height: 25px;">
-					    							{{row.realRecepcionEval}}
-					    						</div>
+				    							{{row.realRecepcionEval}}
 				    						</td>
 				    						<td class="colorPlanificado divisionColumna" style="text-align: left; min-width: 90px; max-width: 90px;">
-					    						<div style="height: 25px;">
-					    							{{row.planificadoAdjudica}}
-												</div>					    							
+				    							{{row.planificadoAdjudica}}
 				    						</td>
 				    						<td class="colorReal divisionColumna" style="text-align: left; min-width: 90px; max-width: 90px;">
-					    						<div style="height: 25px;">
-					    							{{row.realAdjudica}}
-					    						</div>
+				    							{{row.realAdjudica}}
 				    						</td>
 				    						<td class="colorPlanificado divisionColumna" style="text-align: left; min-width: 90px; max-width: 90px;">
-					    						<div style="height: 25px;">
-					    							{{row.planificadoFirma}}
-					    						</div>
+				    							{{row.planificadoFirma}}
 				    						</td>
 				    						<td class="colorReal divisionColumna" style="text-align: left; min-width: 90px; max-width: 90px;">
-					    						<div style="height: 25px;">
-					    							{{row.realFirma}}
-					    						</div>
+				    							{{row.realFirma}}
 				    						</td>
 		    							</tr>
 		    						</tbody>

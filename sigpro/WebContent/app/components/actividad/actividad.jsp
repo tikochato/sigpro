@@ -226,11 +226,39 @@
 								  <label class="floating-label">* Fecha de Fin</label>
 								</div>
 							</div>
+							
+							<div class="col-sm-6">
+								<div class="form-group" >
+								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" alt-input-formats="{{actividadc.altformatofecha}}"
+								  			ng-model="actividadc.actividad.fechaInicioReal"
+								            datepicker-options="actividadc.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  
+								            ng-value="actividadc.actividad.fechaInicioReal" onblur="this.setAttribute('value', this.value);"
+							            	readonly="readonly"/>
+								            <span class="label-icon" tabindex="-1">
+								              <i class="glyphicon glyphicon-calendar"></i>
+								            </span>
+								  <label class="floating-label">Fecha de Inicio Real</label>
+								</div>
+							</div>
+							
+							<div class="col-sm-6">
+							
+								<div class="form-group" >
+								  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}"
+								  			ng-model="actividadc.actividad.fechaFinReal"
+								            datepicker-options="actividadc.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+								            readonly="readonly" ng-value="actividadc.actividad.fechaFinReal" onblur="this.setAttribute('value', this.value);"/>
+								            <span class="label-icon" tabindex="-1">
+								              <i class="glyphicon glyphicon-calendar"></i>
+								            </span>
+								  <label class="floating-label">Fecha de Fin Real</label>
+								</div>
+							</div>
 						</div>
 											
 						<div class="form-group">
 						   <input type="number" name="iavance"  class="inputText" id="inombre" 
-						     ng-model="actividadc.actividad.porcentajeavance" ng-value="actividadc.actividad.porcentajeavance"   
+						     ng-model="actividadc.actividad.porcentajeavance" ng-value="actividadc.actividad.porcentajeavance" 
 						     onblur="this.setAttribute('value', this.value);"  min="0" max="100" ng-required="true" >
 						   <label class="floating-label">* Avance %</label>
 						</div>
@@ -239,12 +267,12 @@
 					       <input type="text" class="inputText" ng-model="actividadc.actividad.costo" ng-value="actividadc.actividad.costo" ui-number-mask="2"
 					       	onblur="this.setAttribute('value', this.value);" style="text-align: left" ng-required="actividadc.actividad.acumulacionCostoId > 0" 
 					       	ng-readonly="actividadc.actividad.tieneHijos"/>
-					       <label for="iprog" class="floating-label">{{actividadc.actividad.acumulacionCostoId > 0 ? "* Costo" : "Costo"}}</label>
+					       <label for="iprog" class="floating-label">{{actividadc.actividad.acumulacionCostoId > 0 ? "* Monto Planificado" : "Monto Planificado"}}</label>
 						</div>
 						<div class="form-group" >
 							<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="actividadc.cambioAcumulacionCosto"
 									local-data="actividadc.acumulacionCostos" search-fields="nombre" title-field="nombre" field-required="actividadc.actividad.costo!=null && actividadc.actividad.costo>0" 
-						  			field-label="{{actividadc.actividad.costo!=null && actividadc.actividad.costo>0 ? '* ':''}}Tipo Acumulación de Costo"
+						  			field-label="{{actividadc.actividad.costo!=null && actividadc.actividad.costo>0 ? '* ':''}}Tipo Acumulación de Monto Planificado"
 									minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
 									initial-value="actividadc.actividad.acumulacionCostoNombre" focus-out="actividadc.blurAcumulacionCosto()" input-name="acumulacionCosto"></div>
 							<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
@@ -257,12 +285,6 @@
 						</div>
 						
 						
-						<div class="form-group">
-						   <input type="text" name="inombre"  class="inputText" id="idescripcion" 
-						     ng-model="actividadc.actividad.descripcion" ng-value="actividadc.actividad.descripcion"   
-						     onblur="this.setAttribute('value', this.value);" >
-						   <label class="floating-label">Descripción</label>
-						</div>
 						<div ng-repeat="campo in actividadc.camposdinamicos">
 							<div ng-switch="campo.tipo">
 								<div ng-switch-when="texto" class="form-group" >
@@ -303,6 +325,13 @@
 									<label class="floating-label">{{ campo.label }}</label>
 								</div>
 							</div>
+						</div>
+						
+						<div class="form-group">
+						   <textarea class="inputText" rows="4"
+						   ng-model="actividadc.actividad.descripcion" ng-value="actividadc.actividad.descripcion"   
+						   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+						   <label class="floating-label">Descripción</label>
 						</div>
 				<br/>
 				

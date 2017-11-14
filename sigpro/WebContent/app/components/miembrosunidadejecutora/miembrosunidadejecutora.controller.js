@@ -14,7 +14,7 @@ app.controller('miembrosunidadejecutoraController',['$rootScope','$scope','$http
 	mi.proyectoNombre;
 	mi.unidadEjecutoraNombre;
 	
-	mi.tamanoPantalla = Math.floor(document.getElementById("miemborsue").offsetWidth);
+	mi.tamanoPantalla = Math.floor(document.getElementById("miembrosue").offsetWidth);
 	mi.tamanoTotal = mi.tamanoPantalla - 300; 
 	
 	
@@ -60,15 +60,7 @@ app.controller('miembrosunidadejecutoraController',['$rootScope','$scope','$http
 			$utilidades.mensaje('warning','No se encontraron datos para este proyecto');
 	});
 	
-	mi.seleccionarColaborador = function(pos){
-		for (x in mi.colaboradores){
-			if (mi.colaboradores[x].id == mi.rowCollection[pos].colaboradorId){
-				mi.rowCollection[pos].email = mi.colaboradores[x].email;
-				mi.rowCollection[pos].colaboradorNombre = mi.colaboradores[x].nombre;
-				break;
-			}
-		}
-	}
+	
 	
 	mi.seleccionarRol = function(pos){
 		for (x in mi.roles){
@@ -88,7 +80,7 @@ app.controller('miembrosunidadejecutoraController',['$rootScope','$scope','$http
 		
 		var param_data = {
 				accion : 'guardarMiembros',
-				proyectoId: mi.proyectoId,
+				proyectoId: $routeParams.proyectoId,
 				miembros: JSON.stringify(mi.rowCollection),
 				t:moment().unix()
 		};
@@ -117,7 +109,10 @@ app.controller('miembrosunidadejecutoraController',['$rootScope','$scope','$http
 		mi.rowCollection.push({  
 			 id :null,
 			 colaboradorId:null,
-			 colaboradorNombre: "",
+			 primerNombre : "",
+			 segundoNombre: "",
+			 primerApellido: "",
+			 segundoApellido: "",
 			 proyectoId: null,
 			 estado: 1,
 			 rolUnidadEjecutoraId: null,
@@ -125,6 +120,10 @@ app.controller('miembrosunidadejecutoraController',['$rootScope','$scope','$http
 			 email: "",
 			 guardado: false
 		});
+	}
+	
+	mi.redireccionSinPermisos=function(){
+		$window.location.href = '/main.jsp#!/forbidden';
 	}
 }
 ]);

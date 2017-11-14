@@ -43,6 +43,8 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	mi.filtros = [];
 	mi.orden = null;
 	mi.prestamo = [];
+	mi.fechaInicioTmep = '';
+	mi.fehcaFinalTemp = '';
 	
 	mi.prestamo.desembolsoAFechaUsdP = "";
 	mi.prestamo.montoPorDesembolsarUsdP = "";
@@ -71,9 +73,11 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				mi.prestamoNombre = response.nombre;
 				mi.objetoTipoNombre = "Préstamo";	
 				mi.prestamoid=response.id;
+				mi.codigoPresupuestario = response.codigoPresupuestario;
+				mi.fechaCierreActualUe = response.fechaCierreActualUe;
 			}
 	});
-
+	
 	mi.fechaOptions = {
 			formatYear : 'yy',
 			maxDate : new Date(2050, 12, 31),
@@ -238,6 +242,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				proyectoClase: $rootScope.etiquetas.id,
 				projectCargado: mi.proyecto.projectCargado,
 				prestamoId: mi.prestamoid,
+				observaciones : mi.proyecto.observaciones,
 				t:moment().unix()
 			};
 			$http.post('/SProyecto',param_data).then(
@@ -344,6 +349,11 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			(mi.proyecto.latitud!=null ? ', ' : '') + (mi.proyecto.longitud!=null ? mi.proyecto.longitud : '');
 			mi.impactos =[];
 			mi.miembros = [];
+			if (mi.fechaInicioTmep == ''){
+				mi.fechaInicioTmep = mi.proyecto.fechaInicio;
+				mi.fehcaFinalTemp = mi.proyecto.fechaFin;
+			}
+			
 			var parametros = {
 					accion: 'getProyectoPropiedadPorTipo',
 					idProyecto: mi.proyecto!=''?mi.proyecto.id:0,
@@ -417,7 +427,34 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				
 			});
 			
-			mi.getDocumentosAdjuntos(1, mi.proyecto.id);
+			if(mi.prestamoid != null){
+				$http.post('/SProyecto', { accion: 'obtenerMontoTechos', id: mi.proyecto.id }).then(
+					function(response){
+					if(response.data.success){
+						mi.MontoTechos = response.data.techoPep;	
+						
+						$http.post('/SDataSigade', { accion: 'getMontoDesembolsosUE', codPrep: mi.codigoPresupuestario, ejercicio: mi.proyecto.ejercicio, entidad: mi.proyecto.entidadentidad, ue: mi.proyecto.unidadejecutoraid}).then(
+							function(response){
+								if(response.data.success){
+									mi.montoDesembolsadoUE = response.data.montoDesembolsadoUE;
+									
+									mi.montoPorDesembolsar = mi.MontoTechos - mi.montoDesembolsadoUE;
+									
+									$http.post('/SDataSigade', { accion: 'getMontoDesembolsosUEALaFecha', codPrep: mi.codigoPresupuestario, entidad: mi.proyecto.entidadentidad, ue: mi.proyecto.unidadejecutoraid}).then(
+										function(response){
+											if(response.data.success){
+												mi.desembolsoAFechaUsd = response.data.montoDesembolsadoUEALaFecha;
+											}
+										}
+											
+									)
+								}
+							}
+						);
+					}
+				})
+			}
+			mi.getDocumentosAdjuntos( mi.proyecto.id,0);
 			$scope.active = 0;
 			
 			
@@ -427,7 +464,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	}
 
 	mi.adjuntarDocumentos = function(){
-		$documentoAdjunto.getModalDocumento($scope, 1, mi.proyecto.id)
+		$documentoAdjunto.getModalDocumento($scope, mi.proyecto.id,0)
 		.result.then(function(data) {
 			if (data != ""){
 				mi.rowCollection = [];
@@ -473,7 +510,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			       mi.rowCollection.splice(indice, 1);		       
 			    }
 				mi.rowCollection = [];
-				mi.getDocumentosAdjuntos(1, mi.proyecto.id);
+				mi.getDocumentosAdjuntos( mi.proyecto.id,0);
 			}
 		});
 	};
@@ -1003,11 +1040,14 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			  $http.post('/SProyecto', { accion : 'getProyectoPorId', id: $routeParams.id, t: (new Date()).getTime() }).then(function(response) {
 						if (response.data.success) {
 							mi.proyecto = response.data.proyecto;
+							mi.fechaInicioTmep = mi.proyecto.fechaInicio;
+							mi.fehcaFinalTemp = mi.proyecto.fechaFin;							
 							if(mi.proyecto.fechaInicio != "")
 								mi.proyecto.fechaInicio = moment(mi.proyecto.fechaInicio, 'DD/MM/YYYY').toDate();
 							if(mi.proyecto.fechaFin != "")
 								mi.proyecto.fechaFin = moment(mi.proyecto.fechaFin, 'DD/MM/YYYY').toDate();
 							mi.editar();
+							
 						}
 					});
 		  }
@@ -1052,6 +1092,31 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			$rootScope.$emit("cambiarNombreNodo",mi.proyecto.nombre);
 			$rootScope.$emit("recargarArbol",mi.proyecto.id);
 		}
+		
+		mi.exportarJasper = function(){
+			var anchor = angular.element('<a/>');
+			  anchor.attr({
+		         href: '/app/components/reportes/jasper/reporte.jsp?reporte=0&proyecto='+mi.proyecto.id
+			  })[0].click();
+		}
+		
+		mi.exportar=function(){
+			var formatData = new FormData();
+			
+			$http.post('/SGantt', { accion: 'exportar', proyecto_id:$routeParams.objeto_id,t:moment().unix()
+			  }).then(
+					 function successCallback(response) {
+							var anchor = angular.element('<a/>');
+						    anchor.attr({
+						         href: 'data:application/xml,' + response.data,
+						         target: '_blank',
+						         download: mi.proyecto.nombre + '.xml'
+						     })[0].click();
+						  }.bind(this), function errorCallback(response){
+						 		
+						 	}
+			);
+		};
 		
 } ]);
 

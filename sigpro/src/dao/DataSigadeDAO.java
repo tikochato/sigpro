@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import pojoSigade.DtmAvanceFisfinanDetDti;
 import pojoSigade.DtmAvanceFisfinanDti;
 import utilities.CHibernateSession;
 import utilities.CLogger;
@@ -204,12 +205,84 @@ public class DataSigadeDAO {
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
-			CLogger.write("5", DataSigadeDAO.class, e);
+			CLogger.write("6", DataSigadeDAO.class, e);
 		}
 		finally{
 			session.close();
 		}
 		return ret;
 	}
-
+	
+	public static List<DtmAvanceFisfinanDetDti> getInfPorUnidadEjecutora(String codigoPresupuestario, Integer ejercicio, Integer entidad, Integer UE){
+		List<DtmAvanceFisfinanDetDti> ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query =String.join("", "SELECT * FROM sipro_analytic.dtm_avance_fisfinan_det_dti d ",
+					"where d.codigo_presupuestario = ?1 ",
+					"and d.ejercicio_fiscal = ?2 ",
+					"and d.entidad_sicoin = ?3 ",
+					"and d.unidad_ejecutora_sicoin= ?4 ");
+			Query<DtmAvanceFisfinanDetDti> criteria = session.createNativeQuery(query, DtmAvanceFisfinanDetDti.class);
+			criteria.setParameter("1", codigoPresupuestario);
+			criteria.setParameter("2", ejercicio);
+			criteria.setParameter("3", entidad);
+			criteria.setParameter("4", UE);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("7", DataSigadeDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static List<DtmAvanceFisfinanDetDti> getInfPorUnidadEjecutoraALaFecha(String codigoPresupuestario, Integer entidad, Integer UE){
+		List<DtmAvanceFisfinanDetDti> ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query =String.join("", "SELECT * FROM sipro_analytic.dtm_avance_fisfinan_det_dti d ",
+					"where d.codigo_presupuestario = ?1 ",
+					"and d.entidad_sicoin = ?2 ",
+					"and d.unidad_ejecutora_sicoin= ?3 ");
+			Query<DtmAvanceFisfinanDetDti> criteria = session.createNativeQuery(query, DtmAvanceFisfinanDetDti.class);
+			criteria.setParameter("1", codigoPresupuestario);
+			criteria.setParameter("2", entidad);
+			criteria.setParameter("3", UE);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("8", DataSigadeDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Integer getDiferenciaMontos(String codigo_presupuestario){
+		Integer ret = null; 
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		
+		try{
+			String query ="select sum(cmp.monto_componente-cs.monto_componente) diferencia " +
+						"from sipro_analytic.dtm_avance_fisfinan_cmp cmp,sipro.componente_sigade cs " +
+						"where cmp.codigo_presupuestario = cs.codigo_presupuestario " +
+						"and cmp.numero_componente = cs.numero_componente " + 
+						"and cmp.codigo_presupuestario = ?1 " +
+						"and cs.estado = 1";
+			Query<?> criteria = session.createNativeQuery(query);
+			criteria.setParameter("1", codigo_presupuestario);
+			BigDecimal total = (BigDecimal) criteria.getSingleResult();
+			ret = total.intValue();
+		}
+		catch(Throwable e){
+			CLogger.write("9", DataSigadeDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 }

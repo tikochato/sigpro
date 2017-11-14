@@ -1,6 +1,7 @@
 package pojo;
-// Generated Oct 24, 2017 11:46:58 AM by Hibernate Tools 5.2.3.Final
+// Generated Nov 12, 2017 1:30:38 AM by Hibernate Tools 5.2.3.Final
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,63 +28,74 @@ public class Riesgo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 2650041544697269183L;
+	private static final long serialVersionUID = 3267347443501897622L;
 	private Integer id;
 	private Colaborador colaborador;
 	private RiesgoTipo riesgoTipo;
 	private String nombre;
 	private String descripcion;
+	private BigDecimal impacto;
+	private BigDecimal probabilidad;
+	private BigDecimal impactoMonto;
+	private BigDecimal impactoTiempo;
+	private String gatillo;
+	private String consecuencia;
+	private String solucion;
+	private String riesgosSegundarios;
+	private int ejecutado;
+	private Date fechaEjecucion;
+	private String resultado;
+	private String observaciones;
 	private String usuarioCreo;
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
-	private String imapctoProyectado;
-	private Integer impacto;
-	private Integer puntuacionImpacto;
-	private Integer probabilidad;
-	private String gatillosSintomas;
-	private String respuesta;
-	private String riesgosSegundarios;
-	private Integer ejecutado;
-	private Date fechaEjecucion;
 	private Set<ObjetoRiesgo> objetoRiesgos = new HashSet<ObjetoRiesgo>(0);
 	private Set<RiesgoPropiedadValor> riesgoPropiedadValors = new HashSet<RiesgoPropiedadValor>(0);
 
 	public Riesgo() {
 	}
 
-	public Riesgo(RiesgoTipo riesgoTipo, String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
+	public Riesgo(RiesgoTipo riesgoTipo, String nombre, BigDecimal impacto, BigDecimal probabilidad, int ejecutado,
+			String usuarioCreo, Date fechaCreacion, int estado) {
 		this.riesgoTipo = riesgoTipo;
 		this.nombre = nombre;
+		this.impacto = impacto;
+		this.probabilidad = probabilidad;
+		this.ejecutado = ejecutado;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
 	}
 
-	public Riesgo(Colaborador colaborador, RiesgoTipo riesgoTipo, String nombre, String descripcion, String usuarioCreo,
-			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, String imapctoProyectado,
-			Integer impacto, Integer puntuacionImpacto, Integer probabilidad, String gatillosSintomas, String respuesta,
-			String riesgosSegundarios, Integer ejecutado, Date fechaEjecucion, Set<ObjetoRiesgo> objetoRiesgos,
+	public Riesgo(Colaborador colaborador, RiesgoTipo riesgoTipo, String nombre, String descripcion, BigDecimal impacto,
+			BigDecimal probabilidad, BigDecimal impactoMonto, BigDecimal impactoTiempo, String gatillo,
+			String consecuencia, String solucion, String riesgosSegundarios, int ejecutado, Date fechaEjecucion,
+			String resultado, String observaciones, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
+			Date fechaActualizacion, int estado, Set<ObjetoRiesgo> objetoRiesgos,
 			Set<RiesgoPropiedadValor> riesgoPropiedadValors) {
 		this.colaborador = colaborador;
 		this.riesgoTipo = riesgoTipo;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
+		this.impacto = impacto;
+		this.probabilidad = probabilidad;
+		this.impactoMonto = impactoMonto;
+		this.impactoTiempo = impactoTiempo;
+		this.gatillo = gatillo;
+		this.consecuencia = consecuencia;
+		this.solucion = solucion;
+		this.riesgosSegundarios = riesgosSegundarios;
+		this.ejecutado = ejecutado;
+		this.fechaEjecucion = fechaEjecucion;
+		this.resultado = resultado;
+		this.observaciones = observaciones;
 		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
-		this.imapctoProyectado = imapctoProyectado;
-		this.impacto = impacto;
-		this.puntuacionImpacto = puntuacionImpacto;
-		this.probabilidad = probabilidad;
-		this.gatillosSintomas = gatillosSintomas;
-		this.respuesta = respuesta;
-		this.riesgosSegundarios = riesgosSegundarios;
-		this.ejecutado = ejecutado;
-		this.fechaEjecucion = fechaEjecucion;
 		this.objetoRiesgos = objetoRiesgos;
 		this.riesgoPropiedadValors = riesgoPropiedadValors;
 	}
@@ -138,6 +150,115 @@ public class Riesgo implements java.io.Serializable {
 		this.descripcion = descripcion;
 	}
 
+	@Column(name = "impacto", nullable = false, precision = 3)
+	public BigDecimal getImpacto() {
+		return this.impacto;
+	}
+
+	public void setImpacto(BigDecimal impacto) {
+		this.impacto = impacto;
+	}
+
+	@Column(name = "probabilidad", nullable = false, precision = 3)
+	public BigDecimal getProbabilidad() {
+		return this.probabilidad;
+	}
+
+	public void setProbabilidad(BigDecimal probabilidad) {
+		this.probabilidad = probabilidad;
+	}
+
+	@Column(name = "impacto_monto", precision = 15)
+	public BigDecimal getImpactoMonto() {
+		return this.impactoMonto;
+	}
+
+	public void setImpactoMonto(BigDecimal impactoMonto) {
+		this.impactoMonto = impactoMonto;
+	}
+
+	@Column(name = "impacto_tiempo", precision = 15)
+	public BigDecimal getImpactoTiempo() {
+		return this.impactoTiempo;
+	}
+
+	public void setImpactoTiempo(BigDecimal impactoTiempo) {
+		this.impactoTiempo = impactoTiempo;
+	}
+
+	@Column(name = "gatillo", length = 1000)
+	public String getGatillo() {
+		return this.gatillo;
+	}
+
+	public void setGatillo(String gatillo) {
+		this.gatillo = gatillo;
+	}
+
+	@Column(name = "consecuencia", length = 1000)
+	public String getConsecuencia() {
+		return this.consecuencia;
+	}
+
+	public void setConsecuencia(String consecuencia) {
+		this.consecuencia = consecuencia;
+	}
+
+	@Column(name = "solucion", length = 1000)
+	public String getSolucion() {
+		return this.solucion;
+	}
+
+	public void setSolucion(String solucion) {
+		this.solucion = solucion;
+	}
+
+	@Column(name = "riesgos_segundarios", length = 1000)
+	public String getRiesgosSegundarios() {
+		return this.riesgosSegundarios;
+	}
+
+	public void setRiesgosSegundarios(String riesgosSegundarios) {
+		this.riesgosSegundarios = riesgosSegundarios;
+	}
+
+	@Column(name = "ejecutado", nullable = false)
+	public int getEjecutado() {
+		return this.ejecutado;
+	}
+
+	public void setEjecutado(int ejecutado) {
+		this.ejecutado = ejecutado;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_ejecucion", length = 19)
+	public Date getFechaEjecucion() {
+		return this.fechaEjecucion;
+	}
+
+	public void setFechaEjecucion(Date fechaEjecucion) {
+		this.fechaEjecucion = fechaEjecucion;
+	}
+
+	@Column(name = "resultado", length = 1000)
+	public String getResultado() {
+		return this.resultado;
+	}
+
+	public void setResultado(String resultado) {
+		this.resultado = resultado;
+	}
+
+	@Column(name = "observaciones", length = 1000)
+	public String getObservaciones() {
+		return this.observaciones;
+	}
+
+	public void setObservaciones(String observaciones) {
+		this.observaciones = observaciones;
+	}
+
 	@Column(name = "usuario_creo", nullable = false, length = 30)
 	public String getUsuarioCreo() {
 		return this.usuarioCreo;
@@ -183,88 +304,6 @@ public class Riesgo implements java.io.Serializable {
 
 	public void setEstado(int estado) {
 		this.estado = estado;
-	}
-
-	@Column(name = "imapcto_proyectado", length = 1000)
-	public String getImapctoProyectado() {
-		return this.imapctoProyectado;
-	}
-
-	public void setImapctoProyectado(String imapctoProyectado) {
-		this.imapctoProyectado = imapctoProyectado;
-	}
-
-	@Column(name = "impacto")
-	public Integer getImpacto() {
-		return this.impacto;
-	}
-
-	public void setImpacto(Integer impacto) {
-		this.impacto = impacto;
-	}
-
-	@Column(name = "puntuacion_impacto")
-	public Integer getPuntuacionImpacto() {
-		return this.puntuacionImpacto;
-	}
-
-	public void setPuntuacionImpacto(Integer puntuacionImpacto) {
-		this.puntuacionImpacto = puntuacionImpacto;
-	}
-
-	@Column(name = "probabilidad")
-	public Integer getProbabilidad() {
-		return this.probabilidad;
-	}
-
-	public void setProbabilidad(Integer probabilidad) {
-		this.probabilidad = probabilidad;
-	}
-
-	@Column(name = "gatillos_sintomas", length = 1000)
-	public String getGatillosSintomas() {
-		return this.gatillosSintomas;
-	}
-
-	public void setGatillosSintomas(String gatillosSintomas) {
-		this.gatillosSintomas = gatillosSintomas;
-	}
-
-	@Column(name = "respuesta", length = 1000)
-	public String getRespuesta() {
-		return this.respuesta;
-	}
-
-	public void setRespuesta(String respuesta) {
-		this.respuesta = respuesta;
-	}
-
-	@Column(name = "riesgos_segundarios", length = 1000)
-	public String getRiesgosSegundarios() {
-		return this.riesgosSegundarios;
-	}
-
-	public void setRiesgosSegundarios(String riesgosSegundarios) {
-		this.riesgosSegundarios = riesgosSegundarios;
-	}
-
-	@Column(name = "ejecutado")
-	public Integer getEjecutado() {
-		return this.ejecutado;
-	}
-
-	public void setEjecutado(Integer ejecutado) {
-		this.ejecutado = ejecutado;
-	}
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fecha_ejecucion", length = 19)
-	public Date getFechaEjecucion() {
-		return this.fechaEjecucion;
-	}
-
-	public void setFechaEjecucion(Date fechaEjecucion) {
-		this.fechaEjecucion = fechaEjecucion;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "riesgo")

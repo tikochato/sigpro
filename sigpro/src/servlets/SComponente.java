@@ -88,6 +88,8 @@ public class SComponente extends HttpServlet {
 		boolean tieneHijos;
 		boolean esDeSigade;
 		Integer prestamoId;
+		String fechaInicioReal;
+		String fechaFinReal;
 	}
 
 	class stdatadinamico {
@@ -189,6 +191,9 @@ public class SComponente extends HttpServlet {
 				temp.fuenteDonacion = componente.getFuenteDonacion();
 				temp.fuenteNacional = componente.getFuenteNacional();
 				temp.prestamoId = componente.getProyecto().getPrestamo().getId();
+				temp.fechaInicioReal = Utils.formatDate(componente.getFechaInicioReal());
+				temp.fechaFinReal = Utils.formatDate(componente.getFechaFinReal());
+				
 				stcomponentes.add(temp);
 			}
 
@@ -251,6 +256,9 @@ public class SComponente extends HttpServlet {
 				temp.fuenteDonacion = componente.getFuenteDonacion();
 				temp.fuenteNacional = componente.getFuenteNacional();
 				temp.prestamoId = componente.getProyecto().getPrestamo().getId();
+				temp.fechaInicioReal = Utils.formatDate(componente.getFechaInicioReal());
+				temp.fechaFinReal = Utils.formatDate(componente.getFechaFinReal());
+				
 				stcomponentes.add(temp);
 			}
 
@@ -315,7 +323,7 @@ public class SComponente extends HttpServlet {
 								descripcion, usuario, null, new DateTime().toDate(), null, 1,
 								snip, programa, subPrograma, proyecto_, actividad,obra, latitud,longitud, costo, renglon, 
 								ubicacionGeografica, fechaInicio, fechaFin, duracion, duracionDimension, null,null,null,esDeSigade,
-								null,null,null, null,null,null,null);
+								null,null,null,null,null, null,null,null,null);
 					}
 					else{
 						componente = ComponenteDAO.getComponentePorId(id,usuario);
@@ -415,6 +423,7 @@ public class SComponente extends HttpServlet {
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			String columna_ordenada = map.get("columna_ordenada");
 			String orden_direccion = map.get("orden_direccion");
+			boolean esDeSigade = false;
 
 			List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(pagina, numeroCooperantes,proyectoId
 					,filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,columna_ordenada,orden_direccion,usuario);
@@ -471,12 +480,17 @@ public class SComponente extends HttpServlet {
 				temp.fuenteDonacion = componente.getFuenteDonacion();
 				temp.fuenteNacional = componente.getFuenteNacional();
 				temp.prestamoId = componente.getProyecto().getPrestamo().getId();
+				esDeSigade = esDeSigade || temp.esDeSigade;
+				temp.fechaInicioReal = Utils.formatDate(componente.getFechaInicioReal());
+				temp.fechaFinReal = Utils.formatDate(componente.getFechaFinReal());
+				
 				stcomponentes.add(temp);
 			}
 
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stcomponentes);
 	        response_text = String.join("", "\"componentes\":",response_text);
-	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+	        response_text = String.join("", "{\"success\":true,\"esDeSigade\":", esDeSigade ? "true" : "false" ,",",
+	        response_text,"}");
 		}
 		else if(accion.equals("obtenerComponentePorId")){
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
@@ -484,11 +498,11 @@ public class SComponente extends HttpServlet {
 
 			response_text = String.join("","{ \"success\": ",(componente!=null && componente.getId()!=null ? "true" : "false"),", "
 				+ "\"id\": " + (componente!=null ? componente.getId():"0") +", "
-				+ "\"ejercicio\": " + (componente!=null ? componente.getProyecto().getUnidadEjecutora().getId().getEjercicio() :"0") +", " 
-				+ "\"entidad\": " + (componente!=null ? componente.getProyecto().getUnidadEjecutora().getId().getEntidadentidad() :"0") +", "
-				+ "\"entidadNombre\": \"" + (componente!=null ? componente.getProyecto().getUnidadEjecutora().getEntidad().getNombre() : "") +"\", "
-				+ "\"unidadEjecutora\": " + (componente!=null ? componente.getProyecto().getUnidadEjecutora().getId().getUnidadEjecutora() :"0") +", "
-				+ "\"unidadEjecutoraNombre\": \"" + (componente!=null ? componente.getProyecto().getUnidadEjecutora().getNombre() : "") +"\", "
+				+ "\"ejercicio\": " + (componente!=null && componente.getUnidadEjecutora() != null ? componente.getProyecto().getUnidadEjecutora().getId().getEjercicio() :"0") +", " 
+				+ "\"entidad\": " + (componente!=null && componente.getUnidadEjecutora() != null ? componente.getProyecto().getUnidadEjecutora().getId().getEntidadentidad() :"0") +", "
+				+ "\"entidadNombre\": \"" + (componente!=null && componente.getUnidadEjecutora() != null ? componente.getProyecto().getUnidadEjecutora().getEntidad().getNombre() : "") +"\", "
+				+ "\"unidadEjecutora\": " + (componente!=null && componente.getUnidadEjecutora() != null ? componente.getProyecto().getUnidadEjecutora().getId().getUnidadEjecutora() :"0") +", "
+				+ "\"unidadEjecutoraNombre\": \"" + (componente!=null && componente.getUnidadEjecutora() != null ? componente.getProyecto().getUnidadEjecutora().getNombre() : "") +"\", "
 				+ "\"prestamoId\": " + (componente!=null ? componente.getProyecto().getPrestamo() != null ? componente.getProyecto().getPrestamo().getId() : 0 : 0) +", "
 				+ "\"fechaInicio\": \"" + (componente!=null ? Utils.formatDate(componente.getFechaInicio()): null) +"\", "
 				+ "\"nombre\": \"" + (componente!=null ? componente.getNombre():"Indefinido") +"\" }");
@@ -550,6 +564,8 @@ public class SComponente extends HttpServlet {
 			temp.descripcion = componente.getDescripcion();
 			temp.longitud = componente.getLongitud();
 			temp.latitud = componente.getLatitud();
+			temp.fechaInicioReal = Utils.formatDate(componente.getFechaInicioReal());
+			temp.fechaFinReal = Utils.formatDate(componente.getFechaFinReal());
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"componente\":",response_text);

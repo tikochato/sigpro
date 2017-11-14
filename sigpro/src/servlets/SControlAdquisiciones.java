@@ -31,8 +31,10 @@ import com.google.gson.reflect.TypeToken;
 import dao.ActividadDAO;
 import dao.EstructuraProyectoDAO;
 import dao.PlanAdquisicionDAO;
+import dao.ProyectoDAO;
 import pojo.Actividad;
 import pojo.PlanAdquisicion;
+import pojo.Proyecto;
 import utilities.CExcel;
 import utilities.CLogger;
 import utilities.CPdf;
@@ -72,6 +74,8 @@ public class SControlAdquisiciones extends HttpServlet {
 		String numeroContrato;
 		BigDecimal montoContrato;
 		List<String> hijos;
+		Integer tipoRevision;
+		String tipoRevisionNombre;
 	}
 	
     public SControlAdquisiciones() {
@@ -100,12 +104,12 @@ public class SControlAdquisiciones extends HttpServlet {
 			String accion = map.get("accion")!=null ? map.get("accion") : "";
 			String response_text = "";
 			
-			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
+			Integer proyectoId = Utils.String2Int(map.get("proyectoId"),0);
 			
 			if (accion.equals("generarPlan")){
 				
 				try{
-					List<stcontroladquisiciones> lstprestamo = generarPlan(idPrestamo, usuario);
+					List<stcontroladquisiciones> lstprestamo = generarPlan(proyectoId, usuario);
 										
 					response_text=new GsonBuilder().serializeNulls().create().toJson(lstprestamo);
 			        response_text = String.join("", "\"proyecto\":",response_text);
@@ -117,7 +121,7 @@ public class SControlAdquisiciones extends HttpServlet {
 			}else if(accion.equals("exportarExcel")){
 				Integer idPlanAdquisicion = Utils.String2Int(map.get("idPlanAdquisicion"), null);
 				try{ 
-					byte [] outArray = exportarExcel(idPlanAdquisicion, idPrestamo, usuario);
+					byte [] outArray = exportarExcel(idPlanAdquisicion, proyectoId, usuario);
 					
 					response.setContentType("application/ms-excel");
 					response.setContentLength(outArray.length);
@@ -134,7 +138,7 @@ public class SControlAdquisiciones extends HttpServlet {
 				String headers[][];
 				String datos[][];
 				headers = generarHeaders();
-				datos = generarDatos(idPrestamo, usuario);
+				datos = generarDatos(proyectoId, usuario);
 				String path = archivo.exportarPlanAdquisiciones(headers, datos,usuario);
 				File file=new File(path);
 				if(file.exists()){
@@ -195,10 +199,10 @@ public class SControlAdquisiciones extends HttpServlet {
 		}
 	}
 	
-	private List<stcontroladquisiciones> generarPlan(Integer idPrestamo, String usuario) throws Exception{
+	private List<stcontroladquisiciones> generarPlan(Integer IdProyecto, String usuario) throws Exception{
 		try{
 			List<stcontroladquisiciones> lstPrestamo = new ArrayList<>();
-			List<?> estruturaProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
+			List<?> estruturaProyecto = EstructuraProyectoDAO.getEstructuraProyecto(IdProyecto);
 			stcontroladquisiciones temp = null;
 			Integer proyectoId = 0;
 			Integer componenteId = 0;
@@ -287,11 +291,14 @@ public class SControlAdquisiciones extends HttpServlet {
 							temp.cantidad = adquisicion.getCantidad() != null ? adquisicion.getCantidad() : 0;
 							temp.costo = adquisicion.getPrecioUnitario() != null ? adquisicion.getPrecioUnitario() : new BigDecimal(0);
 							temp.total = adquisicion.getTotal() != null ? adquisicion.getTotal() : new BigDecimal(0);
+							temp.tipoRevision = adquisicion.getTipoRevision();
+							temp.tipoRevisionNombre = temp.tipoRevision != null ? temp.tipoRevision == 1 ? "Ex-ante" : temp.tipoRevision == 2 ? "Ex-Post" : null : null;
 							temp.nog = adquisicion.getNog();
+							temp.numeroContrato = adquisicion.getNumeroContrato();
+							temp.montoContrato = adquisicion.getMontoContrato().compareTo(BigDecimal.ZERO) > 0 ? adquisicion.getMontoContrato() : null;							
 						}
-					}
-					
-					lstPrestamo.add(temp);
+						lstPrestamo.add(temp);
+					}	
 				}
 			}
 			return lstPrestamo;
@@ -338,7 +345,8 @@ public class SControlAdquisiciones extends HttpServlet {
 			headers = generarHeaders();
 			datos = generarDatos(idPrestamo, usuario);
 			excel = new CExcel("Control de Adquisiciones", false, null);
-			wb=excel.generateExcelOfData(datos, "Control de Adquisiciones", headers, null, true, usuario);
+			Proyecto proyecto = ProyectoDAO.getProyecto(idPrestamo);
+			wb=excel.generateExcelOfData(datos, "Control de Adquisiciones - "+proyecto.getNombre(), headers, null, true, usuario);
 		
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());

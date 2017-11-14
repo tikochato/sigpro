@@ -43,7 +43,10 @@ public class SMiembrosUnidadEjecutora extends HttpServlet {
 	class stmiembro {
 		Integer id;
 		Integer colaboradorId;
-		String colaboradorNombre;
+		String primerNombre;
+		String segundoNombre;
+		String primerApellido;
+		String segundoApellido;
 		Integer proyectoId;
 		Integer estado;
 		Integer rolUnidadEjecutoraId;
@@ -107,16 +110,6 @@ public class SMiembrosUnidadEjecutora extends HttpServlet {
 			Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
 			List<ProyectoRolColaborador> colaboradores = ProyectoRolColaboradorDAO.getMiembrosPorProyecto(proyectoId);
 			
-			if (colaboradores == null || colaboradores.size() == 0){
-				colaboradores = new ArrayList<ProyectoRolColaborador>();
-				List<RolUnidadEjecutora> roles = RolUnidadEjecutoraDAO.getRolesPorDefecto();
-				for (RolUnidadEjecutora rol : roles){
-					ProyectoRolColaborador temp = new ProyectoRolColaborador();
-					temp.setRolUnidadEjecutora(rol);
-					colaboradores.add(temp);
-				}
-			}
-			
 			List<RolUnidadEjecutora> roles = RolUnidadEjecutoraDAO.getRoles();
 			List<strol> listaRoles = new ArrayList<strol>();
 			for (RolUnidadEjecutora rol : roles){
@@ -131,10 +124,12 @@ public class SMiembrosUnidadEjecutora extends HttpServlet {
 			for(ProyectoRolColaborador colaborador : colaboradores){
 				stmiembro temp = new stmiembro();
 				temp.colaboradorId = colaborador.getColaborador() != null ? colaborador.getColaborador().getId() : null;
-				temp.colaboradorNombre = colaborador.getColaborador() != null ?  String.join(" ", colaborador.getColaborador().getPnombre(),
-						colaborador.getColaborador().getSnombre() != null ? colaborador.getColaborador().getSnombre() : "",
-						colaborador.getColaborador().getPapellido(),
-						colaborador.getColaborador().getSapellido() != null ? colaborador.getColaborador().getSapellido() : "") : null;
+				if (colaborador.getColaborador()!=null){
+					temp.primerNombre = colaborador.getColaborador().getPnombre();
+					temp.segundoNombre = colaborador.getColaborador().getSnombre() != null ? colaborador.getColaborador().getSnombre() :null;
+					temp.primerApellido = colaborador.getColaborador().getPapellido();
+					temp.segundoApellido = colaborador.getColaborador().getSapellido() != null ? colaborador.getColaborador().getSapellido() : null;
+				}
 				temp.estado = colaborador.getEstado();
 				temp.id = colaborador.getId();
 				temp.proyectoId = colaborador.getProyecto() != null ?  colaborador.getProyecto().getId() : null;
@@ -193,8 +188,28 @@ public class SMiembrosUnidadEjecutora extends HttpServlet {
 			for(int i=0; i<miembrosArreglo.size(); i++){
 				JsonObject objeto = miembrosArreglo.get(i).getAsJsonObject();
 				
-				Colaborador colaborador = new Colaborador();
-				colaborador.setId(objeto.get("colaboradorId") != null ? Integer.parseInt(objeto.get("colaboradorId").getAsString()) : 0);
+				Colaborador colaborador;
+				if(!objeto.get("colaboradorId").isJsonNull()){
+					colaborador = new Colaborador();
+					colaborador.setId(Utils.String2Int(objeto.get("colaboradorId").getAsString(),0));
+				}else{
+					colaborador = ColaboradorDAO.getColaboradorByNombre(
+						objeto.get("primerNombre").getAsString(), 
+						objeto.get("segundoNombre").isJsonNull() ? null:   objeto.get("segundoNombre").getAsString() , 
+						objeto.get("primerApellido").getAsString(),
+						objeto.get("segundoApellido").isJsonNull() ? null : objeto.get("segundoApellido").getAsString()
+					);
+					
+					if (colaborador == null){
+						colaborador = new Colaborador(proyecto.getUnidadEjecutora(), null, 
+								objeto.get("primerNombre").getAsString(), 
+								objeto.get("segundoNombre").isJsonNull() ? null:   objeto.get("segundoNombre").getAsString(), 
+								objeto.get("primerApellido").getAsString(), 
+								objeto.get("segundoApellido").isJsonNull() ? null : objeto.get("segundoApellido").getAsString(), 
+								0 , 1, usuario, null, new Date(), null, null, null, null, null, null);
+						ColaboradorDAO.guardarColaborador(colaborador);
+					}
+				}
 				
 				RolUnidadEjecutora rol = new RolUnidadEjecutora();
 				rol.setId(objeto.get("rolUnidadEjecutoraId") != null ? Integer.parseInt(objeto.get("rolUnidadEjecutoraId").getAsString()) : 0);

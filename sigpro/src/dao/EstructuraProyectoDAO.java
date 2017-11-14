@@ -5,13 +5,16 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import pojo.Actividad;
 import pojo.Componente;
+import pojo.Prestamo;
 import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subcomponente;
@@ -33,26 +36,26 @@ public class EstructuraProyectoDAO {
 					"select * from ( "+
 					"select p.id, p.nombre, 0 objeto_tipo,  p.treePath, p.fecha_inicio, "+
 					"p.fecha_fin, p.duracion, p.duracion_dimension,p.costo,0, p.acumulacion_costoid,  "+
-					"p.programa, p.subprograma, p.proyecto, p.actividad, p.obra "+
+					"p.programa, p.subprograma, p.proyecto, p.actividad, p.obra, p.fecha_inicio_real, p.fecha_fin_real,0 porcentaje_avance, 0 objeto_tipo_pred "+
 					"from proyecto p "+
 					"where p.id= ?1 and p.estado=1  "+
 					"union "+
 					"select c.id, c.nombre, 1 objeto_tipo,  c.treePath, c.fecha_inicio, "+
 					"c.fecha_fin , c.duracion, c.duracion_dimension,c.costo,0,c.acumulacion_costoid, "+
-					"c.programa, c.subprograma, c.proyecto, c.actividad, c.obra "+
+					"c.programa, c.subprograma, c.proyecto, c.actividad, c.obra, c.fecha_inicio_real, c.fecha_fin_real,0 porcentaje_avance, 0 objeto_tipo_pred "+
 					"from componente c "+
 					"where c.proyectoid=?1 and c.estado=1  "+
 					"union "+
 					"select s.id, s.nombre, 2 objeto_tipo,  s.treePath, s.fecha_inicio, "+
 					"s.fecha_fin , s.duracion, s.duracion_dimension,s.costo,0,s.acumulacion_costoid, "+
-					"s.programa, s.subprograma, s.proyecto, s.actividad, s.obra "+
+					"s.programa, s.subprograma, s.proyecto, s.actividad, s.obra, s.fecha_inicio_real, s.fecha_fin_real,0 porcentaje_avance, 0 objeto_tipo_pred "+
 					"from subcomponente s "+
 					"left outer join componente c on c.id=s.componenteid "+
 					"where c.proyectoid=?1 and s.estado=1 and c.estado=1  "+
 					"union "+
 					"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
 					"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid, "+
-					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra "+
+					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra, pr.fecha_inicio_real, pr.fecha_fin_real,0 porcentaje_avance, 0 objeto_tipo_pred "+
 					"from producto pr "+
 					"left outer join componente c on c.id=pr.componenteid "+
 					"left outer join proyecto p on p.id=c.proyectoid "+
@@ -60,7 +63,7 @@ public class EstructuraProyectoDAO {
 					"union "+
 					"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
 					"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid, "+
-					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra "+
+					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra, pr.fecha_inicio_real, pr.fecha_fin_real,0 porcentaje_avance, 0 objeto_tipo_pred "+
 					"from producto pr "+
 					"left outer join subcomponente sc on sc.id=pr.subcomponenteid   "+  
 					"left outer join componente c on c.id = sc.componenteid   "+
@@ -69,7 +72,7 @@ public class EstructuraProyectoDAO {
 					"union   "+
 					"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
 					"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid, "+
-					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra "+
+					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra, sp.fecha_inicio_real, sp.fecha_fin_real,0 porcentaje_avance, 0 objeto_tipo_pred "+
 					"from subproducto sp "+
 					"left outer join producto pr on pr.id=sp.productoid "+
 					"left outer join componente c on c.id=pr.componenteid "+
@@ -78,7 +81,7 @@ public class EstructuraProyectoDAO {
 					"union   "+
 					"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
 					"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid, "+
-					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra "+
+					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra, sp.fecha_inicio_real, sp.fecha_fin_real,0 porcentaje_avance, 0 objeto_tipo_pred "+
 					"from subproducto sp "+
 					"left outer join producto pr on pr.id=sp.productoid "+
 					"left outer join subcomponente sc on sc.id=pr.subcomponenteid "+
@@ -88,7 +91,7 @@ public class EstructuraProyectoDAO {
 					"union "+
 					"select a.id, a.nombre, 5 objeto_tipo,  a.treePath, a.fecha_inicio, "+
 					"a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id,a.acumulacion_costo acumulacion_costoid, "+
-					"a.programa, a.subprograma, a.proyecto, a.actividad, a.obra "+
+					"a.programa, a.subprograma, a.proyecto, a.actividad, a.obra, a.fecha_inicio_real, a.fecha_fin_real, a.porcentaje_avance, a.objeto_tipo objeto_tipo_pred "+
 					"from actividad a "+
 					"where a.estado=1 and  a.treepath like '"+(10000000+idProyecto)+"%'"+
 					") arbol "+
@@ -269,6 +272,73 @@ public class EstructuraProyectoDAO {
 		return root;
 	}
 	
+	public static Nodo getEstructuraPrestamoProyectoArbolProyectosComponentesProductos(int id,String usuario){
+		Nodo root = null;
+		Prestamo prestamo = PrestamoDAO.getPrestamoById(id);
+		if(prestamo != null){
+			Set<Proyecto> proyectos = prestamo.getProyectos();
+			if(proyectos != null && proyectos.size() > 0){
+				int id_ = prestamo.getId();
+				int objeto_tipo = -1;
+				String nombre = prestamo.getProyectoPrograma();
+				int nivel = 0;
+				boolean estado= checkPermiso(id,objeto_tipo, usuario);
+				root = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, estado);
+				
+				Iterator<Proyecto> iterador = proyectos.iterator();
+				while(iterador.hasNext()){
+					Proyecto proyecto = iterador.next();
+					List<?> estructuras = EstructuraProyectoDAO.getEstructuraProyecto(proyecto.getId());
+					
+					if(estructuras.size()>0){
+						try{
+							Object[] dato = (Object[]) estructuras.get(0);
+							id_ = dato[0]!=null ? (Integer)dato[0] : 0;
+							objeto_tipo = dato[2]!=null ? ((BigInteger)dato[2]).intValue() : 0;
+							nombre = dato[1]!=null ? (String)dato[1] : null;
+							nivel = (dato[3]!=null) ? (((String)dato[3]).length()/8)+1 : 1;
+							estado = checkPermiso(id,objeto_tipo,usuario);
+							Nodo nodo = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, estado);
+							nodo.parent = root;
+							root.children.add(nodo);
+
+							Nodo nivel_actual_estructura = root;
+							//Nodo nivel_actual_estructura = root;
+							for(int i=1; i<estructuras.size(); i++){
+								dato = (Object[]) estructuras.get(i);
+								id_ = dato[0]!=null ? (Integer)dato[0] : 0;
+								objeto_tipo = dato[2]!=null ? ((BigInteger)dato[2]).intValue() : 0;
+								nombre = dato[1]!=null ? (String)dato[1] : null;
+								nivel = (dato[3]!=null) ? (((String)dato[3]).length()/8)+ 1 : 1;
+								estado = checkPermiso(id_,objeto_tipo,usuario);
+								if(objeto_tipo<4){
+									nodo = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, estado);
+									if(nodo.nivel!=nivel_actual_estructura.nivel+1){
+										if(nodo.nivel>nivel_actual_estructura.nivel){
+											nivel_actual_estructura = nivel_actual_estructura.children.get(nivel_actual_estructura.children.size()-1);
+										}
+										else{
+											int retornar = nivel_actual_estructura.nivel-nodo.nivel+1;
+											for(int j=0; j<(retornar); j++)
+												nivel_actual_estructura=nivel_actual_estructura.parent;
+										}
+									}
+									nodo.parent = nivel_actual_estructura;
+									nivel_actual_estructura.children.add(nodo);
+								}
+							}
+						}catch(Throwable e){
+							root = null;
+							CLogger.write("3", EstructuraProyectoDAO.class, e);
+						}
+					}
+				}
+			}
+		}
+		
+		return root;
+	}
+	
 	public static List<?> getActividadesProyecto(Integer prestamoId){
 		List<?> ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -328,9 +398,23 @@ public class EstructuraProyectoDAO {
 		return (ret.size()>0 ? ret : null);
 	}
 	
+	public static ArrayList<Nodo> getEstructuraPrestamosArbol(String usuario){
+		ArrayList<Nodo> ret = new ArrayList<Nodo>();
+		List<Prestamo> prestamos = PrestamoDAO.getPrestamos();
+		if(prestamos!= null){
+			for(int i=0; i<prestamos.size(); i++){
+				Nodo prestamo = getEstructuraPrestamoProyectoArbolProyectosComponentesProductos(prestamos.get(i).getId(), usuario);
+				if(prestamo!=null)
+					ret.add(prestamo);
+			}
+		}
+		return (ret.size()>0 ? ret : null);
+	}
+	
 	public static boolean checkPermiso(int id, int objeto_tipo, String usuario){
 		boolean ret = false;
 		switch(objeto_tipo){
+			case -1: ret = UsuarioDAO.checkUsuarioPrestamo(usuario,id); break;
 			case 0: ret = UsuarioDAO.checkUsuarioProyecto(usuario,id); break;
 			case 1: ret = UsuarioDAO.checkUsuarioComponente(usuario,id); break;
 			case 2: ret = UsuarioDAO.checkUsuarioSubComponente(usuario,id); break;
@@ -389,7 +473,9 @@ public class EstructuraProyectoDAO {
 				Timestamp fecha_inicio = (dato[4]!=null) ? new Timestamp(((Date)dato[4]).getTime()) : null;
 				Timestamp fecha_fin = (dato[5]!=null) ? new Timestamp(((Date)dato[5]).getTime()) : null;
 				Double costo = (dato[8]!=null) ? ((BigDecimal)dato[8]).doubleValue() : 0;
-				root = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, false, fecha_inicio, fecha_fin, costo,0);
+				Timestamp fecha_inicio_real = (dato[16] != null) ? new Timestamp(((Date)dato[16]).getTime()) : null;
+				Timestamp fecha_fin_real = (dato[17] != null) ? new Timestamp(((Date)dato[17]).getTime()) : null;
+				root = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, false, fecha_inicio, fecha_fin, costo,0, fecha_inicio_real, fecha_fin_real);
 				Nodo nivel_actual_estructura = root;
 				ret.add(new ArrayList<Nodo>());
 				ret.get(0).add(root);
@@ -403,7 +489,9 @@ public class EstructuraProyectoDAO {
 					fecha_fin = (dato[5]!=null) ? new Timestamp(((Date)dato[5]).getTime()) : null;
 					costo = (dato[8]!=null) ? ((BigDecimal)dato[8]).doubleValue() : 0;
 					nivel_maximo = nivel_maximo <  nivel ? nivel : nivel_maximo;
-					Nodo nodo = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, false, fecha_inicio, fecha_fin, costo,0);
+					fecha_inicio_real = (dato[16] != null) ? new Timestamp(((Date)dato[16]).getTime()) : null;
+					fecha_fin_real = (dato[17] != null) ? new Timestamp(((Date)dato[17]).getTime()) : null;
+					Nodo nodo = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, false, fecha_inicio, fecha_fin, costo,0, fecha_inicio_real, fecha_fin_real);
 					if(nodo.nivel!=nivel_actual_estructura.nivel+1){
 						if(nodo.nivel>nivel_actual_estructura.nivel){
 							nivel_actual_estructura = nivel_actual_estructura.children.get(nivel_actual_estructura.children.size()-1);
@@ -452,21 +540,21 @@ public class EstructuraProyectoDAO {
 					( objetoTipo<=0 ? 
 					"select p.id, p.nombre, 0 objeto_tipo,  p.treePath, p.fecha_inicio, "+
 					"p.fecha_fin, p.duracion, p.duracion_dimension,p.costo,0, p.acumulacion_costoid,  "+
-					"p.programa, p.subprograma, p.proyecto, p.actividad, p.obra "+
+					"p.programa, p.subprograma, p.proyecto, p.actividad, p.obra, p.fecha_inicio_real, p.fecha_fin_real "+
 					"from proyecto p "+
 					"where p.id= ?1 and p.estado=1  "+
 					"union " : "" ) +
 					( objetoTipo<=1 ? 
 					"select c.id, c.nombre, 1 objeto_tipo,  c.treePath, c.fecha_inicio, "+
 					"c.fecha_fin , c.duracion, c.duracion_dimension,c.costo,0,c.acumulacion_costoid, "+
-					"c.programa, c.subprograma, c.proyecto, c.actividad, c.obra "+
+					"c.programa, c.subprograma, c.proyecto, c.actividad, c.obra, c.fecha_inicio_real, c.fecha_fin_real  "+
 					"from componente c "+
 					"where c.proyectoid=?1 and c.estado=1  "+
 					"union " : "" ) +
 					( objetoTipo<=2 ? 
 					"select s.id, s.nombre, 2 objeto_tipo,  s.treePath, s.fecha_inicio, "+
 					"s.fecha_fin , s.duracion, s.duracion_dimension,s.costo,0,s.acumulacion_costoid, "+
-					"s.programa, s.subprograma, s.proyecto, s.actividad, s.obra "+
+					"s.programa, s.subprograma, s.proyecto, s.actividad, s.obra, s.fecha_inicio_real, s.fecha_fin_real  "+
 					"from subcomponente s "+
 					"left outer join componente c on c.id=s.componenteid "+
 					"left outer join proyecto p on p.id=c.proyectoid "+
@@ -474,7 +562,7 @@ public class EstructuraProyectoDAO {
 					"union " : "" ) +
 					( objetoTipo<=3 ? "select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
 					"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid, "+
-					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra "+
+					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra, pr.fecha_inicio_real, pr.fecha_fin_real  "+
 					"from producto pr "+
 					"left outer join componente c on c.id=pr.componenteid "+
 					"left outer join proyecto p on p.id=c.proyectoid "+
@@ -482,7 +570,7 @@ public class EstructuraProyectoDAO {
 					"union "+
 					"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
 					"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid, "+
-					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra "+
+					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra, pr.fecha_inicio_real, pr.fecha_fin_real  "+
 					"from producto pr "+
 					"left outer join subcomponente s on s.id=pr.subcomponenteid "+
 					"left outer join componente c on c.id=s.componenteid "+
@@ -491,7 +579,7 @@ public class EstructuraProyectoDAO {
 					"union " : "")+
 					( objetoTipo<=4 ? "select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
 					"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid, "+
-					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra "+
+					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra, sp.fecha_inicio_real, sp.fecha_fin_real  "+
 					"from subproducto sp "+
 					"left outer join producto pr on pr.id=sp.productoid "+
 					"left outer join componente c on c.id=pr.componenteid "+
@@ -500,7 +588,7 @@ public class EstructuraProyectoDAO {
 					"union "+
 					"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
 					"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid, "+
-					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra "+
+					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra, sp.fecha_inicio_real, sp.fecha_fin_real  "+
 					"from subproducto sp "+
 					"left outer join producto pr on pr.id=sp.productoid "+
 					"left outer join subcomponente sc on sc.id=pr.subcomponenteid "+
@@ -510,7 +598,7 @@ public class EstructuraProyectoDAO {
 					"union " : "") +
 					"select a.id, a.nombre, 5 objeto_tipo,  a.treePath, a.fecha_inicio, "+
 					"a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id,a.acumulacion_costo acumulacion_costoid, "+
-					"a.programa, a.subprograma, a.proyecto, a.actividad, a.obra "+
+					"a.programa, a.subprograma, a.proyecto, a.actividad, a.obra, a.fecha_inicio_real, a.fecha_fin_real  "+
 					"from actividad a "+
 					"where a.estado=1 and  a.treepath like '"+treePath_inicio+"%'"+
 					") arbol "+
@@ -543,7 +631,9 @@ public class EstructuraProyectoDAO {
 				Timestamp fecha_inicio = (dato[4]!=null) ? new Timestamp(((Date)dato[4]).getTime()) : null;
 				Timestamp fecha_fin = (dato[5]!=null) ? new Timestamp(((Date)dato[5]).getTime()) : null;
 				Double costo = (dato[8]!=null) ? ((BigDecimal)dato[8]).doubleValue() : 0;
-				root = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, false, fecha_inicio, fecha_fin, costo,0);
+				Timestamp fecha_inicio_real = (dato[16] != null) ? new Timestamp(((Date)dato[16]).getTime()) : null;
+				Timestamp fecha_fin_real = (dato[17] != null) ? new Timestamp(((Date)dato[17]).getTime()) : null;
+				root = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, false, fecha_inicio, fecha_fin, costo,0, fecha_inicio_real, fecha_fin_real);
 				Nodo nivel_actual_estructura = root;
 				ret.add(new ArrayList<Nodo>());
 				ret.get(0).add(root);
@@ -557,7 +647,9 @@ public class EstructuraProyectoDAO {
 					fecha_fin = (dato[5]!=null) ? new Timestamp(((Date)dato[5]).getTime()) : null;
 					costo = (dato[8]!=null) ? ((BigDecimal)dato[8]).doubleValue() : 0;
 					nivel_maximo = nivel_maximo <  nivel ? nivel : nivel_maximo;
-					Nodo nodo = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, false, fecha_inicio, fecha_fin, costo,0);
+					fecha_inicio_real = (dato[16] != null) ? new Timestamp(((Date)dato[16]).getTime()) : null;
+					fecha_fin_real = (dato[17] != null) ? new Timestamp(((Date)dato[17]).getTime()) : null;
+					Nodo nodo = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, false, fecha_inicio, fecha_fin, costo,0, fecha_inicio_real, fecha_fin_real);
 					if(nodo.nivel!=nivel_actual_estructura.nivel+1){
 						if(nodo.nivel>nivel_actual_estructura.nivel){
 							nivel_actual_estructura = nivel_actual_estructura.children.get(nivel_actual_estructura.children.size()-1);

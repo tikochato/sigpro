@@ -23,6 +23,7 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		mi.requerido=false;
 		mi.tieneHijos = false;
 		mi.actualizarCosto=null;
+		mi.inhabilitarFechas=false;
 		
 		if($scope.$parent.producto){
 			$scope.$parent.producto.child_adquisiciones = $scope.adquisicionc;
@@ -155,6 +156,8 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 									mi.adquisicion.pagos[j].fechaPago = (mi.adquisicion.pagos[j].fechaPago!=null && mi.adquisicion.pagos[j].fechaPago!="") ? moment(mi.adquisicion.pagos[j].fechaPago,'DD/MM/YYYY').toDate() : null;
 								}
 							}
+							
+							mi.getInfoNog();
 						}
 						else{
 							mi.nuevo();
@@ -184,7 +187,7 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 					id: mi.adquisicion.id,
 					lanzamientoEventoPlanificada: mi.adquisicion.lanzamientoEventoPlanificada,
 					lanzamientoEventoReal: mi.adquisicion.lanzamientoEventoReal,
-					montoContrato: mi.adquisicion.montoContrato,
+					montoContrato: mi.adquisicion.montoContrato != null ? mi.adquisicion.montoContrato : 0,
 					nog: mi.adquisicion.nog,
 					numeroContrato: mi.adquisicion.numeroContrato,
 					precioUnitario: mi.adquisicion.precioUnitario,
@@ -196,6 +199,7 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 					total: mi.adquisicion.total,
 					medidaNombre: mi.adquisicion.medidaNombre,
 					pagos: JSON.stringify(mi.adquisicion.pagos),
+					tipoRevision: mi.adquisicion.tipoRevision,
 					t: (new Date()).getTime()
 				}).success(function(response){
 					if(response.success){
@@ -267,27 +271,36 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		};
 		
 		mi.agregarPagos = function() {
-			var modalInstance = $uibModal.open({
-				animation : 'true',
-				ariaLabelledBy : 'modal-title',
-				ariaDescribedBy : 'modal-body',
-				templateUrl : 'pago.jsp',
-				controller : 'modalPlanadquisicionPagos',
-				controllerAs : 'modalPagos',
-				backdrop : 'static',
-				size : 'md',
-				resolve: {
-				    pagos: function(){
-				    	return mi.adquisicion.pagos;
-				    }
-				  }
-			});
+			if(mi.adquisicion.montoContrato != null){
+				var modalInstance = $uibModal.open({
+					animation : 'true',
+					ariaLabelledBy : 'modal-title',
+					ariaDescribedBy : 'modal-body',
+					templateUrl : 'pago.jsp',
+					controller : 'modalPlanadquisicionPagos',
+					controllerAs : 'modalPagos',
+					backdrop : 'static',
+					size : 'md',
+					resolve: {
+					    pagos: function(){
+					    	return mi.adquisicion.pagos;
+					    },
+					    totalPagos: function(){
+					    	return mi.totalPagos;
+					    },
+					    montoContrato: function(){
+					    	return mi.adquisicion.montoContrato;
+					    }
+					  }
+				});
 
-			modalInstance.result.then(function() {
-			   
-			}, function() {
-			});
+				modalInstance.result.then(function() {
+				   
+				}, function() {
+				});
 
+			}else
+				$utilidades.mensaje('warning','Para agregar pagos, ingrese Monto del contrato');
 		};
 		
 		mi.actualizaMontos=function(control){
@@ -332,14 +345,52 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 				mi.requerido=false;
 		}
 		
+		mi.getInfoNog = function(){
+			if(mi.adquisicion.nog != null){
+				$http.post('/SPlanAdquisicion', { accion: 'getInfoNog', nog: mi.adquisicion.nog}).success(
+					function(response){
+						if(response.success){
+							if(response.nogInfo.length == 1){
+								mi.adquisicion.numeroContrato = response.nogInfo[0].numeroContrato;
+								mi.adquisicion.montoContrato = response.nogInfo[0].montoContrato;
+								mi.adquisicion.preparacionDocumentosReal = response.nogInfo[0].preparacionDocumentosReal != undefined && response.nogInfo[0].preparacionDocumentosReal !='' ? moment(response.nogInfo[0].preparacionDocumentosReal, 'DD/MM/YYYY').toDate() : null;
+								mi.adquisicion.lanzamientoEventoReal = response.nogInfo[0].lanzamientoEventoReal != undefined && response.nogInfo[0].lanzamientoEventoReal != '' ? moment(response.nogInfo[0].lanzamientoEventoReal, 'DD/MM/YYYY').toDate() : null;
+								mi.adquisicion.recepcionOfertasReal = response.nogInfo[0].recepcionOfertasReal != undefined && response.nogInfo[0].recepcionOfertasReal != '' ? moment(response.nogInfo[0].recepcionOfertasReal, 'DD/MM/YYYY').toDate() : null;
+								mi.adquisicion.adjudicacionReal = response.nogInfo[0].adjudicacionReal != undefined && response.nogInfo[0].adjudicacionReal != '' ? moment(response.nogInfo[0].adjudicacionReal, 'DD/MM/YYYY').toDate() : null;
+								mi.adquisicion.firmaContratoReal = response.nogInfo[0].firmaContratoReal != undefined && response.nogInfo[0].firmaContratoReal != '' ? moment(response.nogInfo[0].firmaContratoReal, 'DD/MM/YYYY').toDate() : null;
+								mi.inhabilitarFechas=true;
+								mi.listaNog = false;
+							}else{
+								mi.adquisicion.numeroContrato = null;
+								mi.adquisicion.montoContrato = null;
+								mi.adquisicion.preparacionDocumentosReal = null;
+								mi.adquisicion.lanzamientoEventoReal = null;
+								mi.adquisicion.recepcionOfertasReal = null;
+								mi.adquisicion.adjudicacionReal = null;
+								mi.adquisicion.firmaContratoReal = null;
+								
+								mi.inhabilitarFechas=true;
+								
+								mi.infoNogs = response.nogInfo;
+								mi.displayedInfoNog = [].concat(mi.infoNogs);
+								mi.listaNog = true;
+							}
+						}else{
+							$utilidades.mensaje('warning','No existe información para ese NOG');
+							mi.adquisicion.nog = null;
+						}
+					}
+				)
 			
+			}
+		}		
 } ]);
 
 app.controller('modalPlanadquisicionPagos', [ '$uibModalInstance',
 	'$scope', '$http', '$interval',  'Utilidades',
-	'$timeout', '$log','dialogoConfirmacion', 'pagos', 
+	'$timeout', '$log','dialogoConfirmacion', 'pagos', 'totalPagos','montoContrato',
 	function ($uibModalInstance, $scope, $http, $interval,
-		$utilidades, $timeout, $log,$dialogoConfirmacion, pagos, totalPagos) {
+		$utilidades, $timeout, $log,$dialogoConfirmacion, pagos, totalPagos, montoContrato) {
 	
 		var mi = this;
 		
@@ -348,7 +399,8 @@ app.controller('modalPlanadquisicionPagos', [ '$uibModalInstance',
 		mi.formatofecha = 'dd/MM/yyyy';
 		mi.altformatofecha = ['d!/M!/yyyy'];
 		mi.totalPagos=0;
-				
+		mi.montoContrato = montoContrato;
+		
 		mi.abrirPopupFecha = function(index, tipo) {
 			if(tipo==0){
 				mi.pagos[index].isOpen = true;
@@ -400,7 +452,13 @@ app.controller('modalPlanadquisicionPagos', [ '$uibModalInstance',
 		     var total = 0;
 		     if (array) {
 		         mi.totalPagos = array.reduce(function(total,item) {
-		             return total + item.pago;
+		        	 if(total+item.pago <= mi.montoContrato)
+		        		 return total + item.pago;
+		        	 else{
+		        		 $utilidades.mensaje('warning','Los pagos sobrepasan el Monto del contrato');
+		        		 $scope.pagos.splice($scope.pagos.length-1, 1);
+		        		 return total;
+		        	 }
 		         },0);
 		     } 
 		 }, true);

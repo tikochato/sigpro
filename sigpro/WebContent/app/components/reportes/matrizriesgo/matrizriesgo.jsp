@@ -33,61 +33,58 @@
 			</div>
 			</div>
 			<div class="col-sm-12 " ng-hide="!matrizriesgoc.mostrarTabla">
-				<table st-table="matrizriesgoc.riesgos" st-safe-src="matrizriesgoc.lista" class="table table-condensed table-hover"
+				<table st-table="matrizriesgoc.riesgos" st-safe-src="matrizriesgoc.lista" class="table table-striped"
 				ng-hide="!matrizriesgoc.mostrarTabla" >
 					<thead>
 						<tr>
-							<th class="label-form">Riesgo</th>
-							<th class="label-form">Nivel</th>
-							<th st-sort="nombre" class="label-form">Descripción</th>
+							<th class="label-form">Id</th>
+							<th st-sort="nombre" class="label-form">Riesgo</th>
 							<th class="label-form">Categoría</th>
-							<th class="label-form">Impacto proyectado</th>
+							<th class="label-form">Nivel</th>
 							<th class="label-form">Impacto</th>
-							<th class="label-form">Puntuación de impacto</th>
 							<th class="label-form">Probabilidad</th>
-							<th class="label-form">Punteo de prioridad</th>
-							<th class="label-form">Gatillos / Sintomas</th>
-							<th class="label-form">Respuesta</th>
+							<th class="label-form">Calificación</th>
+							<th class="label-form">Impacto en Tiempo</th>
+							<th class="label-form">Contingencia en Tiempo</th>
+							<th class="label-form">Impacto en Monto (Q)</th>
+							<th class="label-form">Contingencia en Monto (Q)</th>
+							<th class="label-form">Evento Iniciador</th>
+							<th class="label-form">Consecuencias</th>
+							<th class="label-form">Riesgos Secundarios</th>
+							<th class="label-form">Solución</th>
 							<th class="label-form">Responsable</th>
-							<th class="label-form">Riesgos secundarios</th>
 							<th class="label-form">¿Ha sido ejecutado?</th>
 							<th class="label-form">Fecha de Ejecución</th>
-
+							<th class="label-form">Resultado</th>
+							<th class="label-form">Observaciones</th>
 						</tr>
 						<tr>
-							<th colspan="15"><input st-search="" class="form-control" placeholder="Buscar" type="text"/></th>
+							<th colspan="20"><input st-search="" class="form-control" placeholder="Buscar" type="text"/></th>
 						</tr>
 					</thead>
 					<tbody>
 					<tr ng-repeat="row in matrizriesgoc.riesgos">
 
 						<td>{{row.idRiesgo}}</td>
-						<td>{{row.objetoTipoNombre}}</td>
 						<td>{{row.nombre}}</td>
 						<td>{{row.tipoNombre}}</td>
-						<td>{{row.impactoProyectado}}</td>
+						<td>{{row.objetoTipoNombre}}</td>
 						<td>{{row.impacto}}</td>
-						<td>{{row.puntuacionImpacto}}</td>
-						<td>
-						<ANY ng-switch="row.probabilidad" >
-							<ANY ng-switch-when="1">
-								Bajo
-							</ANY>
-							<ANY ng-switch-when="2">
-								Medio
-							</ANY>
-							<ANY ng-switch-when="3">
-								Alto
-							</ANY>
-						</ANY>
-						</td>
-						<td>{{ row.punteoPrioridad }} </td>
-						<td>{{row.gatillosSintomas}}</td>
-						<td>{{row.respuesta}}</td>
-						<td>{{row.colaboradorNombre}}</td>
+						<td>{{row.probabilidad}}</td>
+						<td>{{(row.impacto * row.probabilidad).toFixed(2)}} </td>
+						<td>{{row.impactoTiempo}}</td>
+						<td>{{(row.impacto * row.probabilidad * row.impactoTiempo).toFixed(2)}}</td>
+						<td>{{row.impactoMonto}}</td>
+						<td>{{(row.impacto * row.probabilidad * row.impactoMonto).toFixed(2)}}</td>
+						<td>{{row.gatillo}}</td>
+						<td>{{row.consecuencias}}</td>
 						<td>{{row.riesgosSecundarios}}</td>
+						<td>{{row.solucion}}</td>
+						<td>{{row.colaboradorNombre}}</td>
 						<td>{{ row.ejecutado == 1 ? 'Si' : 'No' }}</td>
 						<td>{{row.fechaEjecucion}}</td>
+						<td>{{row.resultado}}</td>
+						<td>{{row.observaciones}}</td>
 					</tr>
 					</tbody>
 				</table>

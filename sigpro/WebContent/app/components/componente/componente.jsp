@@ -40,7 +40,7 @@
     		<div class="col-sm-12 operation_buttons" align="right">
 			  <div class="btn-group">
 			  <shiro:hasPermission name="5040">
-			    <label class="btn btn-primary" ng-click="componentec.nuevo()" uib-tooltip="Nuevo">
+			    <label class="btn btn-primary" ng-click="!componentec.esDeSigade ? componentec.nuevo() : ''" uib-tooltip="Nuevo" ng-disabled = "componentec.esDeSigade">
 			    <span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			  </shiro:hasPermission>
 			  <shiro:hasPermission name="5020">
@@ -48,7 +48,7 @@
 			    <span class="glyphicon glyphicon-pencil"></span> Editar</label>
 			  </shiro:hasPermission>
 			  <shiro:hasPermission name="5030">
-			    <label class="btn btn-danger" ng-click="componentec.borrar()" uib-tooltip="Borrar">
+			    <label class="btn btn-danger" ng-click="!componentec.esDeSigade ?  componentec.borrar() : ''" uib-tooltip="Borrar" ng-disabled = "componentec.esDeSigade">
 			    <span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			  </shiro:hasPermission>
 			  </div>
@@ -98,7 +98,7 @@
 			
     		<div class="operation_buttons">
     		  <div class="btn-group" ng-hide="componentec.esnuevo" ng-if="!componentec.esTreeview">
-				<label class="btn btn-default" ng-click="componentec.botones ? componentec.irASubComponente(componentec.componente.id) : ''" uib-tooltip="Subcomponentes" tooltip-placement="bottom" ng-disabled="!componentec.botones">
+				<label class="btn btn-default" ng-click="componentec.botones ? componentec.irASubComponente(componentec.componente.id) : ''" uib-tooltip="Subcomponentes" tooltip-placement="bottom" ng-disabled="!componentec.botones ">
 				<span class="glyphicon glyphicon-equalizer"></span></label>
 				<label class="btn btn-default" ng-click="componentec.botones ? componentec.irAProductos(componentec.componente.id) : ''" uib-tooltip="Productos" tooltip-placement="bottom" ng-disabled="!componentec.botones">
 				<span class="glyphicon glyphicon-certificate"></span></label>
@@ -108,7 +108,7 @@
 		      </div>
 			  <div class="btn-group" style="float: right;">
 			    <shiro:hasPermission name="5020">
-			      <label class="btn btn-success" ng-click="componentec.mForm.$valid && componentec.botones ? componentec.guardar() : ''" ng-disabled="!componentec.mForm.$valid || !componentec.botones" uib-tooltip="Guardar">
+			      <label class="btn btn-success" ng-click="componentec.mForm.$valid && componentec.botones   ? componentec.guardar() : ''" ng-disabled="!componentec.mForm.$valid || !componentec.botones" uib-tooltip="Guardar">
 			      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 			    </shiro:hasPermission>
 			    <label ng-if="!componentec.esTreeview" class="btn btn-primary" ng-click="componentec.botones ? componentec.irATabla() : ''" uib-tooltip="Ir a Tabla" ng-disabled="!componentec.botones">
@@ -173,7 +173,7 @@
 							</div>
 						</div>
 						
-						<div class="form-group">
+						<div class="form-group" ng-hide="true">
 						   <input type="number" name="snip"  class="inputText" id="snip" 
 						     ng-model="componentec.componente.snip" ng-value="componentec.componente.snip"   
 						     onblur="this.setAttribute('value', this.value);" ng-required="false" >
@@ -206,20 +206,6 @@
 							<label for="campo3" class="floating-label">Coordenadas</label>
 						</div>
 						
-						<div class="form-group">
-						   <input type="text" name="idescrip"  class="inputText" id="idescrip" 
-						     ng-model="componentec.componente.descripcion" ng-value="componentec.componente.descripcion"   
-						     onblur="this.setAttribute('value', this.value);" ng-required="false" >
-						   <label class="floating-label">Descripción</label>
-						</div>
-						
-						<div class="form-group" >
-					       <input type="text" class="inputText" ng-model="componentec.componente.costo" ng-value="componentec.componente.costo" ui-number-mask="2"
-					       ng-required="componentec.componente.acumulacionCostoId > 0" onblur="this.setAttribute('value', this.value);" style="text-align: left" 
-					       ng-readonly="componentec.componente.tieneHijos" />
-					       <label for="iprog" class="floating-label">{{componentec.componente.acumulacionCostoId > 0 ? "* Costo" : "Costo"}}</label>
-						</div>
-						
 						<div class="form-group" >
 					       <input type="text" class="inputText" ng-model="componentec.componente.fuentePrestamo" ng-value="componentec.componente.fuentePrestamo" ui-number-mask="2"
 					        onblur="this.setAttribute('value', this.value);" style="text-align: left" 
@@ -241,10 +227,17 @@
 					       <label for="iprog" class="floating-label">Total de Fuente Nacional Asignada</label>
 						</div>
 						
+						<div class="form-group" >
+					       <input type="text" class="inputText" ng-model="componentec.componente.costo" ng-value="componentec.componente.costo" ui-number-mask="2"
+					       ng-required="componentec.componente.acumulacionCostoId > 0" onblur="this.setAttribute('value', this.value);" style="text-align: left" 
+					       ng-readonly="componentec.componente.tieneHijos" />
+					       <label for="iprog" class="floating-label">{{componentec.componente.acumulacionCostoId > 0 ? "* Monto Planificado" : "Monto Planificado"}}</label>
+						</div>
+						
 						<div class="form-group">
 		            		<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="componentec.cambioAcumulacionCosto"
 							  local-data="componentec.acumulacionesCosto" search-fields="nombre" title-field="nombre" field-required="componentec.componente.costo!=null && componentec.componente.costo>0" 
-						  field-label="{{componentec.componente.costo!=null && componentec.componente.costo>0 ? '* ':''}}Tipo de Acumulación Costo"
+						  field-label="{{componentec.componente.costo!=null && componentec.componente.costo>0 ? '* ':''}}Tipo de Acumulación Monto Planificado"
 							  minlength="1" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
 							  initial-value="componentec.componente.acumulacionCostoNombre" focus-out="componentec.blurCategoria()" input-name="acumulacionCosto"></div>
 						</div>
@@ -299,6 +292,34 @@
 								  <label for="campo.id" class="floating-label">* Fecha de Fin</label>
 								</div>
 							</div>
+							
+							<div class="col-sm-6">
+							<div class="form-group" >
+							  <input type="text"  class="inputText" uib-datepicker-popup="{{componentec.formatofecha}}" alt-input-formats="{{componentec.altformatofecha}}"
+							  			ng-model="componentec.componente.fechaInicioReal"
+							            datepicker-options="componentec.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  
+							            ng-value="componentec.componente.fechaInicioReal" onblur="this.setAttribute('value', this.value);"
+						            	readonly="readonly"/>
+							            <span class="label-icon" tabindex="-1">
+							              <i class="glyphicon glyphicon-calendar"></i>
+							            </span>
+							  <label class="floating-label">Fecha de Inicio Real</label>
+							</div>
+						</div>
+							
+						<div class="col-sm-6">
+							<div class="form-group" >
+							  <input type="text"  class="inputText" uib-datepicker-popup="{{componentec.formatofecha}}"
+							  			ng-model="componentec.componente.fechaFinReal"
+							            datepicker-options="componentec.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+							            readonly="readonly" ng-value="componentec.componente.fechaFinReal" onblur="this.setAttribute('value', this.value);"/>
+							            <span class="label-icon" tabindex="-1">
+							              <i class="glyphicon glyphicon-calendar"></i>
+							            </span>
+							  <label class="floating-label">Fecha de Fin Real</label>
+							</div>
+						</div>
+						
 						</div>
 						<div ng-repeat="campo in componentec.camposdinamicos">
 							<div ng-switch="campo.tipo">
@@ -341,6 +362,14 @@
 								</div>
 							</div>
 						</div>
+						
+						<div class="form-group">
+						   <textarea class="inputText" rows="4"
+						   ng-model="componentec.componente.descripcion" ng-value="componentec.componente.descripcion"   
+						   onblur="this.setAttribute('value', this.value);" ng-required="false" ng-readonly="componentec.componente.esDeSigade"></textarea>
+						   <label class="floating-label">Descripción</label>
+						</div>
+						
 						<div class="panel panel-default">
 							<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 							<div class="panel-body">
@@ -387,7 +416,7 @@
 				<div class="col-sm-12">
 					<div class="btn-group" ng-disabled="!componentec.botones">
 						 <shiro:hasPermission name="5020">
-						      <label class="btn btn-success" ng-click="componentec.mForm.$valid && componentec.botones ? componentec.guardar() : ''" ng-disabled="!componentec.mForm.$valid || !componentec.botones" uib-tooltip="Guardar" tooltip-placement="top">
+						      <label class="btn btn-success" ng-click="componentec.mForm.$valid && componentec.botones ? componentec.guardar() : ''" ng-disabled="!componentec.mForm.$valid || !componentec.botones " uib-tooltip="Guardar" tooltip-placement="top">
 						      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 						    </shiro:hasPermission>
 						    <label ng-if="!componentec.esTreeview" class="btn btn-primary" ng-click="componentec.botones ? componentec.irATabla() :''" ng-disabled="!componentec.botones" uib-tooltip="Ir a Tabla" tooltip-placement="top">

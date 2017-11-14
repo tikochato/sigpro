@@ -61,7 +61,7 @@
 						<div class="form-group">
 						   	<input type="text" class="inputText" id="inombre" ng-model="controller.descripcion" ng-value="controller.descripcion"   
 						     onblur="this.setAttribute('value', this.value);">
-						  	<label class="floating-label">Descripcion</label>
+						  	<label class="floating-label">Descripción</label>
 						</div>
 					</div>
 					<div class="col-sm-6">

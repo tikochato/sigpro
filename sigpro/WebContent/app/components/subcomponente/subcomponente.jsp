@@ -201,24 +201,17 @@
 							<label for="campo3" class="floating-label">Coordenadas</label>
 						</div>
 						
-						<div class="form-group">
-						   <input type="text" name="idescrip"  class="inputText" id="idescrip" 
-						     ng-model="subcomponentec.subcomponente.descripcion" ng-value="subcomponentec.subcomponente.descripcion"   
-						     onblur="this.setAttribute('value', this.value);" ng-required="false" >
-						   <label class="floating-label">Descripción</label>
-						</div>
-						
 						<div class="form-group" >
 					       <input type="text" class="inputText" ng-model="subcomponentec.subcomponente.costo" ng-value="subcomponentec.subcomponente.costo" ui-number-mask="2"
 					       ng-required="subcomponentec.subcomponente.acumulacionCostoId > 0" onblur="this.setAttribute('value', this.value);" style="text-align: left" 
 					       ng-readonly="subcomponentec.subcomponente.tieneHijos" />
-					       <label for="iprog" class="floating-label">{{subcomponentec.subcomponente.acumulacionCostoId > 0 ? "* Costo" : "Costo"}}</label>
+					       <label for="iprog" class="floating-label">{{subcomponentec.subcomponente.acumulacionCostoId > 0 ? "* Monto Planificado" : "Monto Planificado"}}</label>
 						</div>
 												
 						<div class="form-group">
 		            		<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="subcomponentec.cambioAcumulacionCosto"
 							  local-data="subcomponentec.acumulacionesCosto" search-fields="nombre" title-field="nombre" field-required="subcomponentec.subcomponente.costo!=null && subcomponentec.subcomponente.costo>0" 
-						  field-label="{{subcomponentec.subcomponente.costo!=null && subcomponentec.subcomponente.costo>0 ? '* ':''}}Tipo de Acumulación Costo"
+						  field-label="{{subcomponentec.subcomponente.costo!=null && subcomponentec.subcomponente.costo>0 ? '* ':''}}Tipo de Acumulación Monto Planificado"
 							  minlength="1" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
 							  initial-value="subcomponentec.subcomponente.acumulacionCostoNombre" focus-out="subcomponentec.blurCategoria()" input-name="acumulacionCosto"></div>
 						</div>
@@ -272,6 +265,34 @@
 								  <label for="campo.id" class="floating-label">* Fecha de Fin</label>
 								</div>
 							</div>
+							
+						<div class="col-sm-6">
+							<div class="form-group" >
+							  <input type="text"  class="inputText" uib-datepicker-popup="{{subcomponentec.formatofecha}}" alt-input-formats="{{subcomponentec.altformatofecha}}"
+							  			ng-model="subcomponentec.subcomponente.fechaInicioReal"
+							            datepicker-options="subcomponentec.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  
+							            ng-value="subcomponentec.subcomponente.fechaInicioReal" onblur="this.setAttribute('value', this.value);"
+						            	readonly="readonly"/>
+							            <span class="label-icon" tabindex="-1">
+							              <i class="glyphicon glyphicon-calendar"></i>
+							            </span>
+							  <label class="floating-label">Fecha de Inicio Real</label>
+							</div>
+						</div>
+							
+						<div class="col-sm-6">
+							<div class="form-group" >
+							  <input type="text"  class="inputText" uib-datepicker-popup="{{subcomponentec.formatofecha}}"
+							  			ng-model="subcomponentec.subcomponente.fechaFinReal"
+							            datepicker-options="subcomponentec.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+							            readonly="readonly" ng-value="subcomponentec.subcomponente.fechaFinReal" onblur="this.setAttribute('value', this.value);"/>
+							            <span class="label-icon" tabindex="-1">
+							              <i class="glyphicon glyphicon-calendar"></i>
+							            </span>
+							  <label class="floating-label">Fecha de Fin Real</label>
+							</div>
+						</div>
+						
 						</div>
 						<div ng-repeat="campo in subcomponentec.camposdinamicos">
 							<div ng-switch="campo.tipo">
@@ -313,6 +334,13 @@
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 							</div>
+						</div>
+						
+						<div class="form-group">
+						   <textarea class="inputText" rows="4"
+						   ng-model="subcomponentec.subcomponente.descripcion" ng-value="subcomponentec.subcomponente.descripcion"   
+						   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+						   <label class="floating-label">Descripción</label>
 						</div>
 						<div class="panel panel-default">
 							<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>

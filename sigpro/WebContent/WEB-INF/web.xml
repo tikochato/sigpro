@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" metadata-complete="false" version="3.1">
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:jsp="http://java.sun.com/xml/ns/javaee/jsp" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" metadata-complete="false" version="3.1">
   <display-name>Sipro</display-name>
   <welcome-file-list>
     <welcome-file>login.jsp</welcome-file>
   </welcome-file-list>
   <jsp-config>
     <jsp-property-group>
-        <url-pattern>*.jsp</url-pattern>
+      <url-pattern>*.jsp</url-pattern>
     </jsp-property-group>
     <jsp-property-group>
-        <url-pattern>*.jsx</url-pattern>
+      <url-pattern>*.jsx</url-pattern>
     </jsp-property-group>
   </jsp-config>
   <error-page>
@@ -46,7 +46,7 @@
     <dispatcher>ERROR</dispatcher>
   </filter-mapping>
   <session-config>
-    <session-timeout>30</session-timeout>
+    <session-timeout>60</session-timeout>
     <tracking-mode>COOKIE</tracking-mode>
   </session-config>
   <resource-ref>

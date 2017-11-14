@@ -3,6 +3,7 @@ package utilities;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,8 +13,10 @@ import org.joda.time.DateTime;
 
 import dao.ActividadDAO;
 import dao.AcumulacionCostoDAO;
+import dao.AsignacionRaciDAO;
 import dao.ComponenteDAO;
 import dao.ComponenteTipoDAO;
+import dao.EstructuraProyectoDAO;
 import dao.PrestamoDAO;
 import dao.ProductoDAO;
 import dao.ProgramaDAO;
@@ -23,16 +26,20 @@ import dao.SubComponenteDAO;
 import dao.SubComponenteTipoDAO;
 import dao.SubproductoDAO;
 import dao.UnidadEjecutoraDAO;
+import net.sf.mpxj.AccrueType;
+import net.sf.mpxj.CustomFieldContainer;
+import net.sf.mpxj.Duration;
 import net.sf.mpxj.ProjectFile;
 import net.sf.mpxj.Relation;
 import net.sf.mpxj.Task;
+import net.sf.mpxj.TimeUnit;
 import net.sf.mpxj.mpp.MPPReader;
-import net.sf.mpxj.mpx.MPXWriter;
+import net.sf.mpxj.mspdi.MSPDIWriter;
 import net.sf.mpxj.reader.ProjectReader;
-import net.sf.mpxj.writer.ProjectWriter;
 import pojo.Actividad;
 import pojo.ActividadTipo;
 import pojo.AcumulacionCosto;
+import pojo.AsignacionRaci;
 import pojo.Componente;
 import pojo.ComponenteTipo;
 import pojo.Etiqueta;
@@ -141,7 +148,6 @@ public class CProject {
 	}
 	
 	public Programa crearPrograma(Task task,String usuario){
-		
 		ProgramaTipo programaTipo = new ProgramaTipo();
 		programaTipo.setId(PROGRAMA_TIPO_ID_DEFECTO);
 		
@@ -170,7 +176,21 @@ public class CProject {
 		ProyectoTipo proyectoTipo = ProyectoTipoDAO.getProyectoTipoPorId(PROYECTO_TIPO_ID_DEFECTO);
 		Etiqueta etiqueta = new Etiqueta();
 		etiqueta.setId(PROYECTO_ETIQUETA_DEFECTO);
-		AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
+		
+		AcumulacionCosto acumulacionCosto = null;
+		
+		switch(task.getFixedCostAccrual().getValue()){
+			case 1:
+				acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(1);
+				break;
+			case 2:
+				acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(2);
+				break;
+			case 3:
+				acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
+				break;
+		}
+		
 		Prestamo prestamo = PrestamoDAO.getPrestamoById(prestamoId);
 		
 		UnidadEjecutora unidadEjecturoa = UnidadEjecutoraDAO.getUnidadEjecutora(new DateTime().getYear(),ENTIDAD_ID_DEFECTO,UNIDAD_EJECUTORA_ID_DEFECTO);
@@ -179,7 +199,7 @@ public class CProject {
 				null, null, null,null, null, null, new BigDecimal(task.getCost().toString()),null, null, null,null,
 				Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish()),
 				(( Double ) task.getDuration().getDuration()).intValue(), task.getDuration().getUnits().getName()
-				,null,null,0,0,0, null,null,null,null,null,null,null,null,null,null);
+				,null,null,0,0,0,null, null,null,null,task.getActualStart(),task.getActualFinish(),null,null,null,null,null,null,null,null ,null,null);
 		
 		return ProyectoDAO.guardarProyecto(proyecto, false) ? proyecto : null;
 	}
@@ -191,14 +211,27 @@ public class CProject {
 		
 		int year = new DateTime().getYear();
 		UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(year, ENTIDAD_ID_DEFECTO, UNIDAD_EJECUTORA_ID_DEFECTO);
-		AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
+		
+		AcumulacionCosto acumulacionCosto = null;
+
+		switch(task.getFixedCostAccrual().getValue()){
+			case 1:
+				acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(1);
+				break;
+			case 2:
+				acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(2);
+				break;
+			case 3:
+				acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
+				break;
+		}
 		
 		
 		Componente componente = new Componente(acumulacionCosto,null,componenteTipo, proyecto, unidadEjecutora, task.getName()
 				, null,usuario, null, new Date(), null, 1, null, null, null, null, null, null, null, null, 
 				new BigDecimal(task.getCost().toString()),null,null,Utils.setDateCeroHoras(task.getStart()),
 				Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
-				, task.getDuration().getUnits().getName(),null,null,1,0,null,null,null,null,null,null,null);
+				, task.getDuration().getUnits().getName(),null,null,1,0,null,null,null,task.getActualStart(),task.getActualFinish(),null,null ,null,null);
 		
 		return ComponenteDAO.guardarComponente(componente, false) ? componente : null;
 	}
@@ -211,14 +244,26 @@ public class CProject {
 		
 		int year = new DateTime().getYear();
 		UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(year, ENTIDAD_ID_DEFECTO, UNIDAD_EJECUTORA_ID_DEFECTO);
-		AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
 		
+		AcumulacionCosto acumulacionCosto = null;
+		
+		switch(task.getFixedCostAccrual().getValue()){
+			case 1:
+				acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(1);
+				break;
+			case 2:
+				acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(2);
+				break;
+			case 3:
+				acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
+				break;
+		}
 		
 		Subcomponente subcomponente = new Subcomponente(acumulacionCosto,componente,componenteTipo,  unidadEjecutora, task.getName()
 				, null,usuario, null, new Date(), null, 1, null, null, null, null, null, null, null, null, 
 				new BigDecimal(task.getCost().toString()),null,null,Utils.setDateCeroHoras(task.getStart()),
 				Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
-				, task.getDuration().getUnits().getName(),null,null,2,null,null,null);
+				, task.getDuration().getUnits().getName(),null,null,2,task.getActualStart(),task.getActualFinish(),null ,null,null);
 		
 		return SubComponenteDAO.guardarSubComponente(subcomponente, false) ? subcomponente : null;
 	}
@@ -228,7 +273,20 @@ public class CProject {
 		ProductoTipo productoTipo = new ProductoTipo();
 		productoTipo.setId(PRODUCTO_TIPO_ID_DEFECTO);
 		UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(new DateTime().getYear(), ENTIDAD_ID_DEFECTO, UNIDAD_EJECUTORA_ID_DEFECTO);
-		AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
+		
+		AcumulacionCosto acumulacionCosto = null;
+		
+		switch(task.getFixedCostAccrual().getValue()){
+			case 1:
+				acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(1);
+				break;
+			case 2:
+				acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(2);
+				break;
+			case 3:
+				acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
+				break;
+		}
 		
 		Producto producto = new Producto(acumulacionCosto,null, productoTipo,subcomponente, unidadEjecutora
 				,task.getName() , null, usuario, null, new Date(), null,1, 
@@ -236,7 +294,7 @@ public class CProject {
 				null, null, new BigDecimal(task.getCost().toString()),null,null,
 				Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
 				, task.getDuration().getUnits().getName(),
-				null,null,3,null,null,null);
+				null,null,3,task.getActualStart(),task.getActualFinish(),null ,null,null);
 		
 		return ProductoDAO.guardarProducto(producto, false) ? producto : null;
 	}
@@ -247,14 +305,27 @@ public class CProject {
 		subproductoTipo.setId(SUBPRODUCTO_TIPO__ID_DEFECTO);
 		
 		UnidadEjecutora unidadEjecutroa = UnidadEjecutoraDAO.getUnidadEjecutora(new DateTime().getYear(), ENTIDAD_ID_DEFECTO, UNIDAD_EJECUTORA_ID_DEFECTO);
-		AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
+		
+		AcumulacionCosto acumulacionCosto = null;
+		
+		switch(task.getFixedCostAccrual().getValue()){
+			case 1:
+				acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(1);
+				break;
+			case 2:
+				acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(2);
+				break;
+			case 3:
+				acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
+				break;
+		}
 		
 		Subproducto subproducto = new Subproducto(acumulacionCosto,producto, subproductoTipo, unidadEjecutroa,task.getName(), 
 				null, usuario, null, new Date(), null, 1,null, null, null, null, null, null, null, null,
 				new BigDecimal(task.getCost().toString()),null,null,
 				Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
 				, task.getDuration().getUnits().getName(),
-				null,null,4,null,null);
+				null,null,4,task.getActualStart(),task.getActualFinish(),null,null);
 		
 		return SubproductoDAO.guardarSubproducto(subproducto, false) ? subproducto : null;
 	}
@@ -272,7 +343,19 @@ public class CProject {
 			 itemPredecesor =  items.get(predecesores[0]);	
 		}
 		
-		AcumulacionCosto acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
+		AcumulacionCosto acumulacionCosto = null;
+		
+		switch(task.getFixedCostAccrual().getValue()){
+			case 1:
+				acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(1);
+				break;
+			case 2:
+				acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(2);
+				break;
+			case 3:
+				acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(3);
+				break;
+		}
 		
 		int duracion = (( Double ) task.getDuration().getDuration()).intValue();
 		duracion = duracion>0 ? duracion : 1; 
@@ -286,7 +369,7 @@ public class CProject {
 				, itemPredecesor != null ? itemPredecesor.objetoTipo : null
 				, null, null, new BigDecimal(task.getCost().toString()),null,null,null,null,
 				nivel,proyectoBase,componenteBase,productoBase,
-				null,null
+				task.getActualStart(),task.getActualFinish(),null,null
 				);
 		
 		return ActividadDAO.guardarActividad(actividad, false) ? actividad : null;
@@ -364,7 +447,7 @@ public class CProject {
 					ret = proyecto.getId();
 					objeto_temp=(Object)proyecto;
 					break;
-				case 1:
+				case 1:			
 					if(tieneHijos){
 						objetoTipoTemp=1;
 						Componente componente = null;
@@ -490,85 +573,199 @@ public class CProject {
 	
 	public String exportarProject(int idProyecto,String usuario) throws Exception
 	{
-		Proyecto proyecto = ProyectoDAO.getProyectoPorId(idProyecto, usuario);
 		String path="";
-		
-		if (proyecto !=null){
+		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idProyecto);
+		if(estructuraProyecto != null){
 			project = new ProjectFile();
-			Task task1 = project.addTask();
-			task1.setName(proyecto.getNombre());
 			
-			List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyecto.getId(),
-					null, null, null, null, null, usuario);
-			for (Componente componente :componentes){
-				Task task2 = task1.addTask();
-				task2.setName(componente.getNombre());
-				
-				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(), null,
-						null, null, null, null, null, usuario);
-				for (Producto producto : productos){
-					
-					Task task3 = task2.addTask();
-					task3.setName(producto.getNombre());
-					
-					List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(),
-							null, null, null, null, null, usuario);
-					
-					for (Subproducto subproducto : subproductos){
-						Task task4 = task3.addTask();
-						task4.setName(subproducto.getNombre());
-						
-						List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), 4, 
-								null,null, null, null, null, usuario);
-						
-						for (Actividad actividad : actividades){
-							Task task5 = task4.addTask();
-							task5.setName(actividad.getNombre());
-							task5.setStart(actividad.getFechaInicio());
-							task5.setFinish(actividad.getFechaFin()); 
-							task5.setCost(actividad.getCosto());
-							task5.setPercentageComplete(actividad.getPorcentajeAvance());
-						}	
-					}
-					
-					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), 3, 
-							null,null, null, null, null, usuario);
-					
-					for (Actividad actividad : actividades){
-						Task task4 = task3.addTask();
-						task4.setName(actividad.getNombre());
-						task4.setStart(actividad.getFechaInicio());
-						task4.setFinish(actividad.getFechaFin()); 
-						task4.setCost(actividad.getCosto());
-						task4.setPercentageComplete(actividad.getPorcentajeAvance());
-					} 
-				}
-				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componente.getId(), 2, 
-						null,null, null, null, null, usuario);
-				
-				for (Actividad actividad : actividades){
-					Task task3 = task2.addTask();
-					task3.setName(actividad.getNombre());
-					task3.setStart(actividad.getFechaInicio());
-					task3.setFinish(actividad.getFechaFin()); 
-					task3.setCost(actividad.getCosto());
-					task3.setPercentageComplete(actividad.getPorcentajeAvance());
-				}
-			}
-			List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(proyecto.getId(), 1);
-			for (Actividad actividad : actividades){
-				Task t = task1.addTask();
-				t.setName(actividad.getNombre());
-				t.setStart(actividad.getFechaInicio());
-				t.setFinish(actividad.getFechaFin()); 
-				t.setCost(actividad.getCosto());
-				t.setPercentageComplete(actividad.getPorcentajeAvance());
-			}
+			CustomFieldContainer cfc = project.getCustomFields();
+			cfc.registerAliasValue("responsable", 500, 500);
 			
-			ProjectWriter writer = new MPXWriter();
-			path = "/archivos/temporales/Programa.mpx";
-			writer.write(project,path);
+			Task task0 = null;
+			Task task1 = null;
+			Task task2 = null;
+			Task task3 = null;
+			Task task4 = null;
+			Task task5 = null;
+			
+			
+			for(Object objeto : estructuraProyecto){
+				Object[] obj = (Object[]) objeto;
+				BigInteger objPred = (BigInteger) obj[19];
+				BigInteger avance = (BigInteger) obj[18];
+
+				switch(((BigInteger) obj[2]).intValue()){
+					case 0:
+						task0 = project.addTask();
+						task0.setName((String)obj[1]);
+						task0.setCost((BigDecimal)obj[8]);
+						task0.setActualCost((BigDecimal)obj[8]);
+						task0.setFixedCost((BigDecimal)obj[8]);
+						asignarAcumulacionCosto(task0, obj[9] != null ? ((BigInteger) obj[9]).intValue() : 0);
+						break;
+					case 1:
+						task1 = task0.addTask();
+						task1.setName((String)obj[1]);
+						task1.setCost((BigDecimal)obj[8]);
+						task1.setActualCost((BigDecimal)obj[8]);
+						task1.setFixedCost((BigDecimal)obj[8]);
+						asignarAcumulacionCosto(task1, obj[9] != null ? ((BigInteger) obj[9]).intValue() : 0);
+						break;
+					case 2:
+						task2 = task1.addTask();
+						task2.setName((String)obj[1]);
+						task2.setCost((BigDecimal)obj[8]);
+						task2.setActualCost((BigDecimal)obj[8]);
+						task2.setFixedCost((BigDecimal)obj[8]);
+						asignarAcumulacionCosto(task2, obj[9] != null ? ((BigInteger) obj[9]).intValue() : 0);
+						break;
+					case 3:
+						task3 = task2.addTask();
+						task3.setName((String)obj[1]);
+						task3.setCost((BigDecimal)obj[8]);
+						task3.setActualCost((BigDecimal)obj[8]);
+						task3.setFixedCost((BigDecimal)obj[8]);
+						asignarAcumulacionCosto(task3, obj[9] != null ? ((BigInteger) obj[9]).intValue() : 0);
+						break;
+					case 4:
+						task4 = task3.addTask();
+						task4.setName((String)obj[1]);
+						task4.setCost((BigDecimal)obj[8]);
+						task4.setActualCost((BigDecimal)obj[8]);
+						task4.setFixedCost((BigDecimal)obj[8]);
+						asignarAcumulacionCosto(task4,obj[9] != null ? ((BigInteger) obj[9]).intValue() : 0);
+						break;
+					case 5:
+						if(objPred.intValue() == 0){
+							task5 = task0.addTask();
+							task5.setName((String)obj[1]);
+							task5.setStart((Date)obj[4]);
+							task5.setFinish((Date)obj[5]); 
+							task5.setCost((BigDecimal)obj[8]);
+							task5.setActualCost((BigDecimal)obj[8]);
+							task5.setFixedCost((BigDecimal)obj[8]);
+							task5.setPercentageComplete(avance.intValue());
+							task5.setDuration(Duration.getInstance((Integer)obj[6], TimeUnit.DAYS));
+							task5.setActualStart((Date)obj[16]);
+							task5.setActualFinish((Date)obj[17]);
+							task5.setMilestone(false);
+							asignarAcumulacionCosto(task5,obj[9] != null ? ((BigInteger) obj[9]).intValue() : 0);
+							asignarColumnasAdicionales(task5,  ((BigInteger) obj[2]).intValue(), (Integer) obj[0]);
+							
+						} else if(objPred.intValue() == 1){
+							task5 = task1.addTask();
+							task5.setName((String)obj[1]);
+							task5.setStart((Date)obj[4]);
+							task5.setFinish((Date)obj[5]); 
+							task5.setCost((BigDecimal)obj[8]);
+							task5.setActualCost((BigDecimal)obj[8]);
+							task5.setFixedCost((BigDecimal)obj[8]);
+							task5.setPercentageComplete(avance.intValue());
+							task5.setDuration(Duration.getInstance((Integer)obj[6], TimeUnit.DAYS));
+							task5.setActualStart((Date)obj[16]);
+							task5.setActualFinish((Date)obj[17]);
+							asignarAcumulacionCosto(task5,obj[9] != null ? ((BigInteger) obj[9]).intValue() : 0);
+							asignarColumnasAdicionales(task5,  ((BigInteger) obj[2]).intValue(), (Integer) obj[0]);
+							
+						} else if(objPred.intValue() == 2){
+							task5 = task2.addTask();
+							task5.setName((String)obj[1]);
+							task5.setStart((Date)obj[4]);
+							task5.setFinish((Date)obj[5]); 
+							task5.setCost((BigDecimal)obj[8]);
+							task5.setActualCost((BigDecimal)obj[8]);
+							task5.setFixedCost((BigDecimal)obj[8]);
+							task5.setPercentageComplete(avance.intValue());
+							task5.setDuration(Duration.getInstance((Integer)obj[6], TimeUnit.DAYS));
+							task5.setActualStart((Date)obj[16]);
+							task5.setActualFinish((Date)obj[17]);
+							asignarAcumulacionCosto(task5, obj[9] != null ? ((BigInteger) obj[9]).intValue() : 0);
+							
+						} else if(objPred.intValue() == 3){
+							task5 = task3.addTask();
+							task5.setName((String)obj[1]);
+							task5.setStart((Date)obj[4]);
+							task5.setFinish((Date)obj[5]); 
+							task5.setCost((BigDecimal)obj[8]);
+							task5.setActualCost((BigDecimal)obj[8]);
+							task5.setFixedCost((BigDecimal)obj[8]);
+							task5.setPercentageComplete(avance.intValue());
+							task5.setDuration(Duration.getInstance((Integer)obj[6], TimeUnit.DAYS));
+							task5.setActualStart((Date)obj[16]);
+							task5.setActualFinish((Date)obj[17]);
+							asignarAcumulacionCosto(task5, obj[9] != null ? ((BigInteger) obj[9]).intValue() : 0);
+							asignarColumnasAdicionales(task5,  ((BigInteger) obj[2]).intValue(), (Integer) obj[0]);
+							
+						} else if(objPred.intValue() == 4){
+							task5 = task4.addTask();
+							task5.setName((String)obj[1]);
+							task5.setStart((Date)obj[4]);
+							task5.setFinish((Date)obj[5]); 
+							task5.setCost((BigDecimal)obj[8]);
+							task5.setActualCost((BigDecimal)obj[8]);
+							task5.setFixedCost((BigDecimal)obj[8]);
+							task5.setPercentageComplete(avance.intValue());
+							task5.setDuration(Duration.getInstance((Integer)obj[6], TimeUnit.DAYS));
+							task5.setActualStart((Date)obj[16]);
+							task5.setActualFinish((Date)obj[17]);
+							asignarAcumulacionCosto(task5, obj[9] != null ? ((BigInteger) obj[9]).intValue() : 0);
+							asignarColumnasAdicionales(task5,  ((BigInteger) obj[2]).intValue(), (Integer) obj[0]);
+						} else if(objPred.intValue() == 5){
+							
+							Task task6 = task5.addTask();
+							task6.setName((String)obj[1]);
+							task6.setStart((Date)obj[4]);
+							task6.setFinish((Date)obj[5]); 
+							task6.setCost((BigDecimal)obj[8]);
+							task6.setActualCost((BigDecimal)obj[8]);
+							task6.setFixedCost((BigDecimal)obj[8]);
+							task6.setPercentageComplete(avance.intValue());
+							task6.setDuration(Duration.getInstance((Integer)obj[6], TimeUnit.DAYS));
+							task6.setActualStart((Date)obj[16]);
+							task6.setActualFinish((Date)obj[17]);
+							asignarAcumulacionCosto(task6, obj[9] != null ? ((BigInteger) obj[9]).intValue() : 0);
+							asignarColumnasAdicionales(task6,  ((BigInteger) obj[2]).intValue(), (Integer) obj[0]);
+						}
+						break;
+				}
+			}	
 		}
+					
+		MSPDIWriter writer = new MSPDIWriter();
+		path = "/SIPRO/archivos/temporales/Programa.xml";
+		writer.write(project,path);
+		
 		return path;
 	}	
+	
+	public void asignarColumnasAdicionales(Task task ,Integer objetoTipo, Integer objetoId){
+		switch (objetoTipo){
+			case 5:
+				String nombre ="";
+				AsignacionRaci recurso = AsignacionRaciDAO.getAsignacionPorRolTarea(objetoId, objetoTipo, "r");
+				if (recurso!=null){
+					nombre = recurso.getColaborador().getPnombre() 
+							+ (recurso.getColaborador().getSnombre() != null ? " " + recurso.getColaborador().getSnombre()  : "")
+							+ recurso.getColaborador().getPapellido() + 
+							(recurso.getColaborador().getSapellido()!=null ? " " + recurso.getColaborador().getSapellido() : "");
+					task.setResourceNames(nombre);
+				}
+				
+				if (nombre.length()>0)
+					task.setText(1, nombre);
+			break;
+		}
+
+	}
+	
+	public void asignarAcumulacionCosto(Task task ,int tipoAcumulacion){
+		if(tipoAcumulacion== 1)
+			task.setFixedCostAccrual(AccrueType.START);
+		else if (tipoAcumulacion == 2)
+			task.setFixedCostAccrual(AccrueType.PRORATED);
+		else
+			task.setFixedCostAccrual(AccrueType.END);
+		
+	}
+		
 }

@@ -1,5 +1,5 @@
 package pojoSigade;
-// Generated Sep 29, 2017 10:37:44 PM by Hibernate Tools 5.2.3.Final
+// Generated Nov 2, 2017 2:45:37 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -15,7 +15,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -4602339426706869964L;
+	private static final long serialVersionUID = -6213155061399296003L;
 	private Date fechaCorte;
 	private String noPrestamo;
 	private String codigoPresupuestario;
@@ -37,6 +37,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 	private BigDecimal porDesembolsarUsd;
 	private BigDecimal porDesembolsarGtq;
 	private String estadoPrestamo;
+	private String objetivo;
 
 	public DtmAvanceFisfinanDtiId() {
 	}
@@ -47,7 +48,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 			BigDecimal montoContratadoUsd, BigDecimal montoContratadoGtq, BigDecimal desembolsos,
 			BigDecimal desembolsosUsd, BigDecimal desembolsosGtq, Date fechaDecreto, Date fechaSuscripcion,
 			Date fechaVigencia, BigDecimal porDesembolsar, BigDecimal porDesembolsarUsd, BigDecimal porDesembolsarGtq,
-			String estadoPrestamo) {
+			String estadoPrestamo, String objetivo) {
 		this.fechaCorte = fechaCorte;
 		this.noPrestamo = noPrestamo;
 		this.codigoPresupuestario = codigoPresupuestario;
@@ -69,6 +70,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		this.porDesembolsarUsd = porDesembolsarUsd;
 		this.porDesembolsarGtq = porDesembolsarGtq;
 		this.estadoPrestamo = estadoPrestamo;
+		this.objetivo = objetivo;
 	}
 
 	@Column(name = "fecha_corte", length = 19)
@@ -260,6 +262,15 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		this.estadoPrestamo = estadoPrestamo;
 	}
 
+	@Column(name = "objetivo", length = 4000)
+	public String getObjetivo() {
+		return this.objetivo;
+	}
+
+	public void setObjetivo(String objetivo) {
+		this.objetivo = objetivo;
+	}
+
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -329,7 +340,9 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 								&& this.getPorDesembolsarGtq().equals(castOther.getPorDesembolsarGtq())))
 				&& ((this.getEstadoPrestamo() == castOther.getEstadoPrestamo())
 						|| (this.getEstadoPrestamo() != null && castOther.getEstadoPrestamo() != null
-								&& this.getEstadoPrestamo().equals(castOther.getEstadoPrestamo())));
+								&& this.getEstadoPrestamo().equals(castOther.getEstadoPrestamo())))
+				&& ((this.getObjetivo() == castOther.getObjetivo()) || (this.getObjetivo() != null
+						&& castOther.getObjetivo() != null && this.getObjetivo().equals(castOther.getObjetivo())));
 	}
 
 	public int hashCode() {
@@ -356,6 +369,7 @@ public class DtmAvanceFisfinanDtiId implements java.io.Serializable {
 		result = 37 * result + (getPorDesembolsarUsd() == null ? 0 : this.getPorDesembolsarUsd().hashCode());
 		result = 37 * result + (getPorDesembolsarGtq() == null ? 0 : this.getPorDesembolsarGtq().hashCode());
 		result = 37 * result + (getEstadoPrestamo() == null ? 0 : this.getEstadoPrestamo().hashCode());
+		result = 37 * result + (getObjetivo() == null ? 0 : this.getObjetivo().hashCode());
 		return result;
 	}
 

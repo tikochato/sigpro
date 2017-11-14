@@ -338,5 +338,54 @@ public class ColaboradorDAO {
 		
 		return ret;
 	}
+	
+	public static Colaborador getColaboradorByNombre(String primerNombre, String segundoNombre, 
+			String primerApellido, String segundoApellido){
+		Colaborador ret = null;
+		List<Colaborador> retList = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String str_Query = String.join(" ", "select c from Colaborador c",
+								"where c.pnombre = ?1",
+								"and c.snombre = ?2",
+								"and c.papellido = ?3",
+								"and c.sapellido = ?4",
+								"and c.estado = 1");
+			Query<Colaborador> criteria = session.createQuery(str_Query,Colaborador.class);
+			criteria.setParameter(1, primerNombre);
+			criteria.setParameter(2, segundoNombre);
+			criteria.setParameter(3, primerApellido);
+			criteria.setParameter(4, segundoApellido);
+			retList = criteria.getResultList();
+			if(!retList.isEmpty()){
+				ret = retList.get(0);
+			}
+		}catch(Exception e){
+			CLogger.write("10", ColaboradorDAO.class, e);
+		}finally {
+        	session.close();
+		}
+		
+		return ret;
+	}
+	
+	public static boolean guardarColaborador(Colaborador colaborador){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			session.saveOrUpdate(colaborador);
+			session.flush();
+			session.getTransaction().commit();
+			ret = true;
+		}
+		catch(Throwable e){
+			CLogger.write("11", ColaboradorDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 
 }

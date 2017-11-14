@@ -175,12 +175,6 @@
 				            	<span class="label-icon" ng-click="subproducto.open(subproducto.subproducto.latitud, subproducto.subproducto.longitud); " tabindex="-1"><i class="glyphicon glyphicon-map-marker"></i></span>
 				            	<label class="floating-label">Coordenadas</label>
 					</div>
-
-					<div class="form-group" >
-						<input type="text" class="inputText" ng-model="subproducto.subproducto.descripcion" 
-							ng-value="subproducto.subproducto.descripcion" onblur="this.setAttribute('value', this.value);"/>
-						<label for="campo2" class="floating-label">Descripción</label>
-					</div>
 					
 					<div class="form-group" >
 			            <input type="text" class="inputText" ng-model="subproducto.tipoNombre" ng-readonly="true" ng-required="true" 
@@ -207,13 +201,13 @@
 			        <div class="form-group" >
 				       <input type="text" class="inputText" ng-model="subproducto.subproducto.costo" ng-value="subproducto.subproducto.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left" ui-number-mask="2"
 				        ng-readonly="subproducto.subproducto.tieneHijos"/>
-				       <label for="iprog" class="floating-label">Costo</label>
+				       <label for="iprog" class="floating-label">Monto Planificado</label>
 					</div>
 					
 					<div class="form-group">
 	            		<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="subproducto.cambioAcumulacionCosto"
 						  local-data="subproducto.acumulacionesCosto" search-fields="nombre" title-field="nombre" field-required="subproducto.subproducto.costo!=null && subproducto.subproducto.costo>0" 
-						  field-label="{{subproducto.subproducto.costo!=null && subproducto.subproducto.costo>0 ? '* ':''}}Tipo Acumulación de Costo"
+						  field-label="{{subproducto.subproducto.costo!=null && subproducto.subproducto.costo>0 ? '* ':''}}Tipo Acumulación de Monto Planificado"
 						  minlength="1" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
 						  initial-value="subproducto.subproducto.acumulacionCostoNombre" focus-out="subproducto.blurCategoria()" input-name="acumulacionCosto"></div>
 					</div>
@@ -267,6 +261,34 @@
 							  <label for="campo.id" class="floating-label">* Fecha de Fin</label>
 							</div>
 						</div>
+						
+						<div class="col-sm-6">
+								<div class="form-group" >
+								  <input type="text"  class="inputText" uib-datepicker-popup="{{subproducto.formatofecha}}" alt-input-formats="{{subproducto.altformatofecha}}"
+								  			ng-model="subproducto.subproducto.fechaInicioReal"
+								            datepicker-options="subproducto.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  
+								            ng-value="subproducto.subproducto.fechaInicioReal" onblur="this.setAttribute('value', this.value);"
+							            	readonly="readonly"/>
+								            <span class="label-icon" tabindex="-1">
+								              <i class="glyphicon glyphicon-calendar"></i>
+								            </span>
+								  <label class="floating-label">Fecha de Inicio Real</label>
+								</div>
+							</div>
+							
+							<div class="col-sm-6">
+							
+								<div class="form-group" >
+								  <input type="text"  class="inputText" uib-datepicker-popup="{{subproducto.formatofecha}}"
+								  			ng-model="subproducto.subproducto.fechaFinReal"
+								            datepicker-options="subproducto.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
+								            readonly="readonly" ng-value="subproducto.subproducto.fechaFinReal" onblur="this.setAttribute('value', this.value);"/>
+								            <span class="label-icon" tabindex="-1">
+								              <i class="glyphicon glyphicon-calendar"></i>
+								            </span>
+								  <label class="floating-label">Fecha de Fin Real</label>
+								</div>
+							</div>
 					</div>
 					<div class="form-group" ng-repeat="campo in subproducto.camposdinamicos">
 						<div ng-switch="campo.tipo">
@@ -308,6 +330,12 @@
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 							</div>
+					</div>
+					<div class="form-group">
+					   <textarea class="inputText" rows="4"
+					   ng-model="subproducto.subproducto.descripcion" ng-value="subproducto.subproducto.descripcion"   
+					   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+					   <label class="floating-label">Descripción</label>
 					</div>
 				<div class="panel panel-default">
 					<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>

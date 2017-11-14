@@ -139,11 +139,7 @@
 		.btn-default.active{
 			font-weight: bold;
 		}
-		
-		::-webkit-scrollbar {
-		 	display: none;
-		 }
-		
+				
 	</style>
 
 <div ng-controller="flujocajaController as flujoc" class="maincontainer all_page" id="title">
@@ -242,7 +238,7 @@
 			    			<table class="table table-striped tablaDatos"  style="height: 100%">
 								<thead class="theadDatos">
 									<tr>
-				          				<th style="text-align: center; vertical-align: top; width:300px; height: 72px;" class="label-form">Nombre</th>
+				          				<th style="text-align: center; vertical-align: top; width:300px; height: 74px;" class="label-form">Nombre</th>
 				         			</tr>
 								</thead>
 								<tbody vs-repeat class="cuerpoTablaNombres" id="divTablaNombres" style="max-height: 300px;" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)">
@@ -307,10 +303,10 @@
 			    			<table class="table table-striped tablaDatos"  style="height: 100%">
 								<tbody class="cuerpoTablaNombres">
 									<tr>
-							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Total Planificado</td>
+							      		<td class="colorPlanificado" style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Total Planificado</td>
 							      	</tr>
 							      	<tr>
-							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Total Planificado Acumulado</td>
+							      		<td class="colorPlanificado" style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Total Planificado Acumulado</td>
 							      	</tr>
 							      	<tr>
 							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Total Ejecutado</td>
@@ -325,10 +321,10 @@
 							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">%</td>
 							      	</tr>
 							      	<tr>
-							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Desembolsos Ejecutados</td>
+							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Desembolsos Reales</td>
 							      	</tr>
 							      	<tr>
-							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Desembolsos</td>
+							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Desembolsos Planificados</td>
 							      	</tr>
 							      	<tr>
 							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Saldo</td>
@@ -342,10 +338,10 @@
 			    			<table class="table table-striped tablaDatos" style="max-width: {{flujoc.tamanoTotal}}px; height:100%;" >
 								<tbody class="cuerpoTablaDatos" id="cuerpoTotalesDatos">
 							      	<tr>
-							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaPlanificado track by $index" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>
+							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaPlanificado track by $index" class="colorPlanificado" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>
 							      	</tr>
 							      	<tr>
-							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaPlanificadoAcumulado track by $index" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>
+							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaPlanificadoAcumulado track by $index" class="colorPlanificado" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>
 							      	</tr>
 							      	<tr>
 							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaEjecutado track by $index" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>
@@ -376,10 +372,10 @@
 		    			<table class="table table-striped tablaDatos" style="max-width: {{flujoc.tamanoTotal}}px; height:100%;" >
 							<tbody class="cuerpoTablaTotales bordeIzquierda">
 								<tr>
-									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span>{{flujoc.resumenTotales.totalPlanificado | formatoMillones : flujoc.enMillones}}</span></td>
+									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span class="colorPlanificado">{{flujoc.resumenTotales.totalPlanificado | formatoMillones : flujoc.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span>{{flujoc.resumenTotales.totalPlanificadoAcumulado | formatoMillones : flujoc.enMillones}}</span></td>
+									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span class="colorPlanificado">{{flujoc.resumenTotales.totalPlanificadoAcumulado | formatoMillones : flujoc.enMillones}}</span></td>
 								</tr>
 								<tr>
 									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span>{{flujoc.resumenTotales.totalEjecutado | formatoMillones : flujoc.enMillones}}</span></td>
@@ -391,7 +387,7 @@
 									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span>{{flujoc.resumenTotales.totalVariacion | formatoMillones : flujoc.enMillones}}</span></td>
 								</tr>
 								<tr>
-									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span>{{flujoc.resumenTotales.totalVariacionPorcentaje | formatoMillones : flujoc.enMillones}}</span></td>
+									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span></span></td>
 								</tr>
 								<tr>
 									<td style="{{flujoc.estiloCelda}} {{flujoc.estiloAlineacion}} height: 35px;"><span>{{flujoc.resumenTotales.totalDesembolsosReal | formatoMillones : flujoc.enMillones}}</span></td>

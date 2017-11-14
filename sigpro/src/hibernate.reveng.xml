@@ -205,4 +205,5 @@
 	<table-filter match-name="proyecto_rol_colaborador"
 		match-catalog="sipro">
 	</table-filter>
+	<table-filter match-name="prestamo_usuario" match-catalog="sipro"></table-filter>
 </hibernate-reverse-engineering>

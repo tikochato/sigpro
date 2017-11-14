@@ -98,7 +98,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 		}
 		
 		mi.adjuntarDocumentos = function(){
-			$documentoAdjunto.getModalDocumento($scope, 5, mi.actividad.id)
+			$documentoAdjunto.getModalDocumento($scope,  mi.actividad.id,5)
 			.result.then(function(data) {
 				if (data != ""){
 					mi.rowCollection = [];
@@ -144,7 +144,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 				       mi.rowCollection.splice(indice, 1);		       
 				    }
 					mi.rowCollection = [];
-					mi.getDocumentosAdjuntos(5, mi.actividad.id);
+					mi.getDocumentosAdjuntos( mi.actividad.id,5);
 				}
 			});
 		};
@@ -366,6 +366,10 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 						mi.actividad.fechaCreacion=response.fechaCreacion;
 						mi.actividad.usuarioActualizo=response.usuarioactualizo;
 						mi.actividad.fechaActualizacion=response.fechaactualizacion;
+						if(response.fechaInicioReal != null)
+							mi.actividad.fechaInicioReal = moment(response.fechaInicioReal, 'DD/MM/YYYY').toDate();
+						if(response.fechaFinReal != null)
+							mi.actividad.fechaFinReal = moment(response.fechaFinReal, 'DD/MM/YYYY').toDate();
 						if(!mi.esTreeview)
 							mi.obtenerTotalActividades();
 						else{
@@ -451,7 +455,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 		mi.editar = function() {
 			if(mi.actividad!=null && mi.actividad.id!=null){
 				mi.adquisicionesCargadas = false;
-				mi.getDocumentosAdjuntos(5, mi.actividad.id);
+				mi.getDocumentosAdjuntos( mi.actividad.id,5);
 				mi.esNuevoDocumento = false;
 				mi.actividadResponsable = "";
 				mi.mostraringreso = true;
@@ -799,6 +803,10 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 								mi.actividad.fechaInicio = moment(mi.actividad.fechaInicio, 'DD/MM/YYYY').toDate();
 							if(mi.actividad.fechaFin != "")
 								mi.actividad.fechaFin = moment(mi.actividad.fechaFin, 'DD/MM/YYYY').toDate();
+							if(mi.actividad.fechaInicioReal != null)
+								mi.actividad.fechaInicioReal = moment(mi.actividad.fechaInicioReal, 'DD/MM/YYYY').toDate();
+							if(mi.actividad.fechaFinReal != null)
+								mi.actividad.fechaFinReal = moment(mi.actividad.fechaFinReal, 'DD/MM/YYYY').toDate();
 							mi.editar();
 						}
 					});

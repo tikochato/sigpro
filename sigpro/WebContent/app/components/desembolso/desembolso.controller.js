@@ -5,23 +5,28 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			$window.document.title = $utilidades.sistema_nombre+' - Desembolso';
 			i18nService.setCurrentLang('es');
 			
-			mi.desembolsos = [];
+			$scope.desembolsos = [];
 			mi.desembolso;
 			mi.esnuevo = false;
 			mi.desembolsotipoid;
 			mi.desembolsonombre;
 			mi.objetoTipoNombre=""
 			mi.proyectoid = $scope.$parent.controller.proyecto.id;
+			mi.montoPorDesembolsar = $scope.$parent.controller.montoPorDesembolsar;
+			mi.fechaCierreActual = $scope.$parent.controller.fechaCierreActualUe;
+			mi.desembolsoAFechaUsd = $scope.$parent.controller.desembolsoAFechaUsd;
+			mi.totalDesembolsos = 0;
 			mi.fecha = new Date();
 			mi.formatofecha = 'dd/MM/yyyy';
 			mi.altformatofecha = ['d!/M!/yyyy'];
+			mi.desembolsosValidos=true;
 			
 			mi.mostrarcargando=false;
 			
 			
 			mi.opcionesFecha = {
 				    formatYear: 'yyyy',
-				    maxDate: new Date(2050, 12, 31),
+				    maxDate: moment(mi.fechaCierreActual,'DD/MM/YYYY').toDate(),
 				    minDate : new Date(1990, 1, 1),
 				    startingDay: 1
 				  };
@@ -38,9 +43,9 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 					proyectoid: mi.proyectoid, t: (new Date()).getTime()
 					}).success(
 						function(response) {
-							mi.desembolsos = response.desembolsos;
-							for(x in mi.desembolsos){
-								mi.desembolsos[x].fecha = moment(mi.desembolsos[x].fecha,'DD/MM/YYYY').toDate();
+							$scope.desembolsos = response.desembolsos;
+							for(x in $scope.desembolsos){
+								$scope.desembolsos[x].fecha = moment($scope.desembolsos[x].fecha,'DD/MM/YYYY').toDate();
 							}
 							
 							mi.tipo_moneda_nombre = response.tipoMonedaNombre;
@@ -52,10 +57,10 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			mi.cargarTabla();
 			
 			mi.guardar=function(mensaje_success, mensaje_error,call_chain){
-				if(mi.desembolsos!=null && mi.proyectoid!=''){
+				if($scope.desembolsos!=null && mi.proyectoid!=''){
 					var desembolsos = '';
-					for(var i=0; i<mi.desembolsos.length; i++){
-						desembolsos = desembolsos + "," + JSON.stringify(mi.desembolsos[i]);
+					for(var i=0; i<$scope.desembolsos.length; i++){
+						desembolsos = desembolsos + "," + JSON.stringify($scope.desembolsos[i]);
 					}
 					$http.post('/SDesembolso', {
 						accion: 'guardarDesembolsos',
@@ -84,7 +89,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			};
 			
 			mi.nuevo = function() {
-				mi.desembolsos.push({
+				$scope.desembolsos.push({
 					id: -1,
 					monto: 0,
 					fecha: null,
@@ -93,7 +98,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			};
 			
 			mi.mostrarCalendar = function(index) {
-			    mi.desembolsos[index].c_abierto = true;
+			    $scope.desembolsos[index].c_abierto = true;
 			  };
 			  
 			mi.irATabla = function() {
@@ -131,8 +136,8 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 				});
 
 				instanciaModal.result.then(function(selectedItem) {
-					mi.desembolsos[selectedItem.posicion].tipo_moneda=selectedItem.id;
-					mi.desembolsos[selectedItem.posicion].tipo_moneda_nombre=selectedItem.nombre;
+					$scope.desembolsos[selectedItem.posicion].tipo_moneda=selectedItem.id;
+					$scope.desembolsos[selectedItem.posicion].tipo_moneda_nombre=selectedItem.nombre;
 				}, function() {
 				});
 			};
@@ -145,9 +150,9 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 						, "Cancelar")
 				.result.then(function(data) {
 					if(data){
-						var index = mi.desembolsos.indexOf(row);
+						var index = $scope.desembolsos.indexOf(row);
 				        if (index !== -1) {
-				            mi.desembolsos.splice(index, 1);
+				            $scope.desembolsos.splice(index, 1);
 				        }
 					}
 				}, function(){
@@ -155,6 +160,39 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 				});
 		    }
 			
+			$scope.$watch('desembolsos', function() {
+			    var total = 0;
+			        mi.totalDesembolsos = $scope.desembolsos.reduce(function(total,item) {
+			       	 	 	return total + item.monto;
+			        },0);
+			}, true);
+			
+			mi.validarMonto = function(row){
+				var total = 0;
+				for(x in $scope.desembolsos){
+					total += $scope.desembolsos[x].monto;
+					if(total >= mi.montoPorDesembolsar){
+						if(mi.desembolsosValidos == true){
+							$utilidades.mensaje('warning','Los desembolsos sobrepasan el Monto por desembolsar');
+							mi.desembolsosValidos = false;
+						}
+						return true;
+					}
+				}
+				
+				return false;
+			}
+			
+			for(x in $scope.desembolsos){
+				total += $scope.desembolsos[x].monto;
+				if(total >= mi.montoPorDesembolsar){
+					if(mi.desembolsosValidos == true){
+						$utilidades.mensaje('warning','Los desembolsos sobrepasan el Monto por desembolsar');
+						mi.desembolsosValidos = false;
+					}
+					return true;
+				}
+			}
 } ]);
 
 

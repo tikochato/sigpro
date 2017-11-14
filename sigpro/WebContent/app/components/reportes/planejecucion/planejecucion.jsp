@@ -30,7 +30,7 @@
 		</shiro:lacksPermission>
 		
 		<div class="panel panel-default">
-			<div class="panel-heading"><h3>Plan de Ejecución</h3></div>
+			<div class="panel-heading"><h3>Información General</h3></div>
 		</div>
 		
 		<br>
@@ -47,20 +47,11 @@
 						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 					</div>
 		    	</div>
-		    	<div class="row">
-		    		<div class="form-group col-sm-6" align="left">
-						<div id="pep" angucomplete-alt placeholder="" pause="100" selected-object="planc.cambioPep"
-							  local-data="planc.peps" search-fields="nombre" title-field="nombre" field-required="true" field-label="* {{etiquetas.proyecto}}"
-							  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
-							  initial-value="planc.pepNombre" focus-out="planc.blurPep()" input-name="pep" disable-input="planc.prestamoId==null"></div>
-						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
-					</div>
-		    	</div>
 				<div class="col-sm-12 operation_buttons" style="text-align: right;"  >
 		    			<div class="btn-group" role="group" aria-label="" >
 							<label class="btn btn-default" ng-click="planc.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!planc.mostrarExport">
 							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-							<label class="btn btn-default" ng-click="planc.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="true" >
+							<label class="btn btn-default" ng-click="planc.exportarJasper()" uib-tooltip="Exportar a PDF" ng-hide="true" >
 								<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 						</div>
 		    		</div>

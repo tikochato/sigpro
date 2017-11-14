@@ -37,10 +37,12 @@ import dao.EstructuraProyectoDAO;
 import dao.HitoDAO;
 import dao.HitoResultadoDAO;
 import dao.ProductoDAO;
+import dao.ProyectoDAO;
 import pojo.AsignacionRaci;
 import pojo.Hito;
 import pojo.HitoResultado;
 import pojo.Producto;
+import pojo.Proyecto;
 import utilities.CExcel;
 import utilities.CPdf;
 import utilities.CLogger;
@@ -301,7 +303,7 @@ public class SAvanceActividades extends HttpServlet {
 				Date inicio = new Date();
 				Date fin = new Date();
 				
-				List<?> lstActividadesProducto = EstructuraProyectoDAO.getActividadesByTreePath(producto.getTreePath(), producto.getComponente().getProyecto().getId());
+				List<?> lstActividadesProducto = EstructuraProyectoDAO.getActividadesByTreePath(producto.getTreePath(), producto.getComponente() != null ? producto.getComponente().getProyecto().getId() : producto.getSubcomponente().getComponente().getProyecto().getId());
 				List<stActividad> actividades = new ArrayList<stActividad>();
 				if (lstActividadesProducto != null){
 					stActividad tempActividad = null;
@@ -927,7 +929,8 @@ public class SAvanceActividades extends HttpServlet {
 			headers = generarHeaders();
 			datos = generarDatos(idPrestamo, fechaCorte, usuario);
 			excel = new CExcel("Reporte de Avance", false, null);
-			wb=excel.generateExcelOfData(datos, "Reporte de Avance de Actividades e Hitos", headers, null, true, usuario);
+			Proyecto proyecto = ProyectoDAO.getProyecto(idPrestamo);
+			wb=excel.generateExcelOfData(datos, "Reporte de Avance de Actividades e Hitos - "+proyecto.getNombre(), headers, null, true, usuario);
 			wb.write(outByteStream);
 			outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
@@ -940,7 +943,7 @@ public class SAvanceActividades extends HttpServlet {
 		String headers[][];
 		
 		headers = new String[][]{
-			{"Nombre", "Estado", "Completadas", "Sin Iniciar", "En Proceso", "Retrasadas","Esperadas fin de año", "Años siguientes"},  //titulos
+			{"Nombre", "Estado", "Completadas", "Sin Iniciar", "En Proceso", "Retrasadas","Esperadas fin de aÃ±o", "AÃ±os siguientes"},  //titulos
 			null, //mapeo
 			{"string", "string", "string", "string", "string", "string", "string", "string"}, //tipo dato
 			{"", "", "", "", "", "", "", ""}, //operaciones columnas
