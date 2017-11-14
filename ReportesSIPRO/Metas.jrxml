@@ -258,7 +258,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 		<groupExpression><![CDATA[$F{componente}]]></groupExpression>
 		<groupHeader>
 			<band height="30">
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement mode="Opaque" x="0" y="0" width="750" height="30" forecolor="#FCFAFA" backcolor="#424141" uuid="10b0f87f-e779-4e26-b187-38ed54063f38">
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					</reportElement>
