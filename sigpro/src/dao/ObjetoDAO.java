@@ -271,15 +271,23 @@ public class ObjetoDAO {
 	
 	private static ObjetoCosto obtenerPlanificado(ObjetoCosto objetoCosto, Integer anioInicial, Integer anioFinal){
 		if(objetoCosto.getChildren()!=null && !objetoCosto.getChildren().isEmpty()){
-			objetoCosto.inicializarStanio(anioInicial, anioFinal);
+			for(int a=0; a<(anioFinal-anioInicial+1);a++){
+				for (int m=0; m<12; m++){
+					objetoCosto.anios[a].mes[m].planificado = new BigDecimal(0);
+				}
+			}
 			List<ObjetoCosto> hijos = objetoCosto.getChildren();
 			for(int h=0; h<hijos.size(); h++){
 				ObjetoCosto hijo = hijos.get(h); 
 				hijo.anios = obtenerPlanificado(hijo, anioInicial, anioFinal).anios;
 				for(int a=0; a<(anioFinal-anioInicial+1);a++){
 					for (int m=0; m<12; m++){
+						objetoCosto.anios[a].mes[m].planificado = objetoCosto.anios[a].mes[m].planificado!=null ? objetoCosto.anios[a].mes[m].planificado : new BigDecimal(0);
+						hijo.anios[a].mes[m].planificado = hijo.anios[a].mes[m].planificado!=null ? hijo.anios[a].mes[m].planificado : new BigDecimal(0);
 						objetoCosto.anios[a].mes[m].planificado = objetoCosto.anios[a].mes[m].planificado.add(hijo.anios[a].mes[m].planificado);
-						objetoCosto.anios[a].mes[m].real = objetoCosto.anios[a].mes[m].planificado.add(hijo.anios[a].mes[m].real);
+						objetoCosto.anios[a].mes[m].real = objetoCosto.anios[a].mes[m].real!=null ? objetoCosto.anios[a].mes[m].real : new BigDecimal(0);
+						hijo.anios[a].mes[m].real = hijo.anios[a].mes[m].real!=null ? hijo.anios[a].mes[m].real : new BigDecimal(0);
+						objetoCosto.anios[a].mes[m].real = objetoCosto.anios[a].mes[m].real.add(hijo.anios[a].mes[m].real);
 					}
 				}
 			}
