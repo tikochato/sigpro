@@ -30,7 +30,7 @@
 		</shiro:lacksPermission>
 		
 		<div class="panel panel-default">
-			<div class="panel-heading"><h3>Información General</h3></div>
+			<div class="panel-heading"><h3>Informe General del Préstamo</h3></div>
 		</div>
 		
 		<br>
