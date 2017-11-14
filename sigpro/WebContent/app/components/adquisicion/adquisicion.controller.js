@@ -23,6 +23,7 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		mi.requerido=false;
 		mi.tieneHijos = false;
 		mi.actualizarCosto=null;
+		mi.inhabilitarFechas=false;
 		
 		if($scope.$parent.producto){
 			$scope.$parent.producto.child_adquisiciones = $scope.adquisicionc;
@@ -155,6 +156,8 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 									mi.adquisicion.pagos[j].fechaPago = (mi.adquisicion.pagos[j].fechaPago!=null && mi.adquisicion.pagos[j].fechaPago!="") ? moment(mi.adquisicion.pagos[j].fechaPago,'DD/MM/YYYY').toDate() : null;
 								}
 							}
+							
+							mi.getInfoNog();
 						}
 						else{
 							mi.nuevo();
@@ -347,14 +350,31 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 				$http.post('/SPlanAdquisicion', { accion: 'getInfoNog', nog: mi.adquisicion.nog}).success(
 					function(response){
 						if(response.success){
-							mi.adquisicion.numeroContrato = response.nogInfo[0].numeroContrato;
-							mi.adquisicion.montoContrato = response.nogInfo[0].montoContrato;
-							mi.adquisicion.preparacionDocumentosReal = response.nogInfo[0].preparacionDocumentosReal != undefined && response.nogInfo[0].preparacionDocumentosReal !='' ? moment(response.nogInfo[0].preparacionDocumentosReal, 'DD/MM/YYYY').toDate() : null;
-							mi.adquisicion.lanzamientoEventoReal = response.nogInfo[0].lanzamientoEventoReal != undefined && response.nogInfo[0].lanzamientoEventoReal != '' ? moment(response.nogInfo[0].lanzamientoEventoReal, 'DD/MM/YYYY').toDate() : null;
-							mi.adquisicion.recepcionOfertasReal = response.nogInfo[0].recepcionOfertasReal != undefined && response.nogInfo[0].recepcionOfertasReal != '' ? moment(response.nogInfo[0].recepcionOfertasReal, 'DD/MM/YYYY').toDate() : null;
-							mi.adquisicion.adjudicacionReal = response.nogInfo[0].adjudicacionReal != undefined && response.nogInfo[0].adjudicacionReal != '' ? moment(response.nogInfo[0].adjudicacionReal, 'DD/MM/YYYY').toDate() : null;
-							mi.adquisicion.firmaContratoReal = response.nogInfo[0].firmaContratoReal != undefined && response.nogInfo[0].firmaContratoReal != '' ? moment(response.nogInfo[0].firmaContratoReal, 'DD/MM/YYYY').toDate() : null;
-							mi.nogValido = false;
+							if(response.nogInfo.length == 1){
+								mi.adquisicion.numeroContrato = response.nogInfo[0].numeroContrato;
+								mi.adquisicion.montoContrato = response.nogInfo[0].montoContrato;
+								mi.adquisicion.preparacionDocumentosReal = response.nogInfo[0].preparacionDocumentosReal != undefined && response.nogInfo[0].preparacionDocumentosReal !='' ? moment(response.nogInfo[0].preparacionDocumentosReal, 'DD/MM/YYYY').toDate() : null;
+								mi.adquisicion.lanzamientoEventoReal = response.nogInfo[0].lanzamientoEventoReal != undefined && response.nogInfo[0].lanzamientoEventoReal != '' ? moment(response.nogInfo[0].lanzamientoEventoReal, 'DD/MM/YYYY').toDate() : null;
+								mi.adquisicion.recepcionOfertasReal = response.nogInfo[0].recepcionOfertasReal != undefined && response.nogInfo[0].recepcionOfertasReal != '' ? moment(response.nogInfo[0].recepcionOfertasReal, 'DD/MM/YYYY').toDate() : null;
+								mi.adquisicion.adjudicacionReal = response.nogInfo[0].adjudicacionReal != undefined && response.nogInfo[0].adjudicacionReal != '' ? moment(response.nogInfo[0].adjudicacionReal, 'DD/MM/YYYY').toDate() : null;
+								mi.adquisicion.firmaContratoReal = response.nogInfo[0].firmaContratoReal != undefined && response.nogInfo[0].firmaContratoReal != '' ? moment(response.nogInfo[0].firmaContratoReal, 'DD/MM/YYYY').toDate() : null;
+								mi.inhabilitarFechas=true;
+								mi.listaNog = false;
+							}else{
+								mi.adquisicion.numeroContrato = null;
+								mi.adquisicion.montoContrato = null;
+								mi.adquisicion.preparacionDocumentosReal = null;
+								mi.adquisicion.lanzamientoEventoReal = null;
+								mi.adquisicion.recepcionOfertasReal = null;
+								mi.adquisicion.adjudicacionReal = null;
+								mi.adquisicion.firmaContratoReal = null;
+								
+								mi.inhabilitarFechas=true;
+								
+								mi.infoNogs = response.nogInfo;
+								mi.displayedInfoNog = [].concat(mi.infoNogs);
+								mi.listaNog = true;
+							}
 						}else{
 							$utilidades.mensaje('warning','No existe información para ese NOG');
 							mi.adquisicion.nog = null;
@@ -363,7 +383,7 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 				)
 			
 			}
-		}
+		}		
 } ]);
 
 app.controller('modalPlanadquisicionPagos', [ '$uibModalInstance',
