@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.4.3.final using JasperReports Library version 6.4.3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="InformacionGeneral_Cuadro2" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="40" bottomMargin="20" uuid="24960dc8-cbdf-4b88-b0e0-ffd4a7775e04">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MariaDB Server"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="207"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="787"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -93,7 +93,7 @@ from dual]]>
 					</reportElement>
 				</rectangle>
 				<staticText>
-					<reportElement positionType="Float" mode="Opaque" x="558" y="0" width="186" height="40" backcolor="#D4D4D4" uuid="78bec239-3998-4373-873f-80d82ba285aa">
+					<reportElement positionType="Float" mode="Opaque" x="558" y="0" width="186" height="40" backcolor="#A4A4A4" uuid="78bec239-3998-4373-873f-80d82ba285aa">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -111,7 +111,7 @@ from dual]]>
 					<text><![CDATA[Total]]></text>
 				</staticText>
 				<staticText>
-					<reportElement positionType="Float" mode="Opaque" x="372" y="0" width="186" height="40" backcolor="#D4D4D4" uuid="ecb55e4d-b302-48d9-b934-2a9548237cf7">
+					<reportElement positionType="Float" mode="Opaque" x="372" y="0" width="186" height="40" backcolor="#A4A4A4" uuid="ecb55e4d-b302-48d9-b934-2a9548237cf7">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -129,7 +129,7 @@ from dual]]>
 					<text><![CDATA[Indicadores de Avance Anuales]]></text>
 				</staticText>
 				<staticText>
-					<reportElement positionType="Float" mode="Opaque" x="186" y="0" width="186" height="40" backcolor="#D4D4D4" uuid="f65ba556-e41d-4952-ab9f-3cdca039348e">
+					<reportElement positionType="Float" mode="Opaque" x="186" y="0" width="186" height="40" backcolor="#A4A4A4" uuid="f65ba556-e41d-4952-ab9f-3cdca039348e">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -147,7 +147,7 @@ from dual]]>
 					<text><![CDATA[Desembolsos Mensuales ]]></text>
 				</staticText>
 				<staticText>
-					<reportElement positionType="Float" mode="Opaque" x="0" y="0" width="186" height="40" backcolor="#D4D4D4" uuid="7c28e583-1653-4ead-bca5-5e0c4db8b6cd">
+					<reportElement positionType="Float" mode="Opaque" x="0" y="0" width="186" height="40" backcolor="#A4A4A4" uuid="7c28e583-1653-4ead-bca5-5e0c4db8b6cd">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>

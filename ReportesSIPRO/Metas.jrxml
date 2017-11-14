@@ -282,7 +282,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 		<groupHeader>
 			<band height="30">
 				<textField isBlankWhenNull="true">
-					<reportElement mode="Opaque" x="0" y="0" width="750" height="30" backcolor="#D6D4D4" uuid="027f21ea-c3d8-4b20-973e-1e0accfae0d0">
+					<reportElement mode="Opaque" x="0" y="0" width="750" height="30" backcolor="#D4D4D4" uuid="027f21ea-c3d8-4b20-973e-1e0accfae0d0">
 						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="893fff96-e6c6-4357-b8e0-22b093e33f14"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
@@ -319,7 +319,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 	<columnHeader>
 		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="0" width="154" height="30" forecolor="#FFF7F7" backcolor="#C2BABA" uuid="62bcf306-f9a2-4697-9549-3928a13f9e53">
+				<reportElement mode="Opaque" x="0" y="0" width="154" height="30" forecolor="#FFF7F7" backcolor="#A4A4A4" uuid="62bcf306-f9a2-4697-9549-3928a13f9e53">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="893fff96-e6c6-4357-b8e0-22b093e33f14"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -335,7 +335,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 				<text><![CDATA[Meta]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="700" y="0" width="50" height="30" forecolor="#FFF7F7" backcolor="#C2BABA" uuid="e02ec808-ded8-42f2-9fc1-74f61c460852">
+				<reportElement mode="Opaque" x="700" y="0" width="50" height="30" forecolor="#FFF7F7" backcolor="#A4A4A4" uuid="e02ec808-ded8-42f2-9fc1-74f61c460852">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="fc56ff1a-8aef-4d9a-80b3-5a6274ef885d"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -351,7 +351,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 				<text><![CDATA[% Avance]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="286" y="15" width="52" height="15" forecolor="#FCFCFC" backcolor="#C2BABA" uuid="d592843c-0f33-4b97-b39e-76f9ab732ca6">
+				<reportElement mode="Opaque" x="286" y="15" width="52" height="15" forecolor="#FCFCFC" backcolor="#A4A4A4" uuid="d592843c-0f33-4b97-b39e-76f9ab732ca6">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f51db898-b46c-47f5-947b-17bc751f7ab9"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -369,7 +369,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 				<text><![CDATA[Real]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="338" y="15" width="52" height="15" forecolor="#FCFCFC" backcolor="#C2BABA" uuid="f8dfa479-ead2-4718-90e5-c46ea813292d">
+				<reportElement mode="Opaque" x="338" y="15" width="52" height="15" forecolor="#FCFCFC" backcolor="#A4A4A4" uuid="f8dfa479-ead2-4718-90e5-c46ea813292d">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f51db898-b46c-47f5-947b-17bc751f7ab9"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -387,7 +387,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 				<text><![CDATA[Planificado]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="390" y="15" width="52" height="15" forecolor="#FCFCFC" backcolor="#C2BABA" uuid="3ff8e433-2f1f-4024-9831-026393da6516">
+				<reportElement mode="Opaque" x="390" y="15" width="52" height="15" forecolor="#FCFCFC" backcolor="#A4A4A4" uuid="3ff8e433-2f1f-4024-9831-026393da6516">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f51db898-b46c-47f5-947b-17bc751f7ab9"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -405,7 +405,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 				<text><![CDATA[Real]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="442" y="15" width="52" height="15" forecolor="#FCFCFC" backcolor="#C2BABA" uuid="5c08a7b3-cf4c-4f12-aeb8-a1ce4249ecdf">
+				<reportElement mode="Opaque" x="442" y="15" width="52" height="15" forecolor="#FCFCFC" backcolor="#A4A4A4" uuid="5c08a7b3-cf4c-4f12-aeb8-a1ce4249ecdf">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f51db898-b46c-47f5-947b-17bc751f7ab9"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -423,7 +423,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 				<text><![CDATA[Planificado]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="494" y="15" width="52" height="15" forecolor="#FCFCFC" backcolor="#C2BABA" uuid="7f4b10b1-be3f-4657-a778-45605b09d8f5">
+				<reportElement mode="Opaque" x="494" y="15" width="52" height="15" forecolor="#FCFCFC" backcolor="#A4A4A4" uuid="7f4b10b1-be3f-4657-a778-45605b09d8f5">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f51db898-b46c-47f5-947b-17bc751f7ab9"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -441,7 +441,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 				<text><![CDATA[Real]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="154" y="0" width="80" height="30" forecolor="#FFF7F7" backcolor="#C2BABA" uuid="77b27931-f627-4238-b9bf-903af5139e9f">
+				<reportElement mode="Opaque" x="154" y="0" width="80" height="30" forecolor="#FFF7F7" backcolor="#A4A4A4" uuid="77b27931-f627-4238-b9bf-903af5139e9f">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="52d2810b-d2fc-4eb0-8ea7-111afdcbdca5"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -457,7 +457,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 				<text><![CDATA[Unidad de Medida]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="234" y="15" width="52" height="15" forecolor="#FCFCFC" backcolor="#C2BABA" uuid="0bcf349a-79bf-4f13-9831-e234c16597b1">
+				<reportElement mode="Opaque" x="234" y="15" width="52" height="15" forecolor="#FCFCFC" backcolor="#A4A4A4" uuid="0bcf349a-79bf-4f13-9831-e234c16597b1">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f51db898-b46c-47f5-947b-17bc751f7ab9"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -475,7 +475,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 				<text><![CDATA[Planificado]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="546" y="15" width="52" height="15" forecolor="#FCFCFC" backcolor="#C2BABA" uuid="e570712a-ff84-4999-acfe-a6b204eed5c5">
+				<reportElement mode="Opaque" x="546" y="15" width="52" height="15" forecolor="#FCFCFC" backcolor="#A4A4A4" uuid="e570712a-ff84-4999-acfe-a6b204eed5c5">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f51db898-b46c-47f5-947b-17bc751f7ab9"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -493,7 +493,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 				<text><![CDATA[Planificado]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="598" y="15" width="52" height="15" forecolor="#FCFCFC" backcolor="#C2BABA" uuid="14867495-f359-415a-bdbc-6f2f7e334fe5">
+				<reportElement mode="Opaque" x="598" y="15" width="52" height="15" forecolor="#FCFCFC" backcolor="#A4A4A4" uuid="14867495-f359-415a-bdbc-6f2f7e334fe5">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f51db898-b46c-47f5-947b-17bc751f7ab9"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -511,7 +511,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 				<text><![CDATA[Real]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="650" y="0" width="50" height="30" forecolor="#FFF7F7" backcolor="#C2BABA" uuid="a3202d94-5ad4-454f-b0f4-007ba2ece491">
+				<reportElement mode="Opaque" x="650" y="0" width="50" height="30" forecolor="#FFF7F7" backcolor="#A4A4A4" uuid="a3202d94-5ad4-454f-b0f4-007ba2ece491">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="fc56ff1a-8aef-4d9a-80b3-5a6274ef885d"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -527,7 +527,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 				<text><![CDATA[Meta Final]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="234" y="0" width="104" height="15" forecolor="#FCFCFC" backcolor="#C2BABA" uuid="1da02989-12e0-4073-98ec-7e22c5fa768e">
+				<reportElement mode="Opaque" x="234" y="0" width="104" height="15" forecolor="#FCFCFC" backcolor="#A4A4A4" uuid="1da02989-12e0-4073-98ec-7e22c5fa768e">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f51db898-b46c-47f5-947b-17bc751f7ab9"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -545,7 +545,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 				<text><![CDATA[Cuatrimestre I]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="338" y="0" width="104" height="15" forecolor="#FCFCFC" backcolor="#C2BABA" uuid="ad5b1f6b-a6c4-4f95-af9c-e21335ce29f0">
+				<reportElement mode="Opaque" x="338" y="0" width="104" height="15" forecolor="#FCFCFC" backcolor="#A4A4A4" uuid="ad5b1f6b-a6c4-4f95-af9c-e21335ce29f0">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f51db898-b46c-47f5-947b-17bc751f7ab9"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -563,7 +563,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 				<text><![CDATA[Cuatrimestre II]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="442" y="0" width="104" height="15" forecolor="#FCFCFC" backcolor="#C2BABA" uuid="e9c2b7df-7185-4c89-b09b-0009758b2735">
+				<reportElement mode="Opaque" x="442" y="0" width="104" height="15" forecolor="#FCFCFC" backcolor="#A4A4A4" uuid="e9c2b7df-7185-4c89-b09b-0009758b2735">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f51db898-b46c-47f5-947b-17bc751f7ab9"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -581,7 +581,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 				<text><![CDATA[Cuatrimestre III]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="546" y="0" width="104" height="15" forecolor="#FCFCFC" backcolor="#C2BABA" uuid="4fc10d8b-f923-4756-ba35-b9e6543dd291">
+				<reportElement mode="Opaque" x="546" y="0" width="104" height="15" forecolor="#FCFCFC" backcolor="#A4A4A4" uuid="4fc10d8b-f923-4756-ba35-b9e6543dd291">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f51db898-b46c-47f5-947b-17bc751f7ab9"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
