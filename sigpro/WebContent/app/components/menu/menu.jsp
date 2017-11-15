@@ -76,10 +76,10 @@
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/informacionPresupuestaria">Ejecución presupuestaria</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/flujocaja">Flujo de Caja</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/gestionadquisiciones">Gestión de adquisiciones</a></li></shiro:hasPermission>
+                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/planejecucion">Informe General del Préstamo</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/mapa">Mapa</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/matrizraci">Matriz RACI</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/planadquisiciones">Plan de adquisiciones</a></li></shiro:hasPermission>
-                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/planejecucion">Plan de ejecución</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/planestructuralproyecto">Plan estructural de préstamo</a></li></shiro:hasPermission>
                     	</ul>
                     </li>
