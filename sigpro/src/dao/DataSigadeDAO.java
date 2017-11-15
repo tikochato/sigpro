@@ -96,7 +96,7 @@ public class DataSigadeDAO {
 		return ret;
 	}
 	
-	public static List<?> getAVANCE_FISFINAN_DET_DTIRango(String codigoPresupeustario,int anio_inicio, int anio_fin, int tipoMoneda){
+	public static List<?> getAVANCE_FISFINAN_DET_DTIRango(String codigoPresupeustario,int anio_inicio, int anio_fin, int tipoMoneda, int entidad, int unidadEjecutora){
 		List<?> ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		
@@ -107,12 +107,16 @@ public class DataSigadeDAO {
 					"from DtmAvanceFisfinanDetDti d",
 					"where d.id.codigoPresupuestario = ?1",
 					"and d.id.ejercicioFiscal between ?2 and ?3",
+					"and d.id.entidadSicoin= ?4",
+					"and d.id.unidadEjecutoraSicoin= ?5",
 					"group by d.id.ejercicioFiscal,d.id.mesDesembolso",
 					"order by d.id.ejercicioFiscal,d.id.mesDesembolso asc");
 			Query<?> criteria = session.createQuery(query);
 			criteria.setParameter(1, codigoPresupeustario);
 			criteria.setParameter(2, new Long(anio_inicio));
 			criteria.setParameter(3, new Long(anio_fin));
+			criteria.setParameter(4, entidad);
+			criteria.setParameter(5, unidadEjecutora);
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
