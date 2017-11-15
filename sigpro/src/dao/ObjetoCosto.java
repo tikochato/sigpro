@@ -1,6 +1,9 @@
 package dao;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joda.time.DateTime;
 
 public class ObjetoCosto {
@@ -13,6 +16,7 @@ public class ObjetoCosto {
 	stanio[] anios; 
 	Integer acumulacion_costoid;
 	BigDecimal costo;
+	BigDecimal totalPagos;
 	Integer programa;
 	Integer subprograma; 
 	Integer proyecto;
@@ -21,9 +25,11 @@ public class ObjetoCosto {
 	Integer renglon;
 	Integer geografico;
 	String treePath;
+	transient ObjetoCosto parent;
+	transient List<ObjetoCosto> children;
 	
 	public ObjetoCosto(String nombre, Integer objeto_id, int objeto_tipo, Integer nivel, DateTime fecha_inicial,
-			DateTime fecha_final, stanio[] anios, Integer acumulacion_costoid, BigDecimal costo, Integer programa,
+			DateTime fecha_final, stanio[] anios, Integer acumulacion_costoid, BigDecimal costo, BigDecimal totalPagos, Integer programa,
 			Integer subprograma, Integer proyecto, Integer actividad, Integer obra, Integer renglon, Integer geografico, String treePath) {
 		super();
 		this.nombre = nombre;
@@ -35,6 +41,7 @@ public class ObjetoCosto {
 		this.anios = anios;
 		this.acumulacion_costoid = acumulacion_costoid;
 		this.costo = costo;
+		this.totalPagos = totalPagos;
 		this.programa = programa;
 		this.subprograma = subprograma;
 		this.proyecto = proyecto;
@@ -43,6 +50,7 @@ public class ObjetoCosto {
 		this.renglon = renglon;
 		this.geografico = geografico;
 		this.treePath = treePath;
+		children = new ArrayList<ObjetoCosto>();
 	}
 
 	
@@ -61,6 +69,18 @@ public class ObjetoCosto {
 			temp.anio = anioInicial+i;
 			anios[i] = temp;
 		}
+	}
+		
+	public List<ObjetoCosto> getListado(ObjetoCosto nodo){
+		List<ObjetoCosto> lstPrestamo = new ArrayList<>();
+		lstPrestamo.add(nodo);
+		if(nodo.getChildren()!=null && !nodo.getChildren().isEmpty()){
+			for(int h=0; h<nodo.getChildren().size();h++){
+				lstPrestamo.addAll((List<ObjetoCosto>)getListado(nodo.getChildren().get(h)));
+			}
+			
+		}
+		return lstPrestamo;
 	}
 	
 	public class stpresupuesto{
@@ -145,6 +165,14 @@ public class ObjetoCosto {
 	public void setCosto(BigDecimal costo) {
 		this.costo = costo;
 	}
+	
+	public BigDecimal getTotalPagos() {
+		return totalPagos;
+	}
+
+	public void setTotalPagos(BigDecimal totalPagos) {
+		this.totalPagos = totalPagos;
+	}
 
 	public Integer getPrograma() {
 		return programa;
@@ -208,5 +236,25 @@ public class ObjetoCosto {
 	
 	public void setTreePath(String treePath){
 		this.treePath = treePath;
+	}
+	
+	public ObjetoCosto getParent() {
+		return parent;
+	}
+
+	public void setParent(ObjetoCosto parent) {
+		this.parent = parent;
+	}
+
+	public List<ObjetoCosto> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<ObjetoCosto> children) {
+		this.children = children;
+	}
+	
+	public void addChildren(ObjetoCosto children) {
+		this.children.add(children);
 	}
 }

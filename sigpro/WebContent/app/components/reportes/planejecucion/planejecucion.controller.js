@@ -24,7 +24,7 @@ app.controller('planejecucionController',['$scope','$rootScope','$http','$interv
 	
 	mi.radarColors = ['#88b4df','#8ecf4c'];
 	 
-	$window.document.title = $utilidades.sistema_nombre+' - Información General';
+	$window.document.title = $utilidades.sistema_nombre+' - Informe General del Préstamo';
 	i18nService.setCurrentLang('es');
 	
 	mi.radarOptions = {

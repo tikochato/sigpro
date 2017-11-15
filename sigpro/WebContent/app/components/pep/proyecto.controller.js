@@ -1100,6 +1100,24 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			  })[0].click();
 		}
 		
+		mi.exportar=function(){
+			var formatData = new FormData();
+			
+			$http.post('/SGantt', { accion: 'exportar', proyecto_id:$routeParams.objeto_id,t:moment().unix()
+			  }).then(
+					 function successCallback(response) {
+							var anchor = angular.element('<a/>');
+						    anchor.attr({
+						         href: 'data:application/xml,' + response.data,
+						         target: '_blank',
+						         download: mi.proyecto.nombre + '.xml'
+						     })[0].click();
+						  }.bind(this), function errorCallback(response){
+						 		
+						 	}
+			);
+		};
+		
 } ]);
 
 app.controller('buscarPorProyecto', [ '$uibModalInstance',

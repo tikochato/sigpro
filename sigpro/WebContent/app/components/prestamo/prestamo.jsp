@@ -64,7 +64,7 @@
 		<span ng-init="prestamoc.cambioOrden()"></span>
 	</shiro:hasPermission>
 	<div class="panel panel-default" ng-if="!prestamoc.esTreeview">
-	  <div class="panel-heading"><h3>Información General del Préstamos</h3></div>
+	  <div class="panel-heading"><h3>Información General de Préstamos</h3></div>
 	</div>
 	<div align="center" ng-hide="prestamoc.esColapsado" ng-if="!prestamoc.esTreeview">
 		<div class="col-sm-12 operation_buttons" align="right">

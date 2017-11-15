@@ -143,7 +143,7 @@
 				<span class="glyphicon glyphicon-globe"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAGantt(controller.proyecto.id) : ''" uib-tooltip="Ir a Gantt" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-indent-left"></span></label>
-				<label class="btn btn-default" ng-click="ganttc.exportar()"><span class="glyphicon glyphicon-paste" aria-hidden="true"
+				<label class="btn btn-default" ng-click="controller.botones ? controller.exportar() : ''"><span class="glyphicon glyphicon-paste" aria-hidden="true"
 				uib-tooltip="Exportar Gantt"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAKanban(controller.proyecto.id) : ''" uib-tooltip="Cartelera de Actividades" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-blackboard"></span></label>

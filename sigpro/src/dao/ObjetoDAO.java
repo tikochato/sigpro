@@ -166,135 +166,203 @@ public class ObjetoDAO {
 	
 	public static List<ObjetoCosto> getEstructuraConCosto(int idPrestamo, int anioInicial, int anioFinal, boolean obtenerPlanificado, boolean obtenerReal, String usuario) throws SQLException{
 		List<ObjetoCosto> lstPrestamo = new ArrayList<>();
+		ObjetoCosto root = null;
 		Integer fuente=0;
 		Integer organismo=0;
 		Integer correlativo=0;
 		if(CMariaDB.connectAnalytic()){
 			Connection conn_analytic = CMariaDB.getConnection_analytic();
-			List<?> estructuraProyecto = getConsultaEstructuraConCosto(idPrestamo);
-				if(estructuraProyecto!=null){
-				Iterator<?> iterador = estructuraProyecto.iterator();
-				while (iterador.hasNext()) {
-					Object objeto = iterador.next();
-					Object[] obj = (Object[]) objeto;
-					Integer nivel = (obj[3]!=null) ? ((String)obj[3]).length()/8 : 0;
-					if(nivel != null){
-						Integer objeto_id = obj[0]!=null ? (Integer)obj[0] : null;
-						String nombre = obj[1]!=null ? (String)obj[1] : null;
-						Integer objeto_tipo = obj[2]!=null ? ((BigInteger) obj[2]).intValue() : null;
-						String treePath = obj[3] != null ? ((String) obj[3]) : null;
-						DateTime fecha_inicial = obj[4]!=null ? new DateTime((Timestamp)obj[4]) : null;
-						DateTime fecha_final = obj[5]!=null ? new DateTime((Timestamp)obj[5]) : null;
-						Integer acumulacion_costoid = obj[10]!=null ? Integer.valueOf(obj[10].toString()) : null;
-						BigDecimal costo = obj[8]!=null ? (BigDecimal)obj[8] : null;
-						Integer programa = obj[11]!=null ? (Integer)obj[11] : null;
-						Integer subprograma = obj[12]!=null ? (Integer)obj[12] : null;
-						Integer proyecto = obj[13]!=null ? (Integer)obj[13] : null;
-						Integer actividad = obj[14]!=null ? (Integer)obj[14] : null;
-						Integer obra = obj[15]!=null ? (Integer)obj[15] : null;
-						Integer reglon = obj[16]!=null ? (Integer)obj[16] : null;
-						Integer geografico = obj[17]!= null ? (Integer)obj[17] : null;
+			List<?> estructuras = getConsultaEstructuraConCosto(idPrestamo);
+				if(estructuras!=null && estructuras.size()>0){
+					try{
+						Object[] dato = (Object[]) estructuras.get(0);
+						int objeto_id = dato[0]!=null ? (Integer)dato[0] : 0;
+						int objeto_tipo = dato[2]!=null ? ((BigInteger)dato[2]).intValue() : 0;
+						String nombre = dato[1]!=null ? (String)dato[1] : null;
+						int nivel = (dato[3]!=null) ? ((String)dato[3]).length()/8 : 0;
+						String treePath = dato[3] != null ? ((String) dato[3]) : null;
+						DateTime fecha_inicial = dato[4]!=null ? new DateTime((Timestamp)dato[4]) : null;
+						DateTime fecha_final = dato[5]!=null ? new DateTime((Timestamp)dato[5]) : null;
+						Integer acumulacion_costoid = dato[10]!=null ? Integer.valueOf(dato[10].toString()) : null;
+						BigDecimal costo = dato[8]!=null ? (BigDecimal)dato[8] : null;
+						Integer programa = dato[11]!=null ? (Integer)dato[11] : null;
+						Integer subprograma = dato[12]!=null ? (Integer)dato[12] : null;
+						Integer proyecto = dato[13]!=null ? (Integer)dato[13] : null;
+						Integer actividad = dato[14]!=null ? (Integer)dato[14] : null;
+						Integer obra = dato[15]!=null ? (Integer)dato[15] : null;
+						Integer reglon = dato[16]!=null ? (Integer)dato[16] : null;
+						Integer geografico = dato[17]!= null ? (Integer)dato[17] : null;
+						BigDecimal totalPagos = dato[19]!=null ? (BigDecimal)dato[19] : null;
 						
-						ObjetoCosto objetoCosto =  new ObjetoCosto(nombre, objeto_id, objeto_tipo, nivel, fecha_inicial, fecha_final, null,
-								acumulacion_costoid, costo, programa, subprograma, proyecto, actividad, obra, reglon, geografico, treePath);
-						objetoCosto.inicializarStanio(anioInicial, anioFinal);
-						
-						if(obtenerPlanificado){
-							BigDecimal totalPagos = obj[19]!=null ? (BigDecimal)obj[19] : null;		
-							if(totalPagos!=null && totalPagos.compareTo(BigDecimal.ZERO)!=0){
-								//obtener pagos
-								List<?> estructuraPagos = getConsultaPagos(objetoCosto.objeto_id, objetoCosto.objeto_tipo, anioInicial, anioFinal);
-								
-								Iterator<?> iteradorPagos = estructuraPagos.iterator();
-								while (iteradorPagos.hasNext()) {
-									Object objetoPago = iteradorPagos.next();
-									Object[] objPago = (Object[]) objetoPago;
-									Integer ejercicio = objPago[0]!=null ? (Integer)objPago[0] : null;
-									objetoCosto.anios[ejercicio-anioInicial].anio = ejercicio;
-									for(int m=0; m<12; m++){
-										objetoCosto.anios[ejercicio-anioInicial].mes[m].planificado = objPago[3+m]!=null ? (BigDecimal)objPago[3+m] : null;
-									}
-								}	
-							}else{
-								//utilizar costo del objeto
-								for(int a=0; a<(anioFinal-anioInicial+1); a++){
-									objetoCosto.anios[a].anio=anioInicial+a;
-									ObjetoCosto.stanio anioObj = objetoCosto.anios[a];
-									if(objetoCosto.getFecha_inicial()!=null && objetoCosto.getFecha_final()!=null){
-										int diaInicial = objetoCosto.getFecha_inicial().getDayOfMonth();
-										int mesInicial = objetoCosto.getFecha_inicial().getMonthOfYear() -1;
-										int anioInicialObj = objetoCosto.getFecha_inicial().getYear();
-										int diaFinal = objetoCosto.getFecha_final().getDayOfMonth();
-										int mesFinal = objetoCosto.getFecha_final().getMonthOfYear() -1;
-										int anioFinalObj = objetoCosto.getFecha_final().getYear();
-										if((anioInicial+a) >= anioInicialObj && (anioInicial+a)<=anioFinalObj){
-											Integer acumulacionCostoId = objetoCosto.getAcumulacion_costoid()!=null ? objetoCosto.getAcumulacion_costoid() : 3;
-											if(acumulacionCostoId.compareTo(1)==0){						
-												if(anioInicialObj == (anioInicial+a)){
-													anioObj.mes[mesInicial].planificado =  objetoCosto.getCosto() != null ? objetoCosto.getCosto() : new BigDecimal(0);
-												}
-											}else if(acumulacionCostoId.compareTo(2)==0){
-												int dias = (int)((objetoCosto.getFecha_final().getMillis() - objetoCosto.getFecha_inicial().getMillis())/(1000*60*60*24));
-												BigDecimal costoDiario = objetoCosto.getCosto() != null && dias > 0 ? objetoCosto.getCosto().divide(new BigDecimal(dias),5, BigDecimal.ROUND_HALF_UP) : new BigDecimal(0);
-												int inicioActual = 0;
-												if(anioObj.anio == anioInicialObj){
-													inicioActual = mesInicial;
-												}
-												
-												int finMes = anioObj.anio==anioFinalObj ? mesFinal : 11;
-												for(int m=inicioActual; m<=finMes; m++){
-													if(anioObj.anio == anioInicialObj && m==mesInicial){
-														if(m==mesFinal){
-															int diasMes = diaFinal-diaInicial;
-															anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
-														}else{
-															Calendar cal = new GregorianCalendar(anioObj.anio, m, 1); 
-															int diasMes = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-															diasMes = diasMes-diaInicial;
-															anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
-														}
-													}else if(anioObj.anio == anioFinalObj && m== mesFinal){
-														anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diaFinal));
-													}else{
-														Calendar cal = new GregorianCalendar(anioObj.anio, m, 1); 
-														int diasMes = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-														anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
-													}
-												}
-											}else{
-												if(anioFinalObj == anioObj.anio){
-													anioObj.mes[mesFinal].planificado =  objetoCosto.getCosto() != null ? objetoCosto.getCosto() : new BigDecimal(0);
-												}
-											}
-										}
-									}
-								}
-							}
-						}
+						root =  new ObjetoCosto(nombre, objeto_id, objeto_tipo, nivel, fecha_inicial, fecha_final, null,
+								acumulacion_costoid, costo, totalPagos, programa, subprograma, proyecto, actividad, obra, reglon, geografico, treePath);
+						root.inicializarStanio(anioInicial, anioFinal);
 						
 						if(obtenerReal){
-							if(objetoCosto.getObjeto_tipo() == 0){
-								Proyecto proy = ProyectoDAO.getProyecto(objetoCosto.getObjeto_id());
-								if(proy.getPrestamo() != null ){
-									String codigoPresupuestario = Long.toString(proy.getPrestamo().getCodigoPresupuestario());
-									if(codigoPresupuestario!=null && !codigoPresupuestario.isEmpty()){
-										fuente = Utils.String2Int(codigoPresupuestario.substring(0,2));
-										organismo = Utils.String2Int(codigoPresupuestario.substring(2,6));
-										correlativo = Utils.String2Int(codigoPresupuestario.substring(6,10));
-										objetoCosto = getCostoReal(objetoCosto, fuente, organismo, correlativo, anioInicial, anioFinal, conn_analytic, usuario);
-									}
+							Proyecto proy = ProyectoDAO.getProyecto(root.getObjeto_id());
+							if(proy.getPrestamo() != null ){
+								String codigoPresupuestario = Long.toString(proy.getPrestamo().getCodigoPresupuestario());
+								if(codigoPresupuestario!=null && !codigoPresupuestario.isEmpty()){
+									fuente = Utils.String2Int(codigoPresupuestario.substring(0,2));
+									organismo = Utils.String2Int(codigoPresupuestario.substring(2,6));
+									correlativo = Utils.String2Int(codigoPresupuestario.substring(6,10));
+									root = getCostoReal(root, fuente, organismo, correlativo, anioInicial, anioFinal, conn_analytic, usuario);
 								}
-							}else{
-								objetoCosto = getCostoReal(objetoCosto, fuente, organismo, correlativo, anioInicial, anioFinal, conn_analytic, usuario);
 							}
 						}
-						lstPrestamo.add(objetoCosto);
+						
+						ObjetoCosto nivel_actual_estructura = root;
+						for(int i=1; i<estructuras.size(); i++){
+							dato = (Object[]) estructuras.get(i);
+							objeto_id = dato[0]!=null ? (Integer)dato[0] : 0;
+							objeto_tipo = dato[2]!=null ? ((BigInteger)dato[2]).intValue() : 0;
+							nombre = dato[1]!=null ? (String)dato[1] : null;
+							nivel = (dato[3]!=null) ? ((String)dato[3]).length()/8 : 0;
+							treePath = dato[3] != null ? ((String) dato[3]) : null;
+							fecha_inicial = dato[4]!=null ? new DateTime((Timestamp)dato[4]) : null;
+							fecha_final = dato[5]!=null ? new DateTime((Timestamp)dato[5]) : null;
+							acumulacion_costoid = dato[10]!=null ? Integer.valueOf(dato[10].toString()) : null;
+							costo = dato[8]!=null ? (BigDecimal)dato[8] : null;
+							programa = dato[11]!=null ? (Integer)dato[11] : null;
+							subprograma = dato[12]!=null ? (Integer)dato[12] : null;
+							proyecto = dato[13]!=null ? (Integer)dato[13] : null;
+							actividad = dato[14]!=null ? (Integer)dato[14] : null;
+							obra = dato[15]!=null ? (Integer)dato[15] : null;
+							reglon = dato[16]!=null ? (Integer)dato[16] : null;
+							geografico = dato[17]!= null ? (Integer)dato[17] : null;
+							totalPagos = dato[19]!=null ? (BigDecimal)dato[19] : null;
+							
+							ObjetoCosto nodo =  new ObjetoCosto(nombre, objeto_id, objeto_tipo, nivel, fecha_inicial, fecha_final, null,
+									acumulacion_costoid, costo, totalPagos, programa, subprograma, proyecto, actividad, obra, reglon, geografico, treePath);
+							nodo.inicializarStanio(anioInicial, anioFinal);
+							
+							if(obtenerReal){
+								nodo = getCostoReal(nodo, fuente, organismo, correlativo, anioInicial, anioFinal, conn_analytic, usuario);
+							}
+							
+							if(nodo.nivel!=nivel_actual_estructura.nivel+1){
+								if(nodo.nivel>nivel_actual_estructura.nivel){
+									nivel_actual_estructura = nivel_actual_estructura.children.get(nivel_actual_estructura.children.size()-1);
+								}
+								else{
+									int retornar = nivel_actual_estructura.nivel-nodo.nivel+1;
+									for(int j=0; j<retornar; j++)
+										nivel_actual_estructura=nivel_actual_estructura.parent;
+								}
+							}
+							nodo.parent = nivel_actual_estructura;
+							nivel_actual_estructura.children.add(nodo);
+						}
+					}
+					catch(Throwable e){
+						root = null;
+						CLogger.write("2", EstructuraProyectoDAO.class, e);
+					}
+					
+				}
+			conn_analytic.close();
+		}
+		if(obtenerPlanificado){
+			root = obtenerPlanificado(root, anioInicial, anioFinal);
+		}		
+		lstPrestamo = root.getListado(root);
+		return lstPrestamo;
+	}
+	
+	private static ObjetoCosto obtenerPlanificado(ObjetoCosto objetoCosto, Integer anioInicial, Integer anioFinal){
+		if(objetoCosto.getChildren()!=null && !objetoCosto.getChildren().isEmpty()){
+			for(int a=0; a<(anioFinal-anioInicial+1);a++){
+				for (int m=0; m<12; m++){
+					objetoCosto.anios[a].mes[m].planificado = new BigDecimal(0);
+				}
+			}
+			List<ObjetoCosto> hijos = objetoCosto.getChildren();
+			for(int h=0; h<hijos.size(); h++){
+				ObjetoCosto hijo = hijos.get(h); 
+				hijo.anios = obtenerPlanificado(hijo, anioInicial, anioFinal).anios;
+				for(int a=0; a<(anioFinal-anioInicial+1);a++){
+					for (int m=0; m<12; m++){
+						objetoCosto.anios[a].mes[m].planificado = objetoCosto.anios[a].mes[m].planificado!=null ? objetoCosto.anios[a].mes[m].planificado : new BigDecimal(0);
+						hijo.anios[a].mes[m].planificado = hijo.anios[a].mes[m].planificado!=null ? hijo.anios[a].mes[m].planificado : new BigDecimal(0);
+						objetoCosto.anios[a].mes[m].planificado = objetoCosto.anios[a].mes[m].planificado.add(hijo.anios[a].mes[m].planificado);
+						objetoCosto.anios[a].mes[m].real = objetoCosto.anios[a].mes[m].real!=null ? objetoCosto.anios[a].mes[m].real : new BigDecimal(0);
+						hijo.anios[a].mes[m].real = hijo.anios[a].mes[m].real!=null ? hijo.anios[a].mes[m].real : new BigDecimal(0);
+						objetoCosto.anios[a].mes[m].real = objetoCosto.anios[a].mes[m].real.add(hijo.anios[a].mes[m].real);
 					}
 				}
 			}
-			conn_analytic.close();
+		}else{
+			if(objetoCosto.totalPagos!=null && objetoCosto.totalPagos.compareTo(BigDecimal.ZERO)!=0){
+				//obtener pagos
+				List<?> estructuraPagos = getConsultaPagos(objetoCosto.objeto_id, objetoCosto.objeto_tipo, anioInicial, anioFinal);
+				
+				Iterator<?> iteradorPagos = estructuraPagos.iterator();
+				while (iteradorPagos.hasNext()) {
+					Object objetoPago = iteradorPagos.next();
+					Object[] objPago = (Object[]) objetoPago;
+					Integer ejercicio = objPago[0]!=null ? (Integer)objPago[0] : null;
+					objetoCosto.anios[ejercicio-anioInicial].anio = ejercicio;
+					for(int m=0; m<12; m++){
+						objetoCosto.anios[ejercicio-anioInicial].mes[m].planificado = objPago[3+m]!=null ? (BigDecimal)objPago[3+m] : null;
+					}
+				}	
+			}else{
+				//utilizar costo del objeto
+				for(int a=0; a<(anioFinal-anioInicial+1); a++){
+					objetoCosto.anios[a].anio=anioInicial+a;
+					ObjetoCosto.stanio anioObj = objetoCosto.anios[a];
+					if(objetoCosto.getFecha_inicial()!=null && objetoCosto.getFecha_final()!=null){
+						int diaInicial = objetoCosto.getFecha_inicial().getDayOfMonth();
+						int mesInicial = objetoCosto.getFecha_inicial().getMonthOfYear() -1;
+						int anioInicialObj = objetoCosto.getFecha_inicial().getYear();
+						int diaFinal = objetoCosto.getFecha_final().getDayOfMonth();
+						int mesFinal = objetoCosto.getFecha_final().getMonthOfYear() -1;
+						int anioFinalObj = objetoCosto.getFecha_final().getYear();
+						if((anioInicial+a) >= anioInicialObj && (anioInicial+a)<=anioFinalObj){
+							Integer acumulacionCostoId = objetoCosto.getAcumulacion_costoid()!=null ? objetoCosto.getAcumulacion_costoid() : 3;
+							if(acumulacionCostoId.compareTo(1)==0){						
+								if(anioInicialObj == (anioInicial+a)){
+									anioObj.mes[mesInicial].planificado =  objetoCosto.getCosto() != null ? objetoCosto.getCosto() : new BigDecimal(0);
+								}
+							}else if(acumulacionCostoId.compareTo(2)==0){
+								int dias = (int)((objetoCosto.getFecha_final().getMillis() - objetoCosto.getFecha_inicial().getMillis())/(1000*60*60*24));
+								BigDecimal costoDiario = objetoCosto.getCosto() != null && dias > 0 ? objetoCosto.getCosto().divide(new BigDecimal(dias),5, BigDecimal.ROUND_HALF_UP) : new BigDecimal(0);
+								int inicioActual = 0;
+								if(anioObj.anio == anioInicialObj){
+									inicioActual = mesInicial;
+								}
+								
+								int finMes = anioObj.anio==anioFinalObj ? mesFinal : 11;
+								for(int m=inicioActual; m<=finMes; m++){
+									if(anioObj.anio == anioInicialObj && m==mesInicial){
+										if(m==mesFinal){
+											int diasMes = diaFinal-diaInicial;
+											anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
+										}else{
+											Calendar cal = new GregorianCalendar(anioObj.anio, m, 1); 
+											int diasMes = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+											diasMes = diasMes-diaInicial;
+											anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
+										}
+									}else if(anioObj.anio == anioFinalObj && m== mesFinal){
+										anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diaFinal));
+									}else{
+										Calendar cal = new GregorianCalendar(anioObj.anio, m, 1); 
+										int diasMes = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+										anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
+									}
+								}
+							}else{
+								if(anioFinalObj == anioObj.anio){
+									anioObj.mes[mesFinal].planificado =  objetoCosto.getCosto() != null ? objetoCosto.getCosto() : new BigDecimal(0);
+								}
+							}
+						}
+					}
+				}
+			}
 		}
-		return lstPrestamo;
+		return objetoCosto;
 	}
 	
 	private static ObjetoCosto getCostoReal(ObjetoCosto objetoCosto, Integer fuente, Integer organismo, Integer correlativo, Integer anioInicial, Integer anioFinal, Connection conn, String usuario){
