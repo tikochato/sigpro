@@ -22,7 +22,7 @@
 							<label class="btn btn-default" ng-click="ganttc.pesoProducto(ganttc.proyectoid)" ng-hide="true"><span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true"
 								uib-tooltip="Peso de productos"></span></label>
 							<label class="btn btn-default" ng-click="ganttc.exportar()"><span class="glyphicon glyphicon-paste" aria-hidden="true"
-								uib-tooltip="Exportar Gantt"></span></label>
+								uib-tooltip="Exportar Gantt a Project"></span></label>
 							<label class="btn btn-default" ng-click="ganttc.zoomAcercar()"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true"
 								uib-tooltip="Acercar vista"></span></label>
 							<label class="btn btn-default" ng-click="ganttc.zoomAlejar()"><span class="glyphicon glyphicon-zoom-out" aria-hidden="true"

@@ -1103,7 +1103,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 		mi.exportar=function(){
 			var formatData = new FormData();
 			
-			$http.post('/SGantt', { accion: 'exportar', proyecto_id:$routeParams.objeto_id,t:moment().unix()
+			$http.post('/SGantt', { accion: 'exportar', proyecto_id:mi.proyecto.id,t:moment().unix()
 			  }).then(
 					 function successCallback(response) {
 							var anchor = angular.element('<a/>');

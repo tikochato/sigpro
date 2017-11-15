@@ -202,7 +202,7 @@ public class SPrestamo extends HttpServlet {
 
 		if (accion.equals("getPrestamos")) {
 			try{
-				List<Prestamo> prestamos = PrestamoDAO.getPrestamos();
+				List<Prestamo> prestamos = PrestamoDAO.getPrestamos(usuario);
 				if (prestamos !=null && prestamos.size() > 0){
 					List<stprestamo> lstprestamo = new ArrayList<stprestamo>();
 					
