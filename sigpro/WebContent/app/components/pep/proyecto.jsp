@@ -143,17 +143,17 @@
 				<span class="glyphicon glyphicon-globe"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAGantt(controller.proyecto.id) : ''" uib-tooltip="Ir a Gantt" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-indent-left"></span></label>
-				<label class="btn btn-default" ng-click="controller.botones ? controller.exportar() : ''"><span class="glyphicon glyphicon-paste" aria-hidden="true"
-				uib-tooltip="Exportar Gantt"></span></label>
+				<label class="btn btn-default" ng-click="controller.botones  ? controller.completarConArchivo(controller.proyecto.id) : ''"
+					ng-if="controller.proyecto.projectCargado!=1" uib-tooltip="Importar PEP desde Project" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-copy"></span></label>
+				<label class="btn btn-default" ng-click="controller.botones ? controller.exportar() : ''" uib-tooltip="Exportar PEP a Project" tooltip-placement="bottom">
+				<span class="glyphicon glyphicon-paste"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAKanban(controller.proyecto.id) : ''" uib-tooltip="Cartelera de Actividades" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-blackboard"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAAgenda(controller.proyecto.id) : ''" uib-tooltip="Agenda" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-calendar"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAMatrizRiesgos(controller.proyecto.id) : ''" uib-tooltip="Matriz de Riesgos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-list-alt"></span></label>
-				<label class="btn btn-default" ng-click="controller.botones  ? controller.completarConArchivo(controller.proyecto.id) : ''"
-					ng-if="controller.proyecto.projectCargado!=1" uib-tooltip="Importar PEP desde Project" tooltip-placement="bottom">
-				<span class="glyphicon glyphicon-copy"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.calcularCostoFecha(controller.proyecto.id) : ''" uib-tooltip="Cálculo de costos y fechas" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-wrench"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAMiembrosUnidadEjecutora(controller.proyecto.id) : ''" uib-tooltip="Miembros de la Unidad Ejecutora" tooltip-placement="bottom">

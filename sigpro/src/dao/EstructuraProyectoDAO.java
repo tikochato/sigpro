@@ -400,7 +400,7 @@ public class EstructuraProyectoDAO {
 	
 	public static ArrayList<Nodo> getEstructuraPrestamosArbol(String usuario){
 		ArrayList<Nodo> ret = new ArrayList<Nodo>();
-		List<Prestamo> prestamos = PrestamoDAO.getPrestamos();
+		List<Prestamo> prestamos = PrestamoDAO.getPrestamos(null);
 		if(prestamos!= null){
 			for(int i=0; i<prestamos.size(); i++){
 				Nodo prestamo = getEstructuraPrestamoProyectoArbolProyectosComponentesProductos(prestamos.get(i).getId(), usuario);
