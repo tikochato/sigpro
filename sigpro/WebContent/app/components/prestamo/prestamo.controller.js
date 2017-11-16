@@ -575,6 +575,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 				mi.unidadesEjecutoras = response.data.unidadesEjecutoras;
 				mi.rowCollectionUE = mi.unidadesEjecutoras;
 				for(ue=0; ue<mi.rowCollectionUE.length; ue++){
+					mi.rowCollectionUE[ue].fechaElegibilidad = mi.rowCollectionUE[ue].fechaElegibilidad != '' ? moment(mi.rowCollectionUE[ue].fechaElegibilidad, 'DD/MM/YYYY').toDate() : null;
+					mi.rowCollectionUE[ue].fechaCierre = mi.rowCollectionUE[ue].fechaCierre != '' ? moment(mi.rowCollectionUE[ue].fechaCierre, 'DD/MM/YYYY').toDate() : null;
 					mi.rowCollectionUE[ue].esCoordinador = mi.rowCollectionUE[ue].esCoordinador==1;
 				}
 				mi.displayCollectionUE = [].concat(mi.rowCollectionUE);
@@ -582,6 +584,8 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			})
 			
 			mi.cargarMatriz();
+			
+			mi.getPorcentajes();
 			
 			mi.getDocumentosAdjuntos( mi.prestamo.id,-1);
 		}
