@@ -222,12 +222,18 @@ public class PrestamoDAO {
 		return ret;
 	}
 	
-	public static List<Prestamo> getPrestamos(){
+	public static List<Prestamo> getPrestamos(String usuario){
 		List<Prestamo> ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = "SELECT p FROM Prestamo p where p.estado=1 ";
+			if(usuario!=null){
+				query+= "and p.id in (SELECT u.id.prestamoid from PrestamoUsuario u where u.id.usuario=:usuario ) ";
+			}
 			Query<Prestamo> criteria = session.createQuery(query,Prestamo.class);
+			if(usuario!=null){
+				criteria.setParameter("usuario", usuario);
+			}
 			ret = criteria.getResultList();
 		}catch(Exception e){
 			CLogger.write("8", PrestamoDAO.class, e);
