@@ -38,30 +38,66 @@
 		<parameter name="proyectoIdG" class="java.lang.Integer">
 			<defaultValueExpression><![CDATA[29]]></defaultValueExpression>
 		</parameter>
+		<parameter name="diciembreR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="noviembreR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="octubreR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="septiembreR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="agostoR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="julioR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="junioR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="mayoR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="abrilR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="marzoR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="febreroR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="eneroR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
 		<queryString language="SQL">
-			<![CDATA[select 'planificada' tipo, 1 mes,20000 monto
+			<![CDATA[select 'planificada' tipo, 1 mes,  $P{eneroR_g} monto
 union 
-select 'planificada',2,0
+select 'planificada',2, $P{febreroR_g} 
 union 
-select 'planificada',3,458900
+select 'planificada',3, $P{marzoR_g} 
 union 
-select 'planificada',4,0
+select 'planificada',4, $P{abrilR_g} 
 union 
-select 'planificada',5,0
+select 'planificada',5, $P{mayoR_g} 
 union 
-select 'planificada',6,300000
+select 'planificada',6, $P{junioR_g} 
 union 
-select 'planificada',7,0
+select 'planificada',7, $P{julioR_g} 
 union 
-select 'planificada',8,0
+select 'planificada',8, $P{agostoR_g} 
 union 
-select 'planificada',9,0
+select 'planificada',9, $P{septiembreR_g} 
 union 
-select 'planificada',10,0
+select 'planificada',10, $P{octubreR_g} 
 union 
-select 'planificada',11,0
+select 'planificada',11, $P{noviembreR_g} 
 union 
-select 'planificada',12,0
+select 'planificada',12, $P{diciembreR_g} 
 union
 select 'real' tipo , e.mes, sum(e.ejecutado) monto
 from sipro_analytic.mv_ep_ejec_asig_vige e, sipro.proyecto po ,sipro.prestamo pe
@@ -73,8 +109,7 @@ and e.correlativo = cast(substring(pe.codigo_presupuestario,7,4) as Integer)
 and e.ejercicio = year(now())
 and po.id =  $P{proyectoIdG} 
 and e.mes > 0
-group by  e.ejercicio, e.mes 
-]]>
+group by  e.ejercicio, e.mes]]>
 		</queryString>
 		<field name="tipo" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="tipo"/>
@@ -89,10 +124,46 @@ group by  e.ejercicio, e.mes
 	<subDataset name="gastos" uuid="01fe2ac5-eafc-4fcb-bbd7-bb79cc12b229">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
-		<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="516"/>
-		<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="470"/>
+		<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="625"/>
+		<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="361"/>
+		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="81"/>
+		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="908"/>
 		<parameter name="proyectoId_t" class="java.lang.Integer">
-			<defaultValueExpression><![CDATA[29]]></defaultValueExpression>
+			<defaultValueExpression><![CDATA[6]]></defaultValueExpression>
+		</parameter>
+		<parameter name="costoRealEnero_t" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="costoRealFebrero_t" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="costoRealMarzo_t" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="costoRealAbril_t" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="costoRealMayo_t" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="costoRealJunio_t" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="costoRealJulio_t" class="java.math.BigDecimal"/>
+		<parameter name="costoRealAgosto_t" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="costoRealSeptiembre_t" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="costoRealOctubre_t" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="costoRealNoviembre_t" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="costoRealDiciembre_t" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 		</parameter>
 		<queryString language="SQL">
 			<![CDATA[select 'Gasto real' gasto,
@@ -158,10 +229,11 @@ from (
 	group by  e.ejercicio, e.mes 
 ) t1
 union
-select 'Gasto programado' gasto ,20000 enero,0 febrero,458900 marzo,0 abril,0 mayo,300000 junio,0 julio,0 agosto
-,0 septiembre,0 octubre,0 noviembre,0 diciembre
-
-]]>
+select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFebrero_t}  febrero,
+  $P{costoRealMarzo_t} marzo, $P{costoRealAbril_t}   abril,  $P{costoRealMayo_t} mayo, 
+   $P{costoRealJunio_t}  junio, $P{costoRealJulio_t}   julio, $P{costoRealAgosto_t}  agosto
+,  $P{costoRealSeptiembre_t} septiembre,  $P{costoRealOctubre_t}  octubre,
+ $P{costoRealNoviembre_t}  noviembre, $P{costoRealDiciembre_t}  diciembre]]>
 		</queryString>
 		<field name="gasto" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="gasto"/>
@@ -216,6 +288,9 @@ select 'Gasto programado' gasto ,20000 enero,0 febrero,458900 marzo,0 abril,0 ma
 	</parameter>
 	<parameter name="esSubreporte" class="java.lang.Boolean" isForPrompting="false">
 		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="costoReal" class="java.util.ArrayList" nestedType="java.math.BigDecimal">
+		<parameterDescription><![CDATA[Lista de cosotos reales]]></parameterDescription>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[select 'Gasto real',
@@ -287,7 +362,7 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="471" splitType="Stretch">
+		<band height="456" splitType="Stretch">
 			<staticText>
 				<reportElement mode="Transparent" x="213" y="1" width="335" height="30" backcolor="#0D0D0D" uuid="1a7a0892-ae96-4935-a3ec-dbace311c26e"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
@@ -297,7 +372,7 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 			</staticText>
 			<areaChart>
 				<chart evaluationTime="Report" renderType="draw" theme="default">
-					<reportElement x="115" y="71" width="530" height="200" uuid="0d76a79e-e773-4bef-be73-d1f401f54ec3"/>
+					<reportElement x="115" y="71" width="530" height="200" uuid="7fddb95a-ce0f-48b6-b5b7-ca15db3ff1b5"/>
 					<chartTitle/>
 					<chartSubtitle/>
 					<chartLegend>
@@ -306,9 +381,45 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 				</chart>
 				<categoryDataset>
 					<dataset>
-						<datasetRun subDataset="Tabla" uuid="c3cffc91-c32b-4395-ab0f-09fa4754dbc5">
+						<datasetRun subDataset="Tabla" uuid="f69bcf43-54a3-4780-bbe7-bee19face29d">
 							<datasetParameter name="proyectoIdG">
 								<datasetParameterExpression><![CDATA[$P{proyectoId}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="eneroR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoReal}.isEmpty()  &&  $P{costoReal}.size() > 0 ? $P{costoReal}.get( 0 ) : new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="febreroR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoReal}.isEmpty()  &&  $P{costoReal}.size() >  1 ? $P{costoReal}.get( 1) : new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="marzoR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoReal}.isEmpty()  &&  $P{costoReal}.size() >  2 ? $P{costoReal}.get( 2) : new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="abrilR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoReal}.isEmpty()  &&  $P{costoReal}.size() >  3 ? $P{costoReal}.get( 3) : new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="mayoR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoReal}.isEmpty()  &&  $P{costoReal}.size() >  4 ? $P{costoReal}.get( 4) : new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="junioR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoReal}.isEmpty()  &&  $P{costoReal}.size() >  5 ? $P{costoReal}.get( 5) : new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="julioR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoReal}.isEmpty()  &&  $P{costoReal}.size() >  6 ? $P{costoReal}.get( 6) : new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="agostoR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoReal}.isEmpty()  &&  $P{costoReal}.size() > 7 ? $P{costoReal}.get( 7) : new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="septiembreR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoReal}.isEmpty()  &&  $P{costoReal}.size() >  8 ? $P{costoReal}.get( 8) : new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="octubreR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoReal}.isEmpty()  &&  $P{costoReal}.size() >  9 ? $P{costoReal}.get( 9) : new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="noviembreR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoReal}.isEmpty()  &&  $P{costoReal}.size() >  10 ? $P{costoReal}.get( 10) : new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="diciembreR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoReal}.isEmpty()  &&  $P{costoReal}.size() >  11  ?  $P{costoReal}.get( 11)  :  new BigDecimal(0)]]></datasetParameterExpression>
 							</datasetParameter>
 							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 						</datasetRun>
@@ -335,7 +446,7 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 				</areaPlot>
 			</areaChart>
 			<componentElement>
-				<reportElement x="14" y="332" width="716" height="120" uuid="7dce348a-cd40-48d9-8047-afe1db12b4ef">
+				<reportElement stretchType="ElementGroupBottom" x="14" y="332" width="716" height="118" uuid="7dce348a-cd40-48d9-8047-afe1db12b4ef">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
@@ -344,9 +455,45 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="gastos" uuid="06f52ae4-3540-4b0b-86a2-9492da9c5e16">
+					<datasetRun subDataset="gastos" uuid="bfab080d-0b36-4745-8f48-261bdd120124">
 						<datasetParameter name="proyectoId_t">
 							<datasetParameterExpression><![CDATA[$P{proyectoId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealEnero_t">
+							<datasetParameterExpression><![CDATA[! $P{costoReal}.isEmpty()  && $P{costoReal}.size() > 0  ?    $P{costoReal}.get( 0 ) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealFebrero_t">
+							<datasetParameterExpression><![CDATA[! $P{costoReal}.isEmpty()  && $P{costoReal}.size() > 1  ? $P{costoReal}.get( 1 ) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealMarzo_t">
+							<datasetParameterExpression><![CDATA[! $P{costoReal}.isEmpty()  && $P{costoReal}.size() > 2  ?$P{costoReal}.get( 2 ) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealAbril_t">
+							<datasetParameterExpression><![CDATA[! $P{costoReal}.isEmpty()  && $P{costoReal}.size() > 3  ?$P{costoReal}.get( 3) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealMayo_t">
+							<datasetParameterExpression><![CDATA[! $P{costoReal}.isEmpty()  && $P{costoReal}.size() > 4 ?$P{costoReal}.get( 4) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealJunio_t">
+							<datasetParameterExpression><![CDATA[! $P{costoReal}.isEmpty()  && $P{costoReal}.size() > 5  ?$P{costoReal}.get( 5) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealJulio_t">
+							<datasetParameterExpression><![CDATA[! $P{costoReal}.isEmpty()  && $P{costoReal}.size() > 6  ? $P{costoReal}.get( 6) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealAgosto_t">
+							<datasetParameterExpression><![CDATA[! $P{costoReal}.isEmpty()  && $P{costoReal}.size() > 7  ?$P{costoReal}.get( 7) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealSeptiembre_t">
+							<datasetParameterExpression><![CDATA[! $P{costoReal}.isEmpty()  && $P{costoReal}.size() > 8  ? $P{costoReal}.get( 8) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealOctubre_t">
+							<datasetParameterExpression><![CDATA[! $P{costoReal}.isEmpty()  && $P{costoReal}.size() > 9  ?$P{costoReal}.get( 9 ) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealNoviembre_t">
+							<datasetParameterExpression><![CDATA[! $P{costoReal}.isEmpty()  && $P{costoReal}.size() > 10  ? $P{costoReal}.get( 10) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealDiciembre_t">
+							<datasetParameterExpression><![CDATA[! $P{costoReal}.isEmpty()  && $P{costoReal}.size() > 11  ? $P{costoReal}.get( 11) : new BigDecimal(0)]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
@@ -478,15 +625,15 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 								<textFieldExpression><![CDATA[$V{real}]]></textFieldExpression>
 							</textField>
 							<textField pattern="#,##0.00#">
-								<reportElement x="0" y="30" width="551" height="30" uuid="7beb5217-3c91-432c-88f9-b0efe822fc8a">
+								<reportElement x="0" y="30" width="551" height="30" uuid="0a4f7389-7ec6-4cf9-91c2-b5a65d22a535">
 									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 								</reportElement>
 								<box>
 									<pen lineWidth="0.0"/>
-									<topPen lineWidth="0.5"/>
+									<topPen lineWidth="0.25"/>
 								</box>
 								<textElement textAlignment="Right" verticalAlignment="Middle">
-									<font fontName="Arial&#xA;Arial&#xA;Arial"/>
+									<font fontName="Arial" size="10"/>
 									<paragraph rightIndent="3"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$V{planificado}]]></textFieldExpression>
