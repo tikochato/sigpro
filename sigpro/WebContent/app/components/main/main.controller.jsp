@@ -232,6 +232,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/planestructuralproyecto/',{
             	template: '<div load-on-demand="\'planEstructuralProyectoController\'" class="all_page"></div>'
             })
+            .when('/informeGeneralPEP/',{
+            	template: '<div load-on-demand="\'informeGeneralPEPController\'" class="all_page"></div>'
+            })
             .when("/:redireccion?",{
             	controller:"MainController"
             })
@@ -598,6 +601,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'planEstructuralProyectoController',
 	    	   script: '/app/components/reportes/planestructuraproyecto/planestructuralproyecto.controller.js',
 	    	   template: '/app/components/reportes/planestructuraproyecto/planestructuralproyecto.jsp'
+	       },
+	       {
+	    	   name: 'informeGeneralPEPController',
+	    	   script: '/app/components/reportes/informeGeneralPEP/informeGeneralPEP.controller.js',
+	    	   template: '/app/components/reportes/informeGeneralPEP/informeGeneralPEP.jsp'
 	       }
 
 	   ];
