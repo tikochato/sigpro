@@ -159,16 +159,16 @@ app.controller('informeGeneralPEPController',['$scope','$rootScope','$http','$in
 	
 
 	mi.exportarExcel = function(){
-		$http.post('/SPlanEjecucion', { 
+		$http.post('/SInformeGeneralPEP', { 
 			accion: 'exportarExcel', 
-			id: mi.prestamoId,
-			ejecucionFisicaPlan : mi.dataRadar[0][0],
-			plazoEjecucionPlan: mi.dataRadar[0][1],
-			ejecucionFinancieraPlan : mi.dataRadar[0][2],
-			ejecucionFisicaReal : mi.dataRadar[1][0],
-			plazoEjecucionReal: mi.dataRadar[1][1],
-			ejecucionFinancieraReal : mi.prestamo.desembolsadoAFecha,
+			id: mi.pepId,
+			plazoEjecucionPlan: mi.dataRadar[0][0],
+			ejecucionFinancieraPlan : mi.dataRadar[0][1],
+			ejecucionFisicaPlan : mi.dataRadar[0][2],
 			
+			plazoEjecucionReal: mi.dataRadar[1][0],
+			ejecucionFinancieraReal : mi.dataRadar[1][1],
+			ejecucionFisicaReal : mi.dataRadar[1][2],
 			t:moment().unix()
 		  } ).then(
 				  function successCallback(response) {

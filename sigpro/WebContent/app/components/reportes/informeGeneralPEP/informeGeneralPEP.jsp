@@ -61,7 +61,7 @@
 		    	
 		    	
 		    	
-				<div class="col-sm-12 operation_buttons" style="text-align: right;" ng-if="false"  >
+				<div class="col-sm-12 operation_buttons" style="text-align: right;"  >
 		    			<div class="btn-group" role="group" aria-label="" >
 							<label class="btn btn-default" ng-click="informec.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!informec.mostrarExport">
 							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
