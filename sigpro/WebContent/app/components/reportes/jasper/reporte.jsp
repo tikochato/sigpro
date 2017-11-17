@@ -1,3 +1,4 @@
+<%@page import="dao.InformacionPresupuestariaDAO"%>
 <%@page import="dao.PlanEjecucionDAO"%>
 <%@page import="utilities.Utils"%>
 <%@ page contentType="application/pdf" %>
@@ -27,6 +28,9 @@
 		case 1: jasperPrint = PlanEjecucionDAO.generarJasper(proyectoId, usuario);
 			break;
 		case 2: jasperPrint = PlanEjecucionDAO.generarJasper(proyectoId, usuario);
+			break;
+		case 3: 
+			jasperPrint = InformacionPresupuestariaDAO.generarJasper(proyectoId, usuario);
 			break;
 	}
 	

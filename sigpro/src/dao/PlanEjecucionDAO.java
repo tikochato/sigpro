@@ -505,19 +505,9 @@ public class PlanEjecucionDAO {
 		JasperPrint jasperPrint = null;
 		Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
 		if (proyecto!=null){
-//			BigDecimal ejecucionFisicaReal = calcularEjecucionFisicaReal(proyecto);
-//			BigDecimal ejecucionFinancieraPlanificada = calcularEjecucionFinanciaeraPlanificada(proyecto.getPrestamo(), proyecto.getPrestamo().getCodigoPresupuestario()+"", new Date());
-//			Double plazoEjecucionPlanificada = calcularPlazoEjecucionPlanificada(proyecto);
-//			BigDecimal ejecucionFisicaPlanificada = calcularEjecucionFisicaPlanificada(proyecto.getPrestamo());
-
 			Map<String, Object> parameters = new HashMap<String, Object>();
 			parameters.put("proyectoId",proyectoId);
 			parameters.put("usuario",usuario);
-//			parameters.put("ejecucionFisicaReal",(ejecucionFisicaReal.multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP));
-//			parameters.put("ejecucionFinancieraPlanificada",df.format((ejecucionFisicaReal * 100.00)) );
-//			parameters.put("plazoEjecucionPlanificada",df.format((ejecucionFisicaReal * 100.00)) );
-//			parameters.put("ejecucionFisicaPlanificada",df.format((ejecucionFisicaReal * 100.00)) );
-
 			jasperPrint = CJasperReport.reporteJasperPrint(CJasperReport.PLANTILLA_INFORMACIONGENERAL, parameters);
 		}
 		return jasperPrint;

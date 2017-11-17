@@ -3,11 +3,20 @@ package dao;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperPrint;
+import pojo.Proyecto;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import utilities.CJasperReport;
 import utilities.CLogger;
  
 public class InformacionPresupuestariaDAO {
@@ -635,5 +644,37 @@ public class InformacionPresupuestariaDAO {
 		}
 		
 		return result;
+	}
+    
+    public static JasperPrint generarJasper(Integer proyectoId, String usuario) throws JRException, SQLException{
+		JasperPrint jasperPrint = null;
+		Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
+		if (proyecto!=null){
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("proyectoId",proyectoId);
+			parameters.put("usuario",usuario);
+			List<ObjetoCosto> listadoObjetos = ObjetoDAO.getEstructuraConCosto(proyectoId, 2017, 2017, true, false, usuario);
+			List<ObjetoCostoJasper> listadoCostos = new ArrayList<ObjetoCostoJasper>(); 
+					
+			for (int i=0; i<listadoObjetos.size(); i++){
+				ObjetoCosto temp = listadoObjetos.get(i);
+				ObjetoCostoJasper elemento = new ObjetoCostoJasper(temp.nombre, temp.objeto_id, temp.objeto_tipo, temp.nivel,
+						temp.fecha_inicial, temp.fecha_final, temp.acumulacion_costoid, temp.costo, temp.totalPagos, temp.programa,
+						temp.subprograma, temp.proyecto, temp.actividad, temp.obra, temp.renglon, temp.geografico, temp.treePath, 
+						temp.anios[0].mes[0].planificado, temp.anios[0].mes[1].planificado, temp.anios[0].mes[2].planificado, 
+						temp.anios[0].mes[3].planificado, temp.anios[0].mes[4].planificado, temp.anios[0].mes[5].planificado, 
+						temp.anios[0].mes[6].planificado, temp.anios[0].mes[7].planificado, temp.anios[0].mes[8].planificado, 
+						temp.anios[0].mes[9].planificado, temp.anios[0].mes[10].planificado, temp.anios[0].mes[11].planificado, 
+						temp.anios[0].mes[0].real, temp.anios[0].mes[1].real, temp.anios[0].mes[2].real, 
+						temp.anios[0].mes[3].real, temp.anios[0].mes[4].real, temp.anios[0].mes[5].real, 
+						temp.anios[0].mes[6].real, temp.anios[0].mes[7].real, temp.anios[0].mes[8].real, 
+						temp.anios[0].mes[9].real, temp.anios[0].mes[10].real, temp.anios[0].mes[11].real);
+				listadoCostos.add(elemento);
+			}
+			
+			parameters.put("costos",listadoCostos);
+			jasperPrint = CJasperReport.reporteJasperPrint(CJasperReport.PLANTILLA_EJECUCIONFINANCIERA, parameters);
+		}
+		return jasperPrint;
 	}
 }
