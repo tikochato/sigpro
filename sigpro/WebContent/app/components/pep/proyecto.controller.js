@@ -43,8 +43,10 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	mi.filtros = [];
 	mi.orden = null;
 	mi.prestamo = [];
-	mi.fechaInicioTmep = '';
-	mi.fehcaFinalTemp = '';
+	mi.fechaInicioTemp = '';
+	mi.fechaFinalTemp = '';
+	mi.fechaInicioRealTemp = '';
+	mi.fechaFinalRealTemp = '';
 	
 	mi.prestamo.desembolsoAFechaUsdP = "";
 	mi.prestamo.montoPorDesembolsarUsdP = "";
@@ -349,9 +351,24 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			(mi.proyecto.latitud!=null ? ', ' : '') + (mi.proyecto.longitud!=null ? mi.proyecto.longitud : '');
 			mi.impactos =[];
 			mi.miembros = [];
-			if (mi.fechaInicioTmep == ''){
-				mi.fechaInicioTmep = mi.proyecto.fechaInicio;
-				mi.fehcaFinalTemp = mi.proyecto.fechaFin;
+			if (mi.fechaInicioTemp == null || mi.fechaInicioTemp == ''){
+				mi.fechaInicioTemp = mi.proyecto.fechaInicio;
+				mi.fechaFinalTemp = mi.proyecto.fechaFin;
+			}
+			
+			if(mi.fechaInicioRealTemp == null || mi.fechaInicioRealTemp==''){
+				mi.fechaInicioRealTemp = mi.proyecto.fechaInicioReal;
+				mi.fechaFinalRealTemp = mi.proyecto.fechaFinReal;
+				
+				if((mi.fechaInicioRealTemp != null && mi.fechaInicioRealTemp != '') && (mi.fechaFinalRealTemp != null && mi.fechaFinalRealTemp != '')){
+					mi.duracionReal = moment(mi.fechaFinalRealTemp,'DD/MM/YYYY').toDate() - moment(mi.fechaInicioRealTemp,'DD/MM/YYYY').toDate();
+					mi.duracionReal = Number(mi.duracionReal / (1000*60*60*24));
+				}
+			}else{
+				if((mi.fechaInicioRealTemp != null && mi.fechaInicioRealTemp != '') && (mi.fechaFinalRealTemp != null && mi.fechaFinalRealTemp != '')){
+					mi.duracionReal = moment(mi.fechaFinalRealTemp,'DD/MM/YYYY').toDate() - moment(mi.fechaInicioRealTemp,'DD/MM/YYYY').toDate();
+					mi.duracionReal = Number(mi.duracionReal / (1000*60*60*24));
+				}
 			}
 			
 			var parametros = {
@@ -1040,12 +1057,23 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			  $http.post('/SProyecto', { accion : 'getProyectoPorId', id: $routeParams.id, t: (new Date()).getTime() }).then(function(response) {
 						if (response.data.success) {
 							mi.proyecto = response.data.proyecto;
-							mi.fechaInicioTmep = mi.proyecto.fechaInicio;
-							mi.fehcaFinalTemp = mi.proyecto.fechaFin;							
-							if(mi.proyecto.fechaInicio != "")
+							mi.fechaInicioTemp = mi.proyecto.fechaInicio;
+							mi.fechaFinalTemp = mi.proyecto.fechaFin;
+							mi.fechaInicioRealTemp = mi.proyecto.fechaInicioReal;
+							mi.fechaFinalRealTemp = mi.proyecto.fechaFinReal;
+							if(mi.proyecto.fechaInicio != null && mi.proyecto.fechaInicio != "")
 								mi.proyecto.fechaInicio = moment(mi.proyecto.fechaInicio, 'DD/MM/YYYY').toDate();
-							if(mi.proyecto.fechaFin != "")
+							if(mi.proyecto.fechaFin != null && mi.proyecto.fechaFin != "")
 								mi.proyecto.fechaFin = moment(mi.proyecto.fechaFin, 'DD/MM/YYYY').toDate();
+							if(mi.proyecto.fechaInicioReal != null && mi.proyecto.fechaInicioReal != "")
+								mi.proyecto.fechaInicioReal = moment(mi.proyecto.fechaInicioReal, 'DD/MM/YYYY').toDate();
+							if(mi.proyecto.fechaFinReal != null && mi.proyecto.fechaFinReal != "")
+								mi.proyecto.fechaFinReal = moment(mi.proyecto.fechaFinReal, 'DD/MM/YYYY').toDate();
+							
+							if((mi.proyecto.fechaInicioReal !=null && mi.proyecto.fechaInicioReal != "") && (mi.proyecto.fechaFinReal !=null && mi.proyecto.fechaFinReal != "")){
+								mi.duracionReal = mi.proyecto.fechaFinReal - mi.proyecto.fechaInicioReal;
+								mi.duracionReal = Number(mi.duracionReal / (1000*60*60*24));
+							}
 							mi.editar();
 							
 						}
@@ -1257,9 +1285,7 @@ function buscarPorProyecto($uibModalInstance, $rootScope,$scope, $http, $interva
 				mi.cargarData(1,mi.ejercicio,mi.entidad.entidad);
 			});
 		}
-	};
-	
-	
+	};	
 }
 
 app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogleMapApi','glat','glong',

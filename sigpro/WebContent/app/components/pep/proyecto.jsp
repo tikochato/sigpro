@@ -353,8 +353,8 @@
 						<div class="col-sm-6">
 							<div class="form-group money-input">
 								<input type="text" class="inputText "  
-								 ng-model="controller.fechaInicioTmep"
-								 ng-value="controller.fechaInicioTmep"
+								 ng-model="controller.fechaInicioTemp"
+								 ng-value="controller.fechaInicioTemp"
 								 onblur="this.setAttribute('value', this.value);"
 								 ng-readonly="true"
 								 >
@@ -364,13 +364,50 @@
 						<div class="col-sm-6">
 							<div class="form-group money-input">
 								<input type="text" class="inputText "  
-								 ng-model="controller.fehcaFinalTemp"
-								 ng-value="controller.fehcaFinalTemp"
+								 ng-model="controller.fechaFinalTemp"
+								 ng-value="controller.fechaFinalTemp"
 								 onblur="this.setAttribute('value', this.value);"
 								 ng-readonly="true"
 								 >
 								<label class="floating-label" >Fecha Fin</label>
 							</div>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group money-input">
+								<input type="text" class="inputText "  
+								 ng-model="controller.fechaInicioRealTemp"
+								 ng-value="controller.fechaInicioRealTemp"
+								 onblur="this.setAttribute('value', this.value);"
+								 ng-readonly="true"
+								 >
+								<label class="floating-label" >Fecha Inicio Real</label>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group money-input">
+								<input type="text" class="inputText "  
+								 ng-model="controller.fechaFinalRealTemp"
+								 ng-value="controller.fechaFinalRealTemp"
+								 onblur="this.setAttribute('value', this.value);"
+								 ng-readonly="true"
+								 >
+								<label class="floating-label" >Fecha Fin Real</label>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group">
+								   <input class="inputText"  type="number" style="text-align: right"
+								     ng-model="controller.duracionReal" ng-value="controller.duracionReal"   
+								     onblur="this.setAttribute('value', this.value);"  min="1"
+								     ng-readonly="true">
+								   <label class="floating-label">* Duración Real (días)</label>
+								</div>	
 						</div>
 					</div>
 					
