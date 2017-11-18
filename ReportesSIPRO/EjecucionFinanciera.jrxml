@@ -18,7 +18,7 @@
 			<![CDATA[]]>
 		</queryString>
 		<field name="nombre" class="java.lang.String"/>
-		<field name="objeto_id" class="java.lang.Integer"/>
+		<field name="objeto_tipo" class="java.lang.Integer"/>
 		<field name="eneroP" class="java.math.BigDecimal"/>
 		<field name="febreroP" class="java.math.BigDecimal"/>
 		<field name="marzoP" class="java.math.BigDecimal"/>
@@ -75,7 +75,7 @@
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="9" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Insumo]]></text>
 			</staticText>
@@ -91,7 +91,7 @@
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="9" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Total]]></text>
 			</staticText>
@@ -107,7 +107,7 @@
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="9" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Julio]]></text>
 			</staticText>
@@ -123,7 +123,7 @@
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="9" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Diciembre]]></text>
 			</staticText>
@@ -229,7 +229,7 @@
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="9" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Febrero]]></text>
 			</staticText>
@@ -299,16 +299,16 @@
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="9" isBold="true"/>
+					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Enero]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="94" splitType="Stretch">
+		<band height="30" splitType="Stretch">
 			<componentElement>
-				<reportElement x="0" y="0" width="750" height="30" uuid="b4a1b9ef-c83c-4ba3-9ff1-51326d0d4d20"/>
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="0" width="750" height="30" uuid="b4a1b9ef-c83c-4ba3-9ff1-51326d0d4d20"/>
 				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
 					<datasetRun subDataset="DatasetCostos" uuid="5dbca4f8-5a4d-432b-9e91-c5ffe208e475">
 						<datasetParameter name="costos">
@@ -318,9 +318,11 @@
 					</datasetRun>
 					<jr:listContents height="30" width="750">
 						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-							<reportElement stretchType="ContainerHeight" x="0" y="0" width="152" height="30" uuid="7cfaa464-94a9-4b4d-9869-9a8068772c61">
-								<property name="com.jaspersoft.studio.unit.width" value="px"/>
-								<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+							<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="0" width="152" height="30" uuid="7cfaa464-94a9-4b4d-9869-9a8068772c61">
+								<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
+								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -329,14 +331,17 @@
 								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textElement verticalAlignment="Middle">
-								<paragraph leftIndent="2"/>
+								<font fontName="Arial" size="7"/>
+								<paragraph leftIndent="2" spacingBefore="2" spacingAfter="2"/>
 							</textElement>
 							<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
 						</textField>
-						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-							<reportElement stretchType="ContainerHeight" x="152" y="0" width="46" height="30" uuid="78bc155c-3cc0-4cfd-a5e5-adb2f1104f0d">
-								<property name="com.jaspersoft.studio.unit.width" value="px"/>
-								<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+							<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="152" y="0" width="46" height="30" uuid="78bc155c-3cc0-4cfd-a5e5-adb2f1104f0d">
+								<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
+								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -345,14 +350,17 @@
 								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textElement textAlignment="Right" verticalAlignment="Middle">
-								<paragraph rightIndent="2"/>
+								<font fontName="Arial" size="7"/>
+								<paragraph rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 							</textElement>
 							<textFieldExpression><![CDATA[$F{eneroP}]]></textFieldExpression>
 						</textField>
-						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-							<reportElement stretchType="ContainerHeight" x="198" y="0" width="46" height="30" uuid="7a38555e-8083-46a2-a76d-99204a57a21b">
-								<property name="com.jaspersoft.studio.unit.width" value="px"/>
-								<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+							<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="198" y="0" width="46" height="30" uuid="7a38555e-8083-46a2-a76d-99204a57a21b">
+								<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
+								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -361,14 +369,17 @@
 								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textElement textAlignment="Right" verticalAlignment="Middle">
-								<paragraph rightIndent="2"/>
+								<font fontName="Arial" size="7"/>
+								<paragraph rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 							</textElement>
 							<textFieldExpression><![CDATA[$F{febreroP}]]></textFieldExpression>
 						</textField>
-						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-							<reportElement stretchType="ContainerHeight" x="244" y="0" width="46" height="30" uuid="8e1f035e-a655-487b-b102-bbbca3a8e994">
-								<property name="com.jaspersoft.studio.unit.width" value="px"/>
-								<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+							<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="244" y="0" width="46" height="30" uuid="8e1f035e-a655-487b-b102-bbbca3a8e994">
+								<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
+								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -377,14 +388,17 @@
 								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textElement textAlignment="Right" verticalAlignment="Middle">
-								<paragraph rightIndent="2"/>
+								<font fontName="Arial" size="7"/>
+								<paragraph rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 							</textElement>
 							<textFieldExpression><![CDATA[$F{marzoP}]]></textFieldExpression>
 						</textField>
-						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-							<reportElement stretchType="ContainerHeight" x="290" y="0" width="46" height="30" uuid="f93c64d4-d478-4f0c-97a3-0eed42b0ded9">
-								<property name="com.jaspersoft.studio.unit.width" value="px"/>
-								<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+							<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="290" y="0" width="46" height="30" uuid="f93c64d4-d478-4f0c-97a3-0eed42b0ded9">
+								<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
+								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -393,14 +407,17 @@
 								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textElement textAlignment="Right" verticalAlignment="Middle">
-								<paragraph rightIndent="2"/>
+								<font fontName="Arial" size="7"/>
+								<paragraph rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 							</textElement>
 							<textFieldExpression><![CDATA[$F{abrilP}]]></textFieldExpression>
 						</textField>
-						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-							<reportElement stretchType="ContainerHeight" x="336" y="0" width="46" height="30" uuid="a18aeca5-3e9b-444d-9995-c9ce64e148f5">
-								<property name="com.jaspersoft.studio.unit.width" value="px"/>
-								<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+							<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="336" y="0" width="46" height="30" uuid="a18aeca5-3e9b-444d-9995-c9ce64e148f5">
+								<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
+								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -409,14 +426,17 @@
 								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textElement textAlignment="Right" verticalAlignment="Middle">
-								<paragraph rightIndent="2"/>
+								<font fontName="Arial" size="7"/>
+								<paragraph rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 							</textElement>
 							<textFieldExpression><![CDATA[$F{mayoP}]]></textFieldExpression>
 						</textField>
-						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-							<reportElement stretchType="ContainerHeight" x="382" y="0" width="46" height="30" uuid="a4b4b902-ab34-41d7-92bb-c9b56c1b6992">
-								<property name="com.jaspersoft.studio.unit.width" value="px"/>
-								<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+							<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="382" y="0" width="46" height="30" uuid="a4b4b902-ab34-41d7-92bb-c9b56c1b6992">
+								<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
+								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -425,14 +445,17 @@
 								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textElement textAlignment="Right" verticalAlignment="Middle">
-								<paragraph rightIndent="2"/>
+								<font fontName="Arial" size="7"/>
+								<paragraph rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 							</textElement>
 							<textFieldExpression><![CDATA[$F{junioP}]]></textFieldExpression>
 						</textField>
-						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-							<reportElement stretchType="ContainerHeight" x="428" y="0" width="46" height="30" uuid="1906a8c6-a511-44f9-8cea-6f9e2addc98f">
-								<property name="com.jaspersoft.studio.unit.width" value="px"/>
-								<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+							<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="428" y="0" width="46" height="30" uuid="1906a8c6-a511-44f9-8cea-6f9e2addc98f">
+								<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
+								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -441,14 +464,17 @@
 								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textElement textAlignment="Right" verticalAlignment="Middle">
-								<paragraph rightIndent="2"/>
+								<font fontName="Arial" size="7"/>
+								<paragraph rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 							</textElement>
 							<textFieldExpression><![CDATA[$F{julioP}]]></textFieldExpression>
 						</textField>
-						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-							<reportElement stretchType="ContainerHeight" x="474" y="0" width="46" height="30" uuid="1dd3b88e-17df-4fdc-8aa5-c1bb9b3205f5">
-								<property name="com.jaspersoft.studio.unit.width" value="px"/>
-								<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+							<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="474" y="0" width="46" height="30" uuid="1dd3b88e-17df-4fdc-8aa5-c1bb9b3205f5">
+								<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
+								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -457,14 +483,17 @@
 								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textElement textAlignment="Right" verticalAlignment="Middle">
-								<paragraph rightIndent="2"/>
+								<font fontName="Arial" size="7"/>
+								<paragraph rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 							</textElement>
 							<textFieldExpression><![CDATA[$F{agostoP}]]></textFieldExpression>
 						</textField>
-						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-							<reportElement stretchType="ContainerHeight" x="520" y="0" width="46" height="30" uuid="44bb0a14-9dc5-4c6c-870a-a52834d0e5bf">
-								<property name="com.jaspersoft.studio.unit.width" value="px"/>
-								<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+							<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="520" y="0" width="46" height="30" uuid="44bb0a14-9dc5-4c6c-870a-a52834d0e5bf">
+								<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
+								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -473,14 +502,17 @@
 								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textElement textAlignment="Right" verticalAlignment="Middle">
-								<paragraph rightIndent="2"/>
+								<font fontName="Arial" size="7"/>
+								<paragraph rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 							</textElement>
 							<textFieldExpression><![CDATA[$F{septiembreP}]]></textFieldExpression>
 						</textField>
-						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-							<reportElement stretchType="ContainerHeight" x="566" y="0" width="46" height="30" uuid="898c5eb6-2659-49d8-86bd-caf6f0b63c2d">
-								<property name="com.jaspersoft.studio.unit.width" value="px"/>
-								<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+							<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="566" y="0" width="46" height="30" uuid="898c5eb6-2659-49d8-86bd-caf6f0b63c2d">
+								<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
+								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -489,14 +521,17 @@
 								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textElement textAlignment="Right" verticalAlignment="Middle">
-								<paragraph rightIndent="2"/>
+								<font fontName="Arial" size="7"/>
+								<paragraph rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 							</textElement>
 							<textFieldExpression><![CDATA[$F{octubreP}]]></textFieldExpression>
 						</textField>
-						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-							<reportElement stretchType="ContainerHeight" x="612" y="0" width="46" height="30" uuid="86f1234e-6990-49db-85ea-e9974dc67efe">
-								<property name="com.jaspersoft.studio.unit.width" value="px"/>
-								<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+							<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="612" y="0" width="46" height="30" uuid="86f1234e-6990-49db-85ea-e9974dc67efe">
+								<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
+								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -505,14 +540,17 @@
 								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textElement textAlignment="Right" verticalAlignment="Middle">
-								<paragraph rightIndent="2"/>
+								<font fontName="Arial" size="7"/>
+								<paragraph rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 							</textElement>
 							<textFieldExpression><![CDATA[$F{noviembreP}]]></textFieldExpression>
 						</textField>
-						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-							<reportElement stretchType="ContainerHeight" x="658" y="0" width="46" height="30" uuid="6f6b07da-3ff0-43bc-93fb-01cf09c7c850">
-								<property name="com.jaspersoft.studio.unit.width" value="px"/>
-								<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+							<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="658" y="0" width="46" height="30" uuid="6f6b07da-3ff0-43bc-93fb-01cf09c7c850">
+								<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
+								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -521,14 +559,17 @@
 								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textElement textAlignment="Right" verticalAlignment="Middle">
-								<paragraph rightIndent="2"/>
+								<font fontName="Arial" size="7"/>
+								<paragraph rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 							</textElement>
 							<textFieldExpression><![CDATA[$F{diciembreP}]]></textFieldExpression>
 						</textField>
-						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-							<reportElement stretchType="ContainerHeight" x="704" y="0" width="46" height="30" uuid="6f5ccff2-50d9-4676-8cc2-321374921633">
-								<property name="com.jaspersoft.studio.unit.width" value="px"/>
-								<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+							<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="704" y="0" width="46" height="30" uuid="6f5ccff2-50d9-4676-8cc2-321374921633">
+								<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
+								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
+								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -537,7 +578,8 @@
 								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textElement textAlignment="Right" verticalAlignment="Middle">
-								<paragraph rightIndent="2"/>
+								<font fontName="Arial" size="7"/>
+								<paragraph rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 							</textElement>
 							<textFieldExpression><![CDATA[$V{totales}]]></textFieldExpression>
 						</textField>

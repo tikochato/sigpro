@@ -230,7 +230,7 @@ group by t1.anio
 				</areaPlot>
 			</areaChart>
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="357" width="61" height="25" backcolor="#D9D4D4" uuid="958b09db-8401-4fcb-bae2-6f7b38cf991c">
+				<reportElement mode="Opaque" x="0" y="357" width="61" height="25" forecolor="#FFFFFF" backcolor="#A4A4A4" uuid="958b09db-8401-4fcb-bae2-6f7b38cf991c">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -246,7 +246,7 @@ group by t1.anio
 				<text><![CDATA[Mes]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="61" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="036f7ea9-6d2c-48fb-b56f-2da87ce98ab8">
+				<reportElement mode="Opaque" x="61" y="357" width="53" height="25" forecolor="#FFFFFF" backcolor="#A4A4A4" uuid="036f7ea9-6d2c-48fb-b56f-2da87ce98ab8">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -263,7 +263,7 @@ group by t1.anio
 				<text><![CDATA[Enero]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="114" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="9f846ab1-aeb2-4602-86bc-801b4a6b8bf1">
+				<reportElement mode="Opaque" x="114" y="357" width="53" height="25" forecolor="#FFFFFF" backcolor="#A4A4A4" uuid="9f846ab1-aeb2-4602-86bc-801b4a6b8bf1">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -280,7 +280,7 @@ group by t1.anio
 				<text><![CDATA[Febrero]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="167" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="fa3c5977-317e-4224-bb57-4e69ed81e6cc">
+				<reportElement mode="Opaque" x="167" y="357" width="53" height="25" forecolor="#FFFFFF" backcolor="#A4A4A4" uuid="fa3c5977-317e-4224-bb57-4e69ed81e6cc">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -297,7 +297,7 @@ group by t1.anio
 				<text><![CDATA[Marzo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="220" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="2ce5340f-89dc-4f0a-a8bf-c7c844e42815">
+				<reportElement mode="Opaque" x="220" y="357" width="53" height="25" forecolor="#FFFFFF" backcolor="#A4A4A4" uuid="2ce5340f-89dc-4f0a-a8bf-c7c844e42815">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -314,7 +314,7 @@ group by t1.anio
 				<text><![CDATA[Abril]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="485" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="d11618b3-791c-4af6-a60e-95d7a58c6f76">
+				<reportElement mode="Opaque" x="485" y="357" width="53" height="25" forecolor="#FFFFFF" backcolor="#A4A4A4" uuid="d11618b3-791c-4af6-a60e-95d7a58c6f76">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -331,7 +331,7 @@ group by t1.anio
 				<text><![CDATA[Septiembre]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="273" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="7da7c261-9a23-4571-b67c-605b83e1c72e">
+				<reportElement mode="Opaque" x="273" y="357" width="53" height="25" forecolor="#FFFFFF" backcolor="#A4A4A4" uuid="7da7c261-9a23-4571-b67c-605b83e1c72e">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -348,7 +348,7 @@ group by t1.anio
 				<text><![CDATA[Mayo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="432" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="3129a4ed-1a0e-4d7f-a821-8c4ef915a6ba">
+				<reportElement mode="Opaque" x="432" y="357" width="53" height="25" forecolor="#FFFFFF" backcolor="#A4A4A4" uuid="3129a4ed-1a0e-4d7f-a821-8c4ef915a6ba">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -365,7 +365,7 @@ group by t1.anio
 				<text><![CDATA[Agosto]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="326" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="7113c755-0269-44f2-8084-e0efa7338b4d">
+				<reportElement mode="Opaque" x="326" y="357" width="53" height="25" forecolor="#FFFFFF" backcolor="#A4A4A4" uuid="7113c755-0269-44f2-8084-e0efa7338b4d">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -382,7 +382,7 @@ group by t1.anio
 				<text><![CDATA[Junio]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="379" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="ee0c0f62-8e66-4aa8-9aa0-71bda9699d89">
+				<reportElement mode="Opaque" x="379" y="357" width="53" height="25" forecolor="#FFFFFF" backcolor="#A4A4A4" uuid="ee0c0f62-8e66-4aa8-9aa0-71bda9699d89">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -399,7 +399,7 @@ group by t1.anio
 				<text><![CDATA[Julio]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="644" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="23760b7d-c7b7-4e6f-8f46-cbf69351d6c6">
+				<reportElement mode="Opaque" x="644" y="357" width="53" height="25" forecolor="#FFFFFF" backcolor="#A4A4A4" uuid="23760b7d-c7b7-4e6f-8f46-cbf69351d6c6">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -416,7 +416,7 @@ group by t1.anio
 				<text><![CDATA[Diciembre]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="591" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="63289b28-d96c-495c-af43-80f5298c38f4">
+				<reportElement mode="Opaque" x="591" y="357" width="53" height="25" forecolor="#FFFFFF" backcolor="#A4A4A4" uuid="63289b28-d96c-495c-af43-80f5298c38f4">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -433,7 +433,7 @@ group by t1.anio
 				<text><![CDATA[Noviembre]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="538" y="357" width="53" height="25" backcolor="#D9D4D4" uuid="329b4f2b-0122-4fb7-8443-5edcbba22f58">
+				<reportElement mode="Opaque" x="538" y="357" width="53" height="25" forecolor="#FFFFFF" backcolor="#A4A4A4" uuid="329b4f2b-0122-4fb7-8443-5edcbba22f58">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -961,7 +961,7 @@ group by t1.anio
 				<textFieldExpression><![CDATA[$F{totalP}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Opaque" x="697" y="357" width="55" height="25" backcolor="#D9D4D4" uuid="ae58dadd-ed72-4cfc-8a0b-001d8dbd1bbb">
+				<reportElement mode="Opaque" x="697" y="357" width="55" height="25" forecolor="#FFFFFF" backcolor="#A4A4A4" uuid="ae58dadd-ed72-4cfc-8a0b-001d8dbd1bbb">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>

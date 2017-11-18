@@ -1,3 +1,9 @@
+<%@page import="java.math.BigDecimal"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="dao.ObjetoCostoJasper"%>
+<%@page import="java.util.List"%>
+<%@page import="dao.ObjetoDAO"%>
+<%@page import="org.joda.time.DateTime"%>
 <%@page import="dao.InformacionPresupuestariaDAO"%>
 <%@page import="dao.PlanEjecucionDAO"%>
 <%@page import="utilities.Utils"%>
@@ -23,6 +29,26 @@
 			Map<String, Object> parameters = new HashMap<String, Object>();
 			parameters.put("proyectoId",proyectoId);
 			parameters.put("usuario",usuario);
+			
+			List<ObjetoCostoJasper> listadoCostos = ObjetoDAO.getEstructuraConCostoJasper(proyectoId, DateTime.now().getYear(), DateTime.now().getYear(), usuario);
+			parameters.put("costos",listadoCostos);
+			
+			ArrayList<BigDecimal> costoReal = new ArrayList<BigDecimal>();
+			costoReal.add(listadoCostos.get(0).getEneroP());
+			costoReal.add(listadoCostos.get(0).getFebreroP());
+			costoReal.add(listadoCostos.get(0).getMarzoP());
+			costoReal.add(listadoCostos.get(0).getAbrilP());
+			costoReal.add(listadoCostos.get(0).getMayoP());
+			costoReal.add(listadoCostos.get(0).getJunioP());
+			costoReal.add(listadoCostos.get(0).getJulioP());
+			costoReal.add(listadoCostos.get(0).getAgostoP());
+			costoReal.add(listadoCostos.get(0).getSeptiembreP());
+			costoReal.add(listadoCostos.get(0).getOctubreP());
+			costoReal.add(listadoCostos.get(0).getNoviembreP());
+			costoReal.add(listadoCostos.get(0).getDiciembreP());
+			
+			parameters.put("costoReal",costoReal);
+			
 			jasperPrint = CJasperReport.reporteJasperPrint(CJasperReport.PLANTILLA_PLANANUAL, parameters);
 			break;
 		case 1: jasperPrint = PlanEjecucionDAO.generarJasper(proyectoId, usuario);
@@ -30,7 +56,7 @@
 		case 2: jasperPrint = PlanEjecucionDAO.generarJasper(proyectoId, usuario);
 			break;
 		case 3: 
-			jasperPrint = InformacionPresupuestariaDAO.generarJasper(proyectoId, usuario);
+			jasperPrint = InformacionPresupuestariaDAO.generarJasper(proyectoId, DateTime.now().getYear(), usuario);
 			break;
 	}
 	

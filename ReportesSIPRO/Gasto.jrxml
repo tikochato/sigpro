@@ -3,7 +3,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Desembolsos" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c0c45383-5721-429a-baef-8c47d579dfd8">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
-	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+	<style name="Table_TH" mode="Opaque" forecolor="#FCFAFA" backcolor="#A4A4A4">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 			<topPen lineWidth="0.5" lineColor="#000000"/>
@@ -533,7 +533,7 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 							<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 								<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.grid.JSSGridBagLayout"/>
 								<staticText>
-									<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="e3aa9293-37f3-401b-be08-1d9f637d38be">
+									<reportElement positionType="Float" x="0" y="0" width="55" height="30" uuid="e3aa9293-37f3-401b-be08-1d9f637d38be">
 										<property name="com.jaspersoft.studio.unit.width" value="px"/>
 									</reportElement>
 									<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -549,7 +549,7 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
 									<textElement textAlignment="Center" verticalAlignment="Middle">
-										<font fontName="arial&#xA;" size="8" isBold="true"/>
+										<font fontName="Arial" size="8" isBold="true"/>
 										<paragraph rightIndent="3"/>
 									</textElement>
 									<textFieldExpression><![CDATA[$F{gasto}]]></textFieldExpression>
@@ -576,7 +576,7 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
 									<textElement textAlignment="Right" verticalAlignment="Middle">
-										<font fontName="arial&#xA;" size="8"/>
+										<font fontName="Arial" size="8"/>
 										<paragraph rightIndent="3"/>
 									</textElement>
 									<textFieldExpression><![CDATA[$F{enero} != null ? $F{enero} : 0]]></textFieldExpression>
@@ -603,7 +603,7 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
 									<textElement textAlignment="Right" verticalAlignment="Middle">
-										<font fontName="arial&#xA;" size="8"/>
+										<font fontName="Arial" size="8"/>
 										<paragraph rightIndent="3"/>
 									</textElement>
 									<textFieldExpression><![CDATA[$F{febrero} != null ? $F{febrero} : 0]]></textFieldExpression>
@@ -619,7 +619,7 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 								</reportElement>
 								<textElement textAlignment="Right" verticalAlignment="Middle">
-									<font fontName="Arial&#xA;Arial&#xA;Arial"/>
+									<font fontName="Arial"/>
 									<paragraph rightIndent="3"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$V{real}]]></textFieldExpression>
@@ -659,7 +659,7 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
 									<textElement textAlignment="Right" verticalAlignment="Middle">
-										<font fontName="arial&#xA;" size="8"/>
+										<font fontName="Arial" size="8"/>
 										<paragraph rightIndent="3"/>
 									</textElement>
 									<textFieldExpression><![CDATA[$F{marzo} != null ? $F{marzo} : 0]]></textFieldExpression>
@@ -686,7 +686,7 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
 									<textElement textAlignment="Right" verticalAlignment="Middle">
-										<font fontName="arial&#xA;" size="8"/>
+										<font fontName="Arial" size="8"/>
 										<paragraph rightIndent="3"/>
 									</textElement>
 									<textFieldExpression><![CDATA[$F{abril} != null ?  $F{abril}  : 0]]></textFieldExpression>
@@ -713,7 +713,7 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
 									<textElement textAlignment="Right" verticalAlignment="Middle">
-										<font fontName="arial&#xA;" size="8"/>
+										<font fontName="Arial" size="8"/>
 										<paragraph rightIndent="3"/>
 									</textElement>
 									<textFieldExpression><![CDATA[$F{mayo} != null ? $F{mayo} : 0]]></textFieldExpression>
@@ -740,7 +740,7 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
 									<textElement textAlignment="Right" verticalAlignment="Middle">
-										<font fontName="arial&#xA;" size="8"/>
+										<font fontName="Arial" size="8"/>
 										<paragraph rightIndent="3"/>
 									</textElement>
 									<textFieldExpression><![CDATA[$F{junio} != null ? $F{junio} : 0]]></textFieldExpression>
@@ -767,7 +767,7 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
 									<textElement textAlignment="Right" verticalAlignment="Middle">
-										<font fontName="arial&#xA;" size="8"/>
+										<font fontName="Arial" size="8"/>
 										<paragraph rightIndent="3"/>
 									</textElement>
 									<textFieldExpression><![CDATA[$F{julio} != null ? $F{julio} : 0]]></textFieldExpression>
@@ -794,7 +794,7 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
 									<textElement textAlignment="Right" verticalAlignment="Middle">
-										<font fontName="arial&#xA;" size="8"/>
+										<font fontName="Arial" size="8"/>
 										<paragraph rightIndent="3"/>
 									</textElement>
 									<textFieldExpression><![CDATA[$F{agosto} != null ? $F{agosto} : 0]]></textFieldExpression>
@@ -821,7 +821,7 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
 									<textElement textAlignment="Right" verticalAlignment="Middle">
-										<font fontName="arial&#xA;" size="8"/>
+										<font fontName="Arial" size="8"/>
 										<paragraph rightIndent="3"/>
 									</textElement>
 									<textFieldExpression><![CDATA[$F{septiembre} != null ? $F{septiembre} : 0]]></textFieldExpression>
@@ -848,7 +848,7 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
 									<textElement textAlignment="Right" verticalAlignment="Middle">
-										<font fontName="arial&#xA;" size="8"/>
+										<font fontName="Arial" size="8"/>
 										<paragraph rightIndent="3"/>
 									</textElement>
 									<textFieldExpression><![CDATA[$F{octubre} != null ? $F{octubre} : 0]]></textFieldExpression>
@@ -875,7 +875,7 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
 									<textElement textAlignment="Right" verticalAlignment="Middle">
-										<font fontName="arial&#xA;" size="8"/>
+										<font fontName="Arial" size="8"/>
 										<paragraph rightIndent="3"/>
 									</textElement>
 									<textFieldExpression><![CDATA[$F{noviembre} != null ? $F{noviembre} : 0]]></textFieldExpression>
@@ -903,7 +903,7 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
 									<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
-										<font fontName="arial&#xA;" size="8"/>
+										<font fontName="Arial" size="8"/>
 										<paragraph lineSpacing="Single" rightIndent="3"/>
 									</textElement>
 									<textFieldExpression><![CDATA[$F{diciembre} != null ? $F{diciembre} : 0]]></textFieldExpression>

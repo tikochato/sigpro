@@ -11,6 +11,8 @@
 	<parameter name="esSubreporte" class="java.lang.Boolean" isForPrompting="false">
 		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
 	</parameter>
+	<parameter name="costos" class="java.util.List" nestedType="dao.ObjetoCostoJasper"/>
+	<parameter name="costoReal" class="java.util.ArrayList" nestedType="java.math.BigDecimal"/>
 	<queryString>
 		<![CDATA[select 1 from dual]]>
 	</queryString>
@@ -85,6 +87,44 @@
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["PlanAdquisiciones.jasper"]]></subreportExpression>
 			</subreport>
+		</band>
+		<band height="246">
+			<subreport>
+				<reportElement x="0" y="0" width="791" height="240" uuid="e3c476bc-e601-41ac-b658-2f0b110aa051"/>
+				<subreportParameter name="esSubreporte">
+					<subreportParameterExpression><![CDATA[$P{esSubreporte}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="proyectoId">
+					<subreportParameterExpression><![CDATA[$P{proyectoId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="costos">
+					<subreportParameterExpression><![CDATA[$P{costos}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["EjecucionFinanciera.jasper"]]></subreportExpression>
+			</subreport>
+			<break>
+				<reportElement x="0" y="230" width="791" height="1" uuid="6d1d771e-cde4-497a-a7a5-44180792031f"/>
+			</break>
+		</band>
+		<band height="253">
+			<subreport>
+				<reportElement x="0" y="0" width="791" height="240" uuid="5187f193-cac8-45bb-a8aa-fb52fb211e7a"/>
+				<subreportParameter name="esSubreporte">
+					<subreportParameterExpression><![CDATA[$P{esSubreporte}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="proyectoId">
+					<subreportParameterExpression><![CDATA[$P{proyectoId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="costoReal">
+					<subreportParameterExpression><![CDATA[$P{costoReal}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["Gasto.jasper"]]></subreportExpression>
+			</subreport>
+			<break>
+				<reportElement x="0" y="230" width="791" height="1" uuid="7d1d6966-14e0-4d8e-b708-783441eac50e"/>
+			</break>
 		</band>
 		<band height="240">
 			<subreport>
