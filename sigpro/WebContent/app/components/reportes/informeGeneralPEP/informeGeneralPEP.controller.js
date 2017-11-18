@@ -186,7 +186,7 @@ app.controller('informeGeneralPEPController',['$scope','$rootScope','$http','$in
 		mi.exportarJasper = function(){
 			var anchor = angular.element('<a/>');
 			  anchor.attr({
-		         href: '/app/components/reportes/jasper/reporte.jsp?reporte=1&proyecto='+mi.prestamoId
+		         href: '/app/components/reportes/jasper/reporte.jsp?reporte=1&proyecto='+mi.pepId
 			  })[0].click();
 		}
 		

@@ -65,7 +65,7 @@
 		    			<div class="btn-group" role="group" aria-label="" >
 							<label class="btn btn-default" ng-click="informec.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!informec.mostrarExport">
 							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-							<label class="btn btn-default" ng-click="informec.exportarJasper()" uib-tooltip="Exportar a PDF" ng-hide="true" >
+							<label class="btn btn-default" ng-click="informec.exportarJasper()" uib-tooltip="Exportar a PDF" ng-hide="!informec.mostrarExport">
 								<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 						</div>
 		    		</div>
