@@ -212,6 +212,11 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	
 	$http.post('/SProyecto', { accion: 'getProyectos', prestamoid: mi.prestamoid }).success(function(response) {
 		mi.proyectos = response.entidades;
+		if(mi.proyectos.length==1){
+			var selected = mi.proyectos[0];
+			selected.originalObject = mi.proyectos[0];
+			mi.cambioProyecto(selected);
+		}
 		if($location.$$path.substring(0,4)=='/pep' && $routeParams.id!==undefined && $routeParams.id>0){
 			for(var i = 0; i< mi.proyectos.length; i++){
 				if(mi.proyectos[i].id==$routeParams.id){
