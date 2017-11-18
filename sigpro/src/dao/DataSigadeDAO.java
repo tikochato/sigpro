@@ -289,4 +289,36 @@ public class DataSigadeDAO {
 		}
 		return ret;
 	}
+	
+	public static  BigDecimal totalDesembolsadoAFechaRealDolaresPorEntidad (String codigo_presupuestario,
+				Long anio, int mes,Integer entidadSicoin, Integer unidadEjecutoraSicoin){
+		BigDecimal ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		
+		try{
+			String query =String.join(" ", 
+									"select  sum (d.id.desembolsosMesUsd)",
+									"from DtmAvanceFisfinanDetDti d",
+									"where d.id.codigoPresupuestario = ?1",
+									"and (d.id.ejercicioFiscal < ?2 ",
+									"or (d.id.ejercicioFiscal = ?2 and (cast(d.id.mesDesembolso as integer)) < ?3))",
+									"and d.id.entidadSicoin = ?4 ",
+									"and d.id.unidadEjecutoraSicoin = ?5");
+			Query<?> criteria = session.createQuery(query);
+			criteria.setParameter(1, codigo_presupuestario);
+			criteria.setParameter(2, anio);
+			criteria.setParameter(3, mes);
+			criteria.setParameter(4, entidadSicoin);
+			criteria.setParameter(5, unidadEjecutoraSicoin);
+			Object object =  criteria.getSingleResult();
+			ret =(BigDecimal) object;
+		}
+		catch(Throwable e){
+			CLogger.write("4", DataSigadeDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 }

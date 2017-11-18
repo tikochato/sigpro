@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 import org.joda.time.DateTime;
 
 import net.sf.jasperreports.engine.JRException;
@@ -22,7 +24,9 @@ import pojo.MetaPlanificado;
 import pojo.Prestamo;
 import pojo.Producto;
 import pojo.Proyecto;
+import utilities.CHibernateSession;
 import utilities.CJasperReport;
+import utilities.CLogger;
 
 public class PlanEjecucionDAO {
 
@@ -511,5 +515,89 @@ public class PlanEjecucionDAO {
 			jasperPrint = CJasperReport.reporteJasperPrint(CJasperReport.PLANTILLA_INFORMACIONGENERAL, parameters);
 		}
 		return jasperPrint;
+	}
+	
+	
+	public static List<?> getDatosPlan(int proyectoId){
+		List<?> ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		
+		try{
+			String query =String.join(" ", "select \"Plazo Ejecucion\" categoria, ",
+				"(" ,
+					"select DATEDIFF(py.fecha_inicio,CURRENT_DATE)/DATEDIFF(py.fecha_inicio,py.fecha_fin)*100 ",
+					"from sipro.proyecto py",
+					"where py.id =  ?1 	",
+				") valor_plan,",
+				"(",
+					"select DATEDIFF(ps.fecha_elegibilidad_ue, CURRENT_DATE)/DATEDIFF(ps.fecha_elegibilidad_ue,ps.fecha_cierre_actual_ue)*100", 
+					"from sipro.prestamo ps, sipro.proyecto py ",
+					"where ps.id = py.prestamoid ",
+					"and py.id =  ?1 		",
+				") valor_real from dual",
+				"union",
+				"select \"Ejecucion Financiera\",", 
+				"(select desembolsos_a_la_fecha/ (desembolsos_a_la_fecha+ if(desembolsos_futuros is null, 0, desembolsos_futuros)) ejecucion_financiera_planificada",
+				"from (",
+				"select sum(desembolsos_mes_usd) desembolsos_a_la_fecha,(",
+					"select sum(d.monto)",
+				    "from sipro.desembolso d, sipro.proyecto p",
+				    "where d.proyectoid = p.id",
+				    "and p.id = 1",
+				    "and fecha > current_timestamp()",
+				") desembolsos_futuros",
+				"from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro.proyecto py, sipro.prestamo ps",
+				"where des.codigo_presupuestario= ps.codigo_presupuestario",
+				"and py.prestamoid = ps.id",
+				"and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora",
+				"and des.entidad_sicoin = py.entidad",
+				"and py.id =  ?1", 	
+				"and ( (	des.mes_desembolso<= month(current_timestamp()) and des.ejercicio_fiscal=year(current_timestamp()))",
+							"OR (des.ejercicio_fiscal<year(current_timestamp())))",
+				") t1),",
+				 "(select sum(desembolsos_mes_usd)/", 
+				"(select sum(c.fuente_prestamo)",
+					"from sipro.componente c",
+				    "where c.proyectoid = py.id",
+				")*100 ejecucion_financiera_real",
+				"from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro.proyecto py, sipro.prestamo ps",
+				"where des.codigo_presupuestario= ps.codigo_presupuestario",
+				"and py.prestamoid = ps.id",
+				"and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora",
+				"and des.entidad_sicoin = py.entidad",
+				"and py.id =  ?1 	) from dual",
+				"union",
+				"select \"Ejecucion Fisica\",", 
+				"(select",
+					"if(p_avance_entero is null, if(p_avance_decimal is null, 0, p_avance_decimal), if(p_avance_decimal is null, p_avance_entero, (p_avance_entero+p_avance_decimal)/2)) ejecucion_fisica_planificada",
+					"from (",
+					"select",  
+					"avg(if(dato_tipoid=2,if(p_avance_entero is null, 0, if(p_avance_entero>100,100, p_avance_entero)),null)) p_avance_entero,",
+					"avg(if(dato_tipoid=3,if(p_avance_decimal is null, 0, if(p_avance_decimal>100, 100, p_avance_decimal)),null)) p_avance_decimal",
+					"from (",
+					"select m.id, m.dato_tipoid, m.meta_final_entero, m.meta_final_decimal,",
+					"sum(ma.valor_entero)/if(m.meta_final_entero>0, m.meta_final_entero, 1) p_avance_entero,",
+					"sum(valor_decimal)/if(m.meta_final_decimal>0, m.meta_final_decimal, 1) p_avance_decimal",
+					"from sipro.meta m left outer join sipro.meta_avance ma",
+					"on ( ma.metaid = m.id ),", 
+					"sipro.producto p",
+					"where m.objeto_tipo=3 and m.objeto_id = p.id",
+					"and p.treepath like  CONCAT(CAST((10000000+ ?1 ) AS char),'%')",
+					"and m.dato_tipoid in (2,3)",
+					"group by m.id, m.dato_tipoid, m.meta_final_entero, m.meta_final_decimal",
+					") t1",
+				") t2)*100, (select py.ejecucion_fisica_real from sipro.proyecto py where py.id =  ?1 )  from dual");
+						
+			Query<?> criteria = session.createNativeQuery(query);
+			criteria.setParameter("1", proyectoId);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("8", DataSigadeDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
 	}
 }
