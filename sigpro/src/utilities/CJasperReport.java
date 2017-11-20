@@ -19,7 +19,7 @@ public class CJasperReport {
 	public static final String PLANTILLA_METAS = "/SIPRO/archivos/plantillas/Metas.jasper";
 	public static final String PLANTILLA_DESEMBOLSOS = "/SIPRO/archivos/plantillas/Desembolsos.jasper";
 	public static final String PLANTILLA_PLANADQUISICIONES = "/SIPRO/archivos/plantillas/PlanAdquisiciones.jasper";
-	
+	public static final String PLANTILLA_EJECUCIONFINANCIERA = "/SIPRO/archivos/plantillas/EjecucionFinanciera.jasper";
 
 	public CJasperReport(){
 		
@@ -54,6 +54,7 @@ public class CJasperReport {
 		if(CMariaDB.connect()){
 			Connection conn = CMariaDB.getConnection();
 		    jasperPrint = JasperFillManager.fillReport(pathPlantilla, parameters, conn);
+		    JasperExportManager.exportReportToPdfFile(jasperPrint, "/logs/salida.pdf");
 		    conn.close();
 		}
 		return jasperPrint;

@@ -171,7 +171,7 @@ WHERE p.id= $P{proyectoId}]]>
 		<groupHeader>
 			<band height="30">
 				<textField isBlankWhenNull="true">
-					<reportElement mode="Opaque" x="0" y="0" width="730" height="30" forecolor="#FCFAFA" backcolor="#424141" uuid="311e2d87-cce2-44e1-8d80-f443db161b66">
+					<reportElement mode="Opaque" x="0" y="0" width="730" height="30" forecolor="#FFFFFF" backcolor="#263238" uuid="311e2d87-cce2-44e1-8d80-f443db161b66">
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					</reportElement>
 					<box>
@@ -195,14 +195,15 @@ WHERE p.id= $P{proyectoId}]]>
 		<groupHeader>
 			<band height="30">
 				<textField isBlankWhenNull="true">
-					<reportElement mode="Opaque" x="0" y="0" width="730" height="30" backcolor="#D4D4D4" uuid="5b909622-f77f-4d39-8c3a-7cf10f6d01d9">
+					<reportElement mode="Opaque" x="0" y="0" width="730" height="30" forecolor="#FFFFFF" backcolor="#607D8B" uuid="5b909622-f77f-4d39-8c3a-7cf10f6d01d9">
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					</reportElement>
 					<box>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="1.0"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="1.0"/>
+						<pen lineColor="#000000"/>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Arial" size="8"/>
@@ -543,10 +544,13 @@ WHERE p.id= $P{proyectoId}]]>
 	</columnHeader>
 	<detail>
 		<band height="31" splitType="Stretch">
-			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="130" height="30" uuid="1405552e-1510-4650-bea5-5aa163d8add6">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ContainerHeight" x="0" y="0" width="130" height="30" uuid="1405552e-1510-4650-bea5-5aa163d8add6">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f9f767b1-937e-47c3-af0a-f736b635fff5"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="1.0"/>
@@ -555,16 +559,19 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="8"/>
-					<paragraph leftIndent="3"/>
+					<font fontName="Arial" size="7"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{subproducto}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="130" y="0" width="100" height="30" uuid="81e564a9-dce5-4a89-b35e-5c411bdde958">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ContainerHeight" x="130" y="0" width="100" height="30" uuid="81e564a9-dce5-4a89-b35e-5c411bdde958">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="254190b6-a039-49a4-9115-a1f15e54493f"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="1.0"/>
@@ -573,14 +580,18 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="8"/>
-					<paragraph leftIndent="3"/>
+					<font fontName="Arial" size="7"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{metodo}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="230" y="0" width="50" height="30" uuid="952e0040-8aa9-4aa1-98e1-c00fe6aaa0d7">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ContainerHeight" x="230" y="0" width="50" height="30" uuid="952e0040-8aa9-4aa1-98e1-c00fe6aaa0d7">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6d85e84c-df25-4d49-bc44-df7ca1767614"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="1.0"/>
@@ -589,13 +600,18 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="8"/>
+					<font fontName="Arial" size="7"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{preparacion_doc_planificado}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="380" y="0" width="50" height="30" uuid="2c736043-d938-4a54-996d-a1fdbc450354">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ContainerHeight" x="380" y="0" width="50" height="30" uuid="2c736043-d938-4a54-996d-a1fdbc450354">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a7cf3e1a-f40b-45e6-8fac-e19a8d5b3f2f"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="1.0"/>
@@ -604,13 +620,18 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="8"/>
+					<font fontName="Arial" size="7"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{lanzamiento_evento_real}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="430" y="0" width="50" height="30" uuid="0f2c2468-b42c-4327-aa94-2c0dd712c112">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ContainerHeight" x="430" y="0" width="50" height="30" uuid="0f2c2468-b42c-4327-aa94-2c0dd712c112">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="52279a09-0e01-4a6e-8402-8728ac810511"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="1.0"/>
@@ -619,13 +640,18 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="8"/>
+					<font fontName="Arial" size="7"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{recepcion_ofertas_planificado}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="480" y="0" width="50" height="30" uuid="86a551e3-750e-4565-84c9-494ea7ac3bdb">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ContainerHeight" x="480" y="0" width="50" height="30" uuid="86a551e3-750e-4565-84c9-494ea7ac3bdb">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f8b72547-dadc-4849-82a1-f36dda580f7f"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="1.0"/>
@@ -634,13 +660,18 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="8"/>
+					<font fontName="Arial" size="7"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{recepcion_ofertas_real}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="530" y="0" width="50" height="30" uuid="39112fb3-1ea4-4bf3-aaee-47a8d01ae31b">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ContainerHeight" x="530" y="0" width="50" height="30" uuid="39112fb3-1ea4-4bf3-aaee-47a8d01ae31b">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="87694f6b-e5cb-4257-8693-c7dfd91ff245"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="1.0"/>
@@ -649,13 +680,18 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="8"/>
+					<font fontName="Arial" size="7"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{adjudicacion_planificado}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="580" y="0" width="50" height="30" uuid="c3207a36-8337-4c30-87e8-5569599226e5">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ContainerHeight" x="580" y="0" width="50" height="30" uuid="c3207a36-8337-4c30-87e8-5569599226e5">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="47b92033-082b-49e3-bff4-f77648b6817b"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="1.0"/>
@@ -664,13 +700,18 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="8"/>
+					<font fontName="Arial" size="7"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{adjudicacion_real}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="630" y="0" width="50" height="30" uuid="008cef1a-ab5a-49be-9eca-6e54a6e63e73">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ContainerHeight" x="630" y="0" width="50" height="30" uuid="008cef1a-ab5a-49be-9eca-6e54a6e63e73">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="60c4d96e-3666-4817-a073-c72b92f3163a"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="1.0"/>
@@ -679,13 +720,18 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="8"/>
+					<font fontName="Arial" size="7"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{firma_contrato_planificado}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="680" y="0" width="50" height="30" uuid="fa3fc5f8-c68f-4e68-9de5-c116f3d49818">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ContainerHeight" x="680" y="0" width="50" height="30" uuid="fa3fc5f8-c68f-4e68-9de5-c116f3d49818">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="dcb61081-f1f3-4740-90d1-12a496d2cb01"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="1.0"/>
@@ -694,13 +740,18 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="8"/>
+					<font fontName="Arial" size="7"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{firma_contrato_real}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="280" y="0" width="50" height="30" uuid="6c33f93e-0740-4fc2-bd4e-2e15c8b72f73">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ContainerHeight" x="280" y="0" width="50" height="30" uuid="6c33f93e-0740-4fc2-bd4e-2e15c8b72f73">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ba7e5aa4-a033-4b40-a7cb-16f9ca16fc89"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="1.0"/>
@@ -709,13 +760,18 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="8"/>
+					<font fontName="Arial" size="7"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{preparacion_doc_real}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="330" y="0" width="50" height="30" uuid="64c212e1-83aa-4cd3-b464-5bc398ec1749">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="ContainerHeight" x="330" y="0" width="50" height="30" uuid="64c212e1-83aa-4cd3-b464-5bc398ec1749">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d0243e8f-a239-4cf4-8055-94deae5d7118"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
+					<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="1.0"/>
@@ -724,7 +780,8 @@ WHERE p.id= $P{proyectoId}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="8"/>
+					<font fontName="Arial" size="7"/>
+					<paragraph leftIndent="2" rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{lanzamiento_evento_planificado}]]></textFieldExpression>
 			</textField>

@@ -273,7 +273,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<textField isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="525" y="150" width="175" height="25" uuid="d7634783-8e44-4901-b727-759285152ffd">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -286,12 +286,12 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font fontName="Arial" size="8"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{meses_prorroga_ue}]]></textFieldExpression>
 				</textField>
-				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
 					<reportElement x="525" y="125" width="175" height="25" uuid="a0b9ec36-f6e8-4ced-b92e-c0f74123c3f9">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -304,12 +304,12 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font fontName="Arial" size="8"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{fecha_cierre}]]></textFieldExpression>
 				</textField>
-				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
 					<reportElement x="525" y="100" width="175" height="25" uuid="dc58dafc-96c1-4e09-8fb4-c68ad66a2241">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -322,12 +322,12 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font fontName="Arial" size="8"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{fecha_elegibilidad}]]></textFieldExpression>
 				</textField>
-				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
 					<reportElement x="525" y="75" width="175" height="25" uuid="542a9b71-493a-4c40-bbbc-934741ae0fd4">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -340,12 +340,12 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font fontName="Arial" size="8"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{fecha_vigencia}]]></textFieldExpression>
 				</textField>
-				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
 					<reportElement x="525" y="50" width="175" height="25" uuid="21159766-3a4e-4799-b77c-de507471e3f4">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -358,12 +358,12 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font fontName="Arial" size="8"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{fecha_suscripcion}]]></textFieldExpression>
 				</textField>
-				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
 					<reportElement x="525" y="25" width="175" height="25" uuid="d03b08d3-3726-41c6-86e2-0378cf4dc38e">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -376,12 +376,12 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font fontName="Arial" size="8"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{fecha_decreto}]]></textFieldExpression>
 				</textField>
-				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
 					<reportElement x="525" y="0" width="175" height="25" uuid="3f03b5d5-1e08-4d98-9986-dc3273d5d202">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -394,12 +394,12 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font fontName="Arial" size="8"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{fecha_actualizacion}]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 					<reportElement x="175" y="100" width="175" height="25" uuid="932e181c-60b5-4b62-adbc-bc7ea048b18b">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -412,12 +412,12 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font fontName="Arial" size="8"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{monto_contratado}]]></textFieldExpression>
 				</textField>
-				<textField isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="175" y="75" width="175" height="25" uuid="e45fa795-eca4-4095-a9be-5e03944673e3">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -430,12 +430,12 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font fontName="Arial" size="8"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{moneda}]]></textFieldExpression>
 				</textField>
-				<textField isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="175" y="50" width="175" height="25" uuid="f30e6d27-9556-47ea-93c2-263032f490ba">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -448,12 +448,12 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font fontName="Arial" size="8"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{organismo_financiero}]]></textFieldExpression>
 				</textField>
-				<textField isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="175" y="25" width="175" height="25" uuid="5f2284ca-b940-4d8d-aa5e-0cbf9b508bc8">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -466,12 +466,12 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font fontName="Arial" size="8"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{codigo_presupuestario}]]></textFieldExpression>
 				</textField>
-				<textField isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="175" y="0" width="175" height="25" uuid="a56cfcd0-6c91-4e26-a6f0-dc6e61c27df4">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -484,7 +484,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font fontName="Arial" size="8"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{numero_prestamo}]]></textFieldExpression>
@@ -502,7 +502,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font fontName="Arial" size="8" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Plazo de Ejecución]]></text>
@@ -520,7 +520,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font fontName="Arial" size="8" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Meses de Prórroga]]></text>
@@ -538,7 +538,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font fontName="Arial" size="8" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Fecha de cierre actual]]></text>
@@ -556,7 +556,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font fontName="Arial" size="8" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Fecha de Elegibilidad]]></text>
@@ -574,7 +574,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font fontName="Arial" size="8" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Fecha de Vigencia]]></text>
@@ -592,7 +592,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font fontName="Arial" size="8" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Fecha de Suscripción]]></text>
@@ -610,7 +610,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font fontName="Arial" size="8" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Fecha del Decreto]]></text>
@@ -628,7 +628,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font fontName="Arial" size="8" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Fecha de última actualización]]></text>
@@ -646,7 +646,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font fontName="Arial" size="8" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Monto por Desembolsar]]></text>
@@ -664,7 +664,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font fontName="Arial" size="8" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Desembolsos realizados a la fecha]]></text>
@@ -682,7 +682,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font fontName="Arial" size="8" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Monto Contratado Entidad Ejecutora]]></text>
@@ -700,7 +700,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font fontName="Arial" size="8" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Monto Contratado]]></text>
@@ -718,7 +718,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font fontName="Arial" size="8" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Moneda del Préstamo]]></text>
@@ -736,7 +736,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font fontName="Arial" size="8" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Organismo Financiero]]></text>
@@ -754,7 +754,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font fontName="Arial" size="8" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Código Presupuestario]]></text>
@@ -772,12 +772,12 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false"/>
+						<font fontName="Arial" size="8" isBold="false"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
 					<text><![CDATA[Número de Préstamo]]></text>
 				</staticText>
-				<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 					<reportElement x="175" y="125" width="175" height="25" uuid="b71a8375-daf1-480a-b10a-7b9204dca0d9">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -790,12 +790,12 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font fontName="Arial" size="8"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{monto_unidad_ejecutora}]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 					<reportElement x="175" y="150" width="125" height="25" uuid="fc1379df-6bf0-4605-8a61-258e37165a90">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -808,12 +808,12 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font fontName="Arial" size="8"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{desembolsos_a_la_fecha}]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,##0.00#%" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#%" isBlankWhenNull="true">
 					<reportElement x="300" y="150" width="50" height="25" uuid="5f2d4bf0-d079-47a0-9876-da9a058cb703">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -826,12 +826,12 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font fontName="Arial" size="8"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{desembolsos_a_la_fecha}.divide($F{monto_unidad_ejecutora},4,BigDecimal.ROUND_HALF_UP)]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 					<reportElement x="175" y="175" width="125" height="25" uuid="d14f0630-d52d-4fd7-9210-b86000c85a7f">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -844,12 +844,12 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font fontName="Arial" size="8"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{monto_unidad_ejecutora}.subtract($F{desembolsos_a_la_fecha})]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,##0.00#%" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#%" isBlankWhenNull="true">
 					<reportElement x="300" y="175" width="50" height="25" uuid="013afd87-5cb6-4e8c-9e8b-ac2e0b95efce">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -862,12 +862,12 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font fontName="Arial" size="8"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[new BigDecimal(1).subtract($F{desembolsos_a_la_fecha}.divide($F{monto_unidad_ejecutora},4,BigDecimal.ROUND_HALF_UP))]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,##0.00#%" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#%" isBlankWhenNull="true">
 					<reportElement x="525" y="175" width="175" height="25" uuid="e4d741f6-4f81-4cd7-83d3-5f3e2d070b53">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -880,7 +880,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="10"/>
+						<font fontName="Arial" size="8"/>
 						<paragraph rightIndent="4"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{plazo_ejecucion}]]></textFieldExpression>

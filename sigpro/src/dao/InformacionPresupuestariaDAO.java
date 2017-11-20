@@ -3,11 +3,20 @@ package dao;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperPrint;
+import pojo.Proyecto;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import utilities.CJasperReport;
 import utilities.CLogger;
  
 public class InformacionPresupuestariaDAO {
@@ -635,5 +644,21 @@ public class InformacionPresupuestariaDAO {
 		}
 		
 		return result;
+	}
+    
+    public static JasperPrint generarJasper(Integer proyectoId, Integer anio, String usuario) throws JRException, SQLException{
+		JasperPrint jasperPrint = null;
+		Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
+		if (proyecto!=null){
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("proyectoId",proyectoId);
+			parameters.put("usuario",usuario);
+			
+			List<ObjetoCostoJasper> listadoCostos = ObjetoDAO.getEstructuraConCostoJasper(proyectoId, anio, anio, usuario);
+			
+			parameters.put("costos",listadoCostos);
+			jasperPrint = CJasperReport.reporteJasperPrint(CJasperReport.PLANTILLA_EJECUCIONFINANCIERA, parameters);
+		}
+		return jasperPrint;
 	}
 }
