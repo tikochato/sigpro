@@ -51,7 +51,6 @@
         <mapping class="pojo.HitoTipo" />
         <mapping class="pojo.InteresTipo" />
         <mapping class="pojo.InformePresupuesto" />
-        <mapping class="pojo.MatrizRaci" />
         <mapping class="pojo.Meta" />
         <mapping class="pojo.MetaTipo" />
         <mapping class="pojo.MetaUnidadMedida" />

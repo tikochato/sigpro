@@ -3,16 +3,13 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.hibernate.Session;
 import org.hibernate.query.Query;
-
 
 import utilities.CHibernateSession;
 import utilities.CLogger;
 import pojo.AsignacionRaci;
 import pojo.Colaborador;
-import pojo.MatrizRaci;
 
 public class AsignacionRaciDAO {
 	public static List<AsignacionRaci> getAsignacionesRaci(Integer objetoId, int objetoTipo){
@@ -43,14 +40,20 @@ public class AsignacionRaciDAO {
 		List<Colaborador> ret = new ArrayList<Colaborador>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String query = String.join(" ", "select distinct c from AsignacionRaci a"
-				,"inner join a.matrizRaci m"
-				,"inner join a.colaborador c"
-				,"where m.estado = 1"
-				,"and m.proyecto.id = :proyId");
+			String query = String.join(" ", "select distinct c", 
+					"FROM AsignacionRaci ar",
+					"inner join ar.colaborador c",
+					"where ar.objetoTipo = 5",
+					"and ar.estado = 1",
+					"and ar.objetoId in (", 
+						"select a.id",
+						"from Actividad a",
+						"where a.estado = 1",
+						"and a.treePath like '"+(10000000+proyectoId)+"%'",
+					")");
 			
 			Query<Colaborador> criteria = session.createQuery(query, Colaborador.class);
-			criteria.setParameter("proyId", proyectoId);
+			
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
@@ -141,33 +144,7 @@ public class AsignacionRaciDAO {
 		return ret;
 	}
 	
-	public static MatrizRaci getMatrizPorObjeto(Integer objetoId, Integer objetoTipo){
-		MatrizRaci ret = null;
-		List<MatrizRaci> listRet = null;
-		Session session = CHibernateSession.getSessionFactory().openSession();
-		try{
-			String query = String.join(" ", "select m from MatrizRaci m",
-									"inner join m.asignacionRacis a",
-									"where a.objetoId = :objId",
-									"and a.objetoTipo = :objTipo",
-									"and a.estado = 1",
-									"and m.estado = 1");
-			
-			Query<MatrizRaci> criteria = session.createQuery(query, MatrizRaci.class);
-			criteria.setParameter("objId", objetoId);
-			criteria.setParameter("objTipo", objetoTipo);
-			listRet = criteria.getResultList();
-			
-			ret = !listRet.isEmpty() ? listRet.get(0) : null;
-		}
-		catch(Throwable e){
-			CLogger.write("6", AsignacionRaciDAO.class, e);
-		}
-		finally{
-			session.close();
-		}
-		return ret;
-	}
+	
 	
 	public static boolean eliminarTotalAsignacion(AsignacionRaci asignacion){
 		boolean ret = false;

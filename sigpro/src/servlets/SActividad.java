@@ -30,9 +30,7 @@ import dao.ActividadDAO;
 import dao.ActividadPropiedadDAO;
 import dao.ActividadPropiedadValorDAO;
 import dao.AsignacionRaciDAO;
-import dao.MatrizRaciDAO;
 import dao.ObjetoDAO;
-import dao.ProyectoDAO;
 import dao.SubproductoDAO;
 import pojo.Actividad;
 import pojo.ActividadPropiedad;
@@ -42,8 +40,6 @@ import pojo.ActividadTipo;
 import pojo.AcumulacionCosto;
 import pojo.AsignacionRaci;
 import pojo.Colaborador;
-import pojo.MatrizRaci;
-import pojo.Proyecto;
 import pojo.Subproducto;
 import utilities.Utils;
 
@@ -107,16 +103,11 @@ public class SActividad extends HttpServlet {
 		String nombrerol;
 	}
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+
     public SActividad() {
         super();
     }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String response_text = "{ \"success\": false }";
 
@@ -130,9 +121,6 @@ public class SActividad extends HttpServlet {
         output.close();
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		HttpSession sesionweb = request.getSession();
@@ -308,7 +296,6 @@ public class SActividad extends HttpServlet {
 					
 					Actividad actividad;
 					if(esnuevo){
-						
 						duracion = (int) ((fechaFin.getTime()-fechaInicio.getTime())/86400000);
 						duracionDimension = "d";
 						
@@ -378,18 +365,6 @@ public class SActividad extends HttpServlet {
 						String asignaciones_param = map.get("asignacionroles");
 						
 						if(!asignaciones_param.equals("")){
-							Integer proyectoId = (actividad.getTreePath()!=null) ? Integer.parseInt(actividad.getTreePath().substring(0,8))-10000000 : 0;
-							MatrizRaci matrizRaci = AsignacionRaciDAO.getMatrizPorObjeto(proyectoId, 1);
-							if (matrizRaci == null && proyectoId>0){
-								matrizRaci = new MatrizRaci();
-								matrizRaci.setEstado(1);
-								matrizRaci.setFechaCreacion(new Date());
-								Proyecto proyTemp = ProyectoDAO.getProyecto(proyectoId);
-								matrizRaci.setProyecto(proyTemp);
-								matrizRaci.setUsuarioCreo(usuario);
-								MatrizRaciDAO.guardarMatrizRaci(matrizRaci);
-								
-							}
 							String[] asignaciones = asignaciones_param.split("\\|");
 							if (asignaciones.length > 0){
 								for (String temp : asignaciones){
@@ -401,7 +376,6 @@ public class SActividad extends HttpServlet {
 									asigna_temp.setColaborador(colaborador);
 									asigna_temp.setEstado(1);
 									asigna_temp.setFechaCreacion(new Date());
-									asigna_temp.setMatrizRaci(matrizRaci);
 									asigna_temp.setObjetoId(actividad.getId());
 									asigna_temp.setObjetoTipo(5);
 									asigna_temp.setRolRaci(datosaasignacion[1]);
