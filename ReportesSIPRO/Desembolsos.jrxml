@@ -3,24 +3,30 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Desembolsos" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c0c45383-5721-429a-baef-8c47d579dfd8">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SiproMDB"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="167"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="827"/>
 	<subDataset name="Tabla" uuid="14c01c5e-7c02-4909-af9a-c2a36fa96141">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SiproMDB"/>
 		<parameter name="proyectoIdG" class="java.lang.Integer">
 			<defaultValueExpression><![CDATA[29]]></defaultValueExpression>
 		</parameter>
+		<parameter name="fechaCorte" class="java.util.Date"/>
 		<queryString language="SQL">
 			<![CDATA[SELECT * FROM (
 (SELECT 'planificado' tipo, month(fecha) mes ,SUM(monto)  monto
 from sipro.desembolso where proyectoid =   $P{proyectoIdG} 
 and estado  = 1
-and  year(fecha) = YEAR(now())
+and  fecha <= $P{fechaCorte} 
 GROUP BY year (fecha),month(fecha) order by year(fecha),month (fecha) asc) 
 UNION
 (SELECT 'real' tipo, CAST(d.mes_desembolso AS INT) mes,sum(d.desembolsos_mes_usd) monto
 from sipro_analytic.dtm_avance_fisfinan_det_dti d
-where d.codigo_presupuestario = 5204020104
-and d.ejercicio_fiscal = YEAR(now())
+join sipro.prestamo ps ON d.codigo_presupuestario = ps.codigo_presupuestario
+join sipro.proyecto pr ON pr.prestamoid = ps.id 
+where pr.id =  $P{proyectoIdG} 
+and d.ejercicio_fiscal = YEAR($P{fechaCorte} )
+ and CAST(d.mes_desembolso AS UNSIGNED) <= MONTH( $P{fechaCorte} )
 group by d.ejercicio_fiscal,d.mes_desembolso
 order by d.ejercicio_fiscal,d.mes_desembolso asc)) t1
 ORDER BY mes asc]]>
@@ -37,10 +43,13 @@ ORDER BY mes asc]]>
 	</subDataset>
 	<parameter name="usuario" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="proyectoId" class="java.lang.Integer" isForPrompting="false">
-		<defaultValueExpression><![CDATA[29]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
 	</parameter>
 	<parameter name="esSubreporte" class="java.lang.Boolean" isForPrompting="false">
 		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaCorte" class="java.util.Date">
+		<defaultValueExpression><![CDATA[NOW( )]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[select SUM(eneroP) eneroP, SUM(eneroR) eneroR, SUM(febreroP) febreroP, SUM(febreroR) febreroR,
@@ -68,7 +77,7 @@ from (
 SELECT year (fecha) anio ,month(fecha) mes ,SUM(monto)  monto
 from sipro.desembolso where proyectoid =  $P{proyectoId} 
 and estado  = 1
-and  year(fecha) =YEAR(now())
+and  fecha <= $P{fechaCorte} 
 GROUP BY year (fecha),month(fecha) order by year(fecha),month (fecha) asc
 ) t1
 group by t1.anio
@@ -92,8 +101,9 @@ SELECT d.ejercicio_fiscal anio,d.mes_desembolso mes,sum(d.desembolsos_mes_usd) m
 from sipro_analytic.dtm_avance_fisfinan_det_dti d
 join sipro.prestamo ps ON d.codigo_presupuestario = ps.codigo_presupuestario
 join sipro.proyecto pr ON pr.prestamoid = ps.id 
-where pr.id  =  $P{proyectoId} 
-and d.ejercicio_fiscal = YEAR(now())
+where pr.id =  $P{proyectoId} 
+and d.ejercicio_fiscal = YEAR($P{fechaCorte} )
+and CAST(d.mes_desembolso AS UNSIGNED) <= MONTH( $P{fechaCorte} )
 group by d.ejercicio_fiscal,d.mes_desembolso
 order by d.ejercicio_fiscal,d.mes_desembolso asc
 ) t1
@@ -178,6 +188,10 @@ group by t1.anio
 	<field name="totalR" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.label" value="totalR"/>
 	</field>
+	<variable name="anio" class="java.lang.Integer">
+		<variableExpression><![CDATA[$P{fechaCorte}.getYear()]]></variableExpression>
+		<initialValueExpression><![CDATA[YEAR(NOW( ) )]]></initialValueExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -192,7 +206,7 @@ group by t1.anio
 			</staticText>
 			<areaChart>
 				<chart evaluationTime="Report" renderType="draw" theme="default">
-					<reportElement stretchType="ContainerBottom" x="115" y="80" width="530" height="200" uuid="42d7dbbe-4260-4ff9-a775-00d3fb791994"/>
+					<reportElement stretchType="ContainerBottom" x="115" y="80" width="530" height="200" uuid="91f9f73e-6d96-45a3-8ff1-db5106e51dee"/>
 					<chartTitle/>
 					<chartSubtitle/>
 					<chartLegend>
@@ -201,9 +215,12 @@ group by t1.anio
 				</chart>
 				<categoryDataset>
 					<dataset>
-						<datasetRun subDataset="Tabla" uuid="9d6a254c-3759-48e2-8ef8-c1fe1449f3d7">
+						<datasetRun subDataset="Tabla" uuid="ad806b7d-4c5c-4387-b894-e0d1c0e27eb9">
 							<datasetParameter name="proyectoIdG">
 								<datasetParameterExpression><![CDATA[$P{proyectoId}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="fechaCorte">
+								<datasetParameterExpression><![CDATA[$P{fechaCorte}]]></datasetParameterExpression>
 							</datasetParameter>
 							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 						</datasetRun>
@@ -502,7 +519,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{noviembreP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{noviembreP}!=null?$F{noviembreP}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="167" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="f89852ef-1b15-4900-a9db-de2860b141ef">
@@ -521,7 +538,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{marzoP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{marzoP}!=null?$F{marzoP}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="273" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="d3c7c644-a805-4214-84ec-4c9d34183bff">
@@ -540,7 +557,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{mayoP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{mayoP}!=null?$F{mayoP}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="591" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="9733f706-46f5-4c39-830a-bc68add75401">
@@ -559,7 +576,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{noviembreR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{noviembreR}!=null?$F{noviembreR}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="644" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="97232b10-fe87-4617-8849-af3da117fcd5">
@@ -578,7 +595,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{diciembreP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{diciembreP}!=null?$F{diciembreP}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="379" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="2385fcbd-54a0-48a3-9f97-528fb9b06280">
@@ -597,7 +614,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{julioP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{julioP}!=null?$F{julioP}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="644" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="b015e92f-5224-405d-b4e0-339ca1f19c36">
@@ -616,7 +633,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{diciembreR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{diciembreR}!=null?$F{diciembreR}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="538" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="8900d4fe-963d-4256-8cef-aa5302db7bfb">
@@ -635,7 +652,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{octubreP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{octubreP}!=null?$F{octubreP}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="379" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="f1cab967-6b9e-42d0-a335-5971adcc2689">
@@ -654,7 +671,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{julioR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{julioR}!=null?$F{julioR}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="167" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="08f74e88-2109-4db2-a6ed-3ea7f8050b84">
@@ -673,7 +690,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{marzoR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{marzoR}!=null?$F{marzoR}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="326" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="565a960c-1a3e-41dc-a0b0-ae70a9f2cf8e">
@@ -692,7 +709,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{junioP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{junioP}!=null?$F{junioP}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="485" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="7b348111-fa8f-4012-bc7e-a770f4bb9b04">
@@ -711,7 +728,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{septiembreP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{septiembreP}!=null?$F{septiembreP}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="114" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="f3f6bcb0-5110-4c94-8676-4fb7eb3ee976">
@@ -730,7 +747,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{febreroP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{febreroP}!=null?$F{febreroP}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="432" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="ab401b29-f2fe-4aed-8f9e-22a89e30d556">
@@ -749,7 +766,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{agostoP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{agostoP}!=null?$F{agostoP}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="432" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="733cfe5a-61e4-40db-963f-48bd73e5af67">
@@ -768,7 +785,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{agostoR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{agostoR}!=null?$F{agostoR}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="114" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="60273fc0-fa71-44d9-b58a-4671c548c0d6">
@@ -787,7 +804,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{febreroR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{febreroR}!=null?$F{febreroR}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="61" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="4cdff616-e832-4053-a1de-1166f9fb2506">
@@ -806,7 +823,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{eneroR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{eneroR}!=null?$F{eneroR}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="220" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="5626bb0c-d3f9-483e-a6d8-074506111896">
@@ -825,7 +842,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{abrilP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{abrilP}!=null?$F{abrilP}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="273" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="e694efb4-a454-41cd-bdc5-82bc430c7f67">
@@ -844,7 +861,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{mayoR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{mayoR}!=null?$F{mayoR}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="61" y="382" width="53" height="25" backcolor="#FFFFFF" uuid="4866c386-c370-4671-a196-d51a10735ea8">
@@ -863,7 +880,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{eneroP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{eneroP}!=null?$F{eneroP}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="220" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="f8dfc207-bdd4-435a-8773-ac39785f7654">
@@ -882,7 +899,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{abrilR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{abrilR}!=null?$F{abrilR}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="326" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="88afec5f-07c0-46bb-a4a0-5001d030762b">
@@ -901,7 +918,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{junioR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{junioR}!=null?$F{junioR}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="538" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="a833131d-1c2e-421e-b901-9c859195ad29">
@@ -920,7 +937,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{octubreR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{octubreR}!=null?$F{octubreR}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="485" y="407" width="53" height="25" backcolor="#FFFFFF" uuid="cca533c4-d7f6-4e7e-a49a-0e63dd1ae44a">
@@ -939,7 +956,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{septiembreR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{septiembreR}!=null?$F{septiembreR}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="697" y="382" width="55" height="25" backcolor="#FFFFFF" uuid="0e761418-fdd7-4f18-b4d2-0da070c622eb">
@@ -958,7 +975,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="true"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{totalP}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{totalP}!=null?$F{totalP}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement mode="Opaque" x="697" y="357" width="55" height="25" forecolor="#FFFFFF" backcolor="#A4A4A4" uuid="ae58dadd-ed72-4cfc-8a0b-001d8dbd1bbb">
@@ -994,7 +1011,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="true"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{totalR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{totalR}!=null?$F{totalR}:new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="697" y="432" width="55" height="25" backcolor="#FFFFFF" uuid="3a62fe0c-b91b-45ed-97ad-cd5304c8ba2a">
@@ -1013,7 +1030,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="true"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{totalP}.subtract($F{totalR})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{totalP}!=null?$F{totalP}.subtract($F{totalR}!=null?$F{totalR}:new BigDecimal(0)): new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="485" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="a50bd0cb-56d8-4551-85f3-455c4a143513">
@@ -1032,7 +1049,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{septiembreP}.subtract($F{septiembreR} )]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{septiembreP}!=null?$F{septiembreP}.subtract( $F{septiembreR}!=null?$F{septiembreR}:new BigDecimal(0) ) : new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="432" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="c51ff36d-8759-4830-bb33-21265fdbcbdc">
@@ -1051,7 +1068,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{agostoP}.subtract( $F{agostoR} )]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{agostoP}!=null?$F{agostoP}.subtract( $F{agostoR}!=null?$F{agostoR}:new BigDecimal(0) ) : new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="114" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="23f9ed3b-9e00-46e2-b651-9a79346b87c0">
@@ -1070,7 +1087,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{febreroP}.subtract($F{febreroR} )]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{febreroP}!=null?$F{febreroP}.subtract( $F{febreroR}!=null?$F{febreroR}:new BigDecimal(0) ) : new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="273" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="dec30ae7-5b4c-40de-9100-4ed4107f3734">
@@ -1089,7 +1106,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{mayoP}.subtract( $F{mayoR} )]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{mayoP}!=null?$F{mayoP}.subtract( $F{mayoR}!=null?$F{mayoR}:new BigDecimal(0) ) : new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement mode="Opaque" x="0" y="432" width="61" height="25" backcolor="#FFFFFF" uuid="eeb4ffdb-b6dc-40e9-96ba-9e07fda6f77e">
@@ -1126,7 +1143,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{junioP}.subtract( $F{junioR})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{junioP}!=null?$F{junioP}.subtract( $F{junioR}!=null?$F{junioR}:new BigDecimal(0) ) : new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="220" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="ecad7a5b-0f53-48df-91c3-cd8ef2539596">
@@ -1145,7 +1162,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{abrilP}.subtract( $F{abrilR} )]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{abrilP}!=null?$F{abrilP}.subtract( $F{abrilR}!=null?$F{abrilR}:new BigDecimal(0) ) : new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="644" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="8b47c2a8-e7c3-4f21-998b-4e5ecfdb3e95">
@@ -1164,7 +1181,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{diciembreP}.subtract($F{diciembreR} )]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{diciembreP}!=null?$F{diciembreP}.subtract( $F{diciembreR}!=null?$F{diciembreR}:new BigDecimal(0) ) : new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="61" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="970e9bb8-349d-4c63-85c3-9f745c661b1f">
@@ -1183,7 +1200,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{eneroP}.subtract( $F{eneroR} )]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{eneroP}!=null?$F{eneroP}.subtract( $F{eneroR}!=null?$F{eneroR}:new BigDecimal(0) ) : new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="379" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="dc667f5c-03e7-4642-8cf4-b9b21e4ab799">
@@ -1202,7 +1219,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{julioP}.subtract($F{julioR})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{julioP}!=null?$F{julioP}.subtract( $F{julioR}!=null?$F{julioR}:new BigDecimal(0) ) : new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="591" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="03e10493-ec2d-48a9-8c3a-972b1a66e935">
@@ -1221,7 +1238,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{noviembreP}.subtract( $F{noviembreR})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{noviembreP}!=null?$F{noviembreP}.subtract( $F{noviembreR}!=null?$F{noviembreR}:new BigDecimal(0) ) : new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="538" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="84952045-fca0-4aac-9682-dcdce3a3dff0">
@@ -1240,7 +1257,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{octubreP}.subtract($F{octubreR})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{octubreP}!=null?$F{octubreP}.subtract( $F{octubreR}!=null?$F{octubreR}:new BigDecimal(0) ) : new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 				<reportElement mode="Opaque" x="167" y="432" width="53" height="25" backcolor="#FFFFFF" uuid="81805f31-67fe-44fd-9fe4-c53620297d9a">
@@ -1259,7 +1276,7 @@ group by t1.anio
 					<font fontName="Arial" size="7" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{marzoP}.subtract($F{marzoR})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{marzoP}!=null?$F{marzoP}.subtract( $F{marzoR}!=null?$F{marzoR}:new BigDecimal(0) ) : new BigDecimal(0)]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
