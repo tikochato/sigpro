@@ -74,6 +74,9 @@
 		<parameter name="eneroR_g" class="java.math.BigDecimal">
 			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 		</parameter>
+		<parameter name="fechaCorte" class="java.util.Date">
+			<defaultValueExpression><![CDATA[NOW( )]]></defaultValueExpression>
+		</parameter>
 		<queryString language="SQL">
 			<![CDATA[select 'planificada' tipo, 1 mes,  $P{eneroR_g} monto
 union 
@@ -292,6 +295,9 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 	<parameter name="costoReal" class="java.util.ArrayList" nestedType="java.math.BigDecimal">
 		<parameterDescription><![CDATA[Lista de cosotos reales]]></parameterDescription>
 	</parameter>
+	<parameter name="fechaCorte" class="java.util.Date">
+		<defaultValueExpression><![CDATA[NOW( )]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[select 'Gasto real',
 sum(case
@@ -350,7 +356,8 @@ from (
 	and e.fuente = cast(substring(pe.codigo_presupuestario,1,2) as Integer) 
 	and e.organismo = cast(substring(pe.codigo_presupuestario,3,4) as Integer)
 	and e.correlativo = cast(substring(pe.codigo_presupuestario,7,4) as Integer)
-	and e.ejercicio = year(now())
+	and e.ejercicio = year( $P{fechaCorte} )
+	and e.mes <= month( $P{fechaCorte} )
 	and po.id = 6
 	and e.mes > 0
 	group by  e.ejercicio, e.mes 
@@ -372,7 +379,7 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 			</staticText>
 			<areaChart>
 				<chart evaluationTime="Report" renderType="draw" theme="default">
-					<reportElement x="115" y="71" width="530" height="200" uuid="7fddb95a-ce0f-48b6-b5b7-ca15db3ff1b5"/>
+					<reportElement x="115" y="71" width="530" height="200" uuid="0ede8e65-638f-457c-a2dd-f638b99c396d"/>
 					<chartTitle/>
 					<chartSubtitle/>
 					<chartLegend>
@@ -381,7 +388,7 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 				</chart>
 				<categoryDataset>
 					<dataset>
-						<datasetRun subDataset="Tabla" uuid="f69bcf43-54a3-4780-bbe7-bee19face29d">
+						<datasetRun subDataset="Tabla" uuid="f174f825-0d3b-4ff2-b81d-f2eb9bb46454">
 							<datasetParameter name="proyectoIdG">
 								<datasetParameterExpression><![CDATA[$P{proyectoId}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -420,6 +427,9 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 							</datasetParameter>
 							<datasetParameter name="diciembreR_g">
 								<datasetParameterExpression><![CDATA[!$P{costoReal}.isEmpty()  &&  $P{costoReal}.size() >  11  ?  $P{costoReal}.get( 11)  :  new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="fechaCorte">
+								<datasetParameterExpression><![CDATA[$P{fechaCorte}]]></datasetParameterExpression>
 							</datasetParameter>
 							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 						</datasetRun>
