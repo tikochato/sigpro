@@ -345,7 +345,7 @@ public class EstructuraProyectoDAO {
 		try{
 			String str_Query = String.join(" ", "select a.id, a.nombre, 5 objeto_tipo,  a.treePath, a.nivel, a.fecha_inicio,", 
 					"a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id,a.acumulacion_costo acumulacion_costoid,",
-					"a.porcentaje_avance", 
+					"a.porcentaje_avance, a.fecha_inicio_real, a.fecha_fin_real, a.descripcion", 
 					"from actividad a", 
 					"where a.estado=1 and a.treepath like '"+(10000000+prestamoId)+"%'");
 			
@@ -365,13 +365,13 @@ public class EstructuraProyectoDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			List<?> lstActividadesPrestamo = getActividadesProyecto(idPrestamo);
-			Object[] temp = new Object[5];
+			Object[] temp = new Object[9];
 			for(Object objeto : lstActividadesPrestamo){
 				Object[] obj = (Object[])objeto;
 				String treePathObj = (String)obj[3];
 				if(treePathObj != null && treePath != null && treePathObj.length() >= treePath.length()){
 					if(treePathObj.substring(0, treePath.length()).equals(treePath)){
-						temp = new Object[]{(Integer)obj[0], (String)obj[1], (Date)obj[5], (Date)obj[6], (Integer)obj[12]};
+						temp = new Object[]{(Integer)obj[0], (String)obj[1], (Date)obj[5], (Date)obj[6], (Integer)obj[12], (Date)obj[13], (Date)obj[14], (String)obj[15]};
 						ret.add(temp);
 					}
 				}
