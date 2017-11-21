@@ -5,10 +5,16 @@
 		.divMapa{
 			height: calc(80% - 50px);
 			width: 100%;
-		}
+		} 
 		
 		.label-form2 {
 		    font-size: 13px;
+		    opacity: 1;
+		    color: rgba(0,0,0,0.38) !important;
+		    font-weight: bold;
+		}
+		.label-form3 {
+		    font-size: 11px;
 		    opacity: 1;
 		    color: rgba(0,0,0,0.38) !important;
 		    font-weight: bold;
@@ -262,6 +268,29 @@
 						</div>
 					</div>
 				</ui-gmap-google-map>
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group col-sm-12" align="right" ng-if="mapac.mostrar" style="width: 98%">
+				<table  >
+					<tr >
+						<td class="label-form3" style="border-right: black;" >
+							<img ng-src="/assets/img/marcas/marca_1.png" style="width: 18px; height: 18px;"></img>Componente
+						</td>
+						<td class="label-form3">
+							<img ng-src="/assets/img/marcas/marca_2.png" style="width: 18px; height: 18px;"></img>Subcomponente
+						</td>
+						<td class="label-form3">
+							<img ng-src="/assets/img/marcas/marca_3.png" style="width: 18px; height: 18px;"></img> Producto
+						</td>
+						<td class="label-form3">
+							<img ng-src="/assets/img/marcas/marca_4.png" style="width: 18px; height: 18px;"></img>Subproducto
+						</td>
+						<td class="label-form3">
+							<img ng-src="/assets/img/marcas/marca_5.png" style="width: 18px; height: 18px;"></img> Actividad
+						</td>
+					</tr>
+				</table>
 			</div>
 		</div>
 		<br>
