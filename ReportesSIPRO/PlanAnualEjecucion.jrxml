@@ -13,6 +13,24 @@
 	</parameter>
 	<parameter name="costos" class="java.util.List" nestedType="dao.ObjetoCostoJasper"/>
 	<parameter name="costoReal" class="java.util.ArrayList" nestedType="java.math.BigDecimal"/>
+	<parameter name="fechaCorte" class="java.util.Date">
+		<defaultValueExpression><![CDATA[NOW( )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="observaciones" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="alertivos" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="elaborado" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="aprobado" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="autoridad" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[select 1 from dual]]>
 	</queryString>
@@ -34,6 +52,9 @@
 				<subreportParameter name="proyectoId">
 					<subreportParameterExpression><![CDATA[$P{proyectoId}]]></subreportParameterExpression>
 				</subreportParameter>
+				<subreportParameter name="fechaCorte">
+					<subreportParameterExpression><![CDATA[$P{fechaCorte}]]></subreportParameterExpression>
+				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["InformacionGeneral.jasper"]]></subreportExpression>
 			</subreport>
@@ -48,6 +69,9 @@
 				</subreportParameter>
 				<subreportParameter name="proyectoId">
 					<subreportParameterExpression><![CDATA[$P{proyectoId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="fechaCorte">
+					<subreportParameterExpression><![CDATA[$P{fechaCorte}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["InformacionGeneral_Cuadro2.jasper"]]></subreportExpression>
@@ -64,6 +88,9 @@
 				</subreportParameter>
 				<subreportParameter name="proyectoId">
 					<subreportParameterExpression><![CDATA[$P{proyectoId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="fechaCorte">
+					<subreportParameterExpression><![CDATA[$P{fechaCorte}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["Metas.jasper"]]></subreportExpression>
@@ -119,6 +146,9 @@
 				<subreportParameter name="costoReal">
 					<subreportParameterExpression><![CDATA[$P{costoReal}]]></subreportParameterExpression>
 				</subreportParameter>
+				<subreportParameter name="fechaCorte">
+					<subreportParameterExpression><![CDATA[$P{fechaCorte}]]></subreportParameterExpression>
+				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["Gasto.jasper"]]></subreportExpression>
 			</subreport>
@@ -135,9 +165,102 @@
 				<subreportParameter name="proyectoId">
 					<subreportParameterExpression><![CDATA[$P{proyectoId}]]></subreportParameterExpression>
 				</subreportParameter>
+				<subreportParameter name="fechaCorte">
+					<subreportParameterExpression><![CDATA[$P{fechaCorte}]]></subreportParameterExpression>
+				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["Desembolsos.jasper"]]></subreportExpression>
 			</subreport>
+			<break>
+				<reportElement x="0" y="230" width="791" height="1" uuid="a65517e3-c5c7-4b3b-9bf9-6490e7a26bd3"/>
+			</break>
+		</band>
+		<band height="465">
+			<frame>
+				<reportElement x="45" y="0" width="715" height="450" uuid="4820f514-9865-4e81-9bec-c922de457bf4">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+				</reportElement>
+				<staticText>
+					<reportElement x="0" y="0" width="715" height="30" uuid="7bed4c1e-4c9a-450d-91eb-972c560347e7"/>
+					<textElement>
+						<font fontName="Arial" size="16" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Observaciones / Desafíos]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true">
+					<reportElement x="0" y="30" width="715" height="64" uuid="9c440a67-90ae-4c46-88d1-b302452d94ba"/>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{observaciones}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="94" width="715" height="30" uuid="12dd86aa-b7b8-485b-99ce-0810e04b78e6">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="16" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Alertivos:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true">
+					<reportElement x="0" y="124" width="715" height="64" uuid="8dbad398-a3a7-45a7-b42f-1bdeacdfe1bb"/>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{alertivos}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="188" width="197" height="64" uuid="770115e0-fc17-4b57-a644-d185cc44fa77">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Elaborado por: (nombre y firma)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="252" width="197" height="64" uuid="05abd91a-e8b3-4a5d-b885-429e232fa085"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Aprobado por: (nombre y firma)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="316" width="197" height="64" uuid="ca3814d6-c2ea-4836-a8d2-54d714f0b53e">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Vo. Bo. Máxima Autoridad:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="197" y="188" width="518" height="64" uuid="f8276f64-c587-4834-8b11-28f7af458303"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{elaborado}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="197" y="252" width="518" height="64" uuid="03e3cfa4-f907-4529-addf-b070ad4d1877">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{aprobado}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="197" y="316" width="518" height="64" uuid="1a9cfc4d-804d-490d-871b-89639ed268bc">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{autoridad}]]></textFieldExpression>
+				</textField>
+			</frame>
 		</band>
 	</detail>
 	<pageFooter>
