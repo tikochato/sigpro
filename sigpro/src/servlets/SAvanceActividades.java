@@ -690,27 +690,26 @@ public class SAvanceActividades extends HttpServlet {
 				HitoResultado hitoResultado = HitoResultadoDAO.getHitoResultadoActivoPorHito(hito.getId());
 				
 				if(hitoResultado != null){
-					if(Corte.before(fechaHito) && hitoResultado.getValorEntero() == 0){
-						totalSinIniciar++;
-					}else if(Corte.after(fechaHito) && (hitoResultado.getValorEntero() == 0 && hitoResultado.getValorDecimal() == new BigDecimal(0) && hitoResultado.getValorString().equals("") && hitoResultado.getValorTiempo() == null)){
-						totalRetrasadas++;
-					} else if(Corte.after(fechaHito) && (hitoResultado.getValorEntero() > 0 || hitoResultado.getValorDecimal() != new BigDecimal(0) || !hitoResultado.getValorString().equals("") || hitoResultado.getValorTiempo() != null)){
+//					if(Corte.before(fechaHito) && hitoResultado.getValorEntero() == 0){
+//						totalSinIniciar++;
+//					}else if(Corte.after(fechaHito) && (hitoResultado.getValorEntero() == 0 && hitoResultado.getValorDecimal() == new BigDecimal(0) && hitoResultado.getValorString().equals("") && hitoResultado.getValorTiempo() == null)){
+//						totalRetrasadas++;
+//					} else if(Corte.after(fechaHito) && (hitoResultado.getValorEntero() > 0 || hitoResultado.getValorDecimal() != new BigDecimal(0) || !hitoResultado.getValorString().equals("") || hitoResultado.getValorTiempo() != null)){
 						totalCompletadas++;
-					}
+//					}
 					totalHitos++;
 				}else{						
 					if(fechaHito.after(anioInicio.toDate()) && fechaHito.before(anioFin.toDate())){
 						totalEsperadasAnio++;
 					}else if(fechaHito.after(anioFin.toDate())){
 						totalAniosSiguientes++;
-					}else
-						totalCompletadas++;
+					}
 					
 					if (Corte.before(fechaHito) || Corte.equals(fechaHito)){
 						totalSinIniciar++;
 					}else if (Corte.after(fechaHito)){
 						totalRetrasadas++;
-					}					
+					}
 					totalHitos++;
 				}
 			}
