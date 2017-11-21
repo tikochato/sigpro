@@ -1,3 +1,4 @@
+<%@page import="java.util.Date"%>
 <%@page import="java.math.BigDecimal"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="dao.ObjetoCostoJasper"%>
@@ -48,6 +49,12 @@
 			costoReal.add(listadoCostos.get(0).getDiciembreP());
 			
 			parameters.put("costoReal",costoReal);
+			
+			parameters.put("fechaCorte", new Date());
+			parameters.put("observaciones","estas son observaciones");
+			parameters.put("alertivos","los alertivos");
+			parameters.put("elaborado","Pascual Pajarito");
+			parameters.put("aprobado","Licda. Vivian");
 			
 			jasperPrint = CJasperReport.reporteJasperPrint(CJasperReport.PLANTILLA_PLANANUAL, parameters);
 			break;

@@ -23,6 +23,9 @@
 	<parameter name="esSubreporte" class="java.lang.Boolean" isForPrompting="false">
 		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
 	</parameter>
+	<parameter name="fechaCorte" class="java.util.Date">
+		<defaultValueExpression><![CDATA[NOW( )]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[select
 (select py.ejecucion_fisica_real from sipro.proyecto py where py.id = $P{proyectoId}) ejecucion_fisica,
@@ -31,7 +34,8 @@
     from sipro.desembolso d, sipro.proyecto p
     where d.proyectoid = p.id
     and p.id = $P{proyectoId}
-    and month(fecha) = month(current_timestamp())
+    and year(fecha) = year( $P{fechaCorte} )
+    and month(fecha) = month( $P{fechaCorte} )
 ) desembolso_planificado_mes,
 (
 	select sum(desembolsos_mes_usd) 
@@ -41,15 +45,16 @@
 	and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora
 	and des.entidad_sicoin = py.entidad
 	and py.id = $P{proyectoId}
-	and des.mes_desembolso = month(current_timestamp())
-	and des.ejercicio_fiscal = year(current_timestamp())
+	and des.mes_desembolso = month( $P{fechaCorte} )
+	and des.ejercicio_fiscal = year( $P{fechaCorte} )
 ) desembolso_realizado_mes,
 (
 	select sum(d.monto)
     from sipro.desembolso d, sipro.proyecto p
     where d.proyectoid = p.id
     and p.id = $P{proyectoId}
-    and month(fecha) = month(current_timestamp())+1
+    and month(fecha) = month( $P{fechaCorte})+1
+    and year(fecha) = year( $P{fechaCorte} )
 ) desembolso_planificado_proximo_mes,
 	(
 	select sum(desembolsos_mes_usd) 
@@ -59,7 +64,7 @@
 	and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora
 	and des.entidad_sicoin = py.entidad
 	and py.id = $P{proyectoId}
-	and des.ejercicio_fiscal = year(current_timestamp())
+	and des.ejercicio_fiscal = year( $P{fechaCorte})
 ) desembolsos_acumulados_ano
 from dual]]>
 	</queryString>

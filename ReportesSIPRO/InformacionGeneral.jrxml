@@ -4,6 +4,8 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MariaDB Server"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="167"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="827"/>
 	<style name="Estilo_grafica">
 		<pen lineWidth="0.0"/>
 	</style>
@@ -13,15 +15,18 @@
 		<parameter name="proyectoId" class="java.lang.Integer">
 			<defaultValueExpression><![CDATA[8]]></defaultValueExpression>
 		</parameter>
+		<parameter name="fechaCorte" class="java.util.Date">
+			<defaultValueExpression><![CDATA[NOW( )]]></defaultValueExpression>
+		</parameter>
 		<queryString>
 			<![CDATA[select "Plazo Ejecucion" categoria, 
 (
-	select DATEDIFF(py.fecha_inicio,CURRENT_DATE)/DATEDIFF(py.fecha_inicio,py.fecha_fin)*100
+	select DATEDIFF(py.fecha_inicio, $P{fechaCorte} )/DATEDIFF(py.fecha_inicio,py.fecha_fin)*100
 	from sipro.proyecto py
 	where py.id = $P{proyectoId}	
 ) valor_plan,
 (
-	select DATEDIFF(ps.fecha_elegibilidad_ue, CURRENT_DATE)/DATEDIFF(ps.fecha_elegibilidad_ue,ps.fecha_cierre_actual_ue)*100 
+	select DATEDIFF(ps.fecha_elegibilidad_ue,  $P{fechaCorte} )/DATEDIFF(ps.fecha_elegibilidad_ue,ps.fecha_cierre_actual_ue)*100 
 	from sipro.prestamo ps, sipro.proyecto py 
 	where ps.id = py.prestamoid 
 	and py.id = $P{proyectoId}		
@@ -35,7 +40,7 @@ select sum(desembolsos_mes_usd) desembolsos_a_la_fecha,(
     from sipro.desembolso d, sipro.proyecto p
     where d.proyectoid = p.id
     and p.id = 1
-    and fecha > current_timestamp()
+    and fecha >  $P{fechaCorte} 
 ) desembolsos_futuros
 from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro.proyecto py, sipro.prestamo ps
 where des.codigo_presupuestario= ps.codigo_presupuestario
@@ -43,8 +48,8 @@ and py.prestamoid = ps.id
 and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora
 and des.entidad_sicoin = py.entidad
 and py.id = $P{proyectoId}	
-and ( (	des.mes_desembolso<= month(current_timestamp()) and des.ejercicio_fiscal=year(current_timestamp()))
-			OR (des.ejercicio_fiscal<year(current_timestamp())))
+and ( (	des.mes_desembolso<= month( $P{fechaCorte} ) and des.ejercicio_fiscal=year( $P{fechaCorte} ))
+			OR (des.ejercicio_fiscal<year( $P{fechaCorte} )))
 ) t1),
  (select sum(desembolsos_mes_usd)/ 
 (select sum(c.fuente_prestamo)
@@ -96,6 +101,9 @@ select "Ejecucion Fisica",
 	<parameter name="esSubreporte" class="java.lang.Boolean" isForPrompting="false">
 		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
 	</parameter>
+	<parameter name="fechaCorte" class="java.util.Date">
+		<defaultValueExpression><![CDATA[NOW( )]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT ps.proyecto_programa proyecto,  ue.nombre unidad_ejecutora, ps.numero_prestamo, ps.codigo_presupuestario, co.nombre organismo_financiero,
 tm.simbolo moneda, ps.monto_contratado,
@@ -115,7 +123,7 @@ sum(c.fuente_prestamo) monto_unidad_ejecutora,
 	and des.entidad_sicoin = py.entidad
 	and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora
 ) desembolsos_a_la_fecha,
-DATEDIFF(py.fecha_inicio,CURRENT_DATE)/DATEDIFF(py.fecha_inicio,py.fecha_fin) plazo_ejecucion,
+DATEDIFF(py.fecha_inicio, $P{fechaCorte} )/DATEDIFF(py.fecha_inicio,py.fecha_fin) plazo_ejecucion,
 py.ejecucion_fisica_real
 FROM sipro.proyecto py
 JOIN sipro.prestamo ps ON py.prestamoid = ps.id
@@ -887,7 +895,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 				</textField>
 			</frame>
 			<componentElement>
-				<reportElement key="" style="Estilo_grafica" x="171" y="312" width="410" height="169" uuid="5c15a487-1c37-45b2-b22c-08d93cdd011a"/>
+				<reportElement key="" style="Estilo_grafica" x="171" y="312" width="410" height="169" uuid="dd64cca4-eba8-42bb-8a18-1c5bb6b23f8b"/>
 				<sc:spiderChart xmlns:sc="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<sc:chartSettings>
 						<chartTitle/>
@@ -896,9 +904,12 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 					</sc:chartSettings>
 					<sc:spiderDataset>
 						<dataset>
-							<datasetRun subDataset="Dataset1" uuid="77683b0a-8232-430f-a9b9-3f51cdcdffad">
+							<datasetRun subDataset="Dataset1" uuid="e5ac4338-8e80-48a0-afad-dc6b49608b80">
 								<datasetParameter name="proyectoId">
 									<datasetParameterExpression><![CDATA[$P{proyectoId}]]></datasetParameterExpression>
+								</datasetParameter>
+								<datasetParameter name="fechaCorte">
+									<datasetParameterExpression><![CDATA[$P{fechaCorte}]]></datasetParameterExpression>
 								</datasetParameter>
 								<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 							</datasetRun>
