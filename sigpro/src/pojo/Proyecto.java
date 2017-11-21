@@ -1,5 +1,5 @@
 package pojo;
-// Generated Nov 20, 2017 4:56:36 PM by Hibernate Tools 5.2.3.Final
+// Generated Nov 21, 2017 3:28:39 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -29,7 +30,7 @@ public class Proyecto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1253491446923615131L;
+	private static final long serialVersionUID = -5359330703385971260L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Colaborador colaborador;
@@ -76,6 +77,7 @@ public class Proyecto implements java.io.Serializable {
 	private Date fechaFinReal;
 	private Set<Desembolso> desembolsos = new HashSet<Desembolso>(0);
 	private Set<Hito> hitos = new HashSet<Hito>(0);
+	private PepDetalle pepDetalle;
 	private Set<ProgramaProyecto> programaProyectos = new HashSet<ProgramaProyecto>(0);
 	private Set<ProyectoMiembro> proyectoMiembros = new HashSet<ProyectoMiembro>(0);
 	private Set<ProyectoImpacto> proyectoImpactos = new HashSet<ProyectoImpacto>(0);
@@ -107,10 +109,11 @@ public class Proyecto implements java.io.Serializable {
 			Date fechaInicio, Date fechaFin, int duracion, String duracionDimension, Integer orden, String treePath,
 			Integer nivel, Integer ejecucionFisicaReal, Integer projectCargado, String observaciones,
 			Integer coordinador, Date fechaElegibilidad, Date fechaCierre, Date fechaInicioReal, Date fechaFinReal,
-			Set<Desembolso> desembolsos, Set<Hito> hitos, Set<ProgramaProyecto> programaProyectos,
-			Set<ProyectoMiembro> proyectoMiembros, Set<ProyectoImpacto> proyectoImpactos,
-			Set<ProyectoRolColaborador> proyectoRolColaboradors, Set<ProyectoPropiedadValor> proyectoPropiedadValors,
-			Set<ProyectoUsuario> proyectoUsuarios, Set<Componente> componentes) {
+			Set<Desembolso> desembolsos, Set<Hito> hitos, PepDetalle pepDetalle,
+			Set<ProgramaProyecto> programaProyectos, Set<ProyectoMiembro> proyectoMiembros,
+			Set<ProyectoImpacto> proyectoImpactos, Set<ProyectoRolColaborador> proyectoRolColaboradors,
+			Set<ProyectoPropiedadValor> proyectoPropiedadValors, Set<ProyectoUsuario> proyectoUsuarios,
+			Set<Componente> componentes) {
 		this.acumulacionCosto = acumulacionCosto;
 		this.colaborador = colaborador;
 		this.etiqueta = etiqueta;
@@ -156,6 +159,7 @@ public class Proyecto implements java.io.Serializable {
 		this.fechaFinReal = fechaFinReal;
 		this.desembolsos = desembolsos;
 		this.hitos = hitos;
+		this.pepDetalle = pepDetalle;
 		this.programaProyectos = programaProyectos;
 		this.proyectoMiembros = proyectoMiembros;
 		this.proyectoImpactos = proyectoImpactos;
@@ -596,6 +600,15 @@ public class Proyecto implements java.io.Serializable {
 
 	public void setHitos(Set<Hito> hitos) {
 		this.hitos = hitos;
+	}
+
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "proyecto")
+	public PepDetalle getPepDetalle() {
+		return this.pepDetalle;
+	}
+
+	public void setPepDetalle(PepDetalle pepDetalle) {
+		this.pepDetalle = pepDetalle;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")

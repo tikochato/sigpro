@@ -64,6 +64,7 @@
         <mapping class="pojo.ObjetoRecurso" />
         <mapping class="pojo.ObjetoRiesgo" />
         <mapping class="pojo.ObjetoRiesgoId" />
+        <mapping class="pojo.PepDetalle" />
         <mapping class="pojo.PlanAdquisicionPago" />
         <mapping class="pojo.PlanAdquisicion" />
         <mapping class="pojo.Permiso" />
