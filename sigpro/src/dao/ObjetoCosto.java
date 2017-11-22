@@ -13,6 +13,9 @@ public class ObjetoCosto {
 	Integer nivel;
 	DateTime fecha_inicial;
 	DateTime fecha_final;
+	DateTime fecha_inicial_real;
+	DateTime fecha_final_real;
+	Integer duracion;
 	stanio[] anios; 
 	Integer acumulacion_costoid;
 	BigDecimal costo;
@@ -29,7 +32,7 @@ public class ObjetoCosto {
 	transient List<ObjetoCosto> children;
 	
 	public ObjetoCosto(String nombre, Integer objeto_id, int objeto_tipo, Integer nivel, DateTime fecha_inicial,
-			DateTime fecha_final, stanio[] anios, Integer acumulacion_costoid, BigDecimal costo, BigDecimal totalPagos, Integer programa,
+			DateTime fecha_final, DateTime fecha_inicial_real, DateTime fecha_final_real, Integer duracion, stanio[] anios, Integer acumulacion_costoid, BigDecimal costo, BigDecimal totalPagos, Integer programa,
 			Integer subprograma, Integer proyecto, Integer actividad, Integer obra, Integer renglon, Integer geografico, String treePath) {
 		super();
 		this.nombre = nombre;
@@ -38,6 +41,9 @@ public class ObjetoCosto {
 		this.nivel = nivel;
 		this.fecha_inicial = fecha_inicial;
 		this.fecha_final = fecha_final;
+		this.fecha_inicial_real = fecha_inicial_real;
+		this.fecha_final_real = fecha_final_real;
+		this.duracion = duracion;
 		this.anios = anios;
 		this.acumulacion_costoid = acumulacion_costoid;
 		this.costo = costo;
@@ -141,6 +147,36 @@ public class ObjetoCosto {
 	public void setFecha_final(DateTime fecha_final) {
 		this.fecha_final = fecha_final;
 	}
+	
+	public DateTime getFecha_inicial_real() {
+		return fecha_inicial_real;
+	}
+
+
+	public void setFecha_inicial_real(DateTime fecha_inicial_real) {
+		this.fecha_inicial_real = fecha_inicial_real;
+	}
+
+
+	public DateTime getFecha_final_real() {
+		return fecha_final_real;
+	}
+
+
+	public void setFecha_final_real(DateTime fecha_final_real) {
+		this.fecha_final_real = fecha_final_real;
+	}
+
+
+	public Integer getDuracion() {
+		return duracion;
+	}
+
+
+	public void setDuracion(Integer duracion) {
+		this.duracion = duracion;
+	}
+
 
 	public stanio[] getAnios() {
 		return anios;

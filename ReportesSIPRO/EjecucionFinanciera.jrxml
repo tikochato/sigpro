@@ -31,6 +31,7 @@
 		<field name="octubreP" class="java.math.BigDecimal"/>
 		<field name="noviembreP" class="java.math.BigDecimal"/>
 		<field name="diciembreP" class="java.math.BigDecimal"/>
+		<field name="totalP" class="java.math.BigDecimal"/>
 		<variable name="totales" class="java.math.BigDecimal" resetType="Column">
 			<variableExpression><![CDATA[$F{eneroP}.add($F{febreroP}.add($F{marzoP}.add($F{abrilP}.add($F{mayoP}.add( $F{junioP}.add($F{julioP}.add($F{agostoP}.add( $F{septiembreP}.add($F{octubreP}.add($F{noviembreP}.add($F{diciembreP}))) ) ) ) )) ) ) )]]></variableExpression>
 		</variable>
@@ -323,6 +324,7 @@
 								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
 								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
+								<printWhenExpression><![CDATA[$F{totalP}.compareTo( BigDecimal.ZERO) != 0]]></printWhenExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -342,6 +344,7 @@
 								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
 								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
+								<printWhenExpression><![CDATA[$F{totalP}.compareTo( BigDecimal.ZERO) != 0]]></printWhenExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -361,6 +364,7 @@
 								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
 								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
+								<printWhenExpression><![CDATA[$F{totalP}.compareTo( BigDecimal.ZERO) != 0]]></printWhenExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -380,6 +384,7 @@
 								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
 								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
+								<printWhenExpression><![CDATA[$F{totalP}.compareTo( BigDecimal.ZERO) != 0]]></printWhenExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -399,6 +404,7 @@
 								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
 								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
+								<printWhenExpression><![CDATA[$F{totalP}.compareTo( BigDecimal.ZERO) != 0]]></printWhenExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -418,6 +424,7 @@
 								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
 								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
+								<printWhenExpression><![CDATA[$F{totalP}.compareTo( BigDecimal.ZERO) != 0]]></printWhenExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -437,6 +444,7 @@
 								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
 								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
+								<printWhenExpression><![CDATA[$F{totalP}.compareTo( BigDecimal.ZERO) != 0]]></printWhenExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -456,6 +464,7 @@
 								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
 								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
+								<printWhenExpression><![CDATA[$F{totalP}.compareTo( BigDecimal.ZERO) != 0]]></printWhenExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -475,6 +484,7 @@
 								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
 								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
+								<printWhenExpression><![CDATA[$F{totalP}.compareTo( BigDecimal.ZERO) != 0]]></printWhenExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -494,6 +504,7 @@
 								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
 								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
+								<printWhenExpression><![CDATA[$F{totalP}.compareTo( BigDecimal.ZERO) != 0]]></printWhenExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -513,6 +524,7 @@
 								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
 								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
+								<printWhenExpression><![CDATA[$F{totalP}.compareTo( BigDecimal.ZERO) != 0]]></printWhenExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -532,6 +544,7 @@
 								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
 								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
+								<printWhenExpression><![CDATA[$F{totalP}.compareTo( BigDecimal.ZERO) != 0]]></printWhenExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -551,6 +564,7 @@
 								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
 								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
+								<printWhenExpression><![CDATA[$F{totalP}.compareTo( BigDecimal.ZERO) != 0]]></printWhenExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -570,6 +584,7 @@
 								<property name="com.jaspersoft.studio.unit.spacingAfter" value="px"/>
 								<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[($F{objeto_tipo} == 0)? "#263238" : ($F{objeto_tipo} == 1)? "#37474f" :($F{objeto_tipo} == 2)? "#607d8b" : ($F{objeto_tipo} == 3)? "#90a4ae" : ($F{objeto_tipo} == 4)? "#cfd8dc" : ""]]></propertyExpression>
 								<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[($F{objeto_tipo} == 0 || $F{objeto_tipo} == 1 || $F{objeto_tipo} == 2)? "#FFFFFF" : ""]]></propertyExpression>
+								<printWhenExpression><![CDATA[$F{totalP}.compareTo( BigDecimal.ZERO) != 0]]></printWhenExpression>
 							</reportElement>
 							<box>
 								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>

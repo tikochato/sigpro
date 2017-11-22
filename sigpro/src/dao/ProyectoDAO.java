@@ -18,6 +18,7 @@ import org.joda.time.DateTime;
 
 import pojo.Actividad;
 import pojo.Componente;
+import pojo.PepDetalle;
 import pojo.Proyecto;
 import pojo.ProyectoUsuario;
 import pojo.ProyectoUsuarioId;
@@ -621,6 +622,44 @@ public class ProyectoDAO implements java.io.Serializable  {
 		catch(Throwable e){
 			ret = false;
 			CLogger.write("20", ProyectoDAO.class, e);
+		}
+		return ret;
+	}
+	
+	public static PepDetalle getPepDetalle(int id){
+
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		PepDetalle ret = null;
+		try{
+			List<PepDetalle> listRet = null;
+			Query<PepDetalle> criteria = session.createQuery("FROM PepDetalle p where p.id=:id and p.estado = 1", PepDetalle.class);
+			criteria.setParameter("id", id);
+			listRet=criteria.getResultList();
+			 ret =!listRet.isEmpty() ? listRet.get(0) : null;
+		}
+		catch(Throwable e){
+			CLogger.write("21", ProyectoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static boolean guardarPepDetalle(PepDetalle pepDetalle){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			session.saveOrUpdate(pepDetalle);
+			session.getTransaction().commit();
+			ret = true;
+		}
+		catch(Throwable e){
+			CLogger.write("22", ProyectoDAO.class, e);
+		}
+		finally{
+			session.close();
 		}
 		return ret;
 	}

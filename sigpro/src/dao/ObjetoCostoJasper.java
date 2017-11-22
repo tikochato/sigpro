@@ -12,6 +12,9 @@ public class ObjetoCostoJasper {
 	Integer nivel;
 	DateTime fecha_inicial;
 	DateTime fecha_final;
+	DateTime fecha_inicial_real;
+	DateTime fecha_final_real;
+	Integer duracion;
 	Integer acumulacion_costoid;
 	BigDecimal costo;
 	BigDecimal totalPagos;
@@ -50,8 +53,12 @@ public class ObjetoCostoJasper {
 	BigDecimal noviembreR = new BigDecimal(0);
 	BigDecimal diciembreR = new BigDecimal(0);
 	
+	BigDecimal totalP = new BigDecimal(0);
+	BigDecimal totalR = new BigDecimal(0);
+	
 	public ObjetoCostoJasper(String nombre, Integer objeto_id, int objeto_tipo, Integer nivel, DateTime fecha_inicial,
-			DateTime fecha_final, Integer acumulacion_costoid, BigDecimal costo, BigDecimal totalPagos,
+			DateTime fecha_final, DateTime fecha_inicial_real, DateTime fecha_final_real, Integer duracion, 
+			Integer acumulacion_costoid, BigDecimal costo, BigDecimal totalPagos,
 			Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra, Integer renglon,
 			Integer geografico, String treePath, BigDecimal eneroP, BigDecimal febreroP, BigDecimal marzoP,
 			BigDecimal abrilP, BigDecimal mayoP, BigDecimal junioP, BigDecimal julioP, BigDecimal agostoP,
@@ -66,6 +73,9 @@ public class ObjetoCostoJasper {
 		this.nivel = nivel;
 		this.fecha_inicial = fecha_inicial;
 		this.fecha_final = fecha_final;
+		this.fecha_inicial_real = fecha_inicial_real;
+		this.fecha_final_real = fecha_final_real;
+		this.duracion = duracion;
 		this.acumulacion_costoid = acumulacion_costoid;
 		this.costo = costo;
 		this.totalPagos = totalPagos;
@@ -149,6 +159,30 @@ public class ObjetoCostoJasper {
 
 	public void setFecha_final(DateTime fecha_final) {
 		this.fecha_final = fecha_final;
+	}
+	
+	public DateTime getFecha_inicial_real() {
+		return fecha_inicial_real;
+	}
+
+	public void setFecha_inicial_real(DateTime fecha_inicial_real) {
+		this.fecha_inicial_real = fecha_inicial_real;
+	}
+
+	public DateTime getFecha_final_real() {
+		return fecha_final_real;
+	}
+
+	public void setFecha_final_real(DateTime fecha_final_real) {
+		this.fecha_final_real = fecha_final_real;
+	}
+
+	public Integer getDuracion() {
+		return duracion;
+	}
+
+	public void setDuracion(Integer duracion) {
+		this.duracion = duracion;
 	}
 
 	public Integer getAcumulacion_costoid() {

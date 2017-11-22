@@ -53,6 +53,9 @@
   	 <script type="text/ng-template" id="agregarImpacto.jsp">
     		<%@ include file="/app/components/pep/agregarImpacto.jsp"%>
   	 </script>
+  	 <script type="text/ng-template" id="generarReporte.jsp">
+    		<%@ include file="/app/components/pep/generarReporte.jsp"%>
+  	 </script>
 	<shiro:lacksPermission name="24010">
 		<span ng-init="controller.redireccionSinPermisos()"></span>
 	</shiro:lacksPermission>
@@ -158,7 +161,7 @@
 				<span class="glyphicon glyphicon-wrench"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAMiembrosUnidadEjecutora(controller.proyecto.id) : ''" uib-tooltip="Miembros de la Unidad Ejecutora" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-user"></span></label>
-				<label class="btn btn-default" ng-click="controller.exportarJasper()" uib-tooltip="Plan Anual de Ejecución">
+				<label class="btn btn-default" ng-click="controller.generarReporte()" uib-tooltip="Plan Anual de Ejecución">
 				<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 		</div>
 			<div class="btn-group" style="float: right;">

@@ -40,26 +40,30 @@ public class ObjetoDAO {
 					"select arbol.*, costo.total, costo.pago from ( "+
 					"select p.id, p.nombre, 0 objeto_tipo,  p.treePath, p.fecha_inicio, "+
 					"p.fecha_fin, p.duracion, p.duracion_dimension,p.costo,0, p.acumulacion_costoid,  "+
-					"p.programa, p.subprograma, p.proyecto, p.actividad, p.obra, null renglon, null geografico "+
+					"p.programa, p.subprograma, p.proyecto, p.actividad, p.obra, null renglon, null geografico, "+
+					"p.fecha_inicio_real, p.fecha_fin_real "+
 					"from proyecto p "+
 					"where p.id= ?1 and p.estado=1  "+
 					"union "+
 					"select c.id, c.nombre, 1 objeto_tipo,  c.treePath, c.fecha_inicio, "+
 					"c.fecha_fin , c.duracion, c.duracion_dimension,c.costo,0,c.acumulacion_costoid, "+
-					"c.programa, c.subprograma, c.proyecto, c.actividad, c.obra, c.renglon, c.ubicacion_geografica geografico "+
+					"c.programa, c.subprograma, c.proyecto, c.actividad, c.obra, c.renglon, c.ubicacion_geografica geografico, "+
+					"c.fecha_inicio_real, c.fecha_fin_real "+
 					"from componente c "+
 					"where c.proyectoid=?1 and c.estado=1  "+
 					"union    "+
 					"select sc.id, sc.nombre, 2 objeto_tipo,  sc.treePath, sc.fecha_inicio,  "+  
 					"sc.fecha_fin , sc.duracion, sc.duracion_dimension,sc.costo,0,sc.acumulacion_costoid,  "+  
-					"sc.programa, sc.subprograma, sc.proyecto, sc.actividad, sc.obra, sc.renglon, sc.ubicacion_geografica geografico  "+  
+					"sc.programa, sc.subprograma, sc.proyecto, sc.actividad, sc.obra, sc.renglon, sc.ubicacion_geografica geografico,  "+
+					"sc.fecha_inicio_real, sc.fecha_fin_real "+
 					"from subcomponente sc  "+
 					"left outer join componente c on c.id = sc.componenteid  "+
 					"where c.proyectoid=?1 and sc.estado=1 and c.estado=1   "+
 					"union "+
 					"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
 					"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid, "+
-					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra, pr.renglon, pr.ubicacion_geografica geografico "+
+					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra, pr.renglon, pr.ubicacion_geografica geografico, "+
+					"pr.fecha_inicio_real, pr.fecha_fin_real "+
 					"from producto pr "+
 					"left outer join componente c on c.id=pr.componenteid "+
 					"left outer join proyecto p on p.id=c.proyectoid "+
@@ -67,7 +71,8 @@ public class ObjetoDAO {
 					"union     "+
 					"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio,   "+  
 					"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid,   "+  
-					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra, pr.renglon, pr.ubicacion_geografica geografico   "+  
+					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra, pr.renglon, pr.ubicacion_geografica geografico,   "+
+					"pr.fecha_inicio_real, pr.fecha_fin_real "+
 					"from producto pr   "+  
 					"left outer join subcomponente sc on sc.id=pr.subcomponenteid   "+  
 					"left outer join componente c on c.id = sc.componenteid   "+
@@ -76,7 +81,8 @@ public class ObjetoDAO {
 					"union   "+
 					"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
 					"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid, "+
-					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra, sp.renglon, sp.ubicacion_geografica geografico "+
+					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra, sp.renglon, sp.ubicacion_geografica geografico, "+
+					"sp.fecha_inicio_real, sp.fecha_fin_real "+
 					"from subproducto sp "+
 					"left outer join producto pr on pr.id=sp.productoid "+
 					"left outer join componente c on c.id=pr.componenteid "+
@@ -85,7 +91,8 @@ public class ObjetoDAO {
 					"union   "+
 					"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
 					"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid, "+
-					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra, sp.renglon, sp.ubicacion_geografica geografico "+
+					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra, sp.renglon, sp.ubicacion_geografica geografico, "+
+					"sp.fecha_inicio_real, sp.fecha_fin_real "+
 					"from subproducto sp "+
 					"left outer join producto pr on pr.id=sp.productoid "+
 					"left outer join subcomponente sc on sc.id=pr.subcomponenteid "+
@@ -95,7 +102,8 @@ public class ObjetoDAO {
 					"union "+
 					"select a.id, a.nombre, 5 objeto_tipo,  a.treePath, a.fecha_inicio, "+
 					"a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id,a.acumulacion_costo acumulacion_costoid, "+
-					"a.programa, a.subprograma, a.proyecto, a.actividad, a.obra, a.renglon, a.ubicacion_geografica geografico "+
+					"a.programa, a.subprograma, a.proyecto, a.actividad, a.obra, a.renglon, a.ubicacion_geografica geografico, "+
+					"a.fecha_inicio_real, a.fecha_fin_real "+
 					"from actividad a "+
 					"where a.estado=1 and  a.treepath like '"+(10000000+proyectoId)+"%'"+
 					") arbol "+
@@ -192,9 +200,13 @@ public class ObjetoDAO {
 						Integer obra = dato[15]!=null ? (Integer)dato[15] : null;
 						Integer reglon = dato[16]!=null ? (Integer)dato[16] : null;
 						Integer geografico = dato[17]!= null ? (Integer)dato[17] : null;
-						BigDecimal totalPagos = dato[19]!=null ? (BigDecimal)dato[19] : null;
+						DateTime fecha_inicial_real = dato[18]!=null ? new DateTime((Timestamp)dato[18]) : null;
+						DateTime fecha_final_real = dato[19]!=null ? new DateTime((Timestamp)dato[19]) : null;
+						Integer duracion = dato[6]!= null ? (Integer)dato[6] : null;
+						BigDecimal totalPagos = dato[21]!=null ? (BigDecimal)dato[19] : null;
 						
-						root =  new ObjetoCosto(nombre, objeto_id, objeto_tipo, nivel, fecha_inicial, fecha_final, null,
+						root =  new ObjetoCosto(nombre, objeto_id, objeto_tipo, nivel, fecha_inicial, fecha_final, 
+								fecha_inicial_real, fecha_final_real, duracion, null,
 								acumulacion_costoid, costo, totalPagos, programa, subprograma, proyecto, actividad, obra, reglon, geografico, treePath);
 						root.inicializarStanio(anioInicial, anioFinal);
 						
@@ -230,9 +242,13 @@ public class ObjetoDAO {
 							obra = dato[15]!=null ? (Integer)dato[15] : null;
 							reglon = dato[16]!=null ? (Integer)dato[16] : null;
 							geografico = dato[17]!= null ? (Integer)dato[17] : null;
-							totalPagos = dato[19]!=null ? (BigDecimal)dato[19] : null;
+							fecha_inicial_real = dato[18]!=null ? new DateTime((Timestamp)dato[18]) : null;
+							fecha_final_real = dato[19]!=null ? new DateTime((Timestamp)dato[19]) : null;
+							duracion = dato[6]!= null ? (Integer)dato[6] : null;
+							totalPagos = dato[21]!=null ? (BigDecimal)dato[21] : null;
 							
-							ObjetoCosto nodo =  new ObjetoCosto(nombre, objeto_id, objeto_tipo, nivel, fecha_inicial, fecha_final, null,
+							ObjetoCosto nodo =  new ObjetoCosto(nombre, objeto_id, objeto_tipo, nivel, fecha_inicial, fecha_final,
+									fecha_inicial_real, fecha_final_real, duracion, null,
 									acumulacion_costoid, costo, totalPagos, programa, subprograma, proyecto, actividad, obra, reglon, geografico, treePath);
 							nodo.inicializarStanio(anioInicial, anioFinal);
 							
@@ -271,18 +287,20 @@ public class ObjetoDAO {
 	
 	
 	public static List<ObjetoCostoJasper> getEstructuraConCostoJasper(Integer proyectoId, int anioInicial, int anioFinal, String usuario) throws SQLException{
-		List<ObjetoCosto> listadoObjetos = getEstructuraConCosto(proyectoId, anioInicial, anioFinal, true, false, usuario);
+		List<ObjetoCosto> listadoObjetos = getEstructuraConCosto(proyectoId, anioInicial, anioFinal, true, true, usuario);
 		List<ObjetoCostoJasper> listadoCostos = new ArrayList<ObjetoCostoJasper>(); 
 				
 		for (int i=0; i<listadoObjetos.size(); i++){
 			ObjetoCosto temp = listadoObjetos.get(i);
-			BigDecimal total = new BigDecimal(0);
+			BigDecimal totalP = new BigDecimal(0);
+			BigDecimal totalR = new BigDecimal(0);
 			for(int m=0; m<12; m++){
-				total = total.add(temp.anios[0].mes[0].planificado!=null?temp.anios[0].mes[0].planificado:new BigDecimal(0));
+				totalP = totalP.add(temp.anios[0].mes[0].planificado!=null?temp.anios[0].mes[0].planificado:new BigDecimal(0));
+				totalR = totalR.add(temp.anios[0].mes[0].real!=null?temp.anios[0].mes[0].real:new BigDecimal(0));
 			}
-			if(total.compareTo(BigDecimal.ZERO)!=0){
-				ObjetoCostoJasper elemento = new ObjetoCostoJasper(temp.nombre, temp.objeto_id, temp.objeto_tipo, temp.nivel,
-						temp.fecha_inicial, temp.fecha_final, temp.acumulacion_costoid, temp.costo, temp.totalPagos, temp.programa,
+			ObjetoCostoJasper elemento = new ObjetoCostoJasper(temp.nombre, temp.objeto_id, temp.objeto_tipo, temp.nivel,
+						temp.fecha_inicial, temp.fecha_final, temp.fecha_inicial_real, temp.fecha_final_real, temp.duracion, 
+						temp.acumulacion_costoid, temp.costo, temp.totalPagos, temp.programa,
 						temp.subprograma, temp.proyecto, temp.actividad, temp.obra, temp.renglon, temp.geografico, temp.treePath, 
 						temp.anios[0].mes[0].planificado.setScale(2, BigDecimal.ROUND_HALF_UP), temp.anios[0].mes[1].planificado.setScale(2, BigDecimal.ROUND_HALF_UP), 
 						temp.anios[0].mes[2].planificado.setScale(2, BigDecimal.ROUND_HALF_UP), 
@@ -293,8 +311,9 @@ public class ObjetoDAO {
 						temp.anios[0].mes[3].real.setScale(2, BigDecimal.ROUND_HALF_UP), temp.anios[0].mes[4].real.setScale(2, BigDecimal.ROUND_HALF_UP), temp.anios[0].mes[5].real.setScale(2, BigDecimal.ROUND_HALF_UP), 
 						temp.anios[0].mes[6].real.setScale(2, BigDecimal.ROUND_HALF_UP), temp.anios[0].mes[7].real.setScale(2, BigDecimal.ROUND_HALF_UP), temp.anios[0].mes[8].real.setScale(2, BigDecimal.ROUND_HALF_UP), 
 						temp.anios[0].mes[9].real.setScale(2, BigDecimal.ROUND_HALF_UP), temp.anios[0].mes[10].real.setScale(2, BigDecimal.ROUND_HALF_UP), temp.anios[0].mes[11].real.setScale(2, BigDecimal.ROUND_HALF_UP));
-				listadoCostos.add(elemento);
-			}
+			elemento.totalP = totalP;
+			elemento.totalR = totalR;
+			listadoCostos.add(elemento);
 		}
 		return listadoCostos;
 	}
