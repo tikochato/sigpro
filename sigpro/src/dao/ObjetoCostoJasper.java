@@ -87,30 +87,33 @@ public class ObjetoCostoJasper {
 		this.renglon = renglon;
 		this.geografico = geografico;
 		this.treePath = treePath;
-		this.eneroP = eneroP;
-		this.febreroP = febreroP;
-		this.marzoP = marzoP;
-		this.abrilP = abrilP;
-		this.mayoP = mayoP;
-		this.junioP = junioP;
-		this.julioP = julioP;
-		this.agostoP = agostoP;
-		this.septiembreP = septiembreP;
-		this.octubreP = octubreP;
-		this.noviembreP = noviembreP;
-		this.diciembreP = diciembreP;
-		this.eneroR = eneroR;
-		this.febreroR = febreroR;
-		this.marzoR = marzoR;
-		this.abrilR = abrilR;
-		this.mayoR = mayoR;
-		this.junioR = junioR;
-		this.julioR = julioR;
-		this.agostoR = agostoR;
-		this.septiembreR = septiembreR;
-		this.octubreR = octubreR;
-		this.noviembreR = noviembreR;
-		this.diciembreR = diciembreR;
+		this.eneroP = eneroP!=null?eneroP:new BigDecimal(0);
+		this.febreroP = febreroP!=null?febreroP:new BigDecimal(0);
+		this.marzoP = marzoP!=null?marzoP:new BigDecimal(0);
+		this.abrilP = abrilP!=null?abrilP:new BigDecimal(0);
+		this.mayoP = mayoP!=null?mayoP:new BigDecimal(0);
+		this.junioP = junioP!=null?junioP:new BigDecimal(0);
+		this.julioP = julioP!=null?julioP:new BigDecimal(0);
+		this.agostoP = agostoP!=null?agostoP:new BigDecimal(0);
+		this.septiembreP = septiembreP!=null?septiembreP:new BigDecimal(0);
+		this.octubreP = octubreP!=null?octubreP:new BigDecimal(0);
+		this.noviembreP = noviembreP!=null?noviembreP:new BigDecimal(0);
+		this.diciembreP = diciembreP!=null?diciembreP:new BigDecimal(0);
+		this.eneroR = eneroR!=null?eneroR:new BigDecimal(0);
+		this.febreroR = febreroR!=null?febreroR:new BigDecimal(0);
+		this.marzoR = marzoR!=null?marzoR:new BigDecimal(0);
+		this.abrilR = abrilR!=null?abrilR:new BigDecimal(0);
+		this.mayoR = mayoR!=null?mayoR:new BigDecimal(0);
+		this.junioR = junioR!=null?junioR:new BigDecimal(0);
+		this.julioR = julioR!=null?julioR:new BigDecimal(0);
+		this.agostoR = agostoR!=null?agostoR:new BigDecimal(0);
+		this.septiembreR = septiembreR!=null?septiembreR:new BigDecimal(0);
+		this.octubreR = octubreR!=null?octubreR:new BigDecimal(0);
+		this.noviembreR = noviembreR!=null?noviembreR:new BigDecimal(0);
+		this.diciembreR = diciembreR!=null?diciembreR:new BigDecimal(0);
+		
+		this.totalP=this.eneroP.add(this.febreroP.add(this.marzoP.add(this.abrilP.add(this.mayoP.add(this.junioP.add(this.julioP.add(this.agostoP.add(this.septiembreP.add(this.octubreP.add(this.noviembreP.add(this.diciembreP)))))))))));
+		this.totalR=this.eneroR.add(this.febreroR.add(this.marzoR.add(this.abrilR.add(this.mayoR.add(this.junioR.add(this.julioR.add(this.agostoR.add(this.septiembreR.add(this.octubreR.add(this.noviembreR.add(this.diciembreR)))))))))));
 	}
 
 	public String getNombre() {
@@ -463,6 +466,22 @@ public class ObjetoCostoJasper {
 
 	public void setDiciembreR(BigDecimal diciembreR) {
 		this.diciembreR = diciembreR;
+	}
+
+	public BigDecimal getTotalP() {
+		return totalP;
+	}
+
+	public void setTotalP(BigDecimal totalP) {
+		this.totalP = totalP;
+	}
+
+	public BigDecimal getTotalR() {
+		return totalR;
+	}
+
+	public void setTotalR(BigDecimal totalR) {
+		this.totalR = totalR;
 	}
 	
 }
