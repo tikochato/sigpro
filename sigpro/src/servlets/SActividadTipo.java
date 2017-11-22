@@ -104,6 +104,33 @@ public class SActividadTipo extends HttpServlet {
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stactividadtipos);
 	        response_text = String.join("", "\"actividadtipos\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+		}else if(accion.equals("getActividadtiposPagina")){
+			int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
+			int numeroCooperantesTipo = map.get("numeroactividadstipo")!=null  ? Integer.parseInt(map.get("numeroactividadstipo")) : 0;
+			String filtro_nombre = map.get("filtro_nombre");
+			String filtro_usuario_creo = map.get("filtro_usuario_creo");
+			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+			String columna_ordenada = map.get("columna_ordenada");
+			String orden_direccion = map.get("orden_direccion");
+			List<ActividadTipo> actividadtipos = ActividadTipoDAO.getActividadTiposPagina(pagina, numeroCooperantesTipo,
+					filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion);
+			List<stactividadtipo> stactividadtipos=new ArrayList<stactividadtipo>();
+			for(ActividadTipo actividadtipo:actividadtipos){
+				stactividadtipo temp =new stactividadtipo();
+				temp.descripcion = actividadtipo.getDescripcion();
+				temp.estado = actividadtipo.getEstado();
+				temp.fechaActualizacion = Utils.formatDateHour(actividadtipo.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDateHour(actividadtipo.getFechaCreacion());
+				temp.id = actividadtipo.getId();
+				temp.nombre = actividadtipo.getNombre();
+				temp.usuarioActualizo = actividadtipo.getUsuarioActualizo();
+				temp.usuarioCreo = actividadtipo.getUsuarioCreo();
+				stactividadtipos.add(temp);
+			}
+			
+			response_text=new GsonBuilder().serializeNulls().create().toJson(stactividadtipos);
+	        response_text = String.join("", "\"actividadtipos\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		else if(accion.equals("guardarActividadtipo")){
 			boolean result = false;
