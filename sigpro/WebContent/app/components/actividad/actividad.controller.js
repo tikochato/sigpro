@@ -61,6 +61,34 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 				mi.actividad.actividadtiponombre="";
 				mi.actividad.actividadtipoid="";
 			}
+			
+			
+			var parametros = {
+					accion: 'getActividadPropiedadPorTipo',
+					idActividad: mi.actividad.id != null ? mi.actividad.id : 0,
+				    idActividadTipo: mi.actividad.actividadtipoid, t: new Date().getTime()
+			}
+			$http.post('/SActividadPropiedad', parametros).then(function(response){
+				mi.camposdinamicos = response.data.actividadpropiedades
+				for (campos in mi.camposdinamicos) {
+					switch (mi.camposdinamicos[campos].tipo){
+						case "fecha":
+							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
+							break;
+						case "entero":
+							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? Number(mi.camposdinamicos[campos].valor): null;
+							break;
+						case "decimal":
+							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? Number(mi.camposdinamicos[campos].valor) : null;
+							break;
+						case "booleano":
+							mi.camposdinamicos[campos].valor = mi.camposdinamicos[campos].valor == 'true' ? true : false;
+							break;
+					}
+
+				}
+				$utilidades.setFocus(document.getElementById("inombre"));
+			});
 		}
 		
 		mi.blurTipo=function(){

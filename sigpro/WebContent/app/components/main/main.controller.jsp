@@ -235,6 +235,9 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/informeGeneralPEP/',{
             	template: '<div load-on-demand="\'informeGeneralPEPController\'" class="all_page"></div>'
             })
+            .when('/peppropiedad/:reiniciar_vista?',{
+            	template: '<div load-on-demand="\'proyectopropiedadController\'" class="all_page"></div>'
+            })
             .when("/:redireccion?",{
             	controller:"MainController"
             })
@@ -606,6 +609,11 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   name: 'informeGeneralPEPController',
 	    	   script: '/app/components/reportes/informeGeneralPEP/informeGeneralPEP.controller.js',
 	    	   template: '/app/components/reportes/informeGeneralPEP/informeGeneralPEP.jsp'
+	       },
+	       {
+	    	   name: 'proyectopropiedadController',
+	    	   script: '/app/components/peppropiedad/proyectopropiedad.controller.js',
+	    	   template: '/app/components/peppropiedad/proyectopropiedad.jsp'
 	       }
 
 	   ];
