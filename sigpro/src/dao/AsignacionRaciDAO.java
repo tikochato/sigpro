@@ -70,16 +70,16 @@ public class AsignacionRaciDAO {
 		List<AsignacionRaci> listRet = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String query = String.join(" ", "select a from AsignacionRaci a",
-							"where a.objetoId = :objId",
-							"and a.objetoTipo = :objTipo",
-							"and lower(a.rolRaci) = :rol",
-							"and a.estado = 1");
+			String query = String.join(" ", "select a.* from sipro_history.asignacion_raci a",
+							"where a.objeto_id = ?1",
+							"and a.objeto_tipo = ?2",
+							"and lower(a.rol_raci) = ?3",
+							"and a.estado = 1 and a.actual=1");
 			
-			Query<AsignacionRaci> criteria = session.createQuery(query, AsignacionRaci.class);
-			criteria.setParameter("objId", objetoId);
-			criteria.setParameter("objTipo", objetoTipo);
-			criteria.setParameter("rol", rol.toLowerCase());
+			Query<AsignacionRaci> criteria = session.createNativeQuery(query, AsignacionRaci.class);
+			criteria.setParameter(1, objetoId);
+			criteria.setParameter(2, objetoTipo);
+			criteria.setParameter(3, rol.toLowerCase());
 			
 			listRet = criteria.getResultList();
 			

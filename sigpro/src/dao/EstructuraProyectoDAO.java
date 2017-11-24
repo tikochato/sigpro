@@ -389,8 +389,8 @@ public class EstructuraProyectoDAO {
 			String str_Query = String.join(" ", "select a.id, a.nombre, 5 objeto_tipo,  a.treePath, a.nivel, a.fecha_inicio,", 
 					"a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id,a.acumulacion_costo acumulacion_costoid,",
 					"a.porcentaje_avance", 
-					"from actividad a", 
-					"where a.estado=1 and a.treepath like '"+(10000000+prestamoId)+"%'");
+					"from sipro_history.actividad a", 
+					"where a.estado=1 and a.treepath like '"+(10000000+prestamoId)+"%' and a.actual=1");
 			
 			Query<?> criteria = session.createNativeQuery(str_Query);			
 			ret = criteria.getResultList();
