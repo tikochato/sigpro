@@ -278,8 +278,9 @@ public class DataSigadeDAO {
 						"and cs.estado = 1";
 			Query<?> criteria = session.createNativeQuery(query);
 			criteria.setParameter("1", codigo_presupuestario);
-			BigDecimal total = (BigDecimal) criteria.getSingleResult();
-			ret = total.intValue();
+			Object total =  criteria.getSingleResult();
+			
+			ret = ((BigDecimal ) total).intValue();
 		}
 		catch(Throwable e){
 			CLogger.write("9", DataSigadeDAO.class, e);
