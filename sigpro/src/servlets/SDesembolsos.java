@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -27,6 +29,8 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.DataSigadeDAO;
 import dao.DesembolsoDAO;
+import dao.ObjetoCosto;
+import dao.ObjetoDAO;
 import dao.ProyectoDAO;
 import pojo.Prestamo;
 import pojo.Proyecto;
@@ -97,7 +101,7 @@ public class SDesembolsos extends HttpServlet {
 			
 			if (prestamo!=null){
 			
-				List<?> objDesembolso =DesembolsoDAO.getDesembolsosPorEjercicio(proyectoId,anio_inicial,anio_final);
+				List<?> objDesembolso =DesembolsoDAO.getDesembolsosPorEjercicio(proyectoId,anio_inicial,anio_final,null);
 				
 				String planificado="";
 				
@@ -157,26 +161,28 @@ public class SDesembolsos extends HttpServlet {
 						}
 					}
 				}
+				List<ObjetoCosto> costos = new ArrayList<>();
 				
-				
-				List<?> costos =DesembolsoDAO.getCostosPorEjercicio(proyectoId,anio_inicial,anio_final);
+				try {
+					costos = ObjetoDAO.getEstructuraConCosto(proyectoId, anio_inicial, anio_final,true, false, usuario);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 				
 				String lista_costo="";
-				
-				
+				int contanio = 0;
 				for (int i = anio_inicial ; i<=anio_final ; i++){
-					for (int j = 1; j<=12 ; j++){
-						Integer anio = costos.size() > 0 ?  (Integer) ((Object[]) costos.get(0))[0] : 0;
-						Integer mes = costos.size() > 0 ?  (Integer) ((Object[]) costos.get(0))[1] : 0;
-						if (anio.compareTo(i) == 0 && mes.compareTo(j)==0){
-							BigDecimal valor = (BigDecimal) ((Object[]) costos.get(0))[2];
-							costos.remove(costos.get(0));
-							lista_costo = lista_costo + (lista_costo.length()>0 ? "," :"") +  
-									 (valor!= null ? valor.toString() : "0");
-						}else{
-							lista_costo = lista_costo + (lista_costo.length()>0 ? "," :"") +  
-									 "0";
+					if(costos!=null){
+						dao.ObjetoCosto.stanio[] stanio_= costos.get(0).getAnios();
+						for (int j = 0; j<12 ; j++){
+							    BigDecimal valor = stanio_[contanio].mes[j].planificado;
+								lista_costo = lista_costo + (lista_costo.length()>0 ? "," :"") +  
+										 (valor!= null ? valor.toString() : "0");
 						}
+						contanio++;
+					}else{
+						lista_costo = lista_costo + (lista_costo.length()>0 ? "," :"") +  
+								 "0,0,0,0,0,0,0,0,0,0,0,0";
 					}
 				}
 				
@@ -184,7 +190,6 @@ public class SDesembolsos extends HttpServlet {
 				lista_costo = String.join("", "[",lista_costo,"]");
 				realQ = String.join("", "[",realQ,"]");
 				realD = String.join("", "[",realD,"]");
-				
 				
 			    response_text = String.join("","{ \"success\": true, \"planificado\": ",planificado,
 			    		","," \"real\":",realQ,
