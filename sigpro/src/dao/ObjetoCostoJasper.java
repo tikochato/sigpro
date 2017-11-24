@@ -1,8 +1,7 @@
 package dao;
 
 import java.math.BigDecimal;
-
-import org.joda.time.DateTime;
+import java.util.Date;
 
 public class ObjetoCostoJasper {
 
@@ -10,10 +9,10 @@ public class ObjetoCostoJasper {
 	Integer objeto_id;
 	int objeto_tipo;
 	Integer nivel;
-	DateTime fecha_inicial;
-	DateTime fecha_final;
-	DateTime fecha_inicial_real;
-	DateTime fecha_final_real;
+	Date fecha_inicial;
+	Date fecha_final;
+	Date fecha_inicial_real;
+	Date fecha_final_real;
 	Integer duracion;
 	Integer acumulacion_costoid;
 	BigDecimal costo;
@@ -56,8 +55,14 @@ public class ObjetoCostoJasper {
 	BigDecimal totalP = new BigDecimal(0);
 	BigDecimal totalR = new BigDecimal(0);
 	
-	public ObjetoCostoJasper(String nombre, Integer objeto_id, int objeto_tipo, Integer nivel, DateTime fecha_inicial,
-			DateTime fecha_final, DateTime fecha_inicial_real, DateTime fecha_final_real, Integer duracion, 
+	BigDecimal ejecutado = new BigDecimal(0);
+	BigDecimal asignado = new BigDecimal(0);
+	BigDecimal modificaciones = new BigDecimal(0);
+	
+	Integer avance_fisico = 0;
+	
+	public ObjetoCostoJasper(String nombre, Integer objeto_id, int objeto_tipo, Integer nivel, Date fecha_inicial,
+			Date fecha_final, Date fecha_inicial_real, Date fecha_final_real, Integer duracion, 
 			Integer acumulacion_costoid, BigDecimal costo, BigDecimal totalPagos,
 			Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra, Integer renglon,
 			Integer geografico, String treePath, BigDecimal eneroP, BigDecimal febreroP, BigDecimal marzoP,
@@ -65,7 +70,7 @@ public class ObjetoCostoJasper {
 			BigDecimal septiembreP, BigDecimal octubreP, BigDecimal noviembreP, BigDecimal diciembreP,
 			BigDecimal eneroR, BigDecimal febreroR, BigDecimal marzoR, BigDecimal abrilR, BigDecimal mayoR,
 			BigDecimal junioR, BigDecimal julioR, BigDecimal agostoR, BigDecimal septiembreR, BigDecimal octubreR,
-			BigDecimal noviembreR, BigDecimal diciembreR) {
+			BigDecimal noviembreR, BigDecimal diciembreR, BigDecimal ejecutado, BigDecimal asignado, BigDecimal modificaciones, Integer avance_fisico) {
 		super();
 		this.nombre = nombre;
 		this.objeto_id = objeto_id;
@@ -114,6 +119,10 @@ public class ObjetoCostoJasper {
 		
 		this.totalP=this.eneroP.add(this.febreroP.add(this.marzoP.add(this.abrilP.add(this.mayoP.add(this.junioP.add(this.julioP.add(this.agostoP.add(this.septiembreP.add(this.octubreP.add(this.noviembreP.add(this.diciembreP)))))))))));
 		this.totalR=this.eneroR.add(this.febreroR.add(this.marzoR.add(this.abrilR.add(this.mayoR.add(this.junioR.add(this.julioR.add(this.agostoR.add(this.septiembreR.add(this.octubreR.add(this.noviembreR.add(this.diciembreR)))))))))));
+		
+		this.ejecutado = ejecutado!=null?ejecutado:new BigDecimal(0);
+		this.asignado = asignado!=null?asignado:new BigDecimal(0);
+		this.modificaciones = modificaciones!=null?modificaciones:new BigDecimal(0);
 	}
 
 	public String getNombre() {
@@ -148,35 +157,35 @@ public class ObjetoCostoJasper {
 		this.nivel = nivel;
 	}
 
-	public DateTime getFecha_inicial() {
+	public Date getFecha_inicial() {
 		return fecha_inicial;
 	}
 
-	public void setFecha_inicial(DateTime fecha_inicial) {
+	public void setFecha_inicial(Date fecha_inicial) {
 		this.fecha_inicial = fecha_inicial;
 	}
 
-	public DateTime getFecha_final() {
+	public Date getFecha_final() {
 		return fecha_final;
 	}
 
-	public void setFecha_final(DateTime fecha_final) {
+	public void setFecha_final(Date fecha_final) {
 		this.fecha_final = fecha_final;
 	}
 	
-	public DateTime getFecha_inicial_real() {
+	public Date getFecha_inicial_real() {
 		return fecha_inicial_real;
 	}
 
-	public void setFecha_inicial_real(DateTime fecha_inicial_real) {
+	public void setFecha_inicial_real(Date fecha_inicial_real) {
 		this.fecha_inicial_real = fecha_inicial_real;
 	}
 
-	public DateTime getFecha_final_real() {
+	public Date getFecha_final_real() {
 		return fecha_final_real;
 	}
 
-	public void setFecha_final_real(DateTime fecha_final_real) {
+	public void setFecha_final_real(Date fecha_final_real) {
 		this.fecha_final_real = fecha_final_real;
 	}
 
@@ -482,6 +491,38 @@ public class ObjetoCostoJasper {
 
 	public void setTotalR(BigDecimal totalR) {
 		this.totalR = totalR;
+	}
+
+	public BigDecimal getEjecutado() {
+		return ejecutado;
+	}
+
+	public void setEjecutado(BigDecimal ejecutado) {
+		this.ejecutado = ejecutado;
+	}
+
+	public BigDecimal getAsignado() {
+		return asignado;
+	}
+
+	public void setAsignado(BigDecimal asignado) {
+		this.asignado = asignado;
+	}
+
+	public BigDecimal getModificaciones() {
+		return modificaciones;
+	}
+
+	public void setModificaciones(BigDecimal modificaciones) {
+		this.modificaciones = modificaciones;
+	}
+
+	public Integer getAvance_fisico() {
+		return avance_fisico;
+	}
+
+	public void setAvance_fisico(Integer avance_fisico) {
+		this.avance_fisico = avance_fisico;
 	}
 	
 }

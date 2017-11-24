@@ -20,6 +20,8 @@ public class ObjetoCosto {
 	Integer acumulacion_costoid;
 	BigDecimal costo;
 	BigDecimal totalPagos;
+	Integer unidad_ejecutora;
+	Integer entidad;
 	Integer programa;
 	Integer subprograma; 
 	Integer proyecto;
@@ -28,12 +30,19 @@ public class ObjetoCosto {
 	Integer renglon;
 	Integer geografico;
 	String treePath;
+	BigDecimal ejecutado = new BigDecimal(0);
+	BigDecimal asignado = new BigDecimal(0);
+	BigDecimal modificaciones = new BigDecimal(0);
+	Integer avance_fisico = 0;
 	transient ObjetoCosto parent;
 	transient List<ObjetoCosto> children;
 	
 	public ObjetoCosto(String nombre, Integer objeto_id, int objeto_tipo, Integer nivel, DateTime fecha_inicial,
-			DateTime fecha_final, DateTime fecha_inicial_real, DateTime fecha_final_real, Integer duracion, stanio[] anios, Integer acumulacion_costoid, BigDecimal costo, BigDecimal totalPagos, Integer programa,
-			Integer subprograma, Integer proyecto, Integer actividad, Integer obra, Integer renglon, Integer geografico, String treePath) {
+			DateTime fecha_final, DateTime fecha_inicial_real, DateTime fecha_final_real, Integer duracion, stanio[] anios, 
+			Integer acumulacion_costoid, BigDecimal costo, BigDecimal totalPagos, 
+			Integer unidad_ejecutora, Integer entidad, Integer avance_fisico,
+			Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra, Integer renglon, 
+			Integer geografico, String treePath) {
 		super();
 		this.nombre = nombre;
 		this.objeto_id = objeto_id;
@@ -56,6 +65,9 @@ public class ObjetoCosto {
 		this.renglon = renglon;
 		this.geografico = geografico;
 		this.treePath = treePath;
+		this.unidad_ejecutora = unidad_ejecutora;
+		this.entidad  = entidad;
+		this.avance_fisico = avance_fisico;
 		children = new ArrayList<ObjetoCosto>();
 	}
 
@@ -293,5 +305,66 @@ public class ObjetoCosto {
 	public void addChildren(ObjetoCosto children) {
 		this.children.add(children);
 	}
+
+
+	public BigDecimal getEjecutado() {
+		return ejecutado;
+	}
+
+
+	public void setEjecutado(BigDecimal ejecutado) {
+		this.ejecutado = ejecutado;
+	}
+
+
+	public BigDecimal getAsignado() {
+		return asignado;
+	}
+
+
+	public void setAsignado(BigDecimal asignado) {
+		this.asignado = asignado;
+	}
+
+
+	public BigDecimal getModificaciones() {
+		return modificaciones;
+	}
+
+
+	public void setModificaciones(BigDecimal modificaciones) {
+		this.modificaciones = modificaciones;
+	}
+
+
+	public Integer getAvance_fisico() {
+		return avance_fisico;
+	}
+
+
+	public void setAvance_fisico(Integer avance_fisico) {
+		this.avance_fisico = avance_fisico;
+	}
+
+
+	public Integer getUnidad_ejecutora() {
+		return unidad_ejecutora;
+	}
+
+
+	public void setUnidad_ejecutora(Integer unidad_ejecutora) {
+		this.unidad_ejecutora = unidad_ejecutora;
+	}
+
+
+	public Integer getEntidad() {
+		return entidad;
+	}
+
+
+	public void setEntidad(Integer entidad) {
+		this.entidad = entidad;
+	}
+	
 	
 }
