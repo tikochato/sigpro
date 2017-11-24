@@ -310,9 +310,10 @@ public class SMatrizRACI extends HttpServlet {
 	
 	}
 	
-	private List<stmatriz> getMatriz(Integer idPrestamo){
+	private List<stmatriz> getMatriz(Integer idPrestamo, String lineaBase){
 		List<stmatriz> lstMatriz= new ArrayList<>();
-		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
+		//TODO: lineaBase
+		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo, lineaBase);
 		for(Object objeto : estructuraProyecto){
 			Object[] obj = (Object[]) objeto;
 			stmatriz tempmatriz = new stmatriz();
@@ -366,7 +367,7 @@ public class SMatrizRACI extends HttpServlet {
 		}
 	}
 	
-	private byte[] exportarExcel(Integer idPrestamo, String usuario) throws IOException{
+	private byte[] exportarExcel(Integer idPrestamo, String lineaBase, String usuario) throws IOException{
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -398,7 +399,8 @@ public class SMatrizRACI extends HttpServlet {
 			}
 			
 			headers = generarHeaders(colaboradores);
-			datos = generarDatos(idPrestamo, colaboradores, usuario);
+			//TODO: lineaBase
+			datos = generarDatos(idPrestamo, colaboradores, lineaBase, usuario);
 			excel = new CExcel("Matriz RACI", false, null);
 			Proyecto proyecto = ProyectoDAO.getProyecto(idPrestamo);
 			wb=excel.generateExcelOfData(datos, "Matriz RACI - "+proyecto.getNombre(), headers, null, true, usuario);
@@ -441,8 +443,9 @@ public class SMatrizRACI extends HttpServlet {
 		return headers;
 	}
 	
-	public String[][] generarDatos(Integer idPrestamo, List<stcolaborador> colaboradores, String usuario){
-		List<stmatriz> stmatriz = getMatriz(idPrestamo);
+	public String[][] generarDatos(Integer idPrestamo, List<stcolaborador> colaboradores, String lineaBase, String usuario){
+		//TODO: lineaBase
+		List<stmatriz> stmatriz = getMatriz(idPrestamo, lineaBase);
 		String[][] datos = null;
 		
 		if(stmatriz!= null && colaboradores!=null){

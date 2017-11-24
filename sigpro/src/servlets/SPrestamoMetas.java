@@ -118,7 +118,8 @@ public class SPrestamoMetas extends HttpServlet {
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 			Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
 			Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
-			List<stprestamo> lstPrestamo = getMetasPrestamo(idPrestamo, anioInicial, anioFinal, usuario);
+			//TODO: deActual
+			List<stprestamo> lstPrestamo = getMetasPrestamo(idPrestamo, anioInicial, anioFinal, true, usuario);
 			
 			if (null != lstPrestamo && !lstPrestamo.isEmpty()){
 				response_text=new GsonBuilder().serializeNulls().create().toJson(lstPrestamo);
@@ -216,9 +217,9 @@ public class SPrestamoMetas extends HttpServlet {
 		}
 	}
 	
-	private List<stprestamo> getMetasPrestamo(int idPrestamo, int anioInicial, int anioFinal, String usuario){
+	private List<stprestamo> getMetasPrestamo(int idPrestamo, int anioInicial, int anioFinal, boolean deActual, String usuario){
 		List<stprestamo> lstPrestamo= new ArrayList<>();
-		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
+		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo, deActual);
 		for(Object objeto : estructuraProyecto){
 			Object[] obj = (Object[]) objeto;
 			Integer nivel = (obj[3]!=null) ? ((String)obj[3]).length()/8 : 0;

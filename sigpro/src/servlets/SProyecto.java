@@ -796,7 +796,8 @@ public class SProyecto extends HttpServlet {
 		}
 		else if(accion.equals("controlArbolTodosProyectos")){
 			String pusuario = map.get("usuario");
-			ArrayList<Nodo> proyectos = EstructuraProyectoDAO.getEstructuraPrestamosArbol(pusuario);
+			//TODO: deActual
+			ArrayList<Nodo> proyectos = EstructuraProyectoDAO.getEstructuraPrestamosArbol(pusuario, true);
 			Nodo root = new Nodo(0, 0, "", 0, new ArrayList<Nodo>(), null, false);
 			if(proyectos!=null){
 				for(int i=0; i<proyectos.size(); i++){

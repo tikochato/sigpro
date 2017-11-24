@@ -109,7 +109,8 @@ public class SControlAdquisiciones extends HttpServlet {
 			if (accion.equals("generarPlan")){
 				
 				try{
-					List<stcontroladquisiciones> lstprestamo = generarPlan(proyectoId, usuario);
+					//TODO: lineaBase
+					List<stcontroladquisiciones> lstprestamo = generarPlan(proyectoId, null, usuario);
 										
 					response_text=new GsonBuilder().serializeNulls().create().toJson(lstprestamo);
 			        response_text = String.join("", "\"proyecto\":",response_text);
@@ -121,7 +122,8 @@ public class SControlAdquisiciones extends HttpServlet {
 			}else if(accion.equals("exportarExcel")){
 				Integer idPlanAdquisicion = Utils.String2Int(map.get("idPlanAdquisicion"), null);
 				try{ 
-					byte [] outArray = exportarExcel(idPlanAdquisicion, proyectoId, usuario);
+					//TODO: lineaBase
+					byte [] outArray = exportarExcel(idPlanAdquisicion, proyectoId, null, usuario);
 					
 					response.setContentType("application/ms-excel");
 					response.setContentLength(outArray.length);
@@ -138,7 +140,8 @@ public class SControlAdquisiciones extends HttpServlet {
 				String headers[][];
 				String datos[][];
 				headers = generarHeaders();
-				datos = generarDatos(proyectoId, usuario);
+				//TODO: lineaBase
+				datos = generarDatos(proyectoId, null, usuario);
 				String path = archivo.exportarPlanAdquisiciones(headers, datos,usuario);
 				File file=new File(path);
 				if(file.exists()){
@@ -199,10 +202,10 @@ public class SControlAdquisiciones extends HttpServlet {
 		}
 	}
 	
-	private List<stcontroladquisiciones> generarPlan(Integer IdProyecto, String usuario) throws Exception{
+	private List<stcontroladquisiciones> generarPlan(Integer IdProyecto, String lineaBase, String usuario) throws Exception{
 		try{
 			List<stcontroladquisiciones> lstPrestamo = new ArrayList<>();
-			List<?> estruturaProyecto = EstructuraProyectoDAO.getEstructuraProyecto(IdProyecto);
+			List<?> estruturaProyecto = EstructuraProyectoDAO.getEstructuraProyecto(IdProyecto, lineaBase);
 			stcontroladquisiciones temp = null;
 			Integer proyectoId = 0;
 			Integer componenteId = 0;
@@ -333,7 +336,7 @@ public class SControlAdquisiciones extends HttpServlet {
 		tempPrestamo.montoContrato = new BigDecimal(0);
 	}
 		
-	private byte[] exportarExcel(Integer idPlanAdquisicion, Integer idPrestamo, String usuario) throws IOException{
+	private byte[] exportarExcel(Integer idPlanAdquisicion, Integer idPrestamo, String lineaBase, String usuario) throws IOException{
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -343,7 +346,7 @@ public class SControlAdquisiciones extends HttpServlet {
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
 			headers = generarHeaders();
-			datos = generarDatos(idPrestamo, usuario);
+			datos = generarDatos(idPrestamo, lineaBase, usuario);
 			excel = new CExcel("Control de Adquisiciones", false, null);
 			Proyecto proyecto = ProyectoDAO.getProyecto(idPrestamo);
 			wb=excel.generateExcelOfData(datos, "Control de Adquisiciones - "+proyecto.getNombre(), headers, null, true, usuario);
@@ -375,11 +378,11 @@ public class SControlAdquisiciones extends HttpServlet {
 		return headers;
 	}
 	
-	public String[][] generarDatos(Integer idPrestamo, String usuario){
+	public String[][] generarDatos(Integer idPrestamo, String lineaBase, String usuario){
 		String[][] datos = null;
 		List<stcontroladquisiciones> lstprestamo;
 		try {
-			lstprestamo = generarPlan(idPrestamo, usuario);
+			lstprestamo = generarPlan(idPrestamo, lineaBase, usuario);
 			
 			if (lstprestamo != null && !lstprestamo.isEmpty()){ 
 				datos = new String[lstprestamo.size()][17];

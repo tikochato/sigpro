@@ -26,74 +26,95 @@ public class EstructuraProyectoDAO {
 		
 	
 	
-	public static List<?> getEstructuraProyecto(Integer idProyecto){
+	public static List<?> getEstructuraProyecto(Integer idProyecto, String lineaBase){
 		List<?> ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		
 		try{
-
+			String queryVersionP = "";
+			String queryVersionC = "";
+			String queryVersionS = "";
+			String queryVersionPr = "";
+			String queryVersionSp = "";
+			String queryVersionA = "";
+			if(lineaBase==null){
+				queryVersionP = " and p.actual = 1 ";
+				queryVersionC = " and c.actual = 1 ";
+				queryVersionS = " and s.actual = 1 ";
+				queryVersionPr = " and pr.actual = 1 ";
+				queryVersionSp = " and sp.actual = 1 ";
+				queryVersionA = " and a.actual = 1 ";
+			}
 			String query =
 					"select * from ( "+
 					"select p.id, p.nombre, 0 objeto_tipo,  p.treePath, p.fecha_inicio, "+
 					"p.fecha_fin, p.duracion, p.duracion_dimension,p.costo,0, p.acumulacion_costoid,  "+
 					"p.programa, p.subprograma, p.proyecto, p.actividad, p.obra, p.fecha_inicio_real, p.fecha_fin_real,0 porcentaje_avance, 0 objeto_tipo_pred "+
-					"from proyecto p "+
-					"where p.id= ?1 and p.estado=1  "+
+					"from sipro_history.proyecto p "+
+					"where p.id= ?1 and p.estado=1 "+
+					queryVersionP +
 					"union "+
 					"select c.id, c.nombre, 1 objeto_tipo,  c.treePath, c.fecha_inicio, "+
 					"c.fecha_fin , c.duracion, c.duracion_dimension,c.costo,0,c.acumulacion_costoid, "+
 					"c.programa, c.subprograma, c.proyecto, c.actividad, c.obra, c.fecha_inicio_real, c.fecha_fin_real,0 porcentaje_avance, 0 objeto_tipo_pred "+
-					"from componente c "+
+					"from sipro_history.componente c "+
 					"where c.proyectoid=?1 and c.estado=1  "+
+					queryVersionC +
 					"union "+
 					"select s.id, s.nombre, 2 objeto_tipo,  s.treePath, s.fecha_inicio, "+
 					"s.fecha_fin , s.duracion, s.duracion_dimension,s.costo,0,s.acumulacion_costoid, "+
 					"s.programa, s.subprograma, s.proyecto, s.actividad, s.obra, s.fecha_inicio_real, s.fecha_fin_real,0 porcentaje_avance, 0 objeto_tipo_pred "+
-					"from subcomponente s "+
-					"left outer join componente c on c.id=s.componenteid "+
+					"from sipro_history.subcomponente s "+
+					"left outer join sipro_history.componente c on c.id=s.componenteid "+
 					"where c.proyectoid=?1 and s.estado=1 and c.estado=1  "+
+					queryVersionS +
 					"union "+
 					"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
 					"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid, "+
 					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra, pr.fecha_inicio_real, pr.fecha_fin_real,0 porcentaje_avance, 0 objeto_tipo_pred "+
-					"from producto pr "+
-					"left outer join componente c on c.id=pr.componenteid "+
-					"left outer join proyecto p on p.id=c.proyectoid "+
+					"from sipro_history.producto pr "+
+					"left outer join sipro_history.componente c on c.id=pr.componenteid "+
+					"left outer join sipro_history.proyecto p on p.id=c.proyectoid "+
 					"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1   "+
+					queryVersionPr +
 					"union "+
 					"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
 					"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid, "+
 					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra, pr.fecha_inicio_real, pr.fecha_fin_real,0 porcentaje_avance, 0 objeto_tipo_pred "+
-					"from producto pr "+
-					"left outer join subcomponente sc on sc.id=pr.subcomponenteid   "+  
-					"left outer join componente c on c.id = sc.componenteid   "+
-					"left outer join proyecto p on p.id=c.proyectoid   "+  
+					"from sipro_history.producto pr "+
+					"left outer join sipro_history.subcomponente sc on sc.id=pr.subcomponenteid   "+  
+					"left outer join sipro_history.componente c on c.id = sc.componenteid   "+
+					"left outer join sipro_history.proyecto p on p.id=c.proyectoid   "+  
 					"where p.id= ?1 and p.estado=1 and c.estado=1 and sc.estado=1 and pr.estado=1   "+
+					queryVersionPr +
 					"union   "+
 					"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
 					"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid, "+
 					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra, sp.fecha_inicio_real, sp.fecha_fin_real,0 porcentaje_avance, 0 objeto_tipo_pred "+
-					"from subproducto sp "+
-					"left outer join producto pr on pr.id=sp.productoid "+
-					"left outer join componente c on c.id=pr.componenteid "+
-					"left outer join proyecto p on p.id=c.proyectoid "+
+					"from sipro_history.subproducto sp "+
+					"left outer join sipro_history.producto pr on pr.id=sp.productoid "+
+					"left outer join sipro_history.componente c on c.id=pr.componenteid "+
+					"left outer join sipro_history.proyecto p on p.id=c.proyectoid "+
 					"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1 and sp.estado=1 and sp.id  "+
+					queryVersionSp +
 					"union   "+
 					"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
 					"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid, "+
 					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra, sp.fecha_inicio_real, sp.fecha_fin_real,0 porcentaje_avance, 0 objeto_tipo_pred "+
-					"from subproducto sp "+
-					"left outer join producto pr on pr.id=sp.productoid "+
-					"left outer join subcomponente sc on sc.id=pr.subcomponenteid "+
-					"left outer join componente c on c.id=sc.componenteid "+
-					"left outer join proyecto p on p.id=c.proyectoid "+
+					"from sipro_history.subproducto sp "+
+					"left outer join sipro_history.producto pr on pr.id=sp.productoid "+
+					"left outer join sipro_history.subcomponente sc on sc.id=pr.subcomponenteid "+
+					"left outer join sipro_history.componente c on c.id=sc.componenteid "+
+					"left outer join sipro_history.proyecto p on p.id=c.proyectoid "+
 					"where p.id= ?1 and p.estado=1 and c.estado=1 and sc.estado=1 and pr.estado=1 and sp.estado=1 and sp.id  "+
+					queryVersionSp +
 					"union "+
 					"select a.id, a.nombre, 5 objeto_tipo,  a.treePath, a.fecha_inicio, "+
 					"a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id,a.acumulacion_costo acumulacion_costoid, "+
 					"a.programa, a.subprograma, a.proyecto, a.actividad, a.obra, a.fecha_inicio_real, a.fecha_fin_real, a.porcentaje_avance, a.objeto_tipo objeto_tipo_pred "+
-					"from actividad a "+
+					"from sipro_history.actividad a "+
 					"where a.estado=1 and  a.treepath like '"+(10000000+idProyecto)+"%'"+
+					queryVersionA +
 					") arbol "+
 					"order by treePath ";			
 				
@@ -110,28 +131,45 @@ public class EstructuraProyectoDAO {
 		return ret;
 	}
 	
-	public static List<?> getEstructuraProyecto(Integer idProyecto, String usuario){
+	public static List<?> getEstructuraProyecto(Integer idProyecto, String lineaBase, String usuario){
 		List<?> ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		
 		try{
+			String queryVersionP = "";
+			String queryVersionC = "";
+			String queryVersionS = "";
+			String queryVersionPr = "";
+			String queryVersionSp = "";
+			String queryVersionA = "";
+			if(lineaBase==null){
+				queryVersionP = " and p.actual = 1 ";
+				queryVersionC = " and c.actual = 1 ";
+				queryVersionS = " and s.actual = 1 ";
+				queryVersionPr = " and pr.actual = 1 ";
+				queryVersionSp = " and sp.actual = 1 ";
+				queryVersionA = " and a.actual = 1 ";
+			}
 			String query =
 				"select * from ( "+
 				"select p.id, p.nombre, 0 objeto_tipo,  p.treePath, p.fecha_inicio, "+
 				"p.fecha_fin, p.duracion, p.duracion_dimension,p.costo,0, p.acumulacion_costoid  "+
 				"from proyecto p "+
 				"where p.id= ?1 and p.estado=1 and p.id in ( select proyectoid from proyecto_usuario where usuario = ?2 ) "+
+				queryVersionP +
 				"union "+
 				"select c.id, c.nombre, 1 objeto_tipo,  c.treePath, c.fecha_inicio, "+
 				"c.fecha_fin , c.duracion, c.duracion_dimension,c.costo,0,c.acumulacion_costoid "+
 				"from componente c "+
 				"where c.proyectoid=?1 and c.estado=1 and c.id in (select componenteid from componente_usuario where usuario = ?2 ) "+
+				queryVersionC +
 				"union "+
 				"select s.id, s.nombre, 2 objeto_tipo,  s.treePath, s.fecha_inicio, "+
 				"s.fecha_fin , s.duracion, s.duracion_dimension,s.costo,0,s.acumulacion_costoid "+
 				"from subcomponente s "+
 				"left outer join componente c on c.id=s.componenteid "+
 				"where c.proyectoid=?1 and s.estado=1 and c.estado=1 and s.id in (select subcomponenteid from subcomponente_usuario where usuario = ?2 ) "+
+				queryVersionS +
 				"union "+
 				"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
 				"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid "+
@@ -139,6 +177,7 @@ public class EstructuraProyectoDAO {
 				"left outer join componente c on c.id=pr.componenteid "+
 				"left outer join proyecto p on p.id=c.proyectoid "+
 				"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1 and pr.id in ( select productoid from producto_usuario where usuario = ?2 )  "+
+				queryVersionPr +
 				"union "+
 				"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
 				"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid "+
@@ -147,6 +186,7 @@ public class EstructuraProyectoDAO {
 				"left outer join componente c on c.id=s.componenteid "+
 				"left outer join proyecto p on p.id=c.proyectoid "+
 				"where p.id= ?1 and p.estado=1 and c.estado=1 and s.estado=1 and pr.estado=1 and pr.id in ( select productoid from producto_usuario where usuario = ?2 )  "+
+				queryVersionPr +
 				"union "+
 				"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
 				"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid "+
@@ -155,6 +195,7 @@ public class EstructuraProyectoDAO {
 				"left outer join componente c on c.id=pr.componenteid "+
 				"left outer join proyecto p on p.id=c.proyectoid "+
 				"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1 and sp.estado=1 and sp.id and pr.id in ( select productoid from producto_usuario where usuario = ?2 ) "+
+				queryVersionSp +
 				"union "+
 				"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
 				"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid "+
@@ -164,11 +205,13 @@ public class EstructuraProyectoDAO {
 				"left outer join componente c on c.id=sc.componenteid "+
 				"left outer join proyecto p on p.id=c.proyectoid "+
 				"where p.id= ?1 and p.estado=1 and c.estado=1 and sc.estado=1 and pr.estado=1 and sp.estado=1 and sp.id and pr.id in ( select productoid from producto_usuario where usuario = ?2 ) "+
+				queryVersionSp +
 				"union "+
 				"select a.id, a.nombre, 5 objeto_tipo,  a.treePath, a.fecha_inicio, "+
 				"a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id,a.acumulacion_costo acumulacion_costoid "+
 				"from actividad a "+
 				"where a.estado=1 and  a.treepath like '"+(10000000+idProyecto)+"%'"+
+				queryVersionA +
 				") arbol "+
 				"order by treePath ";			
 			
@@ -227,9 +270,9 @@ public class EstructuraProyectoDAO {
 		return root;
 	}
 	
-	public static Nodo getEstructuraProyectoArbolProyectosComponentesProductos(int id,String usuario){
+	public static Nodo getEstructuraProyectoArbolProyectosComponentesProductos(int id, String lineaBase, String usuario){
 		Nodo root = null;
-		List<?> estructuras = EstructuraProyectoDAO.getEstructuraProyecto(id);
+		List<?> estructuras = EstructuraProyectoDAO.getEstructuraProyecto(id, lineaBase);
 		if(estructuras.size()>0){
 			try{
 				Object[] dato = (Object[]) estructuras.get(0);
@@ -272,7 +315,7 @@ public class EstructuraProyectoDAO {
 		return root;
 	}
 	
-	public static Nodo getEstructuraPrestamoProyectoArbolProyectosComponentesProductos(int id,String usuario){
+	public static Nodo getEstructuraPrestamoProyectoArbolProyectosComponentesProductos(int id, String lineaBase, String usuario){
 		Nodo root = null;
 		Prestamo prestamo = PrestamoDAO.getPrestamoById(id);
 		if(prestamo != null){
@@ -288,7 +331,7 @@ public class EstructuraProyectoDAO {
 				Iterator<Proyecto> iterador = proyectos.iterator();
 				while(iterador.hasNext()){
 					Proyecto proyecto = iterador.next();
-					List<?> estructuras = EstructuraProyectoDAO.getEstructuraProyecto(proyecto.getId());
+					List<?> estructuras = EstructuraProyectoDAO.getEstructuraProyecto(proyecto.getId(), lineaBase);
 					
 					if(estructuras.size()>0){
 						try{
@@ -385,12 +428,12 @@ public class EstructuraProyectoDAO {
 		return ret;
 	}
 
-	public static ArrayList<Nodo> getEstructuraProyectosArbol(String usuario) {
+	public static ArrayList<Nodo> getEstructuraProyectosArbol(String usuario, String lineaBase) {
 		ArrayList<Nodo> ret = new ArrayList<Nodo>();
 		List<Proyecto> proyectos = ProyectoDAO.getTodosProyectos();
 		if(proyectos!=null){
 			for(int i=0; i<proyectos.size(); i++){
-				Nodo proyecto = getEstructuraProyectoArbolProyectosComponentesProductos(proyectos.get(i).getId(),usuario);
+				Nodo proyecto = getEstructuraProyectoArbolProyectosComponentesProductos(proyectos.get(i).getId(), lineaBase, usuario);
 				if(proyecto!=null)
 					ret.add(proyecto);
 			}
@@ -398,12 +441,12 @@ public class EstructuraProyectoDAO {
 		return (ret.size()>0 ? ret : null);
 	}
 	
-	public static ArrayList<Nodo> getEstructuraPrestamosArbol(String usuario){
+	public static ArrayList<Nodo> getEstructuraPrestamosArbol(String usuario, String lineaBase){
 		ArrayList<Nodo> ret = new ArrayList<Nodo>();
 		List<Prestamo> prestamos = PrestamoDAO.getPrestamos(null);
 		if(prestamos!= null){
 			for(int i=0; i<prestamos.size(); i++){
-				Nodo prestamo = getEstructuraPrestamoProyectoArbolProyectosComponentesProductos(prestamos.get(i).getId(), usuario);
+				Nodo prestamo = getEstructuraPrestamoProyectoArbolProyectosComponentesProductos(prestamos.get(i).getId(), lineaBase, usuario);
 				if(prestamo!=null)
 					ret.add(prestamo);
 			}
@@ -458,10 +501,10 @@ public class EstructuraProyectoDAO {
 		return ret;
 	}
 	
-	public static ArrayList<ArrayList<Nodo>> getEstructuraProyectoArbolCalculos(int id){
+	public static ArrayList<ArrayList<Nodo>> getEstructuraProyectoArbolCalculos(int id, String lineaBase){
 		ArrayList<ArrayList<Nodo>> ret = new ArrayList<ArrayList<Nodo>>();
 		Nodo root = null;
-		List<?> estructuras = EstructuraProyectoDAO.getEstructuraProyecto(id);
+		List<?> estructuras = EstructuraProyectoDAO.getEstructuraProyecto(id, lineaBase);
 		if(estructuras.size()>0){
 			try{
 				int nivel_maximo = 0;

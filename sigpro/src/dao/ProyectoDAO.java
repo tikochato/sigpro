@@ -534,7 +534,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 	
 	public static boolean calcularCostoyFechas(Integer proyectoId){
 		boolean ret = false;
-		ArrayList<ArrayList<Nodo>> listas = EstructuraProyectoDAO.getEstructuraProyectoArbolCalculos(proyectoId);
+		ArrayList<ArrayList<Nodo>> listas = EstructuraProyectoDAO.getEstructuraProyectoArbolCalculos(proyectoId, null);
 		for(int i=listas.size()-1; i>=0; i--){
 			for(int j=0; j<listas.get(i).size(); j++){
 				Nodo nodo = listas.get(i).get(j);
