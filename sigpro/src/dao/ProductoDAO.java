@@ -293,14 +293,14 @@ public class ProductoDAO {
 		try {
 			String query = String.join(" ", "select t.*"
 					,"from (",
-					"SELECT pr.* FROM producto pr JOIN componente c ON c.id = pr.componenteid "
-					,"JOIN proyecto p ON p.id = c.proyectoid"
+					"SELECT pr.* FROM sipro_history.producto pr JOIN sipro_history.componente c ON c.id = pr.componenteid "
+					,"JOIN sipro_history.proyecto p ON p.id = c.proyectoid"
 					,"where p.id = :idProy"
 					,"UNION"
-					,"SELECT pr.* FROM producto pr" 
-					,"JOIN subcomponente s ON s.id = pr.subcomponenteid" 
-					,"JOIN componente c ON c.id = s.componenteid" 
-					,"JOIN proyecto p ON p.id = c.proyectoid"
+					,"SELECT pr.* FROM sipro_history.producto pr" 
+					,"JOIN sipro_history.subcomponente s ON s.id = pr.subcomponenteid" 
+					,"JOIN sipro_history.componente c ON c.id = s.componenteid" 
+					,"JOIN sipro_history.proyecto p ON p.id = c.proyectoid"
 					,"where p.id = :idProy"
 					,") as t"
 					,usuario!=null && usuario.length()>0 ? 
