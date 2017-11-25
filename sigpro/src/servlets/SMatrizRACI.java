@@ -120,8 +120,8 @@ public class SMatrizRACI extends HttpServlet {
 		if(accion.equals("getMatriz")){
 			List<stmatriz> lstMatriz;
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
-			
-			lstMatriz = getMatriz(idPrestamo);
+			//TODO: lineaBase
+			lstMatriz = getMatriz(idPrestamo, null);
 			boolean sinColaborador = false;
 			List<stcolaborador> stcolaboradores = getColaboradores(idPrestamo, usuario);
 			if (stcolaboradores.size() ==0){
@@ -232,7 +232,8 @@ public class SMatrizRACI extends HttpServlet {
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 			
 			try{
-	        byte [] outArray = exportarExcel(idPrestamo, usuario);
+				//TODO: lineaBase
+	        byte [] outArray = exportarExcel(idPrestamo, null, usuario);
 		
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
@@ -251,7 +252,8 @@ public class SMatrizRACI extends HttpServlet {
 			String datos[][];
 			List<stcolaborador> colaboradores = getColaboradores(idPrestamo, usuario);
 			headers = generarHeaders(colaboradores);
-			datos = generarDatos(idPrestamo, colaboradores, usuario);
+			//TODO: lineaBase
+			datos = generarDatos(idPrestamo, colaboradores, null, usuario);
 			String path = archivo.exportarMatrizRaci(headers, datos,usuario);
 			File file=new File(path);
 			if(file.exists()){
