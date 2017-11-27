@@ -41,8 +41,8 @@ import utilities.CExcel;
 import utilities.CLogger;
 import utilities.Utils;
 
-@WebServlet("/SPlanAdquisiciones")
-public class SPlanAdquisiciones extends HttpServlet {
+@WebServlet("/SReporteFinancieroAdquisiciones")
+public class SReporteFinancieroAdquisiciones extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
 	class stpresupuestoPlan{
@@ -90,7 +90,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 	final int AGRUPACION_SEMESTRE= 5;
 	final int AGRUPACION_ANUAL= 6;
 		
-    public SPlanAdquisiciones() {
+    public SReporteFinancieroAdquisiciones() {
         super();
     }
 
@@ -122,8 +122,8 @@ public class SPlanAdquisiciones extends HttpServlet {
 			
 			if(accion.equals("generarPlan")){
 				try{
-					//TODO: lineaBase
-					List<stcomponenteplanadquisicion> lstprestamo = generarPlan(idPrestamo, usuario, fechaInicio, fechaFin, null);
+					String lineaBase = map.get("lineaBase");
+					List<stcomponenteplanadquisicion> lstprestamo = generarPlan(idPrestamo, usuario, fechaInicio, fechaFin, lineaBase);
 										
 					response_text=new GsonBuilder().serializeNulls().create().toJson(lstprestamo);
 			        response_text = String.join("", "\"proyecto\":",response_text);
@@ -133,14 +133,14 @@ public class SPlanAdquisiciones extends HttpServlet {
 					CLogger.write("2", SControlAdquisiciones.class, e);
 				}
 			}else if(accion.equals("exportarExcel")){
+				String lineaBase = map.get("lineaBase");
 				Integer agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
 				Integer tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
-				//TODO: lineaBase
-				byte [] outArray = exportarExcel(idPrestamo, agrupacion, usuario, fechaInicio, fechaFin, tipoVisualizacion, null);
+				byte [] outArray = exportarExcel(idPrestamo, agrupacion, usuario, fechaInicio, fechaFin, tipoVisualizacion, lineaBase);
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
 				response.setHeader("Cache-Control", "no-cache"); 
-				response.setHeader("Content-Disposition", "attachment; Ejecucion_Presupuestaria.xls");
+				response.setHeader("Content-Disposition", "attachment; Reporte_Financiero_Adquisiciones.xls");
 				ServletOutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
 				outStream.flush();
@@ -157,7 +157,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 	        output.close();
 
 		}catch(Exception e){
-			CLogger.write("1", SPlanAdquisiciones.class, e);
+			CLogger.write("1", SReporteFinancieroAdquisiciones.class, e);
 		}
 	}
 	
@@ -167,7 +167,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 			List<ObjetoCosto> estructuraProyecto = ObjetoDAO.getEstructuraConCosto(idPrestamo, fechaInicial, fechaFinal, true, false, lineaBase, usuario);
 			stcomponenteplanadquisicion temp = null;
 			
-			List<CategoriaAdquisicion> lstCategorias = CategoriaAdquisicionDAO.getCategoriaAdquisicion(); 
+			List<CategoriaAdquisicion> lstCategorias = CategoriaAdquisicionDAO.getCategoriaAdquisicionLB(lineaBase); 
 			List<stcategoria> lsttempCategorias = new ArrayList<stcategoria>();
 			stcategoria tempCategoria = null;
 			for(CategoriaAdquisicion categoria : lstCategorias){
@@ -196,7 +196,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 					List<ObjetoCosto> hijos = EstructuraProyectoDAO.getHijosCompleto(objeto.getTreePath(), estructuraProyecto);
 
 					for(ObjetoCosto objetoHijo : hijos){
-						PlanAdquisicion lstplan = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(objetoHijo.getObjeto_tipo(), objetoHijo.getObjeto_id());
+						PlanAdquisicion lstplan = PlanAdquisicionDAO.getPlanAdquisicionByObjetoLB(objetoHijo.getObjeto_tipo(), objetoHijo.getObjeto_id(), lineaBase);
 						
 						if(lstplan != null){
 							for(stcategoria cat : lsttempCategorias){
@@ -321,13 +321,13 @@ public class SPlanAdquisiciones extends HttpServlet {
 		
 		Workbook wb=null;
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
-		try{			
+		try{
 			headers = generarHeaders(fechaInicial, fechaFinal, agrupacion, tipoVisualizacion);
 			List<stcomponenteplanadquisicion> lstPrestamo = generarPlan(prestamoId, usuario, fechaInicial, fechaFinal, lineaBase);	
 			datosInforme = generarDatosReporte(lstPrestamo, fechaInicial, fechaFinal, agrupacion, tipoVisualizacion, headers[0].length, usuario);
-			excel = new CExcel("Plan de Adquisiciones", false, null);
+			excel = new CExcel("Reporte Financiero de Adquisiciones", false, null);
 			Proyecto proyecto = ProyectoDAO.getProyecto(prestamoId);
-			wb=excel.generateExcelOfData(datosInforme, "Plan de Adquisiciones - "+proyecto.getNombre(), headers, null, true, usuario);
+			wb=excel.generateExcelOfData(datosInforme, "Reporte Financiero de Adquisiciones - "+proyecto.getNombre(), headers, null, true, usuario);
 			wb.write(outByteStream);
 			outByteStream.close();
 			outArray = Base64.encode(outByteStream.toByteArray());

@@ -560,5 +560,30 @@ public class ComponenteDAO {
 		return ret;
 	}
 	
+	public static List<Componente> getComponentesPorProyectoHistory(Integer proyectoId,String lineaBase){
+		List<Componente> ret = new ArrayList<Componente>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "select * ", 
+					"from sipro_history.componente c ",
+					"where c.estado = 1 ",
+					"and proyectoid = ?1 ",
+					lineaBase != null ? "and c.linea_base = ?2" : "and c.actual = 1",
+							"order by c.id desc");
+			Query<Componente> criteria = session.createNativeQuery(query, Componente.class);
+			criteria.setParameter(1, proyectoId);
+			if (lineaBase != null)
+				criteria.setParameter(2, lineaBase);
+			ret =   criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("19", ComponenteDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
 	
 }

@@ -188,7 +188,7 @@ public class SMatrizRACI extends HttpServlet {
 			break;
 			}
 			
-			AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(objetoId, objetoTipo, rol);
+			AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(objetoId, objetoTipo, rol, null);
 			
 			if (rol.equalsIgnoreCase("R")){
 				informacion.rol = "Responsable";
@@ -214,7 +214,7 @@ public class SMatrizRACI extends HttpServlet {
 		}else if  (accion.equals("getAsignacionPorObjeto")){
 			Integer objetoId = Utils.String2Int(map.get("objetoId"),0);
 			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"),0);
-			List<AsignacionRaci> asignaciones  = AsignacionRaciDAO.getAsignacionesRaci(objetoId, objetoTipo);
+			List<AsignacionRaci> asignaciones  = AsignacionRaciDAO.getAsignacionesRaci(objetoId, objetoTipo, null);
 			List<stasignacion> asignacionesRet = new ArrayList<>();
 			for (AsignacionRaci asignacion : asignaciones){
 				stasignacion temp = new stasignacion();
@@ -334,7 +334,7 @@ public class SMatrizRACI extends HttpServlet {
 		Proyecto proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
 		
 		if(proyecto != null){
-			List<Colaborador> colaboradores = AsignacionRaciDAO.getColaboradoresPorProyecto(idPrestamo);
+			List<Colaborador> colaboradores = AsignacionRaciDAO.getColaboradoresPorProyecto(idPrestamo, null);
 			stcolaboradores = new ArrayList<stcolaborador>();
 			for (Colaborador colaborador : colaboradores){
 				stcolaborador temp = new stcolaborador();
@@ -348,7 +348,7 @@ public class SMatrizRACI extends HttpServlet {
 	}
 	
 	public void getAsignacionRACI(stmatriz item){
-		List<AsignacionRaci> asignaciones = AsignacionRaciDAO.getAsignacionesRaci(item.objetoId,item.objetoTipo);
+		List<AsignacionRaci> asignaciones = AsignacionRaciDAO.getAsignacionesRaci(item.objetoId,item.objetoTipo, null);
 		if (!asignaciones.isEmpty()){
 			for (AsignacionRaci asignacion: asignaciones){
 				

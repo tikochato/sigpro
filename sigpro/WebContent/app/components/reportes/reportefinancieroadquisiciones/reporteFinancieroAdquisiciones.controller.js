@@ -1,5 +1,5 @@
-var app = angular.module('planAdquisicionesController',['ngTouch','ngAnimate']);
-app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http','$window', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q',
+var app = angular.module('reporteFinancieroAdquisicionesController',['ngTouch','ngAnimate']);
+app.controller('reporteFinancieroAdquisicionesController', [ '$scope', '$rootScope', '$http','$window', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q',
 	function($scope, $rootScope, $http, $window, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q){
 		var mi = this;
 		mi.tooltipObjetoTipo = [$rootScope.etiquetas.proyecto,"Componente","Subcomponente","Producto","Sub Producto","Actividad"];
@@ -199,7 +199,7 @@ app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http',
 				mi.mostrarTablas = false;
 				mi.mostrarDescargar = false;
 				mi.idPrestamo = mi.pepId;
-				$http.post('/SPlanAdquisiciones',{
+				$http.post('/SReporteFinancieroAdquisiciones',{
 					accion: 'generarPlan',
 					idPrestamo: mi.idPrestamo,
 					fechaInicio: mi.fechaInicio,
@@ -641,7 +641,7 @@ app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http',
         $scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
 
 		mi.exportarExcel = function(){
-			$http.post('/SPlanAdquisiciones', { 
+			$http.post('/SReporteFinancieroAdquisiciones', { 
 				accion: 'exportarExcel', 
 				agrupacion: mi.agrupacionActual,
 				fechaInicio: mi.fechaInicio,
@@ -655,7 +655,7 @@ app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http',
 					anchor.attr({
 						href: 'data:application/ms-excel;base64,' + response.data,
 						target: '_blank',
-						download: 'PlanDeAdquisiciones.xls'
+						download: 'ReporteFinancieroAdquisiciones.xls'
 					})[0].click();
 				}.bind(this), function errorCallback(response){ }
 			);

@@ -950,7 +950,7 @@ public class SProducto extends HttpServlet {
 				
 		}else if (accion.equals("getProductoPorProyecto")) {
 			Integer idProyecto = Utils.String2Int(parametro.get("idProyecto"));
-			List<Producto> productos = ProductoDAO.getProductosPorProyecto(idProyecto, usuario);
+			List<Producto> productos = ProductoDAO.getProductosPorProyecto(idProyecto, usuario,null);
 			
 			List<stproducto> stproductos=new ArrayList<stproducto>();
 			

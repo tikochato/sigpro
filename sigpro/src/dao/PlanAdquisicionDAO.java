@@ -295,4 +295,54 @@ public class PlanAdquisicionDAO {
 		return ret;
 	}
 	
+	
+	public static List<PlanAdquisicion> getPlanAdquisicionesByObjetoLB(int objetoTipo, int ObjetoId, String lineaBase){
+		List<PlanAdquisicion> retList = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		
+		try{
+			String query = String.join(" ", "SELECT pa.* FROM sipro_history.plan_adquisicion pa",
+					"where pa.objeto_id=:objetoId",
+					"and pa.objeto_tipo=:objetoTipo",
+					lineaBase != null ? "and pa.linea_base="+lineaBase : "and pa.actual=1",
+					"and pa.estado=1");
+			Query<PlanAdquisicion> criteria = session.createNativeQuery(query, PlanAdquisicion.class);
+			criteria.setParameter("objetoId", ObjetoId);
+			criteria.setParameter("objetoTipo", objetoTipo);
+			retList = criteria.getResultList();
+			
+		}catch(Throwable e){
+			CLogger.write("4", PlanAdquisicionDAO.class, e);
+		}
+		finally{
+			session.close();
+			retList = (retList.size()>0) ? retList : null;
+		}
+		return retList;
+	}
+	
+	public static PlanAdquisicion getPlanAdquisicionByObjetoLB(int objetoTipo, int ObjetoId, String lineaBase){
+		List<PlanAdquisicion> retList = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		
+		try{
+			String query = String.join(" ", "SELECT pa.* FROM sipro_history.plan_adquisicion pa",
+					"where pa.objeto_id=:objetoId",
+					"and pa.objeto_tipo=:objetoTipo",
+					lineaBase != null ? "and pa.lineaBase="+lineaBase : "and pa.actual=1",
+					"and pa.estado=1");
+			Query<PlanAdquisicion> criteria = session.createNativeQuery(query, PlanAdquisicion.class);
+			criteria.setParameter("objetoId", ObjetoId);
+			criteria.setParameter("objetoTipo", objetoTipo);
+			retList = criteria.getResultList();
+			
+		}catch(Throwable e){
+			CLogger.write("3", PlanAdquisicionDAO.class, e);
+		}
+		finally{
+			retList = (retList.size()>0) ? retList : null;
+			session.close();
+		}
+		return retList!=null ? retList.get(0) : null;
+	}
 }

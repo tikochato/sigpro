@@ -119,20 +119,20 @@ public class SGestionAdquisiciones extends HttpServlet {
 		
 		if(accion.equals("generarGestion")){
 			try {
-				//TODO: lineaBase
-				List<stcomponentegestionadquisicion> lstprestamo = generarPlan(idPrestamo, usuario, fechaInicio, fechaFin, null);
+				String lineaBase = map.get("lineaBase");
+				List<stcomponentegestionadquisicion> lstprestamo = generarPlan(idPrestamo, usuario, fechaInicio, fechaFin, lineaBase);
 				
 				response_text=new GsonBuilder().serializeNulls().create().toJson(lstprestamo);
 		        response_text = String.join("", "\"proyecto\":",response_text);
 		        response_text = String.join("", "{\"success\":true,", response_text, "}");
 			} catch (Exception e) {
-				CLogger.write("1", SPlanAdquisiciones.class, e);
+				CLogger.write("1", SReporteFinancieroAdquisiciones.class, e);
 			}
 		}else if(accion.equals("exportarExcel")){
 			Integer agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
 			Integer tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
-			//TODO: lineaBase
-			byte [] outArray = exportarExcel(idPrestamo, agrupacion, usuario, fechaInicio, fechaFin, tipoVisualizacion, null);
+			String lineaBase = map.get("lineaBase");
+			byte [] outArray = exportarExcel(idPrestamo, agrupacion, usuario, fechaInicio, fechaFin, tipoVisualizacion, lineaBase);
 			response.setContentType("application/ms-excel");
 			response.setContentLength(outArray.length);
 			response.setHeader("Cache-Control", "no-cache"); 
@@ -381,7 +381,7 @@ public class SGestionAdquisiciones extends HttpServlet {
 			List<ObjetoCosto> estructuraProyecto = ObjetoDAO.getEstructuraConCosto(idPrestamo, fechaInicial, fechaFinal, true, false, lineaBase, usuario);
 			stcomponentegestionadquisicion temp = null;
 			
-			List<CategoriaAdquisicion> lstCategorias = CategoriaAdquisicionDAO.getCategoriaAdquisicion(); 
+			List<CategoriaAdquisicion> lstCategorias = CategoriaAdquisicionDAO.getCategoriaAdquisicionLB(lineaBase); 
 			List<stcategoriaG> lsttempCategorias = new ArrayList<stcategoriaG>();
 			stcategoriaG tempCategoria = null;
 			for(CategoriaAdquisicion categoria : lstCategorias){
@@ -398,7 +398,7 @@ public class SGestionAdquisiciones extends HttpServlet {
 				temp.cantidadAdquisiciones = 0;
 				for(ObjetoCosto objeto: estructuraProyecto){
 					if(objeto.getObjeto_tipo() == 3 || objeto.getObjeto_tipo() == 4 || objeto.getObjeto_tipo() == 5){
-						PlanAdquisicion lstplan = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(objeto.getObjeto_tipo(), objeto.getObjeto_id());
+						PlanAdquisicion lstplan = PlanAdquisicionDAO.getPlanAdquisicionByObjetoLB(objeto.getObjeto_tipo(), objeto.getObjeto_id(), lineaBase);
 						if(lstplan != null){
 							if(cat.categoriaId==lstplan.getCategoriaAdquisicion().getId()){
 								temp.cantidadAdquisiciones++;

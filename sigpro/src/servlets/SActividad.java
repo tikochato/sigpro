@@ -354,7 +354,7 @@ public class SActividad extends HttpServlet {
 					result = ActividadDAO.guardarActividad(actividad, true);
 					
 					if (result){
-						List<AsignacionRaci> asignaciones_temp = AsignacionRaciDAO.getAsignacionPorTarea(actividad.getId(), 5);
+						List<AsignacionRaci> asignaciones_temp = AsignacionRaciDAO.getAsignacionPorTarea(actividad.getId(), 5, null);
 						
 						if (asignaciones_temp!=null){
 							for (AsignacionRaci asign : asignaciones_temp){

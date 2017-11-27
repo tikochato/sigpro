@@ -233,7 +233,7 @@ public class SControlAdquisiciones extends HttpServlet {
 							
 							temp.hijos = EstructuraProyectoDAO.getHijos((String)obj[3], estruturaProyecto);
 							
-							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionesByObjeto(temp.objetoTipo, proyectoId);
+							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionesByObjetoLB(temp.objetoTipo, proyectoId, lineaBase);
 							break;
 						case 2:
 							temp.objetoPredecesorTipo = 1;
@@ -242,7 +242,7 @@ public class SControlAdquisiciones extends HttpServlet {
 							
 							temp.hijos = EstructuraProyectoDAO.getHijos((String)obj[3], estruturaProyecto);
 							
-							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionesByObjeto(temp.objetoTipo, componenteId);
+							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionesByObjetoLB(temp.objetoTipo, componenteId, lineaBase);
 						break;
 						case 3:
 							temp.objetoPredecesorTipo = 2;
@@ -251,7 +251,7 @@ public class SControlAdquisiciones extends HttpServlet {
 							
 							temp.hijos = EstructuraProyectoDAO.getHijos((String)obj[3], estruturaProyecto);
 							
-							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionesByObjeto(temp.objetoTipo, productoId);
+							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionesByObjetoLB(temp.objetoTipo, productoId, lineaBase);
 						break;
 						case 4:
 							temp.objetoPredecesorTipo = 3;
@@ -259,7 +259,7 @@ public class SControlAdquisiciones extends HttpServlet {
 							temp.hijos = EstructuraProyectoDAO.getHijos((String)obj[3], estruturaProyecto);
 							subProductoId = temp.objetoId;
 							
-							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionesByObjeto(temp.objetoTipo, subProductoId);
+							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionesByObjetoLB(temp.objetoTipo, subProductoId, lineaBase);
 						break;
 						case 5:
 							Actividad actividad = ActividadDAO.getActividadPorId(temp.objetoId);
@@ -269,7 +269,7 @@ public class SControlAdquisiciones extends HttpServlet {
 								temp.hijos = EstructuraProyectoDAO.getHijos((String)obj[3], estruturaProyecto);
 								actividadId = temp.objetoId;
 								
-								adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionesByObjeto(temp.objetoTipo, actividadId);
+								adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionesByObjetoLB(temp.objetoTipo, actividadId, lineaBase);
 							}
 						break;
 					}

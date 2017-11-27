@@ -382,7 +382,7 @@ public class EstructuraProyectoDAO {
 		return root;
 	}
 	
-	public static List<?> getActividadesProyecto(Integer prestamoId){
+	public static List<?> getActividadesProyecto(Integer prestamoId, String lineaBase){
 		List<?> ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -390,7 +390,8 @@ public class EstructuraProyectoDAO {
 					"a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id,a.acumulacion_costo acumulacion_costoid,",
 					"a.porcentaje_avance", 
 					"from sipro_history.actividad a", 
-					"where a.estado=1 and a.treepath like '"+(10000000+prestamoId)+"%' and a.actual=1");
+					"where a.estado=1 and a.treepath like '"+(10000000+prestamoId)+"%'",
+					lineaBase != null ? "and a.linea_base=" + lineaBase : "and a.actual=1");
 			
 			Query<?> criteria = session.createNativeQuery(str_Query);			
 			ret = criteria.getResultList();
@@ -403,11 +404,11 @@ public class EstructuraProyectoDAO {
 		return ret;
 	}
 	
-	public static List<?> getActividadesByTreePath(String treePath, Integer idPrestamo){
+	public static List<?> getActividadesByTreePath(String treePath, Integer idPrestamo, String lineaBase){
 		List<Object[]> ret = new ArrayList<Object[]>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			List<?> lstActividadesPrestamo = getActividadesProyecto(idPrestamo);
+			List<?> lstActividadesPrestamo = getActividadesProyecto(idPrestamo, lineaBase);
 			Object[] temp = new Object[5];
 			for(Object objeto : lstActividadesPrestamo){
 				Object[] obj = (Object[])objeto;

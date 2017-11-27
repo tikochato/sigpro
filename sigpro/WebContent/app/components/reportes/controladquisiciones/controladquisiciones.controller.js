@@ -197,7 +197,7 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 	mi.exportarExcel = function(){
 		$http.post('/SControlAdquisiciones', { 
 			 accion: 'exportarExcel', 
-			 idPrestamo: mi.idPrestamo,
+			 proyectoId: mi.pepId,
 			 informeCompleto: mi.informeCompleto,			 
 			 t:moment().unix()
 		  } ).then(

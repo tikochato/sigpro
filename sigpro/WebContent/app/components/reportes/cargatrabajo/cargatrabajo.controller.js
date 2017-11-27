@@ -367,17 +367,14 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 										
 										var aniotemp=0;
 										for (x in mi.actividadesterminadas ){
-											
-											
 											if (x > 0 ){
 												var sigueinteMes = mi.obtenerSiguienteMes(mestemp,aniotemp);
-												while (sigueinteMes.mes < mi.actividadesterminadas[x].mes 
-														|| sigueinteMes.anio < mi.actividadesterminadas[x].anio){
+												while (sigueinteMes.mes < mi.actividadesterminadas[x].mes || sigueinteMes.anio < mi.actividadesterminadas[x].anio){
 													mi.dataChartLine.push(0);
 													mi.etiquetasChartLine.push (mi.obtenerMes(sigueinteMes.mes) + 
 															(mi.fechaInicio != mi.fechaFin ? "-" + sigueinteMes.anio : ""));
 													
-						sigueinteMes = mi.obtenerSiguienteMes(sigueinteMes.mes,sigueinteMes.anio);	
+													sigueinteMes = mi.obtenerSiguienteMes(sigueinteMes.mes,sigueinteMes.anio);	
 												}
 											}
 											mi.dataChartLine.push(mi.actividadesterminadas[x].total)

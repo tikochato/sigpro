@@ -156,9 +156,9 @@ public class SCargaTrabajo extends HttpServlet {
 				Integer anio_inicio = Utils.String2Int(map.get("anio_inicio"));
 				Integer anio_fin = Utils.String2Int(map.get("anio_fin"));
 				Integer idPrestamos = Utils.String2Int(map.get("idPrestamos"));
-				
+				String lineaBase = map.get("lineaBase");
 								
-				List<stcargatrabajo> cargas = getCargaTrabajoPrestamo(idPrestamos,  anio_inicio, anio_fin);
+				List<stcargatrabajo> cargas = getCargaTrabajoPrestamo(idPrestamos,  anio_inicio, anio_fin, lineaBase);
 				
 				response_text=new GsonBuilder().serializeNulls().create().toJson(cargas);
 		        response_text = String.join("", "\"cargatrabajo\":",response_text);
@@ -166,15 +166,10 @@ public class SCargaTrabajo extends HttpServlet {
 			}else if(accion.equals("getActividadesTerminadas")){
 				Integer anio_inicio = Utils.String2Int(map.get("anio_inicio"));
 				Integer anio_fin = Utils.String2Int(map.get("anio_fin"));
-				String idPrestamos = map.get("idPrestamos") != null && map.get("idPrestamos").length() > 0? map.get("idPrestamos") : "0";
-				String idComponentes = map.get("idComponentes") != null && map.get("idComponentes").length() > 0 ? map.get("idComponentes") : "0";
-				String idSubComponentes = map.get("idSubComponentes") != null && map.get("idSubComponentes").length() > 0 ? map.get("idSubComponentes") : "0";
-				String idProductos = map.get("idProductos") != null && map.get("idProductos").length() > 0 ? map.get("idProductos") : "0";
-				String idSubproductos = map.get("idSubproductos") != null && map.get("idSubproductos").length() > 0 ? map.get("idSubproductos") : "0";
+				Integer proyectoId = map.get("idPrestamos") != null && map.get("idPrestamos").length() > 0? Utils.String2Int(map.get("idPrestamos")) : 0;
 				Integer colaboradorId = Utils.String2Int(map.get("colaboradorid"));
 							
-				List<?> objActividades =ActividadDAO.getActividadesTerminadas(idPrestamos, idComponentes, idSubComponentes, idProductos,
-						idSubproductos, colaboradorId, anio_inicio, anio_fin);
+				List<?> objActividades =ActividadDAO.getActividadesTerminadas(proyectoId, colaboradorId, anio_inicio, anio_fin, null);
 				
 				List<stactividadterminada> actividadesTerminadas = new ArrayList<>();
 				if (objActividades!=null && objActividades.size() > 0)
@@ -280,7 +275,7 @@ public class SCargaTrabajo extends HttpServlet {
 					}
 			}else if (accion.equals("getResponsables")){
 				Integer proyectoId = Utils.String2Int(map.get("idPrestamo"));
-				List<Colaborador> colaboradores = AsignacionRaciDAO.getColaboradoresPorProyecto(proyectoId);
+				List<Colaborador> colaboradores = AsignacionRaciDAO.getColaboradoresPorProyecto(proyectoId, null);
 				List<stcolaborador> stcolaboradores = new ArrayList<>();
 				for (Colaborador c : colaboradores){
 					stcolaborador temp = new stcolaborador();
@@ -297,12 +292,13 @@ public class SCargaTrabajo extends HttpServlet {
 					Integer anio_inicio = Utils.String2Int(map.get("anio_inicio"));
 					Integer anio_fin = Utils.String2Int(map.get("anio_fin"));
 					Integer idPrestamos = Utils.String2Int(map.get("idPrestamos"));
+					String lineaBase = map.get("lineaBase");
 					String idComponentes = map.get("idComponentes") != null && map.get("idComponentes").length() > 0 ? map.get("idComponentes") : "0";
 					String idSubComponentes = map.get("idSubComponentes") != null && map.get("idSubComponentes").length() > 0 ? map.get("idSubComponentes") : "0";
 					String idProductos = map.get("idProductos") != null && map.get("idProductos").length() > 0 ? map.get("idProductos") : "0";
 					String idSubproductos = map.get("idSubproductos") != null && map.get("idSubproductos").length() > 0 ? map.get("idSubproductos") : "0";
 					
-			        byte [] outArray = exportarExcel(idPrestamos, idComponentes, idSubComponentes, idProductos, idSubproductos, anio_inicio, anio_fin, usuario);
+			        byte [] outArray = exportarExcel(idPrestamos, idComponentes, idSubComponentes, idProductos, idSubproductos, anio_inicio, anio_fin, usuario, lineaBase);
 				
 					response.setContentType("application/ms-excel");
 					response.setContentLength(outArray.length);
@@ -319,6 +315,7 @@ public class SCargaTrabajo extends HttpServlet {
 				Integer anio_inicio = Utils.String2Int(map.get("anio_inicio"));
 				Integer anio_fin = Utils.String2Int(map.get("anio_fin"));
 				Integer idPrestamos = Utils.String2Int(map.get("idPrestamos"));
+				String lineaBase = map.get("lineaBase");
 				String idComponentes = map.get("idComponentes") != null && map.get("idComponentes").length() > 0 ? map.get("idComponentes") : "0";
 				String idSubComponentes = map.get("idSubComponentes") != null && map.get("idSubComponentes").length() > 0 ? map.get("idSubComponentes") : "0";
 				String idProductos = map.get("idProductos") != null && map.get("idProductos").length() > 0 ? map.get("idProductos") : "0";
@@ -326,7 +323,7 @@ public class SCargaTrabajo extends HttpServlet {
 				String headers[][];
 				String datos[][];
 				headers = generarHeaders();
-				datos = generarDatos(idPrestamos, idComponentes, idSubComponentes, idProductos, idSubproductos, anio_inicio, anio_fin, usuario);
+				datos = generarDatos(idPrestamos, idComponentes, idSubComponentes, idProductos, idSubproductos, anio_inicio, anio_fin, usuario, lineaBase);
 				String path = archivo.ExportarPdfCargaTrabajo(headers, datos,usuario);
 				File file=new File(path);
 				if(file.exists()){
@@ -426,15 +423,15 @@ public class SCargaTrabajo extends HttpServlet {
 		}
 	}
 	
-	private List<stcargatrabajo> getCargaTrabajoPrestamo(Integer idPrestamos,  Integer anio_inicio, Integer anio_fin){
-		List<Actividad> actividades = ActividadDAO.getActividadsPorObjetos
-				(idPrestamos, anio_inicio,anio_fin);
+	private List<stcargatrabajo> getCargaTrabajoPrestamo(Integer idPrestamos,  Integer anio_inicio, Integer anio_fin, String lineaBase){
+		
+		List<Actividad> actividades = ActividadDAO.getActividadsPorObjetos(idPrestamos, anio_inicio,anio_fin, lineaBase);
 		
 		List<stcargatrabajo> cargas = new ArrayList<stcargatrabajo>();
 		
 		for(Actividad actividad : actividades){
 				
-				Colaborador colaborador = AsignacionRaciDAO.getResponsablePorRol(actividad.getId(), 5, "r");
+				Colaborador colaborador = AsignacionRaciDAO.getResponsablePorRol(actividad.getId(), 5, "r", null);
 								
 				Date hoy = new Date();
 				Date siguienteSemana = sumarDiasFecha(hoy, 7);
@@ -523,7 +520,7 @@ public class SCargaTrabajo extends HttpServlet {
 		}
 	}
 	
-	private byte[] exportarExcel(Integer idPrestamos, String idComponentes, String idSubComponentes, String idProductos, String idSubproductos, Integer anio_inicio, Integer anio_fin, String usuario) throws IOException{
+	private byte[] exportarExcel(Integer idPrestamos, String idComponentes, String idSubComponentes, String idProductos, String idSubproductos, Integer anio_inicio, Integer anio_fin, String usuario, String lineaBase) throws IOException{
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -533,7 +530,7 @@ public class SCargaTrabajo extends HttpServlet {
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
 			headers = generarHeaders();
-			datos = generarDatos(idPrestamos, idComponentes, idSubComponentes, idProductos, idSubproductos, anio_inicio, anio_fin, usuario);
+			datos = generarDatos(idPrestamos, idComponentes, idSubComponentes, idProductos, idSubproductos, anio_inicio, anio_fin, usuario, lineaBase);
 			CGraficaExcel grafica = generarGrafica(datos);
 			excel = new CExcel("Carga de Trabajo", false, grafica);
 			Proyecto proyecto = ProyectoDAO.getProyecto(idPrestamos);
@@ -563,8 +560,8 @@ public class SCargaTrabajo extends HttpServlet {
 		return headers;
 	}
 	
-	public String[][] generarDatos(Integer idPrestamos, String idComponentes, String idSubComponentes, String idProductos, String idSubproductos, Integer anio_inicio, Integer anio_fin, String usuario){
-		List<stcargatrabajo> cargas = getCargaTrabajoPrestamo(idPrestamos, anio_inicio, anio_fin);
+	public String[][] generarDatos(Integer idPrestamos, String idComponentes, String idSubComponentes, String idProductos, String idSubproductos, Integer anio_inicio, Integer anio_fin, String usuario, String lineaBase){
+		List<stcargatrabajo> cargas = getCargaTrabajoPrestamo(idPrestamos, anio_inicio, anio_fin, lineaBase);
 		String[][] datos = null;
 		
 		if (cargas != null && !cargas.isEmpty()){ 
