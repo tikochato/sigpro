@@ -5,10 +5,7 @@
 	<nav ng-class="{'showbar' : !hidebar, 'hidebar': hidebar}" class="navbar navbar-inverse navbar-fixed-top">
 		<script type="text/javascript">
 		</script>
-		<div class="" style="float:left;margin-top: 1px;background-color:white; margin-right:10px;">
-			<img src="/assets/img/marcas/Logo_BID.png" alt="BID" width="65" height="51">
-		</div>
-	    <div class="container">
+		<div class="container">
 	    
 	        <input type="checkbox" id="navbar-toggle-cbox" />	       
 	        <div class="navbar-header">
