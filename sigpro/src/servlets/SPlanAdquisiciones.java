@@ -122,7 +122,8 @@ public class SPlanAdquisiciones extends HttpServlet {
 			
 			if(accion.equals("generarPlan")){
 				try{
-					List<stcomponenteplanadquisicion> lstprestamo = generarPlan(idPrestamo, usuario, fechaInicio, fechaFin);
+					//TODO: lineaBase
+					List<stcomponenteplanadquisicion> lstprestamo = generarPlan(idPrestamo, usuario, fechaInicio, fechaFin, null);
 										
 					response_text=new GsonBuilder().serializeNulls().create().toJson(lstprestamo);
 			        response_text = String.join("", "\"proyecto\":",response_text);
@@ -134,7 +135,8 @@ public class SPlanAdquisiciones extends HttpServlet {
 			}else if(accion.equals("exportarExcel")){
 				Integer agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
 				Integer tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
-				byte [] outArray = exportarExcel(idPrestamo, agrupacion, usuario, fechaInicio, fechaFin, tipoVisualizacion);
+				//TODO: lineaBase
+				byte [] outArray = exportarExcel(idPrestamo, agrupacion, usuario, fechaInicio, fechaFin, tipoVisualizacion, null);
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
 				response.setHeader("Cache-Control", "no-cache"); 
@@ -159,10 +161,10 @@ public class SPlanAdquisiciones extends HttpServlet {
 		}
 	}
 	
-	private List<stcomponenteplanadquisicion> generarPlan(Integer idPrestamo, String usuario, Integer fechaInicial, Integer fechaFinal) throws Exception{
+	private List<stcomponenteplanadquisicion> generarPlan(Integer idPrestamo, String usuario, Integer fechaInicial, Integer fechaFinal, String lineaBase) throws Exception{
 		try{
 			List<stcomponenteplanadquisicion> lstPrestamo = new ArrayList<>();
-			List<ObjetoCosto> estructuraProyecto = ObjetoDAO.getEstructuraConCosto(idPrestamo, fechaInicial, fechaFinal, true, false, usuario);
+			List<ObjetoCosto> estructuraProyecto = ObjetoDAO.getEstructuraConCosto(idPrestamo, fechaInicial, fechaFinal, true, false, lineaBase, usuario);
 			stcomponenteplanadquisicion temp = null;
 			
 			List<CategoriaAdquisicion> lstCategorias = CategoriaAdquisicionDAO.getCategoriaAdquisicion(); 
@@ -311,7 +313,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 		return anios;
 	}
 	
-	private byte[] exportarExcel(int prestamoId, int agrupacion, String usuario, Integer fechaInicial, Integer fechaFinal, Integer tipoVisualizacion){
+	private byte[] exportarExcel(int prestamoId, int agrupacion, String usuario, Integer fechaInicial, Integer fechaFinal, Integer tipoVisualizacion, String lineaBase){
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -321,7 +323,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
 			headers = generarHeaders(fechaInicial, fechaFinal, agrupacion, tipoVisualizacion);
-			List<stcomponenteplanadquisicion> lstPrestamo = generarPlan(prestamoId, usuario, fechaInicial, fechaFinal);	
+			List<stcomponenteplanadquisicion> lstPrestamo = generarPlan(prestamoId, usuario, fechaInicial, fechaFinal, lineaBase);	
 			datosInforme = generarDatosReporte(lstPrestamo, fechaInicial, fechaFinal, agrupacion, tipoVisualizacion, headers[0].length, usuario);
 			excel = new CExcel("Plan de Adquisiciones", false, null);
 			Proyecto proyecto = ProyectoDAO.getProyecto(prestamoId);

@@ -646,7 +646,7 @@ public class InformacionPresupuestariaDAO {
 		return result;
 	}
     
-    public static JasperPrint generarJasper(Integer proyectoId, Integer anio, String usuario) throws JRException, SQLException{
+    public static JasperPrint generarJasper(Integer proyectoId, Integer anio, String lineaBase, String usuario) throws JRException, SQLException{
 		JasperPrint jasperPrint = null;
 		Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
 		if (proyecto!=null){
@@ -654,7 +654,7 @@ public class InformacionPresupuestariaDAO {
 			parameters.put("proyectoId",proyectoId);
 			parameters.put("usuario",usuario);
 			
-			List<ObjetoCostoJasper> listadoCostos = ObjetoDAO.getEstructuraConCostoJasper(proyectoId, anio, anio, usuario);
+			List<ObjetoCostoJasper> listadoCostos = ObjetoDAO.getEstructuraConCostoJasper(proyectoId, anio, anio, usuario, lineaBase);
 			
 			parameters.put("costos",listadoCostos);
 			jasperPrint = CJasperReport.reporteJasperPrint(CJasperReport.PLANTILLA_EJECUCIONFINANCIERA, parameters);

@@ -28,6 +28,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 		
 		mi.lprestamos = [];
 		
+		$window.document.title = $utilidades.sistema_nombre+' - Ejecución Presupuestaria';
 		
 		$http.post('/SPrestamo', {accion: 'getPrestamos', t: (new Date()).getTime()}).then(
 			function(response){
