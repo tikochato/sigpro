@@ -334,4 +334,33 @@ public class MetaDAO {
 		}
 		return ret;
 	}
+	
+	public static List<Meta> getMetasObjetoHistoria(int id, int tipo, String lineaBase){
+		List<Meta> ret = new ArrayList<Meta>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "SELECT id, nombre, descripcion, usuario_creo, usuario_actualizo, fecha_creacion, fecha_actualizacion, "
+					+ "estado, meta_unidad_medidaid, dato_tipoid, objeto_id, objeto_tipo, meta_final_entero, meta_final_string, "
+					+ "meta_final_decimal, meta_final_fecha "
+					+ "FROM sipro_history.meta m "
+					+ "WHERE m.estado = 1 and m.objeto_id=?1 "
+					+ "AND m.objeto_tipo=?2 "
+					+" and m.objeto_id > 0 ";
+			
+			query += lineaBase==null ? " and m.actual = 1 " : "";
+			
+			Query<Meta> metavalor = session.createNativeQuery(query,Meta.class);
+			metavalor.setParameter("1", id);
+			metavalor.setParameter("2", tipo);
+			
+			ret =  metavalor.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("15", MetaDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 }

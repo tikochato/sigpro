@@ -236,7 +236,7 @@ public class SPrestamoMetas extends HttpServlet {
 					tempPrestamo = getMetas(metaValores, anioInicial, anioFinal, tempPrestamo);
 					lstPrestamo.add(tempPrestamo);
 					if(tempPrestamo.objeto_tipo == 3){
-						List<Meta> metas = MetaDAO.getMetasObjeto(tempPrestamo.objeto_id, tempPrestamo.objeto_tipo);
+						List<Meta> metas = MetaDAO.getMetasObjetoHistoria(tempPrestamo.objeto_id, tempPrestamo.objeto_tipo, lineaBase);
 						if(metas!=null){
 							Iterator<Meta> iterator = metas.iterator();
 				    	    while(iterator.hasNext()) {
@@ -255,9 +255,9 @@ public class SPrestamoMetas extends HttpServlet {
 									}else if(meta.getDatoTipo()!=null && meta.getDatoTipo().getId().equals(3)){
 										tempMeta.metaFinal = meta.getMetaFinalDecimal();
 									}
-									tempMeta.porcentajeAvance = PrestamoMetasDAO.getPorcentajeAvanceMeta(meta);
+									tempMeta.porcentajeAvance = PrestamoMetasDAO.getPorcentajeAvanceMeta(meta, lineaBase);
 									metaValores = new ArrayList<ArrayList<BigDecimal>>();
-									metaValores = PrestamoMetasDAO.getMetaValores(meta.getId(), anioInicial, anioFinal);
+									metaValores = PrestamoMetasDAO.getMetaValores(meta.getId(), anioInicial, anioFinal, lineaBase);
 									tempMeta = getMetas(metaValores, anioInicial, anioFinal, tempMeta);
 									lstPrestamo.add(tempMeta);
 				    	    	}
