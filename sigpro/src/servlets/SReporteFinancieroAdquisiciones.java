@@ -41,8 +41,8 @@ import utilities.CExcel;
 import utilities.CLogger;
 import utilities.Utils;
 
-@WebServlet("/SPlanAdquisiciones")
-public class SPlanAdquisiciones extends HttpServlet {
+@WebServlet("/SReporteFinancieroAdquisiciones")
+public class SReporteFinancieroAdquisiciones extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
 	class stpresupuestoPlan{
@@ -90,7 +90,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 	final int AGRUPACION_SEMESTRE= 5;
 	final int AGRUPACION_ANUAL= 6;
 		
-    public SPlanAdquisiciones() {
+    public SReporteFinancieroAdquisiciones() {
         super();
     }
 
@@ -157,7 +157,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 	        output.close();
 
 		}catch(Exception e){
-			CLogger.write("1", SPlanAdquisiciones.class, e);
+			CLogger.write("1", SReporteFinancieroAdquisiciones.class, e);
 		}
 	}
 	

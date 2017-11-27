@@ -167,7 +167,7 @@
 		
 	</style>
 
-	<div style="width: 98%" ng-controller="planAdquisicionesController as planadqui" class="maincontainer all_page" id="title" style="height: 100%">
+	<div style="width: 98%" ng-controller="reporteFinancieroAdquisicionesController as planadqui" class="maincontainer all_page" id="title" style="height: 100%">
 		<shiro:lacksPermission name="24010">
 			<p ng-init="planadqui.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>

@@ -126,7 +126,7 @@ public class SGestionAdquisiciones extends HttpServlet {
 		        response_text = String.join("", "\"proyecto\":",response_text);
 		        response_text = String.join("", "{\"success\":true,", response_text, "}");
 			} catch (Exception e) {
-				CLogger.write("1", SPlanAdquisiciones.class, e);
+				CLogger.write("1", SReporteFinancieroAdquisiciones.class, e);
 			}
 		}else if(accion.equals("exportarExcel")){
 			Integer agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
