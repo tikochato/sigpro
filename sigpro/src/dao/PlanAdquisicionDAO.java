@@ -326,7 +326,7 @@ public class PlanAdquisicionDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		
 		try{
-			String query = String.join(" ", "SELECT pa.* FROM sipro_history.plan_Adquisicion pa",
+			String query = String.join(" ", "SELECT pa.* FROM sipro_history.plan_adquisicion pa",
 					"where pa.objeto_id=:objetoId",
 					"and pa.objeto_tipo=:objetoTipo",
 					lineaBase != null ? "and pa.lineaBase="+lineaBase : "and pa.actual=1",
