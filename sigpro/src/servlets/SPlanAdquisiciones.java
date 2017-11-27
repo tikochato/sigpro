@@ -140,7 +140,7 @@ public class SPlanAdquisiciones extends HttpServlet {
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
 				response.setHeader("Cache-Control", "no-cache"); 
-				response.setHeader("Content-Disposition", "attachment; Ejecucion_Presupuestaria.xls");
+				response.setHeader("Content-Disposition", "attachment; Reporte_Financiero_Adquisiciones.xls");
 				ServletOutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
 				outStream.flush();
@@ -325,9 +325,9 @@ public class SPlanAdquisiciones extends HttpServlet {
 			headers = generarHeaders(fechaInicial, fechaFinal, agrupacion, tipoVisualizacion);
 			List<stcomponenteplanadquisicion> lstPrestamo = generarPlan(prestamoId, usuario, fechaInicial, fechaFinal, lineaBase);	
 			datosInforme = generarDatosReporte(lstPrestamo, fechaInicial, fechaFinal, agrupacion, tipoVisualizacion, headers[0].length, usuario);
-			excel = new CExcel("Plan de Adquisiciones", false, null);
+			excel = new CExcel("Reporte Financiero de Adquisiciones", false, null);
 			Proyecto proyecto = ProyectoDAO.getProyecto(prestamoId);
-			wb=excel.generateExcelOfData(datosInforme, "Plan de Adquisiciones - "+proyecto.getNombre(), headers, null, true, usuario);
+			wb=excel.generateExcelOfData(datosInforme, "Reporte Financiero de Adquisiciones - "+proyecto.getNombre(), headers, null, true, usuario);
 			wb.write(outByteStream);
 			outByteStream.close();
 			outArray = Base64.encode(outByteStream.toByteArray());

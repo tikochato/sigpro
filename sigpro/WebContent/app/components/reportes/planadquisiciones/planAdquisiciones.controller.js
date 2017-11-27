@@ -655,7 +655,7 @@ app.controller('planAdquisicionesController', [ '$scope', '$rootScope', '$http',
 					anchor.attr({
 						href: 'data:application/ms-excel;base64,' + response.data,
 						target: '_blank',
-						download: 'PlanDeAdquisiciones.xls'
+						download: 'ReporteFinancieroAdquisiciones.xls'
 					})[0].click();
 				}.bind(this), function errorCallback(response){ }
 			);

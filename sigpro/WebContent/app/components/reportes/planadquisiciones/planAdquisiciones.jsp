@@ -177,7 +177,7 @@
 				<div class="row" style="height: 20%">
 					<div class="row" align="left">
 		    			<div class="panel panel-default">
-			  				<div class="panel-heading"><h3>Plan de adquisiciones AÑO FISCAL {{planadqui.anio}}</h3></div>
+			  				<div class="panel-heading"><h3>Reporte Financiero de Adquisiciones AÑO FISCAL {{planadqui.anio}}</h3></div>
 						</div>
 					</div>
 					<br>
