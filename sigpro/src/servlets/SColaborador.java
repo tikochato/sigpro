@@ -292,7 +292,7 @@ public class SColaborador extends HttpServlet {
 			
 			
 			Integer id = Utils.String2Int(parametro.get("id"), -1);
-			AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(id, 5, "r");
+			AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(id, 5, "r", null);
 			
 			if (asignacion != null && asignacion.getColaborador() != null){
 				stcolaborador temp = new stcolaborador();

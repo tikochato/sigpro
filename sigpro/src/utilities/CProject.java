@@ -742,7 +742,7 @@ public class CProject {
 		switch (objetoTipo){
 			case 5:
 				String nombre ="";
-				AsignacionRaci recurso = AsignacionRaciDAO.getAsignacionPorRolTarea(objetoId, objetoTipo, "r");
+				AsignacionRaci recurso = AsignacionRaciDAO.getAsignacionPorRolTarea(objetoId, objetoTipo, "r", null);
 				if (recurso!=null){
 					nombre = recurso.getColaborador().getPnombre() 
 							+ (recurso.getColaborador().getSnombre() != null ? " " + recurso.getColaborador().getSnombre()  : "")
