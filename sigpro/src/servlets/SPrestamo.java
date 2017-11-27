@@ -952,10 +952,9 @@ public class SPrestamo extends HttpServlet {
         	}
         }else if(accion.equals("getPrestamoPorPEP")){
         	Integer proyectoId = Utils.String2Int(map.get("proyectoId"));
-        	Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
+        	Proyecto proyecto = ProyectoDAO.getProyectoHistory(proyectoId,null);
         	if (proyecto != null ){
-	        	Prestamo prestamo = proyecto.getPrestamo();
-	        	
+	        	Prestamo prestamo = PrestamoDAO.getPrestamoByIdHistory(proyectoId,null);
 	        	if(prestamo != null){
 	        		stprestamo temp = new stprestamo();
 					temp.id = prestamo.getId();
@@ -1034,7 +1033,7 @@ public class SPrestamo extends HttpServlet {
 					}
 					
 					temp.montoContratadoEntidadUsd = new BigDecimal(0);
-					ArrayList<Componente> componentes = (ArrayList<Componente>) ComponenteDAO.getComponentesPorProyecto(proyecto.getId());
+					ArrayList<Componente> componentes = (ArrayList<Componente>) ComponenteDAO.getComponentesPorProyectoHistory(proyecto.getId(),null);
 					if (componentes != null){
 						for (Componente c : componentes)
 							temp.montoContratadoEntidadUsd = temp.montoContratadoEntidadUsd.add(c.getFuentePrestamo()!= null ? c.getFuentePrestamo() : new BigDecimal(0));
@@ -1049,8 +1048,8 @@ public class SPrestamo extends HttpServlet {
 					
 					temp.desembolsadoAFecha = DataSigadeDAO.totalDesembolsadoAFechaRealDolaresPorEntidad(prestamo.getCodigoPresupuestario() + "", 
 							anio, mes,proyecto.getUnidadEjecutora().getId().getEntidadentidad(),proyecto.getUnidadEjecutora().getId().getUnidadEjecutora());
-					
-					
+					if (temp.desembolsadoAFecha == null)
+						temp.desembolsadoAFecha = new BigDecimal(0);
 					
 					temp.usuarioCreo = prestamo.getUsuarioCreo();
 					temp.usuarioActualizo = prestamo.getUsuarioActualizo();

@@ -518,7 +518,7 @@ public class PlanEjecucionDAO {
 	}
 	
 	
-	public static List<?> getDatosPlan(int proyectoId){
+	public static List<?> getDatosPlan(int proyectoId,String lineaBase){
 		List<?> ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		
@@ -526,13 +526,16 @@ public class PlanEjecucionDAO {
 			String query =String.join(" ", "select \"Plazo Ejecucion\" categoria, ",
 				"(" ,
 					"select DATEDIFF(py.fecha_inicio,CURRENT_DATE)/DATEDIFF(py.fecha_inicio,py.fecha_fin)*100 ",
-					"from sipro.proyecto py",
+					"from sipro_history.proyecto py",
 					"where py.id =  ?1 	",
+					lineaBase != null ? "and py.linea_base = ?2" : "and py.actual = 1 ",
 				") valor_plan,",
 				"(",
 					"select DATEDIFF(ps.fecha_elegibilidad_ue, CURRENT_DATE)/DATEDIFF(ps.fecha_elegibilidad_ue,ps.fecha_cierre_actual_ue)*100", 
-					"from sipro.prestamo ps, sipro.proyecto py ",
+					"from sipro_history.prestamo ps, sipro_history.proyecto py ",
 					"where ps.id = py.prestamoid ",
+					lineaBase != null ? "and ps.linea_base = ?2" : "and ps.actual = 1",
+					lineaBase != null ? "and py.linea_base = ?2" : "and py.actual = 1",
 					"and py.id =  ?1 		",
 				") valor_real from dual",
 				"union",
@@ -541,30 +544,36 @@ public class PlanEjecucionDAO {
 				"from (",
 				"select sum(desembolsos_mes_usd) desembolsos_a_la_fecha,(",
 					"select sum(d.monto)",
-				    "from sipro.desembolso d, sipro.proyecto p",
+				    "from sipro_history.desembolso d, sipro_history.proyecto p",
 				    "where d.proyectoid = p.id",
 				    "and p.id = 1",
+				    lineaBase != null ? "and p.linea_base = ?2" : "and p.actual = 1",
 				    "and fecha > current_timestamp()",
 				") desembolsos_futuros",
-				"from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro.proyecto py, sipro.prestamo ps",
+				"from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro_history.proyecto py, sipro_history.prestamo ps",
 				"where des.codigo_presupuestario= ps.codigo_presupuestario",
 				"and py.prestamoid = ps.id",
 				"and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora",
 				"and des.entidad_sicoin = py.entidad",
 				"and py.id =  ?1", 	
+				lineaBase != null ? "and py.linea_base = ?2" : "and py.actual = 1",
+				lineaBase != null ? "and ps.linea_base = ?2" : "and ps.actual = 1",
 				"and ( (	des.mes_desembolso<= month(current_timestamp()) and des.ejercicio_fiscal=year(current_timestamp()))",
 							"OR (des.ejercicio_fiscal<year(current_timestamp())))",
 				") t1),",
 				 "(select sum(desembolsos_mes_usd)/", 
 				"(select sum(c.fuente_prestamo)",
-					"from sipro.componente c",
+					"from sipro_history.componente c",
 				    "where c.proyectoid = py.id",
+				    lineaBase != null ? "and c.linea_base = ?2" : "and c.actual = 1",
 				")*100 ejecucion_financiera_real",
-				"from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro.proyecto py, sipro.prestamo ps",
+				"from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro_history.proyecto py, sipro_history.prestamo ps",
 				"where des.codigo_presupuestario= ps.codigo_presupuestario",
 				"and py.prestamoid = ps.id",
 				"and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora",
 				"and des.entidad_sicoin = py.entidad",
+				lineaBase != null ? "and py.linea_base = ?2" : "and py.actual = 1",
+				lineaBase != null ? "and ps.linea_base = ?2" : "and ps.actual = 1",
 				"and py.id =  ?1 	) from dual",
 				"union",
 				"select \"Ejecucion Fisica\",", 
@@ -578,18 +587,25 @@ public class PlanEjecucionDAO {
 					"select m.id, m.dato_tipoid, m.meta_final_entero, m.meta_final_decimal,",
 					"sum(ma.valor_entero)/if(m.meta_final_entero>0, m.meta_final_entero, 1) p_avance_entero,",
 					"sum(valor_decimal)/if(m.meta_final_decimal>0, m.meta_final_decimal, 1) p_avance_decimal",
-					"from sipro.meta m left outer join sipro.meta_avance ma",
+					"from sipro_history.meta m left outer join sipro_history.meta_avance ma",
 					"on ( ma.metaid = m.id ),", 
-					"sipro.producto p",
+					"sipro_history.producto p",
 					"where m.objeto_tipo=3 and m.objeto_id = p.id",
 					"and p.treepath like  CONCAT(CAST((10000000+ ?1 ) AS char),'%')",
 					"and m.dato_tipoid in (2,3)",
+					lineaBase != null ? "and m.linea_base = ?2" : "and m.actual = 1",
+					lineaBase != null ? "and ma.linea_base = ?2" : "and ma.actual = 1",
+					lineaBase != null ? "and p.linea_base = ?2" : "and p.actual = 1",
 					"group by m.id, m.dato_tipoid, m.meta_final_entero, m.meta_final_decimal",
 					") t1",
-				") t2)*100, (select py.ejecucion_fisica_real from sipro.proyecto py where py.id =  ?1 )  from dual");
+				") t2)*100, (select py.ejecucion_fisica_real from sipro_history.proyecto py where py.id =  ?1 ",
+				lineaBase != null ? "and py.linea_base = ?2" : "and py.actual = 1",
+				")  from dual");
 						
 			Query<?> criteria = session.createNativeQuery(query);
 			criteria.setParameter("1", proyectoId);
+			if(lineaBase != null)
+				criteria.setParameter(2, lineaBase);
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){

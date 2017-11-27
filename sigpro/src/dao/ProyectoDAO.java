@@ -624,4 +624,29 @@ public class ProyectoDAO implements java.io.Serializable  {
 		}
 		return ret;
 	}
+	
+	public static Proyecto getProyectoHistory(int id,String lineaBase){
+
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		Proyecto ret = null;
+		try{
+			String query = String.join(" ", "select * from sipro_history.proyecto p " ,
+					"where p.estado = 1  ",
+					"and  p.id = ?1 ",
+					lineaBase != null ? "and p.linea_base = ?2 " : "and p.actual = 1 ");
+			Query<Proyecto> criteria = session.createNativeQuery(query, Proyecto.class);
+			criteria.setParameter(1, id);
+			if (lineaBase != null)
+				criteria.setParameter(2, lineaBase);
+			 ret = criteria.getSingleResult();
+		} catch (NoResultException e){
+		}
+		catch(Throwable e){
+			CLogger.write("21", ProyectoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 }

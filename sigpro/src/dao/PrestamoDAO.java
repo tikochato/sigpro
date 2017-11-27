@@ -243,5 +243,31 @@ public class PrestamoDAO {
 		
 		return ret;
 	}
+	
+	public static Prestamo getPrestamoByIdHistory(Integer idPrestamo, String lineaBase){
+		Prestamo ret = null;
+		List<Prestamo> lstret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "select * from sipro_history.prestamo p ",
+					"where p.id = ?1 ",
+					"and p.estado = 1 ",
+					lineaBase != null ? "and p.linea_base = ?2" : "and p.actual = 1 ");
+			Query<Prestamo> criteria = session.createNativeQuery(query, Prestamo.class);
+			criteria.setParameter(1, idPrestamo);
+			if (lineaBase != null)
+				criteria.setParameter(2, lineaBase);
+			lstret = criteria.getResultList();
+			if(lstret != null && !lstret.isEmpty()){
+				ret = lstret.get(0);
+			}
+		}catch(Exception e){
+			CLogger.write("7", PrestamoDAO.class, e);
+		}finally {
+			session.close();
+		}
+		
+		return ret;
+	}
 
 }
