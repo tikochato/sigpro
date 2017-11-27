@@ -105,15 +105,15 @@ public class AsignacionRaciDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = String.join(" ", "select c.* ",
-									"from asignacion_raci a", 
-									"inner join a.colaborador c",
-									"where a.objetoId = :objId",
-									"and a.objetoTipo = :objTipo",
-									"and a.rolRaci= :rol ",
-									"and a.estado=1 " ,
+									"from sipro_history.colaborador c, sipro_history.asignacion_raci a",
+									"where c.id=a.colaboradorid",
+									"and a.objeto_id =:objId",
+									"and a.objeto_tipo =:objTipo",
+									"and a.rol_raci=:rol ",
+									"and a.estado=1 ",									
 									lineaBase != null ? "and a.linea_base=" + lineaBase : "and a.actual=1");
 			
-			Query<Colaborador> criteria = session.createQuery(query, Colaborador.class);
+			Query<Colaborador> criteria = session.createNativeQuery(query, Colaborador.class);
 			criteria.setParameter("objId", objetoId);
 			criteria.setParameter("objTipo", objetoTipo);
 			criteria.setParameter("rol", rol);

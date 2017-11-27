@@ -480,19 +480,18 @@ public class ActividadDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = String.join(" ", "select a.* ", 
-							"sipro_history.asignacion_raci ar, sipro_history.actividad a ",
+							"from sipro_history.asignacion_raci ar, sipro_history.actividad a ",
 							"Where ar.objeto_id = a.id",
 							"and ar.objeto_tipo = 5",
 							"and ar.rol_raci = 'r'",
 							"and ar.estado=1",
+							"and a.treePath like '"+(10000000+idPrestamo)+"%'",
 							lineaBase != null ? "and ar.linea_base="+lineaBase : "and ar.actual=1",
 							"and year(a.fecha_fin ) between ?1 and ?2");
 			Query<Actividad> criteria = session.createNativeQuery(query,Actividad.class);
 			criteria.setParameter("1", anio_inicio);
 			criteria.setParameter("2", anio_fin);
-			criteria.setParameter("3", idPrestamo);
-			ret = criteria.getResultList();
-						
+			ret = criteria.getResultList();			
 		}
 		catch(Throwable e){
 			CLogger.write("11", ActividadDAO.class, e);
