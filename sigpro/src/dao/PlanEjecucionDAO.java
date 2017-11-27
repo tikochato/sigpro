@@ -34,8 +34,9 @@ public class PlanEjecucionDAO {
 
 	}
 
-	public static double calcularEjecucionFisicaReal(Prestamo prestamo){
+	public static double calcularEjecucionFisicaReal(Prestamo prestamo,String lineaBase){
 		Set<Proyecto> proyectos = prestamo.getProyectos();
+		ProyectoDAO.getProyectosPorPrestamoHistory(prestamo.getId(),null);
 		List<Double> pesos = new ArrayList<Double>();
 		List<Double> techos = new ArrayList<Double>();
 
@@ -46,7 +47,7 @@ public class PlanEjecucionDAO {
 				double peso = Math.round(proyecto.getEjecucionFisicaReal()/100.0f);
 				pesos.add(peso);
 
-				Set<Componente> componentes = proyecto.getComponentes();
+				List<Componente> componentes = ComponenteDAO.getComponentesPorProyectoHistory(proyecto.getId(),lineaBase);
 				if(componentes != null && componentes.size() > 0){
 					Iterator<Componente> iteradorC = componentes.iterator();
 					BigDecimal techoTotal = new BigDecimal(0);
@@ -55,7 +56,7 @@ public class PlanEjecucionDAO {
 						Componente componente = iteradorC.next();
 						if(componente.getEsDeSigade() == 1){
 							techoTotal = techoTotal.add(componente.getFuentePrestamo().add(componente.getFuenteNacional().add(componente.getFuenteDonacion())));
-							ComponenteSigade cSigade = ComponenteSigadeDAO.getComponenteSigadePorId(componente.getComponenteSigade().getId());
+							ComponenteSigade cSigade = ComponenteSigadeDAO.getComponenteSigadePorIdHistory(componente.getComponenteSigade().getId(),null);
 							techoSigade = techoSigade.add(cSigade.getMontoComponente());
 						}
 					}
@@ -68,8 +69,10 @@ public class PlanEjecucionDAO {
 		double numerador = 0;
 		double denominador = 0;
 		for(int i = 0; i < pesos.size(); i++){
-			numerador += techos.get(i) * pesos.get(i);
-			denominador += pesos.get(i); 
+			if (i<techos.size()){
+				numerador += techos.get(i) * pesos.get(i);
+				denominador += pesos.get(i);
+			}
 		}
 
 		double ret = 0;
@@ -80,7 +83,7 @@ public class PlanEjecucionDAO {
 		return ret;
 	}
 
-	public static BigDecimal calcularEjecucionFinanciaeraPlanificada(Prestamo prestamo, String codigoPresupuestario,Date fecha){
+	public static BigDecimal calcularEjecucionFinanciaeraPlanificada(Prestamo prestamo, String codigoPresupuestario,Date fecha,String lineaBase){
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
 		int anio = Integer.parseInt(sdf.format(fecha));
 		sdf = new SimpleDateFormat("MM");
@@ -94,7 +97,7 @@ public class PlanEjecucionDAO {
 			Iterator<Proyecto> iterador = proyectos.iterator();
 			while(iterador.hasNext()){
 				Proyecto proyecto = iterador.next();
-				BigDecimal desembolsoProyecto = DesembolsoDAO.getTotalDesembolsosFuturos(proyecto.getId(), fecha);
+				BigDecimal desembolsoProyecto = DesembolsoDAO.getTotalDesembolsosFuturos(proyecto.getId(), fecha,lineaBase);
 				totalDesembolsosPlanificados = totalDesembolsosPlanificados.add(desembolsoProyecto != null ? desembolsoProyecto : new BigDecimal(0));
 			}
 		}
@@ -106,8 +109,8 @@ public class PlanEjecucionDAO {
 		return ejecucionFinanciera;
 	}
 
-	public static Double calcularPlazoEjecucionPlanificada(Prestamo prestamo){
-		Set<Proyecto> proyectos = prestamo.getProyectos();
+	public static Double calcularPlazoEjecucionPlanificada(Prestamo prestamo, String lineaBase){
+		List<Proyecto> proyectos = ProyectoDAO.getProyectosPorPrestamoHistory(prestamo.getId(), lineaBase);
 
 		DateTime fechaActual = null;
 		DateTime fechaMinima = new DateTime();
@@ -156,15 +159,15 @@ public class PlanEjecucionDAO {
 
 	}
 
-	public static BigDecimal calcularEjecucionFisicaPlanificada(Prestamo prestamo){
+	public static BigDecimal calcularEjecucionFisicaPlanificada(Prestamo prestamo,String lineaBase){
 		BigDecimal ejecucionFisica = new BigDecimal("0");
-		Set<Proyecto> proyectos = prestamo.getProyectos();
+		List<Proyecto> proyectos = ProyectoDAO.getProyectosPorPrestamoHistory(prestamo.getId(), lineaBase);
 		if(proyectos != null && proyectos.size() > 0){
 			Iterator<Proyecto> iterador = proyectos.iterator();
 			while(iterador.hasNext()){
 				Proyecto proyecto = iterador.next();
 
-				List<Producto> productos = ProductoDAO.getProductosPorProyecto(proyecto.getId(), null);
+				List<Producto> productos = ProductoDAO.getProductosPorProyecto(proyecto.getId(), null, lineaBase);
 
 				Date fecha = new Date();
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
@@ -173,7 +176,7 @@ public class PlanEjecucionDAO {
 				int mes = Integer.parseInt(sdf.format(fecha));
 
 				for(Producto producto : productos){
-					List<Meta> metas = MetaDAO.getMetasPorObjeto(producto.getId(), 3);
+					List<Meta> metas = MetaDAO.getMetasPorObjeto(producto.getId(), 3,lineaBase);
 					BigDecimal metaFinal = new BigDecimal(0);
 					BigDecimal metaPlanificada = new BigDecimal(0);
 					for (Meta meta : metas){
@@ -182,7 +185,7 @@ public class PlanEjecucionDAO {
 									new BigDecimal(meta.getMetaFinalEntero() != null ? meta.getMetaFinalEntero() : 0) : 
 										(meta.getMetaFinalDecimal() != null ? meta.getMetaFinalDecimal() : new BigDecimal(0)) );
 
-							List<MetaPlanificado> planificadas = MetaDAO.getMetasPlanificadas(meta.getId());
+							List<MetaPlanificado> planificadas = MetaDAO.getMetasPlanificadas(meta.getId(),lineaBase);
 							for (MetaPlanificado planificado : planificadas){
 								if (planificado.getId().getEjercicio() < anio){
 									metaPlanificada = metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
@@ -328,7 +331,7 @@ public class PlanEjecucionDAO {
 		BigDecimal totalDesembolsosReales = 
 				DataSigadeDAO.totalDesembolsadoAFechaReal(codigoPresupuestario,new Long( anio), mes);
 		BigDecimal totalDesembolsosPlanificados = 
-				DesembolsoDAO.getTotalDesembolsosFuturos(proyectoId,   fecha);
+				DesembolsoDAO.getTotalDesembolsosFuturos(proyectoId,   fecha,null);
 		BigDecimal  ejecucionFinanciera = new BigDecimal("0");
 		if (totalDesembolsosReales!= null && totalDesembolsosPlanificados != null){
 			BigDecimal total = totalDesembolsosReales.add( totalDesembolsosPlanificados);
@@ -354,9 +357,9 @@ public class PlanEjecucionDAO {
 
 	}
 
-	public static BigDecimal calcularEjecucionFisicaPlanificada(Integer proyectoId){
+	public static BigDecimal calcularEjecucionFisicaPlanificada(Integer proyectoId,String lineaBase){
 
-		List<Producto> productos = ProductoDAO.getProductosPorProyecto(proyectoId, null);
+		List<Producto> productos = ProductoDAO.getProductosPorProyecto(proyectoId, null,lineaBase);
 		BigDecimal ejecucionFisica = new BigDecimal("0");
 		Date fecha = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
@@ -366,7 +369,7 @@ public class PlanEjecucionDAO {
 
 		for(Producto producto : productos){
 
-			List<Meta> metas = MetaDAO.getMetasPorObjeto(producto.getId(), 3);
+			List<Meta> metas = MetaDAO.getMetasPorObjeto(producto.getId(), 3,lineaBase);
 			BigDecimal metaFinal = new BigDecimal(0);
 			BigDecimal metaPlanificada = new BigDecimal(0);
 			for (Meta meta : metas){
@@ -375,7 +378,7 @@ public class PlanEjecucionDAO {
 							new BigDecimal(meta.getMetaFinalEntero() != null ? meta.getMetaFinalEntero() : 0) : 
 								(meta.getMetaFinalDecimal() != null ? meta.getMetaFinalDecimal() : new BigDecimal(0)) );
 
-					List<MetaPlanificado> planificadas = MetaDAO.getMetasPlanificadas(meta.getId());
+					List<MetaPlanificado> planificadas = MetaDAO.getMetasPlanificadas(meta.getId(),lineaBase);
 					for (MetaPlanificado planificado : planificadas){
 						if (planificado.getId().getEjercicio() < anio){
 							metaPlanificada = metaPlanificada.add(meta.getObjetoTipo() == 2 ? 

@@ -768,7 +768,7 @@ public class SAvanceActividades extends HttpServlet {
 		DecimalFormat df2 = new DecimalFormat("###.##");
 		
 		try{			
-			List<Producto> productos = ProductoDAO.getProductosPorProyecto(idPrestamo, null);
+			List<Producto> productos = ProductoDAO.getProductosPorProyecto(idPrestamo, null, null);
 			double totalEsperadasAnio = 0;
 			double totalAniosSiguientes = 0;
 			DateTime anioCorte = new DateTime();

@@ -296,18 +296,22 @@ public class DesembolsoDAO {
 	
 	
 	
-	public static BigDecimal getTotalDesembolsosFuturos(int proyectoId, Date fechaActual){
+	public static BigDecimal getTotalDesembolsosFuturos(int proyectoId, Date fechaActual,String lineaBase){
 		BigDecimal ret= new BigDecimal("0");
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<BigDecimal> conteo = 
-					session.createQuery("select sum(d.monto) from Desembolso d where d.proyecto.id = ?1 and d.fecha > ?2",BigDecimal.class);
+			String query = "select sum(d.monto) from sipro_history.desembolso d where d.proyectoid = ?1 and d.fecha > ?2 " + 
+		    (lineaBase != null ? "and d.linea_base = ?3" : "and d.actual = 1 ") ;
+			Query<?> conteo = session.createNativeQuery(query);
 			conteo.setParameter(1, proyectoId);
 			conteo.setParameter(2, fechaActual);
-			ret = conteo.getSingleResult();
+			if (lineaBase != null)
+				 conteo.setParameter(3, lineaBase);
+			Object res = conteo.getSingleResult();
+			ret = (BigDecimal) res;
 		}
 		catch(Throwable e){
-			CLogger.write("9", DesembolsoDAO.class, e);
+			CLogger.write("11", DesembolsoDAO.class, e);
 		}
 		finally{
 			session.close();

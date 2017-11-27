@@ -287,7 +287,7 @@ public class ProductoDAO {
 		return ret;
 	}
 	
-	public static List<Producto> getProductosPorProyecto(Integer idProyecto,String usuario) {
+	public static List<Producto> getProductosPorProyecto(Integer idProyecto,String usuario,String lineaBase) {
 		List<Producto> ret = new ArrayList<Producto>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
@@ -295,21 +295,27 @@ public class ProductoDAO {
 					,"from (",
 					"SELECT pr.* FROM sipro_history.producto pr JOIN sipro_history.componente c ON c.id = pr.componenteid "
 					,"JOIN sipro_history.proyecto p ON p.id = c.proyectoid"
-					,"where p.id = :idProy"
+					,"where p.id = :idProy" 
+					,lineaBase != null ? "and p.linea_base = :lineaBase" : "and p.actual = 1"
 					,"UNION"
 					,"SELECT pr.* FROM sipro_history.producto pr" 
 					,"JOIN sipro_history.subcomponente s ON s.id = pr.subcomponenteid" 
 					,"JOIN sipro_history.componente c ON c.id = s.componenteid" 
 					,"JOIN sipro_history.proyecto p ON p.id = c.proyectoid"
 					,"where p.id = :idProy"
+					,lineaBase != null ? "and pr.linea_base = :lineaBase" : "and pr.actual = 1"
+					,lineaBase != null ? "and s.linea_base = :lineaBase" : "and s.actual = 1"
+					,lineaBase != null ? "and c.linea_base = :lineaBase" : "and c.actual = 1"
+					,lineaBase != null ? "and p.linea_base = :lineaBase" : "and p.actual = 1"
 					,") as t"
 					,usuario!=null && usuario.length()>0 ? 
 					 "join producto_usuario pu on pu.productoid = t.id where pu.usuario = :usuario ":"",
 					 usuario!=null && usuario.length()>0 ? "and" : "where", "t.estado = 1");
 			
-			
 			Query<Producto> criteria = session.createNativeQuery(query,Producto.class);
 			criteria.setParameter("idProy", idProyecto);
+			if (lineaBase != null)
+				criteria.setParameter("lineaBase", lineaBase);
 			if (usuario !=null && usuario.length()>0)
 				criteria.setParameter("usuario", usuario);
 			ret =   criteria.getResultList();

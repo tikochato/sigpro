@@ -85,7 +85,7 @@ app.controller('planejecucionController',['$scope','$rootScope','$http','$interv
 		mi.mostrarExport = false;
 		mi.mostrar=false;
 			mi.inicializarDatos();
-				$http.post('/SPrestamo', { accion: 'getPrestamo', prestamoId: mi.prestamoId,
+				$http.post('/SPrestamo', { accion: 'getPrestamoHistory', prestamoId: mi.prestamoId,
 					t: (new Date()).getTime()})
 				 .then(function(response){
 					 if (response.data.success && response.data.prestamo != null 
