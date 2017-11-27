@@ -235,7 +235,8 @@ public class SGantt extends HttpServlet {
 		else if(accion.equals("exportar")){
 			try{
 				CProject project = new CProject("");
-				String path = project.exportarProject(proyectoId, usuario);
+				//TODO: lineaBase
+				String path = project.exportarProject(proyectoId, null, usuario);
 
 				File xml=new File(path);
 				if(xml.exists()){
@@ -559,7 +560,8 @@ public class SGantt extends HttpServlet {
 	private String cargarProyecto(Integer proyectoId,String usuario, HashMap<Integer,List<Integer>> predecesores){
 		String items = "";
 		try{
-			List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(proyectoId);
+			//TODO: lineaBase
+			List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(proyectoId, null);
 			
 			for(Object objeto : estructuraProyecto){
 				String item="";

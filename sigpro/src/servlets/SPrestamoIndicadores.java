@@ -114,7 +114,8 @@ public class SPrestamoIndicadores extends HttpServlet {
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 			Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
 			Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
-			List<stprestamo> lstPrestamo = getIndicadoresPrestamo(idPrestamo, anioInicial, anioFinal, usuario);
+			//TODO: lineaBase
+			List<stprestamo> lstPrestamo = getIndicadoresPrestamo(idPrestamo, anioInicial, anioFinal, null, usuario);
 			
 			if (null != lstPrestamo && !lstPrestamo.isEmpty()){
 				response_text=new GsonBuilder().serializeNulls().create().toJson(lstPrestamo);
@@ -131,7 +132,8 @@ public class SPrestamoIndicadores extends HttpServlet {
 			int tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
 			
 			try{
-		        byte [] outArray = exportarExcel(proyectoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, usuario);
+				//TODO: lineaBase
+		        byte [] outArray = exportarExcel(proyectoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, null, usuario);
 			
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
@@ -212,7 +214,7 @@ public class SPrestamoIndicadores extends HttpServlet {
 		}
 	}
 	
-	private List<stprestamo> getIndicadoresPrestamo(int idPrestamo, int anioInicial, int anioFinal, String usuario){
+	private List<stprestamo> getIndicadoresPrestamo(int idPrestamo, int anioInicial, int anioFinal, String lineaBase, String usuario){
 		List<stprestamo> lstPrestamo= new ArrayList<>();
 		if(idPrestamo>0){
 			Prestamo prestamo = PrestamoDAO.getPrestamoById(idPrestamo);
@@ -244,9 +246,9 @@ public class SPrestamoIndicadores extends HttpServlet {
 							}else if(indicador.getDatoTipo()!=null && indicador.getDatoTipo().getId().equals(3)){
 								tempIndicador.metaFinal = indicador.getMetaFinalDecimal();
 							}
-							tempIndicador.porcentajeAvance = PrestamoMetasDAO.getPorcentajeAvanceMeta(indicador);
+							tempIndicador.porcentajeAvance = PrestamoMetasDAO.getPorcentajeAvanceMeta(indicador, lineaBase);
 							indicadorValores = new ArrayList<ArrayList<BigDecimal>>();
-							indicadorValores = PrestamoMetasDAO.getMetaValores(indicador.getId(), anioInicial, anioFinal);
+							indicadorValores = PrestamoMetasDAO.getMetaValores(indicador.getId(), anioInicial, anioFinal, lineaBase);
 							tempIndicador = getIndicadores(indicadorValores, anioInicial, anioFinal, tempIndicador);
 							lstPrestamo.add(tempIndicador);
 		    	    	}
@@ -333,7 +335,7 @@ public class SPrestamoIndicadores extends HttpServlet {
 		return anio;		
 	}
 	
-	private byte[] exportarExcel(int prestamoId, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, String usuario) throws IOException{
+	private byte[] exportarExcel(int prestamoId, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, String lineaBase, String usuario) throws IOException{
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -344,7 +346,7 @@ public class SPrestamoIndicadores extends HttpServlet {
 		try{		
 			excel = new CExcel("Avance de Indicadores", false, null);
 			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
-			datosIndicadores = generarDatosIndicadores(prestamoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
+			datosIndicadores = generarDatosIndicadores(prestamoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, lineaBase, usuario);
 			wb=excel.generateExcelOfData(datosIndicadores, "Avance de Indicadores - "+PrestamoDAO.getPrestamoById(prestamoId).getProyectoPrograma(), headers, null, true, usuario);
 		
 		wb.write(outByteStream);
@@ -489,14 +491,14 @@ public class SPrestamoIndicadores extends HttpServlet {
 		return headers;
 	}
 	
-	public String[][] generarDatosIndicadores(int prestamoId, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, int columnasTotal, String usuario){
+	public String[][] generarDatosIndicadores(int prestamoId, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, int columnasTotal, String lineaBase, String usuario){
 		String[][] datos = null;
 		int columna = 0;int factorVisualizacion=1;
 		if(tipoVisualizacion==2){
 			factorVisualizacion = 2;
 		}
 		int sumaColumnas = ((anioFin-anioInicio) + 1)*factorVisualizacion;
-		List<stprestamo> lstPrestamo = getIndicadoresPrestamo(prestamoId, anioInicio, anioFin, usuario);		
+		List<stprestamo> lstPrestamo = getIndicadoresPrestamo(prestamoId, anioInicio, anioFin, lineaBase, usuario);		
 		if (lstPrestamo != null && !lstPrestamo.isEmpty()){
 			datos = new String[lstPrestamo.size()][columnasTotal];
 			for (int i=0; i<lstPrestamo.size(); i++){

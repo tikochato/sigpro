@@ -97,7 +97,8 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 		
 		if(accion.equals("generarPlan")){
 			try{
-				List<stplanestructuralproyecto> lstprestamo = generarPlan(proyectoId, usuario);
+				//TODO: lineaBase
+				List<stplanestructuralproyecto> lstprestamo = generarPlan(proyectoId, null, usuario);
 				
 				response_text=new GsonBuilder().serializeNulls().create().toJson(lstprestamo);
 		        response_text = String.join("", "\"proyecto\":",response_text);
@@ -107,7 +108,8 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 			}
 		}else if(accion.equals("exportarExcel")){
 			try{ 
-				byte [] outArray = exportarExcel(proyectoId, usuario);
+				//TODO: lineaBase
+				byte [] outArray = exportarExcel(proyectoId, null, usuario);
 				
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
@@ -131,7 +133,7 @@ public class SPlanEstructuralProyecto extends HttpServlet {
         output.close();
 	}
 	
-	private byte[] exportarExcel(Integer proyectoId, String usuario) throws IOException{
+	private byte[] exportarExcel(Integer proyectoId, String lineaBase, String usuario) throws IOException{
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -141,7 +143,7 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
 			headers = generarHeaders();
-			datos = generarDatos(proyectoId, usuario);
+			datos = generarDatos(proyectoId, lineaBase, usuario);
 			excel = new CExcel("Plan estructural del préstamo", false, null);
 			Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
 			wb=excel.generateExcelOfData(datos, "Plan estructural del préstamo - "+proyecto.getNombre(), headers, null, true, usuario);
@@ -171,11 +173,11 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 		return headers;
 	}
 	
-	public String[][] generarDatos(Integer proyectoId, String usuario){
+	public String[][] generarDatos(Integer proyectoId, String lineaBase, String usuario){
 		String[][] datos = null;
 		List<stplanestructuralproyecto> lstprestamo;
 		try {
-			lstprestamo = generarPlan(proyectoId, usuario);
+			lstprestamo = generarPlan(proyectoId, lineaBase, usuario);
 			
 			if (lstprestamo != null && !lstprestamo.isEmpty()){ 
 				datos = new String[lstprestamo.size()][13];
@@ -208,10 +210,10 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 		return datos;
 	}
 	
-	private List<stplanestructuralproyecto> generarPlan(Integer IdProyecto, String usuario) throws Exception{
+	private List<stplanestructuralproyecto> generarPlan(Integer IdProyecto, String lineaBase, String usuario) throws Exception{
 		try{
 			List<stplanestructuralproyecto> lstPrestamo = new ArrayList<>();
-			List<?> estruturaProyecto = EstructuraProyectoDAO.getEstructuraProyecto(IdProyecto);
+			List<?> estruturaProyecto = EstructuraProyectoDAO.getEstructuraProyecto(IdProyecto, lineaBase);
 			
 			stplanestructuralproyecto temp = null;
 			

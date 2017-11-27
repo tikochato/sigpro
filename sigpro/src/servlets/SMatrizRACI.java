@@ -120,8 +120,8 @@ public class SMatrizRACI extends HttpServlet {
 		if(accion.equals("getMatriz")){
 			List<stmatriz> lstMatriz;
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
-			
-			lstMatriz = getMatriz(idPrestamo);
+			//TODO: lineaBase
+			lstMatriz = getMatriz(idPrestamo, null);
 			boolean sinColaborador = false;
 			List<stcolaborador> stcolaboradores = getColaboradores(idPrestamo, usuario);
 			if (stcolaboradores.size() ==0){
@@ -232,7 +232,8 @@ public class SMatrizRACI extends HttpServlet {
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 			
 			try{
-	        byte [] outArray = exportarExcel(idPrestamo, usuario);
+				//TODO: lineaBase
+	        byte [] outArray = exportarExcel(idPrestamo, null, usuario);
 		
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
@@ -251,7 +252,8 @@ public class SMatrizRACI extends HttpServlet {
 			String datos[][];
 			List<stcolaborador> colaboradores = getColaboradores(idPrestamo, usuario);
 			headers = generarHeaders(colaboradores);
-			datos = generarDatos(idPrestamo, colaboradores, usuario);
+			//TODO: lineaBase
+			datos = generarDatos(idPrestamo, colaboradores, null, usuario);
 			String path = archivo.exportarMatrizRaci(headers, datos,usuario);
 			File file=new File(path);
 			if(file.exists()){
@@ -310,9 +312,10 @@ public class SMatrizRACI extends HttpServlet {
 	
 	}
 	
-	private List<stmatriz> getMatriz(Integer idPrestamo){
+	private List<stmatriz> getMatriz(Integer idPrestamo, String lineaBase){
 		List<stmatriz> lstMatriz= new ArrayList<>();
-		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
+		//TODO: lineaBase
+		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo, lineaBase);
 		for(Object objeto : estructuraProyecto){
 			Object[] obj = (Object[]) objeto;
 			stmatriz tempmatriz = new stmatriz();
@@ -366,7 +369,7 @@ public class SMatrizRACI extends HttpServlet {
 		}
 	}
 	
-	private byte[] exportarExcel(Integer idPrestamo, String usuario) throws IOException{
+	private byte[] exportarExcel(Integer idPrestamo, String lineaBase, String usuario) throws IOException{
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -398,7 +401,8 @@ public class SMatrizRACI extends HttpServlet {
 			}
 			
 			headers = generarHeaders(colaboradores);
-			datos = generarDatos(idPrestamo, colaboradores, usuario);
+			//TODO: lineaBase
+			datos = generarDatos(idPrestamo, colaboradores, lineaBase, usuario);
 			excel = new CExcel("Matriz RACI", false, null);
 			Proyecto proyecto = ProyectoDAO.getProyecto(idPrestamo);
 			wb=excel.generateExcelOfData(datos, "Matriz RACI - "+proyecto.getNombre(), headers, null, true, usuario);
@@ -441,8 +445,9 @@ public class SMatrizRACI extends HttpServlet {
 		return headers;
 	}
 	
-	public String[][] generarDatos(Integer idPrestamo, List<stcolaborador> colaboradores, String usuario){
-		List<stmatriz> stmatriz = getMatriz(idPrestamo);
+	public String[][] generarDatos(Integer idPrestamo, List<stcolaborador> colaboradores, String lineaBase, String usuario){
+		//TODO: lineaBase
+		List<stmatriz> stmatriz = getMatriz(idPrestamo, lineaBase);
 		String[][] datos = null;
 		
 		if(stmatriz!= null && colaboradores!=null){
