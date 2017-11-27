@@ -122,7 +122,8 @@ public class SCargaTrabajo extends HttpServlet {
 			stEstructura estructura = new stEstructura();
 			Proyecto proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
 			if(proyecto != null){
-				List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
+				//TODO: lineaBase
+				List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo, null);
 				for(Object objeto : estructuraProyecto){
 					Object[] obj = (Object[]) objeto;
 					int objeto_id = (Integer)obj[0];
@@ -192,7 +193,8 @@ public class SCargaTrabajo extends HttpServlet {
 				
 				if(idPrestamo > 0){
 					ArrayList<stestructuracolaborador> estructuracolaborador = new ArrayList<>();
-					List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
+					//TODO: lineaBase
+					List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo, null);
 					stestructuracolaborador stprestamo=null;
 					stestructuracolaborador stcomponente=null;
 					stestructuracolaborador stsubcomponente=null;
@@ -658,7 +660,8 @@ public class SCargaTrabajo extends HttpServlet {
 	public ArrayList<stestructuracolaborador> getEstructura(Integer idPrestamo, String idColaboradores
 			, Integer anio_inicio, Integer anio_fin ){
 		ArrayList<stestructuracolaborador> estructuracolaborador = new ArrayList<>();
-		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
+		//TODO: deActual
+		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo, null);
 		stestructuracolaborador stprestamo=null;
 		stestructuracolaborador stcomponente=null;
 		stestructuracolaborador stsubcomponente=null;
