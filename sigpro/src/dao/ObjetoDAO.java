@@ -53,6 +53,15 @@ public class ObjetoDAO {
 				queryVersionA = " and a.actual = 1 ";
 				queryVersionPad = " where pa.actual = 1 ";
 				queryVersionPadP = " where actual = 1 ";
+			}else{
+				queryVersionP = " and p.linea_base like '%"+lineaBase+"%' ";
+				queryVersionC = " and c.linea_base like '%"+lineaBase+"%' ";
+				queryVersionSc = " and sc.linea_base like '%"+lineaBase+"%' ";
+				queryVersionPr = " and pr.linea_base like '%"+lineaBase+"%' ";
+				queryVersionSp = " and sp.linea_base like '%"+lineaBase+"%' ";
+				queryVersionA = " and a.linea_base like '%"+lineaBase+"%' ";
+				queryVersionPad = " where pa.linea_base like '%"+lineaBase+"%' ";
+				queryVersionPadP = " where linea_base like '%"+lineaBase+"%' ";
 			}
 			String query =
 					"select arbol.*, costo.total, costo.pago from ( "+
@@ -174,6 +183,8 @@ public class ObjetoDAO {
 			String queryVersionPa = "";
 			if(lineaBase==null){
 				queryVersionPa = " where pa.actual = 1 and pp.actual = 1 ";
+			}else{
+				queryVersionPa = " where pa.linea_base like '%"+lineaBase+"%' and pp.linea_base like '%"+lineaBase+"%' ";
 			}
 			String query =
 					"select t1.ejercicio, t1.objeto_id objeto_id_pago, t1.objeto_tipo objeto_tipo_pago, "+

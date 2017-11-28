@@ -44,6 +44,13 @@ public class EstructuraProyectoDAO {
 				queryVersionPr = " and pr.actual = 1 ";
 				queryVersionSp = " and sp.actual = 1 ";
 				queryVersionA = " and a.actual = 1 ";
+			}else{
+				queryVersionP = " and p.linea_base like '%"+lineaBase+"%' ";
+				queryVersionC = " and c.linea_base like '%"+lineaBase+"%' ";
+				queryVersionS = " and s.linea_base like '%"+lineaBase+"%' ";
+				queryVersionPr = " and pr.linea_base like '%"+lineaBase+"%' ";
+				queryVersionSp = " and sp.linea_base like '%"+lineaBase+"%' ";
+				queryVersionA = " and a.linea_base like '%"+lineaBase+"%' ";
 			}
 			String query =
 					"select * from ( "+
@@ -149,6 +156,13 @@ public class EstructuraProyectoDAO {
 				queryVersionPr = " and pr.actual = 1 ";
 				queryVersionSp = " and sp.actual = 1 ";
 				queryVersionA = " and a.actual = 1 ";
+			}else{
+				queryVersionP = " and p.linea_base like '%"+lineaBase+"%' ";
+				queryVersionC = " and c.linea_base like '%"+lineaBase+"%' ";
+				queryVersionS = " and s.linea_base like '%"+lineaBase+"%' ";
+				queryVersionPr = " and pr.linea_base like '%"+lineaBase+"%' ";
+				queryVersionSp = " and sp.linea_base like '%"+lineaBase+"%' ";
+				queryVersionA = " and a.linea_base like '%"+lineaBase+"%' ";
 			}
 			String query =
 				"select * from ( "+
@@ -229,9 +243,9 @@ public class EstructuraProyectoDAO {
 		return ret;
 	}
 	
-	public static Nodo getEstructuraProyectoArbol(int id, String usuario){
+	public static Nodo getEstructuraProyectoArbol(int id, String lineaBase, String usuario){
 		Nodo root = null;
-		List<?> estructuras = EstructuraProyectoDAO.getEstructuraProyecto(id, usuario);
+		List<?> estructuras = EstructuraProyectoDAO.getEstructuraProyecto(id, lineaBase, usuario);
 		if(estructuras.size()>0){
 			try{
 				Object[] dato = (Object[]) estructuras.get(0);

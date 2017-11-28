@@ -340,7 +340,7 @@ public class MetaDAO {
 		return ret;
 	}
 	
-	public static List<Meta> getMetasObjetoHistoria(int id, int tipo, String lineaBase){
+	public static List<Meta> getMetasObjetoLineaBase(int id, int tipo, String lineaBase){
 		List<Meta> ret = new ArrayList<Meta>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -352,7 +352,7 @@ public class MetaDAO {
 					+ "AND m.objeto_tipo=?2 "
 					+" and m.objeto_id > 0 ";
 			
-			query += lineaBase==null ? " and m.actual = 1 " : "";
+			query += lineaBase!=null ? " and m.linea_base like '%"+lineaBase+"%' " : " and m.actual = 1 ";
 			
 			Query<Meta> metavalor = session.createNativeQuery(query,Meta.class);
 			metavalor.setParameter("1", id);

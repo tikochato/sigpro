@@ -67,7 +67,7 @@ public class PrestamoMetasDAO {
 						"join sipro_history.meta m on mp.metaid = m.id",
 						"where metaid = ? ",
 						"and ejercicio between ? and ?",
-						lineaBase==null ? " and m.actual = 1 and mp.actual = 1 " : "",
+						lineaBase!=null ? " and m.linea_base like '%"+lineaBase+"%' and mp.linea_base like '%"+lineaBase+"%' " : " and m.actual = 1 and mp.actual = 1 ",
 						"union",
 						"select t1.metaid, t1.anio ejercicio,", 
 						"0 eneroP, 0 febreroP, 0 marzoP, 0 abrilP, 0 mayoP, 0 junioP, 0 julioP, 0 agostoP, 0 septiembreP, 0 octubreP, 0 noviembreP, 0 diciembreP,",
@@ -94,7 +94,7 @@ public class PrestamoMetasDAO {
 						"where ma.metaid = ?",
 						"and ma.estado = 1", 
 						"and YEAR(ma.fecha) between ? and ?",
-						lineaBase==null ? " and m.actual = 1 and ma.actual = 1 " : "",
+						lineaBase!=null ? " and m.linea_base like '%"+lineaBase+"%' and ma.linea_base like '%"+lineaBase+"%' " : " and m.actual = 1 and ma.actual = 1 ",
 						") t1",
 						"group by t1.anio",
 						") valores", 
@@ -163,7 +163,7 @@ public class PrestamoMetasDAO {
 				String query = "Select metaid, fecha, usuario, valor_entero, valor_string, valor_decimal, valor_tiempo, estado, fecha_ingreso "
 						+ "FROM meta_avance ma "
 						+ "where ma.metaid = ?1 ";
-				query += lineaBase==null ? " and ma.actual = 1 " : "";
+				query += lineaBase!=null ? " and ma.linea_base like '%"+lineaBase+"%' " : " and ma.actual = 1 ";
 				Query<MetaAvance> criteria = session.createNativeQuery(query, MetaAvance.class);
 				criteria.setParameter("1", meta.getId());
 				ret = criteria.getResultList();
