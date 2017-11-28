@@ -646,7 +646,97 @@ public class InformacionPresupuestariaDAO {
 		return result;
 	}
     
-    public static JasperPrint generarJasper(Integer proyectoId, Integer anio, String usuario) throws JRException, SQLException{
+
+    public static ArrayList<BigDecimal> getPresupuestosPorObjeto(Integer fuente, Integer organismo, Integer correlativo, Integer ejercicio,
+    		Integer mes, Integer unidad_ejecutora, Integer entidad, Integer programa, Integer subprograma, 
+    		Integer proyecto, Integer actividad, Integer obra, Integer renglon, Integer geografico, Connection conn){
+    	ArrayList<BigDecimal> result = new ArrayList<BigDecimal>();
+    	result.add(new BigDecimal(0));
+    	result.add(new BigDecimal(0));
+    	result.add(new BigDecimal(0));
+		//Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			if(!conn.isClosed()){
+				String str_Query = "select sum(asignado) asignado, sum(devengado) devengado, sum(modificaciones) modificaciones "
+						+ " from ( "														
+						+ " select sum(asignado) asignado, 0 devengado, 0 modificaciones "
+						+ " from sipro_analytic.mv_ep_ejec_asig_vige  "
+						+ " where "
+						+ " mes = 0 ";
+						str_Query += entidad!=null? " and entidad = '"+entidad+"' " : "";
+						str_Query += unidad_ejecutora!=null? " and unidad_ejecutra = "+unidad_ejecutora : "";
+						str_Query += programa!=null? " and programa = "+programa : "";
+						str_Query += subprograma!=null? " and subprograma = "+subprograma  : "";
+						str_Query += proyecto!=null? " and proyecto = "+proyecto : "";
+						str_Query += actividad!=null? " and actividad = "+actividad : "";
+						str_Query += renglon!=null? " and renglon = "+renglon : "";
+						str_Query += geografico!=null? " and geografico = "+geografico : "";
+						str_Query += correlativo!=null? " and correlativo = "+correlativo : "";
+						str_Query += organismo!=null? " and organismo = "+organismo : "";
+						str_Query += fuente!=null? " and fuente = "+fuente : "";
+						str_Query += " and ejercicio = "+ejercicio 
+						+ " group by entidad "
+						+ " UNION " 
+						+ " select 0 asignado, sum(ejecutado) devengado, 0 modificaciones "
+						+ " from sipro_analytic.mv_ep_ejec_asig_vige  "
+						+ " where ejercicio = "+ejercicio;
+						str_Query += entidad!=null? " and entidad = '"+entidad+"' " : "";
+						str_Query += unidad_ejecutora!=null? " and unidad_ejecutra = "+unidad_ejecutora : "";
+						str_Query += programa!=null? " and programa = "+programa : "";
+						str_Query += subprograma!=null? " and subprograma = "+subprograma  : "";
+						str_Query += proyecto!=null? " and proyecto = "+proyecto : "";
+						str_Query += actividad!=null? " and actividad = "+actividad : "";
+						str_Query += renglon!=null? " and renglon = "+renglon : "";
+						str_Query += geografico!=null? " and geografico = "+geografico : "";
+						str_Query += correlativo!=null? " and correlativo = "+correlativo : "";
+						str_Query += organismo!=null? " and organismo = "+organismo : "";
+						str_Query += fuente!=null? " and fuente = "+fuente : "";
+						str_Query += " and mes > 0 "
+						+ " and mes <= "+mes
+						+ " group by entidad "
+						+ " UNION " 
+						+ " select 0 asignado, 0 devengado, sum(modificaciones) modificaciones "
+						+ " from sipro_analytic.mv_ep_ejec_asig_vige  "
+						+ " where ejercicio = "+ejercicio;
+						str_Query += entidad!=null? " and entidad = '"+entidad+"' " : "";
+						str_Query += unidad_ejecutora!=null? " and unidad_ejecutra = "+unidad_ejecutora : "";
+						str_Query += programa!=null? " and programa = "+programa : "";
+						str_Query += subprograma!=null? " and subprograma = "+subprograma  : "";
+						str_Query += proyecto!=null? " and proyecto = "+proyecto : "";
+						str_Query += actividad!=null? " and actividad = "+actividad : "";
+						str_Query += renglon!=null? " and renglon = "+renglon : "";
+						str_Query += geografico!=null? " and geografico = "+geografico : "";
+						str_Query += correlativo!=null? " and correlativo = "+correlativo : "";
+						str_Query += organismo!=null? " and organismo = "+organismo : "";
+						str_Query += fuente!=null? " and fuente = "+fuente : "";
+						str_Query += " and mes > 0 "
+						+ " and mes < "+mes
+						+ " group by entidad "
+						+ " ) t1 ";
+
+				PreparedStatement pstm  = conn.prepareStatement(str_Query);
+				
+                ResultSet rs = pstm.executeQuery();
+				
+                while(rs!=null && rs.next()){
+                	result.set(0, rs.getBigDecimal("asignado"));
+                	result.set(1, rs.getBigDecimal("devengado"));
+                	result.set(2, rs.getBigDecimal("modificaciones"));
+                	break;
+                }
+                
+                rs.close();
+                pstm.close();
+			}
+		}
+		catch(Throwable e){
+			CLogger.write("20", InformacionPresupuestariaDAO.class, e);
+		}
+		
+		return result;
+	}
+    
+    public static JasperPrint generarJasper(Integer proyectoId, Integer anio, String lineaBase, String usuario) throws JRException, SQLException{
 		JasperPrint jasperPrint = null;
 		Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
 		if (proyecto!=null){
@@ -654,7 +744,7 @@ public class InformacionPresupuestariaDAO {
 			parameters.put("proyectoId",proyectoId);
 			parameters.put("usuario",usuario);
 			
-			List<ObjetoCostoJasper> listadoCostos = ObjetoDAO.getEstructuraConCostoJasper(proyectoId, anio, anio, usuario);
+			List<ObjetoCostoJasper> listadoCostos = ObjetoDAO.getEstructuraConCostoJasper(proyectoId, anio, anio, usuario, lineaBase);
 			
 			parameters.put("costos",listadoCostos);
 			jasperPrint = CJasperReport.reporteJasperPrint(CJasperReport.PLANTILLA_EJECUCIONFINANCIERA, parameters);

@@ -109,12 +109,7 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 	    startingDay: 1,
 	    minMode: 'year'
 	};
-	
-	$http.post('/SMeta', { accion: 'getMetasUnidadesMedida' }).success(
-			function(response) {
-				mi.unidadesMedida = response.MetasUnidades;
-	});
-	
+		
 	$http.post('/SPrestamo', {accion: 'getPrestamos', t: (new Date()).getTime()}).then(
 			function(response){
 				if(response.data.success){
@@ -167,18 +162,6 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 					}
 			});	
 		}
-
-		mi.nombreUnidadMedida = function(id){
-			if (id != null && id > 0){
-				for (i=0; i<mi.unidadesMedida.length; i++){
-					if(mi.unidadesMedida[i].id == id){
-						return mi.unidadesMedida[i].nombre;
-					}
-				}
-			}
-			return "";
-		}
-
 		
 		mi.anterior = function(){
 			var elemento = document.getElementById("divTablaDatos");

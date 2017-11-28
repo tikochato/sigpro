@@ -278,8 +278,9 @@ public class DataSigadeDAO {
 						"and cs.estado = 1";
 			Query<?> criteria = session.createNativeQuery(query);
 			criteria.setParameter("1", codigo_presupuestario);
-			BigDecimal total = (BigDecimal) criteria.getSingleResult();
-			ret = total.intValue();
+			Object total =  criteria.getSingleResult();
+			
+			ret = ((BigDecimal ) total).intValue();
 		}
 		catch(Throwable e){
 			CLogger.write("9", DataSigadeDAO.class, e);
@@ -292,7 +293,7 @@ public class DataSigadeDAO {
 	
 	public static  BigDecimal totalDesembolsadoAFechaRealDolaresPorEntidad (String codigo_presupuestario,
 				Long anio, int mes,Integer entidadSicoin, Integer unidadEjecutoraSicoin){
-		BigDecimal ret = null;
+		BigDecimal ret = new BigDecimal(0);
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		
 		try{

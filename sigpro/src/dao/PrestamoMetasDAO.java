@@ -26,7 +26,7 @@ import utilities.CMariaDB;
  
 public class PrestamoMetasDAO {
         
-    public static ArrayList<ArrayList<BigDecimal>> getMetaValores(Integer metaId, Integer anioInicial, Integer anioFinal){
+    public static ArrayList<ArrayList<BigDecimal>> getMetaValores(Integer metaId, Integer anioInicial, Integer anioFinal, String lineaBase){
     	ArrayList<ArrayList<BigDecimal>> result = new ArrayList<ArrayList<BigDecimal>>();
 
 		try{
@@ -63,10 +63,11 @@ public class PrestamoMetasDAO {
 						"CASE WHEN m.dato_tipoid = 2 THEN mp.diciembre_entero",
 						"WHEN m.dato_tipoid = 3 THEN mp.diciembre_decimal  END diciembreP ,",
 						"0 eneroR, 0 febreroR, 0 marzoR, 0 abrilR, 0 mayoR, 0 junioR, 0 julioR, 0 agostoR, 0 septiembreR, 0 octubreR, 0 noviembreR, 0 diciembreR",
-						"from meta_planificado mp",
-						"join meta m on mp.metaid = m.id",
+						"from sipro_history.meta_planificado mp",
+						"join sipro_history.meta m on mp.metaid = m.id",
 						"where metaid = ? ",
 						"and ejercicio between ? and ?",
+						lineaBase==null ? " and m.actual = 1 and mp.actual = 1 " : "",
 						"union",
 						"select t1.metaid, t1.anio ejercicio,", 
 						"0 eneroP, 0 febreroP, 0 marzoP, 0 abrilP, 0 mayoP, 0 junioP, 0 julioP, 0 agostoP, 0 septiembreP, 0 octubreP, 0 noviembreP, 0 diciembreP,",
@@ -88,11 +89,12 @@ public class PrestamoMetasDAO {
 						"WHEN m.dato_tipoid = 2 THEN ma.valor_entero",
 						"WHEN m.dato_tipoid = 3 THEN ma.valor_decimal",
 						"END valor", 
-						"from meta_avance ma", 
-						"join meta m on ma.metaid = m.id",
+						"from sipro_history.meta_avance ma", 
+						"join sipro_history.meta m on ma.metaid = m.id",
 						"where ma.metaid = ?",
 						"and ma.estado = 1", 
 						"and YEAR(ma.fecha) between ? and ?",
+						lineaBase==null ? " and m.actual = 1 and ma.actual = 1 " : "",
 						") t1",
 						"group by t1.anio",
 						") valores", 
@@ -149,7 +151,7 @@ public class PrestamoMetasDAO {
 		return result;
 	}
     
-    public static BigDecimal getPorcentajeAvanceMeta(Meta meta){
+    public static BigDecimal getPorcentajeAvanceMeta(Meta meta, String lineaBase){
     	BigDecimal totalAvance = null;
     	Integer datoTipo = meta.getDatoTipo().getId(); 
     	if(datoTipo.equals(2) || datoTipo.equals(3)){
@@ -158,8 +160,12 @@ public class PrestamoMetasDAO {
 	    	List<MetaAvance> ret = new ArrayList<MetaAvance>();
 			Session session = CHibernateSession.getSessionFactory().openSession();
 			try{
-				Query<MetaAvance> criteria = session.createQuery("FROM MetaAvance ma where ma.id.metaid =:metaid ", MetaAvance.class);
-				criteria.setParameter("metaid", meta.getId());
+				String query = "Select metaid, fecha, usuario, valor_entero, valor_string, valor_decimal, valor_tiempo, estado, fecha_ingreso "
+						+ "FROM meta_avance ma "
+						+ "where ma.metaid = ?1 ";
+				query += lineaBase==null ? " and ma.actual = 1 " : "";
+				Query<MetaAvance> criteria = session.createNativeQuery(query, MetaAvance.class);
+				criteria.setParameter("1", meta.getId());
 				ret = criteria.getResultList();
 				
 				BigDecimal sumaDecimal = new BigDecimal(0);

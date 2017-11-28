@@ -435,7 +435,8 @@ public class CExcel {
 				int first_data_line = line + 1;
 				int last_data_line = line + 1;
 				ArrayList<String> lineas = new ArrayList<String>();
-				for (int i = 0; i < data.length; i++) {	
+				if(data != null){
+					for (int i = 0; i < data.length; i++) {	
 						for (int j = 0; j < data[i].length; j++) {
 							if(data[i][j]!=null) {
 								switch (headers[2][j]) {
@@ -484,7 +485,9 @@ public class CExcel {
 						}
 					
 					line++;
+					}
 				}
+				
 				line = setOperations(headers, lineas, line, first_data_line, last_data_line);
 			}
 			Header(report_name, headers[0].length);

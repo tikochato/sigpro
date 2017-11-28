@@ -267,19 +267,22 @@ public class MetaDAO {
 		return ret;
 	}
 	
-	public static List<Meta> getMetasPorObjeto(Integer objetoId, Integer objetoTipo){
+	public static List<Meta> getMetasPorObjeto(Integer objetoId, Integer objetoTipo,String lineaBase){
 		List<Meta> ret=null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = String.join(" ", "select  *",
-				"from meta m",
+				"from sipro_history.meta m",
 				"where m.objeto_id = ?1",
 				"and m.objeto_tipo = ?2",
-				"and m.dato_tipoid in (2,3)");
+				"and m.dato_tipoid in (2,3)",
+				lineaBase != null ? "and m.linea_base = ?3" : "and m.actual = 1");
 			
 			Query<Meta> metavalor = session.createNativeQuery(query,Meta.class);
 			metavalor.setParameter("1", objetoId);
 			metavalor.setParameter("2", objetoTipo);
+			if (lineaBase != null)
+				metavalor.setParameter("3", lineaBase);
 			
 			ret =  metavalor.getResultList();
 		}
@@ -292,18 +295,20 @@ public class MetaDAO {
 		return ret;
 	}
 	
-	public static List<MetaPlanificado> getMetasPlanificadas(Integer metaId){
+	public static List<MetaPlanificado> getMetasPlanificadas(Integer metaId,String lineaBase){
 		List<MetaPlanificado> ret=null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = String.join(" ", "select *",
-					"from meta_planificado mp",
+					"from sipro_history.meta_planificado mp",
 					"where mp.metaid = ?1",
-					"and mp.estado = 1");
+					"and mp.estado = 1",
+					lineaBase != null ? "and mp.linea_base = ?2": "and mp.actual = 1");
 			
 			Query<MetaPlanificado> metavalor = session.createNativeQuery(query,MetaPlanificado.class);
 			metavalor.setParameter("1", metaId);
-			
+			if (lineaBase != null)
+				metavalor.setParameter("2", lineaBase);
 			ret =  metavalor.getResultList();
 		}
 		catch(Throwable e){
@@ -328,6 +333,35 @@ public class MetaDAO {
 		}
 		catch(Throwable e){
 			CLogger.write("14", MetaTipoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static List<Meta> getMetasObjetoHistoria(int id, int tipo, String lineaBase){
+		List<Meta> ret = new ArrayList<Meta>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "SELECT id, nombre, descripcion, usuario_creo, usuario_actualizo, fecha_creacion, fecha_actualizacion, "
+					+ "estado, meta_unidad_medidaid, dato_tipoid, objeto_id, objeto_tipo, meta_final_entero, meta_final_string, "
+					+ "meta_final_decimal, meta_final_fecha "
+					+ "FROM sipro_history.meta m "
+					+ "WHERE m.estado = 1 and m.objeto_id=?1 "
+					+ "AND m.objeto_tipo=?2 "
+					+" and m.objeto_id > 0 ";
+			
+			query += lineaBase==null ? " and m.actual = 1 " : "";
+			
+			Query<Meta> metavalor = session.createNativeQuery(query,Meta.class);
+			metavalor.setParameter("1", id);
+			metavalor.setParameter("2", tipo);
+			
+			ret =  metavalor.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("15", MetaDAO.class, e);
 		}
 		finally{
 			session.close();

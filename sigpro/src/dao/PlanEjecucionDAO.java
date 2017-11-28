@@ -34,8 +34,9 @@ public class PlanEjecucionDAO {
 
 	}
 
-	public static double calcularEjecucionFisicaReal(Prestamo prestamo){
+	public static double calcularEjecucionFisicaReal(Prestamo prestamo,String lineaBase){
 		Set<Proyecto> proyectos = prestamo.getProyectos();
+		ProyectoDAO.getProyectosPorPrestamoHistory(prestamo.getId(),null);
 		List<Double> pesos = new ArrayList<Double>();
 		List<Double> techos = new ArrayList<Double>();
 
@@ -46,7 +47,7 @@ public class PlanEjecucionDAO {
 				double peso = Math.round(proyecto.getEjecucionFisicaReal()/100.0f);
 				pesos.add(peso);
 
-				Set<Componente> componentes = proyecto.getComponentes();
+				List<Componente> componentes = ComponenteDAO.getComponentesPorProyectoHistory(proyecto.getId(),lineaBase);
 				if(componentes != null && componentes.size() > 0){
 					Iterator<Componente> iteradorC = componentes.iterator();
 					BigDecimal techoTotal = new BigDecimal(0);
@@ -55,7 +56,7 @@ public class PlanEjecucionDAO {
 						Componente componente = iteradorC.next();
 						if(componente.getEsDeSigade() == 1){
 							techoTotal = techoTotal.add(componente.getFuentePrestamo().add(componente.getFuenteNacional().add(componente.getFuenteDonacion())));
-							ComponenteSigade cSigade = ComponenteSigadeDAO.getComponenteSigadePorId(componente.getComponenteSigade().getId());
+							ComponenteSigade cSigade = ComponenteSigadeDAO.getComponenteSigadePorIdHistory(componente.getComponenteSigade().getId(),null);
 							techoSigade = techoSigade.add(cSigade.getMontoComponente());
 						}
 					}
@@ -68,8 +69,10 @@ public class PlanEjecucionDAO {
 		double numerador = 0;
 		double denominador = 0;
 		for(int i = 0; i < pesos.size(); i++){
-			numerador += techos.get(i) * pesos.get(i);
-			denominador += pesos.get(i); 
+			if (i<techos.size()){
+				numerador += techos.get(i) * pesos.get(i);
+				denominador += pesos.get(i);
+			}
 		}
 
 		double ret = 0;
@@ -80,7 +83,7 @@ public class PlanEjecucionDAO {
 		return ret;
 	}
 
-	public static BigDecimal calcularEjecucionFinanciaeraPlanificada(Prestamo prestamo, String codigoPresupuestario,Date fecha){
+	public static BigDecimal calcularEjecucionFinanciaeraPlanificada(Prestamo prestamo, String codigoPresupuestario,Date fecha,String lineaBase){
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
 		int anio = Integer.parseInt(sdf.format(fecha));
 		sdf = new SimpleDateFormat("MM");
@@ -94,7 +97,7 @@ public class PlanEjecucionDAO {
 			Iterator<Proyecto> iterador = proyectos.iterator();
 			while(iterador.hasNext()){
 				Proyecto proyecto = iterador.next();
-				BigDecimal desembolsoProyecto = DesembolsoDAO.getTotalDesembolsosFuturos(proyecto.getId(), fecha);
+				BigDecimal desembolsoProyecto = DesembolsoDAO.getTotalDesembolsosFuturos(proyecto.getId(), fecha,lineaBase);
 				totalDesembolsosPlanificados = totalDesembolsosPlanificados.add(desembolsoProyecto != null ? desembolsoProyecto : new BigDecimal(0));
 			}
 		}
@@ -106,8 +109,8 @@ public class PlanEjecucionDAO {
 		return ejecucionFinanciera;
 	}
 
-	public static Double calcularPlazoEjecucionPlanificada(Prestamo prestamo){
-		Set<Proyecto> proyectos = prestamo.getProyectos();
+	public static Double calcularPlazoEjecucionPlanificada(Prestamo prestamo, String lineaBase){
+		List<Proyecto> proyectos = ProyectoDAO.getProyectosPorPrestamoHistory(prestamo.getId(), lineaBase);
 
 		DateTime fechaActual = null;
 		DateTime fechaMinima = new DateTime();
@@ -156,15 +159,15 @@ public class PlanEjecucionDAO {
 
 	}
 
-	public static BigDecimal calcularEjecucionFisicaPlanificada(Prestamo prestamo){
+	public static BigDecimal calcularEjecucionFisicaPlanificada(Prestamo prestamo,String lineaBase){
 		BigDecimal ejecucionFisica = new BigDecimal("0");
-		Set<Proyecto> proyectos = prestamo.getProyectos();
+		List<Proyecto> proyectos = ProyectoDAO.getProyectosPorPrestamoHistory(prestamo.getId(), lineaBase);
 		if(proyectos != null && proyectos.size() > 0){
 			Iterator<Proyecto> iterador = proyectos.iterator();
 			while(iterador.hasNext()){
 				Proyecto proyecto = iterador.next();
 
-				List<Producto> productos = ProductoDAO.getProductosPorProyecto(proyecto.getId(), null);
+				List<Producto> productos = ProductoDAO.getProductosPorProyecto(proyecto.getId(), null, lineaBase);
 
 				Date fecha = new Date();
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
@@ -173,7 +176,7 @@ public class PlanEjecucionDAO {
 				int mes = Integer.parseInt(sdf.format(fecha));
 
 				for(Producto producto : productos){
-					List<Meta> metas = MetaDAO.getMetasPorObjeto(producto.getId(), 3);
+					List<Meta> metas = MetaDAO.getMetasPorObjeto(producto.getId(), 3,lineaBase);
 					BigDecimal metaFinal = new BigDecimal(0);
 					BigDecimal metaPlanificada = new BigDecimal(0);
 					for (Meta meta : metas){
@@ -182,7 +185,7 @@ public class PlanEjecucionDAO {
 									new BigDecimal(meta.getMetaFinalEntero() != null ? meta.getMetaFinalEntero() : 0) : 
 										(meta.getMetaFinalDecimal() != null ? meta.getMetaFinalDecimal() : new BigDecimal(0)) );
 
-							List<MetaPlanificado> planificadas = MetaDAO.getMetasPlanificadas(meta.getId());
+							List<MetaPlanificado> planificadas = MetaDAO.getMetasPlanificadas(meta.getId(),lineaBase);
 							for (MetaPlanificado planificado : planificadas){
 								if (planificado.getId().getEjercicio() < anio){
 									metaPlanificada = metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
@@ -328,7 +331,7 @@ public class PlanEjecucionDAO {
 		BigDecimal totalDesembolsosReales = 
 				DataSigadeDAO.totalDesembolsadoAFechaReal(codigoPresupuestario,new Long( anio), mes);
 		BigDecimal totalDesembolsosPlanificados = 
-				DesembolsoDAO.getTotalDesembolsosFuturos(proyectoId,   fecha);
+				DesembolsoDAO.getTotalDesembolsosFuturos(proyectoId,   fecha,null);
 		BigDecimal  ejecucionFinanciera = new BigDecimal("0");
 		if (totalDesembolsosReales!= null && totalDesembolsosPlanificados != null){
 			BigDecimal total = totalDesembolsosReales.add( totalDesembolsosPlanificados);
@@ -354,9 +357,9 @@ public class PlanEjecucionDAO {
 
 	}
 
-	public static BigDecimal calcularEjecucionFisicaPlanificada(Integer proyectoId){
+	public static BigDecimal calcularEjecucionFisicaPlanificada(Integer proyectoId,String lineaBase){
 
-		List<Producto> productos = ProductoDAO.getProductosPorProyecto(proyectoId, null);
+		List<Producto> productos = ProductoDAO.getProductosPorProyecto(proyectoId, null,lineaBase);
 		BigDecimal ejecucionFisica = new BigDecimal("0");
 		Date fecha = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
@@ -366,7 +369,7 @@ public class PlanEjecucionDAO {
 
 		for(Producto producto : productos){
 
-			List<Meta> metas = MetaDAO.getMetasPorObjeto(producto.getId(), 3);
+			List<Meta> metas = MetaDAO.getMetasPorObjeto(producto.getId(), 3,lineaBase);
 			BigDecimal metaFinal = new BigDecimal(0);
 			BigDecimal metaPlanificada = new BigDecimal(0);
 			for (Meta meta : metas){
@@ -375,7 +378,7 @@ public class PlanEjecucionDAO {
 							new BigDecimal(meta.getMetaFinalEntero() != null ? meta.getMetaFinalEntero() : 0) : 
 								(meta.getMetaFinalDecimal() != null ? meta.getMetaFinalDecimal() : new BigDecimal(0)) );
 
-					List<MetaPlanificado> planificadas = MetaDAO.getMetasPlanificadas(meta.getId());
+					List<MetaPlanificado> planificadas = MetaDAO.getMetasPlanificadas(meta.getId(),lineaBase);
 					for (MetaPlanificado planificado : planificadas){
 						if (planificado.getId().getEjercicio() < anio){
 							metaPlanificada = metaPlanificada.add(meta.getObjetoTipo() == 2 ? 
@@ -518,7 +521,7 @@ public class PlanEjecucionDAO {
 	}
 	
 	
-	public static List<?> getDatosPlan(int proyectoId){
+	public static List<?> getDatosPlan(int proyectoId,String lineaBase){
 		List<?> ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		
@@ -526,13 +529,16 @@ public class PlanEjecucionDAO {
 			String query =String.join(" ", "select \"Plazo Ejecucion\" categoria, ",
 				"(" ,
 					"select DATEDIFF(py.fecha_inicio,CURRENT_DATE)/DATEDIFF(py.fecha_inicio,py.fecha_fin)*100 ",
-					"from sipro.proyecto py",
+					"from sipro_history.proyecto py",
 					"where py.id =  ?1 	",
+					lineaBase != null ? "and py.linea_base = ?2" : "and py.actual = 1 ",
 				") valor_plan,",
 				"(",
 					"select DATEDIFF(ps.fecha_elegibilidad_ue, CURRENT_DATE)/DATEDIFF(ps.fecha_elegibilidad_ue,ps.fecha_cierre_actual_ue)*100", 
-					"from sipro.prestamo ps, sipro.proyecto py ",
+					"from sipro_history.prestamo ps, sipro_history.proyecto py ",
 					"where ps.id = py.prestamoid ",
+					lineaBase != null ? "and ps.linea_base = ?2" : "and ps.actual = 1",
+					lineaBase != null ? "and py.linea_base = ?2" : "and py.actual = 1",
 					"and py.id =  ?1 		",
 				") valor_real from dual",
 				"union",
@@ -541,30 +547,36 @@ public class PlanEjecucionDAO {
 				"from (",
 				"select sum(desembolsos_mes_usd) desembolsos_a_la_fecha,(",
 					"select sum(d.monto)",
-				    "from sipro.desembolso d, sipro.proyecto p",
+				    "from sipro_history.desembolso d, sipro_history.proyecto p",
 				    "where d.proyectoid = p.id",
 				    "and p.id = 1",
+				    lineaBase != null ? "and p.linea_base = ?2" : "and p.actual = 1",
 				    "and fecha > current_timestamp()",
 				") desembolsos_futuros",
-				"from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro.proyecto py, sipro.prestamo ps",
+				"from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro_history.proyecto py, sipro_history.prestamo ps",
 				"where des.codigo_presupuestario= ps.codigo_presupuestario",
 				"and py.prestamoid = ps.id",
 				"and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora",
 				"and des.entidad_sicoin = py.entidad",
 				"and py.id =  ?1", 	
+				lineaBase != null ? "and py.linea_base = ?2" : "and py.actual = 1",
+				lineaBase != null ? "and ps.linea_base = ?2" : "and ps.actual = 1",
 				"and ( (	des.mes_desembolso<= month(current_timestamp()) and des.ejercicio_fiscal=year(current_timestamp()))",
 							"OR (des.ejercicio_fiscal<year(current_timestamp())))",
 				") t1),",
 				 "(select sum(desembolsos_mes_usd)/", 
 				"(select sum(c.fuente_prestamo)",
-					"from sipro.componente c",
+					"from sipro_history.componente c",
 				    "where c.proyectoid = py.id",
+				    lineaBase != null ? "and c.linea_base = ?2" : "and c.actual = 1",
 				")*100 ejecucion_financiera_real",
-				"from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro.proyecto py, sipro.prestamo ps",
+				"from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro_history.proyecto py, sipro_history.prestamo ps",
 				"where des.codigo_presupuestario= ps.codigo_presupuestario",
 				"and py.prestamoid = ps.id",
 				"and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora",
 				"and des.entidad_sicoin = py.entidad",
+				lineaBase != null ? "and py.linea_base = ?2" : "and py.actual = 1",
+				lineaBase != null ? "and ps.linea_base = ?2" : "and ps.actual = 1",
 				"and py.id =  ?1 	) from dual",
 				"union",
 				"select \"Ejecucion Fisica\",", 
@@ -578,18 +590,25 @@ public class PlanEjecucionDAO {
 					"select m.id, m.dato_tipoid, m.meta_final_entero, m.meta_final_decimal,",
 					"sum(ma.valor_entero)/if(m.meta_final_entero>0, m.meta_final_entero, 1) p_avance_entero,",
 					"sum(valor_decimal)/if(m.meta_final_decimal>0, m.meta_final_decimal, 1) p_avance_decimal",
-					"from sipro.meta m left outer join sipro.meta_avance ma",
+					"from sipro_history.meta m left outer join sipro_history.meta_avance ma",
 					"on ( ma.metaid = m.id ),", 
-					"sipro.producto p",
+					"sipro_history.producto p",
 					"where m.objeto_tipo=3 and m.objeto_id = p.id",
 					"and p.treepath like  CONCAT(CAST((10000000+ ?1 ) AS char),'%')",
 					"and m.dato_tipoid in (2,3)",
+					lineaBase != null ? "and m.linea_base = ?2" : "and m.actual = 1",
+					lineaBase != null ? "and ma.linea_base = ?2" : "and ma.actual = 1",
+					lineaBase != null ? "and p.linea_base = ?2" : "and p.actual = 1",
 					"group by m.id, m.dato_tipoid, m.meta_final_entero, m.meta_final_decimal",
 					") t1",
-				") t2)*100, (select py.ejecucion_fisica_real from sipro.proyecto py where py.id =  ?1 )  from dual");
+				") t2)*100, (select py.ejecucion_fisica_real from sipro_history.proyecto py where py.id =  ?1 ",
+				lineaBase != null ? "and py.linea_base = ?2" : "and py.actual = 1",
+				")  from dual");
 						
 			Query<?> criteria = session.createNativeQuery(query);
 			criteria.setParameter("1", proyectoId);
+			if(lineaBase != null)
+				criteria.setParameter(2, lineaBase);
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){

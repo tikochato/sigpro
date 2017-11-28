@@ -1,5 +1,5 @@
 package pojo;
-// Generated Nov 12, 2017 1:30:38 AM by Hibernate Tools 5.2.3.Final
+// Generated Nov 21, 2017 3:28:39 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -24,10 +24,9 @@ public class AsignacionRaci implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 7641261201861788785L;
+	private static final long serialVersionUID = 3850952739387013143L;
 	private Integer id;
 	private Colaborador colaborador;
-	private MatrizRaci matrizRaci;
 	private String rolRaci;
 	private int objetoId;
 	private int objetoTipo;
@@ -40,10 +39,9 @@ public class AsignacionRaci implements java.io.Serializable {
 	public AsignacionRaci() {
 	}
 
-	public AsignacionRaci(Colaborador colaborador, MatrizRaci matrizRaci, String rolRaci, int objetoId, int objetoTipo,
-			int estado, String usuarioCreo, Date fechaCreacion) {
+	public AsignacionRaci(Colaborador colaborador, String rolRaci, int objetoId, int objetoTipo, int estado,
+			String usuarioCreo, Date fechaCreacion) {
 		this.colaborador = colaborador;
-		this.matrizRaci = matrizRaci;
 		this.rolRaci = rolRaci;
 		this.objetoId = objetoId;
 		this.objetoTipo = objetoTipo;
@@ -52,10 +50,9 @@ public class AsignacionRaci implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public AsignacionRaci(Colaborador colaborador, MatrizRaci matrizRaci, String rolRaci, int objetoId, int objetoTipo,
-			int estado, String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion) {
+	public AsignacionRaci(Colaborador colaborador, String rolRaci, int objetoId, int objetoTipo, int estado,
+			String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion) {
 		this.colaborador = colaborador;
-		this.matrizRaci = matrizRaci;
 		this.rolRaci = rolRaci;
 		this.objetoId = objetoId;
 		this.objetoTipo = objetoTipo;
@@ -86,16 +83,6 @@ public class AsignacionRaci implements java.io.Serializable {
 
 	public void setColaborador(Colaborador colaborador) {
 		this.colaborador = colaborador;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "matriz_raciid", nullable = false)
-	public MatrizRaci getMatrizRaci() {
-		return this.matrizRaci;
-	}
-
-	public void setMatrizRaci(MatrizRaci matrizRaci) {
-		this.matrizRaci = matrizRaci;
 	}
 
 	@Column(name = "rol_raci", nullable = false, length = 1)

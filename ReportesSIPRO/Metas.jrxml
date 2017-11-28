@@ -12,12 +12,17 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="257"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="737"/>
 	<parameter name="usuario" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="proyectoId" class="java.lang.Integer" isForPrompting="false">
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
 	</parameter>
 	<parameter name="esSubreporte" class="java.lang.Boolean" isForPrompting="false">
 		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaCorte" class="java.util.Date">
+		<defaultValueExpression><![CDATA[NOW()]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT meta.*, valores.*
@@ -97,7 +102,7 @@ WHEN m.dato_tipoid = 3 THEN mp.diciembre_decimal ELSE 0  END diciembreP ,
 0 eneroR, 0 febreroR, 0 marzoR, 0 abrilR, 0 mayoR, 0 junioR, 0 julioR, 0 agostoR, 0 septiembreR, 0 octubreR, 0 noviembreR, 0 diciembreR
 from sipro.meta_planificado mp
 join sipro.meta m on mp.metaid = m.id
-where ejercicio = YEAR(now())
+where ejercicio = YEAR( $P{fechaCorte} )
 union
 select t1.metaid, t1.anio ejercicio,
 0 eneroP, 0 febreroP, 0 marzoP, 0 abrilP, 0 mayoP, 0 junioP, 0 julioP, 0 agostoP, 0 septiembreP, 0 octubreP, 0 noviembreP, 0 diciembreP,
@@ -122,7 +127,8 @@ END valor
 from sipro.meta_avance ma
 join sipro.meta m on ma.metaid = m.id
 where ma.estado = 1
-and YEAR(ma.fecha) = YEAR(now())
+and YEAR(ma.fecha) = YEAR($P{fechaCorte} )
+and MONTH(ma.fecha) <= MONTH($P{fechaCorte} )
 ) t1
 group by t1.anio
 ) valores
@@ -644,7 +650,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{meta}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="650" y="0" width="50" height="30" uuid="a60094ca-de40-4565-ad8f-23c099399e6a">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3308b2af-1808-4c72-bd40-f01b4fa96bed"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
@@ -766,7 +772,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<font fontName="Arial" size="7"/>
 					<paragraph leftIndent="2" rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{R1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{R2}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="494" y="0" width="52" height="30" uuid="c2ee67c0-1e7b-4e40-8379-f5ab77e4d808">
@@ -787,7 +793,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<font fontName="Arial" size="7"/>
 					<paragraph leftIndent="2" rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{R1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{R3}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="546" y="0" width="51" height="30" uuid="95bb3cd7-78cf-4de0-8a2c-963be129e140">
@@ -827,7 +833,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{RAnual}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="700" y="0" width="50" height="30" uuid="33ca592b-037e-4f2c-9416-eaea1474cd92">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3308b2af-1808-4c72-bd40-f01b4fa96bed"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>

@@ -52,7 +52,6 @@
         <mapping class="pojo.HitoResultado" />
         <mapping class="pojo.HitoTipo" />
         <mapping class="pojo.InteresTipo" />
-        <mapping class="pojo.MatrizRaci" />
         <mapping class="pojo.Meta" />
         <mapping class="pojo.MetaTipo" />
         <mapping class="pojo.MetaUnidadMedida" />
@@ -65,6 +64,7 @@
         <mapping class="pojo.ObjetoRecurso" />
         <mapping class="pojo.ObjetoRiesgo" />
         <mapping class="pojo.ObjetoRiesgoId" />
+        <mapping class="pojo.PepDetalle" />
         <mapping class="pojo.PlanAdquisicionPago" />
         <mapping class="pojo.PlanAdquisicion" />
         <mapping class="pojo.Permiso" />

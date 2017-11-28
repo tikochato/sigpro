@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.4.3.final using JasperReports Library version 6.4.3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Desembolsos" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c0c45383-5721-429a-baef-8c47d579dfd8">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<style name="Table_TH" mode="Opaque" forecolor="#FCFAFA" backcolor="#A4A4A4">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -74,6 +74,9 @@
 		<parameter name="eneroR_g" class="java.math.BigDecimal">
 			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 		</parameter>
+		<parameter name="fechaCorte" class="java.util.Date">
+			<defaultValueExpression><![CDATA[NOW( )]]></defaultValueExpression>
+		</parameter>
 		<queryString language="SQL">
 			<![CDATA[select 'planificada' tipo, 1 mes,  $P{eneroR_g} monto
 union 
@@ -106,7 +109,8 @@ and e.entidad = po.entidad
 and e.fuente = cast(substring(pe.codigo_presupuestario,1,2) as Integer) 
 and e.organismo = cast(substring(pe.codigo_presupuestario,3,4) as Integer)
 and e.correlativo = cast(substring(pe.codigo_presupuestario,7,4) as Integer)
-and e.ejercicio = year(now())
+and e.ejercicio = year( $P{fechaCorte} )
+and e.mes <= month( $P{fechaCorte} )
 and po.id =  $P{proyectoIdG} 
 and e.mes > 0
 group by  e.ejercicio, e.mes]]>
@@ -164,6 +168,9 @@ group by  e.ejercicio, e.mes]]>
 		</parameter>
 		<parameter name="costoRealDiciembre_t" class="java.math.BigDecimal">
 			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="fechaCorte" class="java.util.Date">
+			<defaultValueExpression><![CDATA[NOW( )]]></defaultValueExpression>
 		</parameter>
 		<queryString language="SQL">
 			<![CDATA[select 'Gasto real' gasto,
@@ -223,7 +230,8 @@ from (
 	and e.fuente = cast(substring(pe.codigo_presupuestario,1,2) as Integer) 
 	and e.organismo = cast(substring(pe.codigo_presupuestario,3,4) as Integer)
 	and e.correlativo = cast(substring(pe.codigo_presupuestario,7,4) as Integer)
-	and e.ejercicio = year(now())
+	and e.ejercicio = year( $P{fechaCorte} )
+	and e.mes <= month( $P{fechaCorte} )
 	and po.id =  $P{proyectoId_t} 
 	and e.mes > 0
 	group by  e.ejercicio, e.mes 
@@ -292,71 +300,11 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 	<parameter name="costoReal" class="java.util.ArrayList" nestedType="java.math.BigDecimal">
 		<parameterDescription><![CDATA[Lista de cosotos reales]]></parameterDescription>
 	</parameter>
+	<parameter name="fechaCorte" class="java.util.Date">
+		<defaultValueExpression><![CDATA[NOW( )]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
-		<![CDATA[select 'Gasto real',
-sum(case
-  when t1.mes = 1 then t1.ejecutado
-  else null
-end) enero,
-sum(case
-  when t1.mes = 2 then t1.ejecutado
-  else null
-end) febrero,
-sum(case
-  when t1.mes = 3 then t1.ejecutado
-  else null
-end) marzo,
-sum(case
-  when t1.mes = 4 then t1.ejecutado
-  else null
-end) abril,
-sum(case
-  when t1.mes = 5 then t1.ejecutado
-  else null
-end) mayo,
-sum(case
-  when t1.mes = 6 then t1.ejecutado
-  else null
-end) junio,
-sum(case
-  when t1.mes = 7 then t1.ejecutado
-  else null
-end) julio,
-sum(case
-  when t1.mes = 8 then t1.ejecutado
-  else null
-end) agosto,
-sum(case
-  when t1.mes = 9 then t1.ejecutado
-  else null
-end) septiembre,
-sum(case
-  when t1.mes = 10 then t1.ejecutado
-  else null
-end) octubre,
-sum(case
-  when t1.mes = 11 then t1.ejecutado
-  else null
-end) noviembre,
-sum(case
-  when t1.mes = 12 then t1.ejecutado
-  else null
-end) diciembre
-from (
-	select e.ejercicio, e.mes, sum(e.ejecutado) ejecutado
-	from sipro_analytic.mv_ep_ejec_asig_vige e, sipro.proyecto po ,sipro.prestamo pe
-	where pe.id = po.prestamoid
-	and e.entidad = po.entidad
-	and e.fuente = cast(substring(pe.codigo_presupuestario,1,2) as Integer) 
-	and e.organismo = cast(substring(pe.codigo_presupuestario,3,4) as Integer)
-	and e.correlativo = cast(substring(pe.codigo_presupuestario,7,4) as Integer)
-	and e.ejercicio = year(now())
-	and po.id = 6
-	and e.mes > 0
-	group by  e.ejercicio, e.mes 
-) t1
-union
-select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
+		<![CDATA[select 1]]>
 	</queryString>
 	<background>
 		<band splitType="Stretch"/>
@@ -372,7 +320,7 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 			</staticText>
 			<areaChart>
 				<chart evaluationTime="Report" renderType="draw" theme="default">
-					<reportElement x="115" y="71" width="530" height="200" uuid="7fddb95a-ce0f-48b6-b5b7-ca15db3ff1b5"/>
+					<reportElement x="115" y="71" width="530" height="200" uuid="0ede8e65-638f-457c-a2dd-f638b99c396d"/>
 					<chartTitle/>
 					<chartSubtitle/>
 					<chartLegend>
@@ -381,7 +329,7 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 				</chart>
 				<categoryDataset>
 					<dataset>
-						<datasetRun subDataset="Tabla" uuid="f69bcf43-54a3-4780-bbe7-bee19face29d">
+						<datasetRun subDataset="Tabla" uuid="f174f825-0d3b-4ff2-b81d-f2eb9bb46454">
 							<datasetParameter name="proyectoIdG">
 								<datasetParameterExpression><![CDATA[$P{proyectoId}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -421,6 +369,9 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 							<datasetParameter name="diciembreR_g">
 								<datasetParameterExpression><![CDATA[!$P{costoReal}.isEmpty()  &&  $P{costoReal}.size() >  11  ?  $P{costoReal}.get( 11)  :  new BigDecimal(0)]]></datasetParameterExpression>
 							</datasetParameter>
+							<datasetParameter name="fechaCorte">
+								<datasetParameterExpression><![CDATA[$P{fechaCorte}]]></datasetParameterExpression>
+							</datasetParameter>
 							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 						</datasetRun>
 					</dataset>
@@ -455,7 +406,7 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="gastos" uuid="bfab080d-0b36-4745-8f48-261bdd120124">
+					<datasetRun subDataset="gastos" uuid="760cb5b6-0ab1-4897-8b50-bafdd44343d2">
 						<datasetParameter name="proyectoId_t">
 							<datasetParameterExpression><![CDATA[$P{proyectoId}]]></datasetParameterExpression>
 						</datasetParameter>
@@ -494,6 +445,9 @@ select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
 						</datasetParameter>
 						<datasetParameter name="costoRealDiciembre_t">
 							<datasetParameterExpression><![CDATA[! $P{costoReal}.isEmpty()  && $P{costoReal}.size() > 11  ? $P{costoReal}.get( 11) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="fechaCorte">
+							<datasetParameterExpression><![CDATA[$P{fechaCorte}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>

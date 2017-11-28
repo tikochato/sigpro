@@ -18,6 +18,7 @@ import org.joda.time.DateTime;
 
 import pojo.Actividad;
 import pojo.Componente;
+import pojo.PepDetalle;
 import pojo.Proyecto;
 import pojo.ProyectoUsuario;
 import pojo.ProyectoUsuarioId;
@@ -534,7 +535,7 @@ public class ProyectoDAO implements java.io.Serializable  {
 	
 	public static boolean calcularCostoyFechas(Integer proyectoId){
 		boolean ret = false;
-		ArrayList<ArrayList<Nodo>> listas = EstructuraProyectoDAO.getEstructuraProyectoArbolCalculos(proyectoId);
+		ArrayList<ArrayList<Nodo>> listas = EstructuraProyectoDAO.getEstructuraProyectoArbolCalculos(proyectoId, null);
 		for(int i=listas.size()-1; i>=0; i--){
 			for(int j=0; j<listas.get(i).size(); j++){
 				Nodo nodo = listas.get(i).get(j);
@@ -622,6 +623,97 @@ public class ProyectoDAO implements java.io.Serializable  {
 			ret = false;
 			CLogger.write("20", ProyectoDAO.class, e);
 		}
+		return ret;
+	}
+	
+	public static PepDetalle getPepDetalle(int id){
+
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		PepDetalle ret = null;
+		try{
+			List<PepDetalle> listRet = null;
+			Query<PepDetalle> criteria = session.createQuery("FROM PepDetalle p where p.id=:id and p.estado = 1", PepDetalle.class);
+			criteria.setParameter("id", id);
+			listRet=criteria.getResultList();
+			 ret =!listRet.isEmpty() ? listRet.get(0) : null;
+		}
+		catch(Throwable e){
+			CLogger.write("21", ProyectoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static boolean guardarPepDetalle(PepDetalle pepDetalle){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			session.saveOrUpdate(pepDetalle);
+			session.getTransaction().commit();
+			ret = true;
+		}
+		catch(Throwable e){
+			CLogger.write("22", ProyectoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+
+	
+	public static Proyecto getProyectoHistory(int id,String lineaBase){
+
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		Proyecto ret = null;
+		try{
+			String query = String.join(" ", "select * from sipro_history.proyecto p " ,
+					"where p.estado = 1  ",
+					"and  p.id = ?1 ",
+					lineaBase != null ? "and p.linea_base = ?2 " : "and p.actual = 1 ");
+			Query<Proyecto> criteria = session.createNativeQuery(query, Proyecto.class);
+			criteria.setParameter(1, id);
+			if (lineaBase != null)
+				criteria.setParameter(2, lineaBase);
+			 ret = criteria.getSingleResult();
+		} catch (NoResultException e){
+		}
+		catch(Throwable e){
+			CLogger.write("21", ProyectoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static List<Proyecto> getProyectosPorPrestamoHistory(int idPrograma,String lineaBase){
+		List<Proyecto> ret = new ArrayList<Proyecto>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ","select * ",
+					"from sipro_history.proyecto p",
+					"where p.prestamoid = ?1",
+					"and p.estado = 1",
+					lineaBase != null ? "and p.linea_base = ?2" : "and p.actual = 1");
+			
+			Query<Proyecto> criteria = session.createNativeQuery(query, Proyecto.class);
+			
+			criteria.setParameter(1, idPrograma);
+			if (lineaBase != null)
+				criteria.setParameter(2, lineaBase);
+			ret =   criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("11", ProyectoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+
 		return ret;
 	}
 }

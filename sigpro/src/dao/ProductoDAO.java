@@ -287,29 +287,35 @@ public class ProductoDAO {
 		return ret;
 	}
 	
-	public static List<Producto> getProductosPorProyecto(Integer idProyecto,String usuario) {
+	public static List<Producto> getProductosPorProyecto(Integer idProyecto,String usuario,String lineaBase) {
 		List<Producto> ret = new ArrayList<Producto>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try {
 			String query = String.join(" ", "select t.*"
 					,"from (",
-					"SELECT pr.* FROM producto pr JOIN componente c ON c.id = pr.componenteid "
-					,"JOIN proyecto p ON p.id = c.proyectoid"
-					,"where p.id = :idProy"
+					"SELECT pr.* FROM sipro_history.producto pr JOIN sipro_history.componente c ON c.id = pr.componenteid "
+					,"JOIN sipro_history.proyecto p ON p.id = c.proyectoid"
+					,"where p.id = :idProy" 
+					,lineaBase != null ? "and p.linea_base = :lineaBase" : "and p.actual = 1"
 					,"UNION"
-					,"SELECT pr.* FROM producto pr" 
-					,"JOIN subcomponente s ON s.id = pr.subcomponenteid" 
-					,"JOIN componente c ON c.id = s.componenteid" 
-					,"JOIN proyecto p ON p.id = c.proyectoid"
+					,"SELECT pr.* FROM sipro_history.producto pr" 
+					,"JOIN sipro_history.subcomponente s ON s.id = pr.subcomponenteid" 
+					,"JOIN sipro_history.componente c ON c.id = s.componenteid" 
+					,"JOIN sipro_history.proyecto p ON p.id = c.proyectoid"
 					,"where p.id = :idProy"
+					,lineaBase != null ? "and pr.linea_base = :lineaBase" : "and pr.actual = 1"
+					,lineaBase != null ? "and s.linea_base = :lineaBase" : "and s.actual = 1"
+					,lineaBase != null ? "and c.linea_base = :lineaBase" : "and c.actual = 1"
+					,lineaBase != null ? "and p.linea_base = :lineaBase" : "and p.actual = 1"
 					,") as t"
 					,usuario!=null && usuario.length()>0 ? 
 					 "join producto_usuario pu on pu.productoid = t.id where pu.usuario = :usuario ":"",
 					 usuario!=null && usuario.length()>0 ? "and" : "where", "t.estado = 1");
 			
-			
 			Query<Producto> criteria = session.createNativeQuery(query,Producto.class);
 			criteria.setParameter("idProy", idProyecto);
+			if (lineaBase != null)
+				criteria.setParameter("lineaBase", lineaBase);
 			if (usuario !=null && usuario.length()>0)
 				criteria.setParameter("usuario", usuario);
 			ret =   criteria.getResultList();
@@ -558,6 +564,69 @@ public class ProductoDAO {
 		catch(Throwable e){
 			ret = false;
 			CLogger.write("20", ProductoDAO.class, e);
+		}
+		return ret;
+	}
+	
+	public static List<Producto> getProductosHistory(Integer componenteid, Integer subcomponenteid,String lineaBase) {
+		List<Producto> ret = new ArrayList<Producto>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try {
+			
+			String query = "select * from sipro_history.producto p where p.estado  = 1 ";
+			if(componenteid!=null && componenteid > 0){
+				query += "AND p.componenteid = ?1 ";
+			}
+			if(subcomponenteid!=null && subcomponenteid > 0){
+				query += "AND p.subcomponenteid = ?2 ";
+			}
+			
+			query += (lineaBase != null ? "and p.linea_base = ?3" : "and p.actual = 1");
+
+			
+			Query<Producto> criteria = session.createNativeQuery(query,Producto.class);
+			
+			if (componenteid!=null && componenteid>0){
+				criteria.setParameter(1, componenteid);
+			}
+			if (subcomponenteid!=null && subcomponenteid>0){
+				criteria.setParameter(2, subcomponenteid);
+			}
+			if (lineaBase != null){
+				criteria.setParameter(3, lineaBase);
+			}
+			ret = criteria.getResultList();
+		} catch (Throwable e) {
+			CLogger.write("21", ProductoDAO.class, e);
+		} finally {
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Producto getProductoHistory(Integer productoId,String lineaBase){
+		Producto ret = null;
+		List<Producto> listRet = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "select * ", 
+					"from sipro_history.producto p ",
+					"where p.estado = 1 ",
+					"and p.id = ?1 ",
+					lineaBase != null ? "and p.linea_base = ?2" : "and p.actual = 1",
+							"order by p.id desc");
+			Query<Producto> criteria = session.createNativeQuery(query, Producto.class);
+			criteria.setParameter(1, productoId);
+			if (lineaBase != null)
+				criteria.setParameter(2, lineaBase);
+			listRet =   criteria.getResultList();
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
+		}
+		catch(Throwable e){
+			CLogger.write("22", ProductoDAO.class, e);
+		}
+		finally{
+			session.close();
 		}
 		return ret;
 	}

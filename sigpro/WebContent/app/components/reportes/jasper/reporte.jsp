@@ -1,3 +1,6 @@
+<%@page import="dao.ProyectoDAO"%>
+<%@page import="pojo.PepDetalle"%>
+<%@page import="java.util.Date"%>
 <%@page import="java.math.BigDecimal"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="dao.ObjetoCostoJasper"%>
@@ -19,6 +22,7 @@
 <%
 	Integer reporteId = request.getParameter("reporte")!=null ? Utils.String2Int(request.getParameter("reporte").toString()):0;
 	Integer proyectoId = request.getParameter("proyecto")!=null ? Utils.String2Int(request.getParameter("proyecto").toString()):0;
+	Long fecha = request.getParameter("fecha")!=null ? Utils.String2Long(request.getParameter("fecha").toString()): new Date().getTime();
 	
 	HttpSession sesionweb = request.getSession();
 	String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
@@ -26,11 +30,15 @@
 	JasperPrint jasperPrint = null;
 	switch(reporteId){
 		case 0: 
+			Date fechaCorte = new Date(fecha);
+			DateTime dateTime = new DateTime(fechaCorte);
+			
 			Map<String, Object> parameters = new HashMap<String, Object>();
 			parameters.put("proyectoId",proyectoId);
 			parameters.put("usuario",usuario);
 			
-			List<ObjetoCostoJasper> listadoCostos = ObjetoDAO.getEstructuraConCostoJasper(proyectoId, DateTime.now().getYear(), DateTime.now().getYear(), usuario);
+			//TODO: lineaBase
+			List<ObjetoCostoJasper> listadoCostos = ObjetoDAO.getEstructuraConCostoJasper(proyectoId, dateTime.getYear(), dateTime.getYear(), null, usuario);
 			parameters.put("costos",listadoCostos);
 			
 			ArrayList<BigDecimal> costoReal = new ArrayList<BigDecimal>();
@@ -48,7 +56,16 @@
 			costoReal.add(listadoCostos.get(0).getDiciembreP());
 			
 			parameters.put("costoReal",costoReal);
+			parameters.put("fechaCorte", fechaCorte);
 			
+			PepDetalle detalle = ProyectoDAO.getPepDetalle(proyectoId);
+			if(detalle!=null){
+				parameters.put("observaciones",detalle.getObservaciones());
+				parameters.put("alertivos",detalle.getAlertivos());
+				parameters.put("elaborado",detalle.getElaborado());
+				parameters.put("aprobado",detalle.getAprobado());
+				parameters.put("autoridad",detalle.getAutoridad());
+			}
 			jasperPrint = CJasperReport.reporteJasperPrint(CJasperReport.PLANTILLA_PLANANUAL, parameters);
 			break;
 		case 1: jasperPrint = PlanEjecucionDAO.generarJasper(proyectoId, usuario);
@@ -56,7 +73,8 @@
 		case 2: jasperPrint = PlanEjecucionDAO.generarJasper(proyectoId, usuario);
 			break;
 		case 3: 
-			jasperPrint = InformacionPresupuestariaDAO.generarJasper(proyectoId, DateTime.now().getYear(), usuario);
+			//TODO: lineaBase
+			jasperPrint = InformacionPresupuestariaDAO.generarJasper(proyectoId, DateTime.now().getYear(), null, usuario);
 			break;
 	}
 	

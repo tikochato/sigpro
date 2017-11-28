@@ -119,18 +119,20 @@ public class SGestionAdquisiciones extends HttpServlet {
 		
 		if(accion.equals("generarGestion")){
 			try {
-				List<stcomponentegestionadquisicion> lstprestamo = generarPlan(idPrestamo, usuario, fechaInicio, fechaFin);
+				String lineaBase = map.get("lineaBase");
+				List<stcomponentegestionadquisicion> lstprestamo = generarPlan(idPrestamo, usuario, fechaInicio, fechaFin, lineaBase);
 				
 				response_text=new GsonBuilder().serializeNulls().create().toJson(lstprestamo);
 		        response_text = String.join("", "\"proyecto\":",response_text);
 		        response_text = String.join("", "{\"success\":true,", response_text, "}");
 			} catch (Exception e) {
-				CLogger.write("1", SPlanAdquisiciones.class, e);
+				CLogger.write("1", SReporteFinancieroAdquisiciones.class, e);
 			}
 		}else if(accion.equals("exportarExcel")){
 			Integer agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
 			Integer tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
-			byte [] outArray = exportarExcel(idPrestamo, agrupacion, usuario, fechaInicio, fechaFin, tipoVisualizacion);
+			String lineaBase = map.get("lineaBase");
+			byte [] outArray = exportarExcel(idPrestamo, agrupacion, usuario, fechaInicio, fechaFin, tipoVisualizacion, lineaBase);
 			response.setContentType("application/ms-excel");
 			response.setContentLength(outArray.length);
 			response.setHeader("Cache-Control", "no-cache"); 
@@ -151,7 +153,7 @@ public class SGestionAdquisiciones extends HttpServlet {
         output.close();
 	}
 	
-	private byte[] exportarExcel(int prestamoId, int agrupacion, String usuario, Integer fechaInicial, Integer fechaFinal, Integer tipoVisualizacion){
+	private byte[] exportarExcel(int prestamoId, int agrupacion, String usuario, Integer fechaInicial, Integer fechaFinal, Integer tipoVisualizacion, String lineaBase){
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -161,7 +163,7 @@ public class SGestionAdquisiciones extends HttpServlet {
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
 			headers = generarHeaders(fechaInicial, fechaFinal, agrupacion, tipoVisualizacion);
-			List<stcomponentegestionadquisicion> lstPrestamo = generarPlan(prestamoId, usuario, fechaInicial, fechaFinal);	
+			List<stcomponentegestionadquisicion> lstPrestamo = generarPlan(prestamoId, usuario, fechaInicial, fechaFinal, lineaBase);	
 			datosInforme = generarDatosReporte(lstPrestamo, fechaInicial, fechaFinal, agrupacion, tipoVisualizacion, headers[0].length, usuario);
 			excel = new CExcel("Gestión de Adquisiciones", false, null);
 			Proyecto proyecto = ProyectoDAO.getProyecto(prestamoId);
@@ -373,13 +375,13 @@ public class SGestionAdquisiciones extends HttpServlet {
 		return headers;
 	}
 	
-	private List<stcomponentegestionadquisicion> generarPlan(Integer idPrestamo, String usuario, Integer fechaInicial, Integer fechaFinal) throws Exception{
+	private List<stcomponentegestionadquisicion> generarPlan(Integer idPrestamo, String usuario, Integer fechaInicial, Integer fechaFinal, String lineaBase) throws Exception{
 		try{
 			List<stcomponentegestionadquisicion> lstPrestamo = new ArrayList<>();
-			List<ObjetoCosto> estructuraProyecto = ObjetoDAO.getEstructuraConCosto(idPrestamo, fechaInicial, fechaFinal, true, false, usuario);
+			List<ObjetoCosto> estructuraProyecto = ObjetoDAO.getEstructuraConCosto(idPrestamo, fechaInicial, fechaFinal, true, false, false, lineaBase, usuario);
 			stcomponentegestionadquisicion temp = null;
 			
-			List<CategoriaAdquisicion> lstCategorias = CategoriaAdquisicionDAO.getCategoriaAdquisicion(); 
+			List<CategoriaAdquisicion> lstCategorias = CategoriaAdquisicionDAO.getCategoriaAdquisicionLB(lineaBase); 
 			List<stcategoriaG> lsttempCategorias = new ArrayList<stcategoriaG>();
 			stcategoriaG tempCategoria = null;
 			for(CategoriaAdquisicion categoria : lstCategorias){
@@ -396,7 +398,7 @@ public class SGestionAdquisiciones extends HttpServlet {
 				temp.cantidadAdquisiciones = 0;
 				for(ObjetoCosto objeto: estructuraProyecto){
 					if(objeto.getObjeto_tipo() == 3 || objeto.getObjeto_tipo() == 4 || objeto.getObjeto_tipo() == 5){
-						PlanAdquisicion lstplan = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(objeto.getObjeto_tipo(), objeto.getObjeto_id());
+						PlanAdquisicion lstplan = PlanAdquisicionDAO.getPlanAdquisicionByObjetoLB(objeto.getObjeto_tipo(), objeto.getObjeto_id(), lineaBase);
 						if(lstplan != null){
 							if(cat.categoriaId==lstplan.getCategoriaAdquisicion().getId()){
 								temp.cantidadAdquisiciones++;
