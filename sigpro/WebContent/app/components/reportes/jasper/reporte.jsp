@@ -37,7 +37,8 @@
 			parameters.put("proyectoId",proyectoId);
 			parameters.put("usuario",usuario);
 			
-			List<ObjetoCostoJasper> listadoCostos = ObjetoDAO.getEstructuraConCostoJasper(proyectoId, dateTime.getYear(), dateTime.getYear(), usuario);
+			//TODO: lineaBase
+			List<ObjetoCostoJasper> listadoCostos = ObjetoDAO.getEstructuraConCostoJasper(proyectoId, dateTime.getYear(), dateTime.getYear(), null, usuario);
 			parameters.put("costos",listadoCostos);
 			
 			ArrayList<BigDecimal> costoReal = new ArrayList<BigDecimal>();
@@ -72,7 +73,8 @@
 		case 2: jasperPrint = PlanEjecucionDAO.generarJasper(proyectoId, usuario);
 			break;
 		case 3: 
-			jasperPrint = InformacionPresupuestariaDAO.generarJasper(proyectoId, DateTime.now().getYear(), usuario);
+			//TODO: lineaBase
+			jasperPrint = InformacionPresupuestariaDAO.generarJasper(proyectoId, DateTime.now().getYear(), null, usuario);
 			break;
 	}
 	

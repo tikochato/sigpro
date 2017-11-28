@@ -30,6 +30,7 @@ import com.google.gson.reflect.TypeToken;
 import dao.ComponenteDAO;
 import dao.DataSigadeDAO;
 import dao.PlanEjecucionDAO;
+import dao.PrestamoDAO;
 import dao.ProyectoDAO;
 import pojo.Componente;
 import pojo.Prestamo;
@@ -76,7 +77,7 @@ public class SInformeGeneralPEP extends HttpServlet {
 		if(accion.equals("getDatosPlan")){
 			Integer proyectoId = Utils.String2Int(map.get("proyectoId"),0);
 			
-			List<?> datosPlan = PlanEjecucionDAO.getDatosPlan(proyectoId);
+			List<?> datosPlan = PlanEjecucionDAO.getDatosPlan(proyectoId,null);
 			BigDecimal plazoEjecucionPlan = new BigDecimal(0);
 			BigDecimal plazoEjecucionReal = new BigDecimal(0);
 			BigDecimal ejecucionFinancieraReal = new BigDecimal(0);
@@ -192,8 +193,8 @@ public class SInformeGeneralPEP extends HttpServlet {
 
 
 	public String[][] generarDatos(int idProyecto, String usuario,Double plazoEjecucion){
-		Proyecto proyecto = ProyectoDAO.getProyecto(idProyecto);
-		Prestamo prestamo = proyecto.getPrestamo();
+		Proyecto proyecto = ProyectoDAO.getProyectoHistory(idProyecto,null);
+		Prestamo prestamo = PrestamoDAO.getPrestamoByIdHistory(proyecto.getId(), null);
 
 		Date fecha_actual = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("MM");
@@ -235,7 +236,7 @@ public class SInformeGeneralPEP extends HttpServlet {
 		datos[8][3] = Utils.formatDate(prestamo.getFechaVigencia());
 		
 		BigDecimal montoContratadoEntidadUsd = new BigDecimal(0);
-		ArrayList<Componente> componentes = (ArrayList<Componente>) ComponenteDAO.getComponentesPorProyecto(proyecto.getId());
+		ArrayList<Componente> componentes = (ArrayList<Componente>) ComponenteDAO.getComponentesPorProyectoHistory(proyecto.getId(),null);
 		if (componentes != null){
 			for (Componente c : componentes)
 				montoContratadoEntidadUsd = montoContratadoEntidadUsd.add(c.getFuentePrestamo()!= null ? c.getFuentePrestamo() : new BigDecimal(0));

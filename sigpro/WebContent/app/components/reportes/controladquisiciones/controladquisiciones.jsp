@@ -213,8 +213,8 @@
 		    								<td class="divisionColumna truncate" style="min-width:300px;max-width:300px;">
 			    								<div style="text-align: left" uib-tooltip="{{row.nombre}}"><span style="float: left;" ng-class="ctrladqui.claseIcon(row);" uib-tooltip="{{ctrladqui.tooltipObjetoTipo[row.objetoTipo]}}"></span>{{row.nombre}}</div>
 				    						</td>
-		    								<td class="divisionColumna" style="min-width: 200px; max-width: 200px">
-		    									{{row.tipoAdquisicionNombre}}
+		    								<td class="divisionColumna truncate" style="min-width: 200px; max-width: 200px">
+		    									<div uib-tooltip="{{row.tipoAdquisicionNombre}}">{{row.tipoAdquisicionNombre}}</div>
 		    								</td>		    								
 							    			<td class="divisionColumna" style="min-width: 150px; max-width: 150px">
 							    				{{row.unidadMedida}}

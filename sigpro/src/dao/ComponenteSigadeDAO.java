@@ -75,5 +75,30 @@ public class ComponenteSigadeDAO {
 		}
 		return ret;
 	}
+	
+	public static ComponenteSigade getComponenteSigadePorIdHistory(Integer id, String lineaBase){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		ComponenteSigade ret = null;
+		List<ComponenteSigade> listRet = null;
+		try{
+			String Str_query = String.join(" ", "select * from sipro_history.componente_sigade c",
+							"where c.id = ?1",
+							lineaBase != null ? "and c.linea_base = ?2 ": "and c.actual = 1");
+			
+			Query<ComponenteSigade> criteria = session.createNativeQuery(Str_query, ComponenteSigade.class);
+			criteria.setParameter(1, id);
+			if (lineaBase != null)
+				criteria.setParameter(2, lineaBase);
+			listRet = criteria.getResultList();
+			if(listRet != null && !listRet.isEmpty()){
+				ret = listRet.get(0);
+			}
+		}catch(Exception e){
+			CLogger.write("3", ComponenteSigadeDAO.class, e);
+		}finally{
+			session.close();
+		}
+		return ret;
+	}
 
 }

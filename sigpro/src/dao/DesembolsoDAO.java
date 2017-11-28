@@ -200,19 +200,22 @@ public class DesembolsoDAO {
 		return ret;
 	}
 	
-	public static List<?> getDesembolsosPorEjercicio(Integer idProyecto, int anio_inicial, int anio_final){
+	public static List<?> getDesembolsosPorEjercicio(Integer idProyecto, int anio_inicial, int anio_final,String lineaBase){
 		List<?> ret= null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = String.join(" ", "select year (fecha) anio ,month(fecha) mes ,SUM(monto)  monto",
-				"from desembolso where proyectoid = ?1",
+				"from sipro_history.desembolso where proyectoid = ?1",
 				"and estado  = 1", 
 				"and  year(fecha) between ?2 and ?3",
+				lineaBase!=null ? "and linea_base = ?4" : "and actual = 1",
 				"GROUP BY year (fecha),month(fecha) order by year(fecha),month (fecha) asc");
 			Query<?>  desembolsos = session.createNativeQuery(query);
 			desembolsos.setParameter(1, idProyecto);
 			desembolsos.setParameter(2, anio_inicial);
 			desembolsos.setParameter(3, anio_final);
+			if (lineaBase!=null)
+				desembolsos.setParameter(4, lineaBase);
 			ret = desembolsos.getResultList();
 		}
 		catch(Throwable e){
@@ -224,15 +227,19 @@ public class DesembolsoDAO {
 		return ret;
 	}
 	
-	public static List<?> getDesembolsosEntreFechas(Integer idProyecto, Date fechaInicio, Date fechaFin){
+	public static List<?> getDesembolsosEntreFechas(Integer idProyecto, Date fechaInicio, Date fechaFin, String lineaBase){
 		java.sql.Date fechaInicial = new java.sql.Date(fechaInicio.getTime());
 		java.sql.Date fechaFinal = new java.sql.Date(fechaFin.getTime());
 		List<?> ret= null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
+			String queryVersion = "";
+			if(lineaBase==null){
+				queryVersion = " and actual = 1 ";
+			}
 			String query = String.join(" ", "select year (fecha) anio ,month(fecha) mes ,SUM(monto)  monto",
-				"from desembolso where proyectoid = ?1",
-				"and estado  = 1", 
+				"from sipro_history.desembolso where proyectoid = ?1",
+				queryVersion, 
 				"and  fecha between ?2 and ?3",
 				"GROUP BY year (fecha),month(fecha) order by year(fecha),month (fecha) asc");
 			Query<?>  desembolsos = session.createNativeQuery(query);
@@ -291,46 +298,24 @@ public class DesembolsoDAO {
 		return ret;
 	}
 	
-	public static List<?> getCostosPorEjercicio(Integer idProyecto, int anio_inicial, int anio_final){
-		List<?> ret= null;
-		Session session = CHibernateSession.getSessionFactory().openSession();
-		try{
-			String query = String.join(" ", "select year (a.fecha_inicio), month (a.fecha_inicio), a.costo",
-						"from actividad a",
-						"where a.estado=1 and ((a.proyecto_base= ?1)",
-						"OR (a.componente_base in (select id from componente where proyectoid= ?1))",
-						"OR (a.producto_base in (select p.id from producto p, componente c where p.componenteid=c.id and c.proyectoid= ?1))",
-						")",
-						"and  year (a.fecha_inicio) between ?2 and ?3",
-						"GROUP BY year (a.fecha_inicio), month (a.fecha_inicio)",
-						"order by year (a.fecha_inicio), month (a.fecha_inicio) asc");
-			Query<?>  desembolsos = session.createNativeQuery(query);
-			desembolsos.setParameter(1, idProyecto);
-			desembolsos.setParameter(2, anio_inicial);
-			desembolsos.setParameter(3, anio_final);
-			ret = desembolsos.getResultList();
-		}
-		catch(Throwable e){
-			CLogger.write("8", DesembolsoDAO.class, e);
-		}
-		finally{
-			session.close();
-		}
-		return ret;
-	}
 	
-	public static BigDecimal getTotalDesembolsosFuturos(int proyectoId, Date fechaActual){
+	
+	public static BigDecimal getTotalDesembolsosFuturos(int proyectoId, Date fechaActual,String lineaBase){
 		BigDecimal ret= new BigDecimal("0");
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			Query<BigDecimal> conteo = 
-					session.createQuery("select sum(d.monto) from Desembolso d where d.proyecto.id = ?1 and d.fecha > ?2",BigDecimal.class);
+			String query = "select sum(d.monto) from sipro_history.desembolso d where d.proyectoid = ?1 and d.fecha > ?2 " + 
+		    (lineaBase != null ? "and d.linea_base = ?3" : "and d.actual = 1 ") ;
+			Query<?> conteo = session.createNativeQuery(query);
 			conteo.setParameter(1, proyectoId);
 			conteo.setParameter(2, fechaActual);
-			ret = conteo.getSingleResult();
+			if (lineaBase != null)
+				 conteo.setParameter(3, lineaBase);
+			Object res = conteo.getSingleResult();
+			ret = (BigDecimal) res;
 		}
 		catch(Throwable e){
-			CLogger.write("9", DesembolsoDAO.class, e);
+			CLogger.write("11", DesembolsoDAO.class, e);
 		}
 		finally{
 			session.close();

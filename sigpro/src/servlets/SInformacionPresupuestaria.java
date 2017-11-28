@@ -76,7 +76,8 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 				Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
 				Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
-				List<ObjetoCosto> lstPrestamo = ObjetoDAO.getEstructuraConCosto(idPrestamo, anioInicial, anioFinal, true, true, false, usuario);
+				//TODO: lineaBase
+				List<ObjetoCosto> lstPrestamo = ObjetoDAO.getEstructuraConCosto(idPrestamo, anioInicial, anioFinal, true, true, false, null, usuario);
 				
 				if (null != lstPrestamo && !lstPrestamo.isEmpty()){
 					response_text=new GsonBuilder().serializeNulls().create().toJson(lstPrestamo);
@@ -100,7 +101,8 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
 				Integer agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
 				Integer tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
-		        byte [] outArray = exportarExcel(idPrestamo, anioInicial, anioFinal, agrupacion, tipoVisualizacion, usuario);
+				//TODO: lineaBase 
+		        byte [] outArray = exportarExcel(idPrestamo, anioInicial, anioFinal, agrupacion, tipoVisualizacion, null, usuario);
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
 				response.setHeader("Cache-Control", "no-cache"); 
@@ -119,7 +121,8 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				String headers[][];
 				String datosMetas[][];
 				headers = generarHeaders(anioInicial, anioFinal, agrupacion, tipoVisualizacion);
-				List<ObjetoCosto> lstPrestamo = ObjetoDAO.getEstructuraConCosto(idPrestamo, anioInicial, anioFinal, true, true, false, usuario);
+				//TODO: lineaBase
+				List<ObjetoCosto> lstPrestamo = ObjetoDAO.getEstructuraConCosto(idPrestamo, anioInicial, anioFinal, true, true, false, null, usuario);
 				datosMetas = generarDatosReporte(lstPrestamo, anioInicial, anioFinal, agrupacion, tipoVisualizacion, headers[0].length, usuario);
 				String path = archivo.ExportarPdfEjecucionPresupuestaria(headers, datosMetas,tipoVisualizacion);
 				File file=new File(path);
@@ -170,7 +173,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 	}
 	
 		
-	private byte[] exportarExcel(int prestamoId, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, String usuario){
+	private byte[] exportarExcel(int prestamoId, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, String lineaBase, String usuario){
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -180,7 +183,8 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
 			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
-			List<ObjetoCosto> lstPrestamo = ObjetoDAO.getEstructuraConCosto(prestamoId, anioInicio, anioFin, true, true, false, usuario);
+			//TODO: lineaBase
+			List<ObjetoCosto> lstPrestamo = ObjetoDAO.getEstructuraConCosto(prestamoId, anioInicio, anioFin, true, true, false, lineaBase, usuario);
 			datosInforme = generarDatosReporte(lstPrestamo, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
 			CGraficaExcel grafica = generarGrafica(datosInforme, tipoVisualizacion, agrupacion, anioInicio, anioFin);
 			excel = new CExcel("Ejecucion presupuestaria", false, grafica);

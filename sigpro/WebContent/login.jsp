@@ -13,9 +13,6 @@
 <body ng-app="sipro" ng-controller="loginController as login">
 <div class="container container-fluid">
 		<div class="row-fluid">
-		<div class="" style="margin-top: -90px;">
-			<img src="/assets/img/marcas/Logo_BID.png" alt="BID" width="125" height="90">
-		</div>
 		<form class="login-form">
 			<div class="panel panel-default">
 			  <div class="panel-heading" style="background-color: #1f3b6a; color: #ffffff;">{{ login.sistema_nombre }}</div>

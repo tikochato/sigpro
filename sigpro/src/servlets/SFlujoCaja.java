@@ -118,11 +118,11 @@ public class SFlujoCaja extends HttpServlet {
 				Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 				Integer idProyecto = Utils.String2Int(map.get("idProyecto"),0);
 				Date fechaCorte = Utils.dateFromString(map.get("fechaCorte"));
-				List<ObjetoCosto> lstPrestamo = getFlujoCaja(idProyecto, idPrestamo, fechaCorte, usuario);
-				
+				//TODO: lineaBase
+				List<ObjetoCosto> lstPrestamo = getFlujoCaja(idProyecto, idPrestamo, fechaCorte, null, usuario);
 				
 				if (null != lstPrestamo && !lstPrestamo.isEmpty()){
-					stTotales stTotales = getFlujoCajaTotales(idPrestamo, lstPrestamo, fechaCorte, usuario);
+					stTotales stTotales = getFlujoCajaTotales(idPrestamo, lstPrestamo, fechaCorte, null, usuario);
 					String totales = new GsonBuilder().serializeNulls().create().toJson(stTotales);
 					response_text=new GsonBuilder().serializeNulls().create().toJson(lstPrestamo);
 			        response_text = String.join("", "\"prestamo\":",response_text);
@@ -141,7 +141,8 @@ public class SFlujoCaja extends HttpServlet {
 			int agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
 			
 			try{
-		        byte [] outArray = exportarExcel(prestamoId, proyectoId, fechaCorte, agrupacion, usuario);
+				//TODO: lineaBase
+				byte [] outArray = exportarExcel(prestamoId, proyectoId, fechaCorte, agrupacion, null, usuario);
 			
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
@@ -164,7 +165,8 @@ public class SFlujoCaja extends HttpServlet {
 				String headers[][];
 				String datos[][];
 				headers = generarHeaders(fechaCorte, agrupacion);
-				datos = generarDatosFlujoCaja(prestamoId, proyectoId, fechaCorte, agrupacion, headers[0].length, usuario);
+				//TODO: lineaBase
+				datos = generarDatosFlujoCaja(prestamoId, proyectoId, fechaCorte, agrupacion, headers[0].length, null, usuario);
 				String path = archivo.ExportarPdfFlujoCaja(headers, datos, usuario);
 				File file=new File(path);
 				if(file.exists()){
@@ -222,14 +224,14 @@ public class SFlujoCaja extends HttpServlet {
 		}
 	}
 	
-	private List<ObjetoCosto> getFlujoCaja(int idPrestamo, int idProyecto, Date fechaCorte, String usuario) throws SQLException{
+	private List<ObjetoCosto> getFlujoCaja(int idPrestamo, int idProyecto, Date fechaCorte, String lineaBase, String usuario) throws SQLException{
 		DateTime fecha = new DateTime(fechaCorte);
 		Integer anio = fecha.getYear();
-		List<ObjetoCosto> lstPrestamo = ObjetoDAO.getEstructuraConCosto(idProyecto, anio, anio, true, true, false, usuario);
+		List<ObjetoCosto> lstPrestamo = ObjetoDAO.getEstructuraConCosto(idProyecto, anio, anio, true, true, false, lineaBase, usuario);
 		return lstPrestamo;
 	}
 	
-	private stTotales getFlujoCajaTotales(Integer prestamoId, List<ObjetoCosto> lstPrestamo, Date fechaCorte, String usuario) throws SQLException{
+	private stTotales getFlujoCajaTotales(Integer prestamoId, List<ObjetoCosto> lstPrestamo, Date fechaCorte, String lineaBase, String usuario) throws SQLException{
 		stTotales totales = new stTotales();		
 		if(CMariaDB.connectAnalytic()){
 			Connection conn_analytic = CMariaDB.getConnection_analytic();
@@ -261,7 +263,7 @@ public class SFlujoCaja extends HttpServlet {
 					Integer anioFinal = fecha.getYear();
 					Integer mesFinal = fecha.getMonthOfYear();
 					Date fechaInicial = Utils.dateFromString("01/01/"+ anioFinal);
-					List<?> objDesembolso =DesembolsoDAO.getDesembolsosEntreFechas(prestamo.getObjeto_id(),fechaInicial,fechaCorte);
+					List<?> objDesembolso =DesembolsoDAO.getDesembolsosEntreFechas(prestamo.getObjeto_id(),fechaInicial,fechaCorte, lineaBase);
 					for(int d=0; d<objDesembolso.size(); d++){
 						Integer anio = (Integer) ((Object[]) objDesembolso.get(d))[0];
 						Integer mes = (Integer) ((Object[]) objDesembolso.get(d))[1];
@@ -312,7 +314,7 @@ public class SFlujoCaja extends HttpServlet {
 		return totales;
 	}
 	
-	private byte[] exportarExcel(int prestamoId, int proyectoId, Date fechaCorte, int agrupacion, String usuario) throws IOException{
+	private byte[] exportarExcel(int prestamoId, int proyectoId, Date fechaCorte, int agrupacion, String lineaBase, String usuario) throws IOException{
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -323,7 +325,7 @@ public class SFlujoCaja extends HttpServlet {
 		try{		
 			excel = new CExcel("Flujo de Caja", false, null);
 			headers = generarHeaders(fechaCorte, agrupacion);
-			datos = generarDatosFlujoCaja(prestamoId, proyectoId, fechaCorte, agrupacion, headers[0].length, usuario);
+			datos = generarDatosFlujoCaja(prestamoId, proyectoId, fechaCorte, agrupacion, headers[0].length, lineaBase, usuario);
 			wb=excel.generateExcelOfData(datos, "Flujo de Caja - "+ProyectoDAO.getProyecto(prestamoId).getNombre(), headers, null, true, usuario);
 		
 		wb.write(outByteStream);
@@ -394,12 +396,12 @@ public class SFlujoCaja extends HttpServlet {
 		return headers;
 	}
 	
-	public String[][] generarDatosFlujoCaja(int prestamoId, int proyectoId, Date fechaCorte, int agrupacion, int columnasTotal, String usuario) throws SQLException{
+	public String[][] generarDatosFlujoCaja(int prestamoId, int proyectoId, Date fechaCorte, int agrupacion, int columnasTotal, String lineaBase, String usuario) throws SQLException{
 		String[][] datos = null;
 		int columna = 0;
-		List<ObjetoCosto> lstPrestamo = getFlujoCaja(prestamoId, proyectoId, fechaCorte, usuario);
+		List<ObjetoCosto> lstPrestamo = getFlujoCaja(prestamoId, proyectoId, fechaCorte, lineaBase, usuario);
 		if (lstPrestamo != null && !lstPrestamo.isEmpty()){
-			stTotales stTotales = getFlujoCajaTotales(prestamoId, lstPrestamo, fechaCorte, usuario);
+			stTotales stTotales = getFlujoCajaTotales(prestamoId, lstPrestamo, fechaCorte, lineaBase, usuario);
 			datos = new String[lstPrestamo.size()+9][columnasTotal];
 			for (int i=0; i<lstPrestamo.size(); i++){
 				columna = 0;

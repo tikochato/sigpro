@@ -211,8 +211,8 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/tipoadquisicion/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'tipoAdquisicionController\'" class="all_page"></div>'
             })
-            .when('/planadquisiciones/',{
-            	template: '<div load-on-demand="\'planAdquisicionesController\'" class="all_page"></div>'
+            .when('/reportefinancieroadquisiciones/',{
+            	template: '<div load-on-demand="\'reporteFinancieroAdquisicionesController\'" class="all_page"></div>'
             })
             .when('/flujocaja',{
             	template: '<div load-on-demand="\'flujocajaController\'" class="all_page"></div>'
@@ -568,9 +568,9 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   template: '/app/components/tipoadquisicion/tipoAdquisicion.jsp'
 	       },
 	       {
-	    	   name: 'planAdquisicionesController',
-	    	   script: '/app/components/reportes/planadquisiciones/planAdquisiciones.controller.js',
-	    	   template: '/app/components/reportes/planadquisiciones/planAdquisiciones.jsp'
+	    	   name: 'reporteFinancieroAdquisicionesController',
+	    	   script: '/app/components/reportes/reportefinancieroadquisiciones/reporteFinancieroAdquisiciones.controller.js',
+	    	   template: '/app/components/reportes/reportefinancieroadquisiciones/reporteFinancieroAdquisiciones.jsp'
 	       }, {
 	    	   name: 'flujocajaController',
 	    	   script: '/app/components/reportes/flujocaja/flujocaja.controller.js',

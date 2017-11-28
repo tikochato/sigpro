@@ -243,6 +243,8 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 		var costoPlan = [];
 		var desembolsosAcumuladosReal = [];
 		var desembolsosAcumuladosPlan = [];
+		var variacionDesembolsoAcumulado = [];
+		var porcentajaVaracionAcumulado = [];
 		
 		mi.tabla=[];
 		mi.tablaAcumulado=[];
@@ -254,7 +256,7 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 			case 1:
 				totalItems = (mi.anio_fin - mi.anio_inicio +1) * 12;
 				
-				costoPlan.push ("Monto planificado");
+				costoPlan.push ("Monto planificado PEP");
 				costoPlan.push (...costo.slice());
 			
 				desembolsoPlanificado.push("Desembolso Planificado ($)");
@@ -680,18 +682,31 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 		
 		desembolsosAcumuladosReal.push("Desembolsos Acumulados Real");
 		desembolsosAcumuladosPlan.push("Desembolsos Acumulados Planificado");
+		variacionDesembolsoAcumulado.push("Variacion de Desembolsos Acumulados");
+		porcentajaVaracionAcumulado.push("Porcentaje de Variacion Acumulados");
 		
 		for (x in mi.tabla[1]){
 			if(x>0 && x< mi.tabla[1].length -1){
-			desembolsosAcumuladosReal.push(x == 1 ? mi.tabla[3][x] : desembolsosAcumuladosReal[x-1] + mi.tabla[3][x] );
-			desembolsosAcumuladosPlan.push(x == 1 ? mi.tabla[1][x] : desembolsosAcumuladosPlan[x-1] + mi.tabla[1][x] );
+				desembolsosAcumuladosReal.push(x == 1 ? mi.tabla[3][x] : desembolsosAcumuladosReal[x-1] + mi.tabla[3][x] );
+				desembolsosAcumuladosPlan.push(x == 1 ? mi.tabla[1][x] : desembolsosAcumuladosPlan[x-1] + mi.tabla[1][x] );
+				
+				var variacion = desembolsosAcumuladosPlan[x] - desembolsosAcumuladosReal[x];
+				var var1 = variacion / desembolsosAcumuladosPlan[x];
+				var var2 = variacion / desembolsosAcumuladosReal[x];
+				var1 = (var1 * 100).toFixed(2);
+				var2 = (var2 * 100).toFixed(2);
+				var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsosAcumuladosPlan[x] : desembolsosAcumuladosReal[x] ) * 100).toFixed(2);
+				
+				variacionDesembolsoAcumulado.push (variacion)
+				porcentajaVaracionAcumulado.push(isNaN(porcentajeVariacion) ? "0%" :porcentajeVariacion+"%" );
+			
 			}
 		}
 		
 		mi.tablaAcumulado.push(desembolsosAcumuladosPlan);
 		mi.tablaAcumulado.push(desembolsosAcumuladosReal);
-		
-		
+		mi.tablaAcumulado.push(variacionDesembolsoAcumulado);
+		mi.tablaAcumulado.push(porcentajaVaracionAcumulado);
 	}
 	
 	mi.generarEtiquetas = function(agrupacion,totalItems){

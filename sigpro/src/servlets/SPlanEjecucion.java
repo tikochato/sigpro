@@ -64,13 +64,13 @@ public class SPlanEjecucion extends HttpServlet {
 		Date fecha_actual = new Date();
 		if(accion.equals("getDatosPlan")){
 			Integer prestamoId = Utils.String2Int(map.get("prestamoId"),0);
-			Prestamo prestamo = PrestamoDAO.getPrestamoById(prestamoId);
+			Prestamo prestamo = PrestamoDAO.getPrestamoByIdHistory(prestamoId,null);
 			
 			if(prestamo != null){
-				double ejecucionFisicaReal = PlanEjecucionDAO.calcularEjecucionFisicaReal(prestamo);
-				BigDecimal ejecucionFinancieraPlanificada = PlanEjecucionDAO.calcularEjecucionFinanciaeraPlanificada(prestamo, prestamo.getCodigoPresupuestario()+"", new Date());
-				Double plazoEjecucionPlanificada = PlanEjecucionDAO.calcularPlazoEjecucionPlanificada(prestamo);
-				BigDecimal ejecucionFisicaPlanificada = PlanEjecucionDAO.calcularEjecucionFisicaPlanificada(prestamo);
+				double ejecucionFisicaReal = PlanEjecucionDAO.calcularEjecucionFisicaReal(prestamo,null);
+				BigDecimal ejecucionFinancieraPlanificada = PlanEjecucionDAO.calcularEjecucionFinanciaeraPlanificada(prestamo, prestamo.getCodigoPresupuestario()+"", new Date(),null);
+				Double plazoEjecucionPlanificada = PlanEjecucionDAO.calcularPlazoEjecucionPlanificada(prestamo,null);
+				BigDecimal ejecucionFisicaPlanificada = PlanEjecucionDAO.calcularEjecucionFisicaPlanificada(prestamo,null);
 				
 				DecimalFormat df = new DecimalFormat();
 			    df.setMinimumFractionDigits(2);
@@ -99,7 +99,7 @@ public class SPlanEjecucion extends HttpServlet {
 				
 				
 		        byte [] outArray = exportarExcel(idPrestamo, usuario, plazoEjecucionReal,ejecucionFinancieraReal,ejecucionFisicaReal
-		        		,plazoEjecucionPlan,ejecucionFinancieraPlan,ejecucionFisicaPlan);
+		        		,plazoEjecucionPlan,ejecucionFinancieraPlan,ejecucionFisicaPlan,null);
 			
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
@@ -127,7 +127,7 @@ public class SPlanEjecucion extends HttpServlet {
 	}
 		
 	private byte[] exportarExcel(int idPrestamo, String usuario, Double plazoEjecucionReal, Double ejecucionFinancieraReal,
-			Double ejecucionFisicaReal ,Double plazoEjecucionPlan, Double ejecucionFinancieraPlan, Double ejecucionFisicaPlan
+			Double ejecucionFisicaReal ,Double plazoEjecucionPlan, Double ejecucionFinancieraPlan, Double ejecucionFisicaPlan, String lineaBase
 			) throws IOException{
 		byte [] outArray = null;
 		CExcel excel=null;
@@ -138,7 +138,7 @@ public class SPlanEjecucion extends HttpServlet {
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
 			headers = generarHeaders();
-			datos = generarDatos(idPrestamo, usuario,plazoEjecucionReal);
+			datos = generarDatos(idPrestamo, usuario,plazoEjecucionReal,lineaBase);
 			CGraficaExcel grafica = generarGrafica(plazoEjecucionReal,ejecucionFinancieraReal,ejecucionFisicaReal
 	        		,plazoEjecucionPlan,ejecucionFinancieraPlan,ejecucionFisicaPlan);
 			excel = new CExcel("Plan de Ejecucion", false, grafica);
@@ -169,8 +169,8 @@ public class SPlanEjecucion extends HttpServlet {
 	}
 
 
-	public String[][] generarDatos(int idPrestamo, String usuario,Double plazoEjecucion){
-		Prestamo prestamo = PrestamoDAO.getPrestamoById(idPrestamo);
+	public String[][] generarDatos(int idPrestamo, String usuario,Double plazoEjecucion,String lineaBase){
+		Prestamo prestamo = PrestamoDAO.getPrestamoByIdHistory(idPrestamo,lineaBase);
 
 		Date fecha_actual = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("MM");

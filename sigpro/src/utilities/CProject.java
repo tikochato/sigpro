@@ -571,10 +571,10 @@ public class CProject {
 	
 	
 	
-	public String exportarProject(int idProyecto,String usuario) throws Exception
+	public String exportarProject(int idProyecto, String lineaBase, String usuario) throws Exception
 	{
 		String path="";
-		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idProyecto);
+		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idProyecto, lineaBase);
 		if(estructuraProyecto != null){
 			project = new ProjectFile();
 			
@@ -742,7 +742,7 @@ public class CProject {
 		switch (objetoTipo){
 			case 5:
 				String nombre ="";
-				AsignacionRaci recurso = AsignacionRaciDAO.getAsignacionPorRolTarea(objetoId, objetoTipo, "r");
+				AsignacionRaci recurso = AsignacionRaciDAO.getAsignacionPorRolTarea(objetoId, objetoTipo, "r", null);
 				if (recurso!=null){
 					nombre = recurso.getColaborador().getPnombre() 
 							+ (recurso.getColaborador().getSnombre() != null ? " " + recurso.getColaborador().getSnombre()  : "")

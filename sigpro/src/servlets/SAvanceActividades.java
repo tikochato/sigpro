@@ -165,7 +165,7 @@ public class SAvanceActividades extends HttpServlet {
 				
 				response_text = String.join("", "{\"success\":true ", response_text, "}");
 			}else if(accion.equals("getActividadesProyecto")){
-				List<?> actividades = EstructuraProyectoDAO.getActividadesProyecto(idPrestamo);
+				List<?> actividades = EstructuraProyectoDAO.getActividadesProyecto(idPrestamo, null);
 				Date Corte = new Date();
 				Date inicio = new Date();
 				Date fin = new Date();
@@ -182,7 +182,7 @@ public class SAvanceActividades extends HttpServlet {
 						tempActividad.fechaFin = Utils.formatDate((Date)obj[6]);
 						tempActividad.porcentajeAvance = (Integer)obj[12];
 						
-						AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(tempActividad.id, 5, "R"); 
+						AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(tempActividad.id, 5, "R", null); 
 						tempActividad.responsable = asignacion != null ? ((asignacion != null ? asignacion.getColaborador().getPnombre() : null) + " " + (asignacion != null ? asignacion.getColaborador().getPapellido() : null)) : null;
 						lstActividadesProyecto.add(tempActividad);
 					}
@@ -303,7 +303,7 @@ public class SAvanceActividades extends HttpServlet {
 				Date inicio = new Date();
 				Date fin = new Date();
 				
-				List<?> lstActividadesProducto = EstructuraProyectoDAO.getActividadesByTreePath(producto.getTreePath(), producto.getComponente() != null ? producto.getComponente().getProyecto().getId() : producto.getSubcomponente().getComponente().getProyecto().getId());
+				List<?> lstActividadesProducto = EstructuraProyectoDAO.getActividadesByTreePath(producto.getTreePath(), producto.getComponente() != null ? producto.getComponente().getProyecto().getId() : producto.getSubcomponente().getComponente().getProyecto().getId(), null);
 				List<stActividad> actividades = new ArrayList<stActividad>();
 				if (lstActividadesProducto != null){
 					stActividad tempActividad = null;
@@ -316,7 +316,7 @@ public class SAvanceActividades extends HttpServlet {
 						tempActividad.fechaFin = Utils.formatDate((Date)obj[3]);
 						tempActividad.porcentajeAvance = (Integer)obj[4];
 						
-						AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(tempActividad.id, 5, "R"); 
+						AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(tempActividad.id, 5, "R", null); 
 						tempActividad.responsable = asignacion != null ? ((asignacion != null ? asignacion.getColaborador().getPnombre() : null) + " " + (asignacion != null ? asignacion.getColaborador().getPapellido() : null)) : null;
 						actividades.add(tempActividad);
 					}
@@ -470,7 +470,7 @@ public class SAvanceActividades extends HttpServlet {
 		DecimalFormat df2 = new DecimalFormat("###.##");
 		
 		try{
-			List<?> actividades = EstructuraProyectoDAO.getActividadesProyecto(idPrestamo);
+			List<?> actividades = EstructuraProyectoDAO.getActividadesProyecto(idPrestamo, null);
 			if (actividades != null){
 				if(actividades.size() > 0){
 					totalActividades = actividades.size();
@@ -486,7 +486,7 @@ public class SAvanceActividades extends HttpServlet {
 						tempActividad.fechaFin = Utils.formatDate((Date)obj[6]);
 						tempActividad.porcentajeAvance = (Integer)obj[12];
 						
-						AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(tempActividad.id, 5, "R"); 
+						AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(tempActividad.id, 5, "R", null); 
 						tempActividad.responsable = asignacion != null ? ((asignacion != null ? asignacion.getColaborador().getPnombre() : null) + " " + (asignacion != null ? asignacion.getColaborador().getPapellido() : null)) : null;
 						lstActividadesProyecto.add(tempActividad);
 					}
@@ -768,7 +768,7 @@ public class SAvanceActividades extends HttpServlet {
 		DecimalFormat df2 = new DecimalFormat("###.##");
 		
 		try{			
-			List<Producto> productos = ProductoDAO.getProductosPorProyecto(idPrestamo, null);
+			List<Producto> productos = ProductoDAO.getProductosPorProyecto(idPrestamo, null, null);
 			double totalEsperadasAnio = 0;
 			double totalAniosSiguientes = 0;
 			DateTime anioCorte = new DateTime();
@@ -784,7 +784,7 @@ public class SAvanceActividades extends HttpServlet {
 					totalEsperadasAnio = 0;
 					totalAniosSiguientes = 0;
 					
-					List<?> lstActividadesProducto = EstructuraProyectoDAO.getActividadesByTreePath(producto.getTreePath(), idPrestamo);
+					List<?> lstActividadesProducto = EstructuraProyectoDAO.getActividadesByTreePath(producto.getTreePath(), idPrestamo, null);
 					List<stActividad> actividades = new ArrayList<stActividad>();
 					if (lstActividadesProducto != null){
 						stActividad tempActividad = null;
@@ -797,7 +797,7 @@ public class SAvanceActividades extends HttpServlet {
 							tempActividad.fechaFin = Utils.formatDate((Date)obj[3]);
 							tempActividad.porcentajeAvance = (Integer)obj[4];
 							
-							AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(tempActividad.id, 5, "R"); 
+							AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(tempActividad.id, 5, "R", null); 
 							tempActividad.responsable = asignacion != null ? ((asignacion != null ? asignacion.getColaborador().getPnombre() : null) + " " + (asignacion != null ? asignacion.getColaborador().getPapellido() : null)) : null;
 							actividades.add(tempActividad);
 						}
