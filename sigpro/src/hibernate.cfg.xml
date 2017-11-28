@@ -52,6 +52,7 @@
         <mapping class="pojo.HitoResultado" />
         <mapping class="pojo.HitoTipo" />
         <mapping class="pojo.InteresTipo" />
+        <mapping class="pojo.LineaBase" />
         <mapping class="pojo.Meta" />
         <mapping class="pojo.MetaTipo" />
         <mapping class="pojo.MetaUnidadMedida" />
