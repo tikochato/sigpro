@@ -72,49 +72,49 @@ public class EstructuraProyectoDAO {
 					"s.fecha_fin , s.duracion, s.duracion_dimension,s.costo,0,s.acumulacion_costoid, "+
 					"s.programa, s.subprograma, s.proyecto, s.actividad, s.obra, s.fecha_inicio_real, s.fecha_fin_real,0 porcentaje_avance, 0 objeto_tipo_pred "+
 					"from sipro_history.subcomponente s "+
-					"left outer join sipro_history.componente c on c.id=s.componenteid "+
+					"left outer join sipro_history.componente c on c.id=s.componenteid "+ queryVersionS + 
 					"where c.proyectoid=?1 and s.estado=1 and c.estado=1  "+
-					queryVersionS + queryVersionC +
+					queryVersionC +
 					"union "+
 					"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
 					"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid, "+
 					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra, pr.fecha_inicio_real, pr.fecha_fin_real,0 porcentaje_avance, 0 objeto_tipo_pred "+
 					"from sipro_history.producto pr "+
-					"left outer join sipro_history.componente c on c.id=pr.componenteid "+
-					"left outer join sipro_history.proyecto p on p.id=c.proyectoid "+
+					"left outer join sipro_history.componente c on c.id=pr.componenteid "+ queryVersionC + 
+					"left outer join sipro_history.proyecto p on p.id=c.proyectoid "+ queryVersionP +
 					"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1   "+
-					queryVersionPr + queryVersionC + queryVersionP +
+					queryVersionPr + 
 					"union "+
 					"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
 					"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid, "+
 					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra, pr.fecha_inicio_real, pr.fecha_fin_real,0 porcentaje_avance, 0 objeto_tipo_pred "+
 					"from sipro_history.producto pr "+
-					"left outer join sipro_history.subcomponente s on s.id=pr.subcomponenteid   "+  
-					"left outer join sipro_history.componente c on c.id = s.componenteid   "+
-					"left outer join sipro_history.proyecto p on p.id=c.proyectoid   "+  
+					"left outer join sipro_history.subcomponente s on s.id=pr.subcomponenteid   "+  queryVersionS + 
+					"left outer join sipro_history.componente c on c.id = s.componenteid   "+ queryVersionC +
+					"left outer join sipro_history.proyecto p on p.id=c.proyectoid   "+  queryVersionP +
 					"where p.id= ?1 and p.estado=1 and c.estado=1 and s.estado=1 and pr.estado=1   "+
-					queryVersionPr +  queryVersionS + queryVersionC + queryVersionP +
+					queryVersionPr + 
 					"union   "+
 					"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
 					"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid, "+
 					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra, sp.fecha_inicio_real, sp.fecha_fin_real,0 porcentaje_avance, 0 objeto_tipo_pred "+
 					"from sipro_history.subproducto sp "+
-					"left outer join sipro_history.producto pr on pr.id=sp.productoid "+
-					"left outer join sipro_history.componente c on c.id=pr.componenteid "+
-					"left outer join sipro_history.proyecto p on p.id=c.proyectoid "+
+					"left outer join sipro_history.producto pr on pr.id=sp.productoid "+ queryVersionPr +
+					"left outer join sipro_history.componente c on c.id=pr.componenteid "+ queryVersionC +
+					"left outer join sipro_history.proyecto p on p.id=c.proyectoid "+ queryVersionP +
 					"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1 and sp.estado=1 and sp.id  "+
-					queryVersionSp +  queryVersionPr + queryVersionC + queryVersionP +
+					queryVersionSp + 
 					"union   "+
 					"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
 					"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid, "+
 					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra, sp.fecha_inicio_real, sp.fecha_fin_real,0 porcentaje_avance, 0 objeto_tipo_pred "+
 					"from sipro_history.subproducto sp "+
-					"left outer join sipro_history.producto pr on pr.id=sp.productoid "+
-					"left outer join sipro_history.subcomponente s on s.id=pr.subcomponenteid "+
-					"left outer join sipro_history.componente c on c.id=s.componenteid "+
-					"left outer join sipro_history.proyecto p on p.id=c.proyectoid "+
+					"left outer join sipro_history.producto pr on pr.id=sp.productoid "+ queryVersionPr +
+					"left outer join sipro_history.subcomponente s on s.id=pr.subcomponenteid "+ queryVersionS +
+					"left outer join sipro_history.componente c on c.id=s.componenteid "+ queryVersionC +
+					"left outer join sipro_history.proyecto p on p.id=c.proyectoid "+ queryVersionP +
 					"where p.id= ?1 and p.estado=1 and c.estado=1 and s.estado=1 and pr.estado=1 and sp.estado=1 and sp.id  "+
-					queryVersionSp + queryVersionPr + queryVersionS + queryVersionC + queryVersionP +
+					queryVersionSp +
 					"union "+
 					"select a.id, a.nombre, 5 objeto_tipo,  a.treePath, a.fecha_inicio, "+
 					"a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id,a.acumulacion_costo acumulacion_costoid, "+
@@ -181,45 +181,45 @@ public class EstructuraProyectoDAO {
 				"select s.id, s.nombre, 2 objeto_tipo,  s.treePath, s.fecha_inicio, "+
 				"s.fecha_fin , s.duracion, s.duracion_dimension,s.costo,0,s.acumulacion_costoid "+
 				"from sipro_history.subcomponente s "+
-				"left outer join sipro_history.componente c on c.id=s.componenteid "+
+				"left outer join sipro_history.componente c on c.id=s.componenteid "+ queryVersionC +
 				"where c.proyectoid=?1 and s.estado=1 and c.estado=1 and s.id in (select subcomponenteid from subcomponente_usuario where usuario = ?2 ) "+
-				queryVersionS + queryVersionC +
+				queryVersionS + 
 				"union "+
 				"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
 				"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid "+
 				"from sipro_history.producto pr "+
-				"left outer join sipro_history.componente c on c.id=pr.componenteid "+
-				"left outer join sipro_history.proyecto p on p.id=c.proyectoid "+
+				"left outer join sipro_history.componente c on c.id=pr.componenteid "+ queryVersionC +
+				"left outer join sipro_history.proyecto p on p.id=c.proyectoid "+ queryVersionP +
 				"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1 and pr.id in ( select productoid from producto_usuario where usuario = ?2 )  "+
-				queryVersionPr + queryVersionC + queryVersionP +
+				queryVersionPr +
 				"union "+
 				"select pr.id, pr.nombre, 3 objeto_tipo , pr.treePath, pr.fecha_inicio, "+
 				"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid "+
 				"from sipro_history.producto pr "+
-				"left outer join sipro_history.subcomponente s on s.id=pr.subcomponenteid "+
-				"left outer join sipro_history.componente c on c.id=s.componenteid "+
-				"left outer join sipro_history.proyecto p on p.id=c.proyectoid "+
+				"left outer join sipro_history.subcomponente s on s.id=pr.subcomponenteid "+ queryVersionS +
+				"left outer join sipro_history.componente c on c.id=s.componenteid "+ queryVersionC +
+				"left outer join sipro_history.proyecto p on p.id=c.proyectoid "+ queryVersionP +
 				"where p.id= ?1 and p.estado=1 and c.estado=1 and s.estado=1 and pr.estado=1 and pr.id in ( select productoid from producto_usuario where usuario = ?2 )  "+
-				queryVersionPr + queryVersionS + queryVersionC + queryVersionP +
+				queryVersionPr +
 				"union "+
 				"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
 				"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid "+
 				"from sipro_history.subproducto sp "+
-				"left outer join sipro_history.producto pr on pr.id=sp.productoid "+
-				"left outer join sipro_history.componente c on c.id=pr.componenteid "+
-				"left outer join sipro_history.proyecto p on p.id=c.proyectoid "+
+				"left outer join sipro_history.producto pr on pr.id=sp.productoid "+ queryVersionPr +
+				"left outer join sipro_history.componente c on c.id=pr.componenteid "+ queryVersionC +
+				"left outer join sipro_history.proyecto p on p.id=c.proyectoid "+ queryVersionP +
 				"where p.id= ?1 and p.estado=1 and c.estado=1 and pr.estado=1 and sp.estado=1 and sp.id and pr.id in ( select productoid from producto_usuario where usuario = ?2 ) "+
-				queryVersionSp +  queryVersionPr + queryVersionC + queryVersionP +
+				queryVersionSp + 
 				"union "+
 				"select sp.id, sp.nombre, 4 objeto_tipo,  sp.treePath, sp.fecha_inicio, "+
 				"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid "+
 				"from sipro_history.subproducto sp "+
-				"left outer join sipro_history.producto pr on pr.id=sp.productoid "+
-				"left outer join sipro_history.subcomponente s on s.id=pr.subcomponenteid "+
-				"left outer join sipro_history.componente c on c.id=s.componenteid "+
-				"left outer join sipro_history.proyecto p on p.id=c.proyectoid "+
+				"left outer join sipro_history.producto pr on pr.id=sp.productoid "+ queryVersionPr +
+				"left outer join sipro_history.subcomponente s on s.id=pr.subcomponenteid "+ queryVersionS +
+				"left outer join sipro_history.componente c on c.id=s.componenteid "+ queryVersionC +
+				"left outer join sipro_history.proyecto p on p.id=c.proyectoid "+ queryVersionP +
 				"where p.id= ?1 and p.estado=1 and c.estado=1 and s.estado=1 and pr.estado=1 and sp.estado=1 and sp.id and pr.id in ( select productoid from producto_usuario where usuario = ?2 ) "+
-				queryVersionSp + queryVersionPr + queryVersionS + queryVersionC + queryVersionP +
+				queryVersionSp +
 				"union "+
 				"select a.id, a.nombre, 5 objeto_tipo,  a.treePath, a.fecha_inicio, "+
 				"a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id,a.acumulacion_costo acumulacion_costoid "+
