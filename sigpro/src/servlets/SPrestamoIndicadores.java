@@ -114,8 +114,8 @@ public class SPrestamoIndicadores extends HttpServlet {
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 			Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
 			Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
-			//TODO: lineaBase
-			List<stprestamo> lstPrestamo = getIndicadoresPrestamo(idPrestamo, anioInicial, anioFinal, null, usuario);
+			String lineaBase = map.get("lineaBase");
+			List<stprestamo> lstPrestamo = getIndicadoresPrestamo(idPrestamo, anioInicial, anioFinal, lineaBase, usuario);
 			
 			if (null != lstPrestamo && !lstPrestamo.isEmpty()){
 				response_text=new GsonBuilder().serializeNulls().create().toJson(lstPrestamo);
@@ -132,8 +132,8 @@ public class SPrestamoIndicadores extends HttpServlet {
 			int tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
 			
 			try{
-				//TODO: lineaBase
-		        byte [] outArray = exportarExcel(proyectoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, null, usuario);
+				String lineaBase = map.get("lineaBase");
+		        byte [] outArray = exportarExcel(proyectoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, lineaBase, usuario);
 			
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
