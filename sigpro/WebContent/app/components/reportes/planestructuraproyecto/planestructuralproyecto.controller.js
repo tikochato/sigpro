@@ -155,6 +155,7 @@ app.controller('planEstructuralProyectoController',['$scope', '$rootScope', '$ht
 		$http.post('/SPlanEstructuralProyecto', { 
 			 accion: 'exportarExcel', 
 			 proyectoId: mi.pepId, 
+			 lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 			 t:moment().unix()
 		  } ).then(
 				  function successCallback(response) {
