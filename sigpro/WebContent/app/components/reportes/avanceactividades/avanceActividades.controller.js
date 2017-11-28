@@ -34,6 +34,7 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 		
 		mi.totalProductos = 0;
 		mi.totalHitos = 0;
+		mi.lineasBase = [];
 		
 		mi.calcularTamanosPantalla = function(){
 			mi.tamanoPantalla = Math.floor(document.getElementById("reporte").offsetWidth);
@@ -76,19 +77,37 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 			if(document.getElementById("pep_value").defaultValue!=mi.pepNombre){
 				$scope.$broadcast('angucomplete-alt:clearInput','pep');
 			}
-		}
+		};
 		
 		mi.cambioPep=function(selected){
 			if(selected!== undefined){
 				mi.pepNombre = selected.originalObject.nombre;
 				mi.pepId = selected.originalObject.id;
-				mi.validarFecha(mi.fechaCorte)
+				mi.getLineasBase(mi.pepId);
 			}
 			else{
 				mi.pepNombre="";
 				mi.pepId=null;
 			}
-		}
+		};
+		
+		mi.blurLineaBase=function(){
+			if(document.getElementById("lineaBase_value").defaultValue!=mi.lineaBaseNombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+			}
+		};
+		
+		mi.cambioLineaBase=function(selected){
+			if(selected!== undefined){
+				mi.lineaBaseNombre = selected.originalObject.nombre;
+				mi.lineaBaseId = selected.originalObject.id;
+				mi.validarFecha(mi.fechaCorte)
+			}
+			else{
+				mi.lineaBaseNombre="";
+				mi.lineaBaseId=null;
+			}
+		};
 		
 		mi.getPeps = function(prestamoId){
 			$http.post('/SProyecto',{accion: 'getProyectos', prestamoid: prestamoId}).success(
@@ -100,8 +119,19 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 			});	
 		}
 		
+		mi.getLineasBase = function(proyectoId){
+			$http.post('/SProyecto',{accion: 'getLineasBase', proyectoId: proyectoId}).success(
+				function(response) {
+					mi.lineasBase = [];
+					if (response.success){
+						mi.lineasBase = response.lineasBase;
+					}
+			});	
+		}
+		
 		mi.validarFecha = function(fecha1){
-			if(fecha1 != null && mi.pepId != null)
+			//if(fecha1 != null && mi.pepId != null && mi.lineaBaseId != null)
+			if(fecha1 != null && mi.pepId != null )
 				mi.generar();
 		}
 				
@@ -112,7 +142,7 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 		};
 		
 		mi.generar = function(){
-			if(mi.pepId != 0){
+			if(mi.pepId != 0 ){
 				if(mi.fechaCorte != null){
 					mi.mostrardiv = false;
 					mi.rowCollectionActividades = [];
@@ -141,6 +171,7 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 					$http.post('/SAvanceActividades', {
 						accion: 'getAvance',
 						idPrestamo: mi.pepId,
+						lineaBase:mi.lineaBaseId,
 						fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY')
 					}).success(function(response){
 						if (response.success){

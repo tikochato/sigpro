@@ -73,9 +73,22 @@
 		    	<div class="row">
 		    		<div class="form-group col-sm-6" align="left">
 						<div id="pep" angucomplete-alt placeholder="" pause="100" selected-object="controller.cambioPep"
-							  local-data="controller.peps" search-fields="nombre" title-field="nombre" field-required="true" field-label="* {{etiquetas.proyecto}}"
-							  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
-							  initial-value="controller.pepNombre" focus-out="controller.blurPep()" input-name="pep" disable-input="controller.prestamoId==null"></div>
+							  local-data="controller.peps" search-fields="nombre" title-field="nombre" field-required="true" 
+							  field-label="* {{etiquetas.proyecto}}"
+							  minlength="1" input-class="form-control form-control-small field-angucomplete inputText"
+							   match-class="angucomplete-highlight"
+							  initial-value="controller.pepNombre" focus-out="controller.blurPep()" input-name="pep"
+							   disable-input="controller.prestamoId==null"></div>
+						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+					</div>
+		    	</div>
+		    	<div class="row">
+		    		<div class="form-group col-sm-6" align="left">
+						<div id= "lineaBase" angucomplete-alt placeholder="" pause="100" selected-object="controller.cambioLineaBase"
+							  local-data="controller.lineasBase" search-fields="nombre" title-field="nombre" 
+							  field-required="true" field-label="* Linea Base" minlength="1" input-class="form-control form-control-small field-angucomplete inputText" 
+							  match-class="angucomplete-highlight" initial-value="controller.lineaBaseNombre" 
+							  focus-out="controller.blurLineaBase()" input-name="lineaBase"></div>
 						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 					</div>
 					<div class="form-group col-sm-3" style="margin-top: 4px;">

@@ -66,7 +66,9 @@
 		match-catalog="sipro">
 	</table-filter>
 	<table-filter match-name="interes_tipo" match-catalog="sipro"></table-filter>
-	<table-filter match-name="matriz_raci" match-catalog="sipro" exclude="true"></table-filter>
+	<table-filter match-name="matriz_raci" match-catalog="sipro"
+		exclude="true">
+	</table-filter>
 	<table-filter match-name="meta" match-catalog="sipro"></table-filter>
 	<table-filter match-name="meta_avance" match-catalog="sipro"></table-filter>
 	<table-filter match-name="meta_planificado" match-catalog="sipro"></table-filter>
@@ -207,4 +209,5 @@
 	</table-filter>
 	<table-filter match-name="prestamo_usuario" match-catalog="sipro"></table-filter>
 	<table-filter match-name="pep_detalle" match-catalog="sipro"></table-filter>
+	<table-filter match-name="linea_base" match-catalog="sipro"></table-filter>
 </hibernate-reverse-engineering>
