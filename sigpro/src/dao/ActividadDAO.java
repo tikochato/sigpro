@@ -473,7 +473,6 @@ public class ActividadDAO {
 	        return true;
 	}
 	
-	
 	public static List<Actividad> getActividadsPorObjetos(Integer idPrestamo,int anio_inicio, int anio_fin, String lineaBase){
 		List<Actividad> ret = new ArrayList<Actividad>();
 		
@@ -803,6 +802,60 @@ public class ActividadDAO {
 		catch(Throwable e){
 			ret = false;
 			CLogger.write("18", ActividadDAO.class, e);
+		}
+		return ret;
+	}
+	
+	public static List<Actividad> getActividadsPaginaPorObjetoHistory( int objetoId, int objetoTipo,String lineaBase){
+		List<Actividad> ret = new ArrayList<Actividad>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ","select * from sipro_history.actividad a ",
+					"where a.estado = 1",
+					"and a.objeto_tipo = ?1",
+					"and a.objeto_id = ?2",
+					lineaBase != null ? "and a.linea_base = ?3" : "and a.actual = 1");
+			
+			Query<Actividad> criteria = session.createNativeQuery(query,Actividad.class);
+			criteria.setParameter(1, objetoId);
+			criteria.setParameter(2, objetoTipo);
+			if (lineaBase!=null){
+				criteria.setParameter(3, lineaBase);
+			}
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("19", ActividadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Actividad getActividadHistory(Integer actividadId,String lineaBase){
+		Actividad ret = null;
+		List<Actividad> listRet = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "select * ", 
+					"from sipro_history.actividad a ",
+					"where a.estado = 1 ",
+					"and a.id = ?1 ",
+					lineaBase != null ? "and a.linea_base = ?2" : "and a.actual = 1",
+							"order by a.id desc");
+			Query<Actividad> criteria = session.createNativeQuery(query, Actividad.class);
+			criteria.setParameter(1, actividadId);
+			if (lineaBase != null)
+				criteria.setParameter(2, lineaBase);
+			listRet =   criteria.getResultList();
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
+		}
+		catch(Throwable e){
+			CLogger.write("20", ActividadDAO.class, e);
+		}
+		finally{
+			session.close();
 		}
 		return ret;
 	}
