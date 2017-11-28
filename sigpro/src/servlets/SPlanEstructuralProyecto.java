@@ -6,9 +6,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -29,7 +28,8 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
 import dao.ComponenteDAO;
-import dao.EstructuraProyectoDAO;
+import dao.ObjetoCosto;
+import dao.ObjetoDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
 import dao.SubComponenteDAO;
@@ -97,7 +97,6 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 		
 		if(accion.equals("generarPlan")){
 			try{
-				//TODO: lineaBase
 				List<stplanestructuralproyecto> lstprestamo = generarPlan(proyectoId, null, usuario);
 				
 				response_text=new GsonBuilder().serializeNulls().create().toJson(lstprestamo);
@@ -108,7 +107,6 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 			}
 		}else if(accion.equals("exportarExcel")){
 			try{ 
-				//TODO: lineaBase
 				byte [] outArray = exportarExcel(proyectoId, null, usuario);
 				
 				response.setContentType("application/ms-excel");
@@ -213,24 +211,27 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 	private List<stplanestructuralproyecto> generarPlan(Integer IdProyecto, String lineaBase, String usuario) throws Exception{
 		try{
 			List<stplanestructuralproyecto> lstPrestamo = new ArrayList<>();
-			List<?> estruturaProyecto = EstructuraProyectoDAO.getEstructuraProyecto(IdProyecto, lineaBase);
+			
+			Calendar now = Calendar.getInstance();
+			int anio = now.get(Calendar.YEAR);
+			
+			List<ObjetoCosto> lstArbol = ObjetoDAO.getEstructuraConCosto(IdProyecto, anio, anio, true, true, true, lineaBase, usuario);
 			
 			stplanestructuralproyecto temp = null;
 			
-			for(Object objeto: estruturaProyecto){
-				Object[] obj = (Object[]) objeto;
-				Integer nivel = (obj[3]!=null) ? ((String)obj[3]).length()/8 : 0;
+			for(ObjetoCosto objeto: lstArbol){
+				Integer nivel = objeto.getNivel();
 				if(nivel != null){
 					temp = new stplanestructuralproyecto();
-					temp.objetoId = (Integer)obj[0];
-					temp.nombre = (String)obj[1];
-					temp.objetoTipo = ((BigInteger)obj[2]).intValue();
+					temp.objetoId = objeto.getObjeto_id();
+					temp.nombre = objeto.getNombre();
+					temp.objetoTipo = objeto.getObjeto_tipo();
 					temp.nivel = nivel;
-					temp.duracion = (Integer)obj[6];
-					temp.fechaInicial = Utils.formatDate((Date)obj[4]);
-					temp.fechaFinal = Utils.formatDate((Date)obj[5]);
-					temp.fechaInicialReal = Utils.formatDate((Date)obj[16]);
-					temp.fechaFinReal = Utils.formatDate((Date)obj[17]);
+					temp.duracion = objeto.getDuracion();
+					temp.fechaInicial = Utils.formatDate(objeto.getFecha_inicial().toDate());
+					temp.fechaFinal = Utils.formatDate(objeto.getFecha_final().toDate());
+					temp.fechaInicialReal = objeto.getFecha_inicial_real() != null ? Utils.formatDate(objeto.getFecha_inicial_real().toDate()) : null;
+					temp.fechaFinReal = objeto.getFecha_final_real() != null ? Utils.formatDate(objeto.getFecha_final_real().toDate()) : null;
 					
 					switch(temp.objetoTipo){
 					case 1:
@@ -256,7 +257,11 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 						break;
 					}
 					
-					temp.costoPlanificado = (BigDecimal)obj[8];
+					temp.costoPlanificado = objeto.getCosto();
+					temp.presupuestoDevengado = objeto.getEjecutado();
+					temp.presupuestoAprobado = objeto.getAsignado();
+					temp.asignacionPresupuestariaVigente = objeto.getModificaciones();
+					temp.avanceFinanciero = objeto.getModificaciones() != null && objeto.getEjecutado() != null ? (objeto.getModificaciones().compareTo(BigDecimal.ZERO) > 0 ? objeto.getEjecutado().divide(objeto.getModificaciones()).doubleValue() : new BigDecimal(0).doubleValue()) : new BigDecimal(0).doubleValue();
 					lstPrestamo.add(temp);
 				}
 			}

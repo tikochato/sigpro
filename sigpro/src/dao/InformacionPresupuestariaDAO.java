@@ -662,7 +662,7 @@ public class InformacionPresupuestariaDAO {
 						+ " select sum(asignado) asignado, 0 devengado, 0 modificaciones "
 						+ " from sipro_analytic.mv_ep_ejec_asig_vige  "
 						+ " where "
-						+ " and mes = 0 ";
+						+ " mes = 0 ";
 						str_Query += entidad!=null? " and entidad = '"+entidad+"' " : "";
 						str_Query += unidad_ejecutora!=null? " and unidad_ejecutra = "+unidad_ejecutora : "";
 						str_Query += programa!=null? " and programa = "+programa : "";
@@ -677,7 +677,7 @@ public class InformacionPresupuestariaDAO {
 						str_Query += " and ejercicio = "+ejercicio 
 						+ " group by entidad "
 						+ " UNION " 
-						+ " select 0 asignado, sum(ejecutado) devengado, sum(modificaciones) modificaciones "
+						+ " select 0 asignado, sum(ejecutado) devengado, 0 modificaciones "
 						+ " from sipro_analytic.mv_ep_ejec_asig_vige  "
 						+ " where ejercicio = "+ejercicio;
 						str_Query += entidad!=null? " and entidad = '"+entidad+"' " : "";
@@ -693,6 +693,24 @@ public class InformacionPresupuestariaDAO {
 						str_Query += fuente!=null? " and fuente = "+fuente : "";
 						str_Query += " and mes > 0 "
 						+ " and mes <= "+mes
+						+ " group by entidad "
+						+ " UNION " 
+						+ " select 0 asignado, 0 devengado, sum(modificaciones) modificaciones "
+						+ " from sipro_analytic.mv_ep_ejec_asig_vige  "
+						+ " where ejercicio = "+ejercicio;
+						str_Query += entidad!=null? " and entidad = '"+entidad+"' " : "";
+						str_Query += unidad_ejecutora!=null? " and unidad_ejecutra = "+unidad_ejecutora : "";
+						str_Query += programa!=null? " and programa = "+programa : "";
+						str_Query += subprograma!=null? " and subprograma = "+subprograma  : "";
+						str_Query += proyecto!=null? " and proyecto = "+proyecto : "";
+						str_Query += actividad!=null? " and actividad = "+actividad : "";
+						str_Query += renglon!=null? " and renglon = "+renglon : "";
+						str_Query += geografico!=null? " and geografico = "+geografico : "";
+						str_Query += correlativo!=null? " and correlativo = "+correlativo : "";
+						str_Query += organismo!=null? " and organismo = "+organismo : "";
+						str_Query += fuente!=null? " and fuente = "+fuente : "";
+						str_Query += " and mes > 0 "
+						+ " and mes < "+mes
 						+ " group by entidad "
 						+ " ) t1 ";
 
