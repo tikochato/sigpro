@@ -165,7 +165,7 @@ public class SDesembolsos extends HttpServlet {
 				
 				try {
 					//TODO: lineaBase
-					costos = ObjetoDAO.getEstructuraConCosto(proyectoId, anio_inicial, anio_final,true, false, null, usuario);
+					costos = ObjetoDAO.getEstructuraConCosto(proyectoId, anio_inicial, anio_final,true, false, false, null, usuario);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}

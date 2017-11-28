@@ -1217,7 +1217,7 @@ public class SPrestamo extends HttpServlet {
 						null, null, null,null, null, null, null,null, null, null,null,
 						prestamo.getFechaSuscripcion(),prestamo.getFechaSuscripcion(),
 						1, "d"
-						,null,null,0,0,0, null,esCoordinador,fechaElegibilidad,fechaCierre,null,null,null,null,null,null,null,null,null,null,null);
+						,null,null,0,0,0, null,esCoordinador,fechaElegibilidad,fechaCierre,null,null,null,null,null,null,null,null,null,null,null,null);
 			}else{
 				proyecto = ProyectoDAO.getProyectoPorUnidadEjecutora(unidadEjecutora.getId().getUnidadEjecutora(), prestamo.getId(), unidadEjecutora.getId().getEntidadentidad());
 				proyecto.setCoordinador(esCoordinador);

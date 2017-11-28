@@ -228,7 +228,7 @@ public class SFlujoCaja extends HttpServlet {
 	private List<ObjetoCosto> getFlujoCaja(int idPrestamo, int idProyecto, Date fechaCorte, String lineaBase, String usuario) throws SQLException{
 		DateTime fecha = new DateTime(fechaCorte);
 		Integer anio = fecha.getYear();
-		List<ObjetoCosto> lstPrestamo = ObjetoDAO.getEstructuraConCosto(idProyecto, anio, anio, true, true, lineaBase, usuario);
+		List<ObjetoCosto> lstPrestamo = ObjetoDAO.getEstructuraConCosto(idProyecto, anio, anio, true, true, false, lineaBase, usuario);
 		return lstPrestamo;
 	}
 	

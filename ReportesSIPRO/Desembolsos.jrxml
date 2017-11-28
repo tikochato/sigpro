@@ -11,7 +11,9 @@
 		<parameter name="proyectoIdG" class="java.lang.Integer">
 			<defaultValueExpression><![CDATA[29]]></defaultValueExpression>
 		</parameter>
-		<parameter name="fechaCorte" class="java.util.Date"/>
+		<parameter name="fechaCorte" class="java.util.Date">
+			<defaultValueExpression><![CDATA[new Date()]]></defaultValueExpression>
+		</parameter>
 		<queryString language="SQL">
 			<![CDATA[SELECT * FROM (
 (SELECT 'planificado' tipo, month(fecha) mes ,SUM(monto)  monto
@@ -49,7 +51,7 @@ ORDER BY mes asc]]>
 		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
 	</parameter>
 	<parameter name="fechaCorte" class="java.util.Date">
-		<defaultValueExpression><![CDATA[NOW( )]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new Date()]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[select SUM(eneroP) eneroP, SUM(eneroR) eneroR, SUM(febreroP) febreroP, SUM(febreroR) febreroR,
@@ -188,10 +190,6 @@ group by t1.anio
 	<field name="totalR" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.label" value="totalR"/>
 	</field>
-	<variable name="anio" class="java.lang.Integer">
-		<variableExpression><![CDATA[$P{fechaCorte}.getYear()]]></variableExpression>
-		<initialValueExpression><![CDATA[YEAR(NOW( ) )]]></initialValueExpression>
-	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>

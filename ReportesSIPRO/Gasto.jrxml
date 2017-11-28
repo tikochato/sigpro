@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.4.3.final using JasperReports Library version 6.4.3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Desembolsos" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c0c45383-5721-429a-baef-8c47d579dfd8">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<style name="Table_TH" mode="Opaque" forecolor="#FCFAFA" backcolor="#A4A4A4">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -304,71 +304,7 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 		<defaultValueExpression><![CDATA[NOW( )]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
-		<![CDATA[select 'Gasto real',
-sum(case
-  when t1.mes = 1 then t1.ejecutado
-  else null
-end) enero,
-sum(case
-  when t1.mes = 2 then t1.ejecutado
-  else null
-end) febrero,
-sum(case
-  when t1.mes = 3 then t1.ejecutado
-  else null
-end) marzo,
-sum(case
-  when t1.mes = 4 then t1.ejecutado
-  else null
-end) abril,
-sum(case
-  when t1.mes = 5 then t1.ejecutado
-  else null
-end) mayo,
-sum(case
-  when t1.mes = 6 then t1.ejecutado
-  else null
-end) junio,
-sum(case
-  when t1.mes = 7 then t1.ejecutado
-  else null
-end) julio,
-sum(case
-  when t1.mes = 8 then t1.ejecutado
-  else null
-end) agosto,
-sum(case
-  when t1.mes = 9 then t1.ejecutado
-  else null
-end) septiembre,
-sum(case
-  when t1.mes = 10 then t1.ejecutado
-  else null
-end) octubre,
-sum(case
-  when t1.mes = 11 then t1.ejecutado
-  else null
-end) noviembre,
-sum(case
-  when t1.mes = 12 then t1.ejecutado
-  else null
-end) diciembre
-from (
-	select e.ejercicio, e.mes, sum(e.ejecutado) ejecutado
-	from sipro_analytic.mv_ep_ejec_asig_vige e, sipro.proyecto po ,sipro.prestamo pe
-	where pe.id = po.prestamoid
-	and e.entidad = po.entidad
-	and e.fuente = cast(substring(pe.codigo_presupuestario,1,2) as Integer) 
-	and e.organismo = cast(substring(pe.codigo_presupuestario,3,4) as Integer)
-	and e.correlativo = cast(substring(pe.codigo_presupuestario,7,4) as Integer)
-	and e.ejercicio = year( $P{fechaCorte} )
-	and e.mes <= month( $P{fechaCorte} )
-	and po.id =  $P{proyectoId} 
-	and e.mes > 0
-	group by  e.ejercicio, e.mes 
-) t1
-union
-select 'Gasto programado',0,200000,0,0,0,0,0,0,0,0,0,0]]>
+		<![CDATA[select 1]]>
 	</queryString>
 	<background>
 		<band splitType="Stretch"/>
