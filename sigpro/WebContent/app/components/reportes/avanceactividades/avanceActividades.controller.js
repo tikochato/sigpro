@@ -1,4 +1,4 @@
-var app = angular.module('avanceActividadesController',['ngAnimate', 'ngTouch','smart-table']);
+var app = angular.module('avanceActividadesController',['ngAnimate', 'ngTouch','smart-table','angularjs-dropdown-multiselect']);
 
 app.filter('calculatePercentage', function () {
 	  return function (input, resultField, row) {
@@ -437,14 +437,15 @@ app.controller('modalAvance', [ '$uibModalInstance',
 
 function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $utilidades, $timeout, $log, objetoRow, fechaCorte, $rootScope) {
 	var mi = this;	
-
+	
 	if(objetoRow.objetoTipo == 1){
 		mi.mostrarcargando = true;
 		mi.nombre = "Actividades de "+$rootScope.etiquetas.proyecto;
 		$http.post('/SAvanceActividades', {
 			accion: 'getActividadesProyecto',
 			idPrestamo: objetoRow.objetoId,
-			fechaCorte: moment(fechaCorte).format('DD/MM/YYYY')
+			fechaCorte: moment(fechaCorte).format('DD/MM/YYYY'),
+			t:moment().unix()
 		}).success(function(response){
 			if (response.success){
 				mi.items = response.items;
@@ -458,7 +459,8 @@ function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $u
 		$http.post('/SAvanceActividades', {
 			accion: 'getHitos',
 			idPrestamo: objetoRow.objetoId,
-			fechaCorte: moment(fechaCorte).format('DD/MM/YYYY')
+			fechaCorte: moment(fechaCorte).format('DD/MM/YYYY'),
+			t:moment().unix()
 		}).success(function(response){
 			if (response.success){
 				mi.items = response.items;
@@ -472,7 +474,8 @@ function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $u
 		$http.post('/SAvanceActividades', {
 			accion: 'getActividadesProducto',
 			productoId: objetoRow.objetoId,
-			fechaCorte: moment(fechaCorte).format('DD/MM/YYYY')
+			fechaCorte: moment(fechaCorte).format('DD/MM/YYYY'),
+			t:moment().unix()
 		}).success(function(response){
 			if (response.success){
 				mi.items = response.items;
@@ -481,7 +484,77 @@ function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $u
 			}
 		});
 	}
-
+	
+	mi.obtenerColor = function(row){
+		var style={}
+		if(row.avance >= 0 && row.avance <= 40){
+			style.color='red'
+		}else if(row.avance > 40 && row.avance <= 60){
+			style.color='yellow'
+		}else if(row.avance > 60 && row.avance <= 100){
+			style.color='green'
+		}
+		return style;
+	}
+	
+	mi.exportarDetalleExcel = function(){
+		if(objetoRow.objetoTipo == 1){
+			$http.post('/SAvanceActividades', {
+				accion: 'exportarDetalleExcel',
+				id: objetoRow.objetoId,
+				fechaCorte: moment(fechaCorte).format('DD/MM/YYYY'),
+				objetoTipo: 1,
+				t:moment().unix()
+			}).then(
+					  function successCallback(response) {
+						  var anchor = angular.element('<a/>');
+						  anchor.attr({
+					         href: 'data:application/ms-excel;base64,' + response.data,
+					         target: '_blank',
+					         download: 'DetalleAvancePep.xls'
+						  })[0].click();
+					  }.bind(this), function errorCallback(response){
+				 	}
+			  	);
+		}else if(objetoRow.objetoTipo == 10){
+			$http.post('/SAvanceActividades', {
+				accion: 'exportarDetalleExcel',
+				id: objetoRow.objetoId,
+				fechaCorte: moment(fechaCorte).format('DD/MM/YYYY'),
+				objetoTipo: 10,
+				t:moment().unix()
+			}).then(
+					  function successCallback(response) {
+						  var anchor = angular.element('<a/>');
+						  anchor.attr({
+					         href: 'data:application/ms-excel;base64,' + response.data,
+					         target: '_blank',
+					         download: 'DetaleAvanceHitos.xls'
+						  })[0].click();
+					  }.bind(this), function errorCallback(response){
+				 	}
+			  	);
+		}else if(objetoRow.objetoTipo == 3){
+			$http.post('/SAvanceActividades', {
+				accion: 'exportarDetalleExcel',
+				id: objetoRow.objetoId,
+				fechaCorte: moment(fechaCorte).format('DD/MM/YYYY'),
+				objetoTipo: 3,
+				t:moment().unix()
+			}).then(
+					  function successCallback(response) {
+						  var anchor = angular.element('<a/>');
+						  anchor.attr({
+					         href: 'data:application/ms-excel;base64,' + response.data,
+					         target: '_blank',
+					         download: 'DetalleAvanceProductos.xls'
+						  })[0].click();
+					  }.bind(this), function errorCallback(response){
+				 	}
+			  	);
+		}
+	}
+	
 	mi.ok = function() {
 		
 	};

@@ -796,7 +796,8 @@ public class SProyecto extends HttpServlet {
 		}
 		else if(accion.equals("controlArbol")){
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
-			Nodo arbol = EstructuraProyectoDAO.getEstructuraProyectoArbol(id, usuario);
+			//TODO: lineaBase
+			Nodo arbol = EstructuraProyectoDAO.getEstructuraProyectoArbol(id, null, usuario);
 			Nodo root = new Nodo(0, 0, "", 0, new ArrayList<Nodo>(), null, false);
 			arbol.parent = root;
 			root.children.add(arbol);

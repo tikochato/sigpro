@@ -236,7 +236,7 @@ public class SPrestamoMetas extends HttpServlet {
 					tempPrestamo = getMetas(metaValores, anioInicial, anioFinal, tempPrestamo);
 					lstPrestamo.add(tempPrestamo);
 					if(tempPrestamo.objeto_tipo == 3){
-						List<Meta> metas = MetaDAO.getMetasObjetoHistoria(tempPrestamo.objeto_id, tempPrestamo.objeto_tipo, lineaBase);
+						List<Meta> metas = MetaDAO.getMetasObjetoLineaBase(tempPrestamo.objeto_id, tempPrestamo.objeto_tipo, lineaBase);
 						if(metas!=null){
 							Iterator<Meta> iterator = metas.iterator();
 				    	    while(iterator.hasNext()) {
