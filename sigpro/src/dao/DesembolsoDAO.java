@@ -227,15 +227,19 @@ public class DesembolsoDAO {
 		return ret;
 	}
 	
-	public static List<?> getDesembolsosEntreFechas(Integer idProyecto, Date fechaInicio, Date fechaFin){
+	public static List<?> getDesembolsosEntreFechas(Integer idProyecto, Date fechaInicio, Date fechaFin, String lineaBase){
 		java.sql.Date fechaInicial = new java.sql.Date(fechaInicio.getTime());
 		java.sql.Date fechaFinal = new java.sql.Date(fechaFin.getTime());
 		List<?> ret= null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
+			String queryVersion = "";
+			if(lineaBase==null){
+				queryVersion = " and actual = 1 ";
+			}
 			String query = String.join(" ", "select year (fecha) anio ,month(fecha) mes ,SUM(monto)  monto",
-				"from desembolso where proyectoid = ?1",
-				"and estado  = 1", 
+				"from sipro_history.desembolso where proyectoid = ?1",
+				queryVersion, 
 				"and  fecha between ?2 and ?3",
 				"GROUP BY year (fecha),month(fecha) order by year(fecha),month (fecha) asc");
 			Query<?>  desembolsos = session.createNativeQuery(query);

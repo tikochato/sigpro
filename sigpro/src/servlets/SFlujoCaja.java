@@ -121,9 +121,8 @@ public class SFlujoCaja extends HttpServlet {
 				//TODO: lineaBase
 				List<ObjetoCosto> lstPrestamo = getFlujoCaja(idProyecto, idPrestamo, fechaCorte, null, usuario);
 				
-				
 				if (null != lstPrestamo && !lstPrestamo.isEmpty()){
-					stTotales stTotales = getFlujoCajaTotales(idPrestamo, lstPrestamo, fechaCorte, usuario);
+					stTotales stTotales = getFlujoCajaTotales(idPrestamo, lstPrestamo, fechaCorte, null, usuario);
 					String totales = new GsonBuilder().serializeNulls().create().toJson(stTotales);
 					response_text=new GsonBuilder().serializeNulls().create().toJson(lstPrestamo);
 			        response_text = String.join("", "\"prestamo\":",response_text);
@@ -232,7 +231,7 @@ public class SFlujoCaja extends HttpServlet {
 		return lstPrestamo;
 	}
 	
-	private stTotales getFlujoCajaTotales(Integer prestamoId, List<ObjetoCosto> lstPrestamo, Date fechaCorte, String usuario) throws SQLException{
+	private stTotales getFlujoCajaTotales(Integer prestamoId, List<ObjetoCosto> lstPrestamo, Date fechaCorte, String lineaBase, String usuario) throws SQLException{
 		stTotales totales = new stTotales();		
 		if(CMariaDB.connectAnalytic()){
 			Connection conn_analytic = CMariaDB.getConnection_analytic();
@@ -264,7 +263,7 @@ public class SFlujoCaja extends HttpServlet {
 					Integer anioFinal = fecha.getYear();
 					Integer mesFinal = fecha.getMonthOfYear();
 					Date fechaInicial = Utils.dateFromString("01/01/"+ anioFinal);
-					List<?> objDesembolso =DesembolsoDAO.getDesembolsosEntreFechas(prestamo.getObjeto_id(),fechaInicial,fechaCorte);
+					List<?> objDesembolso =DesembolsoDAO.getDesembolsosEntreFechas(prestamo.getObjeto_id(),fechaInicial,fechaCorte, lineaBase);
 					for(int d=0; d<objDesembolso.size(); d++){
 						Integer anio = (Integer) ((Object[]) objDesembolso.get(d))[0];
 						Integer mes = (Integer) ((Object[]) objDesembolso.get(d))[1];
@@ -402,7 +401,7 @@ public class SFlujoCaja extends HttpServlet {
 		int columna = 0;
 		List<ObjetoCosto> lstPrestamo = getFlujoCaja(prestamoId, proyectoId, fechaCorte, lineaBase, usuario);
 		if (lstPrestamo != null && !lstPrestamo.isEmpty()){
-			stTotales stTotales = getFlujoCajaTotales(prestamoId, lstPrestamo, fechaCorte, usuario);
+			stTotales stTotales = getFlujoCajaTotales(prestamoId, lstPrestamo, fechaCorte, lineaBase, usuario);
 			datos = new String[lstPrestamo.size()+9][columnasTotal];
 			for (int i=0; i<lstPrestamo.size(); i++){
 				columna = 0;
