@@ -145,6 +145,16 @@
 								  initial-value="pep.pepNombre" focus-out="pep.blurPep()" input-name="pep" disable-input="pep.prestamoId==null"></div>
 							<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-sm-6" align="left">
+							<div id= "lineaBase" angucomplete-alt placeholder="" pause="100" selected-object="pep.cambioLineaBase"
+								  local-data="pep.lineasBase" search-fields="nombre" title-field="nombre" 
+								  field-required="true" field-label="* Linea Base" minlength="1" input-class="form-control form-control-small field-angucomplete inputText" 
+								  match-class="angucomplete-highlight" initial-value="pep.lineaBaseNombre" 
+								  focus-out="pep.blurLineaBase()" input-name="lineaBase"></div>
+							<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+						</div>
 						<div class="form-group col-sm-6" align="right">
 							<div class="operation_buttons">
 								<div class="btn-group">
