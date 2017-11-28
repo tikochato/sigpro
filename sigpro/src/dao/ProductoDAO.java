@@ -567,4 +567,67 @@ public class ProductoDAO {
 		}
 		return ret;
 	}
+	
+	public static List<Producto> getProductosHistory(Integer componenteid, Integer subcomponenteid,String lineaBase) {
+		List<Producto> ret = new ArrayList<Producto>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try {
+			
+			String query = "select * from sipro_history.producto p where p.estado  = 1 ";
+			if(componenteid!=null && componenteid > 0){
+				query += "AND p.componenteid = ?1 ";
+			}
+			if(subcomponenteid!=null && subcomponenteid > 0){
+				query += "AND p.subcomponenteid = ?2 ";
+			}
+			
+			query += (lineaBase != null ? "and p.linea_base = ?3" : "and p.actual = 1");
+
+			
+			Query<Producto> criteria = session.createNativeQuery(query,Producto.class);
+			
+			if (componenteid!=null && componenteid>0){
+				criteria.setParameter(1, componenteid);
+			}
+			if (subcomponenteid!=null && subcomponenteid>0){
+				criteria.setParameter(2, subcomponenteid);
+			}
+			if (lineaBase != null){
+				criteria.setParameter(3, lineaBase);
+			}
+			ret = criteria.getResultList();
+		} catch (Throwable e) {
+			CLogger.write("21", ProductoDAO.class, e);
+		} finally {
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Producto getProductoHistory(Integer productoId,String lineaBase){
+		Producto ret = null;
+		List<Producto> listRet = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "select * ", 
+					"from sipro_history.producto p ",
+					"where p.estado = 1 ",
+					"and p.id = ?1 ",
+					lineaBase != null ? "and p.linea_base = ?2" : "and p.actual = 1",
+							"order by p.id desc");
+			Query<Producto> criteria = session.createNativeQuery(query, Producto.class);
+			criteria.setParameter(1, productoId);
+			if (lineaBase != null)
+				criteria.setParameter(2, lineaBase);
+			listRet =   criteria.getResultList();
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
+		}
+		catch(Throwable e){
+			CLogger.write("22", ProductoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 }

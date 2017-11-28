@@ -553,4 +553,56 @@ public class SubproductoDAO {
 		}
 		return ret;
 	}
+	
+	public static List<Subproducto> getSubproductosHistory(Integer productoid,String lineaBase) {
+		List<Subproducto> ret = new ArrayList<Subproducto>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try {
+			
+			String query = String.join(" ", "select * from sipro_history.subproducto p ",
+							"where p.estado = 1",
+							"and p.productoid=?1",
+							lineaBase != null ? "and p.linea_base = ?2": "and p.actual = 1");
+ 
+			
+			Query<Subproducto> criteria = session.createNativeQuery(query,Subproducto.class);
+			criteria.setParameter(1, productoid);
+			if (lineaBase != null)
+				criteria.setParameter(2, lineaBase);
+			
+			ret = criteria.getResultList();
+		} catch (Throwable e) {
+			CLogger.write("19", SubproductoDAO.class, e);
+		} finally {
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Subproducto getSubproductoHistory(Integer subproductoId,String lineaBase){
+		Subproducto ret = null;
+		List<Subproducto> listRet = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "select * ", 
+					"from sipro_history.subproducto p ",
+					"where p.estado = 1 ",
+					"and p.id = ?1 ",
+					lineaBase != null ? "and p.linea_base = ?2" : "and p.actual = 1",
+							"order by p.id desc");
+			Query<Subproducto> criteria = session.createNativeQuery(query, Subproducto.class);
+			criteria.setParameter(1, subproductoId);
+			if (lineaBase != null)
+				criteria.setParameter(2, lineaBase);
+			listRet =   criteria.getResultList();
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
+		}
+		catch(Throwable e){
+			CLogger.write("20", SubproductoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 }
