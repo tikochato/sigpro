@@ -454,7 +454,7 @@ public class SAvanceActividades extends HttpServlet {
 				try{
 					Integer id = Utils.String2Int(map.get("id"));
 					Integer tipo = Utils.String2Int(map.get("objetoTipo"));
-					String lineaBase = map.get("lineaBase");
+					
 			        byte [] outArray = exportarDetalleExcel(id, tipo, fechaCorte, usuario, lineaBase);
 					response.setContentType("application/ms-excel");
 					response.setContentLength(outArray.length);					
