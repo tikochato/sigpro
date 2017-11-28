@@ -31,6 +31,7 @@ import dao.ComponenteDAO;
 import dao.EntidadDAO;
 import dao.EstructuraProyectoDAO;
 import dao.EtiquetaDAO;
+import dao.LineaBaseDAO;
 import dao.Nodo;
 import dao.ObjetoDAO;
 import dao.PrestamoDAO;
@@ -45,6 +46,7 @@ import pojo.Colaborador;
 import pojo.Componente;
 import pojo.Entidad;
 import pojo.Etiqueta;
+import pojo.LineaBase;
 import pojo.PepDetalle;
 import pojo.Prestamo;
 import pojo.Proyecto;
@@ -141,6 +143,16 @@ public class SProyecto extends HttpServlet {
     	String elaborado;
     	String aprobado;
     	String autoridad;
+    }
+    
+    class stlineasbase{
+    	Integer id;
+    	Integer proyectoid;
+    	String nombre;
+    	String usuarioCreo;
+    	String usuarioActualizo;
+    	String fechaCreacion;
+    	String fechaActualizacion;
     }
     
 	public SProyecto() {
@@ -629,6 +641,26 @@ public class SProyecto extends HttpServlet {
 				response_text = "{ \"success\": false }";
 			}
 
+		}else if(accion.equals("getLineasBase")){
+			Integer proyectoid = Utils.String2Int(map.get("proyectoId"));
+			List<LineaBase> lstLineasBase = LineaBaseDAO.getLineasBaseById(proyectoid);
+			
+			List<stlineasbase> lstlineabase = new ArrayList<stlineasbase>();
+			for(LineaBase lineaBase : lstLineasBase){
+				stlineasbase temp = new stlineasbase();
+				temp.id = lineaBase.getId();
+				temp.nombre = lineaBase.getNombre();
+				temp.proyectoid = lineaBase.getProyecto().getId();
+				temp.usuarioCreo = lineaBase.getUsuarioCreo();
+				temp.usuarioActualizo = lineaBase.getUsuarioActualizo();
+				temp.fechaCreacion = Utils.formatDate(lineaBase.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDate(lineaBase.getFechaActualizacion());
+				lstlineabase.add(temp);
+			}
+			
+			response_text=new GsonBuilder().serializeNulls().create().toJson(lstlineabase);
+			response_text = String.join("", "\"lineasBase\":",response_text);
+			response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}else
 
 		if (accion.equals("guardarModal")){
