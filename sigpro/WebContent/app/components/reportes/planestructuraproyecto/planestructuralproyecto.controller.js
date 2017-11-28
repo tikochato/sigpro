@@ -73,7 +73,7 @@ app.controller('planEstructuralProyectoController',['$scope', '$rootScope', '$ht
 		if(selected!== undefined){
 			mi.pepNombre = selected.originalObject.nombre;
 			mi.pepId = selected.originalObject.id;
-			mi.generar();
+			mi.getLineasBase(mi.pepId);
 		}
 		else{
 			mi.pepNombre="";
@@ -91,13 +91,42 @@ app.controller('planEstructuralProyectoController',['$scope', '$rootScope', '$ht
 		});	
 	}
 	
+	mi.getLineasBase = function(proyectoId){
+		$http.post('/SProyecto',{accion: 'getLineasBase', proyectoId: proyectoId}).success(
+			function(response) {
+				mi.lineasBase = [];
+				if (response.success){
+					mi.lineasBase = response.lineasBase;
+				}
+		});	
+	}
+	
+	mi.blurLineaBase=function(){
+		if(document.getElementById("lineaBase_value").defaultValue!=mi.lineaBaseNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+		}
+	};
+	
+	mi.cambioLineaBase=function(selected){
+		if(selected!== undefined){
+			mi.lineaBaseNombre = selected.originalObject.nombre;
+			mi.lineaBaseId = selected.originalObject.id;
+			mi.generar();
+		}
+		else{
+			mi.lineaBaseNombre="";
+			mi.lineaBaseId=null;
+		}
+	};
+	
 	mi.generar = function(){
 		if(mi.pepId > 0){
 			mi.mostrarCargando = true;
 			mi.mostrarTablas = false;
 			$http.post('/SPlanEstructuralProyecto',{
 				accion: 'generarPlan',
-				proyectoId: mi.pepId
+				proyectoId: mi.pepId,
+				lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null
 			}).success(function(response){
 				if(response.success){
 					mi.crearArbol(response.proyecto);

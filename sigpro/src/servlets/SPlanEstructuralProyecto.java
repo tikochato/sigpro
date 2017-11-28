@@ -97,7 +97,8 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 		
 		if(accion.equals("generarPlan")){
 			try{
-				List<stplanestructuralproyecto> lstprestamo = generarPlan(proyectoId, null, usuario);
+				String lineaBase = map.get("lineaBase");
+				List<stplanestructuralproyecto> lstprestamo = generarPlan(proyectoId, lineaBase, usuario);
 				
 				response_text=new GsonBuilder().serializeNulls().create().toJson(lstprestamo);
 		        response_text = String.join("", "\"proyecto\":",response_text);
@@ -107,7 +108,8 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 			}
 		}else if(accion.equals("exportarExcel")){
 			try{ 
-				byte [] outArray = exportarExcel(proyectoId, null, usuario);
+				String lineaBase = map.get("lineaBase");
+				byte [] outArray = exportarExcel(proyectoId, lineaBase, usuario);
 				
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
