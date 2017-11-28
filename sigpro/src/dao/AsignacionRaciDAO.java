@@ -78,7 +78,7 @@ public class AsignacionRaciDAO {
 							"and a.objeto_tipo = ?2",
 							"and lower(a.rol_raci) = ?3",
 							"and a.estado = 1",
-							lineaBase != null ? "and a.linea_base" + lineaBase : "and a.actual=1");
+							lineaBase != null ? "and a.linea_base like '%" + lineaBase + "%'" : "and a.actual=1");
 			
 			Query<AsignacionRaci> criteria = session.createNativeQuery(query, AsignacionRaci.class);
 			criteria.setParameter(1, objetoId);
