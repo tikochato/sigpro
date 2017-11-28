@@ -118,7 +118,8 @@ public class SFlujoCaja extends HttpServlet {
 				Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 				Integer idProyecto = Utils.String2Int(map.get("idProyecto"),0);
 				Date fechaCorte = Utils.dateFromString(map.get("fechaCorte"));
-				List<ObjetoCosto> lstPrestamo = getFlujoCaja(idProyecto, idPrestamo, fechaCorte, usuario);
+				//TODO: lineaBase
+				List<ObjetoCosto> lstPrestamo = getFlujoCaja(idProyecto, idPrestamo, fechaCorte, null, usuario);
 				
 				
 				if (null != lstPrestamo && !lstPrestamo.isEmpty()){
@@ -141,7 +142,8 @@ public class SFlujoCaja extends HttpServlet {
 			int agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
 			
 			try{
-		        byte [] outArray = exportarExcel(prestamoId, proyectoId, fechaCorte, agrupacion, usuario);
+				//TODO: lineaBase
+				byte [] outArray = exportarExcel(prestamoId, proyectoId, fechaCorte, agrupacion, null, usuario);
 			
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
@@ -164,7 +166,8 @@ public class SFlujoCaja extends HttpServlet {
 				String headers[][];
 				String datos[][];
 				headers = generarHeaders(fechaCorte, agrupacion);
-				datos = generarDatosFlujoCaja(prestamoId, proyectoId, fechaCorte, agrupacion, headers[0].length, usuario);
+				//TODO: lineaBase
+				datos = generarDatosFlujoCaja(prestamoId, proyectoId, fechaCorte, agrupacion, headers[0].length, null, usuario);
 				String path = archivo.ExportarPdfFlujoCaja(headers, datos, usuario);
 				File file=new File(path);
 				if(file.exists()){
@@ -222,10 +225,10 @@ public class SFlujoCaja extends HttpServlet {
 		}
 	}
 	
-	private List<ObjetoCosto> getFlujoCaja(int idPrestamo, int idProyecto, Date fechaCorte, String usuario) throws SQLException{
+	private List<ObjetoCosto> getFlujoCaja(int idPrestamo, int idProyecto, Date fechaCorte, String lineaBase, String usuario) throws SQLException{
 		DateTime fecha = new DateTime(fechaCorte);
 		Integer anio = fecha.getYear();
-		List<ObjetoCosto> lstPrestamo = ObjetoDAO.getEstructuraConCosto(idProyecto, anio, anio, true, true, usuario);
+		List<ObjetoCosto> lstPrestamo = ObjetoDAO.getEstructuraConCosto(idProyecto, anio, anio, true, true, false, lineaBase, usuario);
 		return lstPrestamo;
 	}
 	
@@ -312,7 +315,7 @@ public class SFlujoCaja extends HttpServlet {
 		return totales;
 	}
 	
-	private byte[] exportarExcel(int prestamoId, int proyectoId, Date fechaCorte, int agrupacion, String usuario) throws IOException{
+	private byte[] exportarExcel(int prestamoId, int proyectoId, Date fechaCorte, int agrupacion, String lineaBase, String usuario) throws IOException{
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -323,7 +326,7 @@ public class SFlujoCaja extends HttpServlet {
 		try{		
 			excel = new CExcel("Flujo de Caja", false, null);
 			headers = generarHeaders(fechaCorte, agrupacion);
-			datos = generarDatosFlujoCaja(prestamoId, proyectoId, fechaCorte, agrupacion, headers[0].length, usuario);
+			datos = generarDatosFlujoCaja(prestamoId, proyectoId, fechaCorte, agrupacion, headers[0].length, lineaBase, usuario);
 			wb=excel.generateExcelOfData(datos, "Flujo de Caja - "+ProyectoDAO.getProyecto(prestamoId).getNombre(), headers, null, true, usuario);
 		
 		wb.write(outByteStream);
@@ -394,10 +397,10 @@ public class SFlujoCaja extends HttpServlet {
 		return headers;
 	}
 	
-	public String[][] generarDatosFlujoCaja(int prestamoId, int proyectoId, Date fechaCorte, int agrupacion, int columnasTotal, String usuario) throws SQLException{
+	public String[][] generarDatosFlujoCaja(int prestamoId, int proyectoId, Date fechaCorte, int agrupacion, int columnasTotal, String lineaBase, String usuario) throws SQLException{
 		String[][] datos = null;
 		int columna = 0;
-		List<ObjetoCosto> lstPrestamo = getFlujoCaja(prestamoId, proyectoId, fechaCorte, usuario);
+		List<ObjetoCosto> lstPrestamo = getFlujoCaja(prestamoId, proyectoId, fechaCorte, lineaBase, usuario);
 		if (lstPrestamo != null && !lstPrestamo.isEmpty()){
 			stTotales stTotales = getFlujoCajaTotales(prestamoId, lstPrestamo, fechaCorte, usuario);
 			datos = new String[lstPrestamo.size()+9][columnasTotal];

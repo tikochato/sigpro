@@ -689,6 +689,24 @@ public class SMeta extends HttpServlet {
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stunidad);
 			response_text = String.join("", "\"MetasUnidades\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+		}else if(accion.equals("getMetasUnidadesMedidaH")){
+			List<MetaUnidadMedida> MetaUnidades = MetaUnidadMedidaDAO.getMetaUnidadMedidas();
+			List<sttipometa> stunidad = new ArrayList<sttipometa>();
+			for(MetaUnidadMedida metaunidad : MetaUnidades){
+				sttipometa temp = new sttipometa();
+				temp.descripcion = metaunidad.getDescripcion();
+				temp.estado = metaunidad.getEstado();
+				temp.fechaActualizacion = Utils.formatDate(metaunidad.getFechaActualizacion());
+				temp.fechaCreacion = Utils.formatDate(metaunidad.getFechaCreacion());
+				temp.id = metaunidad.getId();
+				temp.nombre = metaunidad.getNombre();
+				temp.usuarioActulizo = metaunidad.getUsuarioActualizo();
+				temp.usuarioCreo = metaunidad.getUsuarioCreo();
+				stunidad.add(temp);
+			}
+			response_text=new GsonBuilder().serializeNulls().create().toJson(stunidad);
+			response_text = String.join("", "\"MetasUnidades\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		else if(accion.equals("getPcp")){
 			String nombre = "";

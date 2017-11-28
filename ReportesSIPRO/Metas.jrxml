@@ -128,7 +128,7 @@ from sipro.meta_avance ma
 join sipro.meta m on ma.metaid = m.id
 where ma.estado = 1
 and YEAR(ma.fecha) = YEAR($P{fechaCorte} )
-and MONTH(ma.fecha) = MONTH($P{fechaCorte} )
+and MONTH(ma.fecha) <= MONTH($P{fechaCorte} )
 ) t1
 group by t1.anio
 ) valores
@@ -772,7 +772,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<font fontName="Arial" size="7"/>
 					<paragraph leftIndent="2" rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{R1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{R2}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="494" y="0" width="52" height="30" uuid="c2ee67c0-1e7b-4e40-8379-f5ab77e4d808">
@@ -793,7 +793,7 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 					<font fontName="Arial" size="7"/>
 					<paragraph leftIndent="2" rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{R1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{R3}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="546" y="0" width="51" height="30" uuid="95bb3cd7-78cf-4de0-8a2c-963be129e140">

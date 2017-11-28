@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.4.3.final using JasperReports Library version 6.4.3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PlanAnualEjecucion" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="792" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="76da67da-1700-440f-9f96-4bfa2e0fc2b6">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MariaDB Server"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="usuario" class="java.lang.String" isForPrompting="false"/>
@@ -58,12 +58,15 @@
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["InformacionGeneral.jasper"]]></subreportExpression>
 			</subreport>
+			<break>
+				<reportElement x="0" y="370" width="792" height="1" uuid="e9495f92-9f23-4e1c-97e3-154d4b1e50e7"/>
+			</break>
 		</band>
 		<band height="204">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<subreport>
-				<reportElement x="0" y="0" width="792" height="203" uuid="9ac98812-e061-4ef8-b0fa-cffadad9e5d4"/>
+				<reportElement x="0" y="0" width="792" height="204" uuid="9ac98812-e061-4ef8-b0fa-cffadad9e5d4"/>
 				<subreportParameter name="esSubreporte">
 					<subreportParameterExpression><![CDATA[$P{esSubreporte}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -82,7 +85,7 @@
 		</band>
 		<band height="237">
 			<subreport>
-				<reportElement x="-1" y="0" width="792" height="217" uuid="06b0ab75-034b-4311-b9e1-ac695e5b0c17"/>
+				<reportElement x="0" y="0" width="792" height="237" uuid="06b0ab75-034b-4311-b9e1-ac695e5b0c17"/>
 				<subreportParameter name="esSubreporte">
 					<subreportParameterExpression><![CDATA[$P{esSubreporte}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -104,7 +107,7 @@
 				<reportElement x="0" y="306" width="790" height="1" uuid="c177de91-4c96-47cc-b588-616f463293f3"/>
 			</break>
 			<subreport>
-				<reportElement x="0" y="0" width="789" height="300" uuid="5216c751-c1c1-4af6-904a-455724ca5ccc"/>
+				<reportElement x="0" y="0" width="792" height="311" uuid="5216c751-c1c1-4af6-904a-455724ca5ccc"/>
 				<subreportParameter name="esSubreporte">
 					<subreportParameterExpression><![CDATA[$P{esSubreporte}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -117,7 +120,7 @@
 		</band>
 		<band height="246">
 			<subreport>
-				<reportElement x="0" y="0" width="791" height="240" uuid="e3c476bc-e601-41ac-b658-2f0b110aa051"/>
+				<reportElement x="0" y="0" width="792" height="246" uuid="e3c476bc-e601-41ac-b658-2f0b110aa051"/>
 				<subreportParameter name="esSubreporte">
 					<subreportParameterExpression><![CDATA[$P{esSubreporte}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -136,7 +139,7 @@
 		</band>
 		<band height="253">
 			<subreport>
-				<reportElement x="0" y="0" width="791" height="240" uuid="5187f193-cac8-45bb-a8aa-fb52fb211e7a"/>
+				<reportElement x="0" y="0" width="792" height="253" uuid="5187f193-cac8-45bb-a8aa-fb52fb211e7a"/>
 				<subreportParameter name="esSubreporte">
 					<subreportParameterExpression><![CDATA[$P{esSubreporte}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -158,7 +161,7 @@
 		</band>
 		<band height="240">
 			<subreport>
-				<reportElement x="0" y="0" width="791" height="240" uuid="bee5ea71-9538-4cef-94dc-c4b5dd31006f"/>
+				<reportElement x="0" y="0" width="792" height="240" uuid="bee5ea71-9538-4cef-94dc-c4b5dd31006f"/>
 				<subreportParameter name="esSubreporte">
 					<subreportParameterExpression><![CDATA[$P{esSubreporte}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -175,27 +178,46 @@
 				<reportElement x="0" y="230" width="791" height="1" uuid="a65517e3-c5c7-4b3b-9bf9-6490e7a26bd3"/>
 			</break>
 		</band>
-		<band height="465">
+		<band height="244">
+			<subreport>
+				<reportElement x="0" y="0" width="792" height="244" uuid="d6d6b82e-3ae0-46a5-bce9-b68a79244276"/>
+				<subreportParameter name="esSubreporte">
+					<subreportParameterExpression><![CDATA[$P{esSubreporte}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="proyectoId">
+					<subreportParameterExpression><![CDATA[$P{proyectoId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="costos">
+					<subreportParameterExpression><![CDATA[$P{costos}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["PlanEstructuralPrestamo.jasper"]]></subreportExpression>
+			</subreport>
+			<break>
+				<reportElement x="0" y="230" width="791" height="1" uuid="201a4db2-ab92-445e-bbb8-07029c6a4be1"/>
+			</break>
+		</band>
+		<band height="580">
 			<frame>
-				<reportElement x="45" y="0" width="715" height="450" uuid="4820f514-9865-4e81-9bec-c922de457bf4">
+				<reportElement x="45" y="10" width="715" height="525" uuid="4820f514-9865-4e81-9bec-c922de457bf4">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 				</reportElement>
 				<staticText>
-					<reportElement x="0" y="0" width="715" height="30" uuid="7bed4c1e-4c9a-450d-91eb-972c560347e7"/>
+					<reportElement x="0" y="72" width="715" height="30" uuid="7bed4c1e-4c9a-450d-91eb-972c560347e7"/>
 					<textElement>
 						<font fontName="Arial" size="16" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Observaciones / Desafíos]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true">
-					<reportElement x="0" y="30" width="715" height="64" uuid="9c440a67-90ae-4c46-88d1-b302452d94ba"/>
+					<reportElement x="0" y="102" width="715" height="50" uuid="9c440a67-90ae-4c46-88d1-b302452d94ba"/>
 					<textElement textAlignment="Justified">
 						<font fontName="Arial" size="9"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{observaciones}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="0" y="94" width="715" height="30" uuid="12dd86aa-b7b8-485b-99ce-0810e04b78e6">
+					<reportElement x="0" y="152" width="715" height="30" uuid="12dd86aa-b7b8-485b-99ce-0810e04b78e6">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Middle">
@@ -204,14 +226,16 @@
 					<text><![CDATA[Alertivos:]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true">
-					<reportElement x="0" y="124" width="715" height="64" uuid="8dbad398-a3a7-45a7-b42f-1bdeacdfe1bb"/>
+					<reportElement x="0" y="182" width="715" height="50" uuid="8dbad398-a3a7-45a7-b42f-1bdeacdfe1bb">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
 					<textElement textAlignment="Justified">
 						<font fontName="Arial" size="9"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{alertivos}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="0" y="188" width="197" height="64" uuid="770115e0-fc17-4b57-a644-d185cc44fa77">
+					<reportElement x="0" y="232" width="197" height="64" uuid="770115e0-fc17-4b57-a644-d185cc44fa77">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Middle">
@@ -220,14 +244,14 @@
 					<text><![CDATA[Elaborado por: (nombre y firma)]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="0" y="252" width="197" height="64" uuid="05abd91a-e8b3-4a5d-b885-429e232fa085"/>
+					<reportElement x="0" y="296" width="197" height="90" uuid="05abd91a-e8b3-4a5d-b885-429e232fa085"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Arial" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Aprobado por: (nombre y firma)]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="0" y="316" width="197" height="64" uuid="ca3814d6-c2ea-4836-a8d2-54d714f0b53e">
+					<reportElement x="0" y="386" width="197" height="124" uuid="ca3814d6-c2ea-4836-a8d2-54d714f0b53e">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Middle">
@@ -236,14 +260,14 @@
 					<text><![CDATA[Vo. Bo. Máxima Autoridad:]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="197" y="188" width="518" height="64" uuid="f8276f64-c587-4834-8b11-28f7af458303"/>
+					<reportElement x="197" y="232" width="518" height="64" uuid="f8276f64-c587-4834-8b11-28f7af458303"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Arial"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{elaborado}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="197" y="252" width="518" height="64" uuid="03e3cfa4-f907-4529-addf-b070ad4d1877">
+					<reportElement x="197" y="296" width="518" height="90" uuid="03e3cfa4-f907-4529-addf-b070ad4d1877">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Middle">
@@ -252,7 +276,7 @@
 					<textFieldExpression><![CDATA[$P{aprobado}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="197" y="316" width="518" height="64" uuid="1a9cfc4d-804d-490d-871b-89639ed268bc">
+					<reportElement x="197" y="386" width="518" height="124" uuid="1a9cfc4d-804d-490d-871b-89639ed268bc">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement verticalAlignment="Middle">

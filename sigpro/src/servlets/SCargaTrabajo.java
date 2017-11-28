@@ -660,7 +660,7 @@ public class SCargaTrabajo extends HttpServlet {
 	public ArrayList<stestructuracolaborador> getEstructura(Integer idPrestamo, String idColaboradores
 			, Integer anio_inicio, Integer anio_fin ){
 		ArrayList<stestructuracolaborador> estructuracolaborador = new ArrayList<>();
-		//TODO: deActual
+		//TODO: lineaBase
 		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo, null);
 		stestructuracolaborador stprestamo=null;
 		stestructuracolaborador stcomponente=null;

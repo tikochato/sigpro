@@ -5,7 +5,7 @@
 	<nav ng-class="{'showbar' : !hidebar, 'hidebar': hidebar}" class="navbar navbar-inverse navbar-fixed-top">
 		<script type="text/javascript">
 		</script>
-	    <div class="container">
+		<div class="container">
 	    
 	        <input type="checkbox" id="navbar-toggle-cbox" />	       
 	        <div class="navbar-header">

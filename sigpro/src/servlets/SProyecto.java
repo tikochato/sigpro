@@ -45,6 +45,7 @@ import pojo.Colaborador;
 import pojo.Componente;
 import pojo.Entidad;
 import pojo.Etiqueta;
+import pojo.PepDetalle;
 import pojo.Prestamo;
 import pojo.Proyecto;
 import pojo.ProyectoImpacto;
@@ -133,6 +134,15 @@ public class SProyecto extends HttpServlet {
 		Double nacional;
     }
 
+    class stpepdetalle{
+    	Integer proyectoid;
+    	String observaciones;
+    	String alertivos;
+    	String elaborado;
+    	String aprobado;
+    	String autoridad;
+    }
+    
 	public SProyecto() {
         super();
 
@@ -491,7 +501,7 @@ public class SProyecto extends HttpServlet {
 							descripcion, usuario, null, new DateTime().toDate(), null, 1, snip, programa, subPrograma, proyecto_, actividad, 
 							obra,latitud,longitud, objetivo,enunciadoAlcance, costo, objetivoEspecifico,visionGeneral,renglon, 
 							ubicacionGeografica,null, null, 0, null, null, null, null, ejecucionFisicaReal,projectCargado,observaciones,
-							null,null,null, null,null,null, null,null,null,null,null,null,null,null);
+							null,null,null, null,null,null, null,null,null,null,null,null,null,null,null);
 
 
 				}else{
@@ -867,7 +877,52 @@ public class SProyecto extends HttpServlet {
 			response_text = new GsonBuilder().serializeNulls().create().toJson(techoTotal);
 			response_text = String.join("", "\"techoPep\":",response_text);
 			response_text = String.join("", "{\"success\":true,", response_text,"}");
+		}else if(accion.equals("getPepDetalle")){
+			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
+			if(id>0){
+				PepDetalle detalle = ProyectoDAO.getPepDetalle(id);
+				if(detalle!=null){
+					stpepdetalle pepdetalle = new stpepdetalle();
+					pepdetalle.proyectoid = id;
+					pepdetalle.observaciones = detalle.getObservaciones();
+					pepdetalle.alertivos = detalle.getAlertivos();
+					pepdetalle.elaborado = detalle.getElaborado();
+					pepdetalle.aprobado = detalle.getAprobado();
+					pepdetalle.autoridad = detalle.getAutoridad();
+					String detalle_text = new GsonBuilder().serializeNulls().create().toJson(pepdetalle);
+			        response_text = String.join("", ",\"detalle\":",detalle_text);
+				}
+				response_text = String.join("","{ \"success\": true ", response_text,"}");
+			}
+			else
+				response_text = "{ \"success\": false }";
+		}else if(accion.equals("guardarPepDetalle")){
+			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
+			String observaciones = map.get("observaciones");
+			String alertivos = map.get("alertivos");
+			String elaborado = map.get("elaborado");
+			String aprobado = map.get("aprobado");
+			String autoridad = map.get("autoridad");
+			
+			if(id>0){
+				Proyecto proyecto = ProyectoDAO.getProyecto(id);
+				PepDetalle detalle = ProyectoDAO.getPepDetalle(id);
+				if(detalle!=null){
+					detalle.setObservaciones(observaciones);
+					detalle.setAlertivos(alertivos);
+					detalle.setElaborado(elaborado);
+					detalle.setAprobado(aprobado);
+					detalle.setAutoridad(autoridad);
+				}else{
+					detalle = new PepDetalle(proyecto, observaciones, alertivos, elaborado, aprobado, autoridad, usuario, null, new Date(), null, 1);
+				}
+				boolean resultado = ProyectoDAO.guardarPepDetalle(detalle);
+				response_text = String.join("","{ \"success\": ", String.valueOf(resultado),"}");
+			}
+			else
+				response_text = "{ \"success\": false }";
 		}
+		
 		else
 			response_text = "{ \"success\": false }";
 		response.setHeader("Content-Encoding", "gzip");

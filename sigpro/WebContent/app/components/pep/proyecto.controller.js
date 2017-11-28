@@ -966,6 +966,33 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	    	
 		});
 	  };
+	  
+	  mi.generarReporte = function () {
+		  var modalInstance = $uibModal.open({
+				animation : 'true',
+				ariaLabelledBy : 'modal-title',
+				ariaDescribedBy : 'modal-body',
+				templateUrl : 'generarReporte.jsp',
+				controller : 'modalGenerarReporte',
+				controllerAs : 'modalrc',
+				backdrop : 'static',
+				size : 'md',
+				resolve: {
+			        proyectoid: function(){
+			        	return mi.proyecto.id;
+			        }
+			     }
+			});
+		  
+		  modalInstance.result.then(function(resultado) {
+				if (resultado != undefined){
+					mi.exportarJasper(resultado);
+				}else{
+					$utilidades.mensaje('danger', 'Error al generar el reporte');
+				}
+			}, function() {
+			});
+	  }
 		
 		mi.buscarDirecotorProyecto = function() {
 			var resultado = mi.llamarModalBusqueda('Colaboradores','/SColaborador', {
@@ -1121,10 +1148,10 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			$rootScope.$emit("recargarArbol",mi.proyecto.id);
 		}
 		
-		mi.exportarJasper = function(){
+		mi.exportarJasper = function(fechaCorte){
 			var anchor = angular.element('<a/>');
 			  anchor.attr({
-		         href: '/app/components/reportes/jasper/reporte.jsp?reporte=0&proyecto='+mi.proyecto.id
+		         href: '/app/components/reportes/jasper/reporte.jsp?reporte=0&proyecto='+mi.proyecto.id+'&fecha='+fechaCorte.getTime()
 			  })[0].click();
 		}
 		
@@ -1325,6 +1352,65 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
 		  
 	  };
 }]);
+
+app.controller('modalGenerarReporte', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log',   '$uibModal', '$q', 'proyectoid' ,modalGenerarReporte ]);
+
+function modalGenerarReporte($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, $uibModal, $q, proyectoid) {
+
+	var mi = this;
+	mi.formatofecha = 'dd/MM/yyyy';
+	mi.altformatofecha = ['d!/M!/yyyy'];
+		
+	$http.post('/SProyecto', { accion: 'getPepDetalle', id: proyectoid, t: (new Date()).getTime() }).success(
+			function(response) {
+				mi.fechaCorte = new Date();
+				if(response.success){
+					if(response.detalle){
+						mi.observaciones = response.detalle.observaciones;
+						mi.alertivos = response.detalle.alertivos;
+						mi.elaborado = response.detalle.elaborado;
+						mi.aprobado = response.detalle.aprobado;
+						mi.autoridad = response.detalle.autoridad;
+					}
+				}
+		});
+		
+	mi.fi_opciones = {
+			formatYear : 'yy',
+			maxDate : new Date(2050, 12, 31),
+			minDate : new Date(1990, 1, 1),
+			startingDay : 1
+	};
+	
+	mi.abrirPopupFecha = function(index) {
+		mi.fi_abierto = true;
+	};
+	
+	mi.ok = function() {
+		$http.post('/SProyecto', { 
+			accion: 'guardarPepDetalle', 
+			id: proyectoid, 
+			observaciones: mi.observaciones,
+			alertivos: mi.alertivos,
+			elaborado: mi.elaborado,
+			aprobado: mi.aprobado, 
+			autoridad: mi.autoridad,
+			t: (new Date()).getTime() }).success(
+				function(response) {
+					if(response.success){
+						console.log(response.detalle);
+					}
+				});
+		$uibModalInstance.close(mi.fechaCorte);
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+}
 
 app.directive('rightClick', function($parse) {
     return function(scope, element, attrs) {

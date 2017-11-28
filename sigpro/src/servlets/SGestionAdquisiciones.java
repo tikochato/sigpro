@@ -378,7 +378,7 @@ public class SGestionAdquisiciones extends HttpServlet {
 	private List<stcomponentegestionadquisicion> generarPlan(Integer idPrestamo, String usuario, Integer fechaInicial, Integer fechaFinal, String lineaBase) throws Exception{
 		try{
 			List<stcomponentegestionadquisicion> lstPrestamo = new ArrayList<>();
-			List<ObjetoCosto> estructuraProyecto = ObjetoDAO.getEstructuraConCosto(idPrestamo, fechaInicial, fechaFinal, true, false, usuario);
+			List<ObjetoCosto> estructuraProyecto = ObjetoDAO.getEstructuraConCosto(idPrestamo, fechaInicial, fechaFinal, true, false, false, lineaBase, usuario);
 			stcomponentegestionadquisicion temp = null;
 			
 			List<CategoriaAdquisicion> lstCategorias = CategoriaAdquisicionDAO.getCategoriaAdquisicionLB(lineaBase); 
