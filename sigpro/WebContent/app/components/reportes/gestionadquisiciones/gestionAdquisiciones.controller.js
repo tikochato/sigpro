@@ -283,6 +283,7 @@ app.controller('gestionAdquisicionesController',['$scope', '$rootScope', '$http'
 				idPrestamo: mi.idPrestamo,
 				fechaInicio: mi.fechaInicio,
 				fechaFin: mi.fechaFin,
+				lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				anio: mi.anio
 			}).success(function(response){
 				if(response.success){
@@ -658,6 +659,7 @@ app.controller('gestionAdquisicionesController',['$scope', '$rootScope', '$http'
 			agrupacion: mi.agrupacionActual,
 			fechaInicio: mi.fechaInicio,
 			fechaFin: mi.fechaFin,
+			lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 			tipoVisualizacion: 0,
 			idPrestamo: mi.pepId,
 			t:moment().unix()

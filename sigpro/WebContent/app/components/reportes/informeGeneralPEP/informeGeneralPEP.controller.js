@@ -80,11 +80,29 @@ app.controller('informeGeneralPEPController',['$scope','$rootScope','$http','$in
 		if(selected!== undefined){
 			mi.pepNombre = selected.originalObject.nombre;
 			mi.pepId = selected.originalObject.id;
-			mi.generarReporte();
+			mi.cambioLineaBase(mi.pepId);
 		}
 		else{
 			mi.pepNombre="";
 			mi.pepId="";
+		}
+	};
+	
+	mi.blurLineaBase=function(){
+		if(document.getElementById("lineaBase_value").defaultValue!=mi.lineaBaseNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+		}
+	};
+	
+	mi.cambioLineaBase=function(selected){
+		if(selected!== undefined){
+			mi.lineaBaseNombre = selected.originalObject.nombre;
+			mi.lineaBaseId = selected.originalObject.id;
+			mi.generarReporte();
+		}
+		else{
+			mi.lineaBaseNombre="";
+			mi.lineaBaseId=null;
 		}
 	};
 	
@@ -97,6 +115,16 @@ app.controller('informeGeneralPEPController',['$scope','$rootScope','$http','$in
 				}
 		});	
 	};
+	
+	mi.getLineasBase = function(proyectoId){
+		$http.post('/SProyecto',{accion: 'getLineasBase', proyectoId: proyectoId}).success(
+			function(response) {
+				mi.lineasBase = [];
+				if (response.success){
+					mi.lineasBase = response.lineasBase;
+				}
+		});	
+	}
 			
 	mi.inicializarDatos = function (){
 		mi.proyectoid = "";
@@ -117,7 +145,10 @@ app.controller('informeGeneralPEPController',['$scope','$rootScope','$http','$in
 		    [0, 0, 0]  //real
 		  ];
 			mi.inicializarDatos();
-				$http.post('/SPrestamo', { accion: 'getPrestamoPorPEP', proyectoId: mi.pepId,
+				$http.post('/SPrestamo', {
+					accion: 'getPrestamoPorPEP', 
+					proyectoId: mi.pepId,
+					lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 					t: (new Date()).getTime()})
 				 .then(function(response){
 					 if (response.data.success && response.data.prestamo != null 
@@ -165,7 +196,7 @@ app.controller('informeGeneralPEPController',['$scope','$rootScope','$http','$in
 			plazoEjecucionPlan: mi.dataRadar[0][0],
 			ejecucionFinancieraPlan : mi.dataRadar[0][1],
 			ejecucionFisicaPlan : mi.dataRadar[0][2],
-			
+			lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 			plazoEjecucionReal: mi.dataRadar[1][0],
 			ejecucionFinancieraReal : mi.dataRadar[1][1],
 			ejecucionFisicaReal : mi.dataRadar[1][2],
