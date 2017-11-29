@@ -646,8 +646,14 @@ public class SProyecto extends HttpServlet {
 			List<LineaBase> lstLineasBase = LineaBaseDAO.getLineasBaseById(proyectoid);
 			
 			List<stlineasbase> lstlineabase = new ArrayList<stlineasbase>();
+			
+			stlineasbase temp = new stlineasbase();
+			temp.id = null;
+			temp.nombre = "Actual";
+			lstlineabase.add(temp);
+			
 			for(LineaBase lineaBase : lstLineasBase){
-				stlineasbase temp = new stlineasbase();
+				temp = new stlineasbase();
 				temp.id = lineaBase.getId();
 				temp.nombre = lineaBase.getNombre();
 				temp.proyectoid = lineaBase.getProyecto().getId();

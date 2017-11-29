@@ -94,14 +94,14 @@ public class SDesembolsos extends HttpServlet {
 		if(accion.equals("getDesembolsos")){
 			Integer anio_inicial = Utils.String2Int(map.get("anio_inicial"));
 			Integer anio_final = Utils.String2Int(map.get("anio_final"));
-			
+			String lineaBase = map.get("lineaBase");
 			Integer proyectoId = Utils.String2Int(map.get("proyectoId"));
 			Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
 			Prestamo prestamo = proyecto.getPrestamo();
 			
 			if (prestamo!=null){
 			
-				List<?> objDesembolso =DesembolsoDAO.getDesembolsosPorEjercicio(proyectoId,anio_inicial,anio_final,null);
+				List<?> objDesembolso =DesembolsoDAO.getDesembolsosPorEjercicio(proyectoId,anio_inicial,anio_final,lineaBase);
 				
 				String planificado="";
 				
@@ -164,8 +164,7 @@ public class SDesembolsos extends HttpServlet {
 				List<ObjetoCosto> costos = new ArrayList<>();
 				
 				try {
-					//TODO: lineaBase
-					costos = ObjetoDAO.getEstructuraConCosto(proyectoId, anio_inicial, anio_final,true, false, false, null, usuario);
+					costos = ObjetoDAO.getEstructuraConCosto(proyectoId, anio_inicial, anio_final,true, false, false, lineaBase, usuario);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}

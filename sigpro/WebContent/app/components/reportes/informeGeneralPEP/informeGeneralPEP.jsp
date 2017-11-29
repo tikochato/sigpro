@@ -58,10 +58,18 @@
 						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 					</div>
 		    	</div>
+		    	<div class="row">
+		    		<div class="form-group col-sm-6" align="left">
+						<div id= "lineaBase" angucomplete-alt placeholder="" pause="100" selected-object="informec.cambioLineaBase"
+							  local-data="informec.lineasBase" search-fields="nombre" title-field="nombre" 
+							  field-required="true" field-label="* Linea Base" minlength="1" input-class="form-control form-control-small field-angucomplete inputText" 
+							  match-class="angucomplete-highlight" initial-value="informec.lineaBaseNombre" 
+							  focus-out="informec.blurLineaBase()" input-name="lineaBase"></div>
+						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+					</div>
+		    	</div>
 		    	
-		    	
-		    	
-				<div class="col-sm-12 operation_buttons" style="text-align: right;"  >
+		    	<div class="col-sm-12 operation_buttons" style="text-align: right;"  >
 		    			<div class="btn-group" role="group" aria-label="" >
 							<label class="btn btn-default" ng-click="informec.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!informec.mostrarExport">
 							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>

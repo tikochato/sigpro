@@ -118,8 +118,9 @@ public class SPrestamoMetas extends HttpServlet {
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 			Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
 			Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
-			//TODO: lineaBase
-			List<stprestamo> lstPrestamo = getMetasPrestamo(idPrestamo, anioInicial, anioFinal, null, usuario);
+			String lineaBase = map.get("lineaBase");
+			
+			List<stprestamo> lstPrestamo = getMetasPrestamo(idPrestamo, anioInicial, anioFinal, lineaBase, usuario);
 			
 			if (null != lstPrestamo && !lstPrestamo.isEmpty()){
 				response_text=new GsonBuilder().serializeNulls().create().toJson(lstPrestamo);
@@ -136,8 +137,8 @@ public class SPrestamoMetas extends HttpServlet {
 			int tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
 			
 			try{
-				//TODO: lineaBase
-		        byte [] outArray = exportarExcel(proyectoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, null, usuario);
+				String lineaBase = map.get("lineaBase");
+		        byte [] outArray = exportarExcel(proyectoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, lineaBase, usuario);
 			
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
@@ -156,11 +157,12 @@ public class SPrestamoMetas extends HttpServlet {
 			int anioFin = Utils.String2Int(map.get("fechaFin"), 0);
 			int agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
 			int tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
+			String lineaBase = map.get("lineaBase");
 			String headers[][];
 			String datosMetas[][];
 			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
-			//TODO: lineaBase
-			datosMetas = generarDatosMetas(proyectoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, null, usuario);
+
+			datosMetas = generarDatosMetas(proyectoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, lineaBase, usuario);
 			String path = archivo.ExportPdfMetasPrestamo(headers, datosMetas,tipoVisualizacion);
 			File file=new File(path);
 			if(file.exists()){

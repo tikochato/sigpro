@@ -673,11 +673,9 @@ public class ProyectoDAO implements java.io.Serializable  {
 			String query = String.join(" ", "select * from sipro_history.proyecto p " ,
 					"where p.estado = 1  ",
 					"and  p.id = ?1 ",
-					lineaBase != null ? "and p.linea_base = ?2 " : "and p.actual = 1 ");
+					lineaBase != null ? "and p.linea_base '%" + lineaBase + "%'" : "and p.actual = 1 ");
 			Query<Proyecto> criteria = session.createNativeQuery(query, Proyecto.class);
 			criteria.setParameter(1, id);
-			if (lineaBase != null)
-				criteria.setParameter(2, lineaBase);
 			 ret = criteria.getSingleResult();
 		} catch (NoResultException e){
 		}

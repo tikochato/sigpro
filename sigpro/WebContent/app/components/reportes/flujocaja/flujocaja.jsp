@@ -175,7 +175,15 @@
 	    	</div>
 	    	
 			<div class="row">
-				<div class="form-group col-sm-2">
+				<div class="form-group col-sm-4" align="left">
+						<div id= "lineaBase" angucomplete-alt placeholder="" pause="100" selected-object="flujoc.cambioLineaBase"
+							  local-data="flujoc.lineasBase" search-fields="nombre" title-field="nombre" 
+							  field-required="true" field-label="* Linea Base" minlength="1" input-class="form-control form-control-small field-angucomplete inputText" 
+							  match-class="angucomplete-highlight" initial-value="flujoc.lineaBaseNombre" 
+							  focus-out="flujoc.blurLineaBase()" input-name="lineaBase"></div>
+						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+					</div>
+				<div class="form-group col-sm-2" style="margin-top: 5px;">
 					<input type="text"  class="inputText" uib-datepicker-popup="{{flujoc.formatofecha}}" alt-input-formats="{{flujoc.altformatofecha}}"
 						ng-model="flujoc.fechaCorte" is-open="flujoc.isOpen"
 			            datepicker-options="flujoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  
@@ -187,10 +195,8 @@
 				  	<label for="campo.id" class="floating-label">*Fecha Corte</label>
 				</div>
 				
-				<div class="col-sm-10" align="right" ng-hide="!flujoc.mostrarDescargar">
-					<div class="form-group col-sm-1">
-					</div>
-					<div class="col-sm-11">
+				<div class="col-sm-6" align="right" ng-hide="!flujoc.mostrarDescargar">
+					<div class="col-sm-12">
 						<div class="btn-group">
 							<label class="btn btn-default" ng-model="flujoc.enMillones" uib-btn-radio="true" ng-click="flujoc.calcularTamaniosCeldas(); flujoc.convertirMillones();" uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false">
 							<span>MQ</span></label>
@@ -309,10 +315,10 @@
 							      		<td class="colorPlanificado" style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Total Planificado Acumulado</td>
 							      	</tr>
 							      	<tr>
-							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Total Ejecutado</td>
+							      		<td class="colorReal" style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Total Ejecutado</td>
 							      	</tr>
 							      	<tr>
-							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Total Ejecutado Acumulado</td>
+							      		<td class="colorReal" style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Total Ejecutado Acumulado</td>
 							      	</tr>
 							      	<tr>
 							      		<td style="min-width:300px; max-width:300px; min-height: 35px; height: 35px; overflow:hidden;">Variación</td>
@@ -344,10 +350,10 @@
 							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaPlanificadoAcumulado track by $index" class="colorPlanificado" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>
 							      	</tr>
 							      	<tr>
-							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaEjecutado track by $index" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>
+							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaEjecutado track by $index" class="colorReal" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>
 							      	</tr>
 							      	<tr>
-							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaEjecutadoAcumulado track by $index" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>
+							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaEjecutadoAcumulado track by $index" class="colorReal" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>
 							      	</tr>
 							      	<tr>
 							      		<td ng-repeat="posicion in flujoc.resumenTotales.filaVariacion track by $index" style="{{flujoc.estiloCelda}} min-height: 35px; height: 35px; {{flujoc.estiloAlineacion}}"> {{posicion | formatoMillones : flujoc.enMillones}} </td>

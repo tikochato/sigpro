@@ -127,6 +127,8 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 			if(selected!== undefined){
 				mi.prestamoNombre = selected.originalObject.proyectoPrograma;
 				mi.prestamoId = selected.originalObject.id;
+				$scope.$broadcast('angucomplete-alt:clearInput', 'pep');
+				$scope.$broadcast('angucomplete-alt:clearInput', 'lineaBase');
 				mi.getPeps(mi.prestamoId);
 			}
 			else{
@@ -145,7 +147,8 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 			if(selected!== undefined){
 				mi.pepNombre = selected.originalObject.nombre;
 				mi.pepId = selected.originalObject.id;
-				mi.validar(1);
+				$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+				mi.getLineasBase(mi.pepId);
 			}
 			else{
 				mi.pepNombre="";
@@ -159,6 +162,35 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 					mi.peps = [];
 					if (response.success){
 						mi.peps = response.entidades;
+					}
+			});	
+		}
+		
+		mi.blurLineaBase=function(){
+			if(document.getElementById("lineaBase_value").defaultValue!=mi.lineaBaseNombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+			}
+		};
+		
+		mi.cambioLineaBase=function(selected){
+			if(selected!== undefined){
+				mi.lineaBaseNombre = selected.originalObject.nombre;
+				mi.lineaBaseId = selected.originalObject.id;
+				mi.validar(1);
+			}
+			else{
+				mi.lineaBaseNombre="";
+				mi.lineaBaseId=null;
+			}
+		};
+
+
+		mi.getLineasBase = function(proyectoId){
+			$http.post('/SProyecto',{accion: 'getLineasBase', proyectoId: proyectoId}).success(
+				function(response) {
+					mi.lineasBase = [];
+					if (response.success){
+						mi.lineasBase = response.lineasBase;
 					}
 			});	
 		}
@@ -214,6 +246,7 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 				fechaFin: mi.fechaFin,
 				agrupacion: mi.agrupacionActual,
 				tipoVisualizacion: tipoVisualizacion,
+				lineaBase: mi.lineaBaseId,
 				t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
@@ -303,7 +336,8 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 				accion : 'getMetasProducto',
 				idPrestamo: mi.pepId,
 				anioInicial: mi.fechaInicio,
-				anioFinal: mi.fechaFin
+				anioFinal: mi.fechaFin,
+				lineaBase: mi.lineaBaseId
 			};
 		
 			mi.mostrarCargando = true;
@@ -564,6 +598,7 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 				 fechaFin: mi.fechaFin,
 				 agrupacion: mi.agrupacionActual,
 				 tipoVisualizacion: tipoVisualizacion,
+				 lineaBase: mi.lineaBaseId,
 				 t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {

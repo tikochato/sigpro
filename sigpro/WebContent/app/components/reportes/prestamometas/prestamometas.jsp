@@ -170,25 +170,31 @@
 					<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 				</div>
 	    	</div>
-	    	<div class="row">	
-					<div class="form-group col-sm-1">
+	    	<div class="row">		    	
+		    		<div class="form-group col-sm-4" align="left">
+						<div id= "lineaBase" angucomplete-alt placeholder="" pause="100" selected-object="metasc.cambioLineaBase"
+							  local-data="metasc.lineasBase" search-fields="nombre" title-field="nombre" 
+							  field-required="true" field-label="* Linea Base" minlength="1" input-class="form-control form-control-small field-angucomplete inputText" 
+							  match-class="angucomplete-highlight" initial-value="metasc.lineaBaseNombre" 
+							  focus-out="metasc.blurLineaBase()" input-name="lineaBase"></div>
+						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+					</div>
+					<div class="form-group col-sm-1" style="margin-top: 5px;">
 						<input type="number"  class="inputText" ng-model="metasc.fechaInicio" maxlength="4" 
 						ng-value="metasc.fechaInicio" onblur="this.setAttribute('value', this.value);"
 						ng-change="metasc.validar(2)"/>
 					  	<label for="campo.id" class="floating-label" style="left: 0;">*Año Inicial</label>
 					</div>
 					
-					<div class="form-group col-sm-1">
+					<div class="form-group col-sm-1" style="margin-top: 5px;">
 						<input type="number"  class="inputText" ng-model="metasc.fechaFin" maxlength="4" 
 						ng-value="metasc.fechaFin" onblur="this.setAttribute('value', this.value);"
 						ng-change="metasc.validar(3)"/>
 					  	<label for="campo.id" class="floating-label">*Año Final</label>
 					</div>
 					
-					<div class="col-sm-10" align="right" ng-hide="!metasc.mostrarDescargar">
-						<div class="form-group col-sm-1">
-						</div>
-						<div class="col-sm-11">
+					<div class="col-sm-6" align="right" ng-hide="!metasc.mostrarDescargar">
+						<div class="col-sm-12">
 							<div class="btn-group">
 								<label class="btn btn-default" ng-model="metasc.agrupacionActual" uib-btn-radio="1" ng-click="metasc.cambiarAgrupacion(1)" uib-tooltip="Mes" role="button" tabindex="1" aria-invalid="false">
 								<span>M</span></label>

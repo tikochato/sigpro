@@ -118,11 +118,11 @@ public class SFlujoCaja extends HttpServlet {
 				Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 				Integer idProyecto = Utils.String2Int(map.get("idProyecto"),0);
 				Date fechaCorte = Utils.dateFromString(map.get("fechaCorte"));
-				//TODO: lineaBase
-				List<ObjetoCosto> lstPrestamo = getFlujoCaja(idProyecto, idPrestamo, fechaCorte, null, usuario);
+				String lineaBase = map.get("lineaBase");
+				List<ObjetoCosto> lstPrestamo = getFlujoCaja(idProyecto, idPrestamo, fechaCorte, lineaBase, usuario);
 				
 				if (null != lstPrestamo && !lstPrestamo.isEmpty()){
-					stTotales stTotales = getFlujoCajaTotales(idPrestamo, lstPrestamo, fechaCorte, null, usuario);
+					stTotales stTotales = getFlujoCajaTotales(idPrestamo, lstPrestamo, fechaCorte, lineaBase, usuario);
 					String totales = new GsonBuilder().serializeNulls().create().toJson(stTotales);
 					response_text=new GsonBuilder().serializeNulls().create().toJson(lstPrestamo);
 			        response_text = String.join("", "\"prestamo\":",response_text);
@@ -141,8 +141,8 @@ public class SFlujoCaja extends HttpServlet {
 			int agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
 			
 			try{
-				//TODO: lineaBase
-				byte [] outArray = exportarExcel(prestamoId, proyectoId, fechaCorte, agrupacion, null, usuario);
+				String lineaBase = map.get("lineaBase");
+				byte [] outArray = exportarExcel(prestamoId, proyectoId, fechaCorte, agrupacion, lineaBase, usuario);
 			
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
@@ -165,8 +165,8 @@ public class SFlujoCaja extends HttpServlet {
 				String headers[][];
 				String datos[][];
 				headers = generarHeaders(fechaCorte, agrupacion);
-				//TODO: lineaBase
-				datos = generarDatosFlujoCaja(prestamoId, proyectoId, fechaCorte, agrupacion, headers[0].length, null, usuario);
+				String lineaBase = map.get("lineaBase");
+				datos = generarDatosFlujoCaja(prestamoId, proyectoId, fechaCorte, agrupacion, headers[0].length, lineaBase, usuario);
 				String path = archivo.ExportarPdfFlujoCaja(headers, datos, usuario);
 				File file=new File(path);
 				if(file.exists()){

@@ -109,8 +109,8 @@ public class SControlAdquisiciones extends HttpServlet {
 			if (accion.equals("generarPlan")){
 				
 				try{
-					//TODO: lineaBase
-					List<stcontroladquisiciones> lstprestamo = generarPlan(proyectoId, null, usuario);
+					String lineaBase = map.get("lineaBase");
+					List<stcontroladquisiciones> lstprestamo = generarPlan(proyectoId, lineaBase, usuario);
 										
 					response_text=new GsonBuilder().serializeNulls().create().toJson(lstprestamo);
 			        response_text = String.join("", "\"proyecto\":",response_text);
@@ -122,8 +122,8 @@ public class SControlAdquisiciones extends HttpServlet {
 			}else if(accion.equals("exportarExcel")){
 				Integer idPlanAdquisicion = Utils.String2Int(map.get("idPlanAdquisicion"), null);
 				try{ 
-					//TODO: lineaBase
-					byte [] outArray = exportarExcel(idPlanAdquisicion, proyectoId, null, usuario);
+					String lineaBase = map.get("lineaBase");
+					byte [] outArray = exportarExcel(idPlanAdquisicion, proyectoId, lineaBase, usuario);
 					
 					response.setContentType("application/ms-excel");
 					response.setContentLength(outArray.length);
@@ -140,8 +140,8 @@ public class SControlAdquisiciones extends HttpServlet {
 				String headers[][];
 				String datos[][];
 				headers = generarHeaders();
-				//TODO: lineaBase
-				datos = generarDatos(proyectoId, null, usuario);
+				String lineaBase = map.get("lineaBase");
+				datos = generarDatos(proyectoId, lineaBase, usuario);
 				String path = archivo.exportarPlanAdquisiciones(headers, datos,usuario);
 				File file=new File(path);
 				if(file.exists()){

@@ -52,6 +52,8 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 		if(selected!== undefined){
 			mi.prestamoNombre = selected.originalObject.proyectoPrograma;
 			mi.prestamoId = selected.originalObject.id;
+			$scope.$broadcast('angucomplete-alt:clearInput', 'pep');
+			$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
 			mi.getPeps(mi.prestamoId);
 		}
 		else{
@@ -70,7 +72,8 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 		if(selected!== undefined){
 			mi.pepNombre = selected.originalObject.nombre;
 			mi.pepId = selected.originalObject.id;
-			mi.generarReporte();
+			$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+			mi.getLineasBase(mi.pepId);
 		}
 		else{
 			mi.pepNombre="";
@@ -84,6 +87,34 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 				mi.peps = [];
 				if (response.success){
 					mi.peps = response.entidades;
+				}
+		});	
+	}
+	
+	mi.blurLineaBase=function(){
+		if(document.getElementById("lineaBase_value").defaultValue!=mi.lineaBaseNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+		}
+	};
+	
+	mi.cambioLineaBase=function(selected){
+		if(selected!== undefined){
+			mi.lineaBaseNombre = selected.originalObject.nombre;
+			mi.lineaBaseId = selected.originalObject.id;
+			mi.generarReporte();
+		}
+		else{
+			mi.lineaBaseNombre="";
+			mi.lineaBaseId=null;
+		}
+	};
+
+	mi.getLineasBase = function(proyectoId){
+		$http.post('/SProyecto',{accion: 'getLineasBase', proyectoId: proyectoId}).success(
+			function(response) {
+				mi.lineasBase = [];
+				if (response.success){
+					mi.lineasBase = response.lineasBase;
 				}
 		});	
 	}
@@ -206,6 +237,7 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 				 proyectoId: mi.pepId,
 				 anio_inicial:mi.anio_inicio,
 				 anio_final:mi.anio_fin,
+				 lineaBase: mi.lineaBaseId,
 				 t: new Date().getTime()
 				
 				}).success(

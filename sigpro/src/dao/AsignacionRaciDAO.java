@@ -21,7 +21,7 @@ public class AsignacionRaciDAO {
 											"where a.estado = 1 ",
 											"and a.objeto_id = :objId ",
 											"and a.objeto_tipo  = :objTipo ",
-											lineaBase != null ? "and a.linea_base=" + lineaBase : "and a.actual=1");
+											lineaBase != null ? "and a.linea_base like '%" + lineaBase + "%'" : "and a.actual=1");
 			
 			Query<AsignacionRaci> criteria = session.createNativeQuery(query, AsignacionRaci.class);
 			criteria.setParameter("objId", objetoId);
@@ -45,14 +45,14 @@ public class AsignacionRaciDAO {
 					"FROM sipro_history.asignacion_raci ar",
 					"inner join sipro_history.colaborador c on c.id=ar.colaboradorid",
 					"where ar.objeto_tipo = 5",
-					lineaBase != null ? "and ar.linea_base=" + lineaBase : "and ar.actual=1",
+					lineaBase != null ? "and ar.linea_base= like '%" + lineaBase + "%'" : "and ar.actual=1",
 					"and ar.estado=1",
 					"and ar.objeto_id in (", 
 						"select a.id",
 						"from sipro_history.actividad a",
 						"where a.estado = 1",
 						"and a.treePath like '"+(10000000+proyectoId)+"%'",
-						lineaBase != null ? "and a.linea_base="+lineaBase : "and a.actual=1",
+						lineaBase != null ? "and a.linea_base like '%" + lineaBase + "%'" : "and a.actual=1",
 					")");
 			
 			Query<Colaborador> criteria = session.createNativeQuery(query, Colaborador.class);
@@ -111,7 +111,7 @@ public class AsignacionRaciDAO {
 									"and a.objeto_tipo =:objTipo",
 									"and a.rol_raci=:rol ",
 									"and a.estado=1 ",									
-									lineaBase != null ? "and a.linea_base=" + lineaBase : "and a.actual=1");
+									lineaBase != null ? "and a.linea_base like '%" + lineaBase + "%'" : "and a.actual=1");
 			
 			Query<Colaborador> criteria = session.createNativeQuery(query, Colaborador.class);
 			criteria.setParameter("objId", objetoId);
