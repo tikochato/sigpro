@@ -58,13 +58,31 @@ app.controller('matrizraciController',['$scope','$rootScope','$http','$interval'
 		if(selected!== undefined){
 			mi.pepNombre = selected.originalObject.nombre;
 			mi.pepId = selected.originalObject.id;
-			mi.generarMatriz();
+			mi.getLineasBase(mi.pepId);		
 		}
 		else{
 			mi.pepNombre="";
 			mi.pepId="";
 		}
 	}
+	
+	mi.blurLineaBase=function(){
+		if(document.getElementById("lineaBase_value").defaultValue!=mi.lineaBaseNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+		}
+	};
+	
+	mi.cambioLineaBase=function(selected){
+		if(selected!== undefined){
+			mi.lineaBaseNombre = selected.originalObject.nombre;
+			mi.lineaBaseId = selected.originalObject.id;
+			mi.generarMatriz();
+		}
+		else{
+			mi.lineaBaseNombre="";
+			mi.lineaBaseId=null;
+		}
+	};
 	
 	mi.getPeps = function(prestamoId){
 		$http.post('/SProyecto',{accion: 'getProyectos', prestamoid: prestamoId}).success(
@@ -76,6 +94,15 @@ app.controller('matrizraciController',['$scope','$rootScope','$http','$interval'
 		});	
 	}
 	 
+	mi.getLineasBase = function(proyectoId){
+		$http.post('/SProyecto',{accion: 'getLineasBase', proyectoId: proyectoId}).success(
+			function(response) {
+				mi.lineasBase = [];
+				if (response.success){
+					mi.lineasBase = response.lineasBase;
+				}
+		});	
+	}
 	 
 	 mi.generarMatriz = function (){
 		 mi.mostrarTabla = false;
@@ -86,9 +113,11 @@ app.controller('matrizraciController',['$scope','$rootScope','$http','$interval'
 			 mi.mostrarcargando = true;
 			 
 			 mi.inicializarVariables();
-				$http.post('/SMatrizRACI', { accion: 'getMatriz', 
-					idPrestamo: mi.pepId }).success(
-				
+				$http.post('/SMatrizRACI', { 
+					accion: 'getMatriz', 
+					lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
+					idPrestamo: mi.pepId 
+				}).success(
 					function(response) {
 						mi.colaboradores = response.colaboradores;
 						mi.matrizAsignacion = response.matriz;
@@ -227,7 +256,8 @@ app.controller('matrizraciController',['$scope','$rootScope','$http','$interval'
 	 mi.exportarExcel = function(){
 			$http.post('/SMatrizRACI', { 
 				 accion: 'exportarExcel', 
-				 idPrestamo: mi.pepId, 
+				 idPrestamo: mi.pepId,
+				 lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				 t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
@@ -245,6 +275,7 @@ app.controller('matrizraciController',['$scope','$rootScope','$http','$interval'
 	 mi.exportarPdf=function(){
 		 $http.post('/SMatrizRACI', { 
 			 accion: 'exportarPdf', 
+			 lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 			 idPrestamo: mi.pepId, 
 			 t:moment().unix()
 		  } ).then(

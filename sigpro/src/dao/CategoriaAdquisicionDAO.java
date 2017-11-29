@@ -145,7 +145,7 @@ public class CategoriaAdquisicionDAO {
 		try{
 			String query = String.join(" ", "SELECT ca.* FROM sipro_history.categoria_adquisicion ca", 
 					"where ca.estado = 1",
-					lineaBase != null ? "and ca.linea_base=" + lineaBase : "and ca.actual=1");
+					lineaBase != null ? "and ca.linea_base like '%" + lineaBase + "%'" : "and ca.actual=1");
 			Query<CategoriaAdquisicion> criteria = session.createNativeQuery(query, CategoriaAdquisicion.class);
 			ret = criteria.getResultList();
 		}catch(Throwable e){

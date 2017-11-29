@@ -134,11 +134,9 @@ public class SAvanceActividades extends HttpServlet {
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 			String fechaCorte = map.get("fechaCorte");
 			String lineaBase = map.get("lineaBase");
-			lineaBase = "LB1|";
 						
 			if (accion.equals("getAvance")){
-				
-				try{					
+				try{
 					stElementoResult avanceActividades = getAvanceActividadesPrestamo(idPrestamo, fechaCorte, usuario,lineaBase);
 						
 					if(avanceActividades != null){
@@ -694,13 +692,7 @@ public class SAvanceActividades extends HttpServlet {
 				HitoResultado hitoResultado = HitoResultadoDAO.getHitoResultadoActivoPorHito(hito.getId());
 				
 				if(hitoResultado != null){
-//					if(Corte.before(fechaHito) && hitoResultado.getValorEntero() == 0){
-//						totalSinIniciar++;
-//					}else if(Corte.after(fechaHito) && (hitoResultado.getValorEntero() == 0 && hitoResultado.getValorDecimal() == new BigDecimal(0) && hitoResultado.getValorString().equals("") && hitoResultado.getValorTiempo() == null)){
-//						totalRetrasadas++;
-//					} else if(Corte.after(fechaHito) && (hitoResultado.getValorEntero() > 0 || hitoResultado.getValorDecimal() != new BigDecimal(0) || !hitoResultado.getValorString().equals("") || hitoResultado.getValorTiempo() != null)){
 						totalCompletadas++;
-//					}
 					totalHitos++;
 				}else{						
 					if(fechaHito.after(anioInicio.toDate()) && fechaHito.before(anioFin.toDate())){

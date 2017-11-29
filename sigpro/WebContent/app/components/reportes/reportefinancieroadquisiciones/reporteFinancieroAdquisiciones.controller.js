@@ -51,14 +51,32 @@ app.controller('reporteFinancieroAdquisicionesController', [ '$scope', '$rootSco
 		mi.cambioPep=function(selected){
 			if(selected!== undefined){
 				mi.pepNombre = selected.originalObject.nombre;
-				mi.pepId = selected.originalObject.id;
-				mi.validar(1);
+				mi.pepId = selected.originalObject.id;	
+				mi.getLineasBase(mi.pepId);
 			}
 			else{
 				mi.pepNombre="";
 				mi.pepId="";
 			}
 		}
+		
+		mi.blurLineaBase=function(){
+			if(document.getElementById("lineaBase_value").defaultValue!=mi.lineaBaseNombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+			}
+		};
+		
+		mi.cambioLineaBase=function(selected){
+			if(selected!== undefined){
+				mi.lineaBaseNombre = selected.originalObject.nombre;
+				mi.lineaBaseId = selected.originalObject.id;
+				mi.validar(1);
+			}
+			else{
+				mi.lineaBaseNombre="";
+				mi.lineaBaseId=null;
+			}
+		};
 		
 		mi.getPeps = function(prestamoId){
 			$http.post('/SProyecto',{accion: 'getProyectos', prestamoid: prestamoId, t: (new Date()).getTime()}).success(
@@ -70,6 +88,15 @@ app.controller('reporteFinancieroAdquisicionesController', [ '$scope', '$rootSco
 			});	
 		}
 		
+		mi.getLineasBase = function(proyectoId){
+			$http.post('/SProyecto',{accion: 'getLineasBase', proyectoId: proyectoId}).success(
+				function(response) {
+					mi.lineasBase = [];
+					if (response.success){
+						mi.lineasBase = response.lineasBase;
+					}
+			});	
+		}
 		
 		mi.padre = function(row){
 			if(row.nivel < 2){
@@ -204,6 +231,7 @@ app.controller('reporteFinancieroAdquisicionesController', [ '$scope', '$rootSco
 					idPrestamo: mi.idPrestamo,
 					fechaInicio: mi.fechaInicio,
 					fechaFin: mi.fechaFin,
+					lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 					anio: mi.anio
 				}).success(function(response){
 					if(response.success){

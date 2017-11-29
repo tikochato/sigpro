@@ -126,6 +126,16 @@
 				<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 			</div>
     	</div>
+    	<div class="row">
+    		<div class="form-group col-sm-6" align="left">
+				<div id= "lineaBase" angucomplete-alt placeholder="" pause="100" selected-object="mapac.cambioLineaBase"
+					  local-data="mapac.lineasBase" search-fields="nombre" title-field="nombre" 
+					  field-required="true" field-label="* Linea Base" minlength="1" input-class="form-control form-control-small field-angucomplete inputText" 
+					  match-class="angucomplete-highlight" initial-value="mapac.lineaBaseNombre" 
+					  focus-out="mapac.blurLineaBase()" input-name="lineaBase"></div>
+				<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+			</div>
+    	</div>
 		<div class="row">
 	    <div class="col-sm-12 operation_buttons" align="right" style="width: 99%">
 	    

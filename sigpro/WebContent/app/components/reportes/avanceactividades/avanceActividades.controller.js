@@ -101,7 +101,7 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 			if(selected!== undefined){
 				mi.lineaBaseNombre = selected.originalObject.nombre;
 				mi.lineaBaseId = selected.originalObject.id;
-				mi.validarFecha(mi.fechaCorte)
+				mi.validarFecha(mi.fechaCorte);
 			}
 			else{
 				mi.lineaBaseNombre="";
@@ -130,7 +130,6 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 		}
 		
 		mi.validarFecha = function(fecha1){
-			//if(fecha1 != null && mi.pepId != null && mi.lineaBaseId != null)
 			if(fecha1 != null && mi.pepId != null )
 				mi.generar();
 		}
@@ -171,7 +170,7 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 					$http.post('/SAvanceActividades', {
 						accion: 'getAvance',
 						idPrestamo: mi.pepId,
-						lineaBase:mi.lineaBaseId,
+						lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 						fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY')
 					}).success(function(response){
 						if (response.success){
@@ -397,6 +396,7 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 				accion: 'exportarExcel', 	
 				idPrestamo: mi.pepId,
 				fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY'),
+				lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
@@ -416,6 +416,7 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 				accion: 'exportarPdf', 	
 				idPrestamo: mi.pepId,
 				fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY'),
+				lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
