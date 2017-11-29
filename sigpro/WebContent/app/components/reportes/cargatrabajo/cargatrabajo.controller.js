@@ -66,7 +66,7 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 		if(selected!== undefined){
 			mi.pepNombre = selected.originalObject.nombre;
 			mi.pepId = selected.originalObject.id;
-			mi.getEstructura();
+			mi.getLineasBase(mi.pepId);			
 		}
 		else{
 			mi.pepNombre="";
@@ -74,12 +74,40 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 		}
 	}
 	
+	mi.blurLineaBase=function(){
+		if(document.getElementById("lineaBase_value").defaultValue!=mi.lineaBaseNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+		}
+	};
+	
+	mi.cambioLineaBase=function(selected){
+		if(selected!== undefined){
+			mi.lineaBaseNombre = selected.originalObject.nombre;
+			mi.lineaBaseId = selected.originalObject.id;
+			mi.getEstructura();
+		}
+		else{
+			mi.lineaBaseNombre="";
+			mi.lineaBaseId=null;
+		}
+	};
+	
 	mi.getPeps = function(prestamoId){
 		$http.post('/SProyecto',{accion: 'getProyectos', prestamoid: prestamoId}).success(
 			function(response) {
 				mi.peps = [];
 				if (response.success){
 					mi.peps = response.entidades;
+				}
+		});	
+	}
+	
+	mi.getLineasBase = function(proyectoId){
+		$http.post('/SProyecto',{accion: 'getLineasBase', proyectoId: proyectoId}).success(
+			function(response) {
+				mi.lineasBase = [];
+				if (response.success){
+					mi.lineasBase = response.lineasBase;
 				}
 		});	
 	}
@@ -294,7 +322,10 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 			mi.idPrestamo = mi.pepId;
 			mi.mostrar = false;
 			mi.mostrarcargando=true;
-			$http.post('/SCargaTrabajo', {accion: 'getEstructrua', idPrestamo :mi.pepId,
+			$http.post('/SCargaTrabajo', {
+				accion: 'getEstructrua', 
+				idPrestamo :mi.pepId,
+				lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				t: new Date().getTime()}).success(
 					function(response){
 						mi.estructuraPrestamo = response.estructura;
@@ -312,6 +343,7 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 									idProductos:idProductos,
 									idSubproductos:idSubproductos,
 									anio_inicio:mi.fechaInicio,
+									lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 									anio_fin: mi.fechaFin,
 									t: new Date().getTime()
 									
@@ -356,6 +388,7 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 									idSubproductos:idSubproductos,
 									anio_inicio:mi.fechaInicio,
 									anio_fin: mi.fechaFin,
+									lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 									t: new Date().getTime()
 									
 									

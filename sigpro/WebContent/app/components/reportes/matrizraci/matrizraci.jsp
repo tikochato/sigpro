@@ -255,6 +255,16 @@
 							<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 						</div>
 			    	</div>
+			    	<div class="row">
+			    		<div class="form-group col-sm-6" align="left">
+							<div id= "lineaBase" angucomplete-alt placeholder="" pause="100" selected-object="racic.cambioLineaBase"
+								  local-data="racic.lineasBase" search-fields="nombre" title-field="nombre" 
+								  field-required="true" field-label="* Linea Base" minlength="1" input-class="form-control form-control-small field-angucomplete inputText" 
+								  match-class="angucomplete-highlight" initial-value="racic.lineaBaseNombre" 
+								  focus-out="racic.blurLineaBase()" input-name="lineaBase"></div>
+							<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+						</div>
+			    	</div>
 					<div class="operation_buttons"  style="float: right;">
 		    			<div class="btn-group" role="group" aria-label="">
 							<label class="btn btn-default" ng-click="racic.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!racic.mostrarExport">

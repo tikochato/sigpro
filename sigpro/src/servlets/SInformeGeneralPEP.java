@@ -75,9 +75,10 @@ public class SInformeGeneralPEP extends HttpServlet {
 		String response_text="";
 		Date fecha_actual = new Date();
 		if(accion.equals("getDatosPlan")){
+			String lineaBase = map.get("lineaBase");
 			Integer proyectoId = Utils.String2Int(map.get("proyectoId"),0);
 			
-			List<?> datosPlan = PlanEjecucionDAO.getDatosPlan(proyectoId,null);
+			List<?> datosPlan = PlanEjecucionDAO.getDatosPlan(proyectoId,lineaBase);
 			BigDecimal plazoEjecucionPlan = new BigDecimal(0);
 			BigDecimal plazoEjecucionReal = new BigDecimal(0);
 			BigDecimal ejecucionFinancieraReal = new BigDecimal(0);
