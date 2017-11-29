@@ -80,7 +80,7 @@ app.controller('informeGeneralPEPController',['$scope','$rootScope','$http','$in
 		if(selected!== undefined){
 			mi.pepNombre = selected.originalObject.nombre;
 			mi.pepId = selected.originalObject.id;
-			mi.cambioLineaBase(mi.pepId);
+			mi.getLineasBase(mi.pepId);
 		}
 		else{
 			mi.pepNombre="";
@@ -195,11 +195,11 @@ app.controller('informeGeneralPEPController',['$scope','$rootScope','$http','$in
 			id: mi.pepId,
 			plazoEjecucionPlan: mi.dataRadar[0][0],
 			ejecucionFinancieraPlan : mi.dataRadar[0][1],
-			ejecucionFisicaPlan : mi.dataRadar[0][2],
-			lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
+			ejecucionFisicaPlan : mi.dataRadar[0][2],			
 			plazoEjecucionReal: mi.dataRadar[1][0],
 			ejecucionFinancieraReal : mi.dataRadar[1][1],
 			ejecucionFisicaReal : mi.dataRadar[1][2],
+			lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 			t:moment().unix()
 		  } ).then(
 				  function successCallback(response) {
