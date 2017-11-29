@@ -173,24 +173,32 @@
 						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 					</div>
 		    	</div>
-	    		<div class="row" style="width: 100%; height: 15%">
-	    			<div align="left" class="form-group col-sm-1">
+	    		<div class="row" style="height: 15%">
+	    			<div class="form-group col-sm-4" align="left">
+						<div id= "lineaBase" angucomplete-alt placeholder="" pause="100" selected-object="controller.cambioLineaBase"
+							  local-data="controller.lineasBase" search-fields="nombre" title-field="nombre" 
+							  field-required="true" field-label="* Linea Base" minlength="1" input-class="form-control form-control-small field-angucomplete inputText" 
+							  match-class="angucomplete-highlight" initial-value="controller.lineaBaseNombre" 
+							  focus-out="controller.blurLineaBase()" input-name="lineaBase"></div>
+						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+					</div>
+	    			<div align="left" class="form-group col-sm-1" style="margin-top: 5px;">
 						<input type="number"  class="inputText" ng-model="controller.fechaInicio" maxlength="4" 
 						ng-value="controller.fechaInicio" onblur="this.setAttribute('value', this.value);"
 						ng-change="controller.validar(2)"/>
 					  	<label for="campo.id" class="floating-label" style="left: 0;">*Año Inicial</label>
 					</div>
 					
-					<div align="left" class="form-group col-sm-1">
+					<div align="left" class="form-group col-sm-1" style="margin-top: 5px;">
 						<input type="number"  class="inputText" ng-model="controller.fechaFin" maxlength="4" 
 						ng-value="controller.fechaFin" onblur="this.setAttribute('value', this.value);"
 						ng-change="controller.validar(3)"/>
 					  	<label for="campo.id" class="floating-label">*Año Final</label>
 					</div>
 					
-					<div class="col-sm-10" align="right" ng-hide="!controller.mostrarDescargar">
+					<div class="col-sm-6" align="right" ng-hide="!controller.mostrarDescargar">
 						<div class="">
-							<div class="btn-group">
+							<div class="btn-group" style="margin-left: -20px;">
 								<label class="btn btn-default" ng-model="controller.enMillones" uib-btn-radio="true" ng-click="controller.calcularTamaniosCeldas(); controller.convertirMillones();" uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false">
 								<span>MQ</span></label>
 								<label class="btn btn-default" ng-model="controller.enMillones" uib-btn-radio="false" ng-click="controller.calcularTamaniosCeldas(); controller.convertirMillones();" uib-tooltip="Quetzales" role="button" tabindex="1" aria-invalid="false">

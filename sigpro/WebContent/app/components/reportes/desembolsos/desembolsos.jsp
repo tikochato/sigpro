@@ -111,22 +111,30 @@
 					</div>
 		    	</div>
 				<div class="row">
-					<div class="form-group col-sm-1">
+					<div class="form-group col-sm-4" align="left">
+						<div id= "lineaBase" angucomplete-alt placeholder="" pause="100" selected-object="desembolsosc.cambioLineaBase"
+							  local-data="desembolsosc.lineasBase" search-fields="nombre" title-field="nombre" 
+							  field-required="true" field-label="* Linea Base" minlength="1" input-class="form-control form-control-small field-angucomplete inputText" 
+							  match-class="angucomplete-highlight" initial-value="desembolsosc.lineaBaseNombre" 
+							  focus-out="desembolsosc.blurLineaBase()" input-name="lineaBase"></div>
+						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+					</div>
+					<div class="form-group col-sm-1" style="margin-top: 5px;">
 						<input type="number"  class="inputText" ng-model="desembolsosc.anio_inicio" maxlength="4" 
 						ng-value="desembolsosc.anioInicial" onblur="this.setAttribute('value', this.value);"
 						ng-change="desembolsosc.validarParametros()"/>
 					  	<label  class="floating-label" style="left: 0">*Año Inicial</label>
 					</div>
-					<div class="form-group col-sm-1">
+					<div class="form-group col-sm-1" style="margin-top: 5px;">
 						<input type="number"  class="inputText" ng-model="desembolsosc.anio_fin" maxlength="4" 
 						ng-value="desembolsosc.anio_fin" onblur="this.setAttribute('value', this.value);"
 						ng-change="desembolsosc.validarParametros()"/>
 					  	<label for="campo.id" class="floating-label" style="left: 0">*Año Final</label>
 					</div>
 					
-					<div class="col-sm-10" align="right" ng-hide="!desembolsosc.mostrarBotones" >
+					<div class="col-sm-6" align="right" ng-hide="!desembolsosc.mostrarBotones" >
 						<div class="">
-							<div class="btn-group">
+							<div class="btn-group" style="margin-left: -20px;">
 								<label class="btn btn-default" ng-model="desembolsosc.enMillones" uib-btn-radio="true"  uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false"
 								ng-click="desembolsosc.convertirMillones()">
 								<span>MQ</span></label>

@@ -208,14 +208,12 @@ public class DesembolsoDAO {
 				"from sipro_history.desembolso where proyectoid = ?1",
 				"and estado  = 1", 
 				"and  year(fecha) between ?2 and ?3",
-				lineaBase!=null ? "and linea_base = ?4" : "and actual = 1",
+				lineaBase!=null ? "and linea_base like '%"+lineaBase+"%'" : "and actual = 1",
 				"GROUP BY year (fecha),month(fecha) order by year(fecha),month (fecha) asc");
 			Query<?>  desembolsos = session.createNativeQuery(query);
 			desembolsos.setParameter(1, idProyecto);
 			desembolsos.setParameter(2, anio_inicial);
 			desembolsos.setParameter(3, anio_final);
-			if (lineaBase!=null)
-				desembolsos.setParameter(4, lineaBase);
 			ret = desembolsos.getResultList();
 		}
 		catch(Throwable e){
@@ -235,15 +233,13 @@ public class DesembolsoDAO {
 		try{
 			String query = String.join(" ", "select year (fecha) anio ,month(fecha) mes ,SUM(monto)  monto",
 				"from sipro_history.desembolso where proyectoid = ?1",
-				lineaBase!=null ? "and linea_base like '%?4%'" : "and actual = 1",
+				lineaBase!=null ? "and linea_base like '%"+lineaBase+"%'" : "and actual = 1",
 				"and  fecha between ?2 and ?3",
 				"GROUP BY year (fecha),month(fecha) order by year(fecha),month (fecha) asc");
 			Query<?>  desembolsos = session.createNativeQuery(query);
 			desembolsos.setParameter(1, idProyecto);
 			desembolsos.setParameter(2, fechaInicial);
 			desembolsos.setParameter(3, fechaFinal);
-			if (lineaBase!=null)
-				desembolsos.setParameter(4, lineaBase);
 			ret = desembolsos.getResultList();
 		}
 		catch(Throwable e){
@@ -303,12 +299,10 @@ public class DesembolsoDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = "select sum(d.monto) from sipro_history.desembolso d where d.proyectoid = ?1 and d.fecha > ?2 " + 
-		    (lineaBase != null ? "and d.linea_base = ?3" : "and d.actual = 1 ") ;
+					lineaBase!=null ? "and d.linea_base like '%"+lineaBase+"%'" : "and d.actual = 1";
 			Query<?> conteo = session.createNativeQuery(query);
 			conteo.setParameter(1, proyectoId);
 			conteo.setParameter(2, fechaActual);
-			if (lineaBase != null)
-				 conteo.setParameter(3, lineaBase);
 			Object res = conteo.getSingleResult();
 			ret = (BigDecimal) res;
 		}

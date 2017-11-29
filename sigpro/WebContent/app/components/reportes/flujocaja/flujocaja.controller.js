@@ -105,6 +105,8 @@ app.controller('flujocajaController',['$scope','$rootScope','$http','$interval',
 		if(selected!== undefined){
 			mi.prestamoNombre = selected.originalObject.proyectoPrograma;
 			mi.prestamoId = selected.originalObject.id;
+			$scope.$broadcast('angucomplete-alt:clearInput','pep');
+			$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
 			mi.getPeps(mi.prestamoId);
 		}
 		else{
@@ -123,7 +125,8 @@ app.controller('flujocajaController',['$scope','$rootScope','$http','$interval',
 		if(selected!== undefined){
 			mi.pepNombre = selected.originalObject.nombre;
 			mi.pepId = selected.originalObject.id;
-			mi.validar();
+			$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+			mi.getLineasBase(mi.pepId);
 		}
 		else{
 			mi.pepNombre="";
@@ -137,6 +140,34 @@ app.controller('flujocajaController',['$scope','$rootScope','$http','$interval',
 				mi.peps = [];
 				if (response.success){
 					mi.peps = response.entidades;
+				}
+		});	
+	}
+	
+	mi.blurLineaBase=function(){
+		if(document.getElementById("lineaBase_value").defaultValue!=mi.lineaBaseNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+		}
+	};
+	
+	mi.cambioLineaBase=function(selected){
+		if(selected!== undefined){
+			mi.lineaBaseNombre = selected.originalObject.nombre;
+			mi.lineaBaseId = selected.originalObject.id;
+			mi.validar();
+		}
+		else{
+			mi.lineaBaseNombre="";
+			mi.lineaBaseId=null;
+		}
+	};
+
+	mi.getLineasBase = function(proyectoId){
+		$http.post('/SProyecto',{accion: 'getLineasBase', proyectoId: proyectoId}).success(
+			function(response) {
+				mi.lineasBase = [];
+				if (response.success){
+					mi.lineasBase = response.lineasBase;
 				}
 		});	
 	}
@@ -222,6 +253,7 @@ app.controller('flujocajaController',['$scope','$rootScope','$http','$interval',
 				accion : 'getFlujoCaja',
 				idPrestamo: mi.prestamoId,
 				idProyecto: mi.pepId,
+				lineaBase: mi.lineaBaseId,
 				fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY'),
 				t: (new Date()).getTime()
 		};
@@ -556,6 +588,7 @@ app.controller('flujocajaController',['$scope','$rootScope','$http','$interval',
 			accion: 'exportarExcel',
 			prestamoid: mi.prestamoId,
 			proyectoid: mi.pepId,
+			lineaBase: mi.lineaBaseId,
 			fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY'),
 			agrupacion: mi.agrupacionActual,
 			t:moment().unix()
@@ -577,6 +610,7 @@ app.controller('flujocajaController',['$scope','$rootScope','$http','$interval',
 			accion: 'exportarPdf',
 			prestamoid: mi.prestamoId,
 			proyectoid: mi.pepId,
+			lineaBase: mi.lineaBaseId,
 			fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY'),
 			agrupacion: mi.agrupacionActual,
 			t:moment().unix()
