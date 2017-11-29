@@ -122,8 +122,8 @@ public class SCargaTrabajo extends HttpServlet {
 			stEstructura estructura = new stEstructura();
 			Proyecto proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
 			if(proyecto != null){
-				//TODO: lineaBase
-				List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo, null);
+				String lineaBase = map.get("lineaBase");
+				List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo, lineaBase);
 				for(Object objeto : estructuraProyecto){
 					Object[] obj = (Object[]) objeto;
 					int objeto_id = (Integer)obj[0];
@@ -193,8 +193,8 @@ public class SCargaTrabajo extends HttpServlet {
 				
 				if(idPrestamo > 0){
 					ArrayList<stestructuracolaborador> estructuracolaborador = new ArrayList<>();
-					//TODO: lineaBase
-					List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo, null);
+					String lineaBase = map.get("lineaBase");
+					List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo, lineaBase);
 					stestructuracolaborador stprestamo=null;
 					stestructuracolaborador stcomponente=null;
 					stestructuracolaborador stsubcomponente=null;
@@ -369,8 +369,9 @@ public class SCargaTrabajo extends HttpServlet {
 				String idColaboradores = map.get("idColaboradores");
 				Integer anio_inicio = Utils.String2Int(map.get("anio_inicio"));
 				Integer anio_fin = Utils.String2Int(map.get("anio_fin"));
+				String lineaBase = map.get("lineaBase");
 				
-				 byte [] outArray = exportarEstructuraExcel(idPrestamo, idColaboradores, anio_inicio, anio_fin,  usuario);
+				byte [] outArray = exportarEstructuraExcel(idPrestamo, idColaboradores, anio_inicio, anio_fin,  usuario, lineaBase);
 				 
 					
 					response.setContentType("application/ms-excel");
@@ -596,7 +597,7 @@ public class SCargaTrabajo extends HttpServlet {
 	}
 	
 	
-	private byte[] exportarEstructuraExcel(Integer idPrestamos, String idsColaboradores, Integer anio_inicio, Integer anio_fin, String usuario) throws IOException{
+	private byte[] exportarEstructuraExcel(Integer idPrestamos, String idsColaboradores, Integer anio_inicio, Integer anio_fin, String usuario, String lineaBase) throws IOException{
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -606,7 +607,7 @@ public class SCargaTrabajo extends HttpServlet {
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
 			headers = generarHeadersEstructura();
-			datos = generarDatosEstructura(idPrestamos, idsColaboradores, anio_inicio,  anio_fin, usuario);
+			datos = generarDatosEstructura(idPrestamos, idsColaboradores, anio_inicio,  anio_fin, usuario, lineaBase);
 			
 			excel = new CExcel("Carga de Trabajo", false, null);
 			wb=excel.generateExcelOfData(datos, "Estado actividades asignadas", headers, null, true, usuario);
@@ -635,9 +636,9 @@ public class SCargaTrabajo extends HttpServlet {
 		return headers;
 	}
 	
-	public String[][] generarDatosEstructura(Integer idPrestamo, String idsColaboradores, Integer anio_inicio, Integer anio_fin, String usuario){
+	public String[][] generarDatosEstructura(Integer idPrestamo, String idsColaboradores, Integer anio_inicio, Integer anio_fin, String usuario, String lineaBase){
 		
-		ArrayList<stestructuracolaborador> estructura = getEstructura(idPrestamo, idsColaboradores, anio_inicio, anio_fin);
+		ArrayList<stestructuracolaborador> estructura = getEstructura(idPrestamo, idsColaboradores, anio_inicio, anio_fin, lineaBase);
 		
 		String[][] datos = null;
 		int i = 0;
@@ -658,10 +659,9 @@ public class SCargaTrabajo extends HttpServlet {
 	}
 	
 	public ArrayList<stestructuracolaborador> getEstructura(Integer idPrestamo, String idColaboradores
-			, Integer anio_inicio, Integer anio_fin ){
+			, Integer anio_inicio, Integer anio_fin, String lineaBase){
 		ArrayList<stestructuracolaborador> estructuracolaborador = new ArrayList<>();
-		//TODO: lineaBase
-		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo, null);
+		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo, lineaBase);
 		stestructuracolaborador stprestamo=null;
 		stestructuracolaborador stcomponente=null;
 		stestructuracolaborador stsubcomponente=null;

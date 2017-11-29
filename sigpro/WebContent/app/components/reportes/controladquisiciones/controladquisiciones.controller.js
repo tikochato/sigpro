@@ -66,12 +66,40 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 		if(selected!== undefined){
 			mi.pepNombre = selected.originalObject.nombre;
 			mi.pepId = selected.originalObject.id;
-			mi.generar();
+			mi.getLineasBase(mi.pepId);
 		}
 		else{
 			mi.pepNombre="";
 			mi.pepId="";
 		}
+	}
+	
+	mi.blurLineaBase=function(){
+		if(document.getElementById("lineaBase_value").defaultValue!=mi.lineaBaseNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+		}
+	};
+	
+	mi.cambioLineaBase=function(selected){
+		if(selected!== undefined){
+			mi.lineaBaseNombre = selected.originalObject.nombre;
+			mi.lineaBaseId = selected.originalObject.id;
+			mi.generar();
+		}
+		else{
+			mi.lineaBaseNombre="";
+			mi.lineaBaseId=null;
+		}
+	};
+	
+	mi.getLineasBase = function(proyectoId){
+		$http.post('/SProyecto',{accion: 'getLineasBase', proyectoId: proyectoId}).success(
+			function(response) {
+				mi.lineasBase = [];
+				if (response.success){
+					mi.lineasBase = response.lineasBase;
+				}
+		});	
 	}
 	
 	mi.getPeps = function(prestamoId){
@@ -177,6 +205,7 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 			mi.mostrarTablas = false;
 			$http.post('/SControlAdquisiciones',{
 				accion: 'generarPlan',
+				lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				proyectoId: mi.pepId
 			}).success(function(response){
 				if(response.success){
@@ -198,7 +227,8 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 		$http.post('/SControlAdquisiciones', { 
 			 accion: 'exportarExcel', 
 			 proyectoId: mi.pepId,
-			 informeCompleto: mi.informeCompleto,			 
+			 informeCompleto: mi.informeCompleto,
+			 lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 			 t:moment().unix()
 		  } ).then(
 				  function successCallback(response) {
@@ -217,7 +247,8 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 		$http.post('/SControlAdquisiciones', { 
 			 accion: 'exportarPdf', 
 			 idPrestamo: mi.idPrestamo,
-			 informeCompleto: mi.informeCompleto,			 
+			 informeCompleto: mi.informeCompleto,	
+			 lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 			 t:moment().unix()
 		  } ).then(
 				  function successCallback(response) {
