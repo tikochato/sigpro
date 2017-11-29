@@ -56,6 +56,9 @@
   	 <script type="text/ng-template" id="generarReporte.jsp">
     		<%@ include file="/app/components/pep/generarReporte.jsp"%>
   	 </script>
+  	 <script type="text/ng-template" id="congelar.jsp">
+    		<%@ include file="/app/components/pep/congelar.jsp"%>
+  	 </script>
 	<shiro:lacksPermission name="24010">
 		<span ng-init="controller.redireccionSinPermisos()"></span>
 	</shiro:lacksPermission>
@@ -163,6 +166,8 @@
 				<span class="glyphicon glyphicon-user"></span></label>
 				<label class="btn btn-default" ng-click="controller.generarReporte()" uib-tooltip="Plan Anual de Ejecución">
 				<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
+				<label class="btn btn-default" ng-click="controller.congelar()" uib-tooltip="Congelar">
+				<span class="glyphicon gglyphicon glyphicon-ban-circle" aria-hidden="true"></span></label>
 		</div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="24020">

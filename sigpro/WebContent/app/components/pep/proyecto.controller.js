@@ -984,6 +984,8 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			     }
 			});
 		  
+		  
+		  
 		  modalInstance.result.then(function(resultado) {
 				if (resultado != undefined){
 					mi.exportarJasper(resultado);
@@ -992,7 +994,36 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				}
 			}, function() {
 			});
-	  }
+	  };
+	  
+	  mi.congelar = function () {
+		  var modalInstance = $uibModal.open({
+				animation : 'true',
+				ariaLabelledBy : 'modal-title',
+				ariaDescribedBy : 'modal-body',
+				templateUrl : 'congelar.jsp',
+				controller : 'modalCongelar',
+				controllerAs : 'modalcc',
+				backdrop : 'static',
+				size : 'md',
+				resolve: {
+			        proyectoid: function(){
+			        	return mi.proyecto.id;
+			        }
+			     }
+			});
+		  
+		  
+		  
+		  modalInstance.result.then(function(resultado) {
+				if (resultado != undefined){
+					$utilidades.mensaje('success', 'El PEP se congelo correctamente');
+				}else{
+					$utilidades.mensaje('danger', 'Error al generar el reporte');
+				}
+			}, function() {
+			});
+	  };
 		
 		mi.buscarDirecotorProyecto = function() {
 			var resultado = mi.llamarModalBusqueda('Colaboradores','/SColaborador', {
@@ -1405,6 +1436,35 @@ function modalGenerarReporte($uibModalInstance, $scope, $http, $interval,
 					}
 				});
 		$uibModalInstance.close(mi.fechaCorte);
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+};
+
+app.controller('modalCongelar', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log',   '$uibModal', '$q', 'proyectoid' ,modalCongelar ]);
+
+function modalCongelar($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, $uibModal, $q, proyectoid) {
+
+	var mi = this;
+	mi.ok = function() {
+		mi.resultado = false;
+		$http.post('/SProyecto', { 
+			accion: 'congelar', 
+			id: proyectoid, 
+			nombre: mi.nombre,
+			t: (new Date()).getTime() }).success(
+				function(response) {
+					console.log(response.success);
+					resultado = response.success;
+					$uibModalInstance.close(mi.resultado);
+				});
+		
+		
 	};
 
 	mi.cancel = function() {

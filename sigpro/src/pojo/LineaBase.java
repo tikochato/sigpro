@@ -1,10 +1,12 @@
 package pojo;
-// Generated Nov 28, 2017 4:03:40 PM by Hibernate Tools 5.2.3.Final
+// Generated Nov 29, 2017 5:33:22 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -22,8 +24,8 @@ public class LineaBase implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -2961211656422042904L;
-	private int id;
+	private static final long serialVersionUID = 4542424089255071022L;
+	private Integer id;
 	private Proyecto proyecto;
 	private String nombre;
 	private String usuarioCreo;
@@ -34,17 +36,15 @@ public class LineaBase implements java.io.Serializable {
 	public LineaBase() {
 	}
 
-	public LineaBase(int id, Proyecto proyecto, String nombre, String usuarioCreo, Date fechaCreacion) {
-		this.id = id;
+	public LineaBase(Proyecto proyecto, String nombre, String usuarioCreo, Date fechaCreacion) {
 		this.proyecto = proyecto;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public LineaBase(int id, Proyecto proyecto, String nombre, String usuarioCreo, String usuarioActualizo,
-			Date fechaCreacion, Date fechaActualizacion) {
-		this.id = id;
+	public LineaBase(Proyecto proyecto, String nombre, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
+			Date fechaActualizacion) {
 		this.proyecto = proyecto;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
@@ -54,13 +54,14 @@ public class LineaBase implements java.io.Serializable {
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 
 	@Column(name = "id", unique = true, nullable = false)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

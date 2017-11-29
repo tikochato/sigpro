@@ -513,7 +513,7 @@ public class SProyecto extends HttpServlet {
 							descripcion, usuario, null, new DateTime().toDate(), null, 1, snip, programa, subPrograma, proyecto_, actividad, 
 							obra,latitud,longitud, objetivo,enunciadoAlcance, costo, objetivoEspecifico,visionGeneral,renglon, 
 							ubicacionGeografica,null, null, 0, null, null, null, null, ejecucionFisicaReal,projectCargado,observaciones,
-							null,null,null, null,null,null, null,null,null,null,null,null,null,null,null,null);
+							null,null,null, null,null,null,null, null,null,null,null,null,null,null,null,null,null);
 
 
 				}else{
@@ -954,6 +954,13 @@ public class SProyecto extends HttpServlet {
 			}
 			else
 				response_text = "{ \"success\": false }";
+		}else if(accion.equals("congelar")){
+			int pepId = Utils.String2Int(map.get("id"),0);
+			Proyecto proyecto =  ProyectoDAO.getProyecto(pepId);
+			String nombre = map.get("nombre");
+			LineaBase lineaBase = new LineaBase(proyecto, nombre, usuario, null, new Date(), null);
+			LineaBaseDAO.guardarLineaBase(lineaBase);
+			response_text = String.join("","{ \"success\": true ", response_text,"}");
 		}
 		
 		else
