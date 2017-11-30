@@ -2,6 +2,13 @@
 	pageEncoding="UTF-8"%>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
+	
+	<style>
+	.div-disabled
+	{
+	  pointer-events: none;
+	}
+	</style>
 	<div ng-controller="subcomponenteController as subcomponentec" ng-class="subcomponentec.esTreeview ? 'maincontainer_treeview all_page' : 'maincontainer all_page'" id="title">
 		<script type="text/ng-template" id="map.html">
         <div class="modal-header">
@@ -127,6 +134,7 @@
 						<div class="form-group">
 						   <input type="text" name="nombre" class="inputText" id="nombre" 
 						     ng-model="subcomponentec.subcomponente.nombre" ng-value="subcomponentec.subcomponente.nombre"   
+						     ng-readonly="subcomponentec.subcomponente.congelado"
 						     onblur="this.setAttribute('value', this.value);" ng-required="true" ng-readonly="subcomponentec.subcomponente.esDeSigade">
 						   <label class="floating-label">* Nombre</label>
 						</div>
@@ -136,31 +144,45 @@
 								<table style="width: 100%">
 									<tr>
 										<td style="width: 14%; padding-right:5px;">
-											<input name="programa" type="number" class="inputText" ng-model="subcomponentec.subcomponente.programa" ng-value="subcomponentec.subcomponente.programa" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;" />
+											<input name="programa" type="number" class="inputText" ng-model="subcomponentec.subcomponente.programa" 
+											ng-readonly="subcomponentec.subcomponente.congelado"
+											ng-value="subcomponentec.subcomponente.programa" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;" />
 							       			<label for="programa" class="floating-label">Programa</label>
 										</td>
 										<td style="width: 14%; padding-right:5px;">
-											<input type="number" class="inputText" ng-model="subcomponentec.subcomponente.subprograma" ng-value="subcomponentec.subcomponente.subprograma" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+											<input type="number" class="inputText" ng-model="subcomponentec.subcomponente.subprograma" 
+											ng-readonly="subcomponentec.subcomponente.congelado"
+											ng-value="subcomponentec.subcomponente.subprograma" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
 							  				<label for="isubprog" class="floating-label">Subprograma</label>
 										</td>
 										<td style="width: 14%; padding-right:5px;">
-											<input type="number" class="inputText" ng-model="subcomponentec.subcomponente.proyecto_" ng-value="subcomponentec.subcomponente.proyecto_" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+											<input type="number" class="inputText" ng-model="subcomponentec.subcomponente.proyecto_" 
+											ng-readonly="subcomponentec.subcomponente.congelado"
+											ng-value="subcomponentec.subcomponente.proyecto_" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
 							  				<label for="iproy_" class="floating-label">Proyecto</label>
 										</td>
 										<td style="width: 14%; padding-right:5px;">
-											<input type="number" class="inputText" ng-model="subcomponentec.subcomponente.actividad" ng-value="subcomponentec.subcomponente.actividad" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+											<input type="number" class="inputText" ng-model="subcomponentec.subcomponente.actividad" 
+											ng-readonly="subcomponentec.subcomponente.congelado"
+											ng-value="subcomponentec.subcomponente.actividad" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
 								  			<label for="iobra" class="floating-label">Actividad</label>
 										</td>
 										<td style="width: 14%; padding-right:5px;">
-											<input type="number" class="inputText" ng-model="subcomponentec.subcomponente.obra" ng-value="subcomponentec.subcomponente.obra" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+											<input type="number" class="inputText" ng-model="subcomponentec.subcomponente.obra" 
+											ng-readonly="subcomponentec.subcomponente.congelado"
+											ng-value="subcomponentec.subcomponente.obra" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
 							 				<label for="iobra" class="floating-label">Obra</label>
 										</td>
 										<td style="width: 14%; padding-right:5px;">
-											<input type="number" class="inputText" ng-model="subcomponentec.subcomponente.renglon" ng-value="subcomponentec.subcomponente.renglon" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+											<input type="number" class="inputText" ng-model="subcomponentec.subcomponente.renglon" 
+											ng-readonly="subcomponentec.subcomponente.congelado"
+											ng-value="subcomponentec.subcomponente.renglon" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
 							  				<label for="fuente" class="floating-label">Renglón</label>
 										</td>
 										<td style="width: 14%; padding-right:5px;">
-											<input type="number" class="inputText" ng-model="subcomponentec.subcomponente.ubicacionGeografica" ng-value="subcomponentec.subcomponente.ubicacionGeografica" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+											<input type="number" class="inputText" ng-model="subcomponentec.subcomponente.ubicacionGeografica" 
+											ng-readonly="subcomponentec.subcomponente.congelado"
+											ng-value="subcomponentec.subcomponente.ubicacionGeografica" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
 							  				<label for="fuente" class="floating-label">Geográfico</label>
 										</td>
 									</tr>
@@ -170,13 +192,15 @@
 						
 						<div class="form-group">
 						   <input type="number" name="snip"  class="inputText" id="snip" 
-						     ng-model="subcomponentec.subcomponente.snip" ng-value="subcomponentec.subcomponente.snip"   
+						     ng-model="subcomponentec.subcomponente.snip" ng-value="subcomponentec.subcomponente.snip" 
+						     ng-readonly="subcomponentec.subcomponente.congelado"  
 						     onblur="this.setAttribute('value', this.value);" ng-required="false" >
 						   <label class="floating-label">SNIP</label>
 						</div>
 						
 						<div class="form-group" ng-show="subcomponentec.unidadejecutoranombre.length>0"  >
 			            	<input type="text" class="inputText" id="iunie" name="iunie" ng-model="subcomponentec.entidadnombre" ng-readonly="true"  
+			            	 ng-readonly="subcomponentec.subcomponente.congelado"
 			            	 ng-value="subcomponentec.entidadnombre" onblur="this.setAttribute('value', this.value);"/>
 			            	<label for="campo3" class="floating-label">Organismo Ejecutor</label>
 			          	
@@ -190,26 +214,27 @@
 						</div>
 						<div class="form-group">
 				            <input type="text" class="inputText" id="icomptipo" name="icomptipo" ng-model="subcomponentec.subcomponentetiponombre" ng-readonly="true" ng-required="true" 
-				            	ng-click="subcomponentec.buscarSubComponenteTipo()" ng-value="subcomponentec.subcomponentetiponombre" onblur="this.setAttribute('value', this.value);"/>
-				            <span class="label-icon" ng-click="subcomponentec.buscarSubComponenteTipo()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+				            	ng-click="subcomponentec.subcomponente.congelado != 1 ? subcomponentec.buscarSubComponenteTipo() : ''" ng-value="subcomponentec.subcomponentetiponombre" onblur="this.setAttribute('value', this.value);"/>
+				            <span class="label-icon" ng-click="subcomponentec.subcomponente.congelado != 1 ? subcomponentec.buscarSubComponenteTipo() : ''" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 				          	<label for="campo3" class="floating-label">* Tipo Subcomponente</label>
 						</div>
 						<div class="form-group" >
 						    <input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="subcomponentec.coordenadas" ng-value="subcomponentec.coordenadas" 
-								            		ng-click="subcomponentec.open(subcomponentec.subcomponente.latitud, subcomponentec.subcomponente.longitud); " onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="false"/>
-							<span class="label-icon" ng-click="subcomponentec.open(subcomponentec.subcomponente.latitud, subcomponentec.subcomponente.longitud); " tabindex="-1"><i class="glyphicon glyphicon-map-marker"></i></span>
+							ng-click="subcomponentec.subcomponente.congelado != 1 ? subcomponentec.open(subcomponentec.subcomponente.latitud, subcomponentec.subcomponente.longitud) : ''; " onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="false"/>
+							<span class="label-icon" ng-click="subcomponentec.subcomponente.congelado != 1 ? subcomponentec.open(subcomponentec.subcomponente.latitud, subcomponentec.subcomponente.longitud) : ''; " tabindex="-1"><i class="glyphicon glyphicon-map-marker"></i></span>
 							<label for="campo3" class="floating-label">Coordenadas</label>
 						</div>
 						
 						<div class="form-group" >
 					       <input type="text" class="inputText" ng-model="subcomponentec.subcomponente.costo" ng-value="subcomponentec.subcomponente.costo" ui-number-mask="2"
 					       ng-required="subcomponentec.subcomponente.acumulacionCostoId > 0" onblur="this.setAttribute('value', this.value);" style="text-align: left" 
-					       ng-readonly="subcomponentec.subcomponente.tieneHijos" />
+					       ng-readonly="subcomponentec.subcomponente.tieneHijos || subcomponentec.subcomponente.congelado == 1" />
 					       <label for="iprog" class="floating-label">{{subcomponentec.subcomponente.acumulacionCostoId > 0 ? "* Monto Planificado" : "Monto Planificado"}}</label>
 						</div>
 												
 						<div class="form-group">
 		            		<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="subcomponentec.cambioAcumulacionCosto"
+		            		ng-class="{ 'div-disabled': subcomponentec.subcomponente.congelado==1 }"
 							  local-data="subcomponentec.acumulacionesCosto" search-fields="nombre" title-field="nombre" field-required="subcomponentec.subcomponente.costo!=null && subcomponentec.subcomponente.costo>0" 
 						  field-label="{{subcomponentec.subcomponente.costo!=null && subcomponentec.subcomponente.costo>0 ? '* ':''}}Tipo de Acumulación Monto Planificado"
 							  minlength="1" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
@@ -231,6 +256,7 @@
 							<div class="col-sm-6">
 								<div class="form-group">
 									<select class="inputText" ng-model="subcomponentec.duracionDimension"
+										ng-readonly="subcomponentec.subcomponente.congelado"
 										ng-options="dim as dim.nombre for dim in subcomponentec.dimensiones track by dim.value"
 										 ng-required="true" ng-readonly="subcomponentec.subcomponente.tieneHijos">
 									</select>
@@ -242,6 +268,7 @@
 								<div class="form-group" >
 								  <input type="text"  class="inputText" uib-datepicker-popup="{{subcomponentec.formatofecha}}" alt-input-formats="{{subcomponentec.altformatofecha}}"
 								  			ng-model="subcomponentec.subcomponente.fechaInicio" is-open="subcomponentec.fi_abierto"
+								  			ng-readonly="subcomponentec.subcomponente.congelado != 1 || subcomponentec.subcomponente.tieneHijos != true"
 								            datepicker-options="subcomponentec.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="subcomponentec.cambioDuracion(subcomponentec.duracionDimension);" ng-required="true"
 								            ng-value="subcomponentec.subcomponente.fechaInicio" onblur="this.setAttribute('value', this.value);" ng-readonly="subcomponentec.subcomponente.tieneHijos">
 								            <span class="label-icon" ng-click="subcomponentec.subcomponente.tieneHijos != true ? subcomponentec.abrirPopupFecha(1000) : ''" tabindex="-1">
@@ -298,35 +325,39 @@
 							<div ng-switch="campo.tipo">
 								<div ng-switch-when="texto" class="form-group" >
 									<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText" 
+										ng-readonly="subcomponentec.subcomponente.congelado"
 										ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>	
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="entero" class="form-group" >
-									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
+									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"  
+									ng-readonly="subcomponentec.subcomponente.congelado" 
 									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="decimal" class="form-group" >
 									<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText"  
+									ng-readonly="subcomponentec.subcomponente.congelado"
 									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="booleano" class="form-group" >
-									<input type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
+									<input type="checkbox" id="{{ 'campo_'+campo.id }}" ng-readonly="subcomponentec.subcomponente.congelado" ng-model="campo.valor" />
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="fecha" class="form-group" >
 									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{subcomponentec.formatofecha}}" alt-input-formats="{{subcomponentec.altformatofecha}}"
 								  						ng-model="campo.valor" is-open="campo.isOpen"
-														datepicker-options="subcomponentec.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="subcomponentec.abrirPopupFecha($index)"
+								  						ng-readonly="subcomponentec.subcomponente.congelado"
+														datepicker-options="subcomponentec.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="subcomponentec.subcomponente.congelado != 1 ? subcomponentec.abrirPopupFecha($index) : ''"
 														ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
-														<span class="label-icon" ng-click="subcomponentec.abrirPopupFecha($index)">
+														<span class="label-icon" ng-click="subcomponentec.subcomponente.congelado != 1 ? subcomponentec.abrirPopupFecha($index) : ''">
 															<i class="glyphicon glyphicon-calendar"></i>
 														</span>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="select" class="form-group" >
-									<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor">
+									<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-readonly="subcomponentec.subcomponente.congelado" ng-model="campo.valor">
 													<option value="">Seleccione una opción</option>
 													<option ng-repeat="number in campo.opciones"
 														ng-value="number.valor">{{number.label}}</option>
@@ -338,7 +369,8 @@
 						
 						<div class="form-group">
 						   <textarea class="inputText" rows="4"
-						   ng-model="subcomponentec.subcomponente.descripcion" ng-value="subcomponentec.subcomponente.descripcion"   
+						   ng-model="subcomponentec.subcomponente.descripcion" ng-value="subcomponentec.subcomponente.descripcion"
+						   ng-readonly="subcomponentec.subcomponente.congelado"   
 						   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
 						   <label class="floating-label">Descripción</label>
 						</div>

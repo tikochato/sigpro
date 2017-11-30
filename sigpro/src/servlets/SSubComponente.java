@@ -31,9 +31,11 @@ import dao.SubComponentePropiedadDAO;
 import dao.SubComponentePropiedadValorDAO;
 import dao.ComponenteDAO;
 import dao.ObjetoDAO;
+import dao.ProyectoDAO;
 import dao.UnidadEjecutoraDAO;
 import pojo.AcumulacionCosto;
 import pojo.Componente;
+import pojo.Proyecto;
 import pojo.Subcomponente;
 import pojo.SubcomponentePropiedad;
 import pojo.SubcomponentePropiedadValor;
@@ -85,6 +87,7 @@ public class SSubComponente extends HttpServlet {
 		boolean tieneHijos;
 		String fechaInicioReal;
 		String fechaFinReal;
+		Integer congelado;
 	}
 
 	class stdatadinamico {
@@ -532,6 +535,9 @@ public class SSubComponente extends HttpServlet {
 			temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
 			temp.fechaInicioReal = Utils.formatDate(subcomponente.getFechaInicioReal());
 			temp.fechaFinReal = Utils.formatDate(subcomponente.getFechaFinReal());
+			
+			Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(subcomponente.getTreePath());
+			temp.congelado = proyecto.getCongelado() != null ? proyecto.getCongelado() : 0;
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"subcomponente\":",response_text);
