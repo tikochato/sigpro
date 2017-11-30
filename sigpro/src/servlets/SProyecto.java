@@ -107,6 +107,7 @@ public class SProyecto extends HttpServlet {
 		String observaciones;
 		String fechaInicioReal;
 		String fechaFinReal;
+		Integer congelado; 
 	};
 
 	class stdatadinamico {
@@ -245,6 +246,8 @@ public class SProyecto extends HttpServlet {
 				dato.observaciones = proyecto.getObservaciones();
 				dato.fechaInicioReal = proyecto.getFechaInicioReal() != null ? Utils.formatDate(proyecto.getFechaInicioReal()) : null;
 				dato.fechaFinReal = proyecto.getFechaFinReal() != null ? Utils.formatDate(proyecto.getFechaFinReal()) : null;
+				//TODO: congelado
+				dato.congelado = 1; 
 				datos_.add(dato);
 			}
 
@@ -308,6 +311,8 @@ public class SProyecto extends HttpServlet {
 				dato.observaciones = proyecto.getObservaciones();
 				dato.fechaInicioReal = proyecto.getFechaInicioReal() != null ? Utils.formatDate(proyecto.getFechaInicioReal()) : null;
 				dato.fechaFinReal = proyecto.getFechaFinReal() != null ? Utils.formatDate(proyecto.getFechaFinReal()) : null;
+				//TODO: congelado
+				dato.congelado = 1; 
 				datos_.add(dato);
 			}
 
@@ -375,6 +380,8 @@ public class SProyecto extends HttpServlet {
 				dato.observaciones = proyecto.getObservaciones();
 				dato.fechaInicioReal = proyecto.getFechaInicioReal() != null ? Utils.formatDate(proyecto.getFechaInicioReal()) : null;
 				dato.fechaFinReal = proyecto.getFechaFinReal() != null ? Utils.formatDate(proyecto.getFechaFinReal()) : null;
+				//TODO: congelado
+				dato.congelado = 1; 
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -438,6 +445,8 @@ public class SProyecto extends HttpServlet {
 				dato.observaciones = proyecto.getObservaciones();
 				dato.fechaInicioReal = proyecto.getFechaInicioReal() != null ? Utils.formatDate(proyecto.getFechaInicioReal()) : null;
 				dato.fechaFinReal = proyecto.getFechaFinReal() != null ? Utils.formatDate(proyecto.getFechaFinReal()) : null;
+				//TODO: congelado
+				dato.congelado = 1; 
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -826,6 +835,8 @@ public class SProyecto extends HttpServlet {
 				dato.observaciones = proyecto.getObservaciones();
 				dato.fechaInicioReal = proyecto.getFechaInicioReal() != null ? Utils.formatDate(proyecto.getFechaInicioReal()) : null;
 				dato.fechaFinReal = proyecto.getFechaFinReal() != null ? Utils.formatDate(proyecto.getFechaFinReal()) : null;
+				//TODO: congelado
+				dato.congelado = 1; 
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(dato);
 	        response_text = String.join("", "\"proyecto\":",response_text);
@@ -834,7 +845,6 @@ public class SProyecto extends HttpServlet {
 		}
 		else if(accion.equals("controlArbol")){
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
-			//TODO: lineaBase
 			Nodo arbol = EstructuraProyectoDAO.getEstructuraProyectoArbol(id, null, usuario);
 			Nodo root = new Nodo(0, 0, "", 0, new ArrayList<Nodo>(), null, false);
 			arbol.parent = root;
@@ -845,7 +855,6 @@ public class SProyecto extends HttpServlet {
 		}
 		else if(accion.equals("controlArbolTodosProyectos")){
 			String pusuario = map.get("usuario");
-			//TODO: lineaBase
 			ArrayList<Nodo> proyectos = EstructuraProyectoDAO.getEstructuraPrestamosArbol(pusuario, null);
 			Nodo root = new Nodo(0, 0, "", 0, new ArrayList<Nodo>(), null, false);
 			if(proyectos!=null){
