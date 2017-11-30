@@ -22,7 +22,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			mi.desembolsosValidos=true;
 			
 			mi.mostrarcargando=false;
-			
+			mi.congelado = 0;
 			
 			mi.opcionesFecha = {
 				    formatYear: 'yyyy',
@@ -47,7 +47,7 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 							for(x in $scope.desembolsos){
 								$scope.desembolsos[x].fecha = moment($scope.desembolsos[x].fecha,'DD/MM/YYYY').toDate();
 							}
-							
+							mi.congelado = response.congelado;
 							mi.tipo_moneda_nombre = response.tipoMonedaNombre;
 							mi.tipo_moneda = response.tipoMonedaId;
 							mi.mostrarcargando = false;

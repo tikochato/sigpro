@@ -69,6 +69,8 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	mi.m_organismosEjecutores = [];
 	mi.m_componentes = [];
 	
+	mi.congelado = 0;
+	
 	$http.post('/SPrestamo', { accion: 'obtenerPrestamoPorId', id: mi.prestamoid, t: (new Date()).getTime() }).success(
 		function(response) {
 			if(response.success){
