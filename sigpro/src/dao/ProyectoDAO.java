@@ -706,12 +706,28 @@ public class ProyectoDAO implements java.io.Serializable  {
 			ret =   criteria.getResultList();
 		}
 		catch(Throwable e){
-			CLogger.write("11", ProyectoDAO.class, e);
+			CLogger.write("22", ProyectoDAO.class, e);
 		}
 		finally{
 			session.close();
 		}
 
+		return ret;
+	}
+	
+	public static Proyecto getProyectobyTreePath(String treePath){
+		Proyecto ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String treePathProyecto = treePath.substring(0,8);
+			Integer proyectoId = Utils.String2Int(treePathProyecto) - 10000000;
+			ret = getProyecto(proyectoId);
+		}catch(Exception e){
+			CLogger.write("23", ProyectoDAO.class, e);
+		}finally{
+			session.close();
+		}
+		
 		return ret;
 	}
 }
