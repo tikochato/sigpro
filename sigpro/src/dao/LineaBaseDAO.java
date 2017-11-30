@@ -5,15 +5,19 @@ import java.util.List;
 import org.hibernate.Session;
 
 import pojo.Actividad;
+import pojo.AsignacionRaci;
 import pojo.Componente;
 import pojo.ComponentePropiedadValor;
 import pojo.Desembolso;
 import pojo.LineaBase;
 import pojo.Meta;
 import pojo.MetaPlanificado;
+import pojo.PlanAdquisicion;
+import pojo.PlanAdquisicionPago;
 import pojo.Producto;
 import pojo.ProductoPropiedadValor;
 import pojo.Proyecto;
+import pojo.Riesgo;
 import pojo.Subcomponente;
 import pojo.SubcomponentePropiedadValor;
 import pojo.Subproducto;
@@ -84,6 +88,25 @@ public class LineaBaseDAO {
 				ret = ret && lineaBasePlanAdquisiciones(lineaBase,4) >= 0;
 			if (ret )
 				ret = ret && lineaBasePlanAdquisiciones(lineaBase,5) >= 0;
+			if (ret)
+				ret = ret && lineaBasePlanAdquisicionPagos(lineaBase,3) >= 0;
+			if (ret)
+				ret = ret && lineaBasePlanAdquisicionPagos(lineaBase,4) >= 0;
+			if (ret)
+				ret = ret && lineaBasePlanAdquisicionPagos(lineaBase,5) >= 0;
+			if (ret)
+				ret = ret && lineaBaseRiesgos(lineaBase,0) >= 0;
+			if (ret)
+				ret = ret && lineaBaseRiesgos(lineaBase,1) >= 0;
+			if (ret)
+				ret = ret && lineaBaseRiesgos(lineaBase,2) >= 0;
+			if (ret)
+				ret = ret && lineaBaseRiesgos(lineaBase,3) >= 0;
+			if (ret)
+				ret = ret && lineaBaseRiesgos(lineaBase,4) >= 0;
+			if (ret)
+				ret = ret && lineaBaseMatrizRaci(lineaBase,5) >= 0;
+			
 		}
 		catch(Throwable e){
 			CLogger.write("2", LineaBaseDAO.class, e);
@@ -538,7 +561,7 @@ public class LineaBaseDAO {
 					"and t.actual = 1",
 					"and t.treepath like '" + lineaBase.getProyecto().getTreePath() + "%') ");
 			
-			Query<MetaPlanificado> criteria = session.createNativeQuery(query, MetaPlanificado.class);
+			Query<PlanAdquisicion> criteria = session.createNativeQuery(query, PlanAdquisicion.class);
 			criteria.setParameter(1, objetoTipo);
 			ret =   criteria.executeUpdate();
 			session.flush();
@@ -547,6 +570,144 @@ public class LineaBaseDAO {
 		}
 		catch(Throwable e){
 			CLogger.write("18", LineaBaseDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	private static Integer lineaBasePlanAdquisicionPagos (LineaBase lineaBase,int objetoTipo){
+		Integer ret = -1;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			String tabla = "";
+			if(objetoTipo == 3)
+				tabla = "producto";
+			else if (objetoTipo == 4)
+				tabla = "subproducto";
+			else if (objetoTipo == 5)
+				tabla = "actividad";
+			
+			String query = String.join(" ","update sipro_history.plan_adquisicion_pago",
+						"set linea_base = CONCAT(ifnull(linea_base,''),'|lb',",lineaBase.getId().toString(),",'|')",
+						"where estado = 1",
+						"and actual = 1",
+						"and plan_adquisicionid in (",
+							"select p.id",
+							"from sipro_history." + tabla + " t, sipro_history.plan_adquisicion p",
+							"where t.id = p.objeto_id",
+							"and p.objeto_tipo = ?1",
+							"and t.estado = 1",
+							"and t.actual = 1",
+							"and t.treepath like '" + lineaBase.getProyecto().getTreePath() + "%') ");
+			Query<PlanAdquisicionPago> criteria = session.createNativeQuery(query, PlanAdquisicionPago.class);
+			criteria.setParameter(1, objetoTipo);
+			ret =   criteria.executeUpdate();
+			session.flush();
+			session.getTransaction().commit();
+			session.close();
+		}
+		catch(Throwable e){
+			CLogger.write("19", LineaBaseDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	private static Integer lineaBaseRiesgos (LineaBase lineaBase,int objetoTipo){
+		Integer ret = -1;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			String tabla = "";
+			if(objetoTipo == 0)
+				tabla = "proyecto";
+			if(objetoTipo == 1)
+				tabla = "componente";
+			if(objetoTipo == 2)
+				tabla = "subcomponente";
+			if(objetoTipo == 3)
+				tabla = "producto";
+			else if (objetoTipo == 4)
+				tabla = "subproducto";
+			else if (objetoTipo == 5)
+				tabla = "actividad";
+			
+			String query = String.join(" ","update sipro_history.objeto_riesgo o,sipro_history.riesgo r",
+					"set r.linea_base = CONCAT(ifnull(r.linea_base,''),'|lb',",lineaBase.getId().toString(),",'|'),",
+					"o.linea_base = CONCAT(ifnull(o.linea_base,''),'|lb',",lineaBase.getId().toString(),",'|')",
+					"where o.riesgoid = r.id",
+					"and o.actual = 1",
+					"and o.objeto_tipo = ?1",
+					"and r.actual = 1",
+					"and r.estado = 1",
+					"and o.objeto_id in (",
+					    "select t.id ",
+					    "from sipro_history." + tabla + " t",
+					    "where t.actual = 1",
+					    "and t.estado = 1",
+					    "and t.treepath like '" + lineaBase.getProyecto().getTreePath() + "%') ");
+					    
+			Query<Riesgo> criteria = session.createNativeQuery(query, Riesgo.class);
+			criteria.setParameter(1, objetoTipo);
+			ret =   criteria.executeUpdate();
+			session.flush();
+			session.getTransaction().commit();
+			session.close();
+		}
+		catch(Throwable e){
+			CLogger.write("20", LineaBaseDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	private static Integer lineaBaseMatrizRaci (LineaBase lineaBase,int objetoTipo){
+		Integer ret = -1;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			String tabla = "";
+			if(objetoTipo == 0)
+				tabla = "proyecto";
+			if(objetoTipo == 1)
+				tabla = "componente";
+			if(objetoTipo == 2)
+				tabla = "subcomponente";
+			if(objetoTipo == 3)
+				tabla = "producto";
+			else if (objetoTipo == 4)
+				tabla = "subproducto";
+			else if (objetoTipo == 5)
+				tabla = "actividad";
+			
+			String query = String.join(" ","update sipro_history.asignacion_raci ",
+					"set linea_base = CONCAT(ifnull(linea_base,''),'|lb',",lineaBase.getId().toString(),",'|')",
+					"where actual = 1 ",
+					"and estado = 1",
+					"and objeto_tipo = ?1",
+					"and objeto_id in (",
+						"select t.id ",
+						"from sipro_history." + tabla + " t",
+					    "where t.actual = 1",
+					    "and t.estado = 1",
+					    "and t.treepath like '" + lineaBase.getProyecto().getTreePath() + "%') ");
+					    
+			Query<AsignacionRaci> criteria = session.createNativeQuery(query, AsignacionRaci.class);
+			criteria.setParameter(1, objetoTipo);
+			ret =   criteria.executeUpdate();
+			session.flush();
+			session.getTransaction().commit();
+			session.close();
+		}
+		catch(Throwable e){
+			CLogger.write("21", LineaBaseDAO.class, e);
 		}
 		finally{
 			session.close();

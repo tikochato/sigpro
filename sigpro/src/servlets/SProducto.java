@@ -31,6 +31,7 @@ import dao.ProductoDAO;
 import dao.ProductoPropiedadDAO;
 import dao.ProductoPropiedadValorDAO;
 import dao.ProductoUsuarioDAO;
+import dao.ProyectoDAO;
 import dao.UnidadEjecutoraDAO;
 import dao.UsuarioDAO;
 import pojo.AcumulacionCosto;
@@ -42,6 +43,7 @@ import pojo.ProductoPropiedadValorId;
 import pojo.ProductoTipo;
 import pojo.ProductoUsuario;
 import pojo.ProductoUsuarioId;
+import pojo.Proyecto;
 import pojo.Subcomponente;
 import pojo.UnidadEjecutora;
 import pojo.Usuario;
@@ -94,6 +96,7 @@ public class SProducto extends HttpServlet {
 		boolean tieneHijos;
 		String fechaInicioReal;
 		String fechaFinReal;
+		Integer congelado;
 	}
 	
 	class stdatadinamico {
@@ -823,6 +826,9 @@ public class SProducto extends HttpServlet {
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 3);
 				temp.fechaInicioReal = Utils.formatDate(producto.getFechaInicioReal());
 				temp.fechaFinReal = Utils.formatDate(producto.getFechaFinReal());
+				
+				Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(producto.getTreePath());
+				temp.congelado = proyecto.getCongelado() != null ? proyecto.getCongelado() : 0;
 			}
 
 			response_text = new GsonBuilder().serializeNulls().create().toJson(temp);
