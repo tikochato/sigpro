@@ -2,6 +2,12 @@
 	pageEncoding="UTF-8"%>
 <%@ page import="org.apache.shiro.SecurityUtils"%>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
+<style>
+	.div-disabled
+	{
+	  pointer-events: none;
+	}
+</style>
 <div ng-controller="controlProducto as producto" ng-class=" producto.esTreeview ? 'maincontainer_treeview all_page' : 'maincontainer all_page'">
 	
 	<script type="text/ng-template" id="map.html">
@@ -127,12 +133,15 @@
 					</div>
 								
 					<div class="form-group">
-						<input type="text" class="inputText" ng-model="producto.producto.nombre" ng-value="producto.producto.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true" id="nombre"/>
+						<input type="text" class="inputText" ng-model="producto.producto.nombre" ng-value="producto.producto.nombre" onblur="this.setAttribute('value', this.value);" 
+						ng-readonly="producto.producto.congelado"
+						ng-required="true" id="nombre"/>						
 						<label class="floating-label">* Nombre</label> 
 					</div>
 					
 					<div class="form-group"  >
-						<input type="number"  class="inputText" ng-model="producto.producto.snip" ng-value="producto.producto.snip" onblur="this.setAttribute('value', this.value);">
+						<input type="number"  class="inputText" ng-model="producto.producto.snip" ng-value="producto.producto.snip" onblur="this.setAttribute('value', this.value);"
+						ng-readonly="producto.producto.congelado">
 						<label for="isnip" class="floating-label">SNIP</label>
 					</div>
 				
@@ -141,31 +150,38 @@
 							<table style="width: 100%">
 								<tr>
 									<td style="width: 14%; padding-right:5px;">
-										<input name="programa" type="number" class="inputText" ng-model="producto.producto.programa" ng-value="producto.producto.programa" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;" />
+										<input name="programa" type="number" class="inputText" ng-model="producto.producto.programa" ng-value="producto.producto.programa" 
+										ng-readonly="producto.producto.congelado" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;" />
 						       			<label for="programa" class="floating-label">Programa</label>
 									</td>
 									<td style="width: 14%; padding-right:5px;">
-										<input type="number" class="inputText" ng-model="producto.producto.subprograma" ng-value="producto.producto.subprograma" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+										<input type="number" class="inputText" ng-model="producto.producto.subprograma" ng-value="producto.producto.subprograma" 
+										ng-readonly="producto.producto.congelado" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
 						  				<label for="isubprog" class="floating-label">Subprograma</label>
 									</td>
 									<td style="width: 14%; padding-right:5px;">
-										<input type="number" class="inputText" ng-model="producto.producto.proyecto_" ng-value="producto.producto.proyecto_" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+										<input type="number" class="inputText" ng-model="producto.producto.proyecto_" ng-value="producto.producto.proyecto_" 
+										ng-readonly="producto.producto.congelado" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
 						  				<label for="iproy_" class="floating-label">Proyecto</label>
 									</td>
 									<td style="width: 14%; padding-right:5px;">
-										<input type="number" class="inputText" ng-model="producto.producto.actividad" ng-value="producto.producto.actividad" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+										<input type="number" class="inputText" ng-model="producto.producto.actividad" ng-value="producto.producto.actividad" 
+										ng-readonly="producto.producto.congelado" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
 							  			<label for="iobra" class="floating-label">Actividad</label>
 									</td>
 									<td style="width: 14%; padding-right:5px;">
-										<input type="number" class="inputText" ng-model="producto.producto.obra" ng-value="producto.producto.obra" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+										<input type="number" class="inputText" ng-model="producto.producto.obra" ng-value="producto.producto.obra" 
+										ng-readonly="producto.producto.congelado" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
 						 				<label for="iobra" class="floating-label">Obra</label>
 									</td>
 									<td style="width: 14%; padding-right:5px;">
-										<input type="number" class="inputText" ng-model="producto.producto.renglon" ng-value="producto.producto.renglon" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+										<input type="number" class="inputText" ng-model="producto.producto.renglon" ng-value="producto.producto.renglon" 
+										ng-readonly="producto.producto.congelado" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
 						  				<label for="fuente" class="floating-label">Renglon</label>
 									</td>
 									<td style="width: 14%; padding-right:5px;">
-										<input type="number" class="inputText" ng-model="producto.producto.ubicacionGeografica" ng-value="producto.producto.ubicacionGeografica" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+										<input type="number" class="inputText" ng-model="producto.producto.ubicacionGeografica" ng-value="producto.producto.ubicacionGeografica" 
+										ng-readonly="producto.producto.congelado" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
 						  				<label for="fuente" class="floating-label">Geográfico</label>
 									</td>
 								</tr>
@@ -175,8 +191,8 @@
 					
 					<div class="form-group" >
 			          <input type="text" class="inputText" ng-model="producto.tipoNombre" ng-value="producto.tipoNombre" 
-			          	ng-click="producto.buscarTipo()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
-			           <span class="label-icon" ng-click="producto.buscarTipo()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+			          	ng-click="producto.producto.congelado != 1 ? producto.buscarTipo() : ''" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+			           <span class="label-icon" ng-click="producto.producto.congelado != 1 ? producto.buscarTipo() : ''" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 			          <label for="campo3" class="floating-label">* Tipo</label>
 			        </div>
 			        
@@ -195,21 +211,23 @@
 			        </div>
 			        
 			        <div class="form-group">
-			          	<input type="text" class="inputText" ng-model="producto.coordenadas" ng-value="producto.coordenadas" 
-			          		onblur="this.setAttribute('value', this.value);"ng-click="producto.open(producto.producto.latitud, producto.producto.longitud); " ng-readonly="true" />
-			            <span class="label-icon" ng-click="producto.open(producto.producto.latitud, producto.producto.longitud); " tabindex="-1"><i class="glyphicon glyphicon-map-marker"></i></span>
+			          	<input type="text" class="inputText" ng-model="producto.coordenadas" ng-value="producto.coordenadas"
+			          		ng-readonly="producto.producto.congelado" 
+			          		onblur="this.setAttribute('value', this.value);"ng-click="producto.producto.congelado != 1 ? producto.open(producto.producto.latitud, producto.producto.longitud) : ''; " ng-readonly="true" />
+			            <span class="label-icon" ng-click="producto.producto.congelado != 1 ? producto.open(producto.producto.latitud, producto.producto.longitud) : ''; " tabindex="-1"><i class="glyphicon glyphicon-map-marker"></i></span>
 			          	<label  class="floating-label">Coordenadas</label>
 					</div>
 						
 			        <div class="form-group" >
 				       <input type="text" class="inputText" ng-model="producto.producto.costo" ng-value="producto.producto.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left"
-				       		ng-required="producto.producto.acumulacionCostoNombre != null"
+				       		ng-required="producto.producto.acumulacionCostoNombre != null" ng-readonly="producto.producto.congelado"
 							ui-number-mask="2" ng-readonly="producto.producto.tieneHijos"/>
 				       <label for="iprog" class="floating-label">{{producto.producto.acumulacionCostoNombre  != null ?"* Monto Planificado":"Monto Planificado"}}</label>
 					</div>
 						
 				    <div class="form-group">
 	            		<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="producto.cambioAcumulacionCosto"
+	            		  ng-class="{ 'div-disabled': producto.producto.congelado==1 }"
 						  local-data="producto.acumulacionesCosto" search-fields="nombre" title-field="nombre" field-required="producto.producto.costo!=null && producto.producto.costo>0" 
 						  field-label="{{producto.producto.costo!=null && producto.producto.costo>0 ? '* ':''}}Tipo de Acumulación Monto Planificado"
 						  minlength="1" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
@@ -222,6 +240,7 @@
 							   <input class="inputText"  type="number"
 							     ng-model="producto.producto.duracion" ng-value="producto.producto.duracion"   
 							     onblur="this.setAttribute('value', this.value);"  min="1" ng-required="true" 
+							     ng-readonly="producto.producto.congelado"
 							     ng-change="producto.producto.fechaInicio != null && producto.duracionDimension.value != 0 ? producto.cambioDuracion(producto.duracionDimension) : ''"  
 							     ng-readonly="producto.producto.tieneHijos">
 							   <label class="floating-label">* Duración</label>
@@ -231,6 +250,7 @@
 						<div class="col-sm-6">
 							<div class="form-group">
 								<select class="inputText" ng-model="producto.duracionDimension"
+									ng-readonly="producto.producto.congelado"
 									ng-options="dim as dim.nombre for dim in producto.dimensiones track by dim.value"
 									 ng-required="true">
 								</select>
@@ -241,10 +261,10 @@
 						<div class="col-sm-6">
 							<div class="form-group" >
 							  <input type="text"  class="inputText" uib-datepicker-popup="{{producto.formatofecha}}" alt-input-formats="{{producto.altformatofecha}}"
-										min={{producto.fechaInicioPadre}} ng-model="producto.producto.fechaInicio" is-open="producto.fi_abierto"
+										min={{producto.fechaInicioPadre}} ng-model="producto.producto.fechaInicio" is-open="producto.fi_abierto" 
 							            datepicker-options="producto.fi_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="producto.cambioDuracion(producto.duracionDimension);" ng-required="true"  
 							            ng-value="producto.producto.fechaInicio" onblur="this.setAttribute('value', this.value);" 
-							            ng-readonly="producto.producto.tieneHijos"/>
+							            ng-readonly="producto.producto.tieneHijos || producto.producto.congelado"/>
 							            <span class="label-icon" ng-click="producto.producto.tieneHijos!=true ? producto.abrirPopupFecha(1000) : ''" tabindex="-1">
 							              <i class="glyphicon glyphicon-calendar"></i>
 							            </span>
@@ -297,26 +317,29 @@
 						<div ng-switch="campo.tipo">
 								<div ng-switch-when="texto" class="form-group" >
 									<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText" 
+										ng-readonly="producto.producto.congelado"
 										ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>	
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="entero" class="form-group" >
-									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
+									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"  
+									ng-readonly="producto.producto.congelado" 
 									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="decimal" class="form-group" >
 									<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText"  
+									ng-readonly="producto.producto.congelado"
 									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="booleano" class="form-group" >
-									<input type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
+									<input type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" ng-readonly="producto.producto.congelado" />
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="fecha" class="form-group" >
 									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{producto.formatofecha}}" alt-input-formats="{{producto.altformatofecha}}"
-														ng-model="campo.valor" is-open="campo.isOpen"
+														ng-model="campo.valor" is-open="campo.isOpen" ng-readonly="producto.producto.congelado"
 														datepicker-options="producto.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="producto.abrirPopupFecha($index)"
 														ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 														<span class="label-icon" ng-click="producto.abrirPopupFecha($index)" tabindex="-1">
@@ -325,7 +348,7 @@
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="select" class="form-group" >
-									<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor">
+									<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor" ng-readonly="producto.producto.congelado">
 													<option value="">Seleccione una opción</option>
 													<option ng-repeat="number in campo.opciones"
 														ng-value="number.valor">{{number.label}}</option>
@@ -337,7 +360,7 @@
 					
 					<div class="form-group">
 					   <textarea class="inputText" rows="4"
-					   ng-model="producto.producto.descripcion" ng-value="producto.producto.descripcion"   
+					   ng-model="producto.producto.descripcion" ng-value="producto.producto.descripcion"  ng-readonly="producto.producto.congelado" 
 					   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
 					   <label class="floating-label">Descripción</label>
 					</div>

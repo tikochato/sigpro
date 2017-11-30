@@ -86,6 +86,7 @@ public class SActividad extends HttpServlet {
 		boolean tieneHijos;
 		String fechaInicioReal;
 		String fechaFinReal;
+		Integer congelado;
 	}
 
 	class stdatadinamico {
@@ -176,6 +177,8 @@ public class SActividad extends HttpServlet {
 				temp.fechaInicioReal = Utils.formatDate(actividad.getFechaInicioReal());
 				temp.fechaFinReal = Utils.formatDate(actividad.getFechaFinReal());
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
+				//TODO: congelado
+				temp.congelado = 1;
 				stactividads.add(temp);
 			}
 
@@ -217,6 +220,8 @@ public class SActividad extends HttpServlet {
 				temp.fechaInicioReal = actividad.getFechaInicioReal() != null ? Utils.formatDate(actividad.getFechaInicioReal()) : null;
 				temp.fechaFinReal = actividad.getFechaFinReal() != null ? Utils.formatDate(actividad.getFechaFinReal()) : null;
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
+				//TODO: congelado
+				temp.congelado = 1;
 				stactividads.add(temp);
 			}
 
@@ -513,6 +518,8 @@ public class SActividad extends HttpServlet {
 				temp.fechaInicioReal = actividad.getFechaInicioReal() != null ? Utils.formatDate(actividad.getFechaInicioReal()) : null;
 				temp.fechaFinReal = actividad.getFechaFinReal() != null ? Utils.formatDate(actividad.getFechaFinReal()) : null;
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
+				//TODO: congelado
+				temp.congelado = 1;
 				stactividads.add(temp);
 			}
 
@@ -566,6 +573,8 @@ public class SActividad extends HttpServlet {
 			temp.fechaInicioReal = actividad.getFechaInicioReal() != null ? Utils.formatDate(actividad.getFechaInicioReal()) : null;
 			temp.fechaFinReal = actividad.getFechaFinReal() != null ? Utils.formatDate(actividad.getFechaFinReal()) : null;
 			temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
+			//TODO: congelado
+			temp.congelado = 1;
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"actividad\":",response_text);

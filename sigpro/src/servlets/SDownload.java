@@ -66,7 +66,6 @@ public class SDownload extends HttpServlet {
 			try{
 				int proyectoId = Utils.String2Int(map.get("proyectoid"), 0);
 				CProject project = new CProject("");
-				//TODO: lineaBase
 				String path = project.exportarProject(proyectoId, null, usuario);
 				
 				File file=new File(path);

@@ -25,6 +25,7 @@ import com.google.gson.reflect.TypeToken;
 import dao.SubComponenteDAO;
 import dao.ObjetoDAO;
 import dao.ProductoDAO;
+import dao.ProyectoDAO;
 import dao.SubproductoDAO;
 import dao.SubproductoDAO.EstructuraPojo;
 import dao.SubproductoPropiedadDAO;
@@ -34,6 +35,7 @@ import dao.UnidadEjecutoraDAO;
 import dao.UsuarioDAO;
 import pojo.AcumulacionCosto;
 import pojo.Producto;
+import pojo.Proyecto;
 import pojo.Subproducto;
 import pojo.SubproductoPropiedad;
 import pojo.SubproductoPropiedadValor;
@@ -97,6 +99,7 @@ public class SSubproducto extends HttpServlet {
 		boolean tieneHijos;
 		String fechaInicioReal;
 		String fechaFinReal;
+		Integer congelado;
 	}
 	
 	
@@ -525,6 +528,8 @@ public class SSubproducto extends HttpServlet {
 			temp.fechaInicioReal = Utils.formatDate(subproducto.getFechaInicioReal());
 			temp.fechaFinReal = Utils.formatDate(subproducto.getFechaFinReal());
 			
+			Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(subproducto.getTreePath());
+			temp.congelado = proyecto.getCongelado() != null ? proyecto.getCongelado() : 0;
 			resultadoJson = new GsonBuilder().serializeNulls().create().toJson(temp);
 			resultadoJson = "{\"success\":true," +" \"subproducto\": " + resultadoJson + "}";	
 		}else{

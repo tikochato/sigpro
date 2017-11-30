@@ -68,6 +68,7 @@ public class SubproductoDAO {
 		public boolean tieneHijos;
 		public String fechaInicioReal;
 		public String fechaFinReal;
+		public Integer congelado;
 	}
 
 	public static List<Subproducto> getSubproductos(String usuario) {
