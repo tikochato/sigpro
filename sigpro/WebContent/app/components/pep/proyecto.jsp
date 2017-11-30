@@ -167,7 +167,7 @@
 				<label class="btn btn-default" ng-click="controller.generarReporte()" uib-tooltip="Plan Anual de Ejecución">
 				<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 				<label class="btn btn-default" ng-click="controller.congelar()" uib-tooltip="Congelar línea base" ng-if="controller.proyecto.congelado != 1">
-				<span class="glyphicon glyphicon glyphicon-ice-lolly" aria-hidden="true"></span></label>
+				<span class="glyphicon glyphicon glyphicon-bookmark" aria-hidden="true"></span></label>
 		</div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="24020">
