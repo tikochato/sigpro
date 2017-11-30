@@ -8,6 +8,7 @@ import pojo.Actividad;
 import pojo.AsignacionRaci;
 import pojo.Componente;
 import pojo.ComponentePropiedadValor;
+import pojo.ComponenteSigade;
 import pojo.Desembolso;
 import pojo.LineaBase;
 import pojo.Meta;
@@ -106,6 +107,8 @@ public class LineaBaseDAO {
 				ret = ret && lineaBaseRiesgos(lineaBase,4) >= 0;
 			if (ret)
 				ret = ret && lineaBaseMatrizRaci(lineaBase,5) >= 0;
+			if (ret)
+				ret = ret && lineaBaseComponenteSigade(lineaBase) >= 0;
 			
 		}
 		catch(Throwable e){
@@ -708,6 +711,37 @@ public class LineaBaseDAO {
 		}
 		catch(Throwable e){
 			CLogger.write("21", LineaBaseDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	private static Integer lineaBaseComponenteSigade (LineaBase lineaBase){
+		Integer ret = -1;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			String query = String.join(" ","update sipro_history.componente_sigade",
+					"set linea_base = CONCAT(ifnull(linea_base,''),'|lb',",lineaBase.getId().toString(),",'|')",
+					"where actual = 1",
+					"and estado = 1",
+					"and id in (",
+						"select c.componente_sigadeid",
+						"from sipro_history.componente c",
+						"where c.actual = 1",
+						"and c.estado = 1",
+						"and c.treepath like '" + lineaBase.getProyecto().getTreePath() + "%') ");
+			
+			Query<ComponenteSigade> criteria = session.createNativeQuery(query, ComponenteSigade.class);
+			ret =   criteria.executeUpdate();
+			session.flush();
+			session.getTransaction().commit();
+			session.close();
+		}
+		catch(Throwable e){
+			CLogger.write("22", LineaBaseDAO.class, e);
 		}
 		finally{
 			session.close();
