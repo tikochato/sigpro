@@ -296,6 +296,9 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 					    montoContrato: function(){
 					    	//return mi.adquisicion.montoContrato;
 					    	return mi.montoContrato();
+					    }, 
+					    congelado: function(){
+					    	return mi.congelado;
 					    }
 					  }
 				});
@@ -406,9 +409,9 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 
 app.controller('modalPlanadquisicionPagos', [ '$uibModalInstance',
 	'$scope', '$http', '$interval',  'Utilidades',
-	'$timeout', '$log','dialogoConfirmacion', 'pagos', 'totalPagos','montoContrato',
+	'$timeout', '$log','dialogoConfirmacion', 'pagos', 'totalPagos','montoContrato', 'congelado',
 	function ($uibModalInstance, $scope, $http, $interval,
-		$utilidades, $timeout, $log,$dialogoConfirmacion, pagos, totalPagos, montoContrato) {
+		$utilidades, $timeout, $log,$dialogoConfirmacion, pagos, totalPagos, montoContrato, congelado) {
 	
 		var mi = this;
 		
@@ -418,6 +421,7 @@ app.controller('modalPlanadquisicionPagos', [ '$uibModalInstance',
 		mi.altformatofecha = ['d!/M!/yyyy'];
 		mi.totalPagos=0;
 		mi.montoContrato = montoContrato;
+		mi.congelado = congelado;
 		
 		mi.abrirPopupFecha = function(index, tipo) {
 			if(tipo==0){
