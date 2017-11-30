@@ -836,6 +836,7 @@ public class SPrestamo extends HttpServlet {
             		+ "\"codigoPresupuestario\": " + (prestamo!=null ? prestamo.getCodigoPresupuestario():" ") +", "
             		+ "\"montoPorDesembolsar\": " + (prestamo!=null ? prestamo.getMontoPorDesembolsarUsd():"0") +", "
     				+ "\"desembolsoAFechaUsd\": \"" + (prestamo!=null ? prestamo.getDesembolsoAFechaUsd():" ") +"\", "
+					+ "\"fechaEligibilidadUe\": \"" + (prestamo!=null ? Utils.formatDate(prestamo.getFechaElegibilidadUe()):" ") +"\", "
     				+ "\"fechaCierreActualUe\": \"" + (prestamo!=null ? Utils.formatDate(prestamo.getFechaCierreActualUe()):" ") +"\", "					
                     + "\"nombre\": \"" + (prestamo!=null ? prestamo.getProyectoPrograma():"") +"\" }");
         }else if(accion.equals("obtenerTipos")){
