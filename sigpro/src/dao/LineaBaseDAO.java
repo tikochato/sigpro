@@ -10,6 +10,7 @@ import pojo.ComponentePropiedadValor;
 import pojo.Desembolso;
 import pojo.LineaBase;
 import pojo.Meta;
+import pojo.MetaPlanificado;
 import pojo.Producto;
 import pojo.ProductoPropiedadValor;
 import pojo.Proyecto;
@@ -133,7 +134,7 @@ public class LineaBaseDAO {
 			session.close();
 		}
 		catch(Throwable e){
-			CLogger.write("3", LineaBaseDAO.class, e);
+			CLogger.write("4", LineaBaseDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -159,7 +160,7 @@ public class LineaBaseDAO {
 			session.close();
 		}
 		catch(Throwable e){
-			CLogger.write("4", LineaBaseDAO.class, e);
+			CLogger.write("5", LineaBaseDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -176,7 +177,7 @@ public class LineaBaseDAO {
 						"set linea_base = CONCAT(ifnull(linea_base,''),'|lb',",lineaBase.getId().toString(),",'|')",
 						"where componenteid in ( ",
 							"select c.id from sipro_history.componente c",
-							"where c.treepath like '" + lineaBase.getProyecto().getTreePath().trim() + "%' ", 
+							"where c.treepath like '" + lineaBase.getProyecto().getTreePath() + "%' ", 
 							"and c.estado = 1 and c.actual = 1",
 						")",
 						"and actual = 1");
@@ -188,7 +189,7 @@ public class LineaBaseDAO {
 			session.close();
 		}
 		catch(Throwable e){
-			CLogger.write("4", LineaBaseDAO.class, e);
+			CLogger.write("6", LineaBaseDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -203,7 +204,7 @@ public class LineaBaseDAO {
 			session.beginTransaction();
 			String query = String.join(" ","update sipro_history.subcomponente", 
 							"set linea_base = CONCAT(ifnull(linea_base,''),'|lb',",lineaBase.getId().toString(),",'|')",
-							"where treepath like '" + lineaBase.getProyecto().getTreePath().trim() + "%' ",
+							"where treepath like '" + lineaBase.getProyecto().getTreePath() + "%' ",
 							"and estado = 1",
 							"and actual = 1");
 			
@@ -214,7 +215,7 @@ public class LineaBaseDAO {
 			session.close();
 		}
 		catch(Throwable e){
-			CLogger.write("5", LineaBaseDAO.class, e);
+			CLogger.write("7", LineaBaseDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -230,7 +231,7 @@ public class LineaBaseDAO {
 			String query = String.join(" ","select * from sipro_history.subcomponente_propiedad_valor", 
 						"where subcomponenteid in ( ",
 							"select c.id from sipro_history.subcomponente c",
-							"where c.treepath like '" + lineaBase.getProyecto().getTreePath().trim() + "%' ", 
+							"where c.treepath like '" + lineaBase.getProyecto().getTreePath() + "%' ", 
 							"and c.estado = 1 and c.actual = 1",
 						")",
 						"and actual = 1");
@@ -242,7 +243,7 @@ public class LineaBaseDAO {
 			session.close();
 		}
 		catch(Throwable e){
-			CLogger.write("4", LineaBaseDAO.class, e);
+			CLogger.write("8", LineaBaseDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -257,7 +258,7 @@ public class LineaBaseDAO {
 			session.beginTransaction();
 			String query = String.join(" ","update sipro_history.producto", 
 							"set linea_base = CONCAT(ifnull(linea_base,''),'|lb',",lineaBase.getId().toString(),",'|')",
-							"where treepath like '" + lineaBase.getProyecto().getTreePath().trim() + "%' ",
+							"where treepath like '" + lineaBase.getProyecto().getTreePath() + "%' ",
 							"and estado = 1",
 							"and actual = 1");
 			
@@ -268,7 +269,7 @@ public class LineaBaseDAO {
 			session.close();
 		}
 		catch(Throwable e){
-			CLogger.write("6", LineaBaseDAO.class, e);
+			CLogger.write("9", LineaBaseDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -285,7 +286,7 @@ public class LineaBaseDAO {
 						"set linea_base = CONCAT(ifnull(linea_base,''),'|lb',",lineaBase.getId().toString(),",'|')",
 						"where productoid in ( ",
 							"select p.id from sipro_history.producto p",
-							"where p.treepath like '" + lineaBase.getProyecto().getTreePath().trim() + "%' ", 
+							"where p.treepath like '" + lineaBase.getProyecto().getTreePath() + "%' ", 
 							"and p.estado = 1 and p.actual = 1",
 						")",
 						"and actual = 1");
@@ -297,7 +298,7 @@ public class LineaBaseDAO {
 			session.close();
 		}
 		catch(Throwable e){
-			CLogger.write("4", LineaBaseDAO.class, e);
+			CLogger.write("10", LineaBaseDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -312,7 +313,7 @@ public class LineaBaseDAO {
 			session.beginTransaction();
 			String query = String.join(" ","update sipro_history.subproducto", 
 							"set linea_base = CONCAT(ifnull(linea_base,''),'|lb',",lineaBase.getId().toString(),",'|')",
-							"where treepath like '" + lineaBase.getProyecto().getTreePath().trim() + "%' ",
+							"where treepath like '" + lineaBase.getProyecto().getTreePath() + "%' ",
 							"and estado = 1",
 							"and actual = 1");
 			
@@ -323,7 +324,7 @@ public class LineaBaseDAO {
 			session.close();
 		}
 		catch(Throwable e){
-			CLogger.write("7", LineaBaseDAO.class, e);
+			CLogger.write("11", LineaBaseDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -340,7 +341,7 @@ public class LineaBaseDAO {
 						"set linea_base = CONCAT(ifnull(linea_base,''),'|lb',",lineaBase.getId().toString(),",'|')",
 						"where subproductoid in ( ",
 							"select p.id from sipro_history.subproducto p",
-							"where p.treepath like '" + lineaBase.getProyecto().getTreePath().trim() + "%' ", 
+							"where p.treepath like '" + lineaBase.getProyecto().getTreePath() + "%' ", 
 							"and p.estado = 1 and p.actual = 1",
 						")",
 						"and actual = 1");
@@ -352,7 +353,7 @@ public class LineaBaseDAO {
 			session.close();
 		}
 		catch(Throwable e){
-			CLogger.write("4", LineaBaseDAO.class, e);
+			CLogger.write("12", LineaBaseDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -367,7 +368,7 @@ public class LineaBaseDAO {
 			session.beginTransaction();
 			String query = String.join(" ","update sipro_history.actividad", 
 							"set linea_base = CONCAT(ifnull(linea_base,''),'|lb',",lineaBase.getId().toString(),",'|')",
-							"where treepath like '" + lineaBase.getProyecto().getTreePath().trim() + "%' ",
+							"where treepath like '" + lineaBase.getProyecto().getTreePath() + "%' ",
 							"and estado = 1",
 							"and actual = 1");
 			
@@ -378,7 +379,7 @@ public class LineaBaseDAO {
 			session.close();
 		}
 		catch(Throwable e){
-			CLogger.write("8", LineaBaseDAO.class, e);
+			CLogger.write("13", LineaBaseDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -395,7 +396,7 @@ public class LineaBaseDAO {
 						"set linea_base = CONCAT(ifnull(linea_base,''),'|lb',",lineaBase.getId().toString(),",'|')",
 						"where actividadid in ( ",
 							"select a.id from sipro_history.actividad a",
-							"where a.treepath like '" + lineaBase.getProyecto().getTreePath().trim() + "%' ", 
+							"where a.treepath like '" + lineaBase.getProyecto().getTreePath() + "%' ", 
 							"and a.estado = 1 and a.actual = 1",
 						")",
 						"and actual = 1");
@@ -407,7 +408,7 @@ public class LineaBaseDAO {
 			session.close();
 		}
 		catch(Throwable e){
-			CLogger.write("4", LineaBaseDAO.class, e);
+			CLogger.write("14", LineaBaseDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -433,7 +434,7 @@ public class LineaBaseDAO {
 			session.close();
 		}
 		catch(Throwable e){
-			CLogger.write("8", LineaBaseDAO.class, e);
+			CLogger.write("15", LineaBaseDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -455,7 +456,7 @@ public class LineaBaseDAO {
 					"select c.id from sipro_history.producto c",
 				    "where c.estado = 1",
 				    "and c.actual = 1",
-				    "and c.treepath like '" + lineaBase.getProyecto().getTreePath().trim() + "%' ",
+				    "and c.treepath like '" + lineaBase.getProyecto().getTreePath() + "%' ",
 				")");
 			
 			Query<Meta> criteria = session.createNativeQuery(query, Meta.class);
@@ -465,7 +466,7 @@ public class LineaBaseDAO {
 			session.close();
 		}
 		catch(Throwable e){
-			CLogger.write("8", LineaBaseDAO.class, e);
+			CLogger.write("16", LineaBaseDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -478,26 +479,28 @@ public class LineaBaseDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
-			String query = String.join(" ","update sipro_history.meta", 
+			String query = String.join(" ","update sipro_history.meta_planificado",
 				"set linea_base = CONCAT(ifnull(linea_base,''),'|lb',",lineaBase.getId().toString(),",'|')",
-				"where objeto_tipo = 3",
+				"where version = 1",
 				"and estado = 1",
-				"and actual = 1",
-				"and objeto_id in (",
-					"select c.id from sipro_history.producto c",
-				    "where c.estado = 1",
-				    "and c.actual = 1",
-				    "and c.treepath like '" + lineaBase.getProyecto().getTreePath().trim() + "%' ",
+				"and metaid in (",
+					"select m.id from sipro_history.producto p,sipro_history.meta m",
+				    "where p.id = m.objeto_id",
+				    "and p.estado = 1",
+				    "and p.actual = 1",
+				    "and p.treepath like '" + lineaBase.getProyecto().getTreePath() + "%' ",
+				    "and m.estado = 1",
+				    "and m.actual = 1",
 				")");
 			
-			Query<Meta> criteria = session.createNativeQuery(query, Meta.class);
+			Query<MetaPlanificado> criteria = session.createNativeQuery(query, MetaPlanificado.class);
 			ret =   criteria.executeUpdate();
 			session.flush();
 			session.getTransaction().commit();
 			session.close();
 		}
 		catch(Throwable e){
-			CLogger.write("8", LineaBaseDAO.class, e);
+			CLogger.write("17", LineaBaseDAO.class, e);
 		}
 		finally{
 			session.close();
