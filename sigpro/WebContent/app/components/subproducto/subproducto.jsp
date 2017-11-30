@@ -50,7 +50,7 @@
 					<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="40030">
-					<label class="btn btn-danger" ng-click="subproducto.borrar()" uib-tooltip="Borrar">
+					<label class="btn btn-danger" ng-disabled="subproducto.subproducto.congelado" ng-click="subproducto.subproducto.congelado != 1 ? subproducto.borrar() : ''" uib-tooltip="Borrar">
 					<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 				</shiro:hasPermission>
 			</div>
