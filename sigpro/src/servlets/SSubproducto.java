@@ -529,7 +529,7 @@ public class SSubproducto extends HttpServlet {
 			temp.fechaFinReal = Utils.formatDate(subproducto.getFechaFinReal());
 			
 			Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(subproducto.getTreePath());
-			temp.congelado = 1;//proyecto.getCongelado() != null ? proyecto.getCongelado() : 0;
+			temp.congelado = proyecto.getCongelado() != null ? proyecto.getCongelado() : 0;
 			resultadoJson = new GsonBuilder().serializeNulls().create().toJson(temp);
 			resultadoJson = "{\"success\":true," +" \"subproducto\": " + resultadoJson + "}";	
 		}else{
