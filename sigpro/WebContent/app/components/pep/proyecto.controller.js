@@ -69,6 +69,8 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	mi.m_organismosEjecutores = [];
 	mi.m_componentes = [];
 	
+	mi.congelado = 0;
+	
 	$http.post('/SPrestamo', { accion: 'obtenerPrestamoPorId', id: mi.prestamoid, t: (new Date()).getTime() }).success(
 		function(response) {
 			if(response.success){
@@ -1016,8 +1018,9 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 		  
 		  
 		  modalInstance.result.then(function(resultado) {
-				if (resultado != undefined){
-					$utilidades.mensaje('success', 'El PEP se congelo correctamente');
+				if (resultado != undefined && resultado ){
+					mi.proyecto.congelado = 1;
+					$utilidades.mensaje('success', 'Se creó la linea base correctamente');
 				}else{
 					$utilidades.mensaje('danger', 'Error al generar el reporte');
 				}
@@ -1451,8 +1454,11 @@ function modalCongelar($uibModalInstance, $scope, $http, $interval,
 	i18nService, $utilidades, $timeout, $log, $uibModal, $q, proyectoid) {
 
 	var mi = this;
+	mi.mostrarcargando=false;
+	
 	mi.ok = function() {
-		mi.resultado = false;
+		
+		mi.mostrarcargando=true;
 		$http.post('/SProyecto', { 
 			accion: 'congelar', 
 			id: proyectoid, 
@@ -1460,8 +1466,8 @@ function modalCongelar($uibModalInstance, $scope, $http, $interval,
 			t: (new Date()).getTime() }).success(
 				function(response) {
 					console.log(response.success);
-					resultado = response.success;
-					$uibModalInstance.close(mi.resultado);
+					mi.mostrarcargando=true;
+					$uibModalInstance.close(response.success);
 				});
 		
 		

@@ -40,7 +40,7 @@
 					<div class="operation_buttons" align="right">
 						<div class="btn-group btn-group-sm">
 					       <shiro:hasPermission name="9040">
-					       		<label class="btn btn-default" ng-click="desembolsoc.nuevo()" uib-tooltip="Nuevo" tooltip-placement="bottom">
+					       		<label class="btn btn-default" ng-click="desembolsoc.congelado?'':desembolsoc.nuevo()" uib-tooltip="Nuevo" tooltip-placement="bottom" ng-disabled="desembolsoc.congelado">
 								<span class="glyphicon glyphicon-plus"></span></label>
 					       </shiro:hasPermission> 
 					    </div>				
@@ -65,19 +65,19 @@
 									<tr ng-repeat="row in desembolsoc.display_desembolsos track by $index" >
 										<td style="padding: 0px;"><div class="form-group" style="padding: 3px;">
 											<input type="text" class="inputText"   uib-datepicker-popup="{{desembolsoc.formatofecha}}" alt-input-formats="{{desembolsoc.altformatofecha}}"
-												ng-model="row.fecha" is-open="row.c_abierto"
+												ng-model="row.fecha" is-open="row.c_abierto" ng-readonly="desembolsoc.congelado"
 												datepicker-options="desembolsoc.opcionesFecha" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-required="true"
 												ng-value="row.fecha" onblur="this.setAttribute('value', this.value);"/>
-											<span class="label-icon" ng-click="desembolsoc.mostrarCalendar($index)">
+											<span class="label-icon" ng-click="desembolsoc.congelado?'':desembolsoc.mostrarCalendar($index)">
 													<i class="glyphicon glyphicon-calendar"></i>
 											</span></div>
 										</td>
 										<td style="padding: 0px 5px 0px 5px;"><div class="form-group" style="padding: 3px;"><input type="text" class="inputText" ng-model="row.monto" ng-required="true"
-											ng-value="row.monto" ng-required="true"
+											ng-value="row.monto" ng-required="true" ng-readonly="desembolsoc.congelado"
 											ng-class="{'ng-invalid': desembolsoc.validarMonto(row)}"
 											onblur="this.setAttribute('value', this.value);" ui-number-mask="2" style="text-align: right;" /></div></td>
 										<shiro:hasPermission name="9030"><td width="1%">
-								       		<label class="btn btn-default btn-xs" ng-click="desembolsoc.borrar(row)" uib-tooltip="Borrar" tooltip-placement="bottom">
+								       		<label class="btn btn-default btn-xs" ng-click="desembolsoc.congelado?'':desembolsoc.borrar(row)" uib-tooltip="Borrar" tooltip-placement="bottom" ng-disabled="desembolsoc.congelado">
 											<span class="glyphicon glyphicon-trash"></span></label>
 								       </td></shiro:hasPermission>
 									</tr>

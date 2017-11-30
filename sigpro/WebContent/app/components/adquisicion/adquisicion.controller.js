@@ -38,7 +38,7 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 				mi.objetoId = $scope.$parent.producto.subcomponenteid;
 			}
 			mi.id = $scope.$parent.producto.producto.id;
-			mi.congelado = $scope.$parent.producto.producto.congelado;
+			mi.congelado = $scope.$parent.producto.congelado;
 			mi.tipo = 3;
 			mi.tieneHijos = $scope.$parent.producto.tieneHijos;
 			mi.actualizarCosto = $scope.$parent.producto.actualizarCosto;
@@ -49,7 +49,7 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 			mi.objetoTipo = 3;
 			mi.objetoId = $scope.$parent.subproducto.productoid;
 			mi.id = $scope.$parent.subproducto.subproducto.id;
-			mi.congelado = $scope.$parent.subproducto.subproducto.congelado;
+			mi.congelado = $scope.$parent.subproducto.congelado;
 			mi.tipo = 4;
 			mi.tieneHijos = $scope.$parent.subproducto.tieneHijos;
 			mi.actualizarCosto = $scope.$parent.subproducto.actualizarCosto;
@@ -60,7 +60,7 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 			mi.objetoTipo = $scope.$parent.actividadc.objetotipo;
 			mi.objetoId = $scope.$parent.actividadc.objetoid;
 			mi.id = $scope.$parent.actividadc.actividad.id;
-			mi.congelado = $scope.$parent.actividadc.actividad.congelado;
+			mi.congelado = $scope.$parent.actividadc.congelado;
 			mi.tipo = 5;
 			mi.tieneHijos = $scope.$parent.actividadc.tieneHijos;
 			mi.actualizarCosto = $scope.$parent.actividadc.actualizarCosto;
