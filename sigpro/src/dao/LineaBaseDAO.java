@@ -78,6 +78,12 @@ public class LineaBaseDAO {
 				ret = ret && lineaBaseMetas(lineaBase) >=0;
 			if (ret )
 				ret = ret && lineaBaseMetasPlanificado(lineaBase) >= 0;
+			if (ret )
+				ret = ret && lineaBasePlanAdquisiciones(lineaBase,3) >= 0;
+			if (ret )
+				ret = ret && lineaBasePlanAdquisiciones(lineaBase,4) >= 0;
+			if (ret )
+				ret = ret && lineaBasePlanAdquisiciones(lineaBase,5) >= 0;
 		}
 		catch(Throwable e){
 			CLogger.write("2", LineaBaseDAO.class, e);
@@ -501,6 +507,46 @@ public class LineaBaseDAO {
 		}
 		catch(Throwable e){
 			CLogger.write("17", LineaBaseDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	private static Integer lineaBasePlanAdquisiciones (LineaBase lineaBase,int objetoTipo){
+		Integer ret = -1;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			String tabla = "";
+			if(objetoTipo == 3)
+				tabla = "producto";
+			else if (objetoTipo == 4)
+				tabla = "subproducto";
+			else if (objetoTipo == 5)
+				tabla = "actividad";
+			
+			String query = String.join(" ","update sipro_history.plan_adquisicion",
+				"set linea_base = CONCAT(ifnull(linea_base,''),'|lb',",lineaBase.getId().toString(),",'|')",
+				"where actual = 1",
+				"and estado = 1",
+				"and objeto_tipo = ?1",
+				"and objeto_id in (",
+					"select t.id from sipro_history."+tabla + " t",
+					"where t.estado = 1",
+					"and t.actual = 1",
+					"and t.treepath like '" + lineaBase.getProyecto().getTreePath() + "%') ");
+			
+			Query<MetaPlanificado> criteria = session.createNativeQuery(query, MetaPlanificado.class);
+			criteria.setParameter(1, objetoTipo);
+			ret =   criteria.executeUpdate();
+			session.flush();
+			session.getTransaction().commit();
+			session.close();
+		}
+		catch(Throwable e){
+			CLogger.write("18", LineaBaseDAO.class, e);
 		}
 		finally{
 			session.close();
