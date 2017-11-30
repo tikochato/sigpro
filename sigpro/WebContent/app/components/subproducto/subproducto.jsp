@@ -50,7 +50,7 @@
 					<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="40030">
-					<label class="btn btn-danger" ng-click="subproducto.borrar()" uib-tooltip="Borrar">
+					<label class="btn btn-danger" ng-disabled="subproducto.subproducto.congelado" ng-click="subproducto.subproducto.congelado != 1 ? subproducto.borrar() : ''" uib-tooltip="Borrar">
 					<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 				</shiro:hasPermission>
 			</div>
@@ -111,7 +111,7 @@
 				</shiro:hasPermission>
 				<label ng-if="!subproducto.esTreeview" class="btn btn-primary" ng-click="subproducto.botones ? subproducto.cancelar() : ''" uib-tooltip="Ir a Tabla" tooltip-placement="bottom" ng-disabled="!subproducto.botones">
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
-				<label ng-if="subproducto.esTreeview" class="btn btn-danger" ng-click=" subproducto.botones ? subproducto.t_borrar() : ''" ng-disabled="!(subproducto.subproducto.id>0) || !subproducto.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
+				<label ng-if="subproducto.esTreeview" class="btn btn-danger" ng-click="subproducto.botones ? subproducto.subproducto.congelado != 1 ? subproducto.t_borrar() : '' : ''" ng-disabled="!(subproducto.subproducto.id>0) || !subproducto.botones || subproducto.subproducto.congelado==1" uib-tooltip="Borrar" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>
@@ -411,7 +411,7 @@
 				</shiro:hasPermission>
 				<label ng-if="!subproducto.esTreeview" class="btn btn-primary" ng-click="subproducto.botones ? subproducto.cancelar() : ''" uib-tooltip="Ir a Tabla" tooltip-placement="top" ng-disabled="!subproducto.botones">
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
-				<label ng-if="subproducto.esTreeview" class="btn btn-danger" ng-click=" subproducto.botones ? subproducto.t_borrar() : ''" ng-disabled="!(subproducto.subproducto.id>0) || !subproducto.botones" uib-tooltip="Borrar" tooltip-placement="top">
+				<label ng-if="subproducto.esTreeview" class="btn btn-danger" ng-click=" subproducto.botones ? subproducto.subproducto.congelado != 1 ? subproducto.t_borrar() : '' : ''" ng-disabled="!(subproducto.subproducto.id>0) || !subproducto.botones || subproducto.subproducto.congelado==1" uib-tooltip="Borrar" tooltip-placement="top">
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>

@@ -324,6 +324,10 @@ public class SubproductoDAO {
 			
 			estructuraPojo.fechaInicioReal = Utils.formatDate(pojo.getFechaInicioReal());
 			estructuraPojo.fechaFinReal = Utils.formatDate(pojo.getFechaFinReal());
+			
+			Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(pojo.getTreePath());
+			estructuraPojo.congelado = proyecto.getCongelado() != null ? proyecto.getCongelado() : 0;
+			
 			listaEstructuraPojos.add(estructuraPojo);
 		}
 

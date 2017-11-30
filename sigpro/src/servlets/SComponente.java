@@ -90,6 +90,7 @@ public class SComponente extends HttpServlet {
 		Integer prestamoId;
 		String fechaInicioReal;
 		String fechaFinReal;
+		Integer congelado;
 	}
 
 	class stdatadinamico {
@@ -566,6 +567,9 @@ public class SComponente extends HttpServlet {
 			temp.latitud = componente.getLatitud();
 			temp.fechaInicioReal = Utils.formatDate(componente.getFechaInicioReal());
 			temp.fechaFinReal = Utils.formatDate(componente.getFechaFinReal());
+			
+			Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(componente.getTreePath());
+			temp.congelado = proyecto.getCongelado() != null ? proyecto.getCongelado() : 0;
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"componente\":",response_text);

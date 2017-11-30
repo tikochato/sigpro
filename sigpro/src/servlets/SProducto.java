@@ -244,6 +244,9 @@ public class SProducto extends HttpServlet {
 				temp.fechaInicioReal = Utils.formatDate(producto.getFechaInicioReal());
 				temp.fechaFinReal = Utils.formatDate(producto.getFechaFinReal());
 				
+				Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(producto.getTreePath());
+				temp.congelado = proyecto.getCongelado() != null ? proyecto.getCongelado() : 0;
+				
 				listaProducto.add(temp);
 			}
 
@@ -506,6 +509,9 @@ public class SProducto extends HttpServlet {
 					temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 3);
 					temp.fechaInicioReal = Utils.formatDate(producto.getFechaInicioReal());
 					temp.fechaFinReal = Utils.formatDate(producto.getFechaFinReal());
+					
+					Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(producto.getTreePath());
+					temp.congelado = proyecto.getCongelado() != null ? proyecto.getCongelado() : 0;
 					
 					listaProducto.add(temp);
 				}

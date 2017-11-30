@@ -2,6 +2,12 @@
 	pageEncoding="UTF-8"%>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
+	<style>
+	.div-disabled
+	{
+	  pointer-events: none;
+	}
+	</style>
 	<div ng-controller="componenteController as componentec" ng-class="componentec.esTreeview ? 'maincontainer_treeview all_page' : 'maincontainer all_page'" id="title">
 		<script type="text/ng-template" id="map.html">
         <div class="modal-header">
@@ -131,7 +137,8 @@
 						
 						<div class="form-group">
 						   <input type="text" name="nombre" class="inputText" id="nombre" 
-						     ng-model="componentec.componente.nombre" ng-value="componentec.componente.nombre"   
+						     ng-model="componentec.componente.nombre" ng-value="componentec.componente.nombre" 
+						     ng-readonly="componentec.componente.congelado"  
 						     onblur="this.setAttribute('value', this.value);" ng-required="true" ng-readonly="componentec.componente.esDeSigade">
 						   <label class="floating-label">* Nombre</label>
 						</div>
@@ -141,31 +148,45 @@
 								<table style="width: 100%">
 									<tr>
 										<td style="width: 14%; padding-right:5px;">
-											<input name="programa" type="number" class="inputText" ng-model="componentec.componente.programa" ng-value="componentec.componente.programa" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;" />
+											<input name="programa" type="number" class="inputText" ng-model="componentec.componente.programa" ng-value="componentec.componente.programa" 
+											ng-readonly="componentec.componente.congelado"
+											onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;" />
 							       			<label for="programa" class="floating-label">Programa</label>
 										</td>
 										<td style="width: 14%; padding-right:5px;">
-											<input type="number" class="inputText" ng-model="componentec.componente.subprograma" ng-value="componentec.componente.subprograma" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+											<input type="number" class="inputText" ng-model="componentec.componente.subprograma" ng-value="componentec.componente.subprograma" 
+											ng-readonly="componentec.componente.congelado"
+											onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
 							  				<label for="isubprog" class="floating-label">Subprograma</label>
 										</td>
 										<td style="width: 14%; padding-right:5px;">
-											<input type="number" class="inputText" ng-model="componentec.componente.proyecto_" ng-value="componentec.componente.proyecto_" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+											<input type="number" class="inputText" ng-model="componentec.componente.proyecto_" ng-value="componentec.componente.proyecto_" 
+											ng-readonly="componentec.componente.congelado"
+											onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
 							  				<label for="iproy_" class="floating-label">Proyecto</label>
 										</td>
 										<td style="width: 14%; padding-right:5px;">
-											<input type="number" class="inputText" ng-model="componentec.componente.actividad" ng-value="componentec.componente.actividad" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+											<input type="number" class="inputText" ng-model="componentec.componente.actividad" ng-value="componentec.componente.actividad" 
+											ng-readonly="componentec.componente.congelado"
+											onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
 								  			<label for="iobra" class="floating-label">Actividad</label>
 										</td>
 										<td style="width: 14%; padding-right:5px;">
-											<input type="number" class="inputText" ng-model="componentec.componente.obra" ng-value="componentec.componente.obra" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+											<input type="number" class="inputText" ng-model="componentec.componente.obra" ng-value="componentec.componente.obra" 
+											ng-readonly="componentec.componente.congelado"
+											onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
 							 				<label for="iobra" class="floating-label">Obra</label>
 										</td>
 										<td style="width: 14%; padding-right:5px;">
-											<input type="number" class="inputText" ng-model="componentec.componente.renglon" ng-value="componentec.componente.renglon" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+											<input type="number" class="inputText" ng-model="componentec.componente.renglon" ng-value="componentec.componente.renglon" 
+											ng-readonly="componentec.componente.congelado"
+											onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
 							  				<label for="fuente" class="floating-label">Renglón</label>
 										</td>
 										<td style="width: 14%; padding-right:5px;">
-											<input type="number" class="inputText" ng-model="componentec.componente.ubicacionGeografica" ng-value="componentec.componente.ubicacionGeografica" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
+											<input type="number" class="inputText" ng-model="componentec.componente.ubicacionGeografica" ng-value="componentec.componente.ubicacionGeografica" 
+											ng-readonly="componentec.componente.congelado"
+											onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center;"/>
 							  				<label for="fuente" class="floating-label">Geográfico</label>
 										</td>
 									</tr>
@@ -175,7 +196,8 @@
 						
 						<div class="form-group" ng-hide="true">
 						   <input type="number" name="snip"  class="inputText" id="snip" 
-						     ng-model="componentec.componente.snip" ng-value="componentec.componente.snip"   
+						     ng-model="componentec.componente.snip" ng-value="componentec.componente.snip" 
+						     ng-readonly="componentec.componente.congelado"  
 						     onblur="this.setAttribute('value', this.value);" ng-required="false" >
 						   <label class="floating-label">SNIP</label>
 						</div>
@@ -195,14 +217,14 @@
 						</div>
 						<div class="form-group">
 				            <input type="text" class="inputText" id="icomptipo" name="icomptipo" ng-model="componentec.componentetiponombre" ng-readonly="true" ng-required="true" 
-				            	ng-click="componentec.buscarComponenteTipo()" ng-value="componentec.componentetiponombre" onblur="this.setAttribute('value', this.value);"/>
-				            <span class="label-icon" ng-click="componentec.buscarComponenteTipo()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+				            	ng-click="componentec.componente.congelado != 1 ? componentec.buscarComponenteTipo() : ''" ng-value="componentec.componentetiponombre" onblur="this.setAttribute('value', this.value);"/>
+				            <span class="label-icon" ng-click="componentec.componente.congelado != 1 ? componentec.buscarComponenteTipo() : ''" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 				          	<label for="campo3" class="floating-label">* Tipo Componente</label>
 						</div>
 						<div class="form-group" >
 						    <input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="componentec.coordenadas" ng-value="componentec.coordenadas" 
-								            		ng-click="componentec.open(componentec.componente.latitud, componentec.componente.longitud); " onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="false"/>
-							<span class="label-icon" ng-click="componentec.open(componentec.componente.latitud, componentec.componente.longitud); " tabindex="-1"><i class="glyphicon glyphicon-map-marker"></i></span>
+							ng-click="componentec.componente.congelado != 1 ? componentec.open(componentec.componente.latitud, componentec.componente.longitud) : ''; " onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="false"/>
+							<span class="label-icon" ng-click="componentec.componente.congelado != 1 ? componentec.open(componentec.componente.latitud, componentec.componente.longitud) : ''; " tabindex="-1"><i class="glyphicon glyphicon-map-marker"></i></span>
 							<label for="campo3" class="floating-label">Coordenadas</label>
 						</div>
 						
@@ -230,12 +252,13 @@
 						<div class="form-group" >
 					       <input type="text" class="inputText" ng-model="componentec.componente.costo" ng-value="componentec.componente.costo" ui-number-mask="2"
 					       ng-required="componentec.componente.acumulacionCostoId > 0" onblur="this.setAttribute('value', this.value);" style="text-align: left" 
-					       ng-readonly="componentec.componente.tieneHijos" />
+					       ng-readonly="componentec.componente.tieneHijos || componentec.componente.congelado == 1" />
 					       <label for="iprog" class="floating-label">{{componentec.componente.acumulacionCostoId > 0 ? "* Monto Planificado" : "Monto Planificado"}}</label>
 						</div>
 						
 						<div class="form-group">
 		            		<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="componentec.cambioAcumulacionCosto"
+		            		ng-class="{ 'div-disabled': componentec.componente.congelado==1 }"
 							  local-data="componentec.acumulacionesCosto" search-fields="nombre" title-field="nombre" field-required="componentec.componente.costo!=null && componentec.componente.costo>0" 
 						  field-label="{{componentec.componente.costo!=null && componentec.componente.costo>0 ? '* ':''}}Tipo de Acumulación Monto Planificado"
 							  minlength="1" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
@@ -258,7 +281,7 @@
 								<div class="form-group">
 									<select class="inputText" ng-model="componentec.duracionDimension"
 										ng-options="dim as dim.nombre for dim in componentec.dimensiones track by dim.value"
-										 ng-required="true" ng-readonly="componentec.componente.tieneHijos">
+										 ng-required="true" ng-readonly="componentec.componente.tieneHijos || componentec.componente.congelado == 1">
 									</select>
 									<label for="nombre" class="floating-label">* Dimension</label>
 								</div>
@@ -325,21 +348,24 @@
 							<div ng-switch="campo.tipo">
 								<div ng-switch-when="texto" class="form-group" >
 									<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText" 
+										ng-readonly="componentec.componente.congelado"
 										ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>	
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="entero" class="form-group" >
-									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
+									<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"
+									ng-readonly="componentec.componente.congelado"   
 									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="decimal" class="form-group" >
 									<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText"  
+									ng-readonly="componentec.componente.congelado"
 									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="booleano" class="form-group" >
-									<input type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
+									<input type="checkbox" id="{{ 'campo_'+campo.id }}" ng-readonly="componentec.componente.congelado" ng-model="campo.valor" />
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="fecha" class="form-group" >
@@ -353,7 +379,7 @@
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="select" class="form-group" >
-									<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor">
+									<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-readonly="componentec.componente.congelado" ng-model="campo.valor">
 													<option value="">Seleccione una opción</option>
 													<option ng-repeat="number in campo.opciones"
 														ng-value="number.valor">{{number.label}}</option>
@@ -365,7 +391,8 @@
 						
 						<div class="form-group">
 						   <textarea class="inputText" rows="4"
-						   ng-model="componentec.componente.descripcion" ng-value="componentec.componente.descripcion"   
+						   ng-model="componentec.componente.descripcion" ng-value="componentec.componente.descripcion" 
+						   ng-readonly="componentec.componente.congelado"  
 						   onblur="this.setAttribute('value', this.value);" ng-required="false" ng-readonly="componentec.componente.esDeSigade"></textarea>
 						   <label class="floating-label">Descripción</label>
 						</div>
