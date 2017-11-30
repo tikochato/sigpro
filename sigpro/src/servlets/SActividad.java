@@ -31,6 +31,7 @@ import dao.ActividadPropiedadDAO;
 import dao.ActividadPropiedadValorDAO;
 import dao.AsignacionRaciDAO;
 import dao.ObjetoDAO;
+import dao.ProyectoDAO;
 import dao.SubproductoDAO;
 import pojo.Actividad;
 import pojo.ActividadPropiedad;
@@ -40,6 +41,7 @@ import pojo.ActividadTipo;
 import pojo.AcumulacionCosto;
 import pojo.AsignacionRaci;
 import pojo.Colaborador;
+import pojo.Proyecto;
 import pojo.Subproducto;
 import utilities.Utils;
 
@@ -177,8 +179,14 @@ public class SActividad extends HttpServlet {
 				temp.fechaInicioReal = Utils.formatDate(actividad.getFechaInicioReal());
 				temp.fechaFinReal = Utils.formatDate(actividad.getFechaFinReal());
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
-				//TODO: congelado
-				temp.congelado = 1;
+				int congelado = 0;
+				if(actividads!=null && actividads.size()>0){
+					Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(actividad.getTreePath());
+					if(proyecto!=null){
+						congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
+					}
+				}
+				temp.congelado = congelado;
 				stactividads.add(temp);
 			}
 
@@ -220,8 +228,14 @@ public class SActividad extends HttpServlet {
 				temp.fechaInicioReal = actividad.getFechaInicioReal() != null ? Utils.formatDate(actividad.getFechaInicioReal()) : null;
 				temp.fechaFinReal = actividad.getFechaFinReal() != null ? Utils.formatDate(actividad.getFechaFinReal()) : null;
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
-				//TODO: congelado
-				temp.congelado = 1;
+				int congelado = 0;
+				if(actividads!=null && actividads.size()>0){
+					Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(actividad.getTreePath());
+					if(proyecto!=null){
+						congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
+					}
+				}
+				temp.congelado = congelado;
 				stactividads.add(temp);
 			}
 
@@ -484,6 +498,13 @@ public class SActividad extends HttpServlet {
 			String orden_direccion = map.get("orden_direccion");
 			List<Actividad> actividads = ActividadDAO.getActividadsPaginaPorObjeto(pagina, numeroActividads, objetoId, objetoTipo,
 					filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion,usuario);
+			int congelado = 0;
+			if(actividads!=null && actividads.size()>0){
+				Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(actividads.get(0).getTreePath());
+				if(proyecto!=null){
+					congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
+				}
+			}
 			List<stactividad> stactividads=new ArrayList<stactividad>();
 			for(Actividad actividad:actividads){
 				stactividad temp =new stactividad();
@@ -518,8 +539,7 @@ public class SActividad extends HttpServlet {
 				temp.fechaInicioReal = actividad.getFechaInicioReal() != null ? Utils.formatDate(actividad.getFechaInicioReal()) : null;
 				temp.fechaFinReal = actividad.getFechaFinReal() != null ? Utils.formatDate(actividad.getFechaFinReal()) : null;
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
-				//TODO: congelado
-				temp.congelado = 1;
+				temp.congelado = congelado;
 				stactividads.add(temp);
 			}
 
@@ -573,8 +593,12 @@ public class SActividad extends HttpServlet {
 			temp.fechaInicioReal = actividad.getFechaInicioReal() != null ? Utils.formatDate(actividad.getFechaInicioReal()) : null;
 			temp.fechaFinReal = actividad.getFechaFinReal() != null ? Utils.formatDate(actividad.getFechaFinReal()) : null;
 			temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
-			//TODO: congelado
-			temp.congelado = 1;
+			int congelado = 0;
+			Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(actividad.getTreePath());
+			if(proyecto!=null){
+				congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
+			}
+			temp.congelado = congelado;
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"actividad\":",response_text);

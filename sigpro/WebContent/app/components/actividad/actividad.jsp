@@ -116,7 +116,7 @@
 					</shiro:hasPermission>
 					<label ng-if="!actividadc.esTreeview" class="btn btn-primary" ng-click="actividadc.botones ? actividadc.irATabla() : ''" uib-tooltip="Ir a Tabla" ng-disabled="!actividadc.botones" tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
-					<label ng-if="actividadc.esTreeview" class="btn btn-danger" ng-click=" actividadc.botones && actividadc.actividad.id>0 ? actividadc.t_borrar() : ''" ng-disabled="!(actividadc.actividad.id>0) || !actividadc.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
+					<label ng-if="actividadc.esTreeview" class="btn btn-danger" ng-click="actividadc.botones && actividadc.actividad.id>0 && !actividadc.actividad.congelado ? actividadc.t_borrar() : ''" ng-disabled="!(actividadc.actividad.id>0) || !actividadc.botones || actividadc.actividad.congelado" uib-tooltip="Borrar" tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 				</div>
 			</div>
@@ -491,7 +491,7 @@
 				</shiro:hasPermission>
 				<label ng-if="!actividadc.esTreeview"  class="btn btn-primary" ng-click="actividadc.botones ? actividadc.irATabla() : ''" uib-tooltip="Ir a Tabla" ng-disabled="!actividadc.botones" tooltip-placement="top">
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
-				<label ng-if="actividadc.esTreeview" class="btn btn-danger" ng-click=" actividadc.botones && actividadc.actividad.id>0 ? actividadc.t_borrar() : ''" ng-disabled="!(actividadc.actividad.id>0) || !actividadc.botones" uib-tooltip="Borrar" tooltip-placement="top">
+				<label ng-if="actividadc.esTreeview" class="btn btn-danger" ng-click="actividadc.botones && actividadc.actividad.id>0 && !actividadc.actividad.congelado ? actividadc.t_borrar() : ''" ng-disabled="!(actividadc.actividad.id>0) || !actividadc.botones || actividadc.actividad.congelado" uib-tooltip="Borrar" tooltip-placement="top">
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>
