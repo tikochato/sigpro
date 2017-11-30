@@ -1,5 +1,5 @@
 package pojo;
-// Generated Nov 28, 2017 4:03:40 PM by Hibernate Tools 5.2.3.Final
+// Generated Nov 29, 2017 5:33:22 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -30,7 +30,7 @@ public class Proyecto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1681394238498745836L;
+	private static final long serialVersionUID = -2613764411471214859L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Colaborador colaborador;
@@ -75,6 +75,7 @@ public class Proyecto implements java.io.Serializable {
 	private Date fechaCierre;
 	private Date fechaInicioReal;
 	private Date fechaFinReal;
+	private Integer congelado;
 	private Set<Desembolso> desembolsos = new HashSet<Desembolso>(0);
 	private Set<Hito> hitos = new HashSet<Hito>(0);
 	private PepDetalle pepDetalle;
@@ -110,7 +111,7 @@ public class Proyecto implements java.io.Serializable {
 			Date fechaInicio, Date fechaFin, int duracion, String duracionDimension, Integer orden, String treePath,
 			Integer nivel, Integer ejecucionFisicaReal, Integer projectCargado, String observaciones,
 			Integer coordinador, Date fechaElegibilidad, Date fechaCierre, Date fechaInicioReal, Date fechaFinReal,
-			Set<Desembolso> desembolsos, Set<Hito> hitos, PepDetalle pepDetalle,
+			Integer congelado, Set<Desembolso> desembolsos, Set<Hito> hitos, PepDetalle pepDetalle,
 			Set<ProgramaProyecto> programaProyectos, Set<LineaBase> lineaBases, Set<ProyectoMiembro> proyectoMiembros,
 			Set<ProyectoImpacto> proyectoImpactos, Set<ProyectoRolColaborador> proyectoRolColaboradors,
 			Set<ProyectoPropiedadValor> proyectoPropiedadValors, Set<ProyectoUsuario> proyectoUsuarios,
@@ -158,6 +159,7 @@ public class Proyecto implements java.io.Serializable {
 		this.fechaCierre = fechaCierre;
 		this.fechaInicioReal = fechaInicioReal;
 		this.fechaFinReal = fechaFinReal;
+		this.congelado = congelado;
 		this.desembolsos = desembolsos;
 		this.hitos = hitos;
 		this.pepDetalle = pepDetalle;
@@ -584,6 +586,15 @@ public class Proyecto implements java.io.Serializable {
 
 	public void setFechaFinReal(Date fechaFinReal) {
 		this.fechaFinReal = fechaFinReal;
+	}
+
+	@Column(name = "congelado")
+	public Integer getCongelado() {
+		return this.congelado;
+	}
+
+	public void setCongelado(Integer congelado) {
+		this.congelado = congelado;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
