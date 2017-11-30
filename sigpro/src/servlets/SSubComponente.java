@@ -473,7 +473,13 @@ public class SSubComponente extends HttpServlet {
 		else if(accion.equals("obtenerSubComponentePorId")){
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			Subcomponente subcomponente = SubComponenteDAO.getSubComponentePorId(id,usuario);
-
+			Integer congelado = 0;
+			
+			if(subcomponente != null){
+				Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(subcomponente.getTreePath());
+				congelado = proyecto.getCongelado() != null ? proyecto.getCongelado() : 0;
+			}
+			
 			response_text = String.join("","{ \"success\": ",(subcomponente!=null && subcomponente.getId()!=null ? "true" : "false"),", "
 				+ "\"id\": " + (subcomponente!=null ? subcomponente.getId():"0") +", " + "\"fechaInicio\": \"" + (subcomponente!=null ? Utils.formatDate(subcomponente.getFechaInicio()): null) +"\", "
 				+ "\"prestamoId\": " + (subcomponente!=null ? subcomponente.getComponente().getProyecto().getPrestamo() != null ? subcomponente.getComponente().getProyecto().getPrestamo().getId() : 0 : 0) +", "
@@ -482,6 +488,7 @@ public class SSubComponente extends HttpServlet {
 				+ "\"entidadNombre\": \"" + (subcomponente!=null ? subcomponente.getComponente().getUnidadEjecutora().getEntidad().getNombre() : "") +"\", "
 				+ "\"unidadEjecutora\": " + (subcomponente!=null ? subcomponente.getComponente().getUnidadEjecutora().getId().getUnidadEjecutora() :"0") +", "
 				+ "\"unidadEjecutoraNombre\": \"" + (subcomponente!=null ? subcomponente.getComponente().getUnidadEjecutora().getNombre() : "") +"\", "
+				+ "\"congelado\": " + congelado +", "
 				+ "\"nombre\": \"" + (subcomponente!=null ? subcomponente.getNombre():"Indefinido") +"\" }");
 
 		}else if(accion.equals("getSubComponentePorId")){

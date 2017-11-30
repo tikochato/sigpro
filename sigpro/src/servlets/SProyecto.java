@@ -757,14 +757,18 @@ public class SProyecto extends HttpServlet {
 		else if(accion.equals("obtenerProyectoPorId")){
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			Proyecto proyecto = ProyectoDAO.getProyectoPorId(id,usuario);
+			
+			Integer congelado = proyecto.getCongelado() != null ? proyecto.getCongelado() : 0;
+			
 			response_text = String.join("","{ \"success\": ",(proyecto!=null && proyecto.getId()!=null ? "true" : "false"),", "
 					+ "\"id\": " + (proyecto!=null ? proyecto.getId():"0") +", "
-							+ "\"ejercicio\": " + (proyecto!=null && proyecto.getUnidadEjecutora() != null ? proyecto.getUnidadEjecutora().getId().getEjercicio() :"0") +", " 
-							+ "\"entidad\": " + (proyecto!=null && proyecto.getUnidadEjecutora() != null ? proyecto.getUnidadEjecutora().getId().getEntidadentidad() :"0") +", "
-							+ "\"entidadNombre\": \"" + (proyecto!=null && proyecto.getUnidadEjecutora() != null ? proyecto.getUnidadEjecutora().getEntidad().getNombre() : "") +"\", "
-							+ "\"unidadEjecutora\": " + (proyecto!=null && proyecto.getUnidadEjecutora() != null ? proyecto.getUnidadEjecutora().getId().getUnidadEjecutora() :"0") +", "
-							+ "\"unidadEjecutoraNombre\": \"" + (proyecto!=null && proyecto.getUnidadEjecutora() != null ? proyecto.getUnidadEjecutora().getNombre() : "") +"\", "
+					+ "\"ejercicio\": " + (proyecto!=null && proyecto.getUnidadEjecutora() != null ? proyecto.getUnidadEjecutora().getId().getEjercicio() :"0") +", " 
+					+ "\"entidad\": " + (proyecto!=null && proyecto.getUnidadEjecutora() != null ? proyecto.getUnidadEjecutora().getId().getEntidadentidad() :"0") +", "
+					+ "\"entidadNombre\": \"" + (proyecto!=null && proyecto.getUnidadEjecutora() != null ? proyecto.getUnidadEjecutora().getEntidad().getNombre() : "") +"\", "
+					+ "\"unidadEjecutora\": " + (proyecto!=null && proyecto.getUnidadEjecutora() != null ? proyecto.getUnidadEjecutora().getId().getUnidadEjecutora() :"0") +", "
+					+ "\"unidadEjecutoraNombre\": \"" + (proyecto!=null && proyecto.getUnidadEjecutora() != null ? proyecto.getUnidadEjecutora().getNombre() : "") +"\", "
 					+ "\"prestamoId\": " + (proyecto!=null ? proyecto.getPrestamo() != null ? proyecto.getPrestamo().getId() : 0 : 0) +", "
+					+ "\"congelado\": " + congelado + ", "
 					+ "\"nombre\": \"" + (proyecto!=null ? proyecto.getNombre():"") +"\" }");
 
 		}else if(accion.equals("obtenerProyectosPorPrograma")){
