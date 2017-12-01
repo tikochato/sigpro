@@ -75,11 +75,11 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
 			<shiro:hasPermission name="24040">
-				<label class="btn btn-primary" ng-click="controller.nuevo()" uib-tooltip="Nuevo">
+				<label class="btn btn-primary" ng-click="controller.congelado?'':controller.nuevo()" ng-disabled="controller.congelado" uib-tooltip="Nuevo">
 				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="24040">
-				<label class="btn btn-primary" ng-click="controller.cargarArchivo()" uib-tooltip="Importar PEP desde project">   
+				<label class="btn btn-primary" ng-click="controller.congelado?'':controller.cargarArchivo()" ng-disabled="controller.congelado" uib-tooltip="Importar PEP desde project">   
 				<span class="glyphicon glyphicon glyphicon-file"></span>Project</label>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="24020">
@@ -87,7 +87,7 @@
 				<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="24030">
-				<label class="btn btn-danger" ng-click="controller.borrar()" uib-tooltip="Borrar">
+				<label class="btn btn-danger" ng-click="controller.congelado?'':controller.borrar()" ng-disabled="controller.congelado" uib-tooltip="Borrar">
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</shiro:hasPermission>
 			</div>
@@ -160,13 +160,13 @@
 				<span class="glyphicon glyphicon-calendar"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAMatrizRiesgos(controller.proyecto.id) : ''" uib-tooltip="Matriz de Riesgos" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-list-alt"></span></label>
-				<label class="btn btn-default" ng-click="controller.botones ? controller.calcularCostoFecha(controller.proyecto.id) : ''" uib-tooltip="Cálculo de costos y fechas" tooltip-placement="bottom">
+				<label class="btn btn-default" ng-click="controller.botones && !controller.congelado ? controller.calcularCostoFecha(controller.proyecto.id) : ''" ng-disabled="controller.congelado" uib-tooltip="Cálculo de costos y fechas" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-wrench"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAMiembrosUnidadEjecutora(controller.proyecto.id) : ''" uib-tooltip="Miembros de la Unidad Ejecutora" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-user"></span></label>
 				<label class="btn btn-default" ng-click="controller.generarReporte()" uib-tooltip="Plan Anual de Ejecución">
 				<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
-				<label class="btn btn-default" ng-click="controller.congelar()" uib-tooltip="Congelar línea base" ng-if="controller.proyecto.congelado != 1">
+				<label class="btn btn-default" ng-click="controller.congelar?'':controller.congelar()" uib-tooltip="Congelar línea base" ng-disabled="controller.congelado">
 				<span class="glyphicon glyphicon glyphicon-bookmark" aria-hidden="true"></span></label>
 		</div>
 			<div class="btn-group" style="float: right;">
@@ -176,7 +176,7 @@
 				</shiro:hasPermission>
 				<label ng-if="!controller.esTreeview" class="btn btn-primary" ng-click="controller.botones ? controller.irATabla() : ''" uib-tooltip="Ir a Tabla" tooltip-placement="bottom" ng-disabled="!controller.botones">
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
-				<label ng-if="controller.esTreeview" class="btn btn-danger" ng-click=" controller.botones ? controller.t_borrar() : ''" ng-disabled="!(controller.proyecto.id>0) || !controller.botones" uib-tooltip="Borrar" tooltip-placement="bottom">
+				<label ng-if="controller.esTreeview" class="btn btn-danger" ng-click=" controller.botones && !controller.congelado ? controller.t_borrar() : ''" ng-disabled="!(controller.proyecto.id>0) || !controller.botones || controller.congelado" uib-tooltip="Borrar" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>
@@ -194,46 +194,46 @@
 					</div>
 					
 					<div class="form-group" >
-				      <input type="text" name="inombre"  class="inputText" id="inombre" ng-model="controller.proyecto.nombre" ng-value="controller.proyecto.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true" >
+				      <input type="text" name="inombre"  class="inputText" id="inombre" ng-model="controller.proyecto.nombre" ng-value="controller.proyecto.nombre" ng-readonly="controller.congelado" onblur="this.setAttribute('value', this.value);" ng-required="true" >
 				      <label class="floating-label">* Nombre</label>
 					</div>
 	
 					<div class="form-group"  ng-hide="true"  >
-						<input type="number" class="inputText" name="isnip" id="isnip"  ng-model="controller.proyecto.snip" ng-value="controller.proyecto.snip" onblur="this.setAttribute('value', this.value);">
+						<input type="number" class="inputText" name="isnip" id="isnip"  ng-model="controller.proyecto.snip" ng-value="controller.proyecto.snip" ng-readonly="controller.congelado" onblur="this.setAttribute('value', this.value);">
 					      <label class="floating-label">SNIP</label>
 					</div>
 					
 					<div class="form-group-row row" ng-hide="true"  >
 						<div class="form-group col-sm-2" >
-						       <input type="number" class="inputText" ng-model="controller.proyecto.programa" ng-value="controller.proyecto.programa" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
+						       <input type="number" class="inputText" ng-model="controller.proyecto.programa" ng-value="controller.proyecto.programa" ng-readonly="controller.congelado" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center" />
 						       <label for="iprog" class="floating-label">Programa</label>
 						</div>
 						<div class="form-group col-sm-2" ng-if="false" >
-						  <input type="number" class="inputText" ng-model="controller.proyecto.subprograma" ng-value="controller.proyecto.subprograma" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+						  <input type="number" class="inputText" ng-model="controller.proyecto.subprograma" ng-value="controller.proyecto.subprograma" ng-readonly="controller.congelado" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
 						  <label for="isubprog" class="floating-label">Subprograma</label>
 						</div>
 						<div class="form-group col-sm-2"  ng-if="false">
-						  <input type="number" class="inputText" ng-model="controller.proyecto.proyecto" ng-value="controller.proyecto.proyecto" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+						  <input type="number" class="inputText" ng-model="controller.proyecto.proyecto" ng-value="controller.proyecto.proyecto" ng-readonly="controller.congelado" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
 						  <label for="iproy_" class="floating-label">Proyecto</label>
 						</div>
 						<div class="form-group col-sm-2" ng-if="false">
-						  <input type="number" class="inputText" ng-model="controller.proyecto.actividad" ng-value="controller.proyecto.actividad" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+						  <input type="number" class="inputText" ng-model="controller.proyecto.actividad" ng-value="controller.proyecto.actividad" ng-readonly="controller.congelado" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
 						  <label for="iobra" class="floating-label">Actividad</label>
 						</div>
 						<div class="form-group col-sm-2" ng-if="false">
-						  <input type="number" class="inputText" ng-model="controller.proyecto.obra" ng-value="controller.proyecto.obra" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+						  <input type="number" class="inputText" ng-model="controller.proyecto.obra" ng-value="controller.proyecto.obra" ng-readonly="controller.congelado" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
 						  <label for="iobra" class="floating-label">Obra</label>
 						</div>
 						<div class="form-group col-sm-2" ng-if="false">
-						  <input type="number" class="inputText" ng-model="controller.proyecto.fuente" ng-value="controller.proyecto.fuente" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
+						  <input type="number" class="inputText" ng-model="controller.proyecto.fuente" ng-value="controller.proyecto.fuente" ng-readonly="controller.congelado" onblur="this.setAttribute('value', this.value);" ng-maxlength="4" style="text-align: center"/>
 						  <label for="campo5" class="floating-label">Fuente</label>
 						</div>
 					</div>
 						
 					<div class="form-group" >
 			            	<input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="controller.proyectotiponombre" ng-value="controller.proyectotiponombre" 
-			            		ng-click="controller.buscarProyectoTipo()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
-			            	<span class="label-icon" ng-click="controller.buscarProyectoTipo()"><i class="glyphicon glyphicon-search"></i></span>
+			            		ng-click="controller.congelado?'':controller.buscarProyectoTipo()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
+			            	<span class="label-icon" ng-click="controller.congelado?'':controller.buscarProyectoTipo()"><i class="glyphicon glyphicon-search"></i></span>
 			          	<label for="campo3" class="floating-label">* Caracterización {{etiquetas.proyecto}}</label>
 					</div>
 					
@@ -290,36 +290,36 @@
 						<div ng-switch="campo.tipo">
 							<div ng-switch-when="texto" class="form-group" >
 								<input type="text" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText" 
-									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>	
+									ng-value="campo.valor" onblur="this.setAttribute('value', this.value);" ng-readonly="controller.congelado"/>	
 								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 							</div>
 							<div ng-switch-when="entero" class="form-group" >
 								<input type="number" id="{{ 'campo_'+campo.id }}" numbers-only ng-model="campo.valor" class="inputText"   
-								ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
+								ng-value="campo.valor" onblur="this.setAttribute('value', this.value);" ng-readonly="controller.congelado"/>
 								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 							</div>
 							<div ng-switch-when="decimal" class="form-group" >
 								<input type="number" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" class="inputText"  
-								ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
+								ng-value="campo.valor" onblur="this.setAttribute('value', this.value);" ng-readonly="controller.congelado"/>
 								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 							</div>
 							<div ng-switch-when="booleano" class="form-group" >
-								<input type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" />
+								<input type="checkbox" id="{{ 'campo_'+campo.id }}" ng-model="campo.valor" ng-readonly="controller.congelado"/>
 								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 							</div>
 							<div ng-switch-when="fecha" class="form-group" >
 								<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" alt-input-formats="{{controller.altformatofecha}}"
-													ng-model="campo.valor" is-open="campo.isOpen"
-													datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="controller.abrirPopupFecha($index)"
+													ng-model="campo.valor" is-open="campo.isOpen"  ng-readonly="controller.congelado"
+													datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
 													ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"
-													ng-readonly="true"/>
-													<span class="label-icon" ng-click="controller.abrirPopupFecha($index)">
+													/>
+													<span class="label-icon" ng-click="controller.congelado?'':controller.abrirPopupFecha($index)">
 														<i class="glyphicon glyphicon-calendar"></i>
 													</span>
 								<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 							</div>
 							<div ng-switch-when="select" class="form-group" >
-								<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor">
+								<select id="{{ 'campo_'+campo.id }}" class="inputText" ng-model="campo.valor" ng-disabled="controller.congelado">
 												<option value="">Seleccione una opción</option>
 												<option ng-repeat="number in campo.opciones"
 													ng-value="number.valor">{{number.label}}</option>
@@ -717,7 +717,7 @@
 				</shiro:hasPermission>
 				<label ng-if="!controller.esTreeview" class="btn btn-primary" ng-click="controller.botones ? controller.irATabla() : ''" uib-tooltip="Ir a Tabla" tooltip-placement="top" ng-disabled="!controller.botones">
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
-				<label ng-if="controller.esTreeview" class="btn btn-danger" ng-click=" controller.botones ? controller.t_borrar() : ''" ng-disabled="!(controller.proyecto.id>0) || !controller.botones" uib-tooltip="Borrar" tooltip-placement="top">
+				<label ng-if="controller.esTreeview" class="btn btn-danger" ng-click=" controller.botones && !controller.congelado ? controller.t_borrar() : ''" ng-disabled="!(controller.proyecto.id>0) || !controller.botones || controller.congelado" uib-tooltip="Borrar" tooltip-placement="top">
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>

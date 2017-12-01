@@ -48,7 +48,9 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 	mi.prestamo = [];
 	mi.componentes = [];	
 	mi.metasCargadas = false;
+	mi.riesgosCargados = false;
 	mi.child_metas = null;
+	mi.child_riesgos = null;
 	
 	mi.prestamo.desembolsoAFechaUsdP = "";
 	mi.prestamo.montoPorDesembolsarUsdP = "";
@@ -440,10 +442,14 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 										//mi.diferenciaCambios = true;
 										mi.m_existenDatos = true; 
 
-										if(mi.child_metas!=null)
-											mi.child_metas.guardar(null, null,'Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
-													'Error al '+(mi.esNuevo ? 'crear' : 'guardar')+' el préstamo');
-										else{
+										if(mi.child_metas!=null || mi.child_riesgos!=null){
+											if(mi.child_metas)
+												mi.child_metas.guardar(null, (mi.child_riesgos!=null) ?  mi.child_riesgos.guardar : null,'Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+														'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
+											else if(mi.child_riesgos)
+												mi.child_riesgos.guardar('Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con Éxito',
+														'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Préstamo');
+										}else{
 											$utilidades.mensaje('success','Préstamo '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 											
 											mi.esNuevoDocumento = false;
@@ -524,6 +530,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		mi.prestamo = [];
 		$scope.active = 0;
 		mi.metasCargadas = false;
+		mi.riesgosCargados = false;
 		
 		mi.rowCollectionComponentes = [];
 		mi.displayedCollectionComponentes = [];
@@ -1150,6 +1157,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 					$scope.m_componentes = response.data.componentes;
 					mi.m_existenDatos = response.data.existenDatos;
 					mi.metasCargadas = false;
+					mi.riesgosCargados = false;
 					mi.activeTab = 0;
 					mi.diferenciaCambios = response.data.diferencia;
 					mi.actualizarTotalesUE();
@@ -1199,6 +1207,12 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		mi.metasActivo = function(){
 			if(!mi.metasCargadas){
 				mi.metasCargadas = true;
+			}
+		}
+		
+		mi.riesgosActivo = function(){
+			if(!mi.riesgosCargados){
+				mi.riesgosCargados = true;
 			}
 		}
 		

@@ -28,7 +28,6 @@ import dao.DesembolsoTipoDAO;
 import dao.ProyectoDAO;
 import dao.TipoMonedaDAO;
 import pojo.Desembolso;
-import pojo.Proyecto;
 import utilities.Utils;
 
 
@@ -201,13 +200,6 @@ public class SDesembolso extends HttpServlet {
 		}
 		else if(accion.equals("getDesembolsosPorProyecto")){
 			int proyectoId = map.get("proyectoid")!=null  ? Integer.parseInt(map.get("proyectoid")) : 0;
-			Integer congelado = 0;
-			if(proyectoId>0){
-				Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
-				if(proyecto!=null){
-					congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
-				}
-			}
 			List<Desembolso> desembolsos = DesembolsoDAO.getDesembolsosPorProyecto(proyectoId);
 			List<stdesembolso> stdesembolsos=new ArrayList<stdesembolso>();
 			for(Desembolso desembolso:desembolsos){
@@ -239,7 +231,7 @@ public class SDesembolso extends HttpServlet {
 
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stdesembolsos);
 	        response_text = String.join("", "\"desembolsos\":",response_text);
-	        response_text = String.join("", "{\"success\":true,", response_text,", \"congelado\" : " + congelado , ", \"tipoMonedaId\" : " + tipoMonedaId + ", \"tipoMonedaNombre\" : \"" + tipoMonedaNombre +"\" }");
+	        response_text = String.join("", "{\"success\":true,", response_text,", \"tipoMonedaId\" : " + tipoMonedaId + ", \"tipoMonedaNombre\" : \"" + tipoMonedaNombre +"\" }");
 		}
 		else{
 			response_text = "{ \"success\": false }";

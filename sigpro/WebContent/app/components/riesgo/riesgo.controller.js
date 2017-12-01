@@ -35,7 +35,14 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		mi.parentController=null;
 		mi.congelar=0;
 		
-		if($scope.$parent.controller && $scope.$parent.controller.proyecto){
+		if($scope.$parent.prestamoc && $scope.$parent.prestamoc.prestamo){
+			$scope.$parent.prestamoc.child_riesgos = $scope.riesgoc;
+			mi.objetoId = $scope.$parent.prestamoc.prestamo.id;
+			mi.objetoTipo=-1;
+			mi.congelar = 0;
+			mi.parentController=$scope.$parent.prestamoc;
+		}
+		else if($scope.$parent.controller && $scope.$parent.controller.proyecto){
 			$scope.$parent.controller.child_riesgos = $scope.riesgoc;
 			mi.objetoId = $scope.$parent.controller.proyecto.id;
 			mi.objetoTipo=0;
@@ -73,6 +80,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		
 		mi.actualizarObjetoId=function(){
 			switch(mi.objetoTipo){
+				case -1: mi.objetoId = $scope.$parent.prestamoc.prestamo.id; break;
 				case 0: mi.objetoId = $scope.$parent.controller.proyecto.id; break;
 				case 1: mi.objetoId = $scope.$parent.componentec.componente.id; break;
 				case 2: mi.objetoId = $scope.$parent.subcomponentec.subcomponente.id; break;
@@ -138,21 +146,21 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		};
 
 		mi.borrar = function(row) {
-				$dialogoConfirmacion.abrirDialogoConfirmacion($scope
-						, "Confirmación de Borrado"
-						, '¿Desea borrar el Riesgo "'+row.nombre+'"?'
-						, "Borrar"
-						, "Cancelar")
-				.result.then(function(data) {
-					if(data){
-						var index = mi.riesgos.indexOf(row);
-				        if (index !== -1) {
-				            mi.riesgos.splice(index, 1);
-				        }
-					}
-				}, function(){
-					
-				});
+			$dialogoConfirmacion.abrirDialogoConfirmacion($scope
+					, "Confirmación de Borrado"
+					, '¿Desea borrar el Riesgo "'+row.nombre+'"?'
+					, "Borrar"
+					, "Cancelar")
+			.result.then(function(data) {
+				if(data){
+					var index = mi.riesgos.indexOf(row);
+			        if (index !== -1) {
+			            mi.riesgos.splice(index, 1);
+			        }
+				}
+			}, function(){
+				
+			});
 		};
 
 		mi.nuevo = function() {
@@ -257,8 +265,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		}
 	
 		
-		mi.abrirPopupFecha = function(index) {
-			
+		mi.abrirPopupFecha = function(index) {			
 			if(index<1000){
 				mi.camposdinamicos[index].isOpen = true;
 			}

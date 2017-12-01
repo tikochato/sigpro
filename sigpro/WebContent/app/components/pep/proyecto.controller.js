@@ -79,6 +79,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				mi.prestamoid=response.id;
 				mi.codigoPresupuestario = response.codigoPresupuestario;
 				mi.fechaCierreActualUe = response.fechaCierreActualUe;
+				mi.congelado = response.congelado;
 			}
 	});
 	
@@ -137,6 +138,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			mi.gridApi = gridApi;
 			gridApi.selection.on.rowSelectionChanged($scope,function(row) {
 				mi.proyecto = row.entity;
+				mi.congelado = row.entity.congelado;
 			});
 
 			gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
@@ -364,12 +366,12 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				
 				if((mi.fechaInicioRealTemp != null && mi.fechaInicioRealTemp != '') && (mi.fechaFinalRealTemp != null && mi.fechaFinalRealTemp != '')){
 					mi.duracionReal = moment(mi.fechaFinalRealTemp,'DD/MM/YYYY').toDate() - moment(mi.fechaInicioRealTemp,'DD/MM/YYYY').toDate();
-					mi.duracionReal = Number(mi.duracionReal / (1000*60*60*24));
+					mi.duracionReal = Number(mi.duracionReal / (1000*60*60*24))+1;
 				}
 			}else{
 				if((mi.fechaInicioRealTemp != null && mi.fechaInicioRealTemp != '') && (mi.fechaFinalRealTemp != null && mi.fechaFinalRealTemp != '')){
 					mi.duracionReal = moment(mi.fechaFinalRealTemp,'DD/MM/YYYY').toDate() - moment(mi.fechaInicioRealTemp,'DD/MM/YYYY').toDate();
-					mi.duracionReal = Number(mi.duracionReal / (1000*60*60*24));
+					mi.duracionReal = Number(mi.duracionReal / (1000*60*60*24))+1;
 				}
 			}
 			
@@ -1133,7 +1135,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 							
 							if((mi.proyecto.fechaInicioReal !=null && mi.proyecto.fechaInicioReal != "") && (mi.proyecto.fechaFinReal !=null && mi.proyecto.fechaFinReal != "")){
 								mi.duracionReal = mi.proyecto.fechaFinReal - mi.proyecto.fechaInicioReal;
-								mi.duracionReal = Number(mi.duracionReal / (1000*60*60*24));
+								mi.duracionReal = Number(mi.duracionReal / (1000*60*60*24))+1;
 							}
 							mi.editar();
 							
