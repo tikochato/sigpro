@@ -33,48 +33,48 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		mi.objetoId=null;
 		mi.objetoTipo=null;
 		mi.parentController=null;
-		mi.congelar=0;
+		mi.congelado=0;
 		
 		if($scope.$parent.prestamoc && $scope.$parent.prestamoc.prestamo){
 			$scope.$parent.prestamoc.child_riesgos = $scope.riesgoc;
 			mi.objetoId = $scope.$parent.prestamoc.prestamo.id;
 			mi.objetoTipo=-1;
-			mi.congelar = 0;
+			mi.congelado = 0;
 			mi.parentController=$scope.$parent.prestamoc;
 		}
 		else if($scope.$parent.controller && $scope.$parent.controller.proyecto){
 			$scope.$parent.controller.child_riesgos = $scope.riesgoc;
 			mi.objetoId = $scope.$parent.controller.proyecto.id;
 			mi.objetoTipo=0;
-			mi.congelar = $scope.$parent.controller.congelar;
+			mi.congelado = $scope.$parent.controller.congelado;
 			mi.parentController=$scope.$parent.controller;
 		}
 		else if($scope.$parent.componentec && $scope.$parent.componentec.componente){
 			$scope.$parent.componentec.child_riesgos = $scope.riesgoc;
 			mi.objetoId = $scope.$parent.componentec.componente.id;
 			mi.objetoTipo=1;
-			mi.congelar = $scope.$parent.componentec.congelar;
+			mi.congelado = $scope.$parent.componentec.congelado;
 			mi.parentController=$scope.$parent.componentec;
 		}
 		else if($scope.$parent.subcomponentec && $scope.$parent.subcomponentec.subcomponente){
 			$scope.$parent.subcomponentec.child_riesgos = $scope.riesgoc;
 			mi.objetoId = $scope.$parent.subcomponentec.subcomponente.id;
 			mi.objetoTipo=2;
-			mi.congelar = $scope.$parent.subcomponentec.congelar;
+			mi.congelado = $scope.$parent.subcomponentec.congelado;
 			mi.parentController=$scope.$parent.subcomponentec;
 		}
 		else if( $scope.$parent.producto && $scope.$parent.producto.producto){
 			$scope.$parent.producto.child_riesgos = $scope.riesgoc;
 			mi.objetoId = $scope.$parent.producto.producto.id;
 			mi.objetoTipo=3;
-			mi.congelar = $scope.$parent.producto.congelar;
+			mi.congelado = $scope.$parent.producto.congelado;
 			mi.parentController=$scope.$parent.producto;
 		}
 		else if($scope.$parent.subproducto && $scope.$parent.subproducto.subproducto){
 			$scope.$parent.subproducto.child_riesgos = $scope.riesgoc;
 			mi.objetoId = $scope.$parent.subproducto.subproducto.id;
 			mi.objetoTipo=4;
-			mi.congelar = $scope.$parent.subproducto.congelar;
+			mi.congelado = $scope.$parent.subproducto.congelado;
 			mi.parentController=$scope.$parent.subproducto;
 		}
 		
@@ -109,7 +109,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 						mi.riesgos = response.riesgos;
 						mi.mostrarcargando = false;
 						for(var i=0; i<mi.riesgos.length; i++)
-							mi.riesgos[i].fechaEjecucion = moment(mi.riesgos[i].fechaEjecucion,'DD/MM/YYYY').toDate();
+							mi.riesgos[i].fechaEjecucion = mi.riesgos[i].fechaEjecucion!=null?moment(mi.riesgos[i].fechaEjecucion,'DD/MM/YYYY').toDate():null;
 					});
 		}
 		
