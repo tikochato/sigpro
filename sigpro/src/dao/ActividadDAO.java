@@ -485,7 +485,7 @@ public class ActividadDAO {
 							"and ar.rol_raci = 'r'",
 							"and ar.estado=1",
 							"and a.treePath like '"+(10000000+idPrestamo)+"%'",
-							lineaBase != null ? "and ar.linea_base="+lineaBase : "and ar.actual=1",
+							lineaBase != null ? "and ar.linea_base like '%"+lineaBase +"%'": "and ar.actual=1",
 							"and year(a.fecha_fin ) between ?1 and ?2");
 			Query<Actividad> criteria = session.createNativeQuery(query,Actividad.class);
 			criteria.setParameter("1", anio_inicio);
