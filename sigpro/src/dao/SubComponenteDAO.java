@@ -504,12 +504,10 @@ public class SubComponenteDAO {
 					"from sipro_history.subcomponente c ",
 					"where c.estado = 1 ",
 					"and componenteid = ?1 ",
-					lineaBase != null ? "and c.linea_base = ?2" : "and c.actual = 1",
+					lineaBase != null ? "and c.linea_base like '%" + lineaBase + "%'" : "and c.actual = 1",
 							"order by c.id desc");
 			Query<Subcomponente> criteria = session.createNativeQuery(query, Subcomponente.class);
 			criteria.setParameter(1, componenteId);
-			if (lineaBase != null)
-				criteria.setParameter(2, lineaBase);
 			ret =   criteria.getResultList();
 		}
 		catch(Throwable e){
@@ -530,12 +528,10 @@ public class SubComponenteDAO {
 					"from sipro_history.subcomponente c ",
 					"where c.estado = 1 ",
 					"and c.id = ?1 ",
-					lineaBase != null ? "and c.linea_base = ?2" : "and c.actual = 1",
+					lineaBase != null ? "and c.linea_base like '%" + lineaBase + "%'" : "and c.actual = 1",
 							"order by c.id desc");
 			Query<Subcomponente> criteria = session.createNativeQuery(query, Subcomponente.class);
 			criteria.setParameter(1, subcomponenteId);
-			if (lineaBase != null)
-				criteria.setParameter(2, lineaBase);
 			listRet =   criteria.getResultList();
 			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		}

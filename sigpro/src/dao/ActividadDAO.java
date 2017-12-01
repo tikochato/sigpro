@@ -513,11 +513,11 @@ public class ActividadDAO {
 					"where a.treePath like '"+(10000000+proyectoId)+"%'", 
 					"and a.porcentaje_avance=100",
 					"and year(a.fecha_fin) between ?2 and ?3",
-					(colaboradorid != null && colaboradorid > 0 ?  "and ar.colaboradorid = ?1" + (lineaBase != null ? " and ar.linea_base=" + lineaBase : " and ar.actual=1") : ""),
+					(colaboradorid != null && colaboradorid > 0 ?  "and ar.colaboradorid = ?1" + (lineaBase != null ? " and ar.linea_base like '%" + lineaBase + "%'" : " and ar.actual=1") : ""),
 					"and a.id = ar.objeto_id",
 					"and a.objeto_tipo = ar.objeto_tipo",
 					"and a.estado = 1",
-					lineaBase != null ? "and a.linea_base=" + lineaBase : "and a.actual=1",
+					lineaBase != null ? "and a.linea_base like '%" + lineaBase + "%'" : "and a.actual=1",
 					") t1",
 					"group by year(t1.fecha_fin), month(t1.fecha_fin) asc");
 			
@@ -814,14 +814,10 @@ public class ActividadDAO {
 					"where a.estado = 1",
 					"and a.objeto_tipo = ?1",
 					"and a.objeto_id = ?2",
-					lineaBase != null ? "and a.linea_base = ?3" : "and a.actual = 1");
-			
+					lineaBase != null ? "and a.linea_base like '%" + lineaBase + "%'" : "and a.actual = 1");
 			Query<Actividad> criteria = session.createNativeQuery(query,Actividad.class);
 			criteria.setParameter(1, objetoId);
 			criteria.setParameter(2, objetoTipo);
-			if (lineaBase!=null){
-				criteria.setParameter(3, lineaBase);
-			}
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
@@ -842,12 +838,10 @@ public class ActividadDAO {
 					"from sipro_history.actividad a ",
 					"where a.estado = 1 ",
 					"and a.id = ?1 ",
-					lineaBase != null ? "and a.linea_base = ?2" : "and a.actual = 1",
+					lineaBase != null ? "and a.linea_base like '%" + lineaBase + "%'" : "and a.actual = 1",
 							"order by a.id desc");
 			Query<Actividad> criteria = session.createNativeQuery(query, Actividad.class);
 			criteria.setParameter(1, actividadId);
-			if (lineaBase != null)
-				criteria.setParameter(2, lineaBase);
 			listRet =   criteria.getResultList();
 			ret = !listRet.isEmpty() ? listRet.get(0) : null;
 		}

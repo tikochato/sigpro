@@ -579,7 +579,7 @@ public class ProductoDAO {
 				query += "AND p.subcomponenteid = ?2 ";
 			}
 			
-			query += (lineaBase != null ? "and p.linea_base = ?3" : "and p.actual = 1");
+			query += (lineaBase != null ? "and p.linea_base like '%" + lineaBase + "%'" : "and p.actual = 1");
 
 			
 			Query<Producto> criteria = session.createNativeQuery(query,Producto.class);
@@ -589,9 +589,6 @@ public class ProductoDAO {
 			}
 			if (subcomponenteid!=null && subcomponenteid>0){
 				criteria.setParameter(2, subcomponenteid);
-			}
-			if (lineaBase != null){
-				criteria.setParameter(3, lineaBase);
 			}
 			ret = criteria.getResultList();
 		} catch (Throwable e) {
@@ -611,7 +608,7 @@ public class ProductoDAO {
 					"from sipro_history.producto p ",
 					"where p.estado = 1 ",
 					"and p.id = ?1 ",
-					lineaBase != null ? "and p.linea_base = ?2" : "and p.actual = 1",
+					lineaBase != null ? "and p.linea_base like '%" + lineaBase + "%'" : "and p.actual = 1",
 							"order by p.id desc");
 			Query<Producto> criteria = session.createNativeQuery(query, Producto.class);
 			criteria.setParameter(1, productoId);

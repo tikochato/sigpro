@@ -265,17 +265,20 @@ app.controller('mapaController',['$scope','$rootScope','$http','$interval','i18n
 	 
 	 mi.cargar = function(){
 		 if (mi.pepId > 0){
-		 $http.post('/SMapa', { accion: 'getMarcasPorProyecto', proyectoId:mi.pepId}).success(
-					function(response) {
-						$scope.marcas = response.marcas;
-						for (x in $scope.marcas){
-							if ($scope.marcas[x].objetoTipoId == 1){
-								$scope.geoposicionlat =  $scope.marcas[x].posicion.latitude;
-								$scope.geoposicionlong = $scope.marcas[x].posicion.longitude;
-							}
-						}
-						mi.mostrar=true;
-						mi.cargarMapa();
+		 $http.post('/SMapa', { accion: 'getMarcasPorProyecto',
+			 lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
+			 proyectoId:mi.pepId
+		}).success( 
+			function(response) {
+				$scope.marcas = response.marcas;
+				for (x in $scope.marcas){
+					if ($scope.marcas[x].objetoTipoId == 1){
+						$scope.geoposicionlat =  $scope.marcas[x].posicion.latitude;
+						$scope.geoposicionlong = $scope.marcas[x].posicion.longitude;
+					}
+				}
+				mi.mostrar=true;
+				mi.cargarMapa();
 			});
 		 } 
 	 };
