@@ -304,7 +304,7 @@ public class PlanAdquisicionDAO {
 			String query = String.join(" ", "SELECT pa.* FROM sipro_history.plan_adquisicion pa",
 					"where pa.objeto_id=:objetoId",
 					"and pa.objeto_tipo=:objetoTipo",
-					lineaBase != null ? "and pa.linea_base="+lineaBase : "and pa.actual=1",
+					lineaBase != null ? "and pa.linea_base like '%"+lineaBase+"%'" : "and pa.actual=1",
 					"and pa.estado=1");
 			Query<PlanAdquisicion> criteria = session.createNativeQuery(query, PlanAdquisicion.class);
 			criteria.setParameter("objetoId", ObjetoId);
@@ -329,7 +329,7 @@ public class PlanAdquisicionDAO {
 			String query = String.join(" ", "SELECT pa.* FROM sipro_history.plan_adquisicion pa",
 					"where pa.objeto_id=:objetoId",
 					"and pa.objeto_tipo=:objetoTipo",
-					lineaBase != null ? "and pa.lineaBase like '%" + lineaBase + "%'" : "and pa.actual=1",
+					lineaBase != null ? "and pa.linea_base like '%" + lineaBase + "%'" : "and pa.actual=1",
 					"and pa.estado=1");
 			Query<PlanAdquisicion> criteria = session.createNativeQuery(query, PlanAdquisicion.class);
 			criteria.setParameter("objetoId", ObjetoId);

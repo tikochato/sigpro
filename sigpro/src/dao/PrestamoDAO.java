@@ -251,8 +251,8 @@ public class PrestamoDAO {
 		try{
 			String query = String.join(" ", "select * from sipro_history.prestamo p ",
 					"where p.id = ?1 ",
-					"and p.estado = 1 ",
-					lineaBase != null ? "and p.linea_base like '%"+lineaBase+"%'" : "and p.actual = 1 ");
+					"and p.estado = 1 and p.actual = 1");
+					//lineaBase != null ? "and p.linea_base like '%"+lineaBase+"%'" : "and p.actual = 1 ");
 			Query<Prestamo> criteria = session.createNativeQuery(query, Prestamo.class);
 			criteria.setParameter(1, idPrestamo);
 			lstret = criteria.getResultList();

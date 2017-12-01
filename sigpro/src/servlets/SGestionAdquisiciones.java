@@ -381,7 +381,7 @@ public class SGestionAdquisiciones extends HttpServlet {
 			List<ObjetoCosto> estructuraProyecto = ObjetoDAO.getEstructuraConCosto(idPrestamo, fechaInicial, fechaFinal, true, false, false, lineaBase, usuario);
 			stcomponentegestionadquisicion temp = null;
 			
-			List<CategoriaAdquisicion> lstCategorias = CategoriaAdquisicionDAO.getCategoriaAdquisicionLB(lineaBase); 
+			List<CategoriaAdquisicion> lstCategorias = CategoriaAdquisicionDAO.getCategoriaAdquisicion(); 
 			List<stcategoriaG> lsttempCategorias = new ArrayList<stcategoriaG>();
 			stcategoriaG tempCategoria = null;
 			for(CategoriaAdquisicion categoria : lstCategorias){
