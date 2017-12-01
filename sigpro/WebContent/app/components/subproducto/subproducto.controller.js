@@ -76,6 +76,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 			mi.productoNombre = response.nombre;
 			var fechaInicioPadre = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
 			mi.modificarFechaInicial(fechaInicioPadre);
+			mi.congelado = response.congelado;
 		});
 	
 	$http.post('/SAcumulacionCosto', { accion: 'getAcumulacionesCosto', t: (new Date()).getTime()}).success(

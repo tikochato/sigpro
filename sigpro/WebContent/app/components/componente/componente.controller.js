@@ -71,6 +71,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 					mi.entidad = response.entidad;
 					mi.ejercicio = response.ejercicio;
 					mi.entidadnombre = response.entidadNombre;
+					mi.congelado = response.congelado;
 		});
 		
 		$http.post('/SAcumulacionCosto', { accion: 'getAcumulacionesCosto', t: (new Date()).getTime()}).success(
