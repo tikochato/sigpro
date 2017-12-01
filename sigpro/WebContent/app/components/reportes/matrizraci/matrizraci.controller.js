@@ -244,6 +244,9 @@ app.controller('matrizraciController',['$scope','$rootScope','$http','$interval'
 					},
 					$rol : function() {
 						return rol;
+					},
+					lineaBase : function(){
+						return mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null;
 					}
 				}
 		    });	    
@@ -295,10 +298,10 @@ app.controller('matrizraciController',['$scope','$rootScope','$http','$interval'
 
 app.controller('modalInformacion', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log', '$objetoId',  '$objetoTipo', '$rol',  modalInformacion ]);
+	'$timeout', '$log', '$objetoId',  '$objetoTipo', '$rol', 'lineaBase', modalInformacion ]);
 
 function modalInformacion($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, $objetoId, $objetoTipo, $rol) {
+	i18nService, $utilidades, $timeout, $log, $objetoId, $objetoTipo, $rol, lineaBase) {
 
 	var mi = this;
 	mi.informacion={};
@@ -307,6 +310,7 @@ function modalInformacion($uibModalInstance, $scope, $http, $interval,
 	$http.post('/SMatrizRACI', {
 		accion : 'getInformacionTarea',
 		objetoId: $objetoId,
+		lineaBase: lineaBase,
 		objetoTipo:$objetoTipo,
 		rol: $rol
 		

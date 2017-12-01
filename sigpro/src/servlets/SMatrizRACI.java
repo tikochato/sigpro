@@ -120,7 +120,8 @@ public class SMatrizRACI extends HttpServlet {
 		if(accion.equals("getMatriz")){
 			List<stmatriz> lstMatriz;
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
-			lstMatriz = getMatriz(idPrestamo, null);
+			String lineaBase = map.get("lineaBase");
+			lstMatriz = getMatriz(idPrestamo, lineaBase);
 			boolean sinColaborador = false;
 			List<stcolaborador> stcolaboradores = getColaboradores(idPrestamo, usuario);
 			if (stcolaboradores.size() ==0){
@@ -157,6 +158,7 @@ public class SMatrizRACI extends HttpServlet {
 		}else if(accion.equals("getInformacionTarea")){
 			Integer objetoId = Utils.String2Int(map.get("objetoId"),0);
 			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"),0);
+			String lineaBase = map.get("lineaBase");
 			String rol = map.get("rol");
 			stinformacion informacion = new stinformacion();
 			
@@ -187,7 +189,7 @@ public class SMatrizRACI extends HttpServlet {
 			break;
 			}
 			
-			AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(objetoId, objetoTipo, rol, null);
+			AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(objetoId, objetoTipo, rol, lineaBase);
 			
 			if (rol.equalsIgnoreCase("R")){
 				informacion.rol = "Responsable";
@@ -319,7 +321,7 @@ public class SMatrizRACI extends HttpServlet {
 			tempmatriz.objetoNombre = (String)obj[1];
 			tempmatriz.nivel = (obj[3]!=null) ? ((String)obj[3]).length()/8 : 0;
 			tempmatriz.objetoTipo = ((BigInteger) obj[2]).intValue();
-			getAsignacionRACI(tempmatriz);
+			getAsignacionRACI(tempmatriz, lineaBase);
 			lstMatriz.add(tempmatriz);
 		}
 		return lstMatriz;
@@ -343,8 +345,8 @@ public class SMatrizRACI extends HttpServlet {
 		return stcolaboradores;
 	}
 	
-	public void getAsignacionRACI(stmatriz item){
-		List<AsignacionRaci> asignaciones = AsignacionRaciDAO.getAsignacionesRaci(item.objetoId,item.objetoTipo, null);
+	public void getAsignacionRACI(stmatriz item, String lineaBase){
+		List<AsignacionRaci> asignaciones = AsignacionRaciDAO.getAsignacionesRaci(item.objetoId,item.objetoTipo, lineaBase);
 		if (!asignaciones.isEmpty()){
 			for (AsignacionRaci asignacion: asignaciones){
 				
