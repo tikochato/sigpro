@@ -167,7 +167,7 @@ public class SReporteFinancieroAdquisiciones extends HttpServlet {
 			List<ObjetoCosto> estructuraProyecto = ObjetoDAO.getEstructuraConCosto(idPrestamo, fechaInicial, fechaFinal, true, false, false, lineaBase, usuario);
 			stcomponenteplanadquisicion temp = null;
 			
-			List<CategoriaAdquisicion> lstCategorias = CategoriaAdquisicionDAO.getCategoriaAdquisicionLB(lineaBase); 
+			List<CategoriaAdquisicion> lstCategorias = CategoriaAdquisicionDAO.getCategoriaAdquisicion(); 
 			List<stcategoria> lsttempCategorias = new ArrayList<stcategoria>();
 			stcategoria tempCategoria = null;
 			for(CategoriaAdquisicion categoria : lstCategorias){
