@@ -161,7 +161,7 @@ public class PrestamoMetasDAO {
 			Session session = CHibernateSession.getSessionFactory().openSession();
 			try{
 				String query = "Select metaid, fecha, usuario, valor_entero, valor_string, valor_decimal, valor_tiempo, estado, fecha_ingreso "
-						+ "FROM meta_avance ma "
+						+ "FROM sipro_history.meta_avance ma "
 						+ "where ma.metaid = ?1 ";
 				query += lineaBase!=null ? " and ma.linea_base like '%"+lineaBase+"%' " : " and ma.actual = 1 ";
 				Query<MetaAvance> criteria = session.createNativeQuery(query, MetaAvance.class);
