@@ -447,12 +447,6 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 			mi.subproductoPadre = mi.subproducto.idSubproducto;
 			mi.subproductoPadreNombre = mi.subproducto.subproducto;
 			
-			mi.unidadEjecutora = mi.subproducto.unidadEjecutora;
-			mi.unidadEjecutoraNombre = mi.subproducto.nombreUnidadEjecutora;
-			mi.ejercicio = mi.subproducto.ejercicio;
-			mi.entidad = mi.subproducto.entidadentidad;
-			mi.entidadnombre = mi.subproducto.entidadnombre;
-			
 			if(mi.fechaFinPadre != null && !isNaN(mi.fechaFinPadre)){
 				mi.subproducto.fechaInicio = mi.sumarDias(mi.fechaFinPadre,2, 'd');
 				mi.primerhijo = true;

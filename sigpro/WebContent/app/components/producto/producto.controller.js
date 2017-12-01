@@ -477,12 +477,6 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			mi.productoPadre = mi.producto.idProducto;
 			mi.productoPadreNombre = mi.producto.producto;
 			
-			mi.unidadEjecutora = mi.producto.unidadEjectuora;
-			mi.unidadEjecutoraNombre = mi.producto.nombreUnidadEjecutora;
-			mi.entidad = mi.producto.entidadentidad;
-			mi.ejercicio = mi.producto.ejercicio;
-			mi.entidadnombre = mi.producto.entidadnombre;
-			
 			mi.coordenadas = (mi.producto.latitud !=null ?  mi.producto.latitud : '') +
 			(mi.producto.latitud!=null ? ', ' : '') + (mi.producto.longitud!=null ? mi.producto.longitud : '');
 			
