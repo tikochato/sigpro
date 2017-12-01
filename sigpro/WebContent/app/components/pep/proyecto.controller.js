@@ -78,8 +78,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				mi.objetoTipoNombre = "Préstamo";	
 				mi.prestamoid=response.id;
 				mi.codigoPresupuestario = response.codigoPresupuestario;
-				mi.fechaCierreActualUe = response.fechaCierreActualUe;
-				mi.congelado = response.congelado;
+				mi.fechaCierreActualUe = response.fechaCierreActualUe;				
 			}
 	});
 	
@@ -1124,6 +1123,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 							mi.fechaFinalTemp = mi.proyecto.fechaFin;
 							mi.fechaInicioRealTemp = mi.proyecto.fechaInicioReal;
 							mi.fechaFinalRealTemp = mi.proyecto.fechaFinReal;
+							mi.congelado = mi.proyecto.congelado;
 							if(mi.proyecto.fechaInicio != null && mi.proyecto.fechaInicio != "")
 								mi.proyecto.fechaInicio = moment(mi.proyecto.fechaInicio, 'DD/MM/YYYY').toDate();
 							if(mi.proyecto.fechaFin != null && mi.proyecto.fechaFin != "")
