@@ -2,12 +2,6 @@
 	pageEncoding="UTF-8"%>
 <%@ page import="org.apache.shiro.SecurityUtils"%>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
-<style>
-	.div-disabled
-	{
-	  pointer-events: none;
-	}
-</style>
 <div ng-controller="controlProducto as producto" ng-class=" producto.esTreeview ? 'maincontainer_treeview all_page' : 'maincontainer all_page'">
 	
 	<script type="text/ng-template" id="map.html">
@@ -227,7 +221,7 @@
 						
 				    <div class="form-group">
 	            		<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="producto.cambioAcumulacionCosto"
-	            		  ng-class="{ 'div-disabled': producto.congelado==1 }"
+	            		  disable-input="producto.congelado"
 						  local-data="producto.acumulacionesCosto" search-fields="nombre" title-field="nombre" field-required="producto.producto.costo!=null && producto.producto.costo>0" 
 						  field-label="{{producto.producto.costo!=null && producto.producto.costo>0 ? '* ':''}}Tipo de Acumulación Monto Planificado"
 						  minlength="1" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
@@ -360,7 +354,7 @@
 					
 					<div class="form-group">
 					   <textarea class="inputText" rows="4"
-					   ng-model="producto.producto.descripcion" ng-value="producto.producto.descripcion"  ng-readonly="producto.congelado" 
+					   ng-model="producto.producto.descripcion" ng-value="producto.producto.descripcion"  
 					   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
 					   <label class="floating-label">Descripción</label>
 					</div>

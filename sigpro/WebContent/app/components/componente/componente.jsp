@@ -2,12 +2,6 @@
 	pageEncoding="UTF-8"%>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
-	<style>
-	.div-disabled
-	{
-	  pointer-events: none;
-	}
-	</style>
 	<div ng-controller="componenteController as componentec" ng-class="componentec.esTreeview ? 'maincontainer_treeview all_page' : 'maincontainer all_page'" id="title">
 		<script type="text/ng-template" id="map.html">
         <div class="modal-header">
@@ -258,7 +252,7 @@
 						
 						<div class="form-group">
 		            		<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="componentec.cambioAcumulacionCosto"
-		            		ng-class="{ 'div-disabled': componentec.congelado==1 }"
+		            		disable-input="componentec.congelado"
 							  local-data="componentec.acumulacionesCosto" search-fields="nombre" title-field="nombre" field-required="componentec.componente.costo!=null && componentec.componente.costo>0" 
 						  field-label="{{componentec.componente.costo!=null && componentec.componente.costo>0 ? '* ':''}}Tipo de Acumulación Monto Planificado"
 							  minlength="1" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
@@ -392,7 +386,6 @@
 						<div class="form-group">
 						   <textarea class="inputText" rows="4"
 						   ng-model="componentec.componente.descripcion" ng-value="componentec.componente.descripcion" 
-						   ng-readonly="componentec.congelado"  
 						   onblur="this.setAttribute('value', this.value);" ng-required="false" ng-readonly="componentec.componente.esDeSigade"></textarea>
 						   <label class="floating-label">Descripción</label>
 						</div>
