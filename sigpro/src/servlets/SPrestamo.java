@@ -958,7 +958,7 @@ public class SPrestamo extends HttpServlet {
         	Integer proyectoId = Utils.String2Int(map.get("proyectoId"));
         	Proyecto proyecto = ProyectoDAO.getProyectoHistory(proyectoId, lineaBase);
         	if (proyecto != null ){
-	        	Prestamo prestamo = PrestamoDAO.getPrestamoByIdHistory(proyectoId,lineaBase);
+	        	Prestamo prestamo = proyecto.getPrestamo();
 	        	if(prestamo != null){
 	        		stprestamo temp = new stprestamo();
 					temp.id = prestamo.getId();
