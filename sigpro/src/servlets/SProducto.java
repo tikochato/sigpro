@@ -96,7 +96,6 @@ public class SProducto extends HttpServlet {
 		boolean tieneHijos;
 		String fechaInicioReal;
 		String fechaFinReal;
-		Integer congelado;
 	}
 	
 	class stdatadinamico {
@@ -243,10 +242,7 @@ public class SProducto extends HttpServlet {
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 3);
 				temp.fechaInicioReal = Utils.formatDate(producto.getFechaInicioReal());
 				temp.fechaFinReal = Utils.formatDate(producto.getFechaFinReal());
-				
-				Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(producto.getTreePath());
-				temp.congelado = proyecto.getCongelado() != null ? proyecto.getCongelado() : 0;
-				
+			
 				listaProducto.add(temp);
 			}
 
@@ -510,9 +506,6 @@ public class SProducto extends HttpServlet {
 					temp.fechaInicioReal = Utils.formatDate(producto.getFechaInicioReal());
 					temp.fechaFinReal = Utils.formatDate(producto.getFechaFinReal());
 					
-					Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(producto.getTreePath());
-					temp.congelado = proyecto.getCongelado() != null ? proyecto.getCongelado() : 0;
-					
 					listaProducto.add(temp);
 				}
 
@@ -748,6 +741,13 @@ public class SProducto extends HttpServlet {
 		}else if(accion.equals("obtenerProductoPorId")){
 			Integer id = parametro.get("id")!=null ? Integer.parseInt(parametro.get("id")) : 0;
 			Producto producto = ProductoDAO.getProductoPorId(id,usuario);
+			Integer congelado = 0;
+			
+			if(producto != null){
+				Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(producto.getTreePath());
+				congelado = proyecto.getCongelado() != null ? proyecto.getCongelado() : 0;
+			}
+			
 			
 			response_text = String.join("","{ \"success\": ",(producto!=null && producto.getId()!=null ? "true" : "false"),", "
 				+ "\"id\": " + (producto!=null ? producto.getId():"0") +", "
@@ -758,6 +758,7 @@ public class SProducto extends HttpServlet {
 				+ "\"unidadEjecutora\": " + (producto != null ? producto.getComponente() != null ? producto.getComponente().getUnidadEjecutora().getId().getUnidadEjecutora() : producto.getSubcomponente() != null ? producto.getSubcomponente().getUnidadEjecutora().getId().getUnidadEjecutora() : 0 : 0) + ", "
 				+ "\"unidadEjecutoraNombre\": \"" + (producto !=null ? producto.getComponente() != null ? producto.getComponente().getUnidadEjecutora().getNombre() : producto.getSubcomponente() != null ? producto.getSubcomponente().getUnidadEjecutora().getNombre() : "" : "") + "\", "
 				+ "\"fechaInicio\": \"" + (producto!=null ? Utils.formatDate(producto.getFechaInicio()): null) +"\", "
+				+ "\"congelado\": " + congelado +", "
 				+ "\"nombre\": \"" + (producto!=null ? producto.getNombre():"Indefinido") +"\" }");
 
 		}else if(accion.equals("getProductoPorId")){
@@ -832,9 +833,6 @@ public class SProducto extends HttpServlet {
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 3);
 				temp.fechaInicioReal = Utils.formatDate(producto.getFechaInicioReal());
 				temp.fechaFinReal = Utils.formatDate(producto.getFechaFinReal());
-				
-				Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(producto.getTreePath());
-				temp.congelado = proyecto.getCongelado() != null ? proyecto.getCongelado() : 0;
 			}
 
 			response_text = new GsonBuilder().serializeNulls().create().toJson(temp);
@@ -956,10 +954,7 @@ public class SProducto extends HttpServlet {
 			}else{
 				response_text = "{ \"success\": false }";
 			}
-
 			
-				
-				
 		}else if (accion.equals("getProductoPorProyecto")) {
 			Integer idProyecto = Utils.String2Int(parametro.get("idProyecto"));
 			List<Producto> productos = ProductoDAO.getProductosPorProyecto(idProyecto, usuario,null);

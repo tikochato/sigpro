@@ -70,6 +70,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 					mi.entidad = response.entidad;
 					mi.ejercicio = response.ejercicio;
 					mi.entidadnombre = response.entidadNombre;
+					mi.congelado = response.congelado;
 		});
 		
 		$http.post('/SAcumulacionCosto', { accion: 'getAcumulacionesCosto', t: (new Date()).getTime()}).success(
@@ -227,7 +228,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 					esnuevo: mi.esnuevo,
 					ejercicio: mi.ejercicio,
 					entidad: mi.entidad,
-					unidadejecutoraid:mi.unidadejecutoraid === "" ? null : mi.unidadejecutoraid,
+					unidadejecutoraid: mi.unidadejecutoraid === "" ? null : mi.unidadejecutoraid, 
 					longitud: mi.subcomponente.longitud,
 					latitud : mi.subcomponente.latitud,
 					costo: mi.subcomponente.costo == null ? null : mi.subcomponente.costo,
@@ -322,13 +323,8 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 
 		mi.editar = function() {
 			if(mi.subcomponente!=null){
-				mi.unidadejecutoraid= mi.subcomponente.unidadejecutoraid;
-				mi.unidadejecutoranombre= mi.subcomponente.unidadejecutoranombre;
 				mi.subcomponentetipoid=mi.subcomponente.subcomponentetipoid;
 				mi.subcomponentetiponombre=mi.subcomponente.subcomponentetiponombre;
-				mi.ejercicio = mi.subcomponente.ejercicio;
-				mi.entidad = mi.subcomponente.entidadentidad;
-				mi.entidadnombre = mi.subcomponente.entidadnombre;
 				
 				if(mi.subcomponente.duracionDimension == 'd'){
 					mi.duracionDimension = mi.dimensiones[0];

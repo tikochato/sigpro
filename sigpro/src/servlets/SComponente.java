@@ -90,7 +90,6 @@ public class SComponente extends HttpServlet {
 		Integer prestamoId;
 		String fechaInicioReal;
 		String fechaFinReal;
-		Integer congelado;
 	}
 
 	class stdatadinamico {
@@ -496,7 +495,12 @@ public class SComponente extends HttpServlet {
 		else if(accion.equals("obtenerComponentePorId")){
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			Componente componente = ComponenteDAO.getComponentePorId(id,usuario);
-
+			Integer congelado = 0;
+			if(componente != null){
+				Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(componente.getTreePath());
+				congelado = proyecto.getCongelado() != null ? proyecto.getCongelado() : 0;
+			}
+			
 			response_text = String.join("","{ \"success\": ",(componente!=null && componente.getId()!=null ? "true" : "false"),", "
 				+ "\"id\": " + (componente!=null ? componente.getId():"0") +", "
 				+ "\"ejercicio\": " + (componente!=null && componente.getUnidadEjecutora() != null ? componente.getProyecto().getUnidadEjecutora().getId().getEjercicio() :"0") +", " 
@@ -506,6 +510,7 @@ public class SComponente extends HttpServlet {
 				+ "\"unidadEjecutoraNombre\": \"" + (componente!=null && componente.getUnidadEjecutora() != null ? componente.getProyecto().getUnidadEjecutora().getNombre() : "") +"\", "
 				+ "\"prestamoId\": " + (componente!=null ? componente.getProyecto().getPrestamo() != null ? componente.getProyecto().getPrestamo().getId() : 0 : 0) +", "
 				+ "\"fechaInicio\": \"" + (componente!=null ? Utils.formatDate(componente.getFechaInicio()): null) +"\", "
+				+ "\"congelado\": " + congelado +", "
 				+ "\"nombre\": \"" + (componente!=null ? componente.getNombre():"Indefinido") +"\" }");
 
 		}else if(accion.equals("getComponentePorId")){
@@ -567,10 +572,7 @@ public class SComponente extends HttpServlet {
 			temp.latitud = componente.getLatitud();
 			temp.fechaInicioReal = Utils.formatDate(componente.getFechaInicioReal());
 			temp.fechaFinReal = Utils.formatDate(componente.getFechaFinReal());
-			
-			Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(componente.getTreePath());
-			temp.congelado = proyecto.getCongelado() != null ? proyecto.getCongelado() : 0;
-			
+
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"componente\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");

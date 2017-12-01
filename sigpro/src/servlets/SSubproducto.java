@@ -99,7 +99,6 @@ public class SSubproducto extends HttpServlet {
 		boolean tieneHijos;
 		String fechaInicioReal;
 		String fechaFinReal;
-		Integer congelado;
 	}
 	
 	
@@ -423,10 +422,6 @@ public class SSubproducto extends HttpServlet {
 			
 			temp.fechaInicioReal = Utils.formatDate(subproducto.getFechaInicioReal());
 			temp.fechaFinReal = Utils.formatDate(subproducto.getFechaFinReal());
-			
-			Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(subproducto.getTreePath());
-			temp.congelado = proyecto.getCongelado() != null ? proyecto.getCongelado() : 0;
-			
 			listaSubProducto.add(temp);
 		}
 		

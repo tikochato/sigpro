@@ -1280,7 +1280,12 @@
 					<div ng-if="prestamoc.metasCargadas">
 						<%@include file="/app/components/meta/meta.jsp" %>
 					</div>
-		    	</uib-tab>
+		    	</uib-tab>		    	
+				<uib-tab index="prestamoc.ordenTab+7" heading="Riesgos" ng-if="prestamoc.mostrarPrestamo" ng-click="prestamoc.riesgosActivo()" >
+					<div ng-if="prestamoc.riesgosCargados">
+						<%@include file="/app/components/riesgo/riesgo.jsp" %>
+					</div>
+				</uib-tab>
 			</uib-tabset>
 			</form>
 		</div>

@@ -69,6 +69,8 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 	mi.m_organismosEjecutores = [];
 	mi.m_componentes = [];
 	
+	mi.congelado = 0;
+	
 	$http.post('/SPrestamo', { accion: 'obtenerPrestamoPorId', id: mi.prestamoid, t: (new Date()).getTime() }).success(
 		function(response) {
 			if(response.success){
@@ -76,7 +78,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				mi.objetoTipoNombre = "Préstamo";	
 				mi.prestamoid=response.id;
 				mi.codigoPresupuestario = response.codigoPresupuestario;
-				mi.fechaCierreActualUe = response.fechaCierreActualUe;
+				mi.fechaCierreActualUe = response.fechaCierreActualUe;				
 			}
 	});
 	
@@ -135,6 +137,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			mi.gridApi = gridApi;
 			gridApi.selection.on.rowSelectionChanged($scope,function(row) {
 				mi.proyecto = row.entity;
+				mi.congelado = row.entity.congelado;
 			});
 
 			gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
@@ -362,12 +365,12 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				
 				if((mi.fechaInicioRealTemp != null && mi.fechaInicioRealTemp != '') && (mi.fechaFinalRealTemp != null && mi.fechaFinalRealTemp != '')){
 					mi.duracionReal = moment(mi.fechaFinalRealTemp,'DD/MM/YYYY').toDate() - moment(mi.fechaInicioRealTemp,'DD/MM/YYYY').toDate();
-					mi.duracionReal = Number(mi.duracionReal / (1000*60*60*24));
+					mi.duracionReal = Number(mi.duracionReal / (1000*60*60*24))+1;
 				}
 			}else{
 				if((mi.fechaInicioRealTemp != null && mi.fechaInicioRealTemp != '') && (mi.fechaFinalRealTemp != null && mi.fechaFinalRealTemp != '')){
 					mi.duracionReal = moment(mi.fechaFinalRealTemp,'DD/MM/YYYY').toDate() - moment(mi.fechaInicioRealTemp,'DD/MM/YYYY').toDate();
-					mi.duracionReal = Number(mi.duracionReal / (1000*60*60*24));
+					mi.duracionReal = Number(mi.duracionReal / (1000*60*60*24))+1;
 				}
 			}
 			
@@ -1120,6 +1123,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 							mi.fechaFinalTemp = mi.proyecto.fechaFin;
 							mi.fechaInicioRealTemp = mi.proyecto.fechaInicioReal;
 							mi.fechaFinalRealTemp = mi.proyecto.fechaFinReal;
+							mi.congelado = mi.proyecto.congelado;
 							if(mi.proyecto.fechaInicio != null && mi.proyecto.fechaInicio != "")
 								mi.proyecto.fechaInicio = moment(mi.proyecto.fechaInicio, 'DD/MM/YYYY').toDate();
 							if(mi.proyecto.fechaFin != null && mi.proyecto.fechaFin != "")
@@ -1131,7 +1135,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 							
 							if((mi.proyecto.fechaInicioReal !=null && mi.proyecto.fechaInicioReal != "") && (mi.proyecto.fechaFinReal !=null && mi.proyecto.fechaFinReal != "")){
 								mi.duracionReal = mi.proyecto.fechaFinReal - mi.proyecto.fechaInicioReal;
-								mi.duracionReal = Number(mi.duracionReal / (1000*60*60*24));
+								mi.duracionReal = Number(mi.duracionReal / (1000*60*60*24))+1;
 							}
 							mi.editar();
 							

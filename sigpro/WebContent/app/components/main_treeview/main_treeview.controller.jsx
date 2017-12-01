@@ -124,6 +124,8 @@ app.controller('MainController',['$scope','$document','deviceDetector','$rootSco
 	if($location.$$path.substring(1).match(mi.letter))   
 	{  
 		mi.prestamoid=parseInt($location.$$path.substring(1));  
+	}else{
+		$window.location='/main.jsp#!/prestamo';
 	}  
 	
 	mi.tree_options={

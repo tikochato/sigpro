@@ -42,6 +42,8 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 		mi.tipos=[];
 		mi.acumulacionCostos=[];
 		
+		mi.congelado = 0;
+		
 		$http.post('/SActividadTipo', { accion: 'getActividadtipos', t: (new Date()).getTime()}).success(
 				function(response) {
 					mi.tipos = response.actividadtipos;
@@ -338,6 +340,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 							mi.actividades[x].fechaInicio = moment(mi.actividades[x].fechaInicio,'DD/MM/YYYY').toDate();
 							mi.actividades[x].fechaFin = moment(mi.actividades[x].fechaFin,'DD/MM/YYYY').toDate();
 						}
+						mi.congelado = response.congelado;
 						mi.gridOptions.data = mi.actividades;
 						mi.mostrarcargando = false;
 						mi.paginaActual = pagina;
@@ -835,6 +838,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 								mi.actividad.fechaInicioReal = moment(mi.actividad.fechaInicioReal, 'DD/MM/YYYY').toDate();
 							if(mi.actividad.fechaFinReal != null)
 								mi.actividad.fechaFinReal = moment(mi.actividad.fechaFinReal, 'DD/MM/YYYY').toDate();
+							mi.congelado = mi.actividad.congelado;
 							mi.editar();
 						}
 					});

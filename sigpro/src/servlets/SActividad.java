@@ -545,6 +545,7 @@ public class SActividad extends HttpServlet {
 
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stactividads);
 	        response_text = String.join("", "\"actividades\":",response_text);
+	        response_text = String.join("", response_text, ", \"congelado\":",String.valueOf(congelado));
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		else if(accion.equals("obtenerActividadPorId")){

@@ -141,7 +141,7 @@ public class SRiesgo extends HttpServlet {
 				temp.solucion = riesgo.getSolucion();
 				temp.riesgosSecundarios = riesgo.getRiesgosSegundarios();
 				temp.ejecutado = riesgo.getEjecutado();
-				temp.fechaEjecucion = Utils.formatDate(riesgo.getFechaEjecucion());
+				temp.fechaEjecucion = riesgo.getFechaEjecucion()!=null?Utils.formatDate(riesgo.getFechaEjecucion()):null;
 				temp.resultado = riesgo.getResultado();
 				temp.observaciones = riesgo.getObservaciones();
 				temp.fechaActualizacion = Utils.formatDateHour(riesgo.getFechaActualizacion());
@@ -218,7 +218,7 @@ public class SRiesgo extends HttpServlet {
 				temp.solucion = riesgo.getSolucion();
 				temp.riesgosSecundarios = riesgo.getRiesgosSegundarios();
 				temp.ejecutado = riesgo.getEjecutado();
-				temp.fechaEjecucion = Utils.formatDate(riesgo.getFechaEjecucion());
+				temp.fechaEjecucion = riesgo.getFechaEjecucion()!=null?Utils.formatDate(riesgo.getFechaEjecucion()):null;
 				temp.resultado = riesgo.getResultado();
 				temp.observaciones = riesgo.getObservaciones();
 				temp.fechaActualizacion = Utils.formatDateHour(riesgo.getFechaActualizacion());
