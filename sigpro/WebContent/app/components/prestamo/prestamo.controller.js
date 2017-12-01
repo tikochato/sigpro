@@ -1293,6 +1293,35 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			
 			mi.rowCollectionComponentes[index].mostrar = !mi.rowCollectionComponentes[index].mostrar; 
 		}
+		
+		mi.congelarDescongelar = function () {
+			  var modalInstance = $uibModal.open({
+					animation : 'true',
+					ariaLabelledBy : 'modal-title',
+					ariaDescribedBy : 'modal-body',
+					templateUrl : 'congelarDescongelar.jsp',
+					controller : 'modalCongelarDescongelar',
+					controllerAs : 'modalcc',
+					backdrop : 'static',
+					size : 'lg',
+					resolve: {
+				        prestamoid: function(){
+				        	return mi.prestamo.id;
+				        }
+				     }
+				});
+			  
+			  
+			  
+			  modalInstance.result.then(function(resultado) {
+					if (resultado != undefined && resultado ){
+						$utilidades.mensaje('success', 'Se realizados con éxtio');
+					}else{
+						$utilidades.mensaje('danger', 'Error al congelar o descongelar');
+					}
+				}, function() {
+				});
+		  };
 } ]);
 
 app.controller('buscarPorPrestamo', [ '$uibModalInstance',
@@ -1508,4 +1537,60 @@ function modalAgregarImpacto($uibModalInstance, $scope, $http, $interval,
 	mi.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
 	};
-}
+};
+
+app.controller('modalCongelarDescongelar', [ '$uibModalInstance',
+	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$timeout', '$log',   '$uibModal', '$q', 'prestamoid' ,modalCongelarDescongelar ]);
+
+function modalCongelarDescongelar($uibModalInstance, $scope, $http, $interval,
+	i18nService, $utilidades, $timeout, $log, $uibModal, $q, prestamoid) {
+
+	var mi = this;
+	mi.peps = [];
+	mi.mostrarcargando=true;
+	mi.crearLineaBase = false;
+	$http.post('/SProyecto', { 
+		accion: 'getProyectos', 
+		prestamoid: prestamoid,
+		t: (new Date()).getTime() }).success(
+			function(response) {
+				mi.mostrarcargando=false;
+				mi.peps = response.entidades;
+				for (x in mi.peps)
+					mi.peps[x].congeladoTemp = mi.peps[x].congelado==1;
+	});
+	
+	mi.ok = function() {
+		var peps = [];
+		for (x in mi.peps){
+			var pep = {};
+			pep.id = mi.peps[x].id;
+			pep.congelado = mi.peps[x].congeladoTemp;
+			peps.push(pep);
+		}
+		
+		mi.mostrarcargando=true;
+		$http.post('/SPrestamo', { 
+			accion: 'congelarDescongelar', 
+			lineaBase: mi.crearLineaBase,
+			nombre: mi.nombre,
+			peps : JSON.stringify(peps),
+			t: (new Date()).getTime() }).success(
+				function(response) {
+					console.log(response.success);
+					mi.mostrarcargando=true;
+					$uibModalInstance.close(response.success);
+		});
+		
+		
+	};
+
+	mi.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+	
+	mi.cambioCheck = function (){
+		mi.nombre = '';
+	}
+};

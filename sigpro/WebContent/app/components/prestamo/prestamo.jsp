@@ -57,6 +57,9 @@
     <script type="text/ng-template" id="buscarPorPrestamo.jsp">
     		<%@ include file="/app/components/prestamo/buscarPorPrestamo.jsp"%>
   	 </script>
+  	  <script type="text/ng-template" id="congelarDescongelar.jsp">
+    		<%@ include file="/app/components/prestamo/congelarDescongelar.jsp"%>
+  	 </script>
 	<shiro:lacksPermission name="24010">
 		<span ng-init="prestamoc.redireccionSinPermisos()"></span>
 	</shiro:lacksPermission>
@@ -132,6 +135,8 @@
 				Vista de Árbol</label>
 				<label class="btn btn-default" ng-if="!prestamoc.esTreeview" ng-click="prestamoc.botones ? prestamoc.irAPeps(prestamoc.prestamo.id) : ''" uib-tooltip="Ver PEPs en Vista de Lista" tooltip-placement="bottom">
 				Vista de Lista</label>
+				<label class="btn btn-default" ng-click="prestamoc.congelarDescongelar()" uib-tooltip="Congelar o descongelar linea base" >
+				<span class="glyphicon glyphicon glyphicon-bookmark" aria-hidden="true"></span></label>
 			</div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="24020">

@@ -35,6 +35,7 @@ import dao.ComponenteDAO;
 import dao.ComponenteSigadeDAO;
 import dao.ComponenteTipoDAO;
 import dao.DataSigadeDAO;
+import dao.LineaBaseDAO;
 import dao.ObjetoDAO;
 import dao.PrestamoDAO;
 import dao.PrestamoTipoDAO;
@@ -50,6 +51,7 @@ import pojo.Cooperante;
 import pojo.EjecucionEstado;
 import pojo.Etiqueta;
 import pojo.InteresTipo;
+import pojo.LineaBase;
 import pojo.Prestamo;
 import pojo.PrestamoTipoPrestamo;
 import pojo.Proyecto;
@@ -1170,6 +1172,31 @@ public class SPrestamo extends HttpServlet {
 		        response_text = String.join("", "\"prestamo\":",response_text);
 		        response_text = String.join("", "{\"success\":true,", response_text,"}");
         	}
+        }else if(accion.equals("congelarDescongelar")){
+        	boolean ret = true;
+        	String peps = map.get("peps");
+        	String nombre = map.get("nombre");
+        	Integer generarLineasBases = Utils.String2Boolean(map.get("lineaBase"), 0); 
+        	JsonParser parser = new JsonParser();
+			JsonArray pepsArreglo = parser.parse(peps).getAsJsonArray();
+			for(int i=0; i<pepsArreglo.size(); i++){
+				JsonObject objeto = pepsArreglo.get(i).getAsJsonObject();
+				Integer id = objeto.get("id").isJsonNull() ? null : objeto.get("id").getAsInt();
+				Integer congelado = objeto.get("congelado").isJsonNull() ? null : objeto.get("congelado").getAsBoolean() ? 1 : 0;
+				Proyecto proyecto = ProyectoDAO.getProyecto(id);
+				
+				if (!congelado.equals(proyecto.getCongelado())){
+					proyecto.setCongelado(congelado);
+					ret = ret && ProyectoDAO.guardarProyecto(proyecto, false);
+					
+					if (ret && proyecto.getCongelado().equals(1) && generarLineasBases.equals(1)){
+						
+						LineaBase lineaBase = new LineaBase(proyecto, nombre, usuario, null, new Date(), null);
+						ret = LineaBaseDAO.guardarLineaBase(lineaBase);
+					}
+				}
+			}
+			response_text = String.join(" ", "{ \"success\": ", ret ? "true" : "false","}");
         }
 		else
 			response_text = "{ \"success\": false }";

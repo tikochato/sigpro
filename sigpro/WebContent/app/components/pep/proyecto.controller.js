@@ -1020,7 +1020,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 					mi.proyecto.congelado = 1;
 					$utilidades.mensaje('success', 'Se creó la linea base correctamente');
 				}else{
-					$utilidades.mensaje('danger', 'Error al generar el reporte');
+					$utilidades.mensaje('danger', 'Error al generar linea base');
 				}
 			}, function() {
 			});

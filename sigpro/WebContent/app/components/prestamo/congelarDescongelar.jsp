@@ -1,6 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<style type="text/css">
+	.divTablacg{
+	    width: 100%;
+	    max-height: 237px;
+	    overflow-y: auto;
+	    overflow-x: hidden;
+	}
+</style>
 <div class="modal-header">
-    <h3 class="modal-title">Congelar PEP</h3>
+    <h3 class="modal-title">Congelar o Descongelar PEPs</h3>
 </div>
 <div class="modal-body" id="modal-body">
 	<div class="grid_loading" ng-hide="!modalcc.mostrarcargando" style="position:relative; z-index:4;   ">
@@ -11,10 +19,40 @@
 				  </span>
 				</div>
 	</div>
+	
+	<div class="divTablacg">
+		<table st-table="modalcc.peps"
+			class="table table-striped  table-hover ">
+			<thead >
+				<tr>
+					<th style="width: 60px;">ID</th>
+					<th>Nombre</th>
+					<th style="width: 30px;">Congelar/Descongelar</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr st-select-row="row"
+					ng-repeat="row in modalcc.peps">
+					<td>{{row.id}}</td>
+					<td>{{row.nombre}}</td>
+					<td style="text-align: center;">
+						<input type="checkbox" ng-model="row.congeladoTemp"/>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<br/>
 	<div class="row main-form">
 		<form name="form" style="margin-top: 10px;">
 			<div class="col-sm-12">
-			   <div class="form-group" >
+				<div class="form-group">
+					<input type="checkbox"  ng-model="modalcc.crearLineaBase" ng-change = "modalcc.cambioCheck()"> 
+ 					<label class="floating-label">Crear nueva linea base</label>   						
+				</div>
+				
+				<div class="form-group" ng-if="modalcc.crearLineaBase" >
 				      <input type="text" name="inombre"  class="inputText" id="inombre" ng-model="modalcc.nombre"
 				       ng-value="modalcc.nombre" 
 				      onblur="this.setAttribute('value', this.value);" ng-required="true" >
