@@ -1021,6 +1021,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 		  modalInstance.result.then(function(resultado) {
 				if (resultado != undefined && resultado ){
 					mi.proyecto.congelado = 1;
+					mi.congelado = 1;
 					$utilidades.mensaje('success', 'Se creó la linea base correctamente');
 				}else{
 					$utilidades.mensaje('danger', 'Error al generar linea base');
