@@ -381,6 +381,9 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 					},
 					fechaCorte : function(){
 						return mi.fechaCorte
+					},
+					lineaBase: function(){
+						return mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null;
 					}
 				}
 			});
@@ -434,9 +437,9 @@ app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$
 
 app.controller('modalAvance', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log', 'objetoRow','fechaCorte','$rootScope', modalAvance ]);
+	'$timeout', '$log', 'objetoRow','fechaCorte','$rootScope', 'lineaBase', modalAvance ]);
 
-function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $utilidades, $timeout, $log, objetoRow, fechaCorte, $rootScope) {
+function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $utilidades, $timeout, $log, objetoRow, fechaCorte, $rootScope, lineaBase) {
 	var mi = this;	
 	
 	if(objetoRow.objetoTipo == 1){
@@ -446,6 +449,7 @@ function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $u
 			accion: 'getActividadesProyecto',
 			idPrestamo: objetoRow.objetoId,
 			fechaCorte: moment(fechaCorte).format('DD/MM/YYYY'),
+			lineaBase: lineaBase,
 			t:moment().unix()
 		}).success(function(response){
 			if (response.success){
@@ -459,6 +463,7 @@ function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $u
 		mi.nombre = "Hitos de "+$rootScope.etiquetas.proyecto;
 		$http.post('/SAvanceActividades', {
 			accion: 'getHitos',
+			lineaBase: lineaBase,
 			idPrestamo: objetoRow.objetoId,
 			fechaCorte: moment(fechaCorte).format('DD/MM/YYYY'),
 			t:moment().unix()
@@ -474,6 +479,7 @@ function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $u
 		mi.nombre = "Actividades de producto: " + objetoRow.nombre;
 		$http.post('/SAvanceActividades', {
 			accion: 'getActividadesProducto',
+			lineaBase: lineaBase,
 			productoId: objetoRow.objetoId,
 			fechaCorte: moment(fechaCorte).format('DD/MM/YYYY'),
 			t:moment().unix()

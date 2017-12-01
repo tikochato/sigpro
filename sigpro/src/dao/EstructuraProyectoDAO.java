@@ -405,7 +405,7 @@ public class EstructuraProyectoDAO {
 					"a.porcentaje_avance, a.fecha_inicio_real, a.fecha_fin_real, a.descripcion", 
 					"from sipro_history.actividad a", 
 					"where a.estado=1 and a.treepath like '"+(10000000+prestamoId)+"%'",
-					lineaBase != null ? "and a.linea_base like '%" + lineaBase +"'%" : "and a.actual=1");
+					lineaBase != null ? "and a.linea_base like '%" + lineaBase +"%'" : "and a.actual=1");
 			
 			Query<?> criteria = session.createNativeQuery(str_Query);			
 			ret = criteria.getResultList();

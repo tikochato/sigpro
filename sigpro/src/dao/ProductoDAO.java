@@ -314,8 +314,6 @@ public class ProductoDAO {
 			
 			Query<Producto> criteria = session.createNativeQuery(query,Producto.class);
 			criteria.setParameter("idProy", idProyecto);
-			if (lineaBase != null)
-				criteria.setParameter("lineaBase", lineaBase);
 			if (usuario !=null && usuario.length()>0)
 				criteria.setParameter("usuario", usuario);
 			ret =   criteria.getResultList();
