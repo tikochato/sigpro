@@ -166,7 +166,7 @@
 				<span class="glyphicon glyphicon-user"></span></label>
 				<label class="btn btn-default" ng-click="controller.generarReporte()" uib-tooltip="Plan Anual de Ejecución">
 				<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
-				<label class="btn btn-default" ng-click="controller.congelar?'':controller.congelar()" uib-tooltip="Congelar línea base" ng-disabled="controller.congelado">
+				<label class="btn btn-default" ng-click="controller.congelado?'':controller.congelar()" uib-tooltip="Congelar línea base" ng-disabled="controller.congelado">
 				<span class="glyphicon glyphicon glyphicon-bookmark" aria-hidden="true"></span></label>
 		</div>
 			<div class="btn-group" style="float: right;">
