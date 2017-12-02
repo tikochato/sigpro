@@ -237,7 +237,7 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 				 proyectoId: mi.pepId,
 				 anio_inicial:mi.anio_inicio,
 				 anio_final:mi.anio_fin,
-				 lineaBase: mi.lineaBaseId,
+				 lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				 t: new Date().getTime()
 				
 				}).success(
@@ -950,6 +950,7 @@ app.controller('desembolsosController',['$scope','$rootScope','$http','$interval
 				 variacion: JSON.stringify(mi.tabla[4].slice(0)),
 				 porcentaje:  JSON.stringify(mi.tabla[5].slice(0)),
 				 headers: JSON.stringify(mi.columnas),
+				 lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				 t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
