@@ -70,7 +70,7 @@
 					<tr ng-repeat="row in estructura.estructuraProyecto">
 						<td>
 							<div style="height: 25px;">
-								<div><span ng-class="estructura.claseIcon(row);" style=" uib-tooltip="{{controller.tooltipObjetoTipo[row.objetoTipo-1]}}" >
+								<div><span ng-class="estructura.claseIcon(row);" uib-tooltip="{{controller.tooltipObjetoTipo[row.objetoTipo-1]}}" >
 								</span>{{row.nombre}}
 								</div>
 							</div>
