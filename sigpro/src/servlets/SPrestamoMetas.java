@@ -257,7 +257,7 @@ public class SPrestamoMetas extends HttpServlet {
 									}else if(meta.getDatoTipo()!=null && meta.getDatoTipo().getId().equals(3)){
 										tempMeta.metaFinal = meta.getMetaFinalDecimal();
 									}
-									tempMeta.porcentajeAvance = PrestamoMetasDAO.getPorcentajeAvanceMeta(meta, lineaBase);
+									tempMeta.porcentajeAvance = PrestamoMetasDAO.getPorcentajeAvanceMeta(meta);
 									metaValores = new ArrayList<ArrayList<BigDecimal>>();
 									metaValores = PrestamoMetasDAO.getMetaValores(meta.getId(), anioInicial, anioFinal, lineaBase);
 									tempMeta = getMetas(metaValores, anioInicial, anioFinal, tempMeta);

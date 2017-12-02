@@ -89,12 +89,12 @@ public class PrestamoMetasDAO {
 						"WHEN m.dato_tipoid = 2 THEN ma.valor_entero",
 						"WHEN m.dato_tipoid = 3 THEN ma.valor_decimal",
 						"END valor", 
-						"from sipro_history.meta_avance ma", 
+						"from meta_avance ma", 
 						"join sipro_history.meta m on ma.metaid = m.id",
 						"where ma.metaid = ?",
 						"and ma.estado = 1", 
 						"and YEAR(ma.fecha) between ? and ?",
-						lineaBase!=null ? " and m.linea_base like '%"+lineaBase+"%' and ma.linea_base like '%"+lineaBase+"%' " : " and m.actual = 1 and ma.actual = 1 ",
+						lineaBase!=null ? " and m.linea_base like '%"+lineaBase+"%'  " : " and m.actual = 1  ",
 						") t1",
 						"group by t1.anio",
 						") valores", 
@@ -151,7 +151,7 @@ public class PrestamoMetasDAO {
 		return result;
 	}
     
-    public static BigDecimal getPorcentajeAvanceMeta(Meta meta, String lineaBase){
+    public static BigDecimal getPorcentajeAvanceMeta(Meta meta){
     	BigDecimal totalAvance = null;
     	Integer datoTipo = meta.getDatoTipo().getId(); 
     	if(datoTipo.equals(2) || datoTipo.equals(3)){
@@ -161,9 +161,8 @@ public class PrestamoMetasDAO {
 			Session session = CHibernateSession.getSessionFactory().openSession();
 			try{
 				String query = "Select metaid, fecha, usuario, valor_entero, valor_string, valor_decimal, valor_tiempo, estado, fecha_ingreso "
-						+ "FROM sipro_history.meta_avance ma "
+						+ "FROM meta_avance ma "
 						+ "where ma.metaid = ?1 ";
-				query += lineaBase!=null ? " and ma.linea_base like '%"+lineaBase+"%' " : " and ma.actual = 1 ";
 				Query<MetaAvance> criteria = session.createNativeQuery(query, MetaAvance.class);
 				criteria.setParameter("1", meta.getId());
 				ret = criteria.getResultList();
