@@ -69,6 +69,8 @@ public class SubproductoDAO {
 		public String fechaInicioReal;
 		public String fechaFinReal;
 		public Integer congelado;
+		public String fechaElegibilidad;
+		public String fechaCierre;
 	}
 
 	public static List<Subproducto> getSubproductos(String usuario) {
@@ -266,6 +268,19 @@ public class SubproductoDAO {
 				,columna_ordenada,orden_direccion,usuario);
 
 		List<EstructuraPojo> listaEstructuraPojos = new ArrayList<EstructuraPojo>();
+		
+		int congelado = 0;
+		String fechaElegibilidad = null;
+		String fechaCierre = null;
+		
+		if(pojos!=null && pojos.size()>0){
+			Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(pojos.get(0).getTreePath());
+			if(proyecto!=null){
+				congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
+				fechaElegibilidad = Utils.formatDate(proyecto.getFechaElegibilidad());
+				fechaCierre = Utils.formatDate(proyecto.getFechaCierre());
+			}
+		}
 
 		for (Subproducto pojo : pojos) {
 			EstructuraPojo estructuraPojo = new EstructuraPojo();
@@ -325,8 +340,9 @@ public class SubproductoDAO {
 			estructuraPojo.fechaInicioReal = Utils.formatDate(pojo.getFechaInicioReal());
 			estructuraPojo.fechaFinReal = Utils.formatDate(pojo.getFechaFinReal());
 			
-			Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(pojo.getTreePath());
-			estructuraPojo.congelado = proyecto.getCongelado() != null ? proyecto.getCongelado() : 0;
+			estructuraPojo.congelado = congelado;
+			estructuraPojo.fechaElegibilidad = fechaElegibilidad;
+			estructuraPojo.fechaCierre = fechaCierre;
 			
 			listaEstructuraPojos.add(estructuraPojo);
 		}
