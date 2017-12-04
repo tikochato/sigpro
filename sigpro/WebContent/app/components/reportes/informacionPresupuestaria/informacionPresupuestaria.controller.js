@@ -298,7 +298,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 				idPrestamo: mi.pepId,
 				anioInicial: mi.fechaInicio,
 				anioFinal: mi.fechaFin,
-				lineaBase: mi.lineaBaseId,
+				lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				t: (new Date()).getTime()
 			};
 			
@@ -742,7 +742,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 				anioFinal: mi.fechaFin,
 				agrupacion: mi.agrupacionActual,
 				tipoVisualizacion: tipoVisualizacion,
-				lineaBase: mi.lineaBaseId,
+				lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
@@ -771,7 +771,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 				 anioFinal: mi.fechaFin,
 				 agrupacion: mi.agrupacionActual,
 				 tipoVisualizacion: tipoVisualizacion,
-				 lineaBase: mi.lineaBaseId,
+				 lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				 t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {

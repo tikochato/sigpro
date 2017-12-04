@@ -261,7 +261,7 @@ public class SPlanAdquisicion extends HttpServlet {
 						temp.tipoNombre = adquisicion.getTipoAdquisicion().getNombre();
 						temp.total = adquisicion.getTotal()!= null ? adquisicion.getTotal() : new BigDecimal(0);
 						temp.tipoRevision = adquisicion.getTipoRevision();
-						temp.tipoRevisionNombre = temp.tipoRevision == 1 ? "Ex-ante" : temp.tipoRevision == 2 ? "Ex-Post" : null;
+						temp.tipoRevisionNombre = temp.tipoRevision != null ? (temp.tipoRevision == 1 ? "Ex-ante" : temp.tipoRevision == 2 ? "Ex-Post" : null) : null;
 						
 						
 						List<PlanAdquisicionPago> lstpagos = PlanAdquisicionDAO.getPagos(adquisicion.getId());
