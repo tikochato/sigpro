@@ -112,9 +112,9 @@
 		}
 	</style>
 	
-	<div ng-controller="controlAdquisicionesController as ctrladqui" class="maincontainer all_page" id="title" style="height: 100%">
+	<div ng-controller="planAdquisicionesController as ctrladqui" class="maincontainer all_page" id="title" style="height: 100%">
 		<script type="text/ng-template" id="pago.jsp">
-    		<%@ include file="/app/components/reportes/controladquisiciones/pago.jsp"%>
+    		<%@ include file="/app/components/reportes/planadquisiciones/pago.jsp"%>
   		</script>
 		<shiro:lacksPermission name="24010">
 			<p ng-init="ctrladqui.redireccionSinPermisos()"></p>
@@ -124,7 +124,7 @@
 	    		<div style="width: 100%;">
 		    		<div class="row">
 		    			<div class="panel panel-default">
-			  				<div class="panel-heading"><h3>Control de adquisiciones AÑO FISCAL {{ctrladqui.anio}}</h3></div>
+			  				<div class="panel-heading"><h3>Plan de adquisiciones AÑO FISCAL {{ctrladqui.anio}}</h3></div>
 						</div>
 		    		</div>
 		    		<br>

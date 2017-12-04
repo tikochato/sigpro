@@ -89,6 +89,8 @@ public class SActividad extends HttpServlet {
 		String fechaInicioReal;
 		String fechaFinReal;
 		Integer congelado;
+		String fechaElegibilidad;
+		String fechaCierre;
 	}
 
 	class stdatadinamico {
@@ -150,6 +152,21 @@ public class SActividad extends HttpServlet {
 			List<Actividad> actividads = ActividadDAO.getActividadsPagina(pagina, numeroActividades, filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion,
 					columna_ordenada, orden_direccion,usuario);
 			List<stactividad> stactividads=new ArrayList<stactividad>();
+			
+			
+			int congelado = 0;
+			String fechaElegibilidad = null;
+			String fechaCierre = null;
+			
+			if(actividads!=null && actividads.size()>0){
+				Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(actividads.get(0).getTreePath());
+				if(proyecto!=null){
+					congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
+					fechaElegibilidad = Utils.formatDate(proyecto.getFechaElegibilidad());
+					fechaCierre = Utils.formatDate(proyecto.getFechaCierre());
+				}
+			}
+			
 			for(Actividad actividad:actividads){
 				stactividad temp =new stactividad();
 				temp.descripcion = actividad.getDescripcion();
@@ -179,14 +196,11 @@ public class SActividad extends HttpServlet {
 				temp.fechaInicioReal = Utils.formatDate(actividad.getFechaInicioReal());
 				temp.fechaFinReal = Utils.formatDate(actividad.getFechaFinReal());
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
-				int congelado = 0;
-				if(actividads!=null && actividads.size()>0){
-					Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(actividad.getTreePath());
-					if(proyecto!=null){
-						congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
-					}
-				}
+				
 				temp.congelado = congelado;
+				temp.fechaElegibilidad = fechaElegibilidad;
+				temp.fechaCierre = fechaCierre;
+				
 				stactividads.add(temp);
 			}
 
@@ -197,6 +211,20 @@ public class SActividad extends HttpServlet {
 		else if(accion.equals("getActividads")){
 			List<Actividad> actividads = ActividadDAO.getActividads(usuario);
 			List<stactividad> stactividads=new ArrayList<stactividad>();
+			
+			int congelado = 0;
+			String fechaElegibilidad = null;
+			String fechaCierre = null;
+			
+			if(actividads!=null && actividads.size()>0){
+				Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(actividads.get(0).getTreePath());
+				if(proyecto!=null){
+					congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
+					fechaElegibilidad = Utils.formatDate(proyecto.getFechaElegibilidad());
+					fechaCierre = Utils.formatDate(proyecto.getFechaCierre());
+				}
+			}
+			
 			for(Actividad actividad:actividads){
 				stactividad temp =new stactividad();
 				temp.descripcion = actividad.getDescripcion();
@@ -228,14 +256,10 @@ public class SActividad extends HttpServlet {
 				temp.fechaInicioReal = actividad.getFechaInicioReal() != null ? Utils.formatDate(actividad.getFechaInicioReal()) : null;
 				temp.fechaFinReal = actividad.getFechaFinReal() != null ? Utils.formatDate(actividad.getFechaFinReal()) : null;
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
-				int congelado = 0;
-				if(actividads!=null && actividads.size()>0){
-					Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(actividad.getTreePath());
-					if(proyecto!=null){
-						congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
-					}
-				}
+
 				temp.congelado = congelado;
+				temp.fechaElegibilidad = fechaElegibilidad;
+				temp.fechaCierre = fechaCierre;;
 				stactividads.add(temp);
 			}
 
@@ -498,11 +522,16 @@ public class SActividad extends HttpServlet {
 			String orden_direccion = map.get("orden_direccion");
 			List<Actividad> actividads = ActividadDAO.getActividadsPaginaPorObjeto(pagina, numeroActividads, objetoId, objetoTipo,
 					filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion,usuario);
+			
 			int congelado = 0;
+			String fechaElegibilidad = null;
+			String fechaCierre = null;
 			if(actividads!=null && actividads.size()>0){
 				Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(actividads.get(0).getTreePath());
 				if(proyecto!=null){
 					congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
+					fechaElegibilidad = Utils.formatDate(proyecto.getFechaElegibilidad());
+					fechaCierre = Utils.formatDate(proyecto.getFechaCierre());
 				}
 			}
 			List<stactividad> stactividads=new ArrayList<stactividad>();
@@ -540,6 +569,8 @@ public class SActividad extends HttpServlet {
 				temp.fechaFinReal = actividad.getFechaFinReal() != null ? Utils.formatDate(actividad.getFechaFinReal()) : null;
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
 				temp.congelado = congelado;
+				temp.fechaElegibilidad = fechaElegibilidad;
+				temp.fechaCierre = fechaCierre;
 				stactividads.add(temp);
 			}
 
@@ -594,12 +625,13 @@ public class SActividad extends HttpServlet {
 			temp.fechaInicioReal = actividad.getFechaInicioReal() != null ? Utils.formatDate(actividad.getFechaInicioReal()) : null;
 			temp.fechaFinReal = actividad.getFechaFinReal() != null ? Utils.formatDate(actividad.getFechaFinReal()) : null;
 			temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
-			int congelado = 0;
+
 			Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(actividad.getTreePath());
 			if(proyecto!=null){
-				congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
+				temp.congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
+				temp.fechaElegibilidad = Utils.formatDate(proyecto.getFechaElegibilidad());
+				temp.fechaCierre = Utils.formatDate(proyecto.getFechaCierre());
 			}
-			temp.congelado = congelado;
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"actividad\":",response_text);

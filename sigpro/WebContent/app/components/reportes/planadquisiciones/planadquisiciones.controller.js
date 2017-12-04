@@ -1,5 +1,5 @@
-var app = angular.module('controlAdquisicionesController', ['ngTouch','ngAnimate','ui.utils.masks','vs-repeat']);
-app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http', '$window', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q','dialogoConfirmacion', '$filter','$uibModal',
+var app = angular.module('planAdquisicionesController', ['ngTouch','ngAnimate','ui.utils.masks','vs-repeat']);
+app.controller('planAdquisicionesController',['$scope', '$rootScope', '$http', '$window', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$timeout', 'uiGridTreeBaseService', '$q','dialogoConfirmacion', '$filter','$uibModal',
 	function($scope, $rootScope, $http, $window, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion, $filter,$uibModal) {
 	var mi = this;
 	var anioFiscal = new Date();
@@ -203,7 +203,7 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 		if(mi.pepId > 0){
 			mi.mostrarCargando = true;
 			mi.mostrarTablas = false;
-			$http.post('/SControlAdquisiciones',{
+			$http.post('/SPlanAdquisiciones',{
 				accion: 'generarPlan',
 				lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				proyectoId: mi.pepId
@@ -224,7 +224,7 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 	}
 	
 	mi.exportarExcel = function(){
-		$http.post('/SControlAdquisiciones', { 
+		$http.post('/SPlanAdquisiciones', { 
 			 accion: 'exportarExcel', 
 			 proyectoId: mi.pepId,
 			 informeCompleto: mi.informeCompleto,
@@ -236,7 +236,7 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 					  anchor.attr({
 				         href: 'data:application/ms-excel;base64,' + response.data,
 				         target: '_blank',
-				         download: 'ControlAdquisiciones.xls'
+				         download: 'PlanAdquisiciones.xls'
 					  })[0].click();
 				  }.bind(this), function errorCallback(response){
 			 	}
@@ -244,7 +244,7 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 		};
 	
 	mi.exportarPdf=function(){
-		$http.post('/SControlAdquisiciones', { 
+		$http.post('/SPlanAdquisiciones', { 
 			 accion: 'exportarPdf', 
 			 idPrestamo: mi.idPrestamo,
 			 informeCompleto: mi.informeCompleto,	
@@ -256,7 +256,7 @@ app.controller('controlAdquisicionesController',['$scope', '$rootScope', '$http'
 					  anchor.attr({
 				         href: 'data:application/pdf;base64,' + response.data,
 				         target: '_blank',
-				         download: 'ControlAdquisiciones.pdf'
+				         download: 'PlanAdquisiciones.pdf'
 					  })[0].click();
 				  }.bind(this), function errorCallback(response){
 			 	}

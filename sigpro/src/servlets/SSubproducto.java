@@ -99,6 +99,8 @@ public class SSubproducto extends HttpServlet {
 		boolean tieneHijos;
 		String fechaInicioReal;
 		String fechaFinReal;
+		String fechaElegibilidad;
+		String fechaCierre;
 	}
 	
 	
@@ -381,6 +383,17 @@ public class SSubproducto extends HttpServlet {
 		
 		List<stsubproducto> listaSubProducto = new ArrayList<stsubproducto>();
 		
+		String fechaElegibilidad = null;
+		String fechaCierre = null;
+		
+		if(subproductos!=null && subproductos.size()>0){
+			Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(subproductos.get(0).getTreePath());
+			if(proyecto!=null){
+				fechaElegibilidad = Utils.formatDate(proyecto.getFechaElegibilidad());
+				fechaCierre = Utils.formatDate(proyecto.getFechaCierre());
+			}
+		}
+		
 		for (Subproducto subproducto : subproductos){
 			stsubproducto temp = new stsubproducto();
 			temp.id = subproducto.getId();
@@ -422,6 +435,10 @@ public class SSubproducto extends HttpServlet {
 			
 			temp.fechaInicioReal = Utils.formatDate(subproducto.getFechaInicioReal());
 			temp.fechaFinReal = Utils.formatDate(subproducto.getFechaFinReal());
+						
+			temp.fechaElegibilidad = fechaElegibilidad;
+			temp.fechaCierre = fechaCierre;
+			
 			listaSubProducto.add(temp);
 		}
 		
@@ -528,6 +545,9 @@ public class SSubproducto extends HttpServlet {
 			
 			Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(subproducto.getTreePath());
 			temp.congelado = proyecto.getCongelado() != null ? proyecto.getCongelado() : 0;
+			temp.fechaElegibilidad = Utils.formatDate(proyecto.getFechaElegibilidad());
+			temp.fechaCierre = Utils.formatDate(proyecto.getFechaCierre());
+			
 			resultadoJson = new GsonBuilder().serializeNulls().create().toJson(temp);
 			resultadoJson = "{\"success\":true," +" \"subproducto\": " + resultadoJson + "}";	
 		}else{

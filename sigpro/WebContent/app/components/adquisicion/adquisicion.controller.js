@@ -42,6 +42,8 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 			mi.tipo = 3;
 			mi.tieneHijos = $scope.$parent.producto.tieneHijos;
 			mi.actualizarCosto = $scope.$parent.producto.actualizarCosto;
+			mi.fechaElegibilidad = $scope.$parent.producto.producto.fechaElegibilidad;
+			mi.fechaCierre = $scope.$parent.producto.producto.fechaCierre;
 		}
 		if($scope.$parent.subproducto){
 			$scope.$parent.subproducto.child_adquisiciones = $scope.adquisicionc;
@@ -53,6 +55,8 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 			mi.tipo = 4;
 			mi.tieneHijos = $scope.$parent.subproducto.tieneHijos;
 			mi.actualizarCosto = $scope.$parent.subproducto.actualizarCosto;
+			mi.fechaElegibilidad = $scope.$parent.subproducto.subproducto.fechaElegibilidad;
+			mi.fechaCierre = $scope.$parent.subproducto.subproducto.fechaCierre;
 		}
 		if($scope.$parent.actividadc){
 			$scope.$parent.actividadc.child_adquisiciones = $scope.adquisicionc;
@@ -64,6 +68,127 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 			mi.tipo = 5;
 			mi.tieneHijos = $scope.$parent.actividadc.tieneHijos;
 			mi.actualizarCosto = $scope.$parent.actividadc.actualizarCosto;
+			mi.fechaElegibilidad = $scope.$parent.actividadc.actividad.fechaElegibilidad;
+			mi.fechaCierre = $scope.$parent.actividadc.actividad.fechaCierre;
+		}
+		
+		mi.validarFechas = function(fecha, pos, tipo){
+			if(fecha != undefined){
+				if(fecha < moment(mi.fechaElegibilidad, 'DD/MM/YYYY)').toDate()){
+					$utilidades.mensaje('warning', 'La fecha no puede ser menor a la fecha de Elegibilidad.');
+					
+					if(pos==1){
+						if(tipo==1)
+							mi.adquisicion.preparacionDocumentosPlanificada = null;
+						else if (tipo==2)
+							mi.adquisicion.preparacionDocumentosReal = null;
+					}else if(pos==2){
+						if(tipo==1)
+							mi.adquisicion.lanzamientoEventoPlanificada = null;
+						else if(tipo==2)
+							mi.adquisicion.lanzamientoEventoReal = null;
+					}else if(pos==3){
+						if(tipo==1)
+							mi.adquisicion.recepcionOfertasPlanificada = null;
+						else if(tipo==2)
+							mi.adquisicion.recepcionOfertasReal = null;
+					}else if(pos==4){
+						if(tipo==1)
+							mi.adquisicion.adjudicacionPlanificada = null;
+						else if(tipo==2)
+							mi.adquisicion.adjudicacionReal = null;
+					}else if(pos==5){
+						if(tipo==1)
+							mi.adquisicion.firmaContratoPlanificada = null;
+						else if(tipo==2)
+							mi.adquisicion.firmaContratoReal = null;
+					}	
+				}else if(fecha > moment(mi.fechaCierre,'DD/MM/YYYY').toDate()){
+					$utilidades.mensaje('warning', 'La fecha no puede ser mayor a la fecha de Cierre.');
+					
+					if(pos==1){
+						if(tipo==1)
+							mi.adquisicion.preparacionDocumentosPlanificada = null;
+						else if (tipo==2)
+							mi.adquisicion.preparacionDocumentosReal = null;
+					}else if(pos==2){
+						if(tipo==1)
+							mi.adquisicion.lanzamientoEventoPlanificada = null;
+						else if(tipo==2)
+							mi.adquisicion.lanzamientoEventoReal = null;
+					}else if(pos==3){
+						if(tipo==1)
+							mi.adquisicion.recepcionOfertasPlanificada = null;
+						else if(tipo==2)
+							mi.adquisicion.recepcionOfertasReal = null;
+					}else if(pos==4){
+						if(tipo==1)
+							mi.adquisicion.adjudicacionPlanificada = null;
+						else if(tipo==2)
+							mi.adquisicion.adjudicacionReal = null;
+					}else if(pos==5){
+						if(tipo==1)
+							mi.adquisicion.firmaContratoPlanificada = null;
+						else if(tipo==2)
+							mi.adquisicion.firmaContratoReal = null;
+					}	
+				}else{
+					switch(pos){
+					case 2:
+						if(tipo==1){
+							if(fecha < mi.adquisicion.preparacionDocumentosPlanificada){
+								mi.adquisicion.lanzamientoEventoPlanificada = null;
+								$utilidades.mensaje('warning', 'Fecha de "Lanzamiento de eventos (Planificada)" no debe ser menor que la fecha de "Preparación de documentos (Planificada)".');
+							}	
+						}else if(tipo==2){
+							if(fecha < mi.adquisicion.preparacionDocumentosReal){
+								mi.adquisicion.lanzamientoEventoReal = null;
+								$utilidades.mensaje('warning', 'Fecha de "Lanzamiento de eventos (Real)" no debe ser menor que la fecha de "Preparación de documentos (Real)".');
+							}
+						}
+						break;
+					case 3:
+						if(tipo==1){
+							if(fecha < mi.adquisicion.lanzamientoEventoPlanificada){
+								mi.adquisicion.recepcionOfertasPlanificada = null;
+								$utilidades.mensaje('warning', 'Fecha de "Recepción de ofertas (Planificada)" no debe ser menor que la fecha de "Lanzamiento de eventos (Planificada)".');
+							}	
+						}else if(tipo==2){
+							if(fecha < mi.adquisicion.lanzamientoEventoReal){
+								mi.adquisicion.recepcionOfertasReal = null;
+								$utilidades.mensaje('warning', 'Fecha de "Recepción de ofertas (Real)" no debe ser menor que la fecha de "Lanzamiento de eventos (Real)".');
+							}
+						}
+						break;
+					case 4:
+						if(tipo==1){
+							if(fecha < mi.adquisicion.recepcionOfertasPlanificada){
+								mi.adquisicion.adjudicacionPlanificada = null;
+								$utilidades.mensaje('warning', 'Fecha de "Adjudicación (Planificada)" no debe ser menor que la fecha de "Recepción de ofertas (Planificada)".');
+							}	
+						}else if(tipo==2){
+							if(fecha < mi.adquisicion.recepcionOfertasReal){
+								mi.adquisicion.adjudicacionReal = null;
+								$utilidades.mensaje('warning', 'Fecha de "Adjudicación (Real)" no debe ser menor que la fecha de "Recepción de ofertas (Real)".');
+							}
+						}
+						break;
+					case 5:
+						if(tipo==1){
+							if(fecha < mi.adquisicion.adjudicacionPlanificada){
+								mi.adquisicion.firmaContratoPlanificada = null;
+								$utilidades.mensaje('warning', 'Fecha de "Firma de contrato (Planificada)" no debe ser menor que la fecha de "Adjudicación (Planificada)".');
+							}	
+						}else if(tipo==2){
+							if(fecha < mi.adquisicion.adjudicacionReal){
+								mi.adquisicion.firmaContratoReal = null;
+								$utilidades.mensaje('warning', 'Fecha de "Firma de contrato (Real)" no debe ser menor que la fecha de "Adjudicación (Real)".');
+							}
+						}
+						break;
+					}
+				}
+			}
 		}
 		
 		mi.actualizarObjetoId=function(){
@@ -124,8 +249,10 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 		
 		mi.fechaOptions = {
 				formatYear : 'yy',
-				maxDate : new Date(2020, 5, 22),
-				minDate : new Date(1900, 1, 1),
+				//maxDate : new Date(2020, 5, 22),
+				//minDate : new Date(1900, 1, 1),
+				maxDate: moment(mi.fechaCierre, 'DD/MM/YYYY').toDate(),
+				minDate: moment(mi.fechaElegibilidad, 'DD/MM/YYYY').toDate(),
 				startingDay : 1
 		};
 		
@@ -402,7 +529,11 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 						}
 					}
 				)
-			
+			}else{
+				mi.infoNogs = null;
+				mi.displayedInfoNog = [].concat(mi.infoNogs);
+				mi.listaNog = false;
+				mi.inhabilitarFechas=false;
 			}
 		}		
 } ]);
