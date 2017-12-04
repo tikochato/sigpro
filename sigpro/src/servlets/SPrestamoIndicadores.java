@@ -246,7 +246,7 @@ public class SPrestamoIndicadores extends HttpServlet {
 							}else if(indicador.getDatoTipo()!=null && indicador.getDatoTipo().getId().equals(3)){
 								tempIndicador.metaFinal = indicador.getMetaFinalDecimal();
 							}
-							tempIndicador.porcentajeAvance = PrestamoMetasDAO.getPorcentajeAvanceMeta(indicador);
+							tempIndicador.porcentajeAvance = PrestamoMetasDAO.getPorcentajeAvanceMeta(indicador, lineaBase);
 							indicadorValores = new ArrayList<ArrayList<BigDecimal>>();
 							indicadorValores = PrestamoMetasDAO.getMetaValores(indicador.getId(), anioInicial, anioFinal, lineaBase);
 							tempIndicador = getIndicadores(indicadorValores, anioInicial, anioFinal, tempIndicador);
