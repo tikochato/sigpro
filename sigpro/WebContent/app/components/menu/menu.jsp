@@ -69,8 +69,7 @@
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/avanceactividades">Avance de Actividades e Hitos</a></li></shiro:hasPermission>                    		
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/prestamoindicadores">Avance de Indicadores</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/prestamometas">Avance de Metas</a></li></shiro:hasPermission>
-                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/cargatrabajo">Carga de Trabajo</a></li></shiro:hasPermission>
-                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/controladquisiciones">Control de adquisiciones</a></li></shiro:hasPermission>
+                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/cargatrabajo">Carga de Trabajo</a></li></shiro:hasPermission>                    		
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/administracionTransaccional/">Detalle de Transacciones</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/desembolsos">Desembolsos</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/informacionPresupuestaria">Ejecución presupuestaria</a></li></shiro:hasPermission>
@@ -82,6 +81,7 @@
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/matrizraci">Matriz RACI</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/reportefinancieroadquisiciones">Reporte Financiero de Adquisiciones</a></li></shiro:hasPermission>
                     		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/planestructuralproyecto">Plan estructural de préstamo</a></li></shiro:hasPermission>
+                    		<shiro:hasPermission name="24010"><li role="menuitem"><a href="/main.jsp#!/planadquisiciones">Plan de adquisiciones</a></li></shiro:hasPermission>
                     	</ul>
                     </li>
                     <shiro:hasPermission name="4010">

@@ -193,8 +193,8 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/responsablerol/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'responsablerolController\'" class="all_page"></div>'
             })
-            .when('/controladquisiciones/',{
-            	template: '<div load-on-demand="\'controlAdquisicionesController\'" class="all_page"></div>'
+            .when('/planadquisiciones/',{
+            	template: '<div load-on-demand="\'planAdquisicionesController\'" class="all_page"></div>'
             })
             .when('/planejecucion/',{
             	template: '<div load-on-demand="\'planejecucionController\'" class="all_page"></div>'
@@ -535,9 +535,9 @@ app.config(['$loadOnDemandProvider', function ($loadOnDemandProvider) {
 	    	   script: '/app/components/responsablerol/responsablerol.controller.js',
 	    	   template: '/app/components/responsablerol/responsablerol.jsp'
 	       },{
-	    	   name: 'controlAdquisicionesController',
-	    	   script: '/app/components/reportes/controladquisiciones/controladquisiciones.controller.js',
-	    	   template: '/app/components/reportes/controladquisiciones/controladquisiciones.jsp'
+	    	   name: 'planAdquisicionesController',
+	    	   script: '/app/components/reportes/planadquisiciones/planadquisiciones.controller.js',
+	    	   template: '/app/components/reportes/planadquisiciones/planadquisiciones.jsp'
 	       },{
 	    	   name: 'planejecucionController',
 	    	   script: '/app/components/reportes/planejecucion/planejecucion.controller.js',

@@ -113,9 +113,6 @@
 	</style>
 	
 	<div ng-controller="planEstructuralProyectoController as pep" class="maincontainer all_page" id="title" style="height: 100%">
-		<script type="text/ng-template" id="pago.jsp">
-    		<%@ include file="/app/components/reportes/controladquisiciones/pago.jsp"%>
-  		</script>
 		<shiro:lacksPermission name="24010">
 			<p ng-init="pep.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
