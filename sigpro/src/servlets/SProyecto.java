@@ -581,7 +581,7 @@ public class SProyecto extends HttpServlet {
 					}
 				}
 				result = ProyectoDAO.guardarProyecto(proyecto, false);
-				if (result && proyecto.getCoordinador().equals(1)){
+				if (result && proyecto.getCoordinador() != null &&  proyecto.getCoordinador().equals(1)){
 					if(porcentajeAvance!= null && !prestamo.getPorcentajeAvance().equals(porcentajeAvance)){
 						prestamo.setPorcentajeAvance(porcentajeAvance);
 						result = result && PrestamoDAO.guardarPrestamo(prestamo);
@@ -988,12 +988,24 @@ public class SProyecto extends HttpServlet {
 			int pepId = Utils.String2Int(map.get("id"),0);
 			String nombre = map.get("nombre");
 			Proyecto proyecto =  ProyectoDAO.getProyecto(pepId);
+			Integer nuevaLinaBase = Utils.String2Int(map.get("nuevo"));
+			Integer lineaBaseId = Utils.String2Int(map.get("lineaBaseId"),0);
+			String lineaBaseEditar = null;
 			
 			proyecto.setCongelado(1);
 			ret = ProyectoDAO.guardarProyecto(proyecto, false);
+			LineaBase lineaTemp = null;
 			if(ret){
+				if (nuevaLinaBase.equals(2) && lineaBaseId > 0){
+					lineaTemp = LineaBaseDAO.getLineaBasePorId(lineaBaseId);
+					nombre = lineaTemp != null ? lineaTemp.getNombre() : "";
+					lineaBaseEditar = lineaTemp != null ? "|lb"+lineaTemp.getId().toString() + "|" : null;
+				}
+				
 				LineaBase lineaBase = new LineaBase(proyecto, nombre, usuario, null, new Date(), null);
-				ret = LineaBaseDAO.guardarLineaBase(lineaBase);
+				if(lineaTemp !=null)
+					ret = LineaBaseDAO.eliminarTotalLineaBase(lineaTemp);
+				ret = LineaBaseDAO.guardarLineaBase(lineaBase,lineaBaseEditar);
 			}
 			response_text = String.join("","{ \"success\":  ", ret ? "true" : "false",response_text,"}");
 		}

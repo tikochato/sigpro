@@ -1186,6 +1186,7 @@ public class SPrestamo extends HttpServlet {
         	String peps = map.get("peps");
         	String nombre = map.get("nombre");
         	Integer generarLineasBases = Utils.String2Boolean(map.get("lineaBase"), 0); 
+        	String lineaBaseId = map.get("lineaBaseId");
         	JsonParser parser = new JsonParser();
 			JsonArray pepsArreglo = parser.parse(peps).getAsJsonArray();
 			for(int i=0; i<pepsArreglo.size(); i++){
@@ -1201,7 +1202,7 @@ public class SPrestamo extends HttpServlet {
 					if (ret && proyecto.getCongelado().equals(1) && generarLineasBases.equals(1)){
 						
 						LineaBase lineaBase = new LineaBase(proyecto, nombre, usuario, null, new Date(), null);
-						ret = LineaBaseDAO.guardarLineaBase(lineaBase);
+						ret = LineaBaseDAO.guardarLineaBase(lineaBase,lineaBaseId);
 					}
 				}
 			}
