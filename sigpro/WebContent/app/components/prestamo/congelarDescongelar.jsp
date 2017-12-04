@@ -46,13 +46,13 @@
 	<br/>
 	<div class="row main-form">
 		<form name="form" style="margin-top: 10px;">
-			<div class="col-sm-12">
+			<div class="col-sm-12" ng-if="false">
 				<div class="form-group">
 					<input type="checkbox"  ng-model="modalcc.crearLineaBase" ng-change = "modalcc.cambioCheck()"> 
  					<label class="floating-label">Crear nueva linea base</label>   						
 				</div>
 				
-				<div class="form-group" ng-if="modalcc.crearLineaBase" >
+				<div class="form-group" ng-if="modalcc.crearLineaBase && false" >
 				      <input type="text" name="inombre"  class="inputText" id="inombre" ng-model="modalcc.nombre"
 				       ng-value="modalcc.nombre" 
 				      onblur="this.setAttribute('value', this.value);" ng-required="true" >
