@@ -119,7 +119,7 @@ public class SFlujoCaja extends HttpServlet {
 				Integer idProyecto = Utils.String2Int(map.get("idProyecto"),0);
 				Date fechaCorte = Utils.dateFromString(map.get("fechaCorte"));
 				String lineaBase = map.get("lineaBase");
-				List<ObjetoCosto> lstPrestamo = getFlujoCaja(idProyecto, idPrestamo, fechaCorte, lineaBase, usuario);
+				List<ObjetoCosto> lstPrestamo = getFlujoCaja(idPrestamo, idProyecto, fechaCorte, lineaBase, usuario);
 				
 				if (null != lstPrestamo && !lstPrestamo.isEmpty()){
 					stTotales stTotales = getFlujoCajaTotales(idPrestamo, lstPrestamo, fechaCorte, lineaBase, usuario);

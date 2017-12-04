@@ -227,7 +227,7 @@ public class ObjetoDAO {
 		return ret;
 	}
 	
-	public static List<ObjetoCosto> getEstructuraConCosto(int idPrestamo, int anioInicial, int anioFinal, boolean obtenerPlanificado, boolean obtenerReal, boolean obtenerPresupuestos,  String lineaBase, String usuario) throws SQLException{
+	public static List<ObjetoCosto> getEstructuraConCosto(int idProyecto, int anioInicial, int anioFinal, boolean obtenerPlanificado, boolean obtenerReal, boolean obtenerPresupuestos,  String lineaBase, String usuario) throws SQLException{
 		List<ObjetoCosto> lstPrestamo = new ArrayList<>();
 		ObjetoCosto root = null;
 		Integer fuente=0;
@@ -235,7 +235,7 @@ public class ObjetoDAO {
 		Integer correlativo=0;
 		if(CMariaDB.connectAnalytic()){
 			Connection conn_analytic = CMariaDB.getConnection_analytic();
-			List<?> estructuras = getConsultaEstructuraConCosto(idPrestamo, lineaBase);
+			List<?> estructuras = getConsultaEstructuraConCosto(idProyecto, lineaBase);
 				if(estructuras!=null && estructuras.size()>0){
 					try{
 						Object[] dato = (Object[]) estructuras.get(0);

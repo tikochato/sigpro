@@ -246,7 +246,7 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 				fechaFin: mi.fechaFin,
 				agrupacion: mi.agrupacionActual,
 				tipoVisualizacion: tipoVisualizacion,
-				lineaBase: mi.lineaBaseId,
+				lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
@@ -337,7 +337,7 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 				idPrestamo: mi.pepId,
 				anioInicial: mi.fechaInicio,
 				anioFinal: mi.fechaFin,
-				lineaBase: mi.lineaBaseId
+				lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null
 			};
 		
 			mi.mostrarCargando = true;
@@ -598,7 +598,7 @@ app.controller('prestamometasController',['$scope','$rootScope','$http','$interv
 				 fechaFin: mi.fechaFin,
 				 agrupacion: mi.agrupacionActual,
 				 tipoVisualizacion: tipoVisualizacion,
-				 lineaBase: mi.lineaBaseId,
+				 lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				 t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {

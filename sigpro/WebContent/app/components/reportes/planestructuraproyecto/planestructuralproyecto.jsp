@@ -120,7 +120,8 @@
 			<p ng-init="pep.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
 		<div class="row" id="reporte" style="height: 100%">
-			<div class="col-sm-12" style=" height: 20%">
+		<div class="col-sm-12">
+			<div class="row" style=" height: 20%">
 	    		<div style="width: 100%;">
 		    		<div class="row">
 		    			<div class="panel panel-default">
@@ -168,7 +169,7 @@
 			    	</div>
 				</div>
 			</div>
-			<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+			<br>
 			<div class="col-sm-12" style="height: 80%">
 				<div ng-hide="!pep.mostrarCargando" style="width: 100%; height: 100%">
     				<div class="grid_loading" ng-hide="!pep.mostrarCargando">
@@ -252,5 +253,6 @@
 		    		</div>
 	    		</div>
 	    	</div>
+			</div>
     	</div>
 	</div>
