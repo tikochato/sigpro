@@ -248,6 +248,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				projectCargado: mi.proyecto.projectCargado,
 				prestamoId: mi.prestamoid,
 				observaciones : mi.proyecto.observaciones,
+				porcentajeAvance: mi.proyecto.porcentajeAvance,
 				t:moment().unix()
 			};
 			$http.post('/SProyecto',param_data).then(
