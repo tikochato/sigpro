@@ -102,7 +102,8 @@
 				<span class="glyphicon glyphicon-certificate"></span></label>
 				<label class="btn btn-default" ng-click="subcomponentec.botones ? subcomponentec.irAActividades(subcomponentec.subcomponente.id) : ''" uib-tooltip="Actividades" tooltip-placement="bottom" ng-disabled="!subcomponentec.botones">
 				<span class="glyphicon glyphicon-time"></span></label>
-			
+				<label class="btn btn-default" ng-click="subcomponentec.verHistoria()" uib-tooltip="Ver Historia">
+				<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
 		      </div>
 			  <div class="btn-group" style="float: right;">
 			    <shiro:hasPermission name="5020">
