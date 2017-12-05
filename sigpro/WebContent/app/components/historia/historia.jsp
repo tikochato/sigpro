@@ -26,18 +26,20 @@
 							</div>
 						</div>
 					</div>
-	    			<table st-table="modalh.displayedItems" st-safe-src="modalh.data" class="table table-striped table-bordered table-hover">
-		        		<tbody style="overflow: scroll;">
-		        			<tr st-select-row="row" ng-repeat="row in modalh.displayedItems">
-		        				<td style="width: 50%" class="atributo">
-		        					{{row.nombre}}
-		        				</td style="width: 50%">
-		        				<td>
-		        					{{row.valor}}
-		        				</td>	        				
-		        			</tr>
-		        		</tbody>
-	        		</table>
+					<div style="overflow: auto; max-height: 300px;">
+						<table st-table="modalh.displayedItems" st-safe-src="modalh.data" class="table table-striped table-bordered table-hover">
+			        		<tbody>
+			        			<tr st-select-row="row" ng-repeat="row in modalh.displayedItems">
+			        				<td style="width: 50%" class="atributo">
+			        					{{row.nombre}}
+			        				</td style="width: 50%">
+			        				<td>
+			        					{{row.valor}}
+			        				</td>	        				
+			        			</tr>
+			        		</tbody>
+	        			</table>
+					</div>
 	        		<div align="right" style="font-size: 12px" ng-hide="modalh.mostrarCargando">
 	        			<b>Total de versiones: {{modalh.totalVersiones}}</b>
 	        		</div> 

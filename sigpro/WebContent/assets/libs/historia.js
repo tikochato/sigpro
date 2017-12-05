@@ -70,7 +70,7 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 		}).success(
 			function(response){
 				if(response.success){
-					mi.data = response.historia;
+					mi.data = response.historia[0];
 					mi.displayedItems = [].concat(mi.data);
 					mi.mostrarCargando = false;
 				}else{
