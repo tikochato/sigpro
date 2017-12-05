@@ -277,10 +277,9 @@ app.controller('gestionAdquisicionesController',['$scope', '$rootScope', '$http'
 			mi.mostrarCargando = true;
 			mi.mostrarTablas = false;
 			mi.mostrarDescargar = false;
-			mi.idPrestamo = mi.pepId;
 			$http.post('/SGestionAdquisiciones',{
 				accion: 'generarGestion',
-				idPrestamo: mi.idPrestamo,
+				proyectoId: mi.pepId,
 				fechaInicio: mi.fechaInicio,
 				fechaFin: mi.fechaFin,
 				lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
