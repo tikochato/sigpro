@@ -309,7 +309,7 @@
 	<detail>
 		<band height="20" splitType="Stretch">
 			<componentElement>
-				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="0" width="750" height="20" isRemoveLineWhenBlank="true" uuid="b4a1b9ef-c83c-4ba3-9ff1-51326d0d4d20"/>
+				<reportElement stretchType="ContainerBottom" mode="Opaque" x="0" y="0" width="750" height="20" isRemoveLineWhenBlank="true" uuid="b4a1b9ef-c83c-4ba3-9ff1-51326d0d4d20"/>
 				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
 					<datasetRun subDataset="DatasetCostos" uuid="5dbca4f8-5a4d-432b-9e91-c5ffe208e475">
 						<datasetParameter name="costos">

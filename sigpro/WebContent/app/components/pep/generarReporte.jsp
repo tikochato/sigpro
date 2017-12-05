@@ -17,6 +17,17 @@
 				  <label class="floating-label">* Fecha de Corte</label>
 				</div>
 			</div>
+			
+			<div class="row form-group" align="left">
+				<div class="col-sm-12">
+				<div id= "lineaBase" angucomplete-alt placeholder="" pause="100" selected-object="modalrc.cambioLineaBase"
+					  local-data="modalrc.lineasBase" search-fields="nombre" title-field="nombre" 
+					  field-required="true" field-label="* Linea Base" minlength="1" input-class="form-control form-control-small field-angucomplete inputText" 
+					  match-class="angucomplete-highlight" initial-value="modalrc.lineaBaseNombre" 
+					  focus-out="modalrc.blurLineaBase()" input-name="lineaBase"></div>
+				<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+				</div>
+			</div>
 		
 			<div class="form-group">
 			   <textarea class="inputText" rows="4"

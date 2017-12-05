@@ -5,7 +5,7 @@
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="usuario" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="proyectoId" class="java.lang.Integer" isForPrompting="false">
+	<parameter name="proyectoId" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[2]]></defaultValueExpression>
 	</parameter>
 	<parameter name="esSubreporte" class="java.lang.Boolean" isForPrompting="false">
@@ -31,6 +31,7 @@
 	<parameter name="autoridad" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
+	<parameter name="lineaBase" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select 1 from dual]]>
 	</queryString>
@@ -55,6 +56,9 @@
 				<subreportParameter name="fechaCorte">
 					<subreportParameterExpression><![CDATA[$P{fechaCorte}]]></subreportParameterExpression>
 				</subreportParameter>
+				<subreportParameter name="lineaBase">
+					<subreportParameterExpression><![CDATA[$P{lineaBase}]]></subreportParameterExpression>
+				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["InformacionGeneral.jasper"]]></subreportExpression>
 			</subreport>
@@ -76,6 +80,9 @@
 				<subreportParameter name="fechaCorte">
 					<subreportParameterExpression><![CDATA[$P{fechaCorte}]]></subreportParameterExpression>
 				</subreportParameter>
+				<subreportParameter name="lineaBase">
+					<subreportParameterExpression><![CDATA[$P{lineaBase}]]></subreportParameterExpression>
+				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["InformacionGeneral_Cuadro2.jasper"]]></subreportExpression>
 			</subreport>
@@ -95,6 +102,9 @@
 				<subreportParameter name="fechaCorte">
 					<subreportParameterExpression><![CDATA[$P{fechaCorte}]]></subreportParameterExpression>
 				</subreportParameter>
+				<subreportParameter name="lineaBase">
+					<subreportParameterExpression><![CDATA[$P{lineaBase}]]></subreportParameterExpression>
+				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["Metas.jasper"]]></subreportExpression>
 			</subreport>
@@ -113,6 +123,9 @@
 				</subreportParameter>
 				<subreportParameter name="proyectoId">
 					<subreportParameterExpression><![CDATA[$P{proyectoId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="lineaBase">
+					<subreportParameterExpression><![CDATA[$P{lineaBase}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["PlanAdquisiciones.jasper"]]></subreportExpression>
@@ -146,11 +159,14 @@
 				<subreportParameter name="proyectoId">
 					<subreportParameterExpression><![CDATA[$P{proyectoId}]]></subreportParameterExpression>
 				</subreportParameter>
-				<subreportParameter name="costoReal">
-					<subreportParameterExpression><![CDATA[$P{costoReal}]]></subreportParameterExpression>
-				</subreportParameter>
 				<subreportParameter name="fechaCorte">
 					<subreportParameterExpression><![CDATA[$P{fechaCorte}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="lineaBase">
+					<subreportParameterExpression><![CDATA[$P{lineaBase}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="costoPlanificado">
+					<subreportParameterExpression><![CDATA[$P{costoReal}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["Gasto.jasper"]]></subreportExpression>
@@ -170,6 +186,9 @@
 				</subreportParameter>
 				<subreportParameter name="fechaCorte">
 					<subreportParameterExpression><![CDATA[$P{fechaCorte}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="lineaBase">
+					<subreportParameterExpression><![CDATA[$P{lineaBase}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["Desembolsos.jasper"]]></subreportExpression>

@@ -24,6 +24,28 @@
 	<parameter name="fechaCorte" class="java.util.Date">
 		<defaultValueExpression><![CDATA[NOW()]]></defaultValueExpression>
 	</parameter>
+	<parameter name="lineaBase" class="java.lang.String"/>
+	<parameter name="queryM" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" m.linea_base like '%"+$P{lineaBase}+"%' ":" m.actual=1 "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="querySc" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" sc.linea_base like '%"+$P{lineaBase}+"%' ":" sc.actual=1 "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="queryMp" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" mp.linea_base like '%"+$P{lineaBase}+"%' ":" mp.actual=1 "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="queryP" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" p.linea_base like '%"+$P{lineaBase}+"%' ":" p.actual=1 "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="queryC" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" c.linea_base like '%"+$P{lineaBase}+"%' ":" c.actual=1 "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="queryPy" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" py.linea_base like '%"+$P{lineaBase}+"%' ":" py.actual=1 "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="queryMa" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" ma.linea_base like '%"+$P{lineaBase}+"%' ":" ma.actual=1 "]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT meta.*, valores.*
 FROM (SELECT c.nombre componente, p.nombre producto, um.nombre unidadmedida, m.id, m.nombre meta, 
@@ -37,13 +59,13 @@ WHEN m.dato_tipoid=2 THEN SUM(ma.valor_entero)
 WHEN m.dato_tipoid=3 THEN SUM(ma.valor_decimal) 
 WHEN m.dato_tipoid=4 THEN ma.valor_tiempo
 ELSE SUM(ma.valor_entero) END AS avanceTotal 
-FROM sipro.meta m
-JOIN sipro.producto p ON m.objeto_id = p.id
-JOIN sipro.componente c ON p.componenteid = c.id
-JOIN sipro.proyecto py ON c.proyectoid = py.id
-JOIN sipro.meta_unidad_medida um ON m.meta_unidad_medidaid = um.id
-LEFT JOIN sipro.meta_avance ma on ma.metaid=m.id
-WHERE m.objeto_tipo=3 AND py.id =  $P{proyectoId} 
+FROM sipro_history.meta m
+JOIN sipro_history.producto p ON m.objeto_id = p.id and  $P!{queryP} 
+JOIN sipro_history.componente c ON p.componenteid = c.id and  $P!{queryC} 
+JOIN sipro_history.proyecto py ON c.proyectoid = py.id and  $P!{queryPy} 
+JOIN sipro_history.meta_unidad_medida um ON m.meta_unidad_medidaid = um.id and um.actual = 1
+LEFT JOIN sipro_history.meta_avance ma on ma.metaid=m.id and  $P!{queryMa} 
+WHERE m.objeto_tipo=3 AND py.id =  $P{proyectoId}  and  $P!{queryM} 
 AND m.estado=1 AND p.estado=1 AND c.estado=1 AND py.estado=1
 group by m.id
 UNION
@@ -58,14 +80,14 @@ WHEN m.dato_tipoid=2 THEN SUM(ma.valor_entero)
 WHEN m.dato_tipoid=3 THEN SUM(ma.valor_decimal) 
 WHEN m.dato_tipoid=4 THEN ma.valor_tiempo
 ELSE SUM(ma.valor_entero) END AS avanceTotal 
-FROM sipro. meta m
-JOIN sipro.producto p ON m.objeto_id = p.id
-JOIN sipro.subcomponente sc ON p.subcomponenteid = sc.id
-JOIN sipro.componente c ON sc.componenteid = c.id
-JOIN sipro.proyecto py ON c.proyectoid = py.id
-JOIN sipro.meta_unidad_medida um ON m.meta_unidad_medidaid = um.id
-LEFT JOIN sipro.meta_avance ma on ma.metaid=m.id
-WHERE m.objeto_tipo=3 AND py.id =  $P{proyectoId} 
+FROM sipro_history. meta m
+JOIN sipro_history.producto p ON m.objeto_id = p.id and  $P!{queryP} 
+JOIN sipro_history.subcomponente sc ON p.subcomponenteid = sc.id and  $P!{querySc} 
+JOIN sipro_history.componente c ON sc.componenteid = c.id and  $P!{queryC} 
+JOIN sipro_history.proyecto py ON c.proyectoid = py.id and  $P!{queryPy} 
+JOIN sipro_history.meta_unidad_medida um ON m.meta_unidad_medidaid = um.id and um.actual=1
+LEFT JOIN sipro_history.meta_avance ma on ma.metaid=m.id and  $P!{queryMa} 
+WHERE m.objeto_tipo=3 AND py.id =  $P{proyectoId} and  $P!{queryM} 
 AND m.estado=1 AND p.estado=1 AND sc.estado=1 AND c.estado=1 AND py.estado=1
 group by m.id ) meta
 LEFT JOIN (
@@ -100,9 +122,9 @@ WHEN m.dato_tipoid = 3 THEN mp.noviembre_decimal ELSE 0  END noviembreP ,
 CASE WHEN m.dato_tipoid = 2 THEN mp.diciembre_entero
 WHEN m.dato_tipoid = 3 THEN mp.diciembre_decimal ELSE 0  END diciembreP ,
 0 eneroR, 0 febreroR, 0 marzoR, 0 abrilR, 0 mayoR, 0 junioR, 0 julioR, 0 agostoR, 0 septiembreR, 0 octubreR, 0 noviembreR, 0 diciembreR
-from sipro.meta_planificado mp
-join sipro.meta m on mp.metaid = m.id
-where ejercicio = YEAR( $P{fechaCorte} )
+from sipro_history.meta_planificado mp
+join sipro_history.meta m on mp.metaid = m.id and  $P!{queryM} 
+where ejercicio = YEAR( $P{fechaCorte} ) and  $P!{queryMp} 
 union
 select t1.metaid, t1.anio ejercicio,
 0 eneroP, 0 febreroP, 0 marzoP, 0 abrilP, 0 mayoP, 0 junioP, 0 julioP, 0 agostoP, 0 septiembreP, 0 octubreP, 0 noviembreP, 0 diciembreP,
@@ -124,9 +146,9 @@ CASE
 WHEN m.dato_tipoid = 2 THEN ma.valor_entero
 WHEN m.dato_tipoid = 3 THEN ma.valor_decimal
 END valor
-from sipro.meta_avance ma
-join sipro.meta m on ma.metaid = m.id
-where ma.estado = 1
+from sipro_history.meta_avance ma
+join sipro_history.meta m on ma.metaid = m.id and  $P!{queryM} 
+where ma.estado = 1 and  $P!{queryMa} 
 and YEAR(ma.fecha) = YEAR($P{fechaCorte} )
 and MONTH(ma.fecha) <= MONTH($P{fechaCorte} )
 ) t1
