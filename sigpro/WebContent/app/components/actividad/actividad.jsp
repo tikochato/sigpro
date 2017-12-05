@@ -107,7 +107,9 @@
 			<div class="operation_buttons">
 				<div class="btn-group" ng-hide="actividadc.esnuevo" ng-if="!actividadc.esTreeview">
 				<label class="btn btn-default" ng-click="actividadc.botones ? actividadc.irAActividades(actividadc.actividad.id) : ''" uib-tooltip="Actividad" tooltip-placement="bottom">
-					<span class="glyphicon glyphicon-time"></span></label>
+				<span class="glyphicon glyphicon-time"></span></label>
+				<label class="btn btn-default" ng-click="actividadc.verHistoria()" uib-tooltip="Ver Historia">
+				<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
 				</div>
 				<div class="btn-group" style="float: right;">
 					<shiro:hasPermission name="1020">

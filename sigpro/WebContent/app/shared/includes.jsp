@@ -70,6 +70,7 @@
 <script type="text/javascript" src="/app/components/desembolso/desembolso.controller.js"></script>
 <script type="text/javascript" src="/app/components/riesgo/riesgo.controller.js"></script>
 <script type="text/javascript" src="/app/components/adquisicion/adquisicion.controller.js"></script>
+<script type="text/javascript" src="/assets/libs/historia.js"></script>
 
 <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPq-t4dJ1GV1kdtXoVZfG7PtfEAHrhr00&callback=initMap" type="text/javascript"></script> -->
 <script>

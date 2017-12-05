@@ -3,12 +3,12 @@ var moduloSubproducto = angular.module('moduloSubproducto', [ 'ngTouch',
 
 moduloSubproducto.controller('controlSubproducto', [ '$rootScope','$scope', '$routeParams',
 		'$route', '$window', '$location', '$mdDialog', '$uibModal', '$http',
-		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', '$q', 'dialogoConfirmacion', 
+		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', '$q', 'dialogoConfirmacion', 'historia',
 		controlSubproducto ]);
 
 function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $location,
 		$mdDialog, $uibModal, $http, $interval, i18nService, $utilidades,
-		$timeout, $log, $q, $dialogoConfirmacion) {
+		$timeout, $log, $q, $dialogoConfirmacion, $historia) {
 	var mi = this;  
 	i18nService.setCurrentLang('es');
 	mi.esTreeview = $rootScope.treeview;
@@ -62,6 +62,16 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 	mi.adquisicionesCargadas = false;
 	mi.riesgos = false;
 	
+	mi.verHistoria = function(){
+		$historia.getHistoria($scope, 'Sub Producto', '/SSubproducto',mi.subproducto.id)
+		.result.then(function(data) {
+			if (data != ""){
+				
+			}
+		}, function(){
+			
+		});
+	}
 	
 	mi.objetoTipoNombre = "Producto:";
 	$http.post('/SProducto', { accion: 'obtenerProductoPorId', id: mi.productoid, t: (new Date()).getTime()}).success(

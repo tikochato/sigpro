@@ -486,6 +486,7 @@ public class ActividadDAO {
 							"and ar.estado=1",
 							"and a.treePath like '"+(10000000+idPrestamo)+"%'",
 							lineaBase != null ? "and ar.linea_base like '%"+lineaBase +"%'": "and ar.actual=1",
+							lineaBase != null ? "and a.linea_base like '%"+lineaBase +"%'": "and a.actual=1",
 							"and year(a.fecha_fin ) between ?1 and ?2");
 			Query<Actividad> criteria = session.createNativeQuery(query,Actividad.class);
 			criteria.setParameter("1", anio_inicio);
@@ -538,19 +539,23 @@ public class ActividadDAO {
 		return ret;
 	}
 	
-	public static Actividad getActividadPorIdResponsable(int id, String responsables,String rol){
+	public static Actividad getActividadPorIdResponsable(int id, String responsables,String rol,String lineaBase){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Actividad ret = null;
 		List<Actividad> listRet = null;
 		try{
 			String query = String.join(" ", "select a.*",
-				"from actividad a,asignacion_raci ar",
+				"from sipro_history.actividad a,sipro_history.asignacion_raci ar",
 				"where a.id = ar.objeto_id ",
 				"and ar.objeto_tipo = 5",
 				"and a.estado = 1",
 				"and a.id = ?1",
 				"and ar.colaboradorid in (",responsables ,")",
-				"and ar.rol_raci = ?3");
+				"and ar.rol_raci = ?3",
+				lineaBase != null ? "and a.linea_base like '%" + lineaBase + "%'" : "and a.actual = 1",
+				lineaBase != null ? "and ar.linea_base like '%" + lineaBase + "%'" : "and ar.actual = 1"
+				
+				);
 			Query<Actividad> criteria = session.createNativeQuery(query, Actividad.class);
 			criteria.setParameter("1", id);
 			criteria.setParameter("3", rol);

@@ -1,7 +1,7 @@
 var app = angular.module('componenteController', ['smart-table']);
 
-app.controller('componenteController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q', 'dialogoConfirmacion', 
-	function($scope,$rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion) {
+app.controller('componenteController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q', 'dialogoConfirmacion','historia', 
+	function($scope,$rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion, $historia) {
 		var mi=this;
 		
 		mi.esTreeview = $rootScope.treeview;
@@ -689,6 +689,17 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 		    }, function() {
 			});
 		  };
+		  
+		  mi.verHistoria = function(){
+				$historia.getHistoria($scope, 'Componente', '/SComponente',mi.componente.id)
+				.result.then(function(data) {
+					if (data != ""){
+						
+					}
+				}, function(){
+					
+				});
+			}
 		  
 		  if(mi.esTreeview){
 			  if($routeParams.nuevo==1){

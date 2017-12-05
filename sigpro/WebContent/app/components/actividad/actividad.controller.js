@@ -1,7 +1,7 @@
 var app = angular.module('actividadController', ['smart-table']);
 
-app.controller('actividadController',['$rootScope','$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$sce','uiGmapGoogleMapApi', 'dialogoConfirmacion','documentoAdjunto', 
-	function($rootScope,$scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$sce,uiGmapGoogleMapApi, $dialogoConfirmacion, $documentoAdjunto) {
+app.controller('actividadController',['$rootScope','$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$sce','uiGmapGoogleMapApi', 'dialogoConfirmacion','documentoAdjunto','historia', 
+	function($rootScope,$scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$sce,uiGmapGoogleMapApi, $dialogoConfirmacion, $documentoAdjunto, $historia) {
 		var mi=this;
 
 		mi.rowCollection = [];
@@ -53,6 +53,17 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 				function(response) {
 					mi.acumulacionCostos = response.acumulacionesTipos;
 		});
+		
+		mi.verHistoria = function(){
+			$historia.getHistoria($scope, 'Actividad', '/SActividad',mi.actividad.id)
+			.result.then(function(data) {
+				if (data != ""){
+					
+				}
+			}, function(){
+				
+			});
+		}
 		
 		mi.cambioTipo=function(selected){
 			if(selected!== undefined){

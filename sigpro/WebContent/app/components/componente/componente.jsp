@@ -104,7 +104,8 @@
 				<span class="glyphicon glyphicon-certificate"></span></label>
 				<label class="btn btn-default" ng-click="componentec.botones ? componentec.irAActividades(componentec.componente.id) : ''" uib-tooltip="Actividades" tooltip-placement="bottom" ng-disabled="!componentec.botones">
 				<span class="glyphicon glyphicon-time"></span></label>
-			
+				<label class="btn btn-default" ng-click="componentec.verHistoria()" uib-tooltip="Ver Historia">
+				<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
 		      </div>
 			  <div class="btn-group" style="float: right;">
 			    <shiro:hasPermission name="5020">
