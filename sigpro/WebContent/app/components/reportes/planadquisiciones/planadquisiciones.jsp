@@ -120,56 +120,56 @@
 			<p ng-init="ctrladqui.redireccionSinPermisos()"></p>
 		</shiro:lacksPermission>
 		<div class="row" id="reporte" style="height: 100%">
-			<div class="col-sm-12" style=" height: 20%">
-	    		<div style="width: 100%;">
-		    		<div class="row">
-		    			<div class="panel panel-default">
-			  				<div class="panel-heading"><h3>Plan de adquisiciones AÑO FISCAL {{ctrladqui.anio}}</h3></div>
-						</div>
-		    		</div>
-		    		<br>
-		    		<div class="row">
-		    			<div class="form-group col-sm-6" align="left">
-							<div id="prestamo" angucomplete-alt placeholder="" pause="100" selected-object="ctrladqui.cambioPrestamo"
-								  local-data="ctrladqui.lprestamos" search-fields="proyectoPrograma" title-field="proyectoPrograma" field-required="true" field-label="* Préstamo"
-								  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
-								  initial-value="ctrladqui.prestamoNombre" focus-out="ctrladqui.blurPrestamo()" input-name="prestamo"></div>
-							<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
-						</div>
-			    	</div>
-			    	<div class="row">
-			    		<div class="form-group col-sm-6" align="left">
-							<div id="pep" angucomplete-alt placeholder="" pause="100" selected-object="ctrladqui.cambioPep"
-								  local-data="ctrladqui.peps" search-fields="nombre" title-field="nombre" field-required="true" field-label="* {{etiquetas.proyecto}}"
-								  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
-								  initial-value="ctrladqui.pepNombre" focus-out="ctrladqui.blurPep()" input-name="pep" disable-input="ctrladqui.prestamoId==null"></div>
-							<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
-						</div>
-					</div>
-					<div class="row">
-			    		<div class="form-group col-sm-6" align="left">
-							<div id= "lineaBase" angucomplete-alt placeholder="" pause="100" selected-object="ctrladqui.cambioLineaBase"
-								  local-data="ctrladqui.lineasBase" search-fields="nombre" title-field="nombre" 
-								  field-required="true" field-label="* Linea Base" minlength="1" input-class="form-control form-control-small field-angucomplete inputText" 
-								  match-class="angucomplete-highlight" initial-value="ctrladqui.lineaBaseNombre" 
-								  focus-out="ctrladqui.blurLineaBase()" input-name="lineaBase"></div>
-							<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
-						</div>
-						<div class="form-group col-sm-6" align="right">
-							<div class="operation_buttons">
-								<div class="btn-group">
-									<label class="btn btn-default"  ng-click="ctrladqui.exportarExcel();" uib-tooltip="Exportar" ng-hide="!ctrladqui.mostrarBotones">
-									<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-									<label class="btn btn-default" ng-click="ctrladqui.exportarPdf()" uib-tooltip="Exportar PDF" ng-hide="true">
-									<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
-								</div>
+			<div class="col-sm-12">
+				<div class="row" style=" height: 20%">
+		    		<div style="width: 100%;">
+			    		<div class="row">
+			    			<div class="panel panel-default">
+				  				<div class="panel-heading"><h3>Plan de adquisiciones AÑO FISCAL {{ctrladqui.anio}}</h3></div>
+							</div>
+			    		</div>
+			    		<br>
+			    		<div class="row">
+			    			<div class="form-group col-sm-6" align="left">
+								<div id="prestamo" angucomplete-alt placeholder="" pause="100" selected-object="ctrladqui.cambioPrestamo"
+									  local-data="ctrladqui.lprestamos" search-fields="proyectoPrograma" title-field="proyectoPrograma" field-required="true" field-label="* Préstamo"
+									  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+									  initial-value="ctrladqui.prestamoNombre" focus-out="ctrladqui.blurPrestamo()" input-name="prestamo"></div>
+								<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+							</div>
+				    	</div>
+				    	<div class="row">
+				    		<div class="form-group col-sm-6" align="left">
+								<div id="pep" angucomplete-alt placeholder="" pause="100" selected-object="ctrladqui.cambioPep"
+									  local-data="ctrladqui.peps" search-fields="nombre" title-field="nombre" field-required="true" field-label="* {{etiquetas.proyecto}}"
+									  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+									  initial-value="ctrladqui.pepNombre" focus-out="ctrladqui.blurPep()" input-name="pep" disable-input="ctrladqui.prestamoId==null"></div>
+								<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 							</div>
 						</div>
-			    	</div>
+						<div class="row">
+				    		<div class="form-group col-sm-6" align="left">
+								<div id= "lineaBase" angucomplete-alt placeholder="" pause="100" selected-object="ctrladqui.cambioLineaBase"
+									  local-data="ctrladqui.lineasBase" search-fields="nombre" title-field="nombre" 
+									  field-required="true" field-label="* Linea Base" minlength="1" input-class="form-control form-control-small field-angucomplete inputText" 
+									  match-class="angucomplete-highlight" initial-value="ctrladqui.lineaBaseNombre" 
+									  focus-out="ctrladqui.blurLineaBase()" input-name="lineaBase"></div>
+								<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+							</div>
+							<div class="form-group col-sm-6" align="right">
+								<div class="operation_buttons">
+									<div class="btn-group">
+										<label class="btn btn-default"  ng-click="ctrladqui.exportarExcel();" uib-tooltip="Exportar" ng-hide="!ctrladqui.mostrarBotones">
+										<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
+										<label class="btn btn-default" ng-click="ctrladqui.exportarPdf()" uib-tooltip="Exportar PDF" ng-hide="true">
+										<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
+									</div>
+								</div>
+							</div>
+				    	</div>
+					</div>
 				</div>
-			</div>
-			<div class="row">
-				<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+				<br>
 				<div class="col-sm-12" style="height: 80%">
 					<div ng-hide="!ctrladqui.mostrarCargando" style="width: 100%; height: 100%">
 	    				<div class="grid_loading" ng-hide="!ctrladqui.mostrarCargando">
@@ -181,9 +181,9 @@
 							</div>
 						</div>
 					</div>
-		    		<div class="divTablas" ng-hide="!ctrladqui.mostrarTablas">	
+		    		<div class="divTablas">	
 		    			<div class="row" style="height: 100%; max-width: {{ctrladqui.tamanoPantalla}}; min-width: {{ctrladqui.tamanoPantalla}}">
-		    				<div class="divPadreDatos" style="height: 100%;min-width: {{ctrladqui.tamanoPantalla}}px; max-width: {{ctrladqui.tamanoPantalla}}px;">
+		    				<div ng-hide="!ctrladqui.mostrarTablas" class="divPadreDatos" style="height: 100%;min-width: {{ctrladqui.tamanoPantalla}}px; max-width: {{ctrladqui.tamanoPantalla}}px;">
 		    					<div class="divTabla">
 			    					<table st-table="ctrladqui.displayedCollectionPrestamo" st-safe-src="ctrladqui.rowCollectionPrestamo" class="table table-striped tablaDatos"
 			    						style="max-width: {{ctrladqui.tamanoPantalla}}px;">
@@ -299,6 +299,6 @@
 						</ol>
 					</div>
 		    	</div>
-			</div>
+	    	</div>
     	</div>
 	</div>
