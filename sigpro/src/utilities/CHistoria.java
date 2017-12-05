@@ -12,6 +12,22 @@ public class CHistoria {
 		
 	}
 	
+	public static List<?> getVersiones(String query){
+		List<?> ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{	
+			Query<?> criteria = session.createNativeQuery(query);
+			ret = criteria.getResultList();			
+		}
+		catch(Throwable e){
+			CLogger.write("2", CHistoria.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
 	public static String getHistoria(String query, String[] campos){
 		String resultado = "";
 		if(query!=null && !query.isEmpty() && campos!=null && campos.length>0){
