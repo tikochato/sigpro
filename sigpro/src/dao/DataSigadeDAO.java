@@ -249,7 +249,8 @@ public class DataSigadeDAO {
 			String query =String.join("", "SELECT * FROM sipro_analytic.dtm_avance_fisfinan_det_dti d ",
 					"where d.codigo_presupuestario = ?1 ",
 					"and d.entidad_sicoin = ?2 ",
-					"and d.unidad_ejecutora_sicoin= ?3 ");
+					"and d.unidad_ejecutora_sicoin= ?3 ",
+					"order by d.ejercicio_fiscal, d.mes_desembolso asc");
 			Query<DtmAvanceFisfinanDetDti> criteria = session.createNativeQuery(query, DtmAvanceFisfinanDetDti.class);
 			criteria.setParameter("1", codigoPresupuestario);
 			criteria.setParameter("2", entidad);

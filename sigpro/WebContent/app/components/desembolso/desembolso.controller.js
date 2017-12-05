@@ -20,6 +20,11 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			mi.formatofecha = 'dd/MM/yyyy';
 			mi.altformatofecha = ['d!/M!/yyyy'];
 			mi.desembolsosValidos=true;
+			mi.desembolsosRealesOpen = false;
+			
+			mi.desembolsosReales = [];
+			mi.totalRealUsd = 0;
+			mi.totalRealGtq = 0;
 			
 			mi.mostrarcargando=false;
 			mi.congelado = 0;
@@ -27,7 +32,6 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 			mi.opcionesFecha = {
 				    formatYear: 'yyyy',
 				    maxDate: moment(mi.fechaCierreActual,'DD/MM/YYYY').toDate(),
-				    minDate : new Date(1990, 1, 1),
 				    startingDay: 1
 				  };
 			
@@ -50,7 +54,22 @@ app.controller('desembolsoController',['$scope','$http','$interval','i18nService
 							}
 							mi.tipo_moneda_nombre = response.tipoMonedaNombre;
 							mi.tipo_moneda = response.tipoMonedaId;
+							mi.opcionesFecha.minDate = moment(response.fechaActual, 'DD/MM/YYYY').toDate();
 							mi.mostrarcargando = false;
+						});
+				
+				mi.mostrarcargando=true;
+				$http.post('/SDesembolso', { accion: 'getDesembolsosReales', 
+					proyectoid: mi.proyectoid, t: (new Date()).getTime()
+					}).success(
+						function(response) {
+							mi.desembolsosReales = response.desembolsos;
+							mi.totalRealUsd = 0;
+							mi.totalRealGtq = 0;
+							for (x in mi.desembolsosReales){
+								mi.totalRealUsd = mi.totalRealUsd + mi.desembolsosReales[x].desembolsosMesUsd;
+								mi.totalRealGtq = mi.totalRealGtq + mi.desembolsosReales[x].desembolsosMesGtq;	
+							}
 						});
 			};
 			

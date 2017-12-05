@@ -23,11 +23,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import dao.DataSigadeDAO;
 import dao.DesembolsoDAO;
 import dao.DesembolsoTipoDAO;
 import dao.ProyectoDAO;
 import dao.TipoMonedaDAO;
 import pojo.Desembolso;
+import pojo.Proyecto;
+import pojoSigade.DtmAvanceFisfinanDetDti;
 import utilities.Utils;
 
 
@@ -51,7 +54,19 @@ public class SDesembolso extends HttpServlet {
 		String fechaCreacion;
 		String fechaActualizacion;
 		int estado;
-	}   
+	}
+	
+	class stdesembolsoreal {
+		Long ejercicioFiscal;
+		String mesDesembolso;
+		String codigoPresupuestario;
+		Integer entidadId;
+		Integer unidadEjecutoraId;
+		String monedaDesembolso;
+		BigDecimal desembolsosMesUsd;
+		BigDecimal desembolsosMesGtq;
+	
+	}
     
     public SDesembolso() {
         super();
@@ -231,7 +246,31 @@ public class SDesembolso extends HttpServlet {
 
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stdesembolsos);
 	        response_text = String.join("", "\"desembolsos\":",response_text);
-	        response_text = String.join("", "{\"success\":true,", response_text,", \"tipoMonedaId\" : " + tipoMonedaId + ", \"tipoMonedaNombre\" : \"" + tipoMonedaNombre +"\" }");
+	        response_text = String.join("", "{\"success\":true,", response_text,", \"tipoMonedaId\" : " + tipoMonedaId + ", \"fechaActual\" : \"" + Utils.formatDate(new Date()) + "\", \"tipoMonedaNombre\" : \"" + tipoMonedaNombre +"\" }");
+		} else if(accion.equals("getDesembolsosReales")){
+			int proyectoId = map.get("proyectoid")!=null  ? Integer.parseInt(map.get("proyectoid")) : 0;
+			Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
+			List<stdesembolsoreal> stdesembolsos=new ArrayList<stdesembolsoreal>();
+			proyecto.getPrestamo();
+			if (proyecto!=null && proyecto.getPrestamo()!=null && proyecto.getUnidadEjecutora()!=null){
+				Long codigoPresupuestario = proyecto.getPrestamo().getCodigoPresupuestario();
+				List<DtmAvanceFisfinanDetDti> desembolsosReales = DataSigadeDAO.getInfPorUnidadEjecutoraALaFecha(codigoPresupuestario.toString(), proyecto.getUnidadEjecutora().getId().getEntidadentidad(),
+						proyecto.getUnidadEjecutora().getId().getUnidadEjecutora());
+				
+				for (DtmAvanceFisfinanDetDti dr : desembolsosReales){
+					stdesembolsoreal temp =new stdesembolsoreal();
+					temp.ejercicioFiscal = dr.getId().getEjercicioFiscal();
+					temp.mesDesembolso = dr.getId().getMesDesembolso();
+					temp.codigoPresupuestario = dr.getId().getCodigoPresupuestario();
+					temp.desembolsosMesUsd = dr.getId().getDesembolsosMesUsd();
+					temp.desembolsosMesGtq = dr.getId().getDesembolsosMesGtq();
+					stdesembolsos.add(temp);
+				}
+			}
+
+			response_text=new GsonBuilder().serializeNulls().create().toJson(stdesembolsos);
+	        response_text = String.join("", "\"desembolsos\":",response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		else{
 			response_text = "{ \"success\": false }";
