@@ -123,7 +123,7 @@ app.controller('gestionAdquisicionesController',['$scope', '$rootScope', '$http'
 	
 	mi.movimiento = false;
 	mi.agrupacionActual = 1
-	mi.columnasTotal = 2;
+	mi.columnasTotal = 3;
 	mi.SiguienteActivo = true;
 	mi.AnteriorActivo = false;
 	
@@ -455,6 +455,11 @@ app.controller('gestionAdquisicionesController',['$scope', '$rootScope', '$http'
 		}
 	}
 	
+	mi.calcularTotalAcumulado = function(){
+		mi.sumTotalesAcumulados = [];
+		//TODO: acumulado
+	}
+	
 	mi.calcularTotalGeneral = function(){
 		mi.totalGeneral = 0;
 		for(x in mi.data){
@@ -593,6 +598,11 @@ app.controller('gestionAdquisicionesController',['$scope', '$rootScope', '$http'
 		if(item.total != null){
 			return item.total;
 		}
+	}
+	
+	mi.getTotalesAcumulado = function(indice){
+		//TODO: acumulado
+		return 0;
 	}
 	
 	mi.getTotalColumna = function(indice){

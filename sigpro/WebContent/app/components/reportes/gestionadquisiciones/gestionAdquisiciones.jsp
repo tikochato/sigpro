@@ -325,6 +325,7 @@
 								<thead class="theadDatos">
 									<tr>
 										<th nowrap colspan={{gestionadqui.colspan}} style="{{gestionadqui.estiloCelda}} text-align: center;" class="label-form">Total</th>
+										<th rowspan="2" style="{{gestionadqui.estiloCelda}} text-align: center; vertical-align: top;vertical-align: middle;" class="label-form">Total Acumulado</th>
 										<th rowspan="2" style="{{gestionadqui.estiloCelda}} text-align: center; vertical-align: top;vertical-align: middle;" class="label-form">Cantidad</th>
 				          				<th rowspan="2" style="{{gestionadqui.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Costo Est. de Adquisición</th>
 				          			</tr>
@@ -337,6 +338,11 @@
 										<td ng-repeat="posicion in gestionadqui.aniosTotal track by $index" style="{{gestionadqui.estiloCelda}}; {{gestionadqui.estiloAlineacion}}">
 							      			<div style="{{gestionadqui.estiloCelda}}">
 											<span ng-show="gestionadqui.grupoMostrado.planificado" class="colorPlanificado">{{gestionadqui.getTotalPlanificado(item,$index).planificado | formatoMillones : gestionadqui.enMillones}}</span>
+							      			</div>
+							      		</td>
+							      		<td ng-repeat="posicion in gestionadqui.aniosTotal track by $index" style="{{gestionadqui.estiloCelda}}; {{gestionadqui.estiloAlineacion}}">
+							      			<div style="{{gestionadqui.estiloCelda}}">
+											<span ng-show="gestionadqui.grupoMostrado.planificado" class="colorPlanificado">{{gestionadqui.getTotalAcumulado(item,$index).planificado | formatoMillones : gestionadqui.enMillones}}</span>
 							      			</div>
 							      		</td>
 							      		<td style="{{gestionadqui.estiloCelda}} {{gestionadqui.estiloAlineacion}}">
@@ -390,6 +396,11 @@
 							      		<td ng-repeat="posicion in gestionadqui.sumTotalesAnuales track by $index" style="font-weight: bold; {{gestionadqui.estiloCelda}}; {{gestionadqui.estiloAlineacion}}">
 							      			<div style="{{gestionadqui.estiloCelda}}">
 												{{gestionadqui.getTotalesAnuales($index) | formatoMillones : gestionadqui.enMillones}}
+							      			</div>
+							      		</td>
+							      		<td ng-repeat="posicion in gestionadqui.sumTotalesAnuales track by $index" style="font-weight: bold; {{gestionadqui.estiloCelda}}; {{gestionadqui.estiloAlineacion}}">
+							      			<div style="{{gestionadqui.estiloCelda}}">
+												{{gestionadqui.getTotalesAcumulado($index) | formatoMillones : gestionadqui.enMillones}}
 							      			</div>
 							      		</td>
 							      		<td style="font-weight: bold; {{gestionadqui.estiloCelda}} {{gestionadqui.estiloAlineacion}}">
