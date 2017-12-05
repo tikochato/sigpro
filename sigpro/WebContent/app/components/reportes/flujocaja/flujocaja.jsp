@@ -425,7 +425,19 @@
 					</div>
 	    	</div>
 	    	
+    		<div style="text-align: center; ">
+	    		<div style="width: 70%"  >
+					<label class="label-form"  >Saldos </label>
+					<canvas id="line" class="chart chart-line" chart-data="flujoc.saldosGrafica" 
+					chart-labels="flujoc.etiqutas" chart-series="flujoc.series" chart-options="flujoc.options"
+					chart-dataset-override="flujoc.datasetOverride" chart-colors = "desembolsosc.lineColors"
+					  chart-legend="true">
+					</canvas>
 				</div>
+			</div>
+	    	
+			</div>
+			
 	    	</div>
    		</div>
 	</div>
