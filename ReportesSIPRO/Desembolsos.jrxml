@@ -15,7 +15,6 @@
 			<defaultValueExpression><![CDATA[new Date()]]></defaultValueExpression>
 		</parameter>
 		<parameter name="queryD1" class="java.lang.String"/>
-		<parameter name="queryPs1" class="java.lang.String"/>
 		<parameter name="queryPr1" class="java.lang.String"/>
 		<queryString language="SQL">
 			<![CDATA[SELECT * FROM (
@@ -28,7 +27,7 @@ GROUP BY year (fecha),month(fecha) order by year(fecha),month (fecha) asc)
 UNION
 (SELECT 'real' tipo, CAST(d.mes_desembolso AS INT) mes,sum(d.desembolsos_mes_usd) monto
 from sipro_analytic.dtm_avance_fisfinan_det_dti d
-join sipro_history.prestamo ps ON d.codigo_presupuestario = ps.codigo_presupuestario and  $P!{queryPs1} 
+join sipro.prestamo ps ON d.codigo_presupuestario = ps.codigo_presupuestario
 join sipro_history.proyecto pr ON pr.prestamoid = ps.id and  $P!{queryPr1} 
 where pr.id =  $P{proyectoIdG} 
 and d.ejercicio_fiscal = YEAR($P{fechaCorte} )
@@ -60,9 +59,6 @@ ORDER BY mes asc]]>
 	<parameter name="lineaBase" class="java.lang.String"/>
 	<parameter name="queryD" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" linea_base like '%"+$P{lineaBase}+"%' ":" actual=1 "]]></defaultValueExpression>
-	</parameter>
-	<parameter name="queryPs" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" ps.linea_base like '%"+$P{lineaBase}+"%' ":" ps.actual=1 "]]></defaultValueExpression>
 	</parameter>
 	<parameter name="queryPr" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" pr.linea_base like '%"+$P{lineaBase}+"%' ":" pr.actual=1 "]]></defaultValueExpression>
@@ -116,7 +112,7 @@ SUM(case when t1.mes = 12 then t1.monto end) diciembreR
 FROM (
 SELECT d.ejercicio_fiscal anio,d.mes_desembolso mes,sum(d.desembolsos_mes_usd) monto
 from sipro_analytic.dtm_avance_fisfinan_det_dti d
-join sipro_history.prestamo ps ON d.codigo_presupuestario = ps.codigo_presupuestario and  $P!{queryPs} 
+join sipro.prestamo ps ON d.codigo_presupuestario = ps.codigo_presupuestario 
 join sipro_history.proyecto pr ON pr.prestamoid = ps.id and  $P!{queryPr} 
 where pr.id =  $P{proyectoId} 
 and d.ejercicio_fiscal = YEAR($P{fechaCorte} )
@@ -219,7 +215,7 @@ group by t1.anio
 			</staticText>
 			<areaChart>
 				<chart evaluationTime="Report" renderType="draw" theme="default">
-					<reportElement stretchType="ContainerBottom" x="115" y="80" width="530" height="200" uuid="2901a746-e170-4dfa-b3c1-5173e076ef78"/>
+					<reportElement stretchType="ContainerBottom" x="115" y="80" width="530" height="200" uuid="8b2731b8-a4b6-42da-8401-204ff562b348"/>
 					<chartTitle/>
 					<chartSubtitle/>
 					<chartLegend>
@@ -228,7 +224,7 @@ group by t1.anio
 				</chart>
 				<categoryDataset>
 					<dataset>
-						<datasetRun subDataset="Tabla" uuid="1bda901b-a273-4ddf-94ad-5bf5eb08915f">
+						<datasetRun subDataset="Tabla" uuid="94f65344-d69e-4df4-a22d-d66247aa4c28">
 							<datasetParameter name="proyectoIdG">
 								<datasetParameterExpression><![CDATA[$P{proyectoId}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -240,9 +236,6 @@ group by t1.anio
 							</datasetParameter>
 							<datasetParameter name="queryPr1">
 								<datasetParameterExpression><![CDATA[$P{queryPr}]]></datasetParameterExpression>
-							</datasetParameter>
-							<datasetParameter name="queryPs1">
-								<datasetParameterExpression><![CDATA[$P{queryPs}]]></datasetParameterExpression>
 							</datasetParameter>
 							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 						</datasetRun>

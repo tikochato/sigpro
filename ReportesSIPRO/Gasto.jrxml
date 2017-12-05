@@ -81,9 +81,6 @@
 		<parameter name="queryPo" class="java.lang.String">
 			<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" po.linea_base like '%"+$P{lineaBase}+"%' ":" po.actual=1 "]]></defaultValueExpression>
 		</parameter>
-		<parameter name="queryPe" class="java.lang.String">
-			<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" pe.linea_base like '%"+$P{lineaBase}+"%' ":" pe.actual=1 "]]></defaultValueExpression>
-		</parameter>
 		<queryString language="SQL">
 			<![CDATA[select 'planificada' tipo, 1 mes,  $P{eneroR_g} monto
 union 
@@ -110,11 +107,10 @@ union
 select 'planificada',12, $P{diciembreR_g} 
 union
 select 'real' tipo , e.mes, sum(e.ejecutado) monto
-from sipro_analytic.mv_ep_ejec_asig_vige e, sipro_history.proyecto po ,sipro_history.prestamo pe
+from sipro_analytic.mv_ep_ejec_asig_vige e, sipro_history.proyecto po ,sipro.prestamo pe
 where pe.id = po.prestamoid
 and e.entidad = po.entidad
 and  $P!{queryPo} 
-and  $P!{queryPe} 
 and e.fuente = cast(substring(pe.codigo_presupuestario,1,2) as Integer) 
 and e.organismo = cast(substring(pe.codigo_presupuestario,3,4) as Integer)
 and e.correlativo = cast(substring(pe.codigo_presupuestario,7,4) as Integer)
@@ -185,9 +181,6 @@ group by  e.ejercicio, e.mes]]>
 		<parameter name="queryPo1" class="java.lang.String">
 			<defaultValueExpression><![CDATA[$P{lineaBase_t}!=null?" po.linea_base like '%"+$P{lineaBase_t}+"%' ":" po.actual=1 "]]></defaultValueExpression>
 		</parameter>
-		<parameter name="queryPe1" class="java.lang.String">
-			<defaultValueExpression><![CDATA[$P{lineaBase_t}!=null?" pe.linea_base like '%"+$P{lineaBase_t}+"%' ":" pe.actual=1 "]]></defaultValueExpression>
-		</parameter>
 		<queryString language="SQL">
 			<![CDATA[select 'Gasto real' gasto,
 sum(case
@@ -240,11 +233,10 @@ sum(case
 end) diciembre
 from (
 	select e.ejercicio, e.mes, sum(e.ejecutado) ejecutado
-	from sipro_analytic.mv_ep_ejec_asig_vige e, sipro_history.proyecto po ,sipro_history.prestamo pe
+	from sipro_analytic.mv_ep_ejec_asig_vige e, sipro_history.proyecto po ,sipro.prestamo pe
 	where pe.id = po.prestamoid
 	and e.entidad = po.entidad
 	and  $P!{queryPo1} 
-	and  $P!{queryPe1} 
 	and e.fuente = cast(substring(pe.codigo_presupuestario,1,2) as Integer) 
 	and e.organismo = cast(substring(pe.codigo_presupuestario,3,4) as Integer)
 	and e.correlativo = cast(substring(pe.codigo_presupuestario,7,4) as Integer)
@@ -339,7 +331,7 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 			</staticText>
 			<areaChart>
 				<chart evaluationTime="Report" renderType="draw" theme="default">
-					<reportElement x="115" y="71" width="530" height="200" uuid="077442a5-d1bf-4c1c-9751-3bb30b83ffd1"/>
+					<reportElement x="115" y="71" width="530" height="200" uuid="3d41a647-6133-4d2a-909a-00dd7ce07439"/>
 					<chartTitle/>
 					<chartSubtitle/>
 					<chartLegend>
@@ -348,7 +340,7 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 				</chart>
 				<categoryDataset>
 					<dataset>
-						<datasetRun subDataset="Tabla" uuid="eef17a70-a530-4cc0-8f4a-817a2873afd9">
+						<datasetRun subDataset="Tabla" uuid="2eb68565-d6c1-472f-a151-20399782be6b">
 							<datasetParameter name="proyectoIdG">
 								<datasetParameterExpression><![CDATA[$P{proyectoId}]]></datasetParameterExpression>
 							</datasetParameter>

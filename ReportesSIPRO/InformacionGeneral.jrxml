@@ -31,9 +31,6 @@
 		<parameter name="queryM" class="java.lang.String">
 			<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" m.linea_base like '%"+$P{lineaBase}+"%' ":" m.actual=1 "]]></defaultValueExpression>
 		</parameter>
-		<parameter name="queryPs" class="java.lang.String">
-			<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" ps.linea_base like '%"+$P{lineaBase}+"%' ":" ps.actual=1 "]]></defaultValueExpression>
-		</parameter>
 		<parameter name="queryP" class="java.lang.String">
 			<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" p.linea_base like '%"+$P{lineaBase}+"%' ":" p.actual=1 "]]></defaultValueExpression>
 		</parameter>
@@ -50,9 +47,9 @@
 ) valor_plan,
 (
 	select DATEDIFF(ps.fecha_elegibilidad_ue,  $P{fechaCorte} )/DATEDIFF(ps.fecha_elegibilidad_ue,ps.fecha_cierre_actual_ue)*100 
-	from sipro_history.prestamo ps, sipro_history.proyecto py 
+	from sipro.prestamo ps, sipro_history.proyecto py 
 	where ps.id = py.prestamoid 
-	and  $P!{queryPs} and  $P!{queryPy}  
+	and  $P!{queryPy}  
 	and py.id = $P{proyectoId}		
 ) valor_real from dual
 union
@@ -68,10 +65,10 @@ select sum(desembolsos_mes_usd) desembolsos_a_la_fecha,(
     and py.id =  $P{proyectoId} 
     and fecha >  $P{fechaCorte} 
 ) desembolsos_futuros
-from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro_history.proyecto py, sipro_history.prestamo ps
+from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro_history.proyecto py, sipro.prestamo ps
 where des.codigo_presupuestario= ps.codigo_presupuestario
 and py.prestamoid = ps.id
-and  $P!{queryPy} and  $P!{queryPs} 
+and  $P!{queryPy} 
 and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora
 and des.entidad_sicoin = py.entidad
 and py.id = $P{proyectoId}	
@@ -84,9 +81,9 @@ and ( (	des.mes_desembolso<= month( $P{fechaCorte} ) and des.ejercicio_fiscal=ye
     where c.proyectoid = py.id
     and  $P!{queryC}
 )*100 ejecucion_financiera_real
-from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro_history.proyecto py, sipro_history.prestamo ps
+from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro_history.proyecto py, sipro.prestamo ps
 where des.codigo_presupuestario= ps.codigo_presupuestario
-and  $P!{queryPy} and  $P!{queryPs}
+and  $P!{queryPy} 
 and py.prestamoid = ps.id
 and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora
 and des.entidad_sicoin = py.entidad
@@ -138,7 +135,7 @@ select "Ejecucion Fisica",
 	</parameter>
 	<parameter name="lineaBase" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="lineaBaseQuery" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" py.linea_base like '%"+$P{lineaBase}+"%' and ps.actual like '%"+$P{lineaBase}+"%' and c.actual like '%"+$P{lineaBase}+"%'  ":" py.actual = 1 and ps.actual=1 and c.actual= 1 "]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" py.linea_base like '%"+$P{lineaBase}+"%' and c.linea_base like '%"+$P{lineaBase}+"%'  ":" py.actual = 1 and c.actual= 1 "]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT ps.proyecto_programa proyecto,  ue.nombre unidad_ejecutora, ps.numero_prestamo, ps.codigo_presupuestario, co.nombre organismo_financiero,
@@ -162,7 +159,7 @@ sum(c.fuente_prestamo) monto_unidad_ejecutora,
 DATEDIFF(py.fecha_inicio, $P{fechaCorte} )/DATEDIFF(py.fecha_inicio,py.fecha_fin) plazo_ejecucion,
 py.ejecucion_fisica_real
 FROM sipro_history.proyecto py
-JOIN sipro_history.prestamo ps ON py.prestamoid = ps.id
+JOIN sipro.prestamo ps ON py.prestamoid = ps.id
 JOIN sipro.unidad_ejecutora ue ON (ue.entidadentidad = py.entidad and py.unidad_ejecutoraunidad_ejecutora = ue.unidad_ejecutora)
 JOIN sipro.cooperante co ON ps.cooperanteid = co.id
 JOIN sipro.tipo_moneda tm ON ps.tipo_monedaid = tm.id
