@@ -582,6 +582,10 @@ public class SComponente extends HttpServlet {
 			Componente componente = ComponenteDAO.getComponente(componentId);
 			
 			 response_text = String.join("", "{\"success\":" + ObjetoDAO.borrarHijos(componente.getTreePath(), 1, usuario) + "}");
+		}else if(accion.equals("getHistoria")){
+			Integer componenteId = Utils.String2Int(map.get("id"));
+			String resultado = ComponenteDAO.getHistoria(componenteId); 
+			response_text = String.join("", "{\"historia\":" + resultado + "}");
 		}
 		else{
 			response_text = "{ \"success\": false }";

@@ -25,6 +25,7 @@ import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Usuario;
 import utilities.CHibernateSession;
+import utilities.CHistoria;
 import utilities.CLogger;
 import utilities.Utils;
 
@@ -608,6 +609,20 @@ public class ComponenteDAO {
 		return ret;
 	}
 	
-	
+	public static String getHistoria (Integer componenteId){
+		String resultado = "";
+		String query = "SELECT c.nombre, c.descripcion, ct.nombre tipo, ue.nombre unidad_ejecutora, c.costo, ac.nombre tipo_costo, "
+				+ " c.programa, c.subprograma, c.proyecto, c.actividad, c.obra, c.renglon, c.ubicacion_geografica, c.latitud, c.longitud, "
+				+ " c.fecha_inicio, c.fecha_fin, c.duracion "
+				+ " FROM sipro_history.componente c "
+				+ " JOIN sipro.unidad_ejecutora ue ON c.unidad_ejecutoraunidad_ejecutora = ue.unidad_ejecutora and c.entidad = ue.entidadentidad and c.ejercicio = ue.ejercicio "
+				+ " JOIN sipro_history.componente_tipo ct ON c.componente_tipoid = ct.id "
+				+ " JOIN sipro_history.acumulacion_costo ac ON c.acumulacion_costoid = ac.id "
+				+ " WHERE c.id = "+componenteId;
+		
+		String [] campos = {"Nombre", "Descripción", "Tipo"};
+		resultado = CHistoria.getHistoria(query, campos);
+		return resultado;
+	}
 	
 }
