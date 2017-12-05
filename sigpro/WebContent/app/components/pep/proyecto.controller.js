@@ -992,7 +992,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 		  
 		  modalInstance.result.then(function(resultado) {
 				if (resultado != undefined){
-					mi.exportarJasper(resultado);
+					mi.exportarJasper(resultado.fechaCorte, resultado.lineaBase);
 				}else{
 					$utilidades.mensaje('danger', 'Error al generar el reporte');
 				}
@@ -1186,10 +1186,10 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			$rootScope.$emit("recargarArbol",mi.proyecto.id);
 		}
 		
-		mi.exportarJasper = function(fechaCorte){
+		mi.exportarJasper = function(fechaCorte, lineaBase){
 			var anchor = angular.element('<a/>');
 			  anchor.attr({
-		         href: '/app/components/reportes/jasper/reporte.jsp?reporte=0&proyecto='+mi.proyecto.id+'&fecha='+fechaCorte.getTime()
+		         href: '/app/components/reportes/jasper/reporte.jsp?reporte=0&proyecto='+mi.proyecto.id+'&fecha='+fechaCorte.getTime()+(lineaBase!=null?'&lb='+lineaBase:'')
 			  })[0].click();
 		}
 		
@@ -1401,6 +1401,7 @@ function modalGenerarReporte($uibModalInstance, $scope, $http, $interval,
 	var mi = this;
 	mi.formatofecha = 'dd/MM/yyyy';
 	mi.altformatofecha = ['d!/M!/yyyy'];
+	mi.observacionesAbierto = false;
 		
 	$http.post('/SProyecto', { accion: 'getPepDetalle', id: proyectoid, t: (new Date()).getTime() }).success(
 			function(response) {
@@ -1415,6 +1416,31 @@ function modalGenerarReporte($uibModalInstance, $scope, $http, $interval,
 					}
 				}
 		});
+	
+	$http.post('/SProyecto',{accion: 'getLineasBase', proyectoId: proyectoid}).success(
+		function(response) {
+			mi.lineasBase = [];
+			if (response.success){
+				mi.lineasBase = response.lineasBase;
+			}
+	});	
+		
+	mi.blurLineaBase=function(){
+		if(document.getElementById("lineaBase_value").defaultValue!=mi.lineaBaseNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+		}
+	};
+	
+	mi.cambioLineaBase=function(selected){
+		if(selected!== undefined){
+			mi.lineaBaseNombre = selected.originalObject.nombre;
+			mi.lineaBaseId = selected.originalObject.id;
+		}
+		else{
+			mi.lineaBaseNombre="";
+			mi.lineaBaseId=null;
+		}
+	};
 		
 	mi.fi_opciones = {
 			formatYear : 'yy',
@@ -1442,7 +1468,11 @@ function modalGenerarReporte($uibModalInstance, $scope, $http, $interval,
 						console.log(response.detalle);
 					}
 				});
-		$uibModalInstance.close(mi.fechaCorte);
+		var resultado = {
+				fechaCorte : mi.fechaCorte, 
+				lineaBase : mi.lineaBaseId
+		}
+		$uibModalInstance.close(resultado);
 	};
 
 	mi.cancel = function() {
