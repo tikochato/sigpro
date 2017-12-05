@@ -248,6 +248,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				projectCargado: mi.proyecto.projectCargado,
 				prestamoId: mi.prestamoid,
 				observaciones : mi.proyecto.observaciones,
+				porcentajeAvance: mi.proyecto.porcentajeAvance,
 				t:moment().unix()
 			};
 			$http.post('/SProyecto',param_data).then(
@@ -1400,6 +1401,7 @@ function modalGenerarReporte($uibModalInstance, $scope, $http, $interval,
 	var mi = this;
 	mi.formatofecha = 'dd/MM/yyyy';
 	mi.altformatofecha = ['d!/M!/yyyy'];
+	mi.observacionesAbierto = false;
 		
 	$http.post('/SProyecto', { accion: 'getPepDetalle', id: proyectoid, t: (new Date()).getTime() }).success(
 			function(response) {
@@ -1487,13 +1489,16 @@ function modalCongelar($uibModalInstance, $scope, $http, $interval,
 
 	var mi = this;
 	mi.mostrarcargando=false;
+	mi.lineasBase = [];
+	mi.nuevaLineaBase = 1;
 	
 	mi.ok = function() {
-		
 		mi.mostrarcargando=true;
 		$http.post('/SProyecto', { 
 			accion: 'congelar', 
 			id: proyectoid, 
+			lineaBaseId: mi.lineaBaseId,
+			nuevo : mi.nuevaLineaBase,
 			nombre: mi.nombre,
 			t: (new Date()).getTime() }).success(
 				function(response) {
@@ -1501,13 +1506,45 @@ function modalCongelar($uibModalInstance, $scope, $http, $interval,
 					mi.mostrarcargando=true;
 					$uibModalInstance.close(response.success);
 				});
-		
-		
 	};
 
 	mi.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
 	};
+	
+	mi.cambioLineaBase=function(selected){
+		if(selected!== undefined){
+			mi.lineaBaseNombre = selected.originalObject.nombre;
+			mi.lineaBaseId = selected.originalObject.id;
+		}
+		else{
+			mi.lineaBaseNombre="";
+			mi.lineaBaseId=null;
+		}
+	};
+	
+	mi.blurLineaBase=function(){
+		if(document.getElementById("lineaBase_value").defaultValue!=mi.lineaBaseNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+		}
+	};
+	
+	
+	$http.post('/SProyecto',{accion: 'getLineasBase', proyectoId: proyectoid}).success(
+		function(response) {
+			mi.lineasBase = [];
+			if (response.success){
+				mi.lineasBase = response.lineasBase;
+			}
+	});	
+	
+	mi.selectNuevo = function(nuevo){
+		mi.nombre = '';
+		mi.lineaBaseNombre="";
+		mi.lineaBaseId=null;
+	}
+
+	
 }
 
 app.directive('rightClick', function($parse) {

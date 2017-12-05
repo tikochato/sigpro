@@ -418,6 +418,19 @@
 								</div>	
 						</div>
 					</div>
+					<div class="row" ng-if="controller.proyecto.coordinador == 1">
+						<div class="col-sm-12">
+							<div class="form-group">
+								<input type="number" style="text-align: right;"
+								 class="inputText "  
+								 ng-model="controller.proyecto.porcentajeAvance"
+								 ng-value="controller.proyecto.porcentajeAvance"
+								 onblur="this.setAttribute('value', this.value);"
+								 min="0" max="100">
+								<label class="floating-label" >Avance del Préstamo %</label>
+							</div>
+						</div>
+					</div>
 					
 					<div class="panel panel-default" ng-hide="controller.esNuevoDocumento" >
 						<div class="panel-heading label-form" style="text-align: center;">Archivos adjuntos</div>
@@ -698,8 +711,6 @@
 								</table>
 							</div>
 						</div>
-					
-					
 					
 					
 				</uib-tab>

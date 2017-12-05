@@ -130,7 +130,7 @@ public class SReporteFinancieroAdquisiciones extends HttpServlet {
 			        response_text = String.join("", "{\"success\":true,", response_text, "}");
 				}
 				catch (Exception e){
-					CLogger.write("2", SControlAdquisiciones.class, e);
+					CLogger.write("2", SPlanAdquisiciones.class, e);
 				}
 			}else if(accion.equals("exportarExcel")){
 				String lineaBase = map.get("lineaBase");
@@ -291,7 +291,7 @@ public class SReporteFinancieroAdquisiciones extends HttpServlet {
 			
 			return lstPrestamo;
 		}catch(Exception e){
-			CLogger.write("1", SControlAdquisiciones.class, e);
+			CLogger.write("1", SPlanAdquisiciones.class, e);
 			return null;
 		}
 	}

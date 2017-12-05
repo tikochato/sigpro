@@ -1,5 +1,5 @@
 package pojo;
-// Generated Nov 29, 2017 5:33:22 PM by Hibernate Tools 5.2.3.Final
+// Generated Dec 1, 2017 6:08:23 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class Prestamo implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3221180278333267024L;
+	private static final long serialVersionUID = -9169742077312332933L;
 	private Integer id;
 	private AutorizacionTipo autorizacionTipo;
 	private Cooperante cooperante;
@@ -101,6 +101,7 @@ public class Prestamo implements java.io.Serializable {
 	private BigDecimal montoPorDesembolsarUeUsd;
 	private String objetivo;
 	private String objetivoEspecifico;
+	private Integer porcentajeAvance;
 	private Set<PrestamoTipoPrestamo> prestamoTipoPrestamos = new HashSet<PrestamoTipoPrestamo>(0);
 	private Set<PrestamoUsuario> prestamoUsuarios = new HashSet<PrestamoUsuario>(0);
 	private Set<ObjetoPrestamo> objetoPrestamos = new HashSet<ObjetoPrestamo>(0);
@@ -155,7 +156,7 @@ public class Prestamo implements java.io.Serializable {
 			BigDecimal montoPorDesembolsarUe, Date fechaVigencia, BigDecimal montoContratadoUsd,
 			BigDecimal montoContratadoQtz, BigDecimal desembolsoAFechaUsd, BigDecimal montoPorDesembolsarUsd,
 			BigDecimal montoAsignadoUeUsd, BigDecimal montoAsignadoUeQtz, BigDecimal desembolsoAFechaUeUsd,
-			BigDecimal montoPorDesembolsarUeUsd, String objetivo, String objetivoEspecifico,
+			BigDecimal montoPorDesembolsarUeUsd, String objetivo, String objetivoEspecifico, Integer porcentajeAvance,
 			Set<PrestamoTipoPrestamo> prestamoTipoPrestamos, Set<PrestamoUsuario> prestamoUsuarios,
 			Set<ObjetoPrestamo> objetoPrestamos, Set<Proyecto> proyectos) {
 		this.autorizacionTipo = autorizacionTipo;
@@ -228,6 +229,7 @@ public class Prestamo implements java.io.Serializable {
 		this.montoPorDesembolsarUeUsd = montoPorDesembolsarUeUsd;
 		this.objetivo = objetivo;
 		this.objetivoEspecifico = objetivoEspecifico;
+		this.porcentajeAvance = porcentajeAvance;
 		this.prestamoTipoPrestamos = prestamoTipoPrestamos;
 		this.prestamoUsuarios = prestamoUsuarios;
 		this.objetoPrestamos = objetoPrestamos;
@@ -894,6 +896,15 @@ public class Prestamo implements java.io.Serializable {
 
 	public void setObjetivoEspecifico(String objetivoEspecifico) {
 		this.objetivoEspecifico = objetivoEspecifico;
+	}
+
+	@Column(name = "porcentaje_avance")
+	public Integer getPorcentajeAvance() {
+		return this.porcentajeAvance;
+	}
+
+	public void setPorcentajeAvance(Integer porcentajeAvance) {
+		this.porcentajeAvance = porcentajeAvance;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "prestamo")

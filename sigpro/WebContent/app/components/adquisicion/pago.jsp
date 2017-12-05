@@ -17,7 +17,7 @@
 		<div class="form-group">
 			<input type="text" class="inputText input-money" ng-model="modalPagos.montoContrato" ui-number-mask="2" 
 			ng-value="modalPagos.montoContrato" onblur="this.setAttribute('value', this.value);" ng-readonly="true"/>
-				<label class="floating-label" >Monto del contrato</label>
+				<label class="floating-label" >Monto del contrato (Q)</label>
 		</div>
 	</div>
   	<div class="operation_buttons" align="right">
@@ -34,7 +34,7 @@
 				<thead>
 				<tr>
 					<th st-sort="fecha">Fecha</th>
-					<th st-sort="valor">Monto</th>
+					<th st-sort="valor">Monto (Q)</th>
 					<th width="1%"></th>
 				</tr>
 				</thead>
@@ -70,7 +70,7 @@
 	<br>
 	<div class="row">
 		<div class="col-sm-6">
-			Total: {{ modalPagos.totalPagos | currency:" ":2 }}
+			Total: {{ modalPagos.totalPagos | formatoMillones : false }}
 		</div>
 	    <div class="col-sm-6 operation_buttons" align="right">
 		    <div class="btn-group">

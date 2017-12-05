@@ -146,6 +146,7 @@ public class SPrestamo extends HttpServlet {
 		BigDecimal desembolsadoAFecha;
 		Double plazoEjecucionPEP;
 		Integer ejecucionFisicaRealPEP;
+		Integer porcentajeAvance;
 	}
 	
 	class sttiposprestamo{
@@ -297,6 +298,7 @@ public class SPrestamo extends HttpServlet {
 						temp.fechaActualizacion = Utils.formatDateHour(prestamo.getFechaActualizacion());
 						temp.objetivo = prestamo.getObjetivo();
 						temp.objetivoEspecifico = prestamo.getObjetivoEspecifico();
+						temp.porcentajeAvance = prestamo.getPorcentajeAvance();
 						lstprestamo.add(temp);
 					}
 					
@@ -352,6 +354,7 @@ public class SPrestamo extends HttpServlet {
 			BigDecimal montoAsignadoUeQtz = Utils.String2BigDecimal(map.get("montoAsignadoUeQtz"), null);
 			BigDecimal desembolsoAFechaUeUsd = Utils.String2BigDecimal(map.get("desembolsoAFechaUeUsd"), null);
 			BigDecimal montoPorDesembolsarUeUsd = Utils.String2BigDecimal(map.get("montoPorDesembolsarUeUsd"), null);
+			Integer porcentajeAvance = Utils.String2Int(map.get("porcentajeAvance"));
 			
 			// prestamo campos adicionales
 			Date fechaCorte = map.get("fechaCorte") == null ? null : Utils.dateFromString(map.get("fechaCorte"));
@@ -394,6 +397,7 @@ public class SPrestamo extends HttpServlet {
 			String objetivoEspecifico = map.get("objetivoEspecifico");
 			
 			
+			
 			AutorizacionTipo autorizacionTipo = null;
 			
 			if (tipoAutorizacionId != null){
@@ -432,7 +436,7 @@ public class SPrestamo extends HttpServlet {
 						fechaSuscripcion, fechaElegibilidadUe, fechaCierreOrigianlUe, fechaCierreActualUe, mesesProrrogaUe,
 						null, montoAsignadoUe, desembolsoAFechaUe, montoPorDesembolsarUe, fechaVigencia, 
 						montoContratadoUsd, montoContratadoQtz, desembolsoAFechaUsd, montoPorDesembolsarUsd, montoAsignadoUeUsd, 
-						montoAsignadoUeQtz, desembolsoAFechaUeUsd, montoPorDesembolsarUeUsd,objetivo,objetivoEspecifico, null,null,null,null);
+						montoAsignadoUeQtz, desembolsoAFechaUeUsd, montoPorDesembolsarUeUsd,objetivo,objetivoEspecifico,porcentajeAvance, null,null,null,null);
 				result = PrestamoDAO.guardarPrestamo(prestamo);
 				
 			}else{
@@ -503,7 +507,9 @@ public class SPrestamo extends HttpServlet {
 				prestamo.setCooperante(cooperanteUe);
 				prestamo.setObjetivo(objetivo);
 				prestamo.setObjetivoEspecifico(objetivoEspecifico);
+				prestamo.setPorcentajeAvance(porcentajeAvance);
 				result = PrestamoDAO.guardarPrestamo(prestamo);
+				
 				
 			}
 			
@@ -625,6 +631,7 @@ public class SPrestamo extends HttpServlet {
 				temp.fechaActualizacion = Utils.formatDateHour(prestamo.getFechaActualizacion());
 				temp.objetivo = prestamo.getObjetivo();
 				temp.objetivoEspecifico = prestamo.getObjetivoEspecifico();
+				temp.porcentajeAvance = prestamo.getPorcentajeAvance();
 				lstprestamo.add(temp);
 			}
 			
@@ -948,6 +955,7 @@ public class SPrestamo extends HttpServlet {
 				temp.fechaActualizacion = Utils.formatDateHour(prestamo.getFechaActualizacion());
 				temp.objetivo = prestamo.getObjetivo();
 				temp.objetivoEspecifico = prestamo.getObjetivoEspecifico();
+				temp.porcentajeAvance = prestamo.getPorcentajeAvance();
 				
 				response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 		        response_text = String.join("", "\"prestamo\":",response_text);
@@ -1167,6 +1175,7 @@ public class SPrestamo extends HttpServlet {
 				temp.fechaActualizacion = Utils.formatDateHour(prestamo.getFechaActualizacion());
 				temp.objetivo = prestamo.getObjetivo();
 				temp.objetivoEspecifico = prestamo.getObjetivoEspecifico();
+				temp.porcentajeAvance = prestamo.getPorcentajeAvance();
 				
 				response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 		        response_text = String.join("", "\"prestamo\":",response_text);
@@ -1177,6 +1186,7 @@ public class SPrestamo extends HttpServlet {
         	String peps = map.get("peps");
         	String nombre = map.get("nombre");
         	Integer generarLineasBases = Utils.String2Boolean(map.get("lineaBase"), 0); 
+        	String lineaBaseId = map.get("lineaBaseId");
         	JsonParser parser = new JsonParser();
 			JsonArray pepsArreglo = parser.parse(peps).getAsJsonArray();
 			for(int i=0; i<pepsArreglo.size(); i++){
@@ -1192,7 +1202,7 @@ public class SPrestamo extends HttpServlet {
 					if (ret && proyecto.getCongelado().equals(1) && generarLineasBases.equals(1)){
 						
 						LineaBase lineaBase = new LineaBase(proyecto, nombre, usuario, null, new Date(), null);
-						ret = LineaBaseDAO.guardarLineaBase(lineaBase);
+						ret = LineaBaseDAO.guardarLineaBase(lineaBase,lineaBaseId);
 					}
 				}
 			}

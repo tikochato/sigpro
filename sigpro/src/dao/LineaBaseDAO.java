@@ -43,10 +43,33 @@ public class LineaBaseDAO {
 		return ret;
 	}
 	
-	public static boolean guardarLineaBase(LineaBase lineaBase){
+	public static LineaBase getLineaBasePorId(int id){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		List<LineaBase> listRet = null;
+		LineaBase ret = null;
+		try{
+			String query = "FROM LineaBase l where l.id=:id";
+			Query<LineaBase> criteria = session.createQuery(query, LineaBase.class);
+			criteria.setParameter("id", id);
+			listRet = criteria.getResultList();
+			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
+		} catch(Throwable e){
+			CLogger.write("2", LineaBaseDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static boolean guardarLineaBase(LineaBase lineaBase,String lineaBaseEditar){
 		boolean ret = false;
+		if(lineaBaseEditar!=null && lineaBaseEditar.trim().length()>0)
+			ret = eliminarLinaeBase(lineaBaseEditar) >= 0;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
+			
 			session.beginTransaction();
 			
 			session.saveOrUpdate(lineaBase);
@@ -84,6 +107,8 @@ public class LineaBaseDAO {
 			if (ret )
 				ret = ret && lineaBaseMetasPlanificado(lineaBase) >= 0;
 			if (ret )
+				ret = ret && lineaBaseMetasAvance(lineaBase) >= 0;
+			if (ret )
 				ret = ret && lineaBasePlanAdquisiciones(lineaBase,3) >= 0;
 			if (ret )
 				ret = ret && lineaBasePlanAdquisiciones(lineaBase,4) >= 0;
@@ -119,6 +144,8 @@ public class LineaBaseDAO {
 		}
 		return ret;
 	}
+	
+	
 	
 	private static Integer lineaBasePEP (LineaBase lineaBase){
 		Integer ret = -1;
@@ -540,6 +567,40 @@ public class LineaBaseDAO {
 		return ret;
 	}
 	
+	private static Integer lineaBaseMetasAvance (LineaBase lineaBase){
+		Integer ret = -1;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			String query = String.join(" ","update sipro_history.meta_avance",
+				"set linea_base = CONCAT(ifnull(linea_base,''),'|lb',",lineaBase.getId().toString(),",'|')",
+				"where version = 1",
+				"and estado = 1",
+				"and metaid in (",
+					"select m.id from sipro_history.producto p,sipro_history.meta m",
+				    "where p.id = m.objeto_id",
+				    "and p.estado = 1",
+				    "and p.actual = 1",
+				    "and p.treepath like '" + lineaBase.getProyecto().getTreePath() + "%' ",
+				    "and m.estado = 1",
+				    "and m.actual = 1",
+				")");
+			
+			Query<MetaPlanificado> criteria = session.createNativeQuery(query, MetaPlanificado.class);
+			ret =   criteria.executeUpdate();
+			session.flush();
+			session.getTransaction().commit();
+			session.close();
+		}
+		catch(Throwable e){
+			CLogger.write("17", LineaBaseDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
 	private static Integer lineaBasePlanAdquisiciones (LineaBase lineaBase,int objetoTipo){
 		Integer ret = -1;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -742,6 +803,139 @@ public class LineaBaseDAO {
 		}
 		catch(Throwable e){
 			CLogger.write("22", LineaBaseDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	private static Integer eliminarLinaeBase (String lineaBase){
+		Integer ret = -1;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			
+			String query = "UPDATE sipro_history.actividad SET linea_base = REPLACE(linea_base,'"+ lineaBase + "','')";
+			ret = session.createNativeQuery(query).executeUpdate();
+			session.flush();
+			
+			query = "UPDATE sipro_history.actividad_propiedad_valor SET linea_base = REPLACE(linea_base,'"+ lineaBase + "','')";
+			ret = ret + session.createNativeQuery(query).executeUpdate();
+			session.flush();
+
+			query = "UPDATE sipro_history.asignacion_raci SET linea_base = REPLACE(linea_base,'"+ lineaBase + "','')";
+			ret = ret + session.createNativeQuery(query).executeUpdate();
+			session.flush();
+
+			query = "UPDATE sipro_history.componente SET linea_base = REPLACE(linea_base,'"+ lineaBase + "','')";
+			ret = ret + session.createNativeQuery(query).executeUpdate();
+			session.flush();
+			
+			query = "UPDATE sipro_history.componente_propiedad_valor SET linea_base = REPLACE(linea_base,'"+ lineaBase + "','')";
+			ret = ret + session.createNativeQuery(query).executeUpdate();
+			session.flush();
+			
+			query = "UPDATE sipro_history.componente_sigade SET linea_base = REPLACE(linea_base,'"+ lineaBase + "','')";
+			ret = ret + session.createNativeQuery(query).executeUpdate();
+			session.flush();
+
+			query = "UPDATE sipro_history.desembolso SET linea_base = REPLACE(linea_base,'"+ lineaBase + "','')";
+			ret = ret + session.createNativeQuery(query).executeUpdate();
+			session.flush();
+
+
+			query = "UPDATE sipro_history.meta SET linea_base = REPLACE(linea_base,'"+ lineaBase + "','')";
+			ret = ret + session.createNativeQuery(query).executeUpdate();
+			session.flush();
+			
+			query = "UPDATE sipro_history.meta_avance SET linea_base = REPLACE(linea_base,'"+ lineaBase + "','')";
+			ret = ret + session.createNativeQuery(query).executeUpdate();
+			session.flush();
+			
+			query = "UPDATE sipro_history.meta_planificado SET linea_base = REPLACE(linea_base,'"+ lineaBase + "','')";
+			ret = ret + session.createNativeQuery(query).executeUpdate();
+			session.flush();
+
+			query = "UPDATE sipro_history.plan_adquisicion SET linea_base = REPLACE(linea_base,'"+ lineaBase + "','')";
+			ret = ret + session.createNativeQuery(query).executeUpdate();
+			session.flush();
+			
+			query = "UPDATE sipro_history.plan_adquisicion_pago SET linea_base = REPLACE(linea_base,'"+ lineaBase + "','')";
+			ret = ret + session.createNativeQuery(query).executeUpdate();
+			session.flush();
+			
+			query = "UPDATE sipro_history.prestamo SET linea_base = REPLACE(linea_base,'"+ lineaBase + "','')";
+			ret = ret + session.createNativeQuery(query).executeUpdate();
+			session.flush();
+
+
+			query = "UPDATE sipro_history.producto SET linea_base = REPLACE(linea_base,'"+ lineaBase + "','')";
+			ret = ret + session.createNativeQuery(query).executeUpdate();
+			session.flush();
+			
+			query = "UPDATE sipro_history.producto_propiedad_valor SET linea_base = REPLACE(linea_base,'"+ lineaBase + "','')";
+			ret = ret + session.createNativeQuery(query).executeUpdate();
+			session.flush();
+
+			query = "UPDATE sipro_history.proyecto SET linea_base = REPLACE(linea_base,'"+ lineaBase + "','')";
+			ret = ret + session.createNativeQuery(query).executeUpdate();
+			session.flush();
+			
+			query = "UPDATE sipro_history.proyecto_propiedad_valor SET linea_base = REPLACE(linea_base,'"+ lineaBase + "','')";
+			ret = ret + session.createNativeQuery(query).executeUpdate();
+			session.flush();
+
+			query = "UPDATE sipro_history.riesgo SET linea_base = REPLACE(linea_base,'"+ lineaBase + "','')";
+			ret = ret + session.createNativeQuery(query).executeUpdate();
+			session.flush();
+			
+			query = "UPDATE sipro_history.riesgo_propiedad_valor SET linea_base = REPLACE(linea_base,'"+ lineaBase + "','')";
+			ret = ret + session.createNativeQuery(query).executeUpdate();
+			session.flush();
+
+			query = "UPDATE sipro_history.subcomponente SET linea_base = REPLACE(linea_base,'"+ lineaBase + "','')";
+			ret = ret + session.createNativeQuery(query).executeUpdate();
+			session.flush();
+			
+			query = "UPDATE sipro_history.subcomponente_propiedad_valor SET linea_base = REPLACE(linea_base,'"+ lineaBase + "','')";
+			ret = ret + session.createNativeQuery(query).executeUpdate();
+			session.flush();
+			
+			query = "UPDATE sipro_history.subproducto SET linea_base = REPLACE(linea_base,'"+ lineaBase + "','')";
+			ret = ret + session.createNativeQuery(query).executeUpdate();
+			session.flush();
+			
+			query = "UPDATE sipro_history.subproducto_propiedad_valor SET linea_base = REPLACE(linea_base,'"+ lineaBase + "','')";
+			ret = ret + session.createNativeQuery(query).executeUpdate();
+			session.flush();
+
+
+			session.getTransaction().commit();
+			session.close();
+		}
+		catch(Throwable e){
+			ret = -1;
+			CLogger.write("23", LineaBaseDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return ret;
+	}
+	
+	public static boolean eliminarTotalLineaBase(LineaBase lineaBase){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			session.delete(lineaBase);
+			session.getTransaction().commit();
+			ret = true;
+		}
+		catch(Throwable e){
+			CLogger.write("24", LineaBaseDAO.class, e);
 		}
 		finally{
 			session.close();

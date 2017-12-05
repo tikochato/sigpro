@@ -1,5 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<style>
+	.contenedorTabla{
+		width: 100%;
+	    height: 300px;
+	    overflow-y: auto;
+	    margin-top: 40px;
+	    overflow-x: hidden;
+	}	
+</style>
 	<%@ page import="org.apache.shiro.SecurityUtils" %>
 	<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 	<div ng-controller="desembolsoController as desembolsoc" class="maincontainer all_page" id="title">
@@ -92,6 +101,51 @@
 				<div class="col-sm-6">
 					Total: {{ desembolsoc.totalDesembolsos | currency:" ":2 }}
 				</div>
+		  </div>
+		  <br/>
+		  <div class="row">
+		  	 <uib-accordion close-others="oneAtATime">
+			    <div uib-accordion-group class="panel-default"  is-disabled="status.isFirstDisabled" is-open="desembolsoc.desembolsosRealesOpen">
+			    	<div class="contenedorTabla">
+			    	<uib-accordion-heading>
+				    	Desembolsos Reales <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': desembolsoc.desembolsosRealesOpen, 'glyphicon-chevron-right': !desembolsoc.desembolsosRealesOpen}"></i>
+				    </uib-accordion-heading>
+			    	<table st-table="desembolsoc.display_desembolsosReales" st-safe-src="desembolsoc.desembolsosReales" 
+			    	class="table" >
+								<thead>
+									<tr>
+										<th st-sort="ejercicioFiscal" style="text-align: center; width: 150px;">Año fiscal</th>
+										<th st-sort="mesDesembolso" style="text-align: center; width: 150px;">Mes desembolso</th>
+										<th st-sort="desembolsosMesUsd" style="text-align: center;">Monto ($)</th>
+										<th st-sort="desembolsosMesGtq" style="text-align: center;">Monto (Q)</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="row in desembolsoc.display_desembolsosReales track by $index" >
+										<td style="text-align: center;"> {{row.ejercicioFiscal}} </td>
+										<td style="text-align: center;"> {{row.mesDesembolso}} </td>
+										<td style="text-align: right;"> {{row.desembolsosMesUsd | currency:" ":2}} </td>
+										<td style="text-align: right;"> {{row.desembolsosMesGtq | currency:" ":2}} </td>
+										
+									</tr>
+								</tbody>
+								<tfoot>
+									<tr>
+										<td colspan="2" style="text-align: center;" >
+											<label class="label-form"  >Totales </label>										
+										</td>
+										<td style="text-align: right;" >
+											<label class="label-form"  >{{desembolsoc.totalRealUsd | currency:" ":2}}</label>
+										</td>
+										<td style="text-align: right;">
+											<label class="label-form"  >{{desembolsoc.totalRealGtq | currency:" ":2}}</label>
+										</td>
+									</tr>
+								</tfoot>
+							</table>
+							</div>
+			    </div>
+			 </uib-accordion>
 		  </div>
 		</div>
 	</div>

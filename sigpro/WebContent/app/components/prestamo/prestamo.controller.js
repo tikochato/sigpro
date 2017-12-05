@@ -400,6 +400,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 					objetivo : mi.prestamo.objetivo,
 					objetivoEspecifico : mi.prestamo.objetivoEspecifico,
 					idPrestamoTipos: idPrestamoTipos,
+					porcentajeAvance: mi.prestamo.porcentajeAvance,
 					t:moment().unix()
 				};
 				

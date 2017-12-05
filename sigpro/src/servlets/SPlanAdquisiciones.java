@@ -40,11 +40,11 @@ import utilities.CLogger;
 import utilities.CPdf;
 import utilities.Utils;
 
-@WebServlet("/SControlAdquisiciones")
-public class SControlAdquisiciones extends HttpServlet {
+@WebServlet("/SPlanAdquisiciones")
+public class SPlanAdquisiciones extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	class stcontroladquisiciones{
+	class stplanadquisiciones{
 		Integer objetoId;
 		Integer objetoTipo;
 		Integer predecesorId;
@@ -78,7 +78,7 @@ public class SControlAdquisiciones extends HttpServlet {
 		String tipoRevisionNombre;
 	}
 	
-    public SControlAdquisiciones() {
+    public SPlanAdquisiciones() {
         super();
     }
 
@@ -110,14 +110,14 @@ public class SControlAdquisiciones extends HttpServlet {
 				
 				try{
 					String lineaBase = map.get("lineaBase");
-					List<stcontroladquisiciones> lstprestamo = generarPlan(proyectoId, lineaBase, usuario);
+					List<stplanadquisiciones> lstprestamo = generarPlan(proyectoId, lineaBase, usuario);
 										
 					response_text=new GsonBuilder().serializeNulls().create().toJson(lstprestamo);
 			        response_text = String.join("", "\"proyecto\":",response_text);
 			        response_text = String.join("", "{\"success\":true,", response_text, "}");
 				}
 				catch (Exception e){
-					CLogger.write("2", SControlAdquisiciones.class, e);
+					CLogger.write("2", SPlanAdquisiciones.class, e);
 				}
 			}else if(accion.equals("exportarExcel")){
 				Integer idPlanAdquisicion = Utils.String2Int(map.get("idPlanAdquisicion"), null);
@@ -133,7 +133,7 @@ public class SControlAdquisiciones extends HttpServlet {
 					outStream.write(outArray);
 					outStream.flush();
 				}catch(Exception e){
-					CLogger.write("4", SControlAdquisiciones.class, e);
+					CLogger.write("4", SPlanAdquisiciones.class, e);
 				}
 			}else if(accion.equals("exportarPdf")){
 				CPdf archivo = new CPdf("Plan de adquisiciones");
@@ -198,15 +198,15 @@ public class SControlAdquisiciones extends HttpServlet {
 		        output.close();
 			}
 		}catch(Exception e){
-			CLogger.write("1", SControlAdquisiciones.class, e);
+			CLogger.write("1", SPlanAdquisiciones.class, e);
 		}
 	}
 	
-	private List<stcontroladquisiciones> generarPlan(Integer IdProyecto, String lineaBase, String usuario) throws Exception{
+	private List<stplanadquisiciones> generarPlan(Integer IdProyecto, String lineaBase, String usuario) throws Exception{
 		try{
-			List<stcontroladquisiciones> lstPrestamo = new ArrayList<>();
+			List<stplanadquisiciones> lstPrestamo = new ArrayList<>();
 			List<?> estruturaProyecto = EstructuraProyectoDAO.getEstructuraProyecto(IdProyecto, lineaBase);
-			stcontroladquisiciones temp = null;
+			stplanadquisiciones temp = null;
 			Integer proyectoId = 0;
 			Integer componenteId = 0;
 			Integer productoId = 0;
@@ -217,7 +217,7 @@ public class SControlAdquisiciones extends HttpServlet {
 				Object[] obj = (Object[]) objeto;
 				Integer nivel = (obj[3]!=null) ? ((String)obj[3]).length()/8 : 0;
 				if(nivel != null){
-					temp = new stcontroladquisiciones();
+					temp = new stplanadquisiciones();
 					temp.objetoId = (Integer)obj[0];
 					temp.nombre = (String)obj[1];
 					temp.objetoTipo = ((BigInteger)obj[2]).intValue();
@@ -306,12 +306,12 @@ public class SControlAdquisiciones extends HttpServlet {
 			}
 			return lstPrestamo;
 		}catch(Exception e){
-			CLogger.write("1", SControlAdquisiciones.class, e);
+			CLogger.write("1", SPlanAdquisiciones.class, e);
 			return null;
 		}
 	}
 	
-	private void inicializarPlanAdquisicion(stcontroladquisiciones tempPrestamo){
+	private void inicializarPlanAdquisicion(stplanadquisiciones tempPrestamo){
 		tempPrestamo.idPlanAdquisicion = 0;
 		tempPrestamo.tipoAdquisicion = 0;
 		tempPrestamo.tipoAdquisicionNombre = "";
@@ -347,14 +347,14 @@ public class SControlAdquisiciones extends HttpServlet {
 		try{			
 			headers = generarHeaders();
 			datos = generarDatos(idPrestamo, lineaBase, usuario);
-			excel = new CExcel("Control de Adquisiciones", false, null);
+			excel = new CExcel("Plan de Adquisiciones", false, null);
 			Proyecto proyecto = ProyectoDAO.getProyecto(idPrestamo);
-			wb=excel.generateExcelOfData(datos, "Control de Adquisiciones - "+proyecto.getNombre(), headers, null, true, usuario);
+			wb=excel.generateExcelOfData(datos, "Plan de Adquisiciones - "+proyecto.getNombre(), headers, null, true, usuario);
 		
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
-			CLogger.write("3", SControlAdquisiciones.class, e);
+			CLogger.write("3", SPlanAdquisiciones.class, e);
 		}
 		return outArray;
 	}
@@ -380,7 +380,7 @@ public class SControlAdquisiciones extends HttpServlet {
 	
 	public String[][] generarDatos(Integer idPrestamo, String lineaBase, String usuario){
 		String[][] datos = null;
-		List<stcontroladquisiciones> lstprestamo;
+		List<stplanadquisiciones> lstprestamo;
 		try {
 			lstprestamo = generarPlan(idPrestamo, lineaBase, usuario);
 			
@@ -412,7 +412,7 @@ public class SControlAdquisiciones extends HttpServlet {
 				}
 			}
 		} catch (Exception e) {
-			CLogger.write("1", SControlAdquisiciones.class, e);
+			CLogger.write("1", SPlanAdquisiciones.class, e);
 		}
 		
 return datos;

@@ -457,6 +457,20 @@
 					</div>
 					<div class="row">
 						<div class="col-sm-12">
+							<div class="form-group">
+								<input type="number" style="text-align: right;"
+								 class="inputText "  
+								 ng-model="prestamoc.prestamo.porcentajeAvance"
+								 ng-value="prestamoc.prestamo.porcentajeAvance"
+								 onblur="this.setAttribute('value', this.value);"
+								 min="0" max="100">
+								<label class="floating-label" >Avance del Préstamo %</label>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-sm-12">
 							<div class="form-group" >
 									<textarea class="inputText" rows="4"  
 										ng-model="prestamoc.prestamo.objetivo"

@@ -108,6 +108,8 @@ public class SProyecto extends HttpServlet {
 		String fechaInicioReal;
 		String fechaFinReal;
 		Integer congelado; 
+		Integer coordinador;
+		Integer porcentajeAvance;
 	};
 
 	class stdatadinamico {
@@ -247,6 +249,7 @@ public class SProyecto extends HttpServlet {
 				dato.fechaInicioReal = proyecto.getFechaInicioReal() != null ? Utils.formatDate(proyecto.getFechaInicioReal()) : null;
 				dato.fechaFinReal = proyecto.getFechaFinReal() != null ? Utils.formatDate(proyecto.getFechaFinReal()) : null;
 				dato.congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
+				dato.coordinador = proyecto.getCoordinador()!=null ? proyecto.getCoordinador() : 0;
 				datos_.add(dato);
 			}
 
@@ -311,6 +314,7 @@ public class SProyecto extends HttpServlet {
 				dato.fechaInicioReal = proyecto.getFechaInicioReal() != null ? Utils.formatDate(proyecto.getFechaInicioReal()) : null;
 				dato.fechaFinReal = proyecto.getFechaFinReal() != null ? Utils.formatDate(proyecto.getFechaFinReal()) : null;
 				dato.congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
+				dato.coordinador = proyecto.getCoordinador()!=null ? proyecto.getCoordinador() : 0;
 				datos_.add(dato);
 			}
 
@@ -379,6 +383,7 @@ public class SProyecto extends HttpServlet {
 				dato.fechaInicioReal = proyecto.getFechaInicioReal() != null ? Utils.formatDate(proyecto.getFechaInicioReal()) : null;
 				dato.fechaFinReal = proyecto.getFechaFinReal() != null ? Utils.formatDate(proyecto.getFechaFinReal()) : null;
 				dato.congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
+				dato.coordinador = proyecto.getCoordinador()!=null ? proyecto.getCoordinador() : 0;
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -443,6 +448,7 @@ public class SProyecto extends HttpServlet {
 				dato.fechaInicioReal = proyecto.getFechaInicioReal() != null ? Utils.formatDate(proyecto.getFechaInicioReal()) : null;
 				dato.fechaFinReal = proyecto.getFechaFinReal() != null ? Utils.formatDate(proyecto.getFechaFinReal()) : null;
 				dato.congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
+				dato.coordinador = proyecto.getCoordinador()!=null ? proyecto.getCoordinador() : 0;
 				datos_.add(dato);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(datos_);
@@ -482,7 +488,7 @@ public class SProyecto extends HttpServlet {
 				Integer projectCargado = Utils.String2Int(map.get("projectCargado"), 0);
 				Integer prestamoId = Utils.String2Int(map.get("prestamoId"), null);
 				String observaciones = map.get("observaciones");
-				
+				Integer porcentajeAvance = Utils.String2Int(map.get("porcentajeAvance"));
 				Prestamo prestamo = null;
 				if(prestamoId != null){
 					prestamo = PrestamoDAO.getPrestamoById(prestamoId);	
@@ -575,6 +581,12 @@ public class SProyecto extends HttpServlet {
 					}
 				}
 				result = ProyectoDAO.guardarProyecto(proyecto, false);
+				if (result && proyecto.getCoordinador() != null &&  proyecto.getCoordinador().equals(1)){
+					if(porcentajeAvance!= null && !prestamo.getPorcentajeAvance().equals(porcentajeAvance)){
+						prestamo.setPorcentajeAvance(porcentajeAvance);
+						result = result && PrestamoDAO.guardarPrestamo(prestamo);
+					}
+				}
 				if (result){
 					for (stdatadinamico data : datos) {
 						if (data.valor!=null && data.valor.length()>0 && data.valor.compareTo("null")!=0){
@@ -624,9 +636,7 @@ public class SProyecto extends HttpServlet {
 							ProyectoMiembroId pmId = new ProyectoMiembroId(proyecto.getId(), colaborador.getId());
 							ProyectoMiembro proyMiembro = new ProyectoMiembro(pmId, colaborador, proyecto, 1, new Date(), null, usuario, null);
 							result = ProyectoMiembroDAO.guardarProyectoMiembro(proyMiembro);
-
 						}
-
 					}
 				}
 
@@ -836,6 +846,11 @@ public class SProyecto extends HttpServlet {
 				dato.fechaInicioReal = proyecto.getFechaInicioReal() != null ? Utils.formatDate(proyecto.getFechaInicioReal()) : null;
 				dato.fechaFinReal = proyecto.getFechaFinReal() != null ? Utils.formatDate(proyecto.getFechaFinReal()) : null;
 				dato.congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
+				dato.coordinador = proyecto.getCoordinador()!=null ? proyecto.getCoordinador() : 0;
+				if(proyecto.getCoordinador() != null && proyecto.getCoordinador() == 1){
+					proyecto.getPrestamo();
+					dato.porcentajeAvance = proyecto.getPrestamo().getPorcentajeAvance();
+				}
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(dato);
 	        response_text = String.join("", "\"proyecto\":",response_text);
@@ -973,12 +988,24 @@ public class SProyecto extends HttpServlet {
 			int pepId = Utils.String2Int(map.get("id"),0);
 			String nombre = map.get("nombre");
 			Proyecto proyecto =  ProyectoDAO.getProyecto(pepId);
+			Integer nuevaLinaBase = Utils.String2Int(map.get("nuevo"));
+			Integer lineaBaseId = Utils.String2Int(map.get("lineaBaseId"),0);
+			String lineaBaseEditar = null;
 			
 			proyecto.setCongelado(1);
 			ret = ProyectoDAO.guardarProyecto(proyecto, false);
+			LineaBase lineaTemp = null;
 			if(ret){
+				if (nuevaLinaBase.equals(2) && lineaBaseId > 0){
+					lineaTemp = LineaBaseDAO.getLineaBasePorId(lineaBaseId);
+					nombre = lineaTemp != null ? lineaTemp.getNombre() : "";
+					lineaBaseEditar = lineaTemp != null ? "|lb"+lineaTemp.getId().toString() + "|" : null;
+				}
+				
 				LineaBase lineaBase = new LineaBase(proyecto, nombre, usuario, null, new Date(), null);
-				ret = LineaBaseDAO.guardarLineaBase(lineaBase);
+				if(lineaTemp !=null)
+					ret = LineaBaseDAO.eliminarTotalLineaBase(lineaTemp);
+				ret = LineaBaseDAO.guardarLineaBase(lineaBase,lineaBaseEditar);
 			}
 			response_text = String.join("","{ \"success\":  ", ret ? "true" : "false",response_text,"}");
 		}

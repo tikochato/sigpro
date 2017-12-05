@@ -1,4 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<style>
+		
+</style>
 <div class="modal-header">
     <h3 class="modal-title">Congelar PEP</h3>
 </div>
@@ -14,12 +17,32 @@
 	<div class="row main-form">
 		<form name="form" style="margin-top: 10px;">
 			<div class="col-sm-12">
+			
 			   <div class="form-group" >
+			   		<div class="btn-group">
+				        <label class="btn btn-default" ng-model="modalcc.nuevaLineaBase" uib-btn-radio="1" ng-change="modalcc.selectNuevo(true)">Nueva Linea Base</label>
+				        <label class="btn btn-default" ng-model="modalcc.nuevaLineaBase" uib-btn-radio="2" ng-change="modalcc.selectNuevo(false)">Editar Linea Base</label>
+				    </div>
+			   </div>
+			   <div class="form-group" ng-if="modalcc.nuevaLineaBase == 1" >
 				      <input type="text" name="inombre"  class="inputText" id="inombre" ng-model="modalcc.nombre"
 				       ng-value="modalcc.nombre" 
 				      onblur="this.setAttribute('value', this.value);" ng-required="true" >
 				      <label class="floating-label">* Nombre</label>
 				</div>
+				<div class="form-group" ng-if="modalcc.nuevaLineaBase == 2">
+					
+						<div id= "lineaBase" angucomplete-alt placeholder="" pause="100" 
+							  selected-object="modalcc.cambioLineaBase" local-data="modalcc.lineasBase" 
+							  search-fields="nombre" title-field="nombre" field-required="true" 
+							  field-label="* Linea Base" minlength="1" 
+							  input-class="form-control form-control-small field-angucomplete inputText" 
+							  match-class="angucomplete-highlight" initial-value="modalcc.lineaBaseNombre" 
+							  focus-out="modalcc.blurLineaBase()" input-name="lineaBase"></div>
+						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+					
+				</div>
+				
 			</div>
 		</form>
 	</div>
