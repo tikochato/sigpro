@@ -43,7 +43,7 @@ public class CHistoria {
 					if(!objeto.isEmpty()){
 						objeto+=", ";
 					}
-					objeto += "{\"nombre\": \""+campos[c] + "\", \"valor\": \"" + (dato[c]!=null?(String)dato[c]:"") + "\"}";					
+					objeto += "{\"nombre\": \""+campos[c] + "\", \"valor\": \"" + (dato[c]!=null?((Object)dato[c]).toString():"") + "\"}";					
 				}
 				resultado += objeto + "]";
 			}
