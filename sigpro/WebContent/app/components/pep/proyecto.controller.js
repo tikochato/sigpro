@@ -1501,9 +1501,11 @@ function modalCongelar($uibModalInstance, $scope, $http, $interval,
 	mi.mostrarcargando=false;
 	mi.lineasBase = [];
 	mi.nuevaLineaBase = 1;
+	mi.bloquerBoton = false;
 	
 	mi.ok = function() {
 		mi.mostrarcargando=true;
+		mi.bloquearBoton = true;
 		$http.post('/SProyecto', { 
 			accion: 'congelar', 
 			id: proyectoid, 
@@ -1514,6 +1516,7 @@ function modalCongelar($uibModalInstance, $scope, $http, $interval,
 				function(response) {
 					console.log(response.success);
 					mi.mostrarcargando=true;
+					mi.bloquearBoton = false;
 					$uibModalInstance.close(response.success);
 				});
 	};
