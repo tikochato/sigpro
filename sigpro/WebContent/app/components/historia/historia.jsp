@@ -26,7 +26,7 @@
 							</div>
 						</div>
 					</div>
-					<div style="overflow: auto; max-height: 300px;">
+					<div style="overflow: auto; min-height: 300px; max-height: 300px;">
 						<table st-table="modalh.displayedItems" st-safe-src="modalh.data" class="table table-striped table-bordered table-hover">
 			        		<tbody>
 			        			<tr st-select-row="row" ng-repeat="row in modalh.displayedItems">
