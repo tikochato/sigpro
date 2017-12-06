@@ -141,6 +141,17 @@ public class SSubproducto extends HttpServlet {
 			getSubproductoPorId(parametro, response);
 		}else if (parametro.get("accion").compareTo("guardarModal") == 0){
 			guardarModal(parametro, response,request);
+		}else if(parametro.get("accion").equals("getCantidadHistoria")){
+			Integer id = Utils.String2Int(parametro.get("id"));
+			String resultado = SubproductoDAO.getVersiones(id); 
+			String response_text = String.join("", "{\"success\":true, \"versiones\": [" + resultado + "]}");
+			Utils.writeJSon(response, response_text);
+		}else if(parametro.get("accion").equals("getHistoria")){
+			Integer id = Utils.String2Int(parametro.get("id"));
+			Integer version = Utils.String2Int(parametro.get("version"));
+			String resultado = SubproductoDAO.getHistoria(id, version); 
+			String response_text = String.join("", "{\"success\":true, \"historia\":" + resultado + "}");
+			Utils.writeJSon(response, response_text);
 		}
 	}
 
