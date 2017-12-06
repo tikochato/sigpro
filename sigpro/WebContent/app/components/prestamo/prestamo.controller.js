@@ -1,7 +1,7 @@
 var app = angular.module('prestamoController', [ 'ngTouch','smart-table',  'ui.bootstrap.contextMenu']);
 
-app.controller('prestamoController',['$rootScope','$scope','$http','$interval','i18nService','Utilidades','documentoAdjunto','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$filter', 'dialogoConfirmacion', 
-	function($rootScope,$scope, $http, $interval,i18nService,$utilidades,$documentoAdjunto,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$filter, $dialogoConfirmacion) {
+app.controller('prestamoController',['$rootScope','$scope','$http','$interval','i18nService','Utilidades','documentoAdjunto','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$filter', 'dialogoConfirmacion','historia', 
+	function($rootScope,$scope, $http, $interval,i18nService,$utilidades,$documentoAdjunto,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$filter, $dialogoConfirmacion, $historia) {
 
 	var mi = this;
 	i18nService.setCurrentLang('es');
@@ -119,7 +119,16 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
         mi.editar();
     };
     
-    
+    mi.verHistoria = function(){
+		$historia.getHistoriaMatriz($scope, 'Matriz Préstamo', '/SPrestamo', mi.prestamo.id)
+		.result.then(function(data) {
+			if (data != ""){
+				
+			}
+		}, function(){
+			
+		});
+	}
     
 	mi.gridOpciones = {
 		enableRowSelection : true,

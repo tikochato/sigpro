@@ -1184,7 +1184,10 @@
 				<uib-tab  index="prestamoc.ordenTab+5" heading="Distribución de Unidad Ejecutora" ng-if="prestamoc.mostrarPrestamo">
 					<div style="margin-top: 15px;">
 						<div class="row">
-						
+							<label class="btn btn-default" ng-click="prestamoc.verHistoria()" uib-tooltip="Ver Historia">
+							<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
+						</div>
+						<div class="row">
 							<div class="divTabla">
 								<table class="table " >
 								 	<tr>
