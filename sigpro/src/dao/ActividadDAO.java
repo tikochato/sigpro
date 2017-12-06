@@ -821,8 +821,8 @@ public class ActividadDAO {
 					"and a.objeto_id = ?2",
 					lineaBase != null ? "and a.linea_base like '%" + lineaBase + "%'" : "and a.actual = 1");
 			Query<Actividad> criteria = session.createNativeQuery(query,Actividad.class);
-			criteria.setParameter(1, objetoId);
-			criteria.setParameter(2, objetoTipo);
+			criteria.setParameter(1, objetoTipo);
+			criteria.setParameter(2, objetoId);
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
