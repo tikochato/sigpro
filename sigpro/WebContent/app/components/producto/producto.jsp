@@ -106,6 +106,10 @@
 				<label class="btn btn-default" ng-click="producto.verHistoria()" uib-tooltip="Ver Historia">
 				<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
 			</div>
+			<div ng-if="producto.esTreeview">
+		      	<label class="btn btn-default" ng-click="producto.verHistoria()" uib-tooltip="Ver Historia">
+				<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
+		     </div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="21020">
 					<label class="btn btn-success" ng-click="producto.mForm.$valid && producto.botones ? producto.guardar() : ''" ng-disabled="!producto.mForm.$valid || !producto.botones" uib-tooltip="Guardar" tooltip-placement="bottom">

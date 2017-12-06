@@ -105,6 +105,10 @@
 				<label class="btn btn-default" ng-click="subcomponentec.verHistoria()" uib-tooltip="Ver Historia">
 				<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
 		      </div>
+		      <div ng-if="subcomponentec.esTreeview">
+		      	<label class="btn btn-default" ng-click="subcomponentec.verHistoria()" uib-tooltip="Ver Historia">
+				<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
+		      </div>
 			  <div class="btn-group" style="float: right;">
 			    <shiro:hasPermission name="5020">
 			      <label class="btn btn-success" ng-click="subcomponentec.mForm.$valid && subcomponentec.botones ? subcomponentec.guardar() : ''" ng-disabled="!subcomponentec.mForm.$valid || !subcomponentec.botones" uib-tooltip="Guardar">
