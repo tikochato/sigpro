@@ -654,8 +654,8 @@ public class SubproductoDAO {
 				+ " JOIN sipro.unidad_ejecutora ue ON sb.unidad_ejecutoraunidad_ejecutora = ue.unidad_ejecutora and sb.entidad = ue.entidadentidad and sb.ejercicio = ue.ejercicio   "
 				+ " JOIN sipro_history.subproducto_tipo st ON sb.subproducto_tipoid = st.id "
 				+ " JOIN sipro_history.acumulacion_costo ac ON sb.acumulacion_costoid = ac.id "
-				+ " WHERE c.id = "+id
-				+ " AND c.version = " +version;
+				+ " WHERE sb.id = "+id
+				+ " AND sb.version = " +version;
 		
 		String [] campos = {"Version", "Nombre", "Descripción", "Tipo", "Unidad Ejecutora", "Monto Planificado", "Tipo Acumulación de Monto Planificado", 
 				"Programa", "Subprograma", "Proyecto", "Actividad", "Obra", "Renglon", "Ubicación Geográfica", "Latitud", "Longitud", 
