@@ -29,7 +29,6 @@ import com.google.gson.reflect.TypeToken;
 import dao.SubComponenteDAO;
 import dao.SubComponentePropiedadDAO;
 import dao.SubComponentePropiedadValorDAO;
-import dao.ActividadDAO;
 import dao.ComponenteDAO;
 import dao.ObjetoDAO;
 import dao.ProyectoDAO;
