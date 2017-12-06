@@ -168,6 +168,8 @@
 				<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 				<label class="btn btn-default" ng-click="controller.congelado?'':controller.congelar()" uib-tooltip="Congelar línea base" ng-disabled="controller.congelado">
 				<span class="glyphicon glyphicon glyphicon-bookmark" aria-hidden="true"></span></label>
+				<label class="btn btn-default" ng-click="controller.verHistoria()" uib-tooltip="Ver Historia">
+				<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
 		</div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="24020">

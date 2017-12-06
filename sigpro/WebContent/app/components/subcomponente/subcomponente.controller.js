@@ -1,7 +1,7 @@
 var app = angular.module('subcomponenteController', ['smart-table']);
 
-app.controller('subcomponenteController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q', 'dialogoConfirmacion', 
-	function($scope,$rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion) {
+app.controller('subcomponenteController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q', 'dialogoConfirmacion','historia', 
+	function($scope,$rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion, $historia) {
 		var mi=this;
 		
 		mi.esTreeview = $rootScope.treeview;
@@ -576,7 +576,17 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 			return resultado.promise;
 		};
 
-
+		mi.verHistoria = function(){
+			$historia.getHistoria($scope, 'Sub Componente', '/SSubComponente',mi.subcomponente.id)
+			.result.then(function(data) {
+				if (data != ""){
+					
+				}
+			}, function(){
+				
+			});
+		}
+		
 		mi.buscarSubComponenteTipo = function() {
 			var resultado = mi.llamarModalBusqueda('Tipos de Subcomponente','/SSubComponenteTipo', {
 				accion : 'numeroSubComponenteTipos'

@@ -26,6 +26,7 @@ app.controller('flujocajaController',['$scope','$rootScope','$http','$interval',
 	mi.scrollPosicion = 0;
 	mi.formatofecha = 'dd/MM/yyyy';
 	mi.altformatofecha = ['d!/M!/yyyy'];
+	mi.saldosGrafica = [];
 	
 	var AGRUPACION_MES= 1;
 	var AGRUPACION_BIMESTRE = 2;
@@ -59,6 +60,17 @@ app.controller('flujocajaController',['$scope','$rootScope','$http','$interval',
 			4: "Subproducto",
 			5: "Actividad",
 	};
+	
+	mi.etiqutas = [];
+	mi.series = ['Saldo'];
+	mi.lineColors = ['#88b4df'];
+	mi.datasetOverride = [{ yAxisID: 'y-axis-1' }];
+	mi.yAxisNombre='';
+	
+	
+	
+
+
 
 	mi.redireccionSinPermisos=function(){
 		$window.location.href = '/main.jsp#!/forbidden';		
@@ -246,6 +258,7 @@ app.controller('flujocajaController',['$scope','$rootScope','$http','$interval',
 		mi.tamanoCabecera = mi.totalAnios * mi.tamanoCelda;
 		mi.estiloCabecera = "width:"+ mi.tamanoCabecera + "px;min-width:" + mi.tamanoCabecera +"px; max-width:"+ mi.tamanoCabecera + "px; text-align: center;";
 		mi.tamanioNombre = (mi.tamanoPantalla+200) -(((mi.totalCabecerasAMostrar*mi.totalAnios)+1) * mi.tamanoCelda);
+		mi.generarDatosGrafica()
 	}
 
 	mi.cargarTabla = function() {			
@@ -294,6 +307,7 @@ app.controller('flujocajaController',['$scope','$rootScope','$http','$interval',
 				mi.mostrarCargando = false;
 				mi.mostrarDescargar = true;
 				mi.movimiento = true;
+				mi.generarDatosGrafica();
 
 				$timeout(function(){
 					mi.mostrarCargando = false;
@@ -471,6 +485,8 @@ app.controller('flujocajaController',['$scope','$rootScope','$http','$interval',
 						}	
 						mi.agruparResumenTotales();
 						mi.renderizaTabla();
+						mi.generarDatosGrafica();
+						
 					}
 			}else
 				$utilidades.mensaje('warning','Favor de ingresar una fecha válida');
@@ -626,7 +642,87 @@ app.controller('flujocajaController',['$scope','$rootScope','$http','$interval',
 				}
 		);
 	};
-
-
+	
+	 mi.NombrexAxis = function(value){
+		 switch (value){
+		 	case 1: mi.yAxisNombre="Mes"; break;
+		 	case 2: mi.yAxisNombre="Bimestre"; break;
+		 	case 3: mi.yAxisNombre="Semestre"; break;
+		 	case 4: mi.yAxisNombre="Trimestre"; break;
+		 	case 5: mi.yAxisNombre="Cuatrimestre"; break;
+		 	case 1: mi.yAxisNombre="Semestre"; break;
+		 	case 1: mi.yAxisNombre="Año"; break;
+		 }
+	 }
+	 
+	mi.options = {
+			legend: {
+				display: true,
+				position: 'bottom'
+			},
+			    scales: {
+			      yAxes: [
+			        {
+			          id: 'y-axis-1',
+			          type: 'linear',
+			          display: true,
+			          position: 'left',
+			          ticks: {
+	                        
+			        	     callback: function (value) {
+			        	    	 return 'Q'+numeral(value).format(' 0.0')
+	                        }
+	                   },
+	                   scaleLabel: {
+	                       display: true,
+	                       labelString: 'Monto'
+	                     }
+			        }
+			      ],
+			      xAxes: [{
+			    	  scaleLabel: {
+	                       display: true,
+	                       labelString: mi.yAxisNombre
+	                     }
+			      }
+			      ]
+			    }
+			  };
+	
+	mi.generarDatosGrafica = function(){
+		mi.saldosGrafica = [];
+		mi.saldosGrafica[0] = [];
+		mi.etiqutas = [];
+		mi.saldosGrafica[0].push(...mi.resumenTotales.filaSaldo)
+		if (mi.enMillones){
+			for (x in mi.saldosGrafica[0]){
+				mi.saldosGrafica[0][x] = (mi.saldosGrafica[0][x]/1000000).toFixed(2); 
+			}
+		}
+		
+		if(mi.agrupacionActual == AGRUPACION_MES){
+			mi.etiqutas.push(...MES_DISPLAY_NAME);
+		}else if(mi.agrupacionActual == AGRUPACION_BIMESTRE){
+			mi.etiqutas.push(...BIMESTRE_DISPLAY_NAME);
+			
+		}else if(mi.agrupacionActual == AGRUPACION_TRIMESTRE){
+			mi.etiqutas.push(...TRIMESTRE_DISPLAY_NAME);
+			
+		}else if(mi.agrupacionActual == AGRUPACION_CUATRIMESTRE){
+			mi.etiqutas.push(...CUATRIMESTRE_DISPLAY_NAME);
+			
+		}else if(mi.agrupacionActual == AGRUPACION_SEMESTRE){
+			mi.etiqutas.push(...SEMESTRE_DISPLAY_NAME)
+			
+		}else if(mi.agrupacionActual == AGRUPACION_ANUAL){
+			mi.etiqutas.push(ANUAL_DISPLAY_NAME);
+		}
+		 mi.NombrexAxis(mi.agrupacionActual);
+		
+	}
+	
+	
+	
+	
 }]);
 

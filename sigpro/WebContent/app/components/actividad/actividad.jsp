@@ -106,9 +106,15 @@
 			
 			<div class="operation_buttons">
 				<div class="btn-group" ng-hide="actividadc.esnuevo" ng-if="!actividadc.esTreeview">
-				<label class="btn btn-default" ng-click="actividadc.botones ? actividadc.irAActividades(actividadc.actividad.id) : ''" uib-tooltip="Actividad" tooltip-placement="bottom">
+					<label class="btn btn-default" ng-click="actividadc.botones ? actividadc.irAActividades(actividadc.actividad.id) : ''" uib-tooltip="Actividad" tooltip-placement="bottom">
 					<span class="glyphicon glyphicon-time"></span></label>
+					<label class="btn btn-default" ng-click="actividadc.verHistoria()" uib-tooltip="Ver Historia">
+					<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
 				</div>
+				<div ng-if="actividadc.esTreeview">
+			      	<label class="btn btn-default" ng-click="actividadc.verHistoria()" uib-tooltip="Ver Historia">
+					<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
+			     </div>
 				<div class="btn-group" style="float: right;">
 					<shiro:hasPermission name="1020">
 						<label class="btn btn-success" ng-click="actividadc.mForm.$valid && actividadc.botones ? actividadc.guardar() : ''" ng-disabled="!actividadc.mForm.$valid || !actividadc.botones" uib-tooltip="Guardar" tooltip-placement="bottom">

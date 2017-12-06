@@ -10,6 +10,25 @@
 	<parameter name="esSubreporte" class="java.lang.Boolean" isForPrompting="false">
 		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
 	</parameter>
+	<parameter name="lineaBase" class="java.lang.String"/>
+	<parameter name="queryPa" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" pa.linea_base like '%"+$P{lineaBase}+"%' ":" pa.actual=1 "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="querySp" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" sp.linea_base like '%"+$P{lineaBase}+"%' ":" sp.actual=1 "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="queryPr" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" pr.linea_base like '%"+$P{lineaBase}+"%' ":" pr.actual=1 "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="querySc" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" sc.linea_base like '%"+$P{lineaBase}+"%' ":" sc.actual=1 "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="queryC" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" c.linea_base like '%"+$P{lineaBase}+"%' ":" c.actual=1 "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="queryP" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" p.linea_base like '%"+$P{lineaBase}+"%' ":" p.actual=1 "]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT c.nombre componente, pr.nombre producto, sp.nombre subproducto, ta.nombre metodo, 
 CASE WHEN pa.preparacion_doc_planificado 
@@ -52,14 +71,14 @@ CASE WHEN pa.firma_contrato_real
 	THEN DATE_FORMAT(pa.firma_contrato_real, "%d/%m/%Y")
 	ELSE ''
 END AS firma_contrato_real
-FROM sipro.plan_adquisicion pa
-JOIN sipro.subproducto sp on sp.id=pa.objeto_id and pa.objeto_tipo=4
-JOIN sipro.producto pr on pr.id=sp.productoid
-JOIN sipro.subcomponente sc on sc.id=pr.subcomponenteid
-JOIN sipro.componente c on c.id=sc.componenteid
-JOIN sipro.proyecto p on p.id=c.proyectoid
-JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id
-WHERE p.id= $P{proyectoId} 
+FROM sipro_history.plan_adquisicion pa
+JOIN sipro_history.subproducto sp on sp.id=pa.objeto_id and pa.objeto_tipo=4 and  $P!{querySp} 
+JOIN sipro_history.producto pr on pr.id=sp.productoid and  $P!{queryPr} 
+JOIN sipro_history.subcomponente sc on sc.id=pr.subcomponenteid and  $P!{querySc} 
+JOIN sipro_history.componente c on c.id=sc.componenteid and  $P!{queryC} 
+JOIN sipro_history.proyecto p on p.id=c.proyectoid and  $P!{queryP} 
+JOIN sipro_history.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id and ta.actual = 1
+WHERE p.id= $P{proyectoId}  and  $P!{queryPa} 
 UNION
 SELECT c.nombre componente, pr.nombre producto, sp.nombre subproducto, ta.nombre metodo, 
 CASE WHEN pa.preparacion_doc_planificado
@@ -102,13 +121,13 @@ CASE WHEN pa.firma_contrato_real
 	THEN DATE_FORMAT(pa.firma_contrato_real, "%d/%m/%Y")
 	ELSE ''
 END AS firma_contrato_real
-FROM sipro.plan_adquisicion pa
-JOIN sipro.subproducto sp on sp.id=pa.objeto_id and pa.objeto_tipo=4
-JOIN sipro.producto pr on pr.id=sp.productoid
-JOIN sipro.componente c on c.id=pr.componenteid
-JOIN sipro.proyecto p on p.id=c.proyectoid
-JOIN sipro.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id
-WHERE p.id= $P{proyectoId}]]>
+FROM sipro_history.plan_adquisicion pa
+JOIN sipro_history.subproducto sp on sp.id=pa.objeto_id and pa.objeto_tipo=4 and  $P!{querySp} 
+JOIN sipro_history.producto pr on pr.id=sp.productoid and  $P!{queryPr} 
+JOIN sipro_history.componente c on c.id=pr.componenteid and  $P!{queryC} 
+JOIN sipro_history.proyecto p on p.id=c.proyectoid and  $P!{queryP} 
+JOIN sipro_history.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id and ta.actual = 1
+WHERE p.id= $P{proyectoId} and  $P!{queryPa} ]]>
 	</queryString>
 	<field name="componente" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="componente"/>

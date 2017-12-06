@@ -97,7 +97,13 @@
 			<div class="btn-group" ng-hide="subproducto.esNuevo" ng-if="!subproducto.esTreeview">
 				<label class="btn btn-default" ng-click="subproducto.botones ? subproducto.irAActividades() : ''" uib-tooltip="Actividades" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-time"></span></label>
+				<label class="btn btn-default" ng-click="subproducto.verHistoria()" uib-tooltip="Ver Historia">
+				<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
 			</div>
+			<div ng-if="subproducto.esTreeview">
+		      	<label class="btn btn-default" ng-click="subproducto.verHistoria()" uib-tooltip="Ver Historia">
+				<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
+		     </div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="40020">
 					<label class="btn btn-success" ng-click="subproducto.mForm.$valid && subproducto.botones ? subproducto.guardar() : ''" ng-disabled="!subproducto.mForm.$valid || !subproducto.botones" uib-tooltip="Guardar" tooltip-placement="bottom">

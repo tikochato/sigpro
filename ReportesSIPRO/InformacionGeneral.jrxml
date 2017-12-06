@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.4.3.final using JasperReports Library version 6.4.3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EjecucionPresupuestaria" pageWidth="792" pageHeight="590" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3be1768b-39b9-4818-9259-816746f57f02">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MariaDB Server"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SiproMDB"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="167"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="827"/>
@@ -18,17 +18,38 @@
 		<parameter name="fechaCorte" class="java.util.Date">
 			<defaultValueExpression><![CDATA[NOW( )]]></defaultValueExpression>
 		</parameter>
+		<parameter name="lineaBase" class="java.lang.String"/>
+		<parameter name="queryPy" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" py.linea_base like '%"+$P{lineaBase}+"%' ":" py.actual=1 "]]></defaultValueExpression>
+		</parameter>
+		<parameter name="queryD" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" d.linea_base like '%"+$P{lineaBase}+"%' ":" d.actual=1 "]]></defaultValueExpression>
+		</parameter>
+		<parameter name="queryC" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" c.linea_base like '%"+$P{lineaBase}+"%' ":" c.actual=1 "]]></defaultValueExpression>
+		</parameter>
+		<parameter name="queryM" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" m.linea_base like '%"+$P{lineaBase}+"%' ":" m.actual=1 "]]></defaultValueExpression>
+		</parameter>
+		<parameter name="queryP" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" p.linea_base like '%"+$P{lineaBase}+"%' ":" p.actual=1 "]]></defaultValueExpression>
+		</parameter>
+		<parameter name="queryMa" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" ma.linea_base like '%"+$P{lineaBase}+"%' ":" ma.actual=1 "]]></defaultValueExpression>
+		</parameter>
 		<queryString>
 			<![CDATA[select "Plazo Ejecucion" categoria, 
 (
 	select DATEDIFF(py.fecha_inicio, $P{fechaCorte} )/DATEDIFF(py.fecha_inicio,py.fecha_fin)*100
-	from sipro.proyecto py
+	from sipro_history.proyecto py
 	where py.id = $P{proyectoId}	
+	and  $P!{queryPy} 
 ) valor_plan,
 (
 	select DATEDIFF(ps.fecha_elegibilidad_ue,  $P{fechaCorte} )/DATEDIFF(ps.fecha_elegibilidad_ue,ps.fecha_cierre_actual_ue)*100 
-	from sipro.prestamo ps, sipro.proyecto py 
+	from sipro.prestamo ps, sipro_history.proyecto py 
 	where ps.id = py.prestamoid 
+	and  $P!{queryPy}  
 	and py.id = $P{proyectoId}		
 ) valor_real from dual
 union
@@ -37,14 +58,17 @@ select "Ejecucion Financiera",
 from (
 select sum(desembolsos_mes_usd) desembolsos_a_la_fecha,(
 	select sum(d.monto)
-    from sipro.desembolso d, sipro.proyecto p
-    where d.proyectoid = p.id
-    and p.id = 1
+    from sipro_history.desembolso d, sipro_history.proyecto py
+    where d.proyectoid = py.id
+    and  $P!{queryD} 
+    and  $P!{queryPy} 
+    and py.id =  $P{proyectoId} 
     and fecha >  $P{fechaCorte} 
 ) desembolsos_futuros
-from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro.proyecto py, sipro.prestamo ps
+from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro_history.proyecto py, sipro.prestamo ps
 where des.codigo_presupuestario= ps.codigo_presupuestario
 and py.prestamoid = ps.id
+and  $P!{queryPy} 
 and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora
 and des.entidad_sicoin = py.entidad
 and py.id = $P{proyectoId}	
@@ -53,11 +77,13 @@ and ( (	des.mes_desembolso<= month( $P{fechaCorte} ) and des.ejercicio_fiscal=ye
 ) t1),
  (select sum(desembolsos_mes_usd)/ 
 (select sum(c.fuente_prestamo)
-	from sipro.componente c
+	from sipro_history.componente c
     where c.proyectoid = py.id
+    and  $P!{queryC}
 )*100 ejecucion_financiera_real
-from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro.proyecto py, sipro.prestamo ps
+from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro_history.proyecto py, sipro.prestamo ps
 where des.codigo_presupuestario= ps.codigo_presupuestario
+and  $P!{queryPy} 
 and py.prestamoid = ps.id
 and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora
 and des.entidad_sicoin = py.entidad
@@ -74,15 +100,16 @@ select "Ejecucion Fisica",
 	select m.id, m.dato_tipoid, m.meta_final_entero, m.meta_final_decimal,
 	sum(ma.valor_entero)/if(m.meta_final_entero>0, m.meta_final_entero, 1) p_avance_entero,
 	sum(valor_decimal)/if(m.meta_final_decimal>0, m.meta_final_decimal, 1) p_avance_decimal
-	from sipro.meta m left outer join sipro.meta_avance ma
-	on ( ma.metaid = m.id ), 
-	sipro.producto p
+	from sipro_history.meta m 
+	left outer join sipro_history.meta_avance ma on ( ma.metaid = m.id  and $P!{queryMa}), 
+	sipro_history.producto p
 	where m.objeto_tipo=3 and m.objeto_id = p.id
+	and  $P!{queryM}
 	and p.treepath like  CONCAT(CAST((10000000+$P{proyectoId}) AS char),'%')
 	and m.dato_tipoid in (2,3)
 	group by m.id, m.dato_tipoid, m.meta_final_entero, m.meta_final_decimal
 	) t1
-) t2)*100, (select py.ejecucion_fisica_real from sipro.proyecto py where py.id = $P{proyectoId})  from dual]]>
+) t2)*100, (select py.ejecucion_fisica_real from sipro_history.proyecto py where py.id = $P{proyectoId} and  $P!{queryPy})  from dual]]>
 		</queryString>
 		<field name="categoria" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="categoria"/>
@@ -94,15 +121,21 @@ select "Ejecucion Fisica",
 			<property name="com.jaspersoft.studio.field.label" value="valor_real"/>
 		</field>
 	</subDataset>
-	<parameter name="proyectoId" class="java.lang.Integer" isForPrompting="false">
+	<parameter name="proyectoId" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
 	</parameter>
-	<parameter name="usuario" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="usuario" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["admin"]]></defaultValueExpression>
+	</parameter>
 	<parameter name="esSubreporte" class="java.lang.Boolean" isForPrompting="false">
 		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
 	</parameter>
 	<parameter name="fechaCorte" class="java.util.Date">
 		<defaultValueExpression><![CDATA[NOW( )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lineaBase" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="lineaBaseQuery" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" py.linea_base like '%"+$P{lineaBase}+"%' and c.linea_base like '%"+$P{lineaBase}+"%'  ":" py.actual = 1 and c.actual= 1 "]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT ps.proyecto_programa proyecto,  ue.nombre unidad_ejecutora, ps.numero_prestamo, ps.codigo_presupuestario, co.nombre organismo_financiero,
@@ -125,13 +158,14 @@ sum(c.fuente_prestamo) monto_unidad_ejecutora,
 ) desembolsos_a_la_fecha,
 DATEDIFF(py.fecha_inicio, $P{fechaCorte} )/DATEDIFF(py.fecha_inicio,py.fecha_fin) plazo_ejecucion,
 py.ejecucion_fisica_real
-FROM sipro.proyecto py
+FROM sipro_history.proyecto py
 JOIN sipro.prestamo ps ON py.prestamoid = ps.id
 JOIN sipro.unidad_ejecutora ue ON (ue.entidadentidad = py.entidad and py.unidad_ejecutoraunidad_ejecutora = ue.unidad_ejecutora)
 JOIN sipro.cooperante co ON ps.cooperanteid = co.id
 JOIN sipro.tipo_moneda tm ON ps.tipo_monedaid = tm.id
-JOIN sipro.componente c ON (c.proyectoid = py.id)
+JOIN sipro_history.componente c ON (c.proyectoid = py.id)
 WHERE py.estado=1 and py.id= $P{proyectoId}
+ and $P!{lineaBaseQuery} 
 group by ps.proyecto_programa,ue.nombre, ps.numero_prestamo, ps.codigo_presupuestario, co.nombre, 
 tm.simbolo, ps.monto_contratado, py.fecha_actualizacion, py.fecha_creacion, py.fecha_elegibilidad, ps.fecha_elegibilidad_ue,
 py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_ue, py.ejecucion_fisica_real]]>
@@ -895,7 +929,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 				</textField>
 			</frame>
 			<componentElement>
-				<reportElement key="" style="Estilo_grafica" x="171" y="312" width="410" height="169" uuid="dd64cca4-eba8-42bb-8a18-1c5bb6b23f8b"/>
+				<reportElement key="" style="Estilo_grafica" stretchType="RelativeToTallestObject" x="171" y="312" width="410" height="169" uuid="7f5f1c90-d740-4504-9d34-463c9f2be709"/>
 				<sc:spiderChart xmlns:sc="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<sc:chartSettings>
 						<chartTitle/>
@@ -904,12 +938,15 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 					</sc:chartSettings>
 					<sc:spiderDataset>
 						<dataset>
-							<datasetRun subDataset="Dataset1" uuid="e5ac4338-8e80-48a0-afad-dc6b49608b80">
+							<datasetRun subDataset="Dataset1" uuid="f0d08a49-257b-4927-b300-f0770a573e10">
 								<datasetParameter name="proyectoId">
 									<datasetParameterExpression><![CDATA[$P{proyectoId}]]></datasetParameterExpression>
 								</datasetParameter>
 								<datasetParameter name="fechaCorte">
 									<datasetParameterExpression><![CDATA[$P{fechaCorte}]]></datasetParameterExpression>
+								</datasetParameter>
+								<datasetParameter name="lineaBase">
+									<datasetParameterExpression><![CDATA[$P{lineaBase}]]></datasetParameterExpression>
 								</datasetParameter>
 								<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 							</datasetRun>

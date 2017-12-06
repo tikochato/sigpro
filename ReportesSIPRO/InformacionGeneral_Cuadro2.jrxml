@@ -26,22 +26,32 @@
 	<parameter name="fechaCorte" class="java.util.Date">
 		<defaultValueExpression><![CDATA[NOW( )]]></defaultValueExpression>
 	</parameter>
+	<parameter name="lineaBase" class="java.lang.String"/>
+	<parameter name="queryD" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" d.linea_base like '%"+$P{lineaBase}+"%' ":" d.actual=1 "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="queryPy" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" py.linea_base like '%"+$P{lineaBase}+"%' ":" py.actual=1 "]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[select
-(select py.ejecucion_fisica_real from sipro.proyecto py where py.id = $P{proyectoId}) ejecucion_fisica,
+(select py.ejecucion_fisica_real from sipro_history.proyecto py where py.id = $P{proyectoId} and  $P!{queryPy} ) ejecucion_fisica,
 (
 	select sum(d.monto)
-    from sipro.desembolso d, sipro.proyecto p
-    where d.proyectoid = p.id
-    and p.id = $P{proyectoId}
+    from sipro_history.desembolso d, sipro_history.proyecto py
+    where d.proyectoid = py.id
+    and py.id = $P{proyectoId}
+    and  $P!{queryD}
+    and  $P!{queryPy}
     and year(fecha) = year( $P{fechaCorte} )
     and month(fecha) = month( $P{fechaCorte} )
 ) desembolso_planificado_mes,
 (
 	select sum(desembolsos_mes_usd) 
-	from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro.proyecto py, sipro.prestamo ps
+	from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro_history.proyecto py, sipro.prestamo ps
 	where des.codigo_presupuestario= ps.codigo_presupuestario
 	and py.prestamoid = ps.id
+	and  $P!{queryPy}
 	and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora
 	and des.entidad_sicoin = py.entidad
 	and py.id = $P{proyectoId}
@@ -50,17 +60,20 @@
 ) desembolso_realizado_mes,
 (
 	select sum(d.monto)
-    from sipro.desembolso d, sipro.proyecto p
-    where d.proyectoid = p.id
-    and p.id = $P{proyectoId}
+    from sipro_history.desembolso d, sipro_history.proyecto py
+    where d.proyectoid = py.id
+    and py.id = $P{proyectoId}
+    and  $P!{queryD}
+    and  $P!{queryPy}
     and month(fecha) = month( $P{fechaCorte})+1
     and year(fecha) = year( $P{fechaCorte} )
 ) desembolso_planificado_proximo_mes,
 	(
 	select sum(desembolsos_mes_usd) 
-	from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro.proyecto py, sipro.prestamo ps
+	from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro_history.proyecto py, sipro.prestamo ps
 	where des.codigo_presupuestario= ps.codigo_presupuestario
 	and py.prestamoid = ps.id
+	and  $P!{queryPy}
 	and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora
 	and des.entidad_sicoin = py.entidad
 	and py.id = $P{proyectoId}

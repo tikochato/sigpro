@@ -14,10 +14,13 @@
 		<parameter name="fechaCorte" class="java.util.Date">
 			<defaultValueExpression><![CDATA[new Date()]]></defaultValueExpression>
 		</parameter>
+		<parameter name="queryD1" class="java.lang.String"/>
+		<parameter name="queryPr1" class="java.lang.String"/>
 		<queryString language="SQL">
 			<![CDATA[SELECT * FROM (
 (SELECT 'planificado' tipo, month(fecha) mes ,SUM(monto)  monto
-from sipro.desembolso where proyectoid =   $P{proyectoIdG} 
+from sipro_history.desembolso where proyectoid =   $P{proyectoIdG} 
+and  $P!{queryD1} 
 and estado  = 1
 and  year(fecha) = year($P{fechaCorte} )
 GROUP BY year (fecha),month(fecha) order by year(fecha),month (fecha) asc) 
@@ -25,7 +28,7 @@ UNION
 (SELECT 'real' tipo, CAST(d.mes_desembolso AS INT) mes,sum(d.desembolsos_mes_usd) monto
 from sipro_analytic.dtm_avance_fisfinan_det_dti d
 join sipro.prestamo ps ON d.codigo_presupuestario = ps.codigo_presupuestario
-join sipro.proyecto pr ON pr.prestamoid = ps.id 
+join sipro_history.proyecto pr ON pr.prestamoid = ps.id and  $P!{queryPr1} 
 where pr.id =  $P{proyectoIdG} 
 and d.ejercicio_fiscal = YEAR($P{fechaCorte} )
  and CAST(d.mes_desembolso AS UNSIGNED) <= MONTH( $P{fechaCorte} )
@@ -53,6 +56,13 @@ ORDER BY mes asc]]>
 	<parameter name="fechaCorte" class="java.util.Date">
 		<defaultValueExpression><![CDATA[new Date()]]></defaultValueExpression>
 	</parameter>
+	<parameter name="lineaBase" class="java.lang.String"/>
+	<parameter name="queryD" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" linea_base like '%"+$P{lineaBase}+"%' ":" actual=1 "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="queryPr" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" pr.linea_base like '%"+$P{lineaBase}+"%' ":" pr.actual=1 "]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[select SUM(eneroP) eneroP, SUM(eneroR) eneroR, SUM(febreroP) febreroP, SUM(febreroR) febreroR,
 SUM(marzoP) marzoP, SUM(marzoR) marzoR, SUM(abrilP) abrilP, SUM(abrilR) abrilR, SUM(mayoP) mayoP, SUM(mayoR) mayoR, SUM(junioP) junioP, SUM(junioR) junioR,
@@ -77,8 +87,9 @@ SUM(case when t1.mes = 12 then t1.monto end) diciembreP,
 0 eneroR, 0 febreroR, 0 marzoR, 0 abrilR, 0 mayoR, 0 junioR, 0 julioR, 0 agostoR, 0 septiembreR, 0 octubreR, 0 noviembreR, 0 diciembreR
 from (
 SELECT year (fecha) anio ,month(fecha) mes ,SUM(monto)  monto
-from sipro.desembolso where proyectoid =  $P{proyectoId} 
+from sipro_history.desembolso where proyectoid =  $P{proyectoId} 
 and estado  = 1
+and  $P!{queryD} 
 and  year(fecha) = year($P{fechaCorte} )
 GROUP BY year (fecha),month(fecha) order by year(fecha),month (fecha) asc
 ) t1
@@ -101,8 +112,8 @@ SUM(case when t1.mes = 12 then t1.monto end) diciembreR
 FROM (
 SELECT d.ejercicio_fiscal anio,d.mes_desembolso mes,sum(d.desembolsos_mes_usd) monto
 from sipro_analytic.dtm_avance_fisfinan_det_dti d
-join sipro.prestamo ps ON d.codigo_presupuestario = ps.codigo_presupuestario
-join sipro.proyecto pr ON pr.prestamoid = ps.id 
+join sipro.prestamo ps ON d.codigo_presupuestario = ps.codigo_presupuestario 
+join sipro_history.proyecto pr ON pr.prestamoid = ps.id and  $P!{queryPr} 
 where pr.id =  $P{proyectoId} 
 and d.ejercicio_fiscal = YEAR($P{fechaCorte} )
 and CAST(d.mes_desembolso AS UNSIGNED) <= MONTH( $P{fechaCorte} )
@@ -204,7 +215,7 @@ group by t1.anio
 			</staticText>
 			<areaChart>
 				<chart evaluationTime="Report" renderType="draw" theme="default">
-					<reportElement stretchType="ContainerBottom" x="115" y="80" width="530" height="200" uuid="91f9f73e-6d96-45a3-8ff1-db5106e51dee"/>
+					<reportElement stretchType="ContainerBottom" x="115" y="80" width="530" height="200" uuid="8b2731b8-a4b6-42da-8401-204ff562b348"/>
 					<chartTitle/>
 					<chartSubtitle/>
 					<chartLegend>
@@ -213,12 +224,18 @@ group by t1.anio
 				</chart>
 				<categoryDataset>
 					<dataset>
-						<datasetRun subDataset="Tabla" uuid="ad806b7d-4c5c-4387-b894-e0d1c0e27eb9">
+						<datasetRun subDataset="Tabla" uuid="94f65344-d69e-4df4-a22d-d66247aa4c28">
 							<datasetParameter name="proyectoIdG">
 								<datasetParameterExpression><![CDATA[$P{proyectoId}]]></datasetParameterExpression>
 							</datasetParameter>
 							<datasetParameter name="fechaCorte">
 								<datasetParameterExpression><![CDATA[$P{fechaCorte}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="queryD1">
+								<datasetParameterExpression><![CDATA[$P{queryD}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="queryPr1">
+								<datasetParameterExpression><![CDATA[$P{queryPr}]]></datasetParameterExpression>
 							</datasetParameter>
 							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 						</datasetRun>

@@ -242,7 +242,7 @@ public class SCargaTrabajo extends HttpServlet {
 							stsubproducto.nivel = nivel;
 							break;
 						case 5: 
-							Actividad objActividad = ActividadDAO.getActividadPorIdResponsable(objeto_id,  idColaboradores, "r");
+							Actividad objActividad = ActividadDAO.getActividadPorIdResponsable(objeto_id,  idColaboradores, "r",lineaBase);
 							
 							if (objActividad!=null){
 								stestructuracolaborador stactividad = construirItemPorColaborador(
@@ -719,7 +719,7 @@ public class SCargaTrabajo extends HttpServlet {
 				estructuracolaborador.add(stsubproducto);
 				break;
 			case 5: 
-				Actividad objActividad = ActividadDAO.getActividadPorIdResponsable(objeto_id,  idColaboradores, "r");
+				Actividad objActividad = ActividadDAO.getActividadPorIdResponsable(objeto_id,  idColaboradores, "r",lineaBase);
 				if (objActividad!=null){
 					stestructuracolaborador stactividad = construirItemPorColaborador(
 							objActividad.getNombre(), objActividad.getId(), 5, true,objActividad.getFechaInicio(),objActividad.getFechaFin(),

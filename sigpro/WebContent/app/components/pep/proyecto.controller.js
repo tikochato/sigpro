@@ -1,7 +1,7 @@
 var app = angular.module('proyectoController', [ 'ngTouch','smart-table',  'ui.bootstrap.contextMenu']);
 
-app.controller('proyectoController',['$rootScope','$scope','$http','$interval','i18nService','Utilidades','documentoAdjunto','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$filter', 'dialogoConfirmacion', 
-	function($rootScope,$scope, $http, $interval,i18nService,$utilidades,$documentoAdjunto,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$filter, $dialogoConfirmacion) {
+app.controller('proyectoController',['$rootScope','$scope','$http','$interval','i18nService','Utilidades','documentoAdjunto','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$filter', 'dialogoConfirmacion', 'historia',
+	function($rootScope,$scope, $http, $interval,i18nService,$utilidades,$documentoAdjunto,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$filter, $dialogoConfirmacion, $historia) {
 
 	var mi = this;
 	i18nService.setCurrentLang('es');
@@ -992,7 +992,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 		  
 		  modalInstance.result.then(function(resultado) {
 				if (resultado != undefined){
-					mi.exportarJasper(resultado);
+					mi.exportarJasper(resultado.fechaCorte, resultado.lineaBase);
 				}else{
 					$utilidades.mensaje('danger', 'Error al generar el reporte');
 				}
@@ -1186,10 +1186,10 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			$rootScope.$emit("recargarArbol",mi.proyecto.id);
 		}
 		
-		mi.exportarJasper = function(fechaCorte){
+		mi.exportarJasper = function(fechaCorte, lineaBase){
 			var anchor = angular.element('<a/>');
 			  anchor.attr({
-		         href: '/app/components/reportes/jasper/reporte.jsp?reporte=0&proyecto='+mi.proyecto.id+'&fecha='+fechaCorte.getTime()
+		         href: '/app/components/reportes/jasper/reporte.jsp?reporte=0&proyecto='+mi.proyecto.id+'&fecha='+fechaCorte.getTime()+(lineaBase!=null?'&lb='+lineaBase:'')
 			  })[0].click();
 		}
 		
@@ -1211,6 +1211,16 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			);
 		};
 		
+		mi.verHistoria = function(){
+			$historia.getHistoria($scope, 'Pep', '/SProyecto',mi.proyecto.id)
+			.result.then(function(data) {
+				if (data != ""){
+					
+				}
+			}, function(){
+				
+			});
+		}
 } ]);
 
 app.controller('buscarPorProyecto', [ '$uibModalInstance',
@@ -1401,6 +1411,7 @@ function modalGenerarReporte($uibModalInstance, $scope, $http, $interval,
 	var mi = this;
 	mi.formatofecha = 'dd/MM/yyyy';
 	mi.altformatofecha = ['d!/M!/yyyy'];
+	mi.observacionesAbierto = false;
 		
 	$http.post('/SProyecto', { accion: 'getPepDetalle', id: proyectoid, t: (new Date()).getTime() }).success(
 			function(response) {
@@ -1415,6 +1426,31 @@ function modalGenerarReporte($uibModalInstance, $scope, $http, $interval,
 					}
 				}
 		});
+	
+	$http.post('/SProyecto',{accion: 'getLineasBase', proyectoId: proyectoid}).success(
+		function(response) {
+			mi.lineasBase = [];
+			if (response.success){
+				mi.lineasBase = response.lineasBase;
+			}
+	});	
+		
+	mi.blurLineaBase=function(){
+		if(document.getElementById("lineaBase_value").defaultValue!=mi.lineaBaseNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+		}
+	};
+	
+	mi.cambioLineaBase=function(selected){
+		if(selected!== undefined){
+			mi.lineaBaseNombre = selected.originalObject.nombre;
+			mi.lineaBaseId = selected.originalObject.id;
+		}
+		else{
+			mi.lineaBaseNombre="";
+			mi.lineaBaseId=null;
+		}
+	};
 		
 	mi.fi_opciones = {
 			formatYear : 'yy',
@@ -1442,7 +1478,11 @@ function modalGenerarReporte($uibModalInstance, $scope, $http, $interval,
 						console.log(response.detalle);
 					}
 				});
-		$uibModalInstance.close(mi.fechaCorte);
+		var resultado = {
+				fechaCorte : mi.fechaCorte, 
+				lineaBase : mi.lineaBaseId
+		}
+		$uibModalInstance.close(resultado);
 	};
 
 	mi.cancel = function() {
@@ -1461,9 +1501,11 @@ function modalCongelar($uibModalInstance, $scope, $http, $interval,
 	mi.mostrarcargando=false;
 	mi.lineasBase = [];
 	mi.nuevaLineaBase = 1;
+	mi.bloquerBoton = false;
 	
 	mi.ok = function() {
 		mi.mostrarcargando=true;
+		mi.bloquearBoton = true;
 		$http.post('/SProyecto', { 
 			accion: 'congelar', 
 			id: proyectoid, 
@@ -1474,6 +1516,7 @@ function modalCongelar($uibModalInstance, $scope, $http, $interval,
 				function(response) {
 					console.log(response.success);
 					mi.mostrarcargando=true;
+					mi.bloquearBoton = false;
 					$uibModalInstance.close(response.success);
 				});
 	};

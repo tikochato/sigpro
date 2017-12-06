@@ -1008,6 +1008,15 @@ public class SProyecto extends HttpServlet {
 				ret = LineaBaseDAO.guardarLineaBase(lineaBase,lineaBaseEditar);
 			}
 			response_text = String.join("","{ \"success\":  ", ret ? "true" : "false",response_text,"}");
+		}else if(accion.equals("getCantidadHistoria")){
+			Integer id = Utils.String2Int(map.get("id"));
+			String resultado = ProyectoDAO.getVersiones(id); 
+			response_text = String.join("", "{\"success\":true, \"versiones\": [" + resultado + "]}");
+		}else if(accion.equals("getHistoria")){
+			Integer id = Utils.String2Int(map.get("id"));
+			Integer version = Utils.String2Int(map.get("version"));
+			String resultado = ProyectoDAO.getHistoria(id, version); 
+			response_text = String.join("", "{\"success\":true, \"historia\":" + resultado + "}");
 		}
 		
 		else

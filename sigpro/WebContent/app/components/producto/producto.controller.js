@@ -3,12 +3,12 @@ var moduloProducto = angular.module('moduloProducto', [ 'ngTouch',
 
 moduloProducto.controller('controlProducto', [ '$scope', '$routeParams',
 		'$route', '$window', '$location', '$mdDialog', '$uibModal', '$http', '$rootScope',
-		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', '$q', 'uiGridTreeBaseService','uiGridConstants', 'dialogoConfirmacion', 
+		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', '$q', 'uiGridTreeBaseService','uiGridConstants', 'dialogoConfirmacion', 'historia', 
 		controlProducto ]);
 
 function controlProducto($scope, $routeParams, $route, $window, $location,
 		$mdDialog, $uibModal, $http, $rootScope, $interval, i18nService, $utilidades,
-		$timeout, $log, $q, uiGridTreeBaseService,uiGridConstants, $dialogoConfirmacion) {
+		$timeout, $log, $q, uiGridTreeBaseService,uiGridConstants, $dialogoConfirmacion, $historia) {
 	var mi = this;  
 	i18nService.setCurrentLang('es');
 	
@@ -56,6 +56,17 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	];
 	
 	mi.duracionDimension = mi.dimensiones[0];
+	
+	mi.verHistoria = function(){
+		$historia.getHistoria($scope, 'Producto', '/SProducto',mi.producto.id)
+		.result.then(function(data) {
+			if (data != ""){
+				
+			}
+		}, function(){
+			
+		});
+	}
 	
 	if(mi.objetoTipo==1){
 		mi.objetoTipoNombre = "Componente";
