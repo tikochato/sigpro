@@ -55,6 +55,8 @@ app.controller('planEstructuralProyectoController',['$scope', '$rootScope', '$ht
 		if(selected!== undefined){
 			mi.prestamoNombre = selected.originalObject.proyectoPrograma;
 			mi.prestamoId = selected.originalObject.id;
+			$scope.$broadcast('angucomplete-alt:clearInput', 'pep');
+			$scope.$broadcast('angucomplete-alt:clearInput', 'lineaBase');
 			mi.getPeps(mi.prestamoId);
 		}
 		else{
@@ -73,6 +75,7 @@ app.controller('planEstructuralProyectoController',['$scope', '$rootScope', '$ht
 		if(selected!== undefined){
 			mi.pepNombre = selected.originalObject.nombre;
 			mi.pepId = selected.originalObject.id;
+			$scope.$broadcast('angucomplete-alt:clearInput', 'lineaBase');
 			mi.getLineasBase(mi.pepId);
 		}
 		else{
