@@ -620,14 +620,18 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 		var totalPrestamo = 0;
 		var totalDonacion = 0;
 		var totalNacional = 0;
+		
+		for (x in mi.m_organismosEjecutores){
+			mi.m_organismosEjecutores[x].totalAsignadoPrestamo = 0;
+			mi.m_organismosEjecutores[x].totalAsignadoDonacion = 0;
+			mi.m_organismosEjecutores[x].totalAsignadoNacional = 0;
+		}
+		
 		for(c=0; c<$scope.m_componentes.length; c++){
 			for(ue=0; ue<$scope.m_componentes[c].unidadesEjecutoras.length; ue++){
-				totalPrestamo += $scope.m_componentes[c].unidadesEjecutoras[ue].prestamo;
-				mi.m_organismosEjecutores[ue].totalAsignadoPrestamo = totalPrestamo;
-				totalDonacion += $scope.m_componentes[c].unidadesEjecutoras[ue].donacion;
-				mi.m_organismosEjecutores[ue].totalAsignadoDonacion = totalDonacion;
-				totalNacional += $scope.m_componentes[c].unidadesEjecutoras[ue].nacional;
-				mi.m_organismosEjecutores[ue].totalAsignadoNacional = totalNacional;
+				mi.m_organismosEjecutores[ue].totalAsignadoPrestamo += $scope.m_componentes[c].unidadesEjecutoras[ue].prestamo;
+				mi.m_organismosEjecutores[ue].totalAsignadoDonacion += $scope.m_componentes[c].unidadesEjecutoras[ue].donacion;
+				mi.m_organismosEjecutores[ue].totalAsignadoNacional+= $scope.m_componentes[c].unidadesEjecutoras[ue].nacional;
 			}
 		}
 	}
@@ -1222,6 +1226,7 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
 			mi.matriz_valid = 1;
 			mi.totalIngresado  = 0;
 		     for (x in componentes){
+		    	 componentes[x].totalAsignadoPrestamo = 0;
 		    	 var  totalUnidades = 0;
 		    	 var totalAsignado = 0;
 		    	 for (j in componentes[x].unidadesEjecutoras){
