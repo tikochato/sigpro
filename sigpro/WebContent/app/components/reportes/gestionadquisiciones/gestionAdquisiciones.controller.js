@@ -343,6 +343,7 @@ app.controller('gestionAdquisicionesController',['$scope', '$rootScope', '$http'
 		mi.calcularTotalColumnas();
 		mi.calcularTotalAnual();
 		mi.calcularTotalGeneral();
+		mi.calcularTotalAcumulado();
 		mi.calcularTotalCantidad();
 		 
 		mi.renderizaTabla();
@@ -466,6 +467,13 @@ app.controller('gestionAdquisicionesController',['$scope', '$rootScope', '$http'
 		mi.totalGeneral = 0;
 		for(x in mi.data){
 			mi.totalGeneral += mi.data[x].total;
+		}
+	}
+	
+	mi.calcularTotalAcumulado = function(){
+		mi.totalAcumulado = 0;
+		for(x in mi.data){
+			mi.totalAcumulado += mi.data[x].acumulado;	
 		}
 	}
 	

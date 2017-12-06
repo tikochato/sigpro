@@ -412,6 +412,7 @@ public class SGestionAdquisiciones extends HttpServlet {
 							if(cat.categoriaId==lstplan.getCategoriaAdquisicion().getId()){
 								temp.cantidadAdquisiciones++;
 								temp.anioPlan = mergeGestionPlan(temp.anioPlan, objeto, fechaInicial, fechaFinal);
+								temp.acumulado = getAcumuladoPlan(temp.anioPlan, objeto);
 							}
 						}
 					}
@@ -471,10 +472,12 @@ public class SGestionAdquisiciones extends HttpServlet {
 		stgestion[] aAnios = (stgestion[])anios;
 		try{
 			ObjetoCosto.stanio[] anioPlan = objetoAnios.getAnios();
-			for(int i=0; i<anioPlan.length; i++){
-				for(int j=0;j<anioPlan[i].mes.length;j++){
-					if(anioPlan[i].anio.equals(aAnios[i].anio)){
-						aAnios[i].mes[j].planificado = aAnios[i].mes[j].planificado.add(anioPlan[i].mes[j].planificado != null ? anioPlan[i].mes[j].planificado : new BigDecimal(0));	
+			for(ObjetoCosto.stanio objAnioPlan : anioPlan){
+				for(int i=0; i<aAnios.length; i++){
+					if(objAnioPlan.anio.equals(aAnios[i].anio)){
+						for(int j=0;j<12;j++){
+							aAnios[i].mes[j].planificado = aAnios[i].mes[j].planificado.add(objAnioPlan.mes[j].planificado != null ? objAnioPlan.mes[j].planificado : new BigDecimal(0));	
+						}
 					}
 				}
 			}
@@ -483,6 +486,22 @@ public class SGestionAdquisiciones extends HttpServlet {
 		}
 		
 		return aAnios;
+	}
+	
+	private BigDecimal getAcumuladoPlan(Object anios, ObjetoCosto objetoAnios){
+		BigDecimal totalAcumulado = new BigDecimal(0);
+		try{
+			ObjetoCosto.stanio[] anioPlan = objetoAnios.getAnios();
+			for(ObjetoCosto.stanio objAnioPlan : anioPlan){
+				for(int j=0;j<12;j++){
+					totalAcumulado = totalAcumulado.add(objAnioPlan.mes[j].planificado);
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return totalAcumulado;
 	}
 
 	private stgestion[] inicializarStAnioGestion(Integer anioInicial, Integer anioFinal){		

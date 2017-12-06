@@ -340,8 +340,8 @@
 							      			</div>
 							      		</td>
 							      		<td style="{{gestionadqui.estiloCelda}}; {{gestionadqui.estiloAlineacion}}">
-							      			<div style="{{gestionadqui.estiloCelda}}">
-												{{item.totalAcumulado}}
+							      			<div style="{{gestionadqui.estiloCelda}}" class="colorPlanificado">
+												{{item.acumulado | formatoMillones : gestionadqui.enMillones}}
 							      			</div>
 							      		</td>
 							      		<td style="{{gestionadqui.estiloCelda}} {{gestionadqui.estiloAlineacion}}">
@@ -397,9 +397,9 @@
 												{{gestionadqui.getTotalesAnuales($index) | formatoMillones : gestionadqui.enMillones}}
 							      			</div>
 							      		</td>
-							      		<td ng-repeat="posicion in gestionadqui.sumTotalesAnuales track by $index" style="font-weight: bold; {{gestionadqui.estiloCelda}}; {{gestionadqui.estiloAlineacion}}">
-							      			<div style="{{gestionadqui.estiloCelda}}">
-												{{gestionadqui.getTotalesAcumulado($index) | formatoMillones : gestionadqui.enMillones}}
+							      		<td style="font-weight: bold; {{gestionadqui.estiloCelda}} {{gestionadqui.estiloAlineacion}}">
+							      			<div style="{{gestionadqui.estiloCelda}} text-align: center;">
+							      				{{gestionadqui.totalAcumulado | formatoMillones : gestionadqui.enMillones}}
 							      			</div>
 							      		</td>
 							      		<td style="font-weight: bold; {{gestionadqui.estiloCelda}} {{gestionadqui.estiloAlineacion}}">
