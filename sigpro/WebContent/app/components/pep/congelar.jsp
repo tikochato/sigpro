@@ -50,10 +50,11 @@
 	<div class="row">
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group">
-				<label class="btn btn-success" ng-click="form.$valid  ? modalcc.ok() : '' "
-				 ng-disabled = "!form.$valid">
+				<label class="btn btn-success" ng-click="form.$valid && !modalcc.bloquearBoton  ? modalcc.ok() : '' "
+				 ng-disabled = "!form.$valid || modalcc.bloquearBoton">
 					&nbsp;&nbsp;&nbsp;&nbsp;Ok&nbsp;&nbsp;&nbsp;&nbsp;</label> 
-					<label class="btn btn-primary" ng-click="modalcc.cancel()">Cancelar</label>
+					<label class="btn btn-primary" ng-click="!modalcc.bloquearBoton ? modalcc.cancel() : ''" 
+					ng-disabled = "modalcc.bloquearBoton">Cancelar</label>
 			</div>
 
 		</div>
