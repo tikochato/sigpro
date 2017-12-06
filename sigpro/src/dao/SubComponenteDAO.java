@@ -24,6 +24,7 @@ import pojo.PlanAdquisicionPago;
 import pojo.Producto;
 import pojo.Proyecto;
 import utilities.CHibernateSession;
+import utilities.CHistoria;
 import utilities.CLogger;
 import utilities.Utils;
 
@@ -542,5 +543,47 @@ public class SubComponenteDAO {
 			session.close();
 		}
 		return ret;
+	}
+	
+	public static String getVersiones (Integer componenteId){
+		String resultado = "";
+		String query = "SELECT DISTINCT(version) "
+				+ " FROM sipro_history.subcomponente "
+				+ " WHERE id = "+componenteId;
+		List<?> versiones = CHistoria.getVersiones(query);
+		if(versiones!=null){
+			for(int i=0; i<versiones.size(); i++){
+				if(!resultado.isEmpty()){
+					resultado+=",";
+				}
+				resultado+=(Integer)versiones.get(i);
+			}
+		}
+		return resultado;
+	}
+	
+	public static String getHistoria (Integer componenteId, Integer version){
+		String resultado = "";
+		String query = "SELECT c.version, c.nombre, c.descripcion, ct.nombre tipo, ue.nombre unidad_ejecutora, c.costo, ac.nombre tipo_costo, "
+				+ " c.programa, c.subprograma, c.proyecto, c.actividad, c.obra, c.renglon, c.ubicacion_geografica, c.latitud, c.longitud, "
+				+ " c.fecha_inicio, c.fecha_fin, c.duracion, c.fecha_inicio_real, c.fecha_fin_real, "
+				+ " c.fecha_creacion, c.usuario_creo, c.fecha_actualizacion, c.usuario_actualizo, "
+				+ " CASE WHEN c.estado = 1 "
+				+ " THEN 'Activo' "
+				+ " ELSE 'Inactivo' "
+				+ " END AS estado "
+				+ " FROM sipro_history.subcomponente c "
+				+ " JOIN sipro.unidad_ejecutora ue ON c.unidad_ejecutoraunidad_ejecutora = ue.unidad_ejecutora and c.entidad = ue.entidadentidad and c.ejercicio = ue.ejercicio  JOIN sipro_history.subcomponente_tipo ct ON c.subcomponente_tipoid = ct.id "
+				+ " JOIN sipro_history.acumulacion_costo ac ON c.acumulacion_costoid = ac.id "
+				+ " WHERE c.id = "+componenteId
+				+ " AND c.version = " +version;
+		
+		String [] campos = {"Version", "Nombre", "Descripción", "Tipo", "Unidad Ejecutora", "Monto Planificado", "Tipo Acumulación de Monto Planificado", 
+				"Programa", "Subprograma", "Proyecto", "Actividad", "Obra", "Renglon", "Ubicación Geográfica", "Latitud", "Longitud", 
+				"Fecha Inicio", "Fecha Fin", "Duración", "Fecha Inicio Real", "Fecha Fin Real", 
+				"Fecha Creación", "Usuario que creo", "Fecha Actualización", "Usuario que actualizó", 
+				"Estado"};
+		resultado = CHistoria.getHistoria(query, campos);
+		return resultado;
 	}
 }
