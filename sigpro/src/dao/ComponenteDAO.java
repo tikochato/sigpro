@@ -643,7 +643,7 @@ public class ComponenteDAO {
 				+ " WHERE c.id = "+componenteId
 				+ " AND c.version = " +version;
 		
-		String [] campos = {"Version", "Nombre", "Descripción", "Tipo", "Unidad Ejecutora", "Costo", "Tipo Costo", 
+		String [] campos = {"Version", "Nombre", "Descripción", "Tipo", "Unidad Ejecutora", "Monto Planificado", "Tipo Acumulación de Monto Planificado", 
 				"Programa", "Subprograma", "Proyecto", "Actividad", "Obra", "Renglon", "Ubicación Geográfica", "Latitud", "Longitud", 
 				"Fecha Inicio", "Fecha Fin", "Duración", "Fecha Inicio Real", "Fecha Fin Real", 
 				"Fuente Préstamo", "Fuente Donación", "Fuente Nacional", 
