@@ -24,6 +24,7 @@ import pojo.Proyecto;
 import pojo.Subcomponente;
 import pojo.Subproducto;
 import utilities.CHibernateSession;
+import utilities.CHistoria;
 import utilities.CLogger;
 import utilities.Utils;
 
@@ -857,6 +858,50 @@ public class ActividadDAO {
 			session.close();
 		}
 		return ret;
+	}
+	
+	public static String getVersiones (Integer id){
+		String resultado = "";
+		String query = "SELECT DISTINCT(version) "
+				+ " FROM sipro_history.actividad "
+				+ " WHERE id = "+id;
+		List<?> versiones = CHistoria.getVersiones(query);
+		if(versiones!=null){
+			for(int i=0; i<versiones.size(); i++){
+				if(!resultado.isEmpty()){
+					resultado+=",";
+				}
+				resultado+=(Integer)versiones.get(i);
+			}
+		}
+		return resultado;
+	}
+	
+	public static String getHistoria (Integer id, Integer version){
+		String resultado = "";
+		String query = "SELECT a.version, a.nombre, a.descripcion, ati.nombre tipo, a.costo, ac.nombre tipo_costo, "
+				+ " a.programa, a.subprograma, a.proyecto, a.actividad, a.obra, a.renglon, a.ubicacion_geografica, a.latitud, a.longitud, "
+				+ " a.fecha_inicio, a.fecha_fin, a.duracion, a.fecha_inicio_real, a.fecha_fin_real, "
+				+ " a.porcentaje_avance, "
+				+ " a.fecha_creacion, a.usuario_creo, a.fecha_actualizacion, a.usuario_actualizo, "
+				+ " CASE WHEN a.estado = 1 "
+				+ " THEN 'Activo' "
+				+ " ELSE 'Inactivo' "
+				+ " END AS estado "
+				+ " FROM sipro_history.actividad a "
+				+ " JOIN sipro_history.actividad_tipo ati ON a.actividad_tipoid = ati.id "
+				+ " JOIN sipro_history.acumulacion_costo ac ON a.acumulacion_costo = ac.id "
+				+ " WHERE a.id = "+id
+				+ " AND a.version = " +version;
+		
+		String [] campos = {"Version", "Nombre", "Descripción", "Tipo", "Monto Planificado", "Tipo Acumulación de Monto Planificado", 
+				"Programa", "Subprograma", "Proyecto", "Actividad", "Obra", "Renglon", "Ubicación Geográfica", "Latitud", "Longitud", 
+				"Fecha Inicio", "Fecha Fin", "Duración", "Fecha Inicio Real", "Fecha Fin Real",
+				"Porcentaje de Avance", 
+				"Fecha Creación", "Usuario que creo", "Fecha Actualización", "Usuario que actualizó", 
+				"Estado"};
+		resultado = CHistoria.getHistoria(query, campos);
+		return resultado;
 	}
 	
 }

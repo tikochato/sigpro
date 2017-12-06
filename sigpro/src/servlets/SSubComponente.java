@@ -555,6 +555,15 @@ public class SSubComponente extends HttpServlet {
 			Subcomponente subcomponente = SubComponenteDAO.getSubComponente(subcomponentId);
 			
 			 response_text = String.join("", "{\"success\":" + ObjetoDAO.borrarHijos(subcomponente.getTreePath(), 2, usuario) + "}");
+		}else if(accion.equals("getCantidadHistoria")){
+			Integer id = Utils.String2Int(map.get("id"));
+			String resultado = SubComponenteDAO.getVersiones(id); 
+			response_text = String.join("", "{\"success\":true, \"versiones\": [" + resultado + "]}");
+		}else if(accion.equals("getHistoria")){
+			Integer id = Utils.String2Int(map.get("id"));
+			Integer version = Utils.String2Int(map.get("version"));
+			String resultado = SubComponenteDAO.getHistoria(id, version); 
+			response_text = String.join("", "{\"success\":true, \"historia\":" + resultado + "}");
 		}
 		else{
 			response_text = "{ \"success\": false }";

@@ -1,7 +1,7 @@
 var app = angular.module('proyectoController', [ 'ngTouch','smart-table',  'ui.bootstrap.contextMenu']);
 
-app.controller('proyectoController',['$rootScope','$scope','$http','$interval','i18nService','Utilidades','documentoAdjunto','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$filter', 'dialogoConfirmacion', 
-	function($rootScope,$scope, $http, $interval,i18nService,$utilidades,$documentoAdjunto,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$filter, $dialogoConfirmacion) {
+app.controller('proyectoController',['$rootScope','$scope','$http','$interval','i18nService','Utilidades','documentoAdjunto','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$filter', 'dialogoConfirmacion', 'historia',
+	function($rootScope,$scope, $http, $interval,i18nService,$utilidades,$documentoAdjunto,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$filter, $dialogoConfirmacion, $historia) {
 
 	var mi = this;
 	i18nService.setCurrentLang('es');
@@ -1211,6 +1211,16 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			);
 		};
 		
+		mi.verHistoria = function(){
+			$historia.getHistoria($scope, 'Pep', '/SProyecto',mi.proyecto.id)
+			.result.then(function(data) {
+				if (data != ""){
+					
+				}
+			}, function(){
+				
+			});
+		}
 } ]);
 
 app.controller('buscarPorProyecto', [ '$uibModalInstance',

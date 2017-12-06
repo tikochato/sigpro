@@ -1058,6 +1058,15 @@ public class SProducto extends HttpServlet {
 			}
 			response_text = String.join("", "{ \"success\": ",(ret ? "true":"false")," }");
 			
+		}else if(accion.equals("getCantidadHistoria")){
+			Integer id = Utils.String2Int(parametro.get("id"));
+			String resultado = ProductoDAO.getVersiones(id); 
+			response_text = String.join("", "{\"success\":true, \"versiones\": [" + resultado + "]}");
+		}else if(accion.equals("getHistoria")){
+			Integer id = Utils.String2Int(parametro.get("id"));
+			Integer version = Utils.String2Int(parametro.get("version"));
+			String resultado = ProductoDAO.getHistoria(id, version); 
+			response_text = String.join("", "{\"success\":true, \"historia\":" + resultado + "}");
 		}
 		else 
 			response_text = "{ \"success\": false }";
