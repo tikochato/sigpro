@@ -286,6 +286,7 @@
 									<tr>
 			          					<th nowrap colspan={{indicadoresc.colspan}} style="{{indicadoresc.estiloCelda}} text-align: center;" class="label-form"><span ng-show="indicadoresc.grupoMostrado.planificado && indicadoresc.grupoMostrado.real">Total Anual</span><span ng-hide="indicadoresc.grupoMostrado.planificado && indicadoresc.grupoMostrado.real">Anual</span></th>
 				          				<th rowspan="2" style="{{indicadoresc.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Total</th>
+				          				<th rowspan="2" style="{{indicadoresc.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Total Acumulado</th>
 				          				<th rowspan="2" style="{{indicadoresc.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Meta Final</th>
 				          				<th rowspan="2" style="{{indicadoresc.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">% Avance Final</th>
 				          			</tr>

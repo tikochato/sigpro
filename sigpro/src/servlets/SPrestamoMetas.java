@@ -52,6 +52,8 @@ public class SPrestamoMetas extends HttpServlet {
 		Integer unidadDeMedida;
 		BigDecimal porcentajeAvance;
 		BigDecimal metaFinal;
+		BigDecimal metaAcumuladaP;
+		BigDecimal metaAcumuladaR;
 		Integer nivel;
 		stanio[] anios; 
 	}
@@ -257,7 +259,10 @@ public class SPrestamoMetas extends HttpServlet {
 									}else if(meta.getDatoTipo()!=null && meta.getDatoTipo().getId().equals(3)){
 										tempMeta.metaFinal = meta.getMetaFinalDecimal();
 									}
-									tempMeta.porcentajeAvance = PrestamoMetasDAO.getPorcentajeAvanceMeta(meta, lineaBase);
+									BigDecimal acumulados[] = PrestamoMetasDAO.getPorcentajeAvanceMeta(meta, lineaBase);
+									tempMeta.metaAcumuladaP = acumulados[0]!=null?acumulados[0]:new BigDecimal(0);
+									tempMeta.metaAcumuladaR = acumulados[1]!=null?acumulados[1]:new BigDecimal(0);
+									tempMeta.porcentajeAvance = acumulados[2]!=null?acumulados[2]:new BigDecimal(0);
 									metaValores = new ArrayList<ArrayList<BigDecimal>>();
 									metaValores = PrestamoMetasDAO.getMetaValores(meta.getId(), anioInicial, anioFinal, lineaBase);
 									tempMeta = getMetas(metaValores, anioInicial, anioFinal, tempMeta);

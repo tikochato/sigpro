@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +16,6 @@ import org.hibernate.query.Query;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperPrint;
 import pojo.Meta;
-import pojo.MetaAvance;
 import pojo.Proyecto;
 import utilities.CHibernateSession;
 import utilities.CJasperReport;
@@ -151,49 +149,76 @@ public class PrestamoMetasDAO {
 		return result;
 	}
     
-    public static BigDecimal getPorcentajeAvanceMeta(Meta meta, String lineaBase){
-    	BigDecimal totalAvance = null;
+    public static BigDecimal[] getPorcentajeAvanceMeta(Meta meta, String lineaBase){
+    	BigDecimal respuesta[] = new BigDecimal[3];
     	Integer datoTipo = meta.getDatoTipo().getId(); 
     	if(datoTipo.equals(2) || datoTipo.equals(3)){
-	    	totalAvance = new BigDecimal(0);
+    		respuesta[0] = new BigDecimal(0);
+    		respuesta[1] = new BigDecimal(0);
+    		respuesta[2] = new BigDecimal(0);
 	    	
-	    	List<MetaAvance> ret = new ArrayList<MetaAvance>();
+    		List<?> ret = null;
 			Session session = CHibernateSession.getSessionFactory().openSession();
 			try{
-				String query = "Select metaid, fecha, usuario, valor_entero, valor_string, valor_decimal, valor_tiempo, estado, fecha_ingreso "
-						+ "FROM sipro_history.meta_avance ma "
-						+ "where ma.metaid = ?1 ";
-				query += lineaBase!=null ? " and ma.linea_base like '%"+lineaBase+"%' " : " and ma.actual = 1 ";
-				Query<MetaAvance> criteria = session.createNativeQuery(query, MetaAvance.class);
-				criteria.setParameter("1", meta.getId());
+				String query = "SELECT id, SUM(enteroP), SUM(decimalP), SUM(enteroR), SUM(decimalR) "
+						+ " FROM( "
+						+ " SELECT m.id, "
+						+ " sum(mp.enero_entero+mp.febrero_entero+mp.marzo_entero+mp.abril_entero+mp.mayo_entero+mp.junio_entero+mp.julio_entero "
+						+ " +mp.agosto_entero+mp.septiembre_entero+mp.octubre_entero+mp.noviembre_entero+mp.diciembre_entero) enteroP, "
+						+ " sum(mp.enero_decimal+mp.febrero_decimal+mp.marzo_decimal+mp.abril_decimal+mp.mayo_decimal+mp.junio_decimal+mp.julio_decimal "
+						+ " +mp.agosto_decimal+mp.septiembre_decimal+mp.octubre_decimal+mp.noviembre_decimal+mp.diciembre_decimal) decimalP "
+						+ " , 0 enteroR, 0 decimalR "
+						+ " FROM sipro_history.meta m "
+						+ " LEFT JOIN sipro_history.meta_planificado mp ON (m.id = mp.metaid "
+						+ (lineaBase!=null ? " and mp.linea_base like '%"+lineaBase+"%' " : " and mp.actual = 1 ")
+						+ " ) "
+						+ " where m.id = " + meta.getId()
+						+ (lineaBase!=null ? " and m.linea_base like '%"+lineaBase+"%' " : " and m.actual = 1 ")
+						+ " and m.estado=1 and mp.estado = 1 "
+						+ " UNION "
+						+ " Select m.id, 0 enteroP, 0 decimalP, "
+						+ " sum(ma.valor_entero) enteroR, sum(ma.valor_decimal) decimalR "
+						+ " FROM sipro_history.meta m "
+						+ " LEFT JOIN sipro_history.meta_avance ma ON (m.id = ma.metaid "
+						+ (lineaBase!=null ? " and ma.linea_base like '%"+lineaBase+"%' " : " and ma.actual = 1 ")
+						+ " ) "
+						+ " where m.id = " + meta.getId()
+						+ (lineaBase!=null ? " and m.linea_base like '%"+lineaBase+"%' " : " and m.actual = 1 ")
+						+ " and m.estado=1 and ma.estado = 1 "
+						+ " )t ";
+
+				Query<?> criteria = session.createNativeQuery(query);
 				ret = criteria.getResultList();
-				
-				BigDecimal sumaDecimal = new BigDecimal(0);
-	    		Integer sumaEntero = 0;
-	    		Iterator<MetaAvance> iterator = ret.iterator();
-	    	    while(iterator.hasNext()) {
-	    	    	MetaAvance avance = iterator.next();
-	    			if(datoTipo.equals(2)){
-	    				if(avance.getValorEntero()!=null){
-	    					sumaEntero += avance.getValorEntero();
-	    				}
-	    			}else if(datoTipo.equals(3)){
-	    				if(avance.getValorDecimal()!=null){
-	    					sumaDecimal = sumaDecimal.add(avance.getValorDecimal());
-	    				}
-	    			}
+
+				BigDecimal sumaDecimalP = new BigDecimal(0);
+	    		Integer sumaEnteroP = 0;
+				BigDecimal sumaDecimalR = new BigDecimal(0);
+	    		Integer sumaEnteroR = 0;
+	    		if(ret!=null && ret.size()>0){
+	    			Object[] dato = (Object[]) ret.get(0);
+	    			sumaEnteroP = dato[1]!=null? ((BigDecimal)dato[1]).toBigInteger().intValue():0;
+	    			sumaDecimalP = dato[2]!=null? (BigDecimal)dato[2]:new BigDecimal(0);
+	    			sumaEnteroR = dato[3]!=null? ((BigDecimal)dato[3]).toBigInteger().intValue():0;
+	    			sumaDecimalR = dato[4]!=null? (BigDecimal)dato[4]:new BigDecimal(0);
 	    		}
+
+	    		
+	    		
 	    		Integer metaFinalEntero = meta.getMetaFinalEntero()!=null ? meta.getMetaFinalEntero() : 0;
 	    		BigDecimal metaFinalDecimal = meta.getMetaFinalDecimal()!=null ? meta.getMetaFinalDecimal() : new BigDecimal(0);
 	    		if(datoTipo.equals(2) && metaFinalEntero.compareTo(0)!=0){
-	    			BigDecimal total = new BigDecimal(sumaEntero); 
+	    			BigDecimal total = new BigDecimal(sumaEnteroR); 
 	    			total = (total.divide(new BigDecimal(metaFinalEntero), 3, BigDecimal.ROUND_HALF_UP));
     				total = total.multiply(new BigDecimal(100));
-    				totalAvance = total.setScale(2, BigDecimal.ROUND_HALF_UP);
+    				respuesta[0] = new BigDecimal(sumaEnteroP);
+    				respuesta[1] = new BigDecimal(sumaEnteroR);
+    				respuesta[2] = total.setScale(2, BigDecimal.ROUND_HALF_UP);
     			}else if(datoTipo.equals(3)&& metaFinalDecimal.compareTo(new BigDecimal(0))!=0){
-    				BigDecimal total = (sumaDecimal.divide(metaFinalDecimal, 3, BigDecimal.ROUND_HALF_UP));
+    				BigDecimal total = (sumaDecimalR.divide(metaFinalDecimal, 3, BigDecimal.ROUND_HALF_UP));
     				total = total.multiply(new BigDecimal(100));
-    				totalAvance = total.setScale(2, BigDecimal.ROUND_HALF_UP);
+    				respuesta[0] = sumaDecimalP;
+    				respuesta[1] = sumaDecimalR;
+    				respuesta[2] = total.setScale(2, BigDecimal.ROUND_HALF_UP);
     			}
 			}
 			catch(Throwable e){
@@ -203,7 +228,7 @@ public class PrestamoMetasDAO {
 				session.close();
 			}
     	}
-    	return totalAvance;
+    	return respuesta;
     }
     
     public static JasperPrint generarJasper(Integer proyectoId, String usuario) throws JRException, SQLException{
