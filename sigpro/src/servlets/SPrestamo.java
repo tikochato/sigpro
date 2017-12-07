@@ -1256,6 +1256,7 @@ public class SPrestamo extends HttpServlet {
             		}
         		}
         		
+        		stcomponentesTemp = bubbleSort(stcomponentesTemp);
         		Iterator<stcomponentessigade> iteratorCT = stcomponentesTemp.iterator();
         		while(iteratorCT.hasNext()){
         			stcomponentessigade componenteTemp = iteratorCT.next();
@@ -1300,6 +1301,26 @@ public class SPrestamo extends HttpServlet {
         gz.write(response_text.getBytes("UTF-8"));
         gz.close();
         output.close();
+	}
+	
+	public List<stcomponentessigade> bubbleSort(List<stcomponentessigade> lista) {
+	      boolean swapped = true;
+	      int j = 0;
+	      stcomponentessigade tmp;
+	      while (swapped) {
+	            swapped = false;
+	            j++;
+	            for (int i = 0; i < lista.size() - j; i++) {                                       
+	                  if (lista.get(i).orden > lista.get(i + 1).orden) {                          
+	                        tmp = lista.get(i);
+	                        lista.set(i, lista.get(i+1));
+	                        lista.set(i + 1, tmp);
+	                        swapped = true;
+	                  }
+	            }                
+	      }
+	      
+	      return lista;
 	}
 	
 	private Proyecto crearEditarProyecto(JsonObject unidad,Prestamo prestamo,String usuario, JsonArray est_unidadesEjecutoras,int existeData){
