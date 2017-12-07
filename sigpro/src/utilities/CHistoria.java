@@ -81,7 +81,6 @@ public class CHistoria {
 					+ " JOIN sipro.prestamo p ON py.prestamoid = p.id "
 					+ " where c.proyectoid = py.id "
 					+ " and p.id = " + prestamoId
-					+ " or c.fecha_actualizacion is null "
 					+ " group by c.fuente_prestamo,c.fuente_donacion,c.fuente_nacional "
 					+ " union "
 					+ " select distinct "
@@ -89,7 +88,6 @@ public class CHistoria {
 					+ " from sipro_history.componente_sigade cs, sipro_history.componente c "
 					+ " where c.componente_sigadeid = cs.id "
 					+ " and cs.codigo_presupuestario = '"+codigoPresupuestario+"' "
-					+ " or c.fecha_actualizacion is null "
 					+ " ) t1 "
 					+ " order by fecha asc ";
 			
@@ -117,38 +115,38 @@ public class CHistoria {
 		List<?> ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{	
-			String query = "select DATE_FORMAT(c.fecha_creacion, \"%Y-%m-%d %H:%i\") fecha_creacion, "
-					+ " DATE_FORMAT(c.fecha_actualizacion, \"%Y-%m-%d %H:%i\") fecha_actualizacion, "
-					+ " c.id componenteid,c.nombre, c.fuente_prestamo,c.fuente_donacion,c.fuente_nacional, "
+			String query = "select DATE_FORMAT(c.fecha_creacion,  \"%Y-%m-%d %H:%i\") fecha_creacion, "
+					+ " DATE_FORMAT(c.fecha_actualizacion, \"%Y-%m-%d %H:%i\") fecha_actualizacion, c.id componenteid,c.nombre, "
+					+ " c.fuente_prestamo,c.fuente_donacion,c.fuente_nacional, "
 					+ " p.unidad_ejecutoraunidad_ejecutora,p.entidad, "
 					+ " ( select ue.nombre "
 					+ " from unidad_ejecutora ue "
 					+ " where ue.unidad_ejecutora=p.unidad_ejecutoraunidad_ejecutora "
-					+ " and ue.entidadentidad=p.entidad limit 1 ) nombre_unidad_ejecutora, "
+					+ " and ue.entidadentidad=p.entidad  "
+					+ " limit 1 ) nombre_unidad_ejecutora, "
 					+ " ( select cs.monto_componente "
 					+ " from sipro_history.componente_sigade cs, sipro_history.componente ct "
 					+ " where ct.componente_sigadeid = cs.id "
 					+ " and ct.id = c.id "
-					+ " and DATE_FORMAT(ct.fecha_creacion, \"%Y-%m-%d %H:%i\") < '"+fecha+"' "
-					+ " or ct.fecha_actualizacion is null "
-					+ " order by cs.fecha_creacion,cs.fecha_actualizacion "
+					+ " and DATE_FORMAT(ifnull(cs.fecha_actualizacion,cs.fecha_creacion), \"%Y-%m-%d %H:%i\") <= '"+fecha+"' "
+					+ " and DATE_FORMAT(ifnull(ct.fecha_actualizacion,ct.fecha_creacion), \"%Y-%m-%d %H:%i\") <= '"+fecha+"' "
+					+ " order by ifnull(cs.fecha_actualizacion,cs.fecha_creacion), ifnull(ct.fecha_actualizacion,ct.fecha_creacion) desc "
 					+ " limit 1 ) techo, "
 					+ " ( select cs.id "
 					+ " from sipro_history.componente_sigade cs, sipro_history.componente ct "
 					+ " where ct.componente_sigadeid = cs.id "
 					+ " and ct.id = c.id "
-					+ " and DATE_FORMAT(ct.fecha_creacion, \"%Y-%m-%d %H:%i\") < '"+fecha+"' "
-					+ " or ct.fecha_actualizacion is null "
-					+ " order by cs.fecha_creacion,cs.fecha_actualizacion "
+					+ " and DATE_FORMAT(ifnull(cs.fecha_actualizacion,cs.fecha_creacion), \"%Y-%m-%d %H:%i\") <= '"+fecha+"' "
+					+ " and DATE_FORMAT(ifnull(ct.fecha_actualizacion,ct.fecha_creacion), \"%Y-%m-%d %H:%i\") <= '"+fecha+"' "
+					+ " order by ifnull(cs.fecha_actualizacion,cs.fecha_creacion), ifnull(ct.fecha_actualizacion,ct.fecha_creacion) desc "
 					+ " limit 1 ) componente_sigadeid "
 					+ " from sipro_history.componente c, "
 					+ " sipro_history.proyecto p "
 					+ " where c.proyectoid = p.id "
-					+ " and p.id = "+proyectoId
-					+ " and c.id = "+componenteId
-					+ " and DATE_FORMAT(c.fecha_creacion, \"%Y-%m-%d %H:%i\") < '"+fecha+"' "
-					+ " or c.fecha_actualizacion is null "
-					+ " order by c.fecha_actualizacion desc "
+					+ " and p.id = "+ proyectoId
+					+ " and c.id = "+ componenteId
+					+ " and DATE_FORMAT(ifnull(c.fecha_actualizacion,c.fecha_creacion), \"%Y-%m-%d %H:%i\") <= '"+fecha+"' "
+					+ " order by ifnull(c.fecha_actualizacion,c.fecha_creacion) desc "
 					+ " limit 1 ";
 			
 			Query<?> criteria = session.createNativeQuery(query);

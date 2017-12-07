@@ -1267,7 +1267,15 @@ public class SPrestamo extends HttpServlet {
         			}
         			if(!agregado){
         				stcomponentes.add(componenteTemp);
-        				unidadesEjecutoras.add(componenteTemp.unidadesEjecutoras.get(0));
+        				boolean agregada =false;
+        				for(int i=0; i<unidadesEjecutoras.size(); i++){
+        					if(unidadesEjecutoras.get(i).id.compareTo(componenteTemp.unidadesEjecutoras.get(0).id)==0){
+        						agregada = true;
+        					}
+        				}
+        				if(!agregada){
+        					unidadesEjecutoras.add(componenteTemp.unidadesEjecutoras.get(0));
+        				}
         			}
         		}
         	}
