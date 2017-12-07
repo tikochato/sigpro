@@ -267,5 +267,5 @@ public class PrestamoDAO {
 		
 		return ret;
 	}
-
+	
 }

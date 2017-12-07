@@ -6,10 +6,13 @@ import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Year;
@@ -1210,14 +1213,72 @@ public class SPrestamo extends HttpServlet {
 			response_text = String.join(" ", "{ \"success\": ", ret ? "true" : "false","}");
         }else if(accion.equals("getFechasHistoriaMatriz")){
         	Integer prestamoId = Utils.String2Int(map.get("prestamoId"));
-        	Integer codigoPresupuestario = Utils.String2Int(map.get("codigoPresupuestario")); 
+        	String codigoPresupuestario = map.get("codigoPresupuestario"); 
         	String fechas = CHistoria.getFechasHistoriaMatriz(prestamoId, codigoPresupuestario);
 			response_text = String.join(" ", "{ \"success\": true, \"fechas\": [", fechas ,"]}");
         }else if(accion.equals("getHistoriaMatriz")){
         	Integer prestamoId = Utils.String2Int(map.get("prestamoId"));
         	String fecha = map.get("fecha"); 
-//        	String fechas = CHistoria.getFechasHistoriaMatriz(prestamoId, codigoPresupuestario);
-			response_text = String.join(" ", "{ \"success\": true, \"fechas\": [", "" ,"]}");
+        	List<stunidadejecutora> unidadesEjecutoras =  new ArrayList<stunidadejecutora>();
+        	List<stcomponentessigade> stcomponentes = new ArrayList<stcomponentessigade>();
+        	List<stcomponentessigade> stcomponentesTemp = new ArrayList<stcomponentessigade>();
+        	
+        	Prestamo prestamo = PrestamoDAO.getPrestamoById(prestamoId);
+        	if(prestamo!=null){
+        		Set<Proyecto> proyectos = prestamo.getProyectos();
+        		Iterator<Proyecto> iteratorP = proyectos.iterator();
+        		while(iteratorP.hasNext()){
+        			Proyecto proyecto = iteratorP.next();
+        			Set<Componente> componentes = proyecto.getComponentes();
+        			Iterator<Componente> iteratorC = componentes.iterator();
+            		while(iteratorC.hasNext()){
+            			Componente componente = iteratorC.next();
+            			List<?> datos = CHistoria.getHistoriaMatriz(proyecto.getId(), componente.getId(), fecha);
+            			if(datos!=null & datos.size()>0){
+            				Object[] dato = (Object[])datos.get(0);
+            				stcomponentessigade stcomponente = new stcomponentessigade();
+            				stcomponente.id = ((BigInteger)dato[11]).intValue();
+            				stcomponente.nombre = (String)dato[3];
+            				stcomponente.techo = (BigDecimal)dato[10];
+            				
+            				stunidadejecutora unidadEjecutora = new stunidadejecutora();
+            				unidadEjecutora.id = (Integer)dato[7];
+            				unidadEjecutora.nombre = (String)dato[9];
+            				unidadEjecutora.prestamo = ((BigDecimal)dato[4]).doubleValue();
+            				unidadEjecutora.donacion = ((BigDecimal)dato[5]).doubleValue();
+            				unidadEjecutora.nacional = ((BigDecimal)dato[6]).doubleValue();
+            				
+            				stcomponente.unidadesEjecutoras = new ArrayList<stunidadejecutora>();
+            				stcomponente.unidadesEjecutoras.add(unidadEjecutora);
+            				stcomponentesTemp.add(stcomponente);
+            			}
+            		}
+        		}
+        		
+        		Iterator<stcomponentessigade> iteratorCT = stcomponentesTemp.iterator();
+        		while(iteratorCT.hasNext()){
+        			stcomponentessigade componenteTemp = iteratorCT.next();
+        			boolean agregado=false;
+        			for(int i=0; i<stcomponentes.size(); i++){
+        				if(stcomponentes.get(i).id.compareTo(componenteTemp.id)==0){
+        					stcomponentes.get(i).unidadesEjecutoras.add(componenteTemp.unidadesEjecutoras.get(0));
+        					agregado = true;
+        				}
+        			}
+        			if(!agregado){
+        				stcomponentes.add(componenteTemp);
+        				unidadesEjecutoras.add(componenteTemp.unidadesEjecutoras.get(0));
+        			}
+        		}
+        	}
+
+
+        	String componentes_text=new GsonBuilder().serializeNulls().create().toJson(stcomponentes);
+			String unidades_text=new GsonBuilder().serializeNulls().create().toJson(unidadesEjecutoras);
+			
+			response_text = String.join("", ",\"unidadesEjecutoras\":",unidades_text);
+	        response_text = String.join("", "\"componentes\":",componentes_text,response_text);
+	        response_text = String.join("", "{\"success\":true,", response_text,"}");
         }
 		else
 			response_text = "{ \"success\": false }";
