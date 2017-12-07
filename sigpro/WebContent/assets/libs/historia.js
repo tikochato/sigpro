@@ -28,7 +28,7 @@ app.factory('historia',['$mdDialog','$uibModal', '$http',
 			    }
 			});
 		},
-		getHistoriaMatriz: function($scope, titulo, servlet, id){
+		getHistoriaMatriz: function($scope, titulo, servlet, id, codigoPresupuestario){
 			return $uibModal.open({
 				animation : 'true',
 			    ariaLabelledBy : 'modal-title',
@@ -48,6 +48,9 @@ app.factory('historia',['$mdDialog','$uibModal', '$http',
 					},
 					id : function(){
 						return id;
+					},
+					codigo_presupuestario : function(){
+						return codigoPresupuestario;
 					}
 			    }
 			});
@@ -160,25 +163,30 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 
 app.controller('historiaMatrizController', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log', 'titulo','servlet', 'id', historiaMatrizController ]);
+	'$timeout', '$log', 'titulo','servlet', 'id', 'codigo_presupuestario', historiaMatrizController ]);
 
-function historiaMatrizController($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log, titulo, servlet, id) {
+function historiaMatrizController($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log, titulo, servlet, id, codigoPresupuestario) {
 	var mi = this;
-	mi.mostrarCargando = false;
+	mi.mostrarCargando = true;
 	mi.objetoNombre = titulo;
 	mi.m_organismosEjecutores = [];
 	mi.m_componentes = [];
 	mi.posicion = 0;
-	mi.versiones = [];
-	mi.totalVersiones = 0;
-//	$http.post(servlet, {
-//		
-//	}).success(
-//		function(response){
-//		if(response.success){
-//			
-//		}
-//	});
+	mi.fechas = [];
+	mi.totalFechas = 0;
+
+	$http.post(servlet, {
+		accion: 'getFechasHistoriaMatriz',
+		prestamoId: id,
+		codigoPresupuestario: codigoPresupuestario
+	}).success(
+		function(response){
+		if(response.success){
+			mi.fechas = response.fechas;
+			mi.tatalFechas = mi.fechas.length;
+			mi.cargarData(mi.fechas[0]);
+		}
+	});
 	
 	mi.m_componentes = [
 		{"id":null,"nombre":"Catastro en áreas protegidas","tipoMoneda":null,"techo":17205000.00,"orden":1,"descripcion":null,
@@ -212,29 +220,55 @@ function historiaMatrizController($uibModalInstance, $scope, $http, $interval, i
 		}
 	}
 	
+	mi.cargarData = function(fecha){
+		$http.post(servlet, {
+			accion: 'getHistoriaMatriz',
+			fecha: fecha,
+			prestamoId: id
+		}).success(
+			function(response){
+				if(response.success){
+					mi.mostrarCargando = false;
+				}else{
+					mi.mostrarCargando = false;
+				}
+			}
+		);
+	}
+	
 	mi.cerrar = function() {
 		$uibModalInstance.close(false);
 	};
 	
 	mi.inicio = function(){
-		
+		mi.posicion = 0;
+		mi.cargarData(mi.fechas[0]);
+		mi.desHabilitarBotones();
 	}
 	
 	mi.ultimo = function(){
-		if(mi.totalVersiones > 0){
-			
+		if(mi.totalFechas > 0){
+			mi.posicion = mi.totalFechas - 1;
+			mi.cargarData(mi.fechas[mi.posicion]);
+			mi.desHabilitarBotones();
 		}
 	}
 	
 	mi.siguiente = function(){
-		if(mi.totalVersiones > 0){
-			
+		if(mi.totalFechas > 0){
+			if(mi.posicion != mi.totalFechas - 1){
+				mi.posicion = mi.posicion+1;
+				mi.cargarData(mi.fechas[mi.posicion]);
+				mi.desHabilitarBotones();
+			}
 		}
 	}
 	
 	mi.atras = function(){
 		if(mi.posicion != 0){
-			
+			mi.posicion = mi.posicion-1;
+			mi.cargarData(mi.fechas[mi.posicion]);
+			mi.desHabilitarBotones();
 		}
 	}
 	
@@ -244,12 +278,12 @@ function historiaMatrizController($uibModalInstance, $scope, $http, $interval, i
 		else
 			mi.disabledInicio=false;
 		
-		if(mi.posicion == mi.totalVersiones -1)
+		if(mi.posicion == mi.totalFechas -1)
 			mi.disabledFin = true;
 		else
 			mi.disabledFin = false;
 		
-		if(mi.totalVersiones == 1){
+		if(mi.totalFechas == 1){
 			mi.disabledInicio=true;
 			mi.disabledFin = true;
 		}
