@@ -68,7 +68,7 @@ public class CHistoria {
 		return ret;
 	}
 	
-	public static String getFechasHistoriaMatriz(Integer prestamoId, Integer codigoPresupuestario){
+	public static String getFechasHistoriaMatriz(Integer prestamoId, String codigoPresupuestario){
 		String resultado = "";
 		List<?> ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -113,8 +113,7 @@ public class CHistoria {
 		return resultado;
 	}
 	
-	public static String getHistoriaMatriz(Integer proyectoId, Integer componenteId, String fecha){
-		String resultado = "";
+	public static List<?> getHistoriaMatriz(Integer proyectoId, Integer componenteId, String fecha){
 		List<?> ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{	
@@ -153,23 +152,15 @@ public class CHistoria {
 					+ " limit 1 ";
 			
 			Query<?> criteria = session.createNativeQuery(query);
-			ret = criteria.getResultList();
-			if(ret!=null){
-				for(int i=0; i<ret.size(); i++){
-					if(!resultado.isEmpty()){
-						resultado+=", ";
-					}
-					resultado+="\""+ret.get(i)+"\"";
-				}
-			}
+			ret = criteria.getResultList();			
 		}
 		catch(Throwable e){
-			CLogger.write("3", CHistoria.class, e);
+			CLogger.write("4", CHistoria.class, e);
 		}
 		finally{
 			session.close();
 		}
-		return resultado;
+		return ret;
 	}
 	
 }

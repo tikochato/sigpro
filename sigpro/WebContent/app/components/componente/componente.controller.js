@@ -141,10 +141,6 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 					mi.gridApi = gridApi;
 					gridApi.selection.on.rowSelectionChanged($scope,function(row) {
 						mi.componente = row.entity;
-						$http.post('/SPrestamo', { accion: 'getFechasHistoriaMatriz', prestamoId: 1, codigoPresupuestario: 5204020122, t: (new Date()).getTime()}).success(
-								function(response) {
-									console.log(response);
-						});
 					});
 
 					gridApi.core.on.sortChanged( $scope, function ( grid, sortColumns ) {
