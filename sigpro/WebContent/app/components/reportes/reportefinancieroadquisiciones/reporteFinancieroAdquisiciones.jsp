@@ -208,14 +208,14 @@
 								  focus-out="planadqui.blurLineaBase()" input-name="lineaBase"></div>
 							<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 						</div>
-						<div align="left" class="form-group col-sm-1">
+						<div align="left" class="form-group col-sm-1" style="margin-top: 5px">
 							<input type="number"  class="inputText" ng-model="planadqui.fechaInicio" maxlength="4" 
 							ng-value="planadqui.fechaInicio" onblur="this.setAttribute('value', this.value);"
 							ng-change="planadqui.validar(2)"/>
 						  	<label for="campo.id" class="floating-label" style="left: 0;">*Año Inicial</label>
 						</div>
 				
-						<div align="left" class="form-group col-sm-1">
+						<div align="left" class="form-group col-sm-1" style="margin-top: 5px">
 							<input type="number"  class="inputText" ng-model="planadqui.fechaFin" maxlength="4" 
 							ng-value="planadqui.fechaFin" onblur="this.setAttribute('value', this.value);"
 							ng-change="planadqui.validar(3)"/>
