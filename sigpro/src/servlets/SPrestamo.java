@@ -58,6 +58,7 @@ import pojo.Proyecto;
 import pojo.ProyectoTipo;
 import pojo.TipoMoneda;
 import pojo.UnidadEjecutora;
+import utilities.CHistoria;
 import utilities.Utils;
 
 
@@ -1207,6 +1208,16 @@ public class SPrestamo extends HttpServlet {
 				}
 			}
 			response_text = String.join(" ", "{ \"success\": ", ret ? "true" : "false","}");
+        }else if(accion.equals("getFechasHistoriaMatriz")){
+        	Integer prestamoId = Utils.String2Int(map.get("prestamoId"));
+        	Integer codigoPresupuestario = Utils.String2Int(map.get("codigoPresupuestario")); 
+        	String fechas = CHistoria.getFechasHistoriaMatriz(prestamoId, codigoPresupuestario);
+			response_text = String.join(" ", "{ \"success\": true, \"fechas\": [", fechas ,"]}");
+        }else if(accion.equals("getHistoriaMatriz")){
+        	Integer prestamoId = Utils.String2Int(map.get("prestamoId"));
+        	String fecha = map.get("fecha"); 
+//        	String fechas = CHistoria.getFechasHistoriaMatriz(prestamoId, codigoPresupuestario);
+			response_text = String.join(" ", "{ \"success\": true, \"fechas\": [", "" ,"]}");
         }
 		else
 			response_text = "{ \"success\": false }";
