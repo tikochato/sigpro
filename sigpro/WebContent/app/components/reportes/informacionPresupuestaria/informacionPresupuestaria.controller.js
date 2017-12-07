@@ -548,6 +548,17 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 			    montoPlanificado,
 			    montoReal
 			];
+			
+			mi.dataGraficaAcumulado = [];
+			mi.dataGraficaAcumulado[0] = [];
+			mi.dataGraficaAcumulado[1] = [];
+			
+			for (x in mi.dataGrafica[0]){
+				mi.dataGraficaAcumulado[0][x] = x == 0 ? mi.dataGrafica[0][x] : mi.dataGraficaAcumulado[0][x -1] +  mi.dataGrafica[0][x];
+				mi.dataGraficaAcumulado[1][x] = x == 0 ? mi.dataGrafica[1][x] : mi.dataGraficaAcumulado[1][x -1] +  mi.dataGrafica[1][x];
+			}
+			
+			  
 				
 			mi.series = ['Planificado', 'Real'];
 			
@@ -559,10 +570,12 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 				for(k in mi.dataGrafica[h]){
 					if(mi.enMillones){
 						mi.dataGrafica[h][k] = mi.dataGrafica[h][k] / 1000000;
+						mi.dataGraficaAcumulado[h][k] = mi.dataGraficaAcumulado[h][k] / 1000000;
 						mi.optionsGrafica.scales.yAxes[0].scaleLabel.labelString = "Monto en millones de quetzales";
 					}
 					else{
 						mi.dataGrafica[h][k] = mi.dataGrafica[h][k] * 1000000;
+						mi.dataGraficaAcumulado[h][k] = mi.dataGraficaAcumulado[h][k] * 1000000;
 						mi.optionsGrafica.scales.yAxes[0].scaleLabel.labelString = "Monto en quetzales";
 					}
 				}

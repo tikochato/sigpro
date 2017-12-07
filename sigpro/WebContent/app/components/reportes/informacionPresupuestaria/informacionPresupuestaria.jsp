@@ -360,6 +360,18 @@
 		    			chart-options="controller.optionsGrafica">
 					</canvas>
 		    	</div>
+		    	
+		    	<br/>
+		    	<br/>
+		    	
+		    	<div class="row" ng-hide="!controller.mostrarDescargar" style="width: 70%">
+		    		<label class="label-form">Total Acumulado</label>
+		    		<canvas id="line" class="chart chart-line" chart-data="controller.dataGraficaAcumulado" 
+		    			chart-labels="controller.labels" chart-series="controller.series" 
+		    			chart-colors = "controller.lineColors" chart-legend="true"
+		    			chart-options="controller.optionsGrafica">
+					</canvas>
+		    	</div>
 			</div>
 		</div>
 	</div>
