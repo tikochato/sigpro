@@ -178,32 +178,17 @@ function historiaMatrizController($uibModalInstance, $scope, $http, $interval, i
 	$http.post(servlet, {
 		accion: 'getFechasHistoriaMatriz',
 		prestamoId: id,
-		codigoPresupuestario: codigoPresupuestario
+		codigoPresupuestario: codigoPresupuestario,
+		t: (new Date()).getTime()
 	}).success(
 		function(response){
 		if(response.success){
 			mi.fechas = response.fechas;
-			mi.tatalFechas = mi.fechas.length;
+			mi.totalFechas = mi.fechas.length;
 			mi.cargarData(mi.fechas[0]);
+			mi.desHabilitarBotones();
 		}
 	});
-	
-	mi.m_componentes = [
-		{"id":null,"nombre":"Catastro en áreas protegidas","tipoMoneda":null,"techo":17205000.00,"orden":1,"descripcion":null,
-		"unidadesEjecutoras":[{"id":0,"nombre":"OBLIGACIONES DEL ESTADO A CARGO DEL TESORO","entidad":"11130018","entidadId":11130018,"ejercicio":2017,"prestamo":1.7205E7,"donacion":0.0,"nacional":0.0,"esCoordinador":0,"fechaElegibilidad":null,"fechaCierre":null}]},
-		{"id":null,"nombre":"Consolidación de la certeza jurídica de las áreas protegidas","tipoMoneda":null,"techo":700000.00,"orden":2,"descripcion":null,
-		"unidadesEjecutoras":[{"id":0,"nombre":"OBLIGACIONES DEL ESTADO A CARGO DEL TESORO","entidad":"11130018","entidadId":11130018,"ejercicio":2017,"prestamo":700000.0,"donacion":0.0,"nacional":0.0,"esCoordinador":0,"fechaElegibilidad":null,"fechaCierre":null}]},
-		{"id":null,"nombre":"Soporte técnico, coordinación interinstitucional y uso de la información catastral y registral","tipoMoneda":null,"techo":2145000.00,"orden":3,"descripcion":null,
-		"unidadesEjecutoras":[{"id":0,"nombre":"OBLIGACIONES DEL ESTADO A CARGO DEL TESORO","entidad":"11130018","entidadId":11130018,"ejercicio":2017,"prestamo":2145000.0,"donacion":0.0,"nacional":0.0,"esCoordinador":0,"fechaElegibilidad":null,"fechaCierre":null}]},
-		{"id":null,"nombre":"Administración, supervisión y seguimiento del Programa","tipoMoneda":null,"techo":1820000.00,"orden":4,"descripcion":null,
-		"unidadesEjecutoras":[{"id":0,"nombre":"OBLIGACIONES DEL ESTADO A CARGO DEL TESORO","entidad":"11130018","entidadId":11130018,"ejercicio":2017,"prestamo":1820000.0,"donacion":0.0,"nacional":0.0,"esCoordinador":0,"fechaElegibilidad":null,"fechaCierre":null}]},
-		{"id":null,"nombre":"Auditoría financera externa","tipoMoneda":null,"techo":130000.00,"orden":5,"descripcion":null,
-		"unidadesEjecutoras":[{"id":0,"nombre":"OBLIGACIONES DEL ESTADO A CARGO DEL TESORO","entidad":"11130018","entidadId":11130018,"ejercicio":2017,"prestamo":130000.0,"donacion":0.0,"nacional":0.0,"esCoordinador":0,"fechaElegibilidad":null,"fechaCierre":null}]},
-		{"id":null,"nombre":"Contingencia","tipoMoneda":null,"techo":0.00,"orden":6,"descripcion":null,
-		"unidadesEjecutoras":[{"id":0,"nombre":"OBLIGACIONES DEL ESTADO A CARGO DEL TESORO","entidad":"11130018","entidadId":11130018,"ejercicio":2017,"prestamo":null,"donacion":null,"nacional":null,"esCoordinador":0,"fechaElegibilidad":null,"fechaCierre":null}]}];
-	
-	
-	mi.m_organismosEjecutores = [{"id":0,"nombre":"OBLIGACIONES DEL ESTADO A CARGO DEL TESORO","entidad":"11130018","entidadId":11130018,"ejercicio":2017,"prestamo":null,"donacion":null,"nacional":null,"esCoordinador":0,"fechaElegibilidad":null,"fechaCierre":null}];
 	
 	mi.actualizarTotalesUE = function(){
 		for (x in mi.m_componentes){
@@ -224,10 +209,14 @@ function historiaMatrizController($uibModalInstance, $scope, $http, $interval, i
 		$http.post(servlet, {
 			accion: 'getHistoriaMatriz',
 			fecha: fecha,
-			prestamoId: id
+			prestamoId: id,
+			t: (new Date()).getTime()
 		}).success(
 			function(response){
 				if(response.success){
+					mi.m_organismosEjecutores = response.unidadesEjecutoras;
+					mi.m_componentes = response.componentes;
+					mi.actualizarTotalesUE();
 					mi.mostrarCargando = false;
 				}else{
 					mi.mostrarCargando = false;
@@ -241,6 +230,8 @@ function historiaMatrizController($uibModalInstance, $scope, $http, $interval, i
 	};
 	
 	mi.inicio = function(){
+		mi.inicializar();
+		mi.mostrarCargando = true;
 		mi.posicion = 0;
 		mi.cargarData(mi.fechas[0]);
 		mi.desHabilitarBotones();
@@ -248,6 +239,8 @@ function historiaMatrizController($uibModalInstance, $scope, $http, $interval, i
 	
 	mi.ultimo = function(){
 		if(mi.totalFechas > 0){
+			mi.inicializar();
+			mi.mostrarCargando = true;
 			mi.posicion = mi.totalFechas - 1;
 			mi.cargarData(mi.fechas[mi.posicion]);
 			mi.desHabilitarBotones();
@@ -257,6 +250,8 @@ function historiaMatrizController($uibModalInstance, $scope, $http, $interval, i
 	mi.siguiente = function(){
 		if(mi.totalFechas > 0){
 			if(mi.posicion != mi.totalFechas - 1){
+				mi.inicializar();
+				mi.mostrarCargando = true;
 				mi.posicion = mi.posicion+1;
 				mi.cargarData(mi.fechas[mi.posicion]);
 				mi.desHabilitarBotones();
@@ -266,6 +261,8 @@ function historiaMatrizController($uibModalInstance, $scope, $http, $interval, i
 	
 	mi.atras = function(){
 		if(mi.posicion != 0){
+			mi.inicializar();
+			mi.mostrarCargando = true;
 			mi.posicion = mi.posicion-1;
 			mi.cargarData(mi.fechas[mi.posicion]);
 			mi.desHabilitarBotones();
@@ -289,5 +286,7 @@ function historiaMatrizController($uibModalInstance, $scope, $http, $interval, i
 		}
 	}
 	
-	mi.actualizarTotalesUE();
+	mi.inicializar = function(){
+		mi.m_componentes = [];
+	}
 }
