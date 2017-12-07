@@ -232,7 +232,7 @@
 												
 						<div class="form-group">
 		            		<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="subcomponentec.cambioAcumulacionCosto"
-		            		disable-input="subcomponentec.congelado"
+		            		disable-input="subcomponentec.subcomponente.tieneHijos || subcomponentec.congelado"
 							  local-data="subcomponentec.acumulacionesCosto" search-fields="nombre" title-field="nombre" field-required="subcomponentec.subcomponente.costo!=null && subcomponentec.subcomponente.costo>0" 
 						  field-label="{{subcomponentec.subcomponente.costo!=null && subcomponentec.subcomponente.costo>0 ? '* ':''}}Tipo de Acumulación Monto Planificado"
 							  minlength="1" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
@@ -266,9 +266,9 @@
 								<div class="form-group" >
 								  <input type="text"  class="inputText" uib-datepicker-popup="{{subcomponentec.formatofecha}}" alt-input-formats="{{subcomponentec.altformatofecha}}"
 								  			ng-model="subcomponentec.subcomponente.fechaInicio" is-open="subcomponentec.fi_abierto"
-								  			ng-readonly="subcomponentec.congelado == 1 || subcomponentec.subcomponente.tieneHijos != true"
+								  			ng-readonly="subcomponentec.congelado || subcomponentec.subcomponente.tieneHijos"
 								            datepicker-options="subcomponentec.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="subcomponentec.cambioDuracion(subcomponentec.duracionDimension);" ng-required="true"
-								            ng-value="subcomponentec.subcomponente.fechaInicio" onblur="this.setAttribute('value', this.value);" ng-readonly="subcomponentec.subcomponente.tieneHijos">
+								            ng-value="subcomponentec.subcomponente.fechaInicio" onblur="this.setAttribute('value', this.value);">
 								            <span class="label-icon" ng-click="subcomponentec.subcomponente.tieneHijos != true ? subcomponentec.abrirPopupFecha(1000) : ''" tabindex="-1">
 								              <i class="glyphicon glyphicon-calendar"></i>
 								            </span>

@@ -220,14 +220,14 @@
 						
 			        <div class="form-group" >
 				       <input type="text" class="inputText" ng-model="producto.producto.costo" ng-value="producto.producto.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left"
-				       		ng-required="producto.producto.acumulacionCostoNombre != null" ng-readonly="producto.congelado"
-							ui-number-mask="2" ng-readonly="producto.producto.tieneHijos"/>
+				       		ng-required="producto.producto.acumulacionCostoNombre != null"
+							ui-number-mask="2" ng-readonly="producto.producto.tieneHijos || producto.congelado"/>
 				       <label for="iprog" class="floating-label">{{producto.producto.acumulacionCostoNombre  != null ?"* Monto Planificado":"Monto Planificado"}}</label>
 					</div>
 						
 				    <div class="form-group">
 	            		<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="producto.cambioAcumulacionCosto"
-	            		  disable-input="producto.congelado"
+	            		  disable-input="producto.producto.tieneHijos || producto.congelado"
 						  local-data="producto.acumulacionesCosto" search-fields="nombre" title-field="nombre" field-required="producto.producto.costo!=null && producto.producto.costo>0" 
 						  field-label="{{producto.producto.costo!=null && producto.producto.costo>0 ? '* ':''}}Tipo de Acumulación Monto Planificado"
 						  minlength="1" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"
@@ -240,9 +240,8 @@
 							   <input class="inputText"  type="number"
 							     ng-model="producto.producto.duracion" ng-value="producto.producto.duracion"   
 							     onblur="this.setAttribute('value', this.value);"  min="1" ng-required="true" 
-							     ng-readonly="producto.congelado"
 							     ng-change="producto.producto.fechaInicio != null && producto.duracionDimension.value != 0 ? producto.cambioDuracion(producto.duracionDimension) : ''"  
-							     ng-readonly="producto.producto.tieneHijos">
+							     ng-readonly="producto.producto.tieneHijos || producto.congelado">
 							   <label class="floating-label">* Duración</label>
 							</div>	
 						</div>
