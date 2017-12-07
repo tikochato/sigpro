@@ -1240,9 +1240,10 @@ public class SPrestamo extends HttpServlet {
             				stcomponente.id = ((BigInteger)dato[11]).intValue();
             				stcomponente.nombre = (String)dato[3];
             				stcomponente.techo = (BigDecimal)dato[10];
+            				stcomponente.orden = ((BigInteger)dato[12]).intValue();
             				
             				stunidadejecutora unidadEjecutora = new stunidadejecutora();
-            				unidadEjecutora.id = (Integer)dato[7];
+            				unidadEjecutora.id = (Integer)dato[8];
             				unidadEjecutora.nombre = (String)dato[9];
             				unidadEjecutora.prestamo = ((BigDecimal)dato[4]).doubleValue();
             				unidadEjecutora.donacion = ((BigDecimal)dato[5]).doubleValue();
