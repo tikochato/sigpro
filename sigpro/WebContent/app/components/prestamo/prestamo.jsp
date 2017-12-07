@@ -1262,20 +1262,20 @@
 								 		 </td>
 								 		 
 								 	</tr>
-								 	<tr style="border-top: 3px double #ddd;" ng-show="false">
+								 	<tr style="border-top: 3px double #ddd;" >
 								 		<td style="min-width: 200px;" class="label-form">
 								 			Total Asignado
 								 		</td>
 								 		<td  colspan="3" ng-repeat = "organismo in prestamoc.m_organismosEjecutores">
 								 			<table style="width: 100%;">
 								 				<tr>
-								 					<td style="text-align: center;">
+								 					<td style="text-align: right; width: 100px; padding-right: 5px;" class="label-form">
 								 						{{ organismo.totalAsignadoPrestamo | formatoMillonesSinTipo : prestamoc.enMillones }}
 								 					</td>
-								 					<td style="text-align: center;">
+								 					<td style="text-align: right; width: 100px; padding-right: 5px;" class="label-form">
 								 						{{ organismo.totalAsignadoDonacion | formatoMillonesSinTipo : prestamoc.enMillones }}
 								 					</td>
-								 					<td style="text-align: center; border-right: 1px single #ddd;">
+								 					<td style="text-align: right; border-right: 1px single #ddd; width: 100px; padding-right: 5px;" class="label-form">
 								 						{{ organismo.totalAsignadoNacional | formatoMillonesSinTipo : prestamoc.enMillones }}
 								 					</td>
 								 				<tr>

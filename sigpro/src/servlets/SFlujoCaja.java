@@ -57,6 +57,8 @@ public class SFlujoCaja extends HttpServlet {
 		BigDecimal[] filaVariacionPorcentaje = new BigDecimal[12];
 		BigDecimal[] filaDesembolsos = new BigDecimal[12];
 		BigDecimal[] filaDesembolsosReal = new BigDecimal[12];
+		BigDecimal[] filaSaldoCuenta = new BigDecimal[12];
+		BigDecimal[] filaAnticipos = new BigDecimal[12];
 		BigDecimal[] filaSaldo = new BigDecimal[12];
 				
 		BigDecimal totalPlanificado = new BigDecimal(0);
@@ -67,6 +69,8 @@ public class SFlujoCaja extends HttpServlet {
 		BigDecimal totalVariacionPorcentaje = new BigDecimal(0);
 		BigDecimal totalDesembolsosReal = new BigDecimal(0);
 		BigDecimal totalDesembolsos = new BigDecimal(0);
+		BigDecimal totalSaldoCuenta = new BigDecimal(0);
+		BigDecimal totalAnticipos = new BigDecimal(0);
 		BigDecimal totalSaldo = new BigDecimal(0);
 
 	}
@@ -253,10 +257,13 @@ public class SFlujoCaja extends HttpServlet {
 							totales.filaEjecutadoAcumulado[m] = ejecutadoAcumulado;
 							totales.totalEjecutado = totales.totalEjecutado.add(ejecutadoActual); 
 							totales.totalEjecutadoAcumulado = ejecutadoAcumulado;
-							
 							totales.filaVariacion[m] = planificadoActual.subtract(ejecutadoActual);
 							totales.filaVariacionPorcentaje[m] = (planificadoActual.compareTo(BigDecimal.ZERO)==0 || totales.filaVariacion[m]==null) ? new BigDecimal(0) : totales.filaVariacion[m].divide(planificadoActual, 2, BigDecimal.ROUND_HALF_UP);
 							totales.totalVariacion = totales.totalVariacion.add(totales.filaVariacion[m]);
+							totales.filaSaldoCuenta[m] = null;
+							totales.filaAnticipos[m] = null;
+							totales.totalSaldoCuenta = null;
+							totales.totalAnticipos = null;
 						}
 	
 					DateTime fecha = new DateTime(fechaCorte);
