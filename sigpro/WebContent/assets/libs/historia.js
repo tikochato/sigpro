@@ -4,7 +4,7 @@ app.factory('historia',['$mdDialog','$uibModal', '$http',
 	function($mdDialog,$uibModal,$http){
 	
 	return{
-		getHistoria: function($scope, titulo, servlet, id){
+		getHistoria: function($scope, titulo, servlet, id, objeto_tipo, adquisiciones, riesgos, desembolsos, metas){
 			return $uibModal.open({
 			    animation : 'true',
 			    ariaLabelledBy : 'modal-title',
@@ -24,6 +24,21 @@ app.factory('historia',['$mdDialog','$uibModal', '$http',
 					},
 					id : function(){
 						return id;
+					},
+					objeto_tipo : function(){
+						return objeto_tipo;
+					},
+					adquisiciones: function(){
+						return adquisiciones;
+					},
+					riesgos: function(){
+						return riesgos; 
+					},
+					desembolsos: function(){
+						return desembolsos;
+					},
+					metas: function(){
+						return metas;
 					}
 			    }
 			});
@@ -60,9 +75,10 @@ app.factory('historia',['$mdDialog','$uibModal', '$http',
 
 app.controller('historiaController', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log', 'titulo','servlet', 'id', historiaController ]);
+	'$timeout', '$log', 'titulo','servlet', 'id', 'objeto_tipo', 'adquisiciones', 'riesgos', 'desembolsos', 'metas', historiaController ]);
 
-function historiaController($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log, titulo, servlet, id) {
+function historiaController($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log, 
+		titulo, servlet, id, objeto_tipo, adquisiciones, riesgos, desembolsos, metas) {
 	var mi = this;
 	
 	mi.objetoNombre = titulo;
@@ -70,28 +86,76 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 	mi.posicion = 0;
 	mi.totalVersiones = 0;
 	mi.versiones = [];
+	mi.adquisiciones = adquisiciones;
+	mi.riesgos = riesgos;
+	mi.desembolsos = desembolsos;
+	mi.metas = metas;
+	mi.id = id;
+	mi.objetoTipo = objeto_tipo;
+	mi.servletGeneral = servlet;
+	mi.servlet = servlet;
 	
-	$http.post(servlet, {
-		accion: 'getCantidadHistoria',
-		id: id,
-		t: (new Date()).getTime()
-	}).success(
-		function(response){
-			if(response.success){
-				mi.versiones = response.versiones;
-				mi.totalVersiones = mi.versiones.length;
-				mi.cargarData(mi.versiones[0]);
-				mi.desHabilitarBotones();
-			}else{
-				mi.mostrarCargando = false;
+	mi.adquisicionesClick = function(){
+		mi.posicion = 0;
+		mi.mostrarCargando = true;
+		mi.servlet = '/SPlanAdquisicion';
+		$http.post(mi.servlet, {
+			accion: 'getCantidadHistoria',
+			id: mi.id,
+			objetoTipo : mi.objetoTipo,
+			t: (new Date()).getTime()
+		}).success(
+			function(response){
+				if(response.success){
+					mi.versiones = response.versiones;
+					mi.totalVersiones = mi.versiones.length;
+					mi.cargarData(mi.versiones[0]);
+					mi.desHabilitarBotones();
+				}
 			}
-		}
-	);
+		);
+	}
+	
+	mi.riesgosClick = function(){
+		mi.mostrarCargando = true;
+	}
+	
+	mi.desembolsosClick = function(){
+		mi.mostrarCargando = true;
+	}
+	
+	mi.metasClick = function(){
+		mi.mostrarCargando = true;
+	}
+	
+	mi.generalClick = function(){
+		mi.posicion = 0;
+		mi.mostrarCargando = true;
+		mi.servlet = mi.servletGeneral;
+		$http.post(servlet, {
+			accion: 'getCantidadHistoria',
+			id: id,
+			t: (new Date()).getTime()
+		}).success(
+			function(response){
+				if(response.success){
+					mi.versiones = response.versiones;
+					mi.totalVersiones = mi.versiones.length;
+					mi.cargarData(mi.versiones[0]);					
+					mi.desHabilitarBotones();
+				}else{
+					mi.mostrarCargando = false;
+				}
+			}
+		);
+	}
 	
 	mi.cargarData = function(version){
-		$http.post(servlet, {
+		mi.data = [];
+		$http.post(mi.servlet, {
 			accion: 'getHistoria',
 			id: id,
+			objetoTipo : mi.objetoTipo,
 			version : version,
 			t: (new Date()).getTime()
 		}).success(
@@ -104,7 +168,7 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 					mi.mostrarCargando = false;
 				}
 			}
-		);	
+		);
 	}
 	
 	mi.cerrar = function() {
@@ -159,6 +223,8 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 			mi.disabledFin = true;
 		}
 	}
+	
+	mi.generalClick();
 }
 
 app.controller('historiaMatrizController', [ '$uibModalInstance',

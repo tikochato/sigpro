@@ -26,22 +26,54 @@
 							</div>
 						</div>
 					</div>
-					<div style="overflow: auto; min-height: 300px; max-height: 300px;">
-						<table st-table="modalh.displayedItems" st-safe-src="modalh.data" class="table table-striped table-bordered table-hover">
-			        		<tbody>
-			        			<tr st-select-row="row" ng-repeat="row in modalh.displayedItems">
-			        				<td style="width: 50%" class="atributo">
-			        					{{row.nombre}}
-			        				</td style="width: 50%">
-			        				<td>
-			        					{{row.valor}}
-			        				</td>	        				
-			        			</tr>
-			        		</tbody>
-	        			</table>
-					</div>
-	        		<div align="right" style="font-size: 12px" ng-hide="modalh.mostrarCargando">
-	        			<b>Total de versiones: {{modalh.totalVersiones}}</b>
+					<uib-tabset active="modalh.active">
+						<uib-tab ng-click="modalh.generalClick();" index="0" heading="General" >
+							<div style="overflow: auto; min-height: 300px; max-height: 300px;">						
+								<table st-table="modalh.displayedItems" st-safe-src="modalh.data" class="table table-striped table-bordered table-hover">
+					        		<tbody>
+					        			<tr st-select-row="row" ng-repeat="row in modalh.displayedItems">
+					        				<td style="width: 50%" class="atributo">
+					        					{{row.nombre}}
+					        				</td style="width: 50%">
+					        				<td>
+					        					{{row.valor}}
+					        				</td>	        				
+					        			</tr>
+					        		</tbody>
+			        			</table>
+							</div>
+						</uib-tab>
+						<uib-tab ng-click="modalh.adquisicionesClick();" index="1" heading="Adquisiciones" ng-hide="!modalh.adquisiciones">
+							<div style="overflow: auto; min-height: 300px; max-height: 300px;">
+								<table st-table="modalh.displayedItems" st-safe-src="modalh.data" class="table table-striped table-bordered table-hover">
+					        		<tbody>
+					        			<tr st-select-row="row" ng-repeat="row in modalh.displayedItems">
+					        				<td style="width: 50%" class="atributo">
+					        					{{row.nombre}}
+					        				</td style="width: 50%">
+					        				<td>
+					        					{{row.valor}}
+					        				</td>	        				
+					        			</tr>
+					        		</tbody>
+			        			</table>
+							</div>
+        				</uib-tab>
+        				<uib-tab ng-click="modalh.riesgosClick();" index="2" heading="Riesgos" ng-hide="!modalh.riesgos">
+        					<div style="overflow: auto; min-height: 300px; max-height: 300px;">
+        					</div>
+        				</uib-tab>
+        				<uib-tab ng-click="modalh.desembolsosClick();" index="3" heading="Desembolsos" ng-hide="!modalh.desembolsos">
+        					<div style="overflow: auto; min-height: 300px; max-height: 300px;">
+        					</div>
+        				</uib-tab>
+        				<uib-tab ng-click="modalh.metasClick();" index="4" heading="Metas" ng-hide="!modalh.metas">
+        					<div style="overflow: auto; min-height: 300px; max-height: 300px;">
+        					</div>
+        				</uib-tab>
+        			</uib-tabset>
+	        		<div align="right" style="font-size: 12px; z-index: -1">
+	        			<b>Total de versiones: {{modalh.posicion + 1}} de {{modalh.totalVersiones}}</b>
 	        		</div> 
 	    		</div>
 	    		<div class="row" align="center" ng-hide="modalh.mostrarCargando || modalh.totalVersiones == 0">
