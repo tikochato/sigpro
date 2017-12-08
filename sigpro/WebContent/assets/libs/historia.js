@@ -117,7 +117,24 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 	}
 	
 	mi.riesgosClick = function(){
+		mi.posicion = 0;
 		mi.mostrarCargando = true;
+		mi.servlet = '/SRiesgo';
+		$http.post(mi.servlet, {
+			accion: 'getCantidadHistoria',
+			id: mi.id,
+			objetoTipo : mi.objetoTipo,
+			t: (new Date()).getTime()
+		}).success(
+			function(response){
+				if(response.success){
+					mi.versiones = response.versiones;
+					mi.totalVersiones = mi.versiones.length;
+					mi.cargarData(mi.versiones[0]);
+					mi.desHabilitarBotones();
+				}
+			}
+		);
 	}
 	
 	mi.desembolsosClick = function(){
@@ -161,7 +178,13 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 		}).success(
 			function(response){
 				if(response.success){
-					mi.data = response.historia[0];
+					if(response.historia.length > 1){
+						mi.cabeceras = [];
+						for(x in response.historia[0]){
+							mi.cabeceras.push(response.historia[0][x].nombre);
+						}
+					}
+					mi.data = response.historia.length == 1 ? response.historia[0] : response.historia;
 					mi.displayedItems = [].concat(mi.data);
 					mi.mostrarCargando = false;
 				}else{

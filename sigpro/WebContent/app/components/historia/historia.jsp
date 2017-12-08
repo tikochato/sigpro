@@ -61,6 +61,20 @@
         				</uib-tab>
         				<uib-tab ng-click="modalh.riesgosClick();" index="2" heading="Riesgos" ng-hide="!modalh.riesgos">
         					<div style="overflow: auto; min-height: 300px; max-height: 300px;">
+        						<table st-table="modalh.displayedItems" st-safe-src="modalh.data" class="table table-striped table-bordered table-hover">
+        							<thead>
+        								<tr>
+        									<th style="text-align: center;" st-select-row="row" ng-repeat="row in modalh.cabeceras">{{row}}</th>
+        								</tr>
+        							</thead>
+					        		<tbody>
+					        			<tr st-select-row="row" ng-repeat="row in modalh.displayedItems">
+					        				<td ng-repeat="item in row">
+					        					{{item.valor}}
+					        				</td>	        				
+					        			</tr>
+					        		</tbody>
+			        			</table>
         					</div>
         				</uib-tab>
         				<uib-tab ng-click="modalh.desembolsosClick();" index="3" heading="Desembolsos" ng-hide="!modalh.desembolsos">
@@ -73,7 +87,7 @@
         				</uib-tab>
         			</uib-tabset>
 	        		<div align="right" style="font-size: 12px; z-index: -1">
-	        			<b>Total de versiones: {{modalh.posicion + 1}} de {{modalh.totalVersiones}}</b>
+	        			<b>Total de versiones: {{modalh.totalVersiones != 0 ? modalh.posicion + 1 : 0}} de {{modalh.totalVersiones}}</b>
 	        		</div> 
 	    		</div>
 	    		<div class="row" align="center" ng-hide="modalh.mostrarCargando || modalh.totalVersiones == 0">
