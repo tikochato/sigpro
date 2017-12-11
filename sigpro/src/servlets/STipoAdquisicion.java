@@ -134,7 +134,7 @@ public class STipoAdquisicion extends HttpServlet {
 			TipoAdquisicion tipoAdquisicion = null;
 			
 			if(esNuevo){
-				tipoAdquisicion = new TipoAdquisicion(cooperanteCodigo,nombreTipoAdquisicion, usuario, new Date(), 1);
+				tipoAdquisicion = new TipoAdquisicion(cooperanteCodigo, nombreTipoAdquisicion, usuario, null, new Date(), null, 1, null, null);
 			}else{
 				tipoAdquisicion = TipoAdquisicionDAO.getTipoAdquisicionPorId(idTipoAdquisicion);
 				tipoAdquisicion.setCooperantecodigo(cooperanteCodigo);
