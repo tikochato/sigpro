@@ -161,7 +161,25 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 	}
 	
 	mi.metasClick = function(){
+		mi.posicion = 0;
+		mi.tipo = 2;
 		mi.mostrarCargando = true;
+		mi.servlet = '/SMeta';
+		$http.post(mi.servlet, {
+			accion: 'getCantidadHistoria',
+			id: mi.id,
+			objetoTipo : mi.objetoTipo,
+			t: (new Date()).getTime()
+		}).success(
+			function(response){
+				if(response.success){
+					mi.versiones = response.versiones;
+					mi.totalVersiones = mi.versiones.length;
+					mi.cargarData(mi.versiones[0], mi.tipo);
+					mi.desHabilitarBotones();
+				}
+			}
+		);
 	}
 	
 	mi.generalClick = function(){

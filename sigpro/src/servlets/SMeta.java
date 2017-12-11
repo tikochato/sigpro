@@ -748,6 +748,17 @@ public class SMeta extends HttpServlet {
 			}
 	        response_text = String.join("", "\"nombre\":\"",nombre,"\", ", "\"fechaInicio\":\"",fechaInicio,"\", ", "\"fechaFin\":\"",fechaFin,"\"");
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+		}else if(accion.equals("getCantidadHistoria")){
+			Integer objetoId = Utils.String2Int(map.get("id"));
+			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
+			String resultado = MetaDAO.getVersiones(objetoId, objetoTipo); 
+			response_text = String.join("", "{\"success\":true, \"versiones\": [" + resultado + "]}");
+		}else if(accion.equals("getHistoria")){
+			Integer objetoId = Utils.String2Int(map.get("id"));
+			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
+			Integer version = Utils.String2Int(map.get("version"));
+			String resultado = MetaDAO.getHistoria(objetoId, objetoTipo, version); 
+			response_text = String.join("", "{\"success\":true, \"historia\":" + resultado + "}");
 		}
 		else{
 			response_text = "{ \"success\": false }";
