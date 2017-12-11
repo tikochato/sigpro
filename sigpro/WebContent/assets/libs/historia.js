@@ -97,6 +97,7 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 	
 	mi.adquisicionesClick = function(){
 		mi.posicion = 0;
+		mi.tipo = 1;
 		mi.mostrarCargando = true;
 		mi.servlet = '/SPlanAdquisicion';
 		$http.post(mi.servlet, {
@@ -109,7 +110,7 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 				if(response.success){
 					mi.versiones = response.versiones;
 					mi.totalVersiones = mi.versiones.length;
-					mi.cargarData(mi.versiones[0]);
+					mi.cargarData(mi.versiones[0], mi.tipo);
 					mi.desHabilitarBotones();
 				}
 			}
@@ -118,6 +119,7 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 	
 	mi.riesgosClick = function(){
 		mi.posicion = 0;
+		mi.tipo = 2;
 		mi.mostrarCargando = true;
 		mi.servlet = '/SRiesgo';
 		$http.post(mi.servlet, {
@@ -130,7 +132,7 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 				if(response.success){
 					mi.versiones = response.versiones;
 					mi.totalVersiones = mi.versiones.length;
-					mi.cargarData(mi.versiones[0]);
+					mi.cargarData(mi.versiones[0], mi.tipo);
 					mi.desHabilitarBotones();
 				}
 			}
@@ -138,7 +140,24 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 	}
 	
 	mi.desembolsosClick = function(){
+		mi.posicion = 0;
+		mi.tipo = 2;
 		mi.mostrarCargando = true;
+		mi.servlet = '/SDesembolso';
+		$http.post(mi.servlet, {
+			accion: 'getCantidadHistoria',
+			id: mi.id,
+			t: (new Date()).getTime()
+		}).success(
+			function(response){
+				if(response.success){
+					mi.versiones = response.versiones;
+					mi.totalVersiones = mi.versiones.length;
+					mi.cargarData(mi.versiones[0], mi.tipo);
+					mi.desHabilitarBotones();
+				}
+			}
+		);
 	}
 	
 	mi.metasClick = function(){
@@ -147,6 +166,7 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 	
 	mi.generalClick = function(){
 		mi.posicion = 0;
+		mi.tipo = 1;
 		mi.mostrarCargando = true;
 		mi.servlet = mi.servletGeneral;
 		$http.post(servlet, {
@@ -158,7 +178,7 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 				if(response.success){
 					mi.versiones = response.versiones;
 					mi.totalVersiones = mi.versiones.length;
-					mi.cargarData(mi.versiones[0]);					
+					mi.cargarData(mi.versiones[0], mi.tipo);					
 					mi.desHabilitarBotones();
 				}else{
 					mi.mostrarCargando = false;
@@ -167,7 +187,7 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 		);
 	}
 	
-	mi.cargarData = function(version){
+	mi.cargarData = function(version, tipo){
 		mi.data = [];
 		$http.post(mi.servlet, {
 			accion: 'getHistoria',
@@ -178,13 +198,13 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 		}).success(
 			function(response){
 				if(response.success){
-					if(response.historia.length > 1){
+					if(tipo==2){
 						mi.cabeceras = [];
 						for(x in response.historia[0]){
 							mi.cabeceras.push(response.historia[0][x].nombre);
 						}
 					}
-					mi.data = response.historia.length == 1 ? response.historia[0] : response.historia;
+					mi.data = tipo != 2 ? response.historia[0] : response.historia;
 					mi.displayedItems = [].concat(mi.data);
 					mi.mostrarCargando = false;
 				}else{
@@ -200,14 +220,14 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 	
 	mi.inicio = function(){
 		mi.posicion = 0;
-		mi.cargarData(mi.versiones[0]);
+		mi.cargarData(mi.versiones[0], mi.tipo);
 		mi.desHabilitarBotones();
 	}
 	
 	mi.ultimo = function(){
 		if(mi.totalVersiones > 0){
 			mi.posicion = mi.totalVersiones - 1;
-			mi.cargarData(mi.versiones[mi.posicion]);
+			mi.cargarData(mi.versiones[mi.posicion], mi.tipo);
 			mi.desHabilitarBotones();
 		}
 	}
@@ -216,7 +236,7 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 		if(mi.totalVersiones > 0){
 			if(mi.posicion != mi.totalVersiones - 1){
 				mi.posicion = mi.posicion+1;
-				mi.cargarData(mi.versiones[mi.posicion]);
+				mi.cargarData(mi.versiones[mi.posicion], mi.tipo);
 				mi.desHabilitarBotones();
 			}	
 		}
@@ -225,7 +245,7 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 	mi.atras = function(){
 		if(mi.posicion != 0){
 			mi.posicion = mi.posicion-1;
-			mi.cargarData(mi.versiones[mi.posicion]);
+			mi.cargarData(mi.versiones[mi.posicion], mi.tipo);
 			mi.desHabilitarBotones();
 		}
 	}

@@ -17,6 +17,7 @@ import org.hibernate.query.Query;
 
 import pojo.Desembolso;
 import utilities.CHibernateSession;
+import utilities.CHistoria;
 import utilities.CLogger;
 
 public class DesembolsoDAO {
@@ -313,5 +314,38 @@ public class DesembolsoDAO {
 			session.close();
 		}
 		return ret;
+	}
+	
+	public static String getVersiones(Integer objeto_id){
+		String resultado = "";
+		String query = "SELECT DISTINCT(version) " 
+				+ "FROM sipro_history.desembolso "
+				+ "WHERE proyectoid="+objeto_id;
+		List<?> versiones = CHistoria.getVersiones(query);
+		if(versiones!=null){
+			for(int i=0; i<versiones.size(); i++){
+				if(!resultado.isEmpty()){
+					resultado+=",";
+				}
+				resultado+=(Integer)versiones.get(i);
+			}
+		}
+		return resultado;
+	}
+	
+	public static String getHistoria(Integer objeto_id, Integer version){
+		String resultado = "";
+		String query = "select d.version, d.fecha, d.monto, dt.nombre, d.usuario_creo, "
+			+ "d.usuario_actualizo, d.fecha_creacion, d.fecha_actualizacion, d.estado "
+			+ "FROM sipro_history.desembolso d, sipro_history.desembolso_tipo dt "
+			+ "WHERE d.proyectoid=" + objeto_id
+			+ " AND d.version=" + version
+			+ " AND d.desembolso_tipoid=dt.id ";
+		
+		String [] campos = {"Version", "Fecha Desembolso", "Monto del desembolso", "Tipo del desembolso", "Usuario que Creo", 
+				"Usuario que Actualizó", "Fecha de Creación", "Fecha de Actualización", 
+				"Estado"};
+		resultado = CHistoria.getHistoria(query, campos);
+		return resultado;
 	}
 }

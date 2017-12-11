@@ -79,6 +79,20 @@
         				</uib-tab>
         				<uib-tab ng-click="modalh.desembolsosClick();" index="3" heading="Desembolsos" ng-hide="!modalh.desembolsos">
         					<div style="overflow: auto; min-height: 300px; max-height: 300px;">
+        						<table st-table="modalh.displayedItems" st-safe-src="modalh.data" class="table table-striped table-bordered table-hover">
+        							<thead>
+        								<tr>
+        									<th style="text-align: center;" st-select-row="row" ng-repeat="row in modalh.cabeceras track by $index">{{row}}</th>
+        								</tr>
+        							</thead>
+					        		<tbody>
+					        			<tr st-select-row="row" ng-repeat="row in modalh.displayedItems">
+					        				<td ng-repeat="item in row">
+					        					{{item.valor}}
+					        				</td>	        				
+					        			</tr>
+					        		</tbody>
+			        			</table>
         					</div>
         				</uib-tab>
         				<uib-tab ng-click="modalh.metasClick();" index="4" heading="Metas" ng-hide="!modalh.metas">
