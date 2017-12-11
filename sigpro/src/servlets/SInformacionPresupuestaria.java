@@ -8,7 +8,6 @@ import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -185,13 +184,10 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				
 				Calendar fecha = Calendar.getInstance();
 			    int anio = fecha.get(Calendar.YEAR);
-			    int mes = fecha.get(Calendar.MONTH) + 1;
-			    
-			    mes = anioFinal < anio ? 12 : anio;
-				
+			    int mes =  anioFinal < anio ? 12 : fecha.get(Calendar.MONTH) + 1;
 				
 				for (int x = anioInicial; x<= anioFinal; x++){
-					List<?> vigente = ObjetoDAO.getViegente(fuente, organismo, correlativo, anioInicial, anio, 
+					List<?> vigente = ObjetoDAO.getViegente(fuente, organismo, correlativo, anioInicial, mes, 
 							proyecto.getUnidadEjecutora().getId().getUnidadEjecutora(), proyecto.getUnidadEjecutora().getId().getEntidadentidad());
 					Object valores [] = (Object[]) vigente.get(0);
 					for (int y = 0 ; y< 12; y++)
