@@ -278,6 +278,7 @@ app.controller('tipoAdquisicionController', ['$scope','$http','$interval','i18nS
 				cooperanteCodigo : mi.tipoAdquisicion.cooperanteCodigo,
 				nombreTipoAdquisicion : mi.tipoAdquisicion.nombre,
 				esNuevo : mi.esNuevo,
+				convenioCDirecta: mi.tipoAdquisicion.esConvevioCdirecta,
 				t: (new Date()).getTime()
 			}).success(function(response){
 				if(response.success){

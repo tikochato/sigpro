@@ -44,6 +44,7 @@ public class STipoAdquisicion extends HttpServlet {
     	String fechaCreacion;
     	String fechaActualizacion;
     	Integer estado;
+    	Integer esConvevioCdirecta;
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -91,6 +92,7 @@ public class STipoAdquisicion extends HttpServlet {
 				temp.fechaCreacion = Utils.formatDateHour(tipoAdquisicion.getFechaCreacion());	
 				temp.usuarioActualizo = tipoAdquisicion.getUsuarioActualizo();
 				temp.usuarioCreo = tipoAdquisicion.getUsuarioCreo();
+				//temp.esConvevioCdirecta = tipoAdquisicion.get
 				sttipoadquisicion.add(temp);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(sttipoadquisicion);
