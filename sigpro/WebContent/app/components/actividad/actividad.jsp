@@ -280,7 +280,8 @@
 									local-data="actividadc.acumulacionCostos" search-fields="nombre" title-field="nombre" field-required="actividadc.actividad.costo!=null && actividadc.actividad.costo>0" 
 						  			field-label="{{actividadc.actividad.costo!=null && actividadc.actividad.costo>0 ? '* ':''}}Tipo Acumulación de Monto Planificado"
 									minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
-									initial-value="actividadc.actividad.acumulacionCostoNombre" focus-out="actividadc.blurAcumulacionCosto()" input-name="acumulacionCosto" disable-input="actividadc.congelado"></div>
+									initial-value="actividadc.actividad.acumulacionCostoNombre" focus-out="actividadc.blurAcumulacionCosto()" input-name="acumulacionCosto" 
+									disable-input="actividadc.actividad.tieneHijos || actividadc.congelado"></div>
 							<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 						</div>
 						<div class="form-group" >

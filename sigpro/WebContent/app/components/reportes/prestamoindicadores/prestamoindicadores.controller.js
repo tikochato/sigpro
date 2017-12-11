@@ -14,7 +14,7 @@ app.controller('prestamoindicadoresController',['$scope','$rootScope','$http','$
 	mi.AnteriorActivo = false;
 	mi.enMillones = true;
 	mi.agrupacionActual = 1
-	mi.columnasTotal = 3;
+	mi.columnasTotal = 4;
 	mi.limiteAnios = 5;
 	mi.tamanioMinimoColumna = 125;
 	mi.tamanioMinimoColumnaMillones = 60;
@@ -307,9 +307,11 @@ app.controller('prestamoindicadoresController',['$scope','$rootScope','$http','$
 					mi.totales = [];
 					 for (x in mi.data){
 						 var totalFinal = {"planificado": null, "real": null};
+						 var totalAcumulado = {"planificado": null, "real": null};
 						 var fila = [];
 						 if(mi.data[x].objeto_tipo == 10){
 							 totalFinal = {"planificado": 0, "real": 0};
+							 totalAcumulado = {"planificado": mi.data[x].metaAcumuladaP, "real": mi.data[x].metaAcumuladaR};
 							 for(a in mi.data[x].anios){
 								 var totalAnual = {"planificado": 0, "real": 0};
 								 var anio = mi.data[x].anios[a];
@@ -338,6 +340,8 @@ app.controller('prestamoindicadoresController',['$scope','$rootScope','$http','$
 							 }
 						 }
 						 var tot = {"valor": totalFinal};
+						 fila.push(tot);
+						 var tot = {"valor": totalAcumulado};
 						 fila.push(tot);
 						 var tot = {"anio": fila};
 						 mi.totales.push(tot);

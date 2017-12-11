@@ -216,7 +216,7 @@
 					
 					<div class="form-group">
 	            		<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="subproducto.cambioAcumulacionCosto" ng-readonly="subproducto.congelado"
-						  disable-input="subproducto.congelado"
+						  disable-input="subproducto.subproducto.tieneHijos || subproducto.congelado"
 						  local-data="subproducto.acumulacionesCosto" search-fields="nombre" title-field="nombre" field-required="subproducto.subproducto.costo!=null && subproducto.subproducto.costo>0" 
 						  field-label="{{subproducto.subproducto.costo!=null && subproducto.subproducto.costo>0 ? '* ':''}}Tipo Acumulación de Monto Planificado"
 						  minlength="1" input-class="form-control form-control-small field-angucomplete" match-class="angucomplete-highlight"

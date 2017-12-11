@@ -83,7 +83,7 @@
 					</div>
 		    	</div>
 		    	<div class="row">
-		    		<div class="form-group col-sm-6" align="left">
+		    		<div class="form-group col-sm-4" align="left">
 						<div id= "lineaBase" angucomplete-alt placeholder="" pause="100" selected-object="controller.cambioLineaBase"
 							  local-data="controller.lineasBase" search-fields="nombre" title-field="nombre" 
 							  field-required="true" field-label="* Linea Base" minlength="1" input-class="form-control form-control-small field-angucomplete inputText" 
@@ -91,7 +91,7 @@
 							  focus-out="controller.blurLineaBase()" input-name="lineaBase"></div>
 						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 					</div>
-					<div class="form-group col-sm-3" style="margin-top: 4px;">
+					<div class="form-group col-sm-2" style="margin-top: 5px;">
 						<input type="text"  class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" alt-input-formats="{{controller.altformatofecha}}"
 							ng-model="controller.fechaCorte" is-open="controller.fi_abierto"
 				            datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="controller.validarFecha(controller.fechaCorte)" 

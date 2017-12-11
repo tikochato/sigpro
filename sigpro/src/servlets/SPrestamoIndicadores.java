@@ -48,6 +48,8 @@ public class SPrestamoIndicadores extends HttpServlet {
 		Integer unidadDeMedida;
 		BigDecimal porcentajeAvance;
 		BigDecimal metaFinal;
+		BigDecimal metaAcumuladaP;
+		BigDecimal metaAcumuladaR;
 		Integer nivel;
 		stanio[] anios; 
 	}
@@ -246,7 +248,10 @@ public class SPrestamoIndicadores extends HttpServlet {
 							}else if(indicador.getDatoTipo()!=null && indicador.getDatoTipo().getId().equals(3)){
 								tempIndicador.metaFinal = indicador.getMetaFinalDecimal();
 							}
-							tempIndicador.porcentajeAvance = PrestamoMetasDAO.getPorcentajeAvanceMeta(indicador, lineaBase);
+							BigDecimal acumulados[] = PrestamoMetasDAO.getPorcentajeAvanceMeta(indicador, lineaBase);
+							tempIndicador.metaAcumuladaP = acumulados[0]!=null?acumulados[0]:new BigDecimal(0);
+							tempIndicador.metaAcumuladaR = acumulados[1]!=null?acumulados[1]:new BigDecimal(0);
+							tempIndicador.porcentajeAvance = acumulados[2]!=null?acumulados[2]:new BigDecimal(0);
 							indicadorValores = new ArrayList<ArrayList<BigDecimal>>();
 							indicadorValores = PrestamoMetasDAO.getMetaValores(indicador.getId(), anioInicial, anioFinal, lineaBase);
 							tempIndicador = getIndicadores(indicadorValores, anioInicial, anioFinal, tempIndicador);
@@ -367,14 +372,14 @@ public class SPrestamoIndicadores extends HttpServlet {
 			{"Anual"}
 		};
 		
-		int totalesCant = 3;
+		int totalesCant = 4;
 		int aniosDiferencia =(anioFin-anioInicio)+1; 
 		int columnasTotal = (aniosDiferencia*(AgrupacionesTitulo[agrupacion-1].length));
 		int factorVisualizacion = 1;
 		if(tipoVisualizacion == 2){
 			columnasTotal = columnasTotal*2;
 			totalesCant+=(aniosDiferencia*2);
-			columnasTotal += 2+totalesCant+1;
+			columnasTotal += 2+totalesCant+2;
 			factorVisualizacion = 2;
 		}else{
 			totalesCant+=aniosDiferencia;
@@ -463,6 +468,24 @@ public class SPrestamoIndicadores extends HttpServlet {
 			subtitulo[pos]="Real";
 			operacionesFila[pos]="sum";
 			columnasOperacion[pos]=totales[totalesCant-1];
+			pos++;
+		}
+		titulo[pos] = "Total Acumulado";
+		tipo[pos] = "double";
+		operacionesFila[pos]="";
+		columnasOperacion[pos]="";
+		if(tipoVisualizacion==1){
+			subtitulo[pos]="Real";
+		}else{
+			subtitulo[pos]="Planificado";
+		}
+		pos++;
+		if(tipoVisualizacion == 2){
+			titulo[pos] = "";
+			tipo[pos] = "double";
+			subtitulo[pos]="Real";
+			operacionesFila[pos]="";
+			columnasOperacion[pos]="";
 			pos++;
 		}
 		titulo[pos] = "Meta Final";
@@ -694,6 +717,16 @@ public class SPrestamoIndicadores extends HttpServlet {
 					}
 					if(tipoVisualizacion==1 || tipoVisualizacion == 2){
 						datos[i][posicion]= totalAniosR.toString();
+					}
+					posicion++;
+					if(tipoVisualizacion==0 || tipoVisualizacion==2){ 
+						datos[i][posicion]= lstPrestamo.get(i).metaAcumuladaP.toString();
+					}
+					if(tipoVisualizacion == 2){
+						posicion++;
+					}
+					if(tipoVisualizacion==1 || tipoVisualizacion == 2){
+						datos[i][posicion]= lstPrestamo.get(i).metaAcumuladaR.toString();
 					}
 					datos[i][columnasTotal-2]=prestamo.metaFinal!=null ? prestamo.metaFinal.toString() : "";
 					datos[i][columnasTotal-1]=prestamo.porcentajeAvance!=null ? prestamo.porcentajeAvance.toString() : "";
