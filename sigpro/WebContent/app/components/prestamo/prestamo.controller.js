@@ -119,11 +119,12 @@ app.controller('prestamoController',['$rootScope','$scope','$http','$interval','
         mi.editar();
     };
     
+    
+    
     mi.verHistoria = function(){
 		$historia.getHistoriaMatriz($scope, 'Matriz Préstamo', '/SPrestamo', mi.prestamo.id, mi.prestamo.codigoPresupuestario)
 		.result.then(function(data) {
-			if (data != ""){
-				
+			if (data != ""){	
 			}
 		}, function(){
 			
