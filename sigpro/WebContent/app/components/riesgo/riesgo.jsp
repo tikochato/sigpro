@@ -80,20 +80,38 @@
 				            	<span class="label-icon" ng-click="riesgoc.congelado?'':riesgoc.buscarRiesgoTipo()"><i class="glyphicon glyphicon-search"></i></span>
 								<label class="floating-label">* Tipo Riesgo</label>
 						</div>
-						<div class="form-group">
-							<input type="number" class="inputText" ng-model="riesgoc.riesgo.impacto"  ng-value="riesgoc.riesgo.impacto" 
-							onblur="this.setAttribute('value', this.value);" ng-required="riesgoc.mostraringreso" ng-readonly="riesgoc.congelado"
-							min="0.01" max="0.99" step="0.05">							
-							<label class="floating-label">* Calificación de Riesgo</label>
+						<div class="form-group row">
+							<div class="col-sm-5">
+								<label class="label-form">* Calificación de Riesgo</label>
+								<div class="row" style="margin-top: 15px;">
+									<div class="col-sm-8">
+										<input type="range" class="riesgos" min="0.01" max="0.99" step="0.01" 
+											ng-model="riesgoc.riesgo.impacto" ng-value="riesgoc.riesgo.impacto"
+											ng-readonly="riesgoc.congelado" 
+											style="background-image: -webkit-gradient(linear, left top, right top, color-stop({{riesgoc.riesgo.impacto}}, {{riesgoc.riesgo.impacto>0.64?riesgoc.colorAlto:riesgoc.riesgo.impacto>0.34?riesgoc.colorMedio:riesgoc.colorBajo}}), color-stop({{riesgoc.riesgo.impacto}}, #C5C5C5))">
+									</div>
+									<div class="col-sm-4">
+										<label class="label-form">{{(riesgoc.riesgo.impacto*100).toFixed(0)}}% {{riesgoc.riesgo.impacto>0.64?'Alto':riesgoc.riesgo.impacto>0.34?'Medio':'Bajo'}}</label>
+									</div>		
+								</div>
+							</div>
+							<div class="col-sm-2"></div>
+							<div class="col-sm-5">
+								<label class="label-form">* Porcentaje de Probabilidad</label>
+								<div class="row" style="margin-top: 15px;">
+									<div class="col-sm-8">
+										<input type="range" class="riesgos" min="0.01" max="0.99" step="0.01" 
+											ng-model="riesgoc.riesgo.probabilidad"  ng-value="riesgoc.riesgo.probabilidad"
+											ng-readonly="riesgoc.congelado"
+											style="background-image: -webkit-gradient(linear, left top, right top, color-stop({{riesgoc.riesgo.probabilidad}}, {{riesgoc.riesgo.probabilidad>0.64?riesgoc.colorAlto:riesgoc.riesgo.probabilidad>0.34?riesgoc.colorMedio:riesgoc.colorBajo}}), color-stop({{riesgoc.riesgo.probabilidad}}, #C5C5C5))">
+									</div>
+									<div class="col-sm-4">
+										<label class="label-form">{{(riesgoc.riesgo.probabilidad*100).toFixed(0)}}% {{riesgoc.riesgo.probabilidad>0.64?'Alto':riesgoc.riesgo.probabilidad>0.34?'Medio':'Bajo'}}</label>
+									</div>		
+								</div>
+							</div>
 						</div>
-						
-						<div class="form-group">
-							<input type="number" class="inputText" ng-model="riesgoc.riesgo.probabilidad"  ng-value="riesgoc.riesgo.probabilidad" 
-							onblur="this.setAttribute('value', this.value);" ng-required="riesgoc.mostraringreso" ng-readonly="riesgoc.congelado"
-							min="0.01" max="0.99" step="0.05">
-							<label class="floating-label">* Porcentaje de Probabilidad</label>
-						</div>
-												
+									
 						<div class="form-group">
 							<input type="text" class="inputText" ng-model="riesgoc.riesgo.impactoMonto"  ng-value="riesgoc.riesgo.impactoMonto" 
 							onblur="this.setAttribute('value', this.value);" ng-readonly="riesgoc.congelado"

@@ -35,6 +35,10 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 		mi.parentController=null;
 		mi.congelado=0;
 		
+		mi.colorAlto = '#ff5f52';
+		mi.colorMedio = '#ffb300';
+		mi.colorBajo = '#43a047';
+		
 		if($scope.$parent.prestamoc && $scope.$parent.prestamoc.prestamo){
 			$scope.$parent.prestamoc.child_riesgos = $scope.riesgoc;
 			mi.objetoId = $scope.$parent.prestamoc.prestamo.id;
@@ -168,7 +172,7 @@ app.controller('riesgoController',['$scope','$http','$interval','i18nService','U
 			mi.esnuevo = true;
 			mi.colaboradorNombre="";
 			mi.colaboradorid="";
-			mi.riesgo = {};
+			mi.riesgo = {impacto:0.01, probabilidad:0.01};
 			mi.riesgoTipoid = "";
 			mi.riesgoTipoNombre="";
 			mi.componenteid = "";
