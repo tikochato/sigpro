@@ -228,7 +228,7 @@
 					</textElement>
 					<text><![CDATA[Observaciones / Desafíos]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="0" y="102" width="715" height="50" uuid="9c440a67-90ae-4c46-88d1-b302452d94ba"/>
 					<textElement textAlignment="Justified">
 						<font fontName="Arial" size="9"/>
@@ -244,7 +244,7 @@
 					</textElement>
 					<text><![CDATA[Alertivos:]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="0" y="182" width="715" height="50" uuid="8dbad398-a3a7-45a7-b42f-1bdeacdfe1bb">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
@@ -278,14 +278,14 @@
 					</textElement>
 					<text><![CDATA[Vo. Bo. Máxima Autoridad:]]></text>
 				</staticText>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement x="197" y="232" width="518" height="64" uuid="f8276f64-c587-4834-8b11-28f7af458303"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Arial"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{elaborado}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement x="197" y="296" width="518" height="90" uuid="03e3cfa4-f907-4529-addf-b070ad4d1877">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
@@ -294,7 +294,7 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$P{aprobado}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement x="197" y="386" width="518" height="124" uuid="1a9cfc4d-804d-490d-871b-89639ed268bc">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
