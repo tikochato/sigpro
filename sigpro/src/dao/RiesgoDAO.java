@@ -14,6 +14,7 @@ import pojo.ObjetoRiesgo;
 import pojo.ObjetoRiesgoId;
 import pojo.Riesgo;
 import utilities.CHibernateSession;
+import utilities.CHistoria;
 import utilities.CLogger;
 
 
@@ -308,5 +309,58 @@ public class RiesgoDAO {
 			if(session.isOpen())
 				session.close();
 		}
+	}
+	
+	public static String getVersiones (Integer objetoId, Integer objetoTipo){
+		String resultado = "";
+		String query = "SELECT DISTINCT(r.version) "
+			+ "FROM sipro_history.riesgo r, sipro_history.objeto_riesgo ori "
+			+ "WHERE r.id=ori.riesgoid "
+			+ "AND ori.objeto_id="+ objetoId
+			+ " AND ori.objeto_tipo="+ objetoTipo;
+		List<?> versiones = CHistoria.getVersiones(query);
+		if(versiones!=null){
+			for(int i=0; i<versiones.size(); i++){
+				if(!resultado.isEmpty()){
+					resultado+=",";
+				}
+				resultado+=(Integer)versiones.get(i);
+			}
+		}
+		return resultado;
+	}
+	
+	public static String getHistoria (Integer objetoId, Integer objetoTipo, Integer version){
+		String resultado = "";
+		String query = "SELECT DISTINCT(r.version), r.nombre, r.descripcion, rt.nombre as tipo_riesgo, r.impacto, r.probabilidad, "
+			+ "r.impacto_monto, r.impacto_tiempo, r.gatillo, r.consecuencia, r.solucion, r.riesgo_segundarios, " 
+			+ "CASE r.ejecutado "
+			+ "WHEN 0 THEN 'No' "
+			+ "WHEN 1 THEN 'Si' "
+			+ "END as ejecutado, "
+			+ "r.fecha_ejecucion, "
+			+ "r.resultado, "
+			+ "r.observaciones, "
+			+ "CONCAT(IFNULL(c.pnombre, ''), ' ', IFNULL(c.snombre,''), ' ', IFNULL(c.papellido,''), ' ', IFNULL(c.sapellido,'')) as colaborador, "
+			+ "r.usuario_creo, r.usuario_actualizo, r.fecha_creacion, r.fecha_actualizacion, " 
+			+ "CASE r.estado "
+			+ "WHEN 0 THEN 'Inactivo' "
+			+ "WHEN 1 THEN 'Activo' "
+			+ "END as estado "
+			+ "FROM sipro_history.objeto_riesgo ori, sipro_history.riesgo r, sipro_history.riesgo_tipo rt, sipro_history.colaborador c "
+			+ "WHERE r.id=ori.riesgoid "
+			+ "AND rt.id=r.riesgo_tipoid "
+			+ "AND c.id=r.colaboradorid "
+			+ "AND ori.objeto_id="+objetoId
+			+ " AND ori.objeto_tipo="+ objetoTipo 
+			+ " AND r.version="+ version;
+		
+		String [] campos = {"Version", "Nombre", "Descripción", "Tipo de Riesgo", "Impacto", "Probabilidad", 
+				"Impacto Monto(Q)", "Impacto Tiempo(días)", "Evento iniciador del riesgo", "Consecuencia", "Solución", "Riesgos secundarios", 
+				"Ejecutado", "Fecha de Ejecución", "Resultado", "Observaciones", "Colaborador",
+				"Fecha Creación", "Usuario que creo", "Fecha Actualización", "Usuario que actualizó", 
+				"Estado"};
+		resultado = CHistoria.getHistoria(query, campos);
+		return resultado;
 	}
 }

@@ -15,6 +15,7 @@ import pojo.Meta;
 import pojo.MetaAvance;
 import pojo.MetaPlanificado;
 import utilities.CHibernateSession;
+import utilities.CHistoria;
 import utilities.CLogger;
 
 public class MetaDAO {
@@ -367,5 +368,42 @@ public class MetaDAO {
 			session.close();
 		}
 		return ret;
+	}
+	
+	public static String getVersiones(Integer objeto_id, Integer objeto_tipo){
+		String resultado = "";
+		String query = "SELECT DISTINCT(version) "
+			+ "FROM sipro_history.meta "
+			+ "WHERE objeto_id="+ objeto_id
+			+ " AND objeto_tipo="+objeto_tipo;
+		List<?> versiones = CHistoria.getVersiones(query);
+		if(versiones!=null){
+			for(int i=0; i<versiones.size(); i++){
+				if(!resultado.isEmpty()){
+					resultado+=",";
+				}
+				resultado+=(Integer)versiones.get(i);
+			}
+		}
+		return resultado;
+	}
+	
+	public static String getHistoria(Integer objeto_id, Integer objeto_tipo, Integer version){
+		String resultado = "";
+		String query = "SELECT m.version, m.nombre, m.descripcion, mum.nombre as unidad_medida, dt.nombre as dato_tipo, "
+			+ "IFNULL(m.meta_final_entero, m.meta_final_decimal) meta_final, m.usuario_creo, m.usuario_actualizo, "
+			+ "m.fecha_creacion, m.fecha_actualizacion, m.estado "
+			+ "FROM sipro_history.meta m, sipro_history.meta_unidad_medida mum, sipro.dato_tipo dt "
+			+ "WHERE mum.id=m.meta_unidad_medidaid "
+			+ "AND dt.id=m.dato_tipoid "
+			+ "AND m.objeto_id=" + objeto_id
+			+ " AND m.objeto_tipo=" + objeto_tipo
+			+ " AND m.version=" + version;
+		
+		String [] campos = {"Version", "Nombre", "Descripción", "Unidad Medida", "Tipo de Dato", 
+				"Meta Final", "Usuario Creo", "Usuario Actualizó", "Fecha de Creación", "Fecha de Actualización", 
+				"Estado"};
+		resultado = CHistoria.getHistoria(query, campos);
+		return resultado;
 	}
 }

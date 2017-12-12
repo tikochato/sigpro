@@ -271,6 +271,15 @@ public class SDesembolso extends HttpServlet {
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stdesembolsos);
 	        response_text = String.join("", "\"desembolsos\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+		}else if(accion.equals("getCantidadHistoria")){
+			Integer objetoId = Utils.String2Int(map.get("id"));
+			String resultado = DesembolsoDAO.getVersiones(objetoId); 
+			response_text = String.join("", "{\"success\":true, \"versiones\": [" + resultado + "]}");
+		}else if(accion.equals("getHistoria")){
+			Integer objetoId = Utils.String2Int(map.get("id"));
+			Integer version = Utils.String2Int(map.get("version"));
+			String resultado = DesembolsoDAO.getHistoria(objetoId, version); 
+			response_text = String.join("", "{\"success\":true, \"historia\":" + resultado + "}");
 		}
 		else{
 			response_text = "{ \"success\": false }";

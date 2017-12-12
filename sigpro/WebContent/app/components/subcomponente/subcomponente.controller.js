@@ -577,7 +577,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 		};
 
 		mi.verHistoria = function(){
-			$historia.getHistoria($scope, 'Sub Componente', '/SSubComponente',mi.subcomponente.id)
+			$historia.getHistoria($scope, 'Sub Componente', '/SSubComponente',mi.subcomponente.id, 2, false, true, false, false)
 			.result.then(function(data) {
 				if (data != ""){
 					

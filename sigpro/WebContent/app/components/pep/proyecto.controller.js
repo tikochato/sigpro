@@ -1212,7 +1212,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 		};
 		
 		mi.verHistoria = function(){
-			$historia.getHistoria($scope, 'Pep', '/SProyecto',mi.proyecto.id)
+			$historia.getHistoria($scope, 'Pep', '/SProyecto',mi.proyecto.id, 0, false, true, true, false)
 			.result.then(function(data) {
 				if (data != ""){
 					
