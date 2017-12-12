@@ -16,6 +16,7 @@ import pojo.Proyecto;
 import pojo.Subcomponente;
 import pojo.Subproducto;
 import utilities.CHibernateSession;
+import utilities.CHistoria;
 import utilities.CLogger;
 
 public class PlanAdquisicionDAO {
@@ -344,5 +345,56 @@ public class PlanAdquisicionDAO {
 			session.close();
 		}
 		return retList!=null ? retList.get(0) : null;
+	}
+	
+	public static String getVersiones(Integer objeto_id, Integer objeto_tipo){
+		String resultado = "";
+		String query = "SELECT DISTINCT(version) "
+				+ " FROM sipro_history.plan_adquisicion "
+				+ " WHERE objeto_id = "+objeto_id
+				+ " and objeto_tipo= " +objeto_tipo;
+		List<?> versiones = CHistoria.getVersiones(query);
+		if(versiones!=null){
+			for(int i=0; i<versiones.size(); i++){
+				if(!resultado.isEmpty()){
+					resultado+=",";
+				}
+				resultado+=(Integer)versiones.get(i);
+			}
+		}
+		return resultado;
+	}
+	
+	public static String getHistoria(Integer objeto_id, Integer objeto_tipo, Integer version){
+		String resultado = "";
+		String query = "SELECT pa.version, ta.nombre as tipo_adquisicion, ca.nombre as categoria_adquisicion, pa.unidad_medida, pa.cantidad, pa.precio_unitario, pa.total, "
+				+ "pa.numero_contrato, pa.monto_contrato, pa.nog, " 
+				+ "CASE pa.tipo_revision "
+				+ "WHEN 1 THEN 'Revisión Ex-Ante' "
+				+ "WHEN 2 THEN 'Revisión Ex-Post' "
+				+ "WHEN null THEN '' "
+				+ "END as tipo_revision, "
+				+ "pa.preparacion_doc_planificado, pa.preparacion_doc_real, pa.lanzamiento_evento_planificado, pa.lanzamiento_evento_real, "
+				+ "pa.recepcion_ofertas_planificado, pa.recepcion_ofertas_real, pa.adjudicacion_planificado, pa.adjudicacion_real, "
+				+ "pa.firma_contrato_planificado, pa.firma_contrato_real, "
+				+ "pa.usuario_creo, pa.usuario_actualizo, pa.fecha_creacion, pa.fecha_actualizacion, "
+				+ " CASE WHEN pa.estado = 1 "
+				+ " THEN 'Activo' "
+				+ " ELSE 'Inactivo' "
+				+ " END AS estado "
+				+ "FROM sipro_history.plan_adquisicion pa, sipro.tipo_adquisicion ta, sipro.categoria_adquisicion ca "
+				+ "WHERE pa.objeto_id = " + objeto_id + " AND pa.objeto_tipo= " + objeto_tipo
+				+ " AND ta.id=pa.tipo_adquisicion "
+				+ " AND ca.id=pa.categoria_adquisicion "
+				+ " AND pa.version=" + version;
+		
+		String [] campos = {"Version", "Tipo adquisicion", "Categoría adquisición", "Unidad Medida", "Cantidad", "Costo", "Total", 
+				"Número del Contrato", "Monto del Contrato", "NOG", "Tipo Revisión", 
+				"Preparación de Documentos (Planificado)", "Preparación de Documentos (Real)", "Lanzamiento del Evento(Planificado)", "Lanzamiento del Evento(Real)", 
+				"Recepción de Ofertas (Planificado)", "Recepción de Ofertas (Real)", "Adjudicación (Planificado)", "Adjudicación (Real)", 
+				"Firma de Contrato (Planificado)", "Firma de Contrato (Real)", "Fecha Creación", "Usuario que creo", "Fecha Actualización", "Usuario que actualizó", 
+				"Estado"};
+		resultado = CHistoria.getHistoria(query, campos);
+		return resultado;
 	}
 }

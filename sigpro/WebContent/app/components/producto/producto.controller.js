@@ -58,7 +58,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.duracionDimension = mi.dimensiones[0];
 	
 	mi.verHistoria = function(){
-		$historia.getHistoria($scope, 'Producto', '/SProducto',mi.producto.id)
+		$historia.getHistoria($scope, 'Producto', '/SProducto', mi.producto.id, 3, true, true, false, true)
 		.result.then(function(data) {
 			if (data != ""){
 				

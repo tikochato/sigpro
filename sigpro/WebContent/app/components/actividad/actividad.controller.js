@@ -55,7 +55,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 		});
 		
 		mi.verHistoria = function(){
-			$historia.getHistoria($scope, 'Actividad', '/SActividad',mi.actividad.id)
+			$historia.getHistoria($scope, 'Actividad', '/SActividad',mi.actividad.id, 5, true, false, false, false)
 			.result.then(function(data) {
 				if (data != ""){
 					

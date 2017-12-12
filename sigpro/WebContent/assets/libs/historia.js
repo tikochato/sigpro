@@ -4,7 +4,7 @@ app.factory('historia',['$mdDialog','$uibModal', '$http',
 	function($mdDialog,$uibModal,$http){
 	
 	return{
-		getHistoria: function($scope, titulo, servlet, id){
+		getHistoria: function($scope, titulo, servlet, id, objeto_tipo, adquisiciones, riesgos, desembolsos, metas){
 			return $uibModal.open({
 			    animation : 'true',
 			    ariaLabelledBy : 'modal-title',
@@ -24,6 +24,21 @@ app.factory('historia',['$mdDialog','$uibModal', '$http',
 					},
 					id : function(){
 						return id;
+					},
+					objeto_tipo : function(){
+						return objeto_tipo;
+					},
+					adquisiciones: function(){
+						return adquisiciones;
+					},
+					riesgos: function(){
+						return riesgos; 
+					},
+					desembolsos: function(){
+						return desembolsos;
+					},
+					metas: function(){
+						return metas;
 					}
 			    }
 			});
@@ -60,9 +75,10 @@ app.factory('historia',['$mdDialog','$uibModal', '$http',
 
 app.controller('historiaController', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log', 'titulo','servlet', 'id', historiaController ]);
+	'$timeout', '$log', 'titulo','servlet', 'id', 'objeto_tipo', 'adquisiciones', 'riesgos', 'desembolsos', 'metas', historiaController ]);
 
-function historiaController($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log, titulo, servlet, id) {
+function historiaController($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log, 
+		titulo, servlet, id, objeto_tipo, adquisiciones, riesgos, desembolsos, metas) {
 	var mi = this;
 	
 	mi.objetoNombre = titulo;
@@ -70,41 +86,150 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 	mi.posicion = 0;
 	mi.totalVersiones = 0;
 	mi.versiones = [];
+	mi.adquisiciones = adquisiciones;
+	mi.riesgos = riesgos;
+	mi.desembolsos = desembolsos;
+	mi.metas = metas;
+	mi.id = id;
+	mi.objetoTipo = objeto_tipo;
+	mi.servletGeneral = servlet;
+	mi.servlet = servlet;
 	
-	$http.post(servlet, {
-		accion: 'getCantidadHistoria',
-		id: id,
-		t: (new Date()).getTime()
-	}).success(
-		function(response){
-			if(response.success){
-				mi.versiones = response.versiones;
-				mi.totalVersiones = mi.versiones.length;
-				mi.cargarData(mi.versiones[0]);
-				mi.desHabilitarBotones();
-			}else{
-				mi.mostrarCargando = false;
+	mi.adquisicionesClick = function(){
+		mi.posicion = 0;
+		mi.tipo = 1;
+		mi.mostrarCargando = true;
+		mi.servlet = '/SPlanAdquisicion';
+		$http.post(mi.servlet, {
+			accion: 'getCantidadHistoria',
+			id: mi.id,
+			objetoTipo : mi.objetoTipo,
+			t: (new Date()).getTime()
+		}).success(
+			function(response){
+				if(response.success){
+					mi.versiones = response.versiones;
+					mi.totalVersiones = mi.versiones.length;
+					mi.cargarData(mi.versiones[0], mi.tipo);
+					mi.desHabilitarBotones();
+				}
 			}
-		}
-	);
+		);
+	}
 	
-	mi.cargarData = function(version){
+	mi.riesgosClick = function(){
+		mi.posicion = 0;
+		mi.tipo = 2;
+		mi.mostrarCargando = true;
+		mi.servlet = '/SRiesgo';
+		$http.post(mi.servlet, {
+			accion: 'getCantidadHistoria',
+			id: mi.id,
+			objetoTipo : mi.objetoTipo,
+			t: (new Date()).getTime()
+		}).success(
+			function(response){
+				if(response.success){
+					mi.versiones = response.versiones;
+					mi.totalVersiones = mi.versiones.length;
+					mi.cargarData(mi.versiones[0], mi.tipo);
+					mi.desHabilitarBotones();
+				}
+			}
+		);
+	}
+	
+	mi.desembolsosClick = function(){
+		mi.posicion = 0;
+		mi.tipo = 2;
+		mi.mostrarCargando = true;
+		mi.servlet = '/SDesembolso';
+		$http.post(mi.servlet, {
+			accion: 'getCantidadHistoria',
+			id: mi.id,
+			t: (new Date()).getTime()
+		}).success(
+			function(response){
+				if(response.success){
+					mi.versiones = response.versiones;
+					mi.totalVersiones = mi.versiones.length;
+					mi.cargarData(mi.versiones[0], mi.tipo);
+					mi.desHabilitarBotones();
+				}
+			}
+		);
+	}
+	
+	mi.metasClick = function(){
+		mi.posicion = 0;
+		mi.tipo = 2;
+		mi.mostrarCargando = true;
+		mi.servlet = '/SMeta';
+		$http.post(mi.servlet, {
+			accion: 'getCantidadHistoria',
+			id: mi.id,
+			objetoTipo : mi.objetoTipo,
+			t: (new Date()).getTime()
+		}).success(
+			function(response){
+				if(response.success){
+					mi.versiones = response.versiones;
+					mi.totalVersiones = mi.versiones.length;
+					mi.cargarData(mi.versiones[0], mi.tipo);
+					mi.desHabilitarBotones();
+				}
+			}
+		);
+	}
+	
+	mi.generalClick = function(){
+		mi.posicion = 0;
+		mi.tipo = 1;
+		mi.mostrarCargando = true;
+		mi.servlet = mi.servletGeneral;
 		$http.post(servlet, {
+			accion: 'getCantidadHistoria',
+			id: id,
+			t: (new Date()).getTime()
+		}).success(
+			function(response){
+				if(response.success){
+					mi.versiones = response.versiones;
+					mi.totalVersiones = mi.versiones.length;
+					mi.cargarData(mi.versiones[0], mi.tipo);					
+					mi.desHabilitarBotones();
+				}else{
+					mi.mostrarCargando = false;
+				}
+			}
+		);
+	}
+	
+	mi.cargarData = function(version, tipo){
+		mi.data = [];
+		$http.post(mi.servlet, {
 			accion: 'getHistoria',
 			id: id,
+			objetoTipo : mi.objetoTipo,
 			version : version,
 			t: (new Date()).getTime()
 		}).success(
 			function(response){
 				if(response.success){
-					mi.data = response.historia[0];
+					if(tipo==2){
+						mi.cabeceras = [];
+						for(x in response.historia[0]){
+							mi.cabeceras.push(response.historia[0][x].nombre);
+						}
+					}
+					mi.data = tipo != 2 ? response.historia[0] : response.historia;
 					mi.displayedItems = [].concat(mi.data);
 					mi.mostrarCargando = false;
 				}else{
 					mi.mostrarCargando = false;
 				}
 			}
-		);	
+		);
 	}
 	
 	mi.cerrar = function() {
@@ -113,14 +238,14 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 	
 	mi.inicio = function(){
 		mi.posicion = 0;
-		mi.cargarData(mi.versiones[0]);
+		mi.cargarData(mi.versiones[0], mi.tipo);
 		mi.desHabilitarBotones();
 	}
 	
 	mi.ultimo = function(){
 		if(mi.totalVersiones > 0){
 			mi.posicion = mi.totalVersiones - 1;
-			mi.cargarData(mi.versiones[mi.posicion]);
+			mi.cargarData(mi.versiones[mi.posicion], mi.tipo);
 			mi.desHabilitarBotones();
 		}
 	}
@@ -129,7 +254,7 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 		if(mi.totalVersiones > 0){
 			if(mi.posicion != mi.totalVersiones - 1){
 				mi.posicion = mi.posicion+1;
-				mi.cargarData(mi.versiones[mi.posicion]);
+				mi.cargarData(mi.versiones[mi.posicion], mi.tipo);
 				mi.desHabilitarBotones();
 			}	
 		}
@@ -138,7 +263,7 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 	mi.atras = function(){
 		if(mi.posicion != 0){
 			mi.posicion = mi.posicion-1;
-			mi.cargarData(mi.versiones[mi.posicion]);
+			mi.cargarData(mi.versiones[mi.posicion], mi.tipo);
 			mi.desHabilitarBotones();
 		}
 	}
@@ -159,6 +284,8 @@ function historiaController($uibModalInstance, $scope, $http, $interval, i18nSer
 			mi.disabledFin = true;
 		}
 	}
+	
+	mi.generalClick();
 }
 
 app.controller('historiaMatrizController', [ '$uibModalInstance',
@@ -172,20 +299,20 @@ function historiaMatrizController($uibModalInstance, $scope, $http, $interval, i
 	mi.m_organismosEjecutores = [];
 	mi.m_componentes = [];
 	mi.posicion = 0;
-	mi.fechas = [];
-	mi.totalFechas = 0;
+	mi.versiones = [];
+	mi.totalVersiones = 0;
 
 	$http.post(servlet, {
-		accion: 'getFechasHistoriaMatriz',
+		accion: 'getVersionesMatriz',
 		prestamoId: id,
 		codigoPresupuestario: codigoPresupuestario,
 		t: (new Date()).getTime()
 	}).success(
 		function(response){
 		if(response.success){
-			mi.fechas = response.fechas;
-			mi.totalFechas = mi.fechas.length;
-			mi.cargarData(mi.fechas[0]);
+			mi.versiones = response.versiones;
+			mi.totalVersiones = mi.versiones.length;
+			mi.cargarData(mi.versiones[0]);
 			mi.desHabilitarBotones();
 		}
 	});
@@ -205,11 +332,12 @@ function historiaMatrizController($uibModalInstance, $scope, $http, $interval, i
 		}
 	}
 	
-	mi.cargarData = function(fecha){
+	mi.cargarData = function(version){
 		$http.post(servlet, {
 			accion: 'getHistoriaMatriz',
-			fecha: fecha,
+			version: version,
 			prestamoId: id,
+			codigoPresupuestario: codigoPresupuestario,
 			t: (new Date()).getTime()
 		}).success(
 			function(response){
@@ -233,27 +361,27 @@ function historiaMatrizController($uibModalInstance, $scope, $http, $interval, i
 		mi.inicializar();
 		mi.mostrarCargando = true;
 		mi.posicion = 0;
-		mi.cargarData(mi.fechas[0]);
+		mi.cargarData(mi.versiones[0]);
 		mi.desHabilitarBotones();
 	}
 	
 	mi.ultimo = function(){
-		if(mi.totalFechas > 0){
+		if(mi.totalVersiones > 0){
 			mi.inicializar();
 			mi.mostrarCargando = true;
-			mi.posicion = mi.totalFechas - 1;
-			mi.cargarData(mi.fechas[mi.posicion]);
+			mi.posicion = mi.totalVersiones - 1;
+			mi.cargarData(mi.versiones[mi.posicion]);
 			mi.desHabilitarBotones();
 		}
 	}
 	
 	mi.siguiente = function(){
-		if(mi.totalFechas > 0){
-			if(mi.posicion != mi.totalFechas - 1){
+		if(mi.totalVersiones > 0){
+			if(mi.posicion != mi.totalVersiones - 1){
 				mi.inicializar();
 				mi.mostrarCargando = true;
 				mi.posicion = mi.posicion+1;
-				mi.cargarData(mi.fechas[mi.posicion]);
+				mi.cargarData(mi.versiones[mi.posicion]);
 				mi.desHabilitarBotones();
 			}
 		}
@@ -264,7 +392,7 @@ function historiaMatrizController($uibModalInstance, $scope, $http, $interval, i
 			mi.inicializar();
 			mi.mostrarCargando = true;
 			mi.posicion = mi.posicion-1;
-			mi.cargarData(mi.fechas[mi.posicion]);
+			mi.cargarData(mi.versiones[mi.posicion]);
 			mi.desHabilitarBotones();
 		}
 	}
@@ -275,12 +403,12 @@ function historiaMatrizController($uibModalInstance, $scope, $http, $interval, i
 		else
 			mi.disabledInicio=false;
 		
-		if(mi.posicion == mi.totalFechas -1)
+		if(mi.posicion == mi.totalVersiones -1)
 			mi.disabledFin = true;
 		else
 			mi.disabledFin = false;
 		
-		if(mi.totalFechas == 1){
+		if(mi.totalVersiones == 1){
 			mi.disabledInicio=true;
 			mi.disabledFin = true;
 		}

@@ -63,7 +63,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 	mi.riesgos = false;
 	
 	mi.verHistoria = function(){
-		$historia.getHistoria($scope, 'Sub Producto', '/SSubproducto',mi.subproducto.id)
+		$historia.getHistoria($scope, 'Sub Producto', '/SSubproducto',mi.subproducto.id, 4, true, true, false, false)
 		.result.then(function(data) {
 			if (data != ""){
 				

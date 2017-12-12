@@ -41,9 +41,6 @@ import pojo.RiesgoTipo;
 import utilities.CLogger;
 import utilities.Utils;
 
-/**
- * Servlet implementation class SRiesgo
- */
 @WebServlet("/SRiesgo")
 public class SRiesgo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -359,6 +356,17 @@ public class SRiesgo extends HttpServlet {
 			}
 			else
 				response_text = "{ \"success\": false }";
+		}else if(accion.equals("getCantidadHistoria")){
+			Integer objetoId = Utils.String2Int(map.get("id"));
+			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
+			String resultado = RiesgoDAO.getVersiones(objetoId, objetoTipo); 
+			response_text = String.join("", "{\"success\":true, \"versiones\": [" + resultado + "]}");
+		}else if(accion.equals("getHistoria")){
+			Integer objetoId = Utils.String2Int(map.get("id"));
+			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
+			Integer version = Utils.String2Int(map.get("version"));
+			String resultado = RiesgoDAO.getHistoria(objetoId, objetoTipo, version); 
+			response_text = String.join("", "{\"success\":true, \"historia\":" + resultado + "}");
 		}
 		else{
 			response_text = "{ \"success\": false }";

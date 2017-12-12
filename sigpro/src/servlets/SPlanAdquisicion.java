@@ -318,6 +318,17 @@ public class SPlanAdquisicion extends HttpServlet {
 				response_text = new GsonBuilder().serializeNulls().create().toJson(lstnog);
 				response_text = String.join("", "\"nogInfo\":",response_text);
 		        response_text = String.join("", "{\"success\":", lstnog.size() > 0 ? "true," : "false,", response_text, "}");
+			}else if(accion.equals("getCantidadHistoria")){
+				Integer objetoId = Utils.String2Int(map.get("id"));
+				Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
+				String resultado = PlanAdquisicionDAO.getVersiones(objetoId, objetoTipo); 
+				response_text = String.join("", "{\"success\":true, \"versiones\": [" + resultado + "]}");
+			}else if(accion.equals("getHistoria")){
+				Integer objetoId = Utils.String2Int(map.get("id"));
+				Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
+				Integer version = Utils.String2Int(map.get("version"));
+				String resultado = PlanAdquisicionDAO.getHistoria(objetoId, objetoTipo, version); 
+				response_text = String.join("", "{\"success\":true, \"historia\":" + resultado + "}");
 			}
 			
 			response.setHeader("Content-Encoding", "gzip");
