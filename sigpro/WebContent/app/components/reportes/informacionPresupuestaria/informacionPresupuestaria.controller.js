@@ -23,8 +23,10 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 		mi.porcentajeCeldaPipe = "width: 2%; float: left;";
 		mi.data = [];
 		mi.dataOriginal=[];
+		mi.vigenteOriginal=[];
 		mi.totales = [];
 		mi.scrollPosicion = 0;
+		mi.vigente = [];
 		
 		mi.lprestamos = [];
 		
@@ -341,6 +343,13 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 					mi.mostrarDescargar = true;
 					mi.movimiento = true;
 					
+					datos.accion = "getvigente";
+					$http.post('/SInformacionPresupuestaria', datos).then(function(response) {
+						mi.vigenteOriginal = response.data.vigente;
+						mi.agruparVigente(mi.agrupacionActual);
+					})
+					
+					
 					$timeout(function(){
 						mi.mostrarCargando = false;
 					})
@@ -350,7 +359,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 			});
 		}
 		
-		mi.lineColors = ['#88b4df','#8ecf4c'];
+		mi.lineColors = ['#88b4df','#8ecf4c','#feadae'];
 		
 		mi.cambiarAgrupacion = function(agrupacion){
 			if(mi.pepId > 0)
@@ -369,6 +378,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 								 }
 							}
 							mi.renderizaTabla();
+							mi.agruparVigente (agrupacion);
 						}
 					}else
 						$utilidades.mensaje('warning','La fecha inicial es mayor a la fecha final');
@@ -560,7 +570,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 			
 			  
 				
-			mi.series = ['Planificado', 'Real'];
+			mi.series = ['Planificado', 'Real','Vigente'];
 			
 			mi.convertirMillones();
 		}
@@ -798,5 +808,89 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 				 	}
 			  	);
 			};
+			
+	mi.agruparVigente = function(agrupacion){
+		mi.vigente=[];
+		mi.vigenteAcumulado=[];
+		mi.vigente.push(...mi.vigenteOriginal)
+		var vigenteTemp = [];
+		var vigenteTempAcumulado = [];
+		
+		
+		
+		if(mi.enMillones){
+			for (x in mi.vigente){
+				mi.vigente[x] = mi.vigente[x] / 1000000;
+				mi.vigenteAcumulado[x] = mi.vigenteAcumulado[x] / 1000000;
+			}
+		}
+		
+		switch (agrupacion){
+			case 1:
+				for(x = 0; x<mi.vigente.length; x++){
+					vigenteTemp.push(mi.vigente[x]);
+					//vigenteTempAcumulado.push(mi.vigenteAcumulado[x]);
+				}
+				break;
+			case 2:
+				for(x = 0; x<mi.vigente.length ; ){
+					vigenteTemp.push(mi.vigente[x] + mi.vigente[x+1]);
+					//vigenteTempAcumulado.push(mi.vigenteAcumulado[x] + mi.vigenteAcumulado[x + 1] );
+					x = x+2;
+				}
+				break;
+			case 3:
+				for(x = 0; x<mi.vigente.length ; ){
+					vigenteTemp.push(mi.vigente[x] + mi.vigente[x+1] + mi.vigente[x+2]);
+					/*vigenteTempAcumulado.push(mi.vigenteAcumulado[x] + mi.vigenteAcumulado[x + 1] + mi.vigenteAcumulado[x + 2] );*/
+					x = x+3;
+				}
+				break;
+			case 4:
+				for(x = 0; x<mi.vigente.length ; ){
+					vigenteTemp.push(mi.vigente[x] + mi.vigente[x+1] + mi.vigente[x+2] + mi.vigente[x+3]);
+					/*vigenteTempAcumulado.push(mi.vigenteAcumulado[x] + mi.vigenteAcumulado[x + 1] + mi.vigenteAcumulado[x + 2]
+					+ mi.vigenteAcumulado[x + 3]);*/
+					x = x+4;
+				}
+				break;
+			case 5:
+				for(x = 0; x<mi.vigente.length ; ){
+					vigenteTemp.push(mi.vigente[x] + mi.vigente[x+1] + mi.vigente[x+2] + mi.vigente[x+3]
+					+ mi.vigente[x+4] + mi.vigente[x+5]);
+					/*vigenteTempAcumulado.push(mi.vigenteAcumulado[x] + mi.vigenteAcumulado[x + 1] + mi.vigenteAcumulado[x + 2]
+					+ mi.vigenteAcumulado[x + 3] + mi.vigenteAcumulado[x + 4] + mi.vigenteAcumulado[x + 5]);*/
+					x = x+6;
+				}
+				break;
+			case 6:
+				for(x = 0; x<mi.vigente.length ; ){
+					vigenteTemp.push(mi.vigente[x] + mi.vigente[x+1] + mi.vigente[x+2] + mi.vigente[x+3]
+					+ mi.vigente[x+4] + mi.vigente[x+5] + mi.vigente[x+6] + mi.vigente[x+7] + mi.vigente[x+8] + mi.vigente[x+9]
+					+ mi.vigente[x+10] + mi.vigente[x+11]);
+					/*vigenteTempAcumulado.push(mi.vigenteAcumulado[x] + mi.vigenteAcumulado[x + 1] + mi.vigenteAcumulado[x + 2]
+					+ mi.vigenteAcumulado[x + 3] + mi.vigenteAcumulado[x + 4] + mi.vigenteAcumulado[x + 5]
+					+ mi.vigenteAcumulado[x + 6] + mi.vigenteAcumulado[x + 7] + mi.vigenteAcumulado[x + 8]
+					+ mi.vigenteAcumulado[x + 9] + mi.vigenteAcumulado[x + 10] + mi.vigenteAcumulado[x + 11]);*/
+					x = x+12;
+				}
+				break;
+		
+		}
+		
+		mi.vigenteAcumulado = [];
+		for (x in vigenteTemp){
+			mi.vigenteAcumulado[x] = x == 0 ? vigenteTemp[x] : mi.vigenteAcumulado[x -1] +  vigenteTemp[x];
+		}
+		
+		if(mi.dataGrafica.length == 3)
+			mi.dataGrafica.splice(2,1);
+		
+		if(mi.dataGraficaAcumulado.length == 3)
+			mi.dataGraficaAcumulado.splice(2,1);
+		
+		mi.dataGrafica.push(vigenteTemp);
+		mi.dataGraficaAcumulado.push(mi.vigenteAcumulado);
+	}
 		
 }]);
