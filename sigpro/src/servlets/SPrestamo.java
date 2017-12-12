@@ -6,13 +6,10 @@ import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Year;
@@ -61,7 +58,6 @@ import pojo.Proyecto;
 import pojo.ProyectoTipo;
 import pojo.TipoMoneda;
 import pojo.UnidadEjecutora;
-import utilities.CHistoria;
 import utilities.Utils;
 
 
@@ -162,28 +158,32 @@ public class SPrestamo extends HttpServlet {
 		String fechaActualizacion;
 	}
        
-    class stcomponentessigade{
-    	Integer id;
-    	String nombre;
-    	String tipoMoneda;
-    	BigDecimal techo;
-    	int orden;
-    	String descripcion;
-		List<stunidadejecutora> unidadesEjecutoras;
+    public class stcomponentessigade{
+    	public Integer id;
+    	public String nombre;
+    	public String tipoMoneda;
+    	public BigDecimal techo;
+    	public int orden;
+    	public String descripcion;
+    	public List<stunidadejecutora> unidadesEjecutoras;
     }
     
-    class stunidadejecutora{
-    	Integer id;
-    	String nombre;
-    	String entidad;
-    	Integer entidadId;
-		Integer ejercicio;
-		Double prestamo;
-		Double donacion;
-		Double nacional;
-		int esCoordinador;
-		String fechaElegibilidad;
-		String fechaCierre;
+    public class stunidadejecutora{
+    	public Integer id;
+    	public String nombre;
+    	public String entidad;
+    	public Integer entidadId;
+    	public Integer ejercicio;
+    	public Double prestamo;
+    	public Double donacion;
+    	public Double nacional;
+    	public int esCoordinador;
+    	public String fechaElegibilidad;
+    	public String fechaCierre;
+    	public BigDecimal techo;
+    	public Integer prestamoId;
+    	public Integer componenteId;
+    	public Integer componenteSigadeId;
     }
     
     public SPrestamo() {
@@ -742,10 +742,14 @@ public class SPrestamo extends HttpServlet {
 							temp_.entidadId = unidade.getId().getEntidadentidad();
 							temp_.ejercicio = unidade.getId().getEjercicio();
 							temp_.nombre = unidade.getNombre();
+							temp_.techo = temp.techo;
+							temp_.prestamoId=prestamoId;
 														
 							Componente compTemp = ComponenteDAO.obtenerComponentePorEntidad(codigoPresupuestario,temp_.ejercicio,
 									Integer.valueOf(temp_.entidad),temp_.id,temp.orden,prestamoId);
 							if (compTemp != null){
+								temp_.componenteId = compTemp.getId();
+								temp_.componenteSigadeId = compTemp.getComponenteSigade()!=null?compTemp.getComponenteSigade().getId():null;
 								temp_.prestamo = compTemp.getFuentePrestamo().doubleValue();
 								temp_.donacion = compTemp.getFuenteDonacion().doubleValue();
 								temp_.nacional = compTemp.getFuenteNacional().doubleValue();
@@ -790,6 +794,7 @@ public class SPrestamo extends HttpServlet {
 				JsonArray est_unidadesEjecutoras_ = parser.parse(unidadesEjecutoras).getAsJsonArray();
 				
 				ArrayList<Proyecto> proyectos = new ArrayList<Proyecto>();
+				ArrayList<stunidadejecutora> unidadesEjecutorasMatriz = new ArrayList<stunidadejecutora>();
 				int k = 0;
 				for (Map<String, Object> estructura : estructuras){
 					JsonObject estructura_ = estructuras_.get(k).getAsJsonObject();
@@ -824,12 +829,24 @@ public class SPrestamo extends HttpServlet {
 										prestamo.getCodigoPresupuestario(),((Double) estructura.get("orden")).intValue());
 							}
 						}
+						ComponenteSigade componenteSigade = ComponenteSigadeDAO.getComponenteSigadePorCodigoNumero(prestamo.getCodigoPresupuestario() + "", ((Double) estructura.get("orden")).intValue());
+						stunidadejecutora unidadMatriz = new stunidadejecutora();
+						unidadMatriz.componenteSigadeId = componenteSigade.getId();						
+						unidadMatriz.id = Utils.String2Int(unidad.get("id").getAsString());
+						unidadMatriz.prestamoId=prestamo.getId();
+						unidadMatriz.entidadId=Utils.String2Int(unidad.get("entidad").getAsString());
+						unidadMatriz.ejercicio=Utils.String2Int(unidad.get("ejercicio").getAsString());
+						unidadMatriz.prestamo=fuentePrestamo.doubleValue();
+						unidadMatriz.donacion=fuenteDonacion.doubleValue();
+						unidadMatriz.nacional=fuenteNacional.doubleValue();
+						unidadMatriz.techo = estructura_.get("techo").getAsBigDecimal();
+						unidadesEjecutorasMatriz.add(unidadMatriz);
 					}
 				}
+				PrestamoDAO.actualizarMatriz(prestamo.getId(), unidadesEjecutorasMatriz);
+				Integer diferencia = DataSigadeDAO.getDiferenciaMontos(prestamo.getCodigoPresupuestario()+"");
 			
-			Integer diferencia = DataSigadeDAO.getDiferenciaMontos(prestamo.getCodigoPresupuestario()+"");
-			
-			 response_text = String.join("", "{\"success\":",ret ? "true" : "false", response_text,
+				response_text = String.join("", "{\"success\":",ret ? "true" : "false", response_text,
 					 ",\"diferencia\":",diferencia + "",
 					 "}");
 			
@@ -1211,81 +1228,64 @@ public class SPrestamo extends HttpServlet {
 				}
 			}
 			response_text = String.join(" ", "{ \"success\": ", ret ? "true" : "false","}");
-        }else if(accion.equals("getFechasHistoriaMatriz")){
+        }else if(accion.equals("getVersionesMatriz")){
         	Integer prestamoId = Utils.String2Int(map.get("prestamoId"));
-        	String codigoPresupuestario = map.get("codigoPresupuestario"); 
-        	String fechas = CHistoria.getFechasHistoriaMatriz(prestamoId, codigoPresupuestario);
-			response_text = String.join(" ", "{ \"success\": true, \"fechas\": [", fechas ,"]}");
+        	String resultado = PrestamoDAO.getVersionesMatriz(prestamoId); 
+			response_text = String.join("", "{\"success\":true, \"versiones\": [" + resultado + "]}");
         }else if(accion.equals("getHistoriaMatriz")){
-        	Integer prestamoId = Utils.String2Int(map.get("prestamoId"));
-        	String fecha = map.get("fecha"); 
-        	List<stunidadejecutora> unidadesEjecutoras =  new ArrayList<stunidadejecutora>();
-        	List<stcomponentessigade> stcomponentes = new ArrayList<stcomponentessigade>();
-        	List<stcomponentessigade> stcomponentesTemp = new ArrayList<stcomponentessigade>();
-        	
-        	Prestamo prestamo = PrestamoDAO.getPrestamoById(prestamoId);
-        	if(prestamo!=null){
-        		Set<Proyecto> proyectos = prestamo.getProyectos();
-        		Iterator<Proyecto> iteratorP = proyectos.iterator();
-        		while(iteratorP.hasNext()){
-        			Proyecto proyecto = iteratorP.next();
-        			Set<Componente> componentes = proyecto.getComponentes();
-        			Iterator<Componente> iteratorC = componentes.iterator();
-            		while(iteratorC.hasNext()){
-            			Componente componente = iteratorC.next();
-            			List<?> datos = CHistoria.getHistoriaMatriz(proyecto.getId(), componente.getId(), fecha);
-            			if(datos!=null & datos.size()>0){
-            				Object[] dato = (Object[])datos.get(0);
-            				stcomponentessigade stcomponente = new stcomponentessigade();
-            				stcomponente.id = ((BigInteger)dato[11]).intValue();
-            				stcomponente.nombre = (String)dato[3];
-            				stcomponente.techo = (BigDecimal)dato[10];
-            				stcomponente.orden = ((BigInteger)dato[12]).intValue();
-            				
-            				stunidadejecutora unidadEjecutora = new stunidadejecutora();
-            				unidadEjecutora.id = (Integer)dato[8];
-            				unidadEjecutora.nombre = (String)dato[9];
-            				unidadEjecutora.prestamo = ((BigDecimal)dato[4]).doubleValue();
-            				unidadEjecutora.donacion = ((BigDecimal)dato[5]).doubleValue();
-            				unidadEjecutora.nacional = ((BigDecimal)dato[6]).doubleValue();
-            				
-            				stcomponente.unidadesEjecutoras = new ArrayList<stunidadejecutora>();
-            				stcomponente.unidadesEjecutoras.add(unidadEjecutora);
-            				stcomponentesTemp.add(stcomponente);
-            			}
-            		}
-        		}
-        		
-        		stcomponentesTemp = bubbleSort(stcomponentesTemp);
-        		Iterator<stcomponentessigade> iteratorCT = stcomponentesTemp.iterator();
-        		while(iteratorCT.hasNext()){
-        			stcomponentessigade componenteTemp = iteratorCT.next();
-        			boolean agregado=false;
-        			for(int i=0; i<stcomponentes.size(); i++){
-        				if(stcomponentes.get(i).id.compareTo(componenteTemp.id)==0){
-        					stcomponentes.get(i).unidadesEjecutoras.add(componenteTemp.unidadesEjecutoras.get(0));
-        					agregado = true;
-        				}
-        			}
-        			if(!agregado){
-        				stcomponentes.add(componenteTemp);
-        				boolean agregada =false;
-        				for(int i=0; i<unidadesEjecutoras.size(); i++){
-        					if(unidadesEjecutoras.get(i).id.compareTo(componenteTemp.unidadesEjecutoras.get(0).id)==0){
-        						agregada = true;
-        					}
-        				}
-        				if(!agregada){
-        					unidadesEjecutoras.add(componenteTemp.unidadesEjecutoras.get(0));
-        				}
-        			}
-        		}
-        	}
-
-
-        	String componentes_text=new GsonBuilder().serializeNulls().create().toJson(stcomponentes);
-			String unidades_text=new GsonBuilder().serializeNulls().create().toJson(unidadesEjecutoras);
+			Integer prestamoId = Utils.String2Int(map.get("prestamoId"),0);
+			Integer version = Utils.String2Int(map.get("version"));			
+			String codigoPresupuestario = map.get("codigoPresupuestario");
 			
+			int anio_actual = Year.now().getValue();
+			List<?> unidadesEjecutorasSigade = DataSigadeDAO.getUnidadesEjecutoras(codigoPresupuestario,anio_actual);
+			List<stunidadejecutora> unidadesEjecutroas =  new ArrayList<stunidadejecutora>();
+			
+
+			List<?> componentesSigade = DataSigadeDAO.getComponentes(codigoPresupuestario);
+			List<stcomponentessigade> stcomponentes = new ArrayList<stcomponentessigade>();
+			if(componentesSigade!=null && componentesSigade.size()>0){
+				for(int i=0; i<componentesSigade.size(); i++){
+					Object[] componenteSigade = (Object[]) componentesSigade.get(i);
+					stcomponentessigade temp = new stcomponentessigade();
+					temp.nombre = (String) componenteSigade[2];
+					temp.orden = (Integer) componenteSigade[1];
+					unidadesEjecutroas =  new ArrayList<stunidadejecutora>();
+					if (unidadesEjecutorasSigade!=null && unidadesEjecutorasSigade.size()>0){
+						for(int j=0; j<unidadesEjecutorasSigade.size(); j++){
+							Object[] unidadEjecutora = (Object[]) unidadesEjecutorasSigade.get(j);
+							UnidadEjecutora unidade = UnidadEjecutoraDAO.getUnidadEjecutora((Integer) unidadEjecutora[1],(Integer) unidadEjecutora[2],
+									(Integer) unidadEjecutora[3]);
+							stunidadejecutora temp_ = new stunidadejecutora();
+							temp_.id = unidade.getId().getUnidadEjecutora();
+							temp_.entidad = unidade.getId().getEntidadentidad() + "";
+							temp_.entidadId = unidade.getId().getEntidadentidad();
+							temp_.ejercicio = unidade.getId().getEjercicio();
+							temp_.nombre = unidade.getNombre();
+							temp_.techo = temp.techo;
+							temp_.prestamoId=prestamoId;
+							
+							BigDecimal[] techos = PrestamoDAO.getComponenteMatrizHistoria(prestamoId, temp.orden, 
+									temp_.entidadId, temp_.ejercicio, temp_.id, version);
+							
+							if(techos!=null){
+								temp.techo = techos[0]!=null?techos[0]:new BigDecimal(0);
+								temp_.prestamo = techos[1]!=null?techos[1].doubleValue():0;
+								temp_.donacion = techos[2]!=null?techos[2].doubleValue():0;
+								temp_.nacional = techos[3]!=null?techos[3].doubleValue():0;
+							}								
+							unidadesEjecutroas.add(temp_);
+						}
+					}
+					
+					temp.unidadesEjecutoras = unidadesEjecutroas;
+					stcomponentes.add(temp);
+				}
+			}
+			
+			String unidades_text=new GsonBuilder().serializeNulls().create().toJson(unidadesEjecutroas);
+			String componentes_text = new GsonBuilder().serializeNulls().create().toJson(stcomponentes);
+						
 			response_text = String.join("", ",\"unidadesEjecutoras\":",unidades_text);
 	        response_text = String.join("", "\"componentes\":",componentes_text,response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");

@@ -120,7 +120,7 @@
 						</table>
 					</div>
 	        		<div align="right" style="font-size: 12px; z-index: -1">
-	        			<b>Total de versiones: {{modalh.posicion + 1}} de {{modalh.totalFechas}}</b>
+	        			<b>Total de versiones: {{modalh.posicion + 1}} de {{modalh.totalVersiones}}</b>
 	        		</div> 
 	    		</div>
 	    		<div class="row" align="center" style="z-index: -1" ng-hide="modalh.totalFechas == 0">

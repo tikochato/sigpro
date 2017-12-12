@@ -172,20 +172,20 @@ function historiaMatrizController($uibModalInstance, $scope, $http, $interval, i
 	mi.m_organismosEjecutores = [];
 	mi.m_componentes = [];
 	mi.posicion = 0;
-	mi.fechas = [];
-	mi.totalFechas = 0;
+	mi.versiones = [];
+	mi.totalVersiones = 0;
 
 	$http.post(servlet, {
-		accion: 'getFechasHistoriaMatriz',
+		accion: 'getVersionesMatriz',
 		prestamoId: id,
 		codigoPresupuestario: codigoPresupuestario,
 		t: (new Date()).getTime()
 	}).success(
 		function(response){
 		if(response.success){
-			mi.fechas = response.fechas;
-			mi.totalFechas = mi.fechas.length;
-			mi.cargarData(mi.fechas[0]);
+			mi.versiones = response.versiones;
+			mi.totalVersiones = mi.versiones.length;
+			mi.cargarData(mi.versiones[0]);
 			mi.desHabilitarBotones();
 		}
 	});
@@ -205,11 +205,12 @@ function historiaMatrizController($uibModalInstance, $scope, $http, $interval, i
 		}
 	}
 	
-	mi.cargarData = function(fecha){
+	mi.cargarData = function(version){
 		$http.post(servlet, {
 			accion: 'getHistoriaMatriz',
-			fecha: fecha,
+			version: version,
 			prestamoId: id,
+			codigoPresupuestario: codigoPresupuestario,
 			t: (new Date()).getTime()
 		}).success(
 			function(response){
@@ -233,27 +234,27 @@ function historiaMatrizController($uibModalInstance, $scope, $http, $interval, i
 		mi.inicializar();
 		mi.mostrarCargando = true;
 		mi.posicion = 0;
-		mi.cargarData(mi.fechas[0]);
+		mi.cargarData(mi.versiones[0]);
 		mi.desHabilitarBotones();
 	}
 	
 	mi.ultimo = function(){
-		if(mi.totalFechas > 0){
+		if(mi.totalVersiones > 0){
 			mi.inicializar();
 			mi.mostrarCargando = true;
-			mi.posicion = mi.totalFechas - 1;
-			mi.cargarData(mi.fechas[mi.posicion]);
+			mi.posicion = mi.totalVersiones - 1;
+			mi.cargarData(mi.versiones[mi.posicion]);
 			mi.desHabilitarBotones();
 		}
 	}
 	
 	mi.siguiente = function(){
-		if(mi.totalFechas > 0){
-			if(mi.posicion != mi.totalFechas - 1){
+		if(mi.totalVersiones > 0){
+			if(mi.posicion != mi.totalVersiones - 1){
 				mi.inicializar();
 				mi.mostrarCargando = true;
 				mi.posicion = mi.posicion+1;
-				mi.cargarData(mi.fechas[mi.posicion]);
+				mi.cargarData(mi.versiones[mi.posicion]);
 				mi.desHabilitarBotones();
 			}
 		}
@@ -264,7 +265,7 @@ function historiaMatrizController($uibModalInstance, $scope, $http, $interval, i
 			mi.inicializar();
 			mi.mostrarCargando = true;
 			mi.posicion = mi.posicion-1;
-			mi.cargarData(mi.fechas[mi.posicion]);
+			mi.cargarData(mi.versiones[mi.posicion]);
 			mi.desHabilitarBotones();
 		}
 	}
@@ -275,12 +276,12 @@ function historiaMatrizController($uibModalInstance, $scope, $http, $interval, i
 		else
 			mi.disabledInicio=false;
 		
-		if(mi.posicion == mi.totalFechas -1)
+		if(mi.posicion == mi.totalVersiones -1)
 			mi.disabledFin = true;
 		else
 			mi.disabledFin = false;
 		
-		if(mi.totalFechas == 1){
+		if(mi.totalVersiones == 1){
 			mi.disabledInicio=true;
 			mi.disabledFin = true;
 		}

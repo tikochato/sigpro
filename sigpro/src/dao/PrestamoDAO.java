@@ -1,5 +1,8 @@
 package dao;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.NoResultException;
 import org.hibernate.Session;
@@ -10,7 +13,9 @@ import pojo.Prestamo;
 import pojo.PrestamoUsuario;
 import pojo.PrestamoUsuarioId;
 import pojo.Usuario;
+import servlets.SPrestamo.stunidadejecutora;
 import utilities.CHibernateSession;
+import utilities.CHistoria;
 import utilities.CLogger;
 
 public class PrestamoDAO {
@@ -266,6 +271,125 @@ public class PrestamoDAO {
 		}
 		
 		return ret;
+	}
+	
+	public static boolean actualizarMatriz(Integer prestamoId, List<stunidadejecutora> unidadesEjecutoras){
+		Boolean actualizada = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{	
+			if(unidadesEjecutoras!=null){
+				session.beginTransaction();
+				Integer version = getVersionHistoriaMatriz(prestamoId);
+				version++;
+				for(int u=0; u<unidadesEjecutoras.size(); u++){
+					stunidadejecutora unidadEjecutora = unidadesEjecutoras.get(u);
+					String query = "INSERT INTO sipro_history.componente_matriz "
+							+ "(unidad_ejecutoraid, componente_sigadeid, prestamoid, entidadid, ejercicio, "
+							+ " fuente_prestamo, fuente_donacion, fuente_nacional, techo, version, fecha_actualizacion) "
+							+ " VALUES "
+							+ "("+ unidadEjecutora.id
+							+ ", " + unidadEjecutora.componenteSigadeId
+							+ ", " + prestamoId
+							+ ", " + unidadEjecutora.entidadId
+							+ ", " + unidadEjecutora.ejercicio
+							+ ", " + (unidadEjecutora.prestamo!=null?(new BigDecimal(unidadEjecutora.prestamo)).toString():"0")
+							+ ", " + (unidadEjecutora.donacion!=null?(new BigDecimal(unidadEjecutora.donacion)).toString():"0")
+							+ ", " + (unidadEjecutora.nacional!=null?(new BigDecimal(unidadEjecutora.nacional)).toString():"0")
+							+ ", " + (unidadEjecutora.techo!=null?unidadEjecutora.techo.toString():"0")
+							+ ", " + version
+							+ ", '" + new java.sql.Date(new Date().getTime())+"') ";
+					
+					Query<?> criteria = session.createNativeQuery(query);
+					criteria.executeUpdate();
+				}
+				actualizada = true;
+				session.flush();
+				session.getTransaction().commit();
+				session.close();
+			}
+		}
+		catch(Throwable e){
+			CLogger.write("3", PrestamoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return actualizada;
+	}
+	
+	public static Integer getVersionHistoriaMatriz(Integer prestamoId){
+		Integer version = 0;
+		List<?> ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{	
+			String query = "select ifnull(max(version),0) version "
+					+ " from sipro_history.componente_matriz "
+					+ " where prestamoid = "+prestamoId;
+			
+			Query<?> criteria = session.createNativeQuery(query);
+			ret = criteria.getResultList();
+			if(ret!=null){
+				version = ((BigInteger)ret.get(0)).intValue();
+			}
+		}
+		catch(Throwable e){
+			CLogger.write("4", PrestamoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return version;
+	}
+	
+	public static String getVersionesMatriz (Integer id){
+		String resultado = "";
+		String query = "SELECT DISTINCT(version) "
+				+ " FROM sipro_history.componente_matriz "
+				+ " WHERE prestamoid = "+id;
+		List<?> versiones = CHistoria.getVersiones(query);
+		if(versiones!=null){
+			for(int i=0; i<versiones.size(); i++){
+				if(!resultado.isEmpty()){
+					resultado+=",";
+				}
+				resultado+=(Integer)versiones.get(i);
+			}
+		}
+		return resultado;
+	}
+	
+	public static BigDecimal[] getComponenteMatrizHistoria(Integer prestamoId, Integer orden, Integer entidadId, Integer ejercicio, Integer unidadEjuctoraId, Integer version){
+		BigDecimal[] resultado = new BigDecimal[4];
+		List<?> ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{	
+			String query = "SELECT cm.techo, cm.fuente_prestamo, cm.fuente_donacion, cm.fuente_nacional "
+					+ " FROM sipro_history.componente_matriz cm "
+					+ " JOIN sipro.componente_sigade cs ON cm.componente_sigadeid = cs.id "
+					+ " WHERE cm.prestamoid = " + prestamoId
+					+ " AND cs.numero_componente = " + orden
+					+ " AND cm.entidadid = " + entidadId
+					+ " AND cm.ejercicio = " + ejercicio
+					+ " AND cm.unidad_ejecutoraid = " + unidadEjuctoraId
+					+ " AND cm.version = " + version;
+			
+			Query<?> criteria = session.createNativeQuery(query);
+			ret = criteria.getResultList();
+			if(ret!=null){
+				Object[] dato = (Object[])ret.get(0);
+				resultado[0] = dato[0]!=null?(BigDecimal)dato[0]:new BigDecimal(0);
+				resultado[1] = dato[1]!=null?(BigDecimal)dato[1]:new BigDecimal(0);
+				resultado[2] = dato[2]!=null?(BigDecimal)dato[2]:new BigDecimal(0);
+				resultado[3] = dato[3]!=null?(BigDecimal)dato[3]:new BigDecimal(0);
+			}
+		}
+		catch(Throwable e){
+			CLogger.write("5", PrestamoDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return resultado;
 	}
 	
 }
