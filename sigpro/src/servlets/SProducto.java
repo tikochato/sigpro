@@ -22,11 +22,15 @@ import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import dao.SubComponenteDAO;
 import dao.ComponenteDAO;
 import dao.ObjetoDAO;
+import dao.PagoPlanificadoDAO;
 import dao.ProductoDAO;
 import dao.ProductoPropiedadDAO;
 import dao.ProductoPropiedadValorDAO;
@@ -36,6 +40,7 @@ import dao.UnidadEjecutoraDAO;
 import dao.UsuarioDAO;
 import pojo.AcumulacionCosto;
 import pojo.Componente;
+import pojo.PagoPlanificado;
 import pojo.Producto;
 import pojo.ProductoPropiedad;
 import pojo.ProductoPropiedadValor;
@@ -361,6 +366,29 @@ public class SProducto extends HttpServlet {
 				}
 				
 				ret = ProductoDAO.guardarProducto(producto, true);
+				
+				if(ret){
+					String pagosPlanificados = parametro.get("pagosPlanificados");
+					if(!acumulacionCostoid.equals(2)  || pagosPlanificados!= null && pagosPlanificados.replace("[", "").replace("]", "").length()>0 ){
+						List<PagoPlanificado> pagosActuales = PagoPlanificadoDAO.getPagosPlanificadosPorObjeto(producto.getId(), 3);
+						for (PagoPlanificado pagoTemp : pagosActuales){
+							PagoPlanificadoDAO.eliminarTotalPagoPlanificado(pagoTemp);
+						}
+					}
+						
+					if (acumulacionCostoid.equals(2) && pagosPlanificados!= null && pagosPlanificados.replace("[", "").replace("]", "").length()>0){
+						JsonParser parser = new JsonParser();
+						JsonArray pagosArreglo = parser.parse(pagosPlanificados).getAsJsonArray();
+						for(int i=0; i<pagosArreglo.size(); i++){
+							JsonObject objeto = pagosArreglo.get(i).getAsJsonObject();
+							Date fechaPago = objeto.get("fechaPago").isJsonNull() ? null : Utils.stringToDate(objeto.get("fechaPago").getAsString());
+							BigDecimal monto = objeto.get("pago").isJsonNull() ? null : objeto.get("pago").getAsBigDecimal();
+							
+							PagoPlanificado pagoPlanificado = new PagoPlanificado(fechaPago, monto, producto.getId(), 3, usuario, null, new Date(), null, 1);
+							ret = ret && PagoPlanificadoDAO.guardar(pagoPlanificado);
+						}
+					}
+				}
 				
 				if (ret){
 					ProductoUsuarioId productoUsuarioId = new ProductoUsuarioId(producto.getId(), usuario);
