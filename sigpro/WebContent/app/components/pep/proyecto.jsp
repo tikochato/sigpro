@@ -158,8 +158,6 @@
 				<span class="glyphicon glyphicon-blackboard"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAAgenda(controller.proyecto.id) : ''" uib-tooltip="Agenda" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-calendar"></span></label>
-				<label class="btn btn-default" ng-click="controller.botones ? controller.irAMatrizRiesgos(controller.proyecto.id) : ''" uib-tooltip="Matriz de Riesgos" tooltip-placement="bottom">
-				<span class="glyphicon glyphicon-list-alt"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones && !controller.congelado ? controller.calcularCostoFecha(controller.proyecto.id) : ''" ng-disabled="controller.congelado" uib-tooltip="Cálculo de costos y fechas" tooltip-placement="bottom">
 				<span class="glyphicon glyphicon-wrench"></span></label>
 				<label class="btn btn-default" ng-click="controller.botones ? controller.irAMiembrosUnidadEjecutora(controller.proyecto.id) : ''" uib-tooltip="Miembros de la Unidad Ejecutora" tooltip-placement="bottom">

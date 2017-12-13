@@ -8,7 +8,7 @@ app.controller('matrizriesgoController',['$scope','$rootScope','$http','$interva
 	mi.prestamoId=null;
 	mi.objetoTipoNombre = "";
 	mi.mostrarTabla = false;
-	
+	mi.mostrarBuscar=false;
 		
 	$window.document.title = $utilidades.sistema_nombre+' - Matriz Riesgos';
 	i18nService.setCurrentLang('es');
@@ -109,6 +109,7 @@ app.controller('matrizriesgoController',['$scope','$rootScope','$http','$interva
 		mi.mostrarTabla = false;
 		 $http.post('/SMatrizRiesgo', { 
 			 accion: 'getMatrizRiesgos', 
+			 prestamoid:mi.prestamoId,
 			 proyectoid:mi.pepId, 
 			 lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 			 t: (new Date()).getTime()})
@@ -119,15 +120,20 @@ app.controller('matrizriesgoController',['$scope','$rootScope','$http','$interva
 				 mi.mostrarTabla = true;
 			 }else{
 				 mi.mostrarTabla = false;
-				 if (mi.proyectoId.value>0)
+				 if (mi.pepId!=null && mi.pepId>0)
 				 $utilidades.mensaje('warning','No se encontraron datos para el '+$rootScope.etiquetas.proyecto);
 			 }
 		});
+	}
+	
+	mi.Buscar = function(){
+		mi.mostrarBuscar = !mi.mostrarBuscar;
 	}
 
 	 mi.exportarExcel = function(){
 		$http.post('/SMatrizRiesgo', { 
 			accion: 'exportarExcel',
+			prestamoid:mi.prestamoId,
 			proyectoid:mi.pepId,
 			lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 			t:moment().unix() })
