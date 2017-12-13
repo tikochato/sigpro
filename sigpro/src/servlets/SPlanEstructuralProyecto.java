@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -263,7 +264,7 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 					temp.presupuestoDevengado = objeto.getEjecutado();
 					temp.presupuestoAprobado = objeto.getAsignado();
 					temp.asignacionPresupuestariaVigente = objeto.getModificaciones();
-					temp.avanceFinanciero = objeto.getModificaciones() != null && objeto.getEjecutado() != null ? (objeto.getModificaciones().compareTo(BigDecimal.ZERO) > 0 ? objeto.getEjecutado().divide(objeto.getModificaciones()).doubleValue() : new BigDecimal(0).doubleValue()) : new BigDecimal(0).doubleValue();
+					temp.avanceFinanciero = objeto.getModificaciones() != null && objeto.getEjecutado() != null ? (objeto.getModificaciones().compareTo(BigDecimal.ZERO) > 0 ? objeto.getEjecutado().divide(objeto.getModificaciones(),MathContext.DECIMAL128).doubleValue() : new BigDecimal(0).doubleValue()) : new BigDecimal(0).doubleValue();
 					lstPrestamo.add(temp);
 				}
 			}
