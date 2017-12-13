@@ -48,8 +48,7 @@
 			float: left;			
 			overflow-y:hidden;
 			overflow-x:hidden;
-			height: 100%;
-			height: 100%;
+			height: 375px;
 		}
 		
 		.tablaDatos {
