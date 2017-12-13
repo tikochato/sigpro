@@ -958,7 +958,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 					objetoId: objetoId,
 					objetoTipo : objetoTipo
 				}
-			}, mi.actividad.costo);
+			}, mi.actividad.costo != null ? mi.actividad.costo : 0);
 			
 			resultado.then(function(pagos){
 				mi.pagos=pagos;
@@ -1230,7 +1230,4 @@ function modalPagos($uibModalInstance, $scope, $http, $interval,
 	     } 
 	 }, true);
 	
-	
-	
-
 }
