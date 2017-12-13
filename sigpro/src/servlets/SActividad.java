@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -737,6 +738,21 @@ public class SActividad extends HttpServlet {
 			Integer version = Utils.String2Int(map.get("version"));
 			String resultado = ActividadDAO.getHistoria(id, version); 
 			response_text = String.join("", "{\"success\":true, \"historia\":" + resultado + "}");
+		}else if(accion.equals("getAsignado")){
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(new Date());
+			Integer ejercicio = cal.get(Calendar.YEAR);
+			String entidad = map.get("entidad");
+			Integer unidadEjecutora = Utils.String2Int(map.get("unidadEjecutora"));
+			Integer programa = Utils.String2Int(map.get("programa"));
+			Integer subprograma = Utils.String2Int(map.get("subprograma"));
+			Integer proyecto = Utils.String2Int(map.get("proyecto"));
+			Integer actividad = Utils.String2Int(map.get("actividad"));
+			Integer obra = Utils.String2Int(map.get("obra"));
+			Integer renglon = Utils.String2Int(map.get("renglon"));
+			Integer geografico = Utils.String2Int(map.get("geografico"));
+			BigDecimal asignado = ObjetoDAO.getAsignadoPorLineaPresupuestaria(ejercicio, entidad, unidadEjecutora, programa, 
+					subprograma, proyecto, actividad, obra, renglon, geografico);
 		}
 		else{
 			response_text = "{ \"success\": false }";
