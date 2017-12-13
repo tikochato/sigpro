@@ -801,4 +801,57 @@ public class ObjetoDAO {
 		
 		return ret;
 	}
+	
+	public static List<?> getViegente(Integer fuente, Integer organismo, Integer correlativo,
+			int ejercicio, int mesMaximo,int unidad_ejecutora, int entidad){
+		List<?> ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		
+		try{
+			String query =String.join(" ","select ",
+			"sum(case when t.mes = 1 then t.vigente else null end) enero,",
+			"sum(case when t.mes = 2 then t.vigente else null end) febrero,",
+			"sum(case when t.mes = 3 then t.vigente else null end) marzo,",
+			"sum(case when t.mes = 4 then t.vigente else null end) abril,",
+			"sum(case when t.mes = 5 then t.vigente else null end) mayo,",
+			"sum(case when t.mes = 6 then t.vigente else null end) junio,",
+			"sum(case when t.mes = 7 then t.vigente else null end) julio,",
+			"sum(case when t.mes = 8 then t.vigente else null end) agosto,",
+			"sum(case when t.mes = 9 then t.vigente else null end) septiembre,",
+			"sum(case when t.mes = 10 then t.vigente else null end) octubre,",
+			"sum(case when t.mes = 11 then t.vigente else null end) noviembre,",
+			"sum(case when t.mes = 12 then t.vigente else null end) diciembre",
+			"from",
+			"(",
+				"select  v.ejercicio,v.mes, sum(v.asignado + v.modificaciones) vigente",
+				"from sipro_analytic.mv_ep_ejec_asig_vige  v",
+				"where organismo = ?1",
+				"and fuente = ?2",
+				"and correlativo = ?3",
+				"and entidad = ?4",
+				"and unidad_ejecutra = ?5",
+				"and ejercicio = ?6",
+				"and mes between 1 and ?7",
+				"group by  v.ejercicio,v.mes",
+			") as t");
+			
+			
+			Query<?> criteria = session.createNativeQuery(query);
+			criteria.setParameter("1", organismo);
+			criteria.setParameter("2", fuente);
+			criteria.setParameter("3", correlativo);
+			criteria.setParameter("4", entidad);
+			criteria.setParameter("5", unidad_ejecutora);
+			criteria.setParameter("6", ejercicio);
+			criteria.setParameter("7", mesMaximo);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("6", DataSigadeDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return  ret;
+	}
 }
