@@ -187,7 +187,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 			    int mes =  anioFinal < anio ? 12 : fecha.get(Calendar.MONTH) + 1;
 				
 				for (int x = anioInicial; x<= anioFinal; x++){
-					List<?> vigente = ObjetoDAO.getViegente(fuente, organismo, correlativo, anioInicial, mes, 
+					List<?> vigente = ObjetoDAO.getVigente(fuente, organismo, correlativo, anioInicial, mes, 
 							proyecto.getUnidadEjecutora().getId().getUnidadEjecutora(), proyecto.getUnidadEjecutora().getId().getEntidadentidad());
 					Object valores [] = (Object[]) vigente.get(0);
 					for (int y = 0 ; y< 12; y++)

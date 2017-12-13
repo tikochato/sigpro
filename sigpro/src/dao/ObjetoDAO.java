@@ -263,6 +263,13 @@ public class ObjetoDAO {
 						Integer avance_fisico = dato[22]!=null ? Integer.valueOf(((BigInteger)dato[22]).toString()) : null;
 						BigDecimal totalPagos = dato[23]!=null ? (BigDecimal)dato[23] : null;
 						
+						//TODO: unidad ejecutra quemada para prestamo 2766 
+						Proyecto proyecto_ = ProyectoDAO.getProyecto(idProyecto);
+						proyecto_.getPrestamo();
+						Long codigo_presupuestario = proyecto_.getPrestamo().getCodigoPresupuestario();
+						if (codigo_presupuestario.equals(5204020122L)){
+							unidad_ejecutora = 205;
+						}
 						
 						root =  new ObjetoCosto(nombre, objeto_id, objeto_tipo, nivel, fecha_inicial, fecha_final, 
 								fecha_inicial_real, fecha_final_real, duracion, null,
@@ -780,7 +787,7 @@ public class ObjetoDAO {
 		return ret;
 	}
 	
-	public static List<?> getViegente(Integer fuente, Integer organismo, Integer correlativo,
+	public static List<?> getVigente(Integer fuente, Integer organismo, Integer correlativo,
 			int ejercicio, int mesMaximo,int unidad_ejecutora, int entidad){
 		List<?> ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
