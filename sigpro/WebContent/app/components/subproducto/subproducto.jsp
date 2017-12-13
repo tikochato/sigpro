@@ -104,7 +104,7 @@
 				<span class="glyphicon glyphicon-time"></span></label>
 				<label class="btn btn-default" ng-click="subproducto.verHistoria()" uib-tooltip="Ver Historia">
 				<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
-				<label class="btn btn-default btn-sm" ng-click="subproducto.subproducto.acumulacionCosto == 2 ? subproducto.agregarPagos() : ''"
+				<label class="btn btn-default" ng-click="subproducto.subproducto.acumulacionCosto == 2 ? subproducto.agregarPagos() : ''"
 				 uib-tooltip="Pagos planificados" tooltip-placement="left" ng-disabled = "subproducto.subproducto.acumulacionCosto != 2">
 				<span class="glyphicon glyphicon-piggy-bank"></span></label>
 			</div>
