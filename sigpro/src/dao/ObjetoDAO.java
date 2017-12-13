@@ -9,7 +9,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -19,6 +18,7 @@ import org.joda.time.DateTime;
 
 import pojo.Actividad;
 import pojo.Componente;
+import pojo.PagoPlanificado;
 import pojo.PlanAdquisicion;
 import pojo.PlanAdquisicionPago;
 import pojo.Producto;
@@ -426,10 +426,8 @@ public class ObjetoDAO {
 					objetoCosto.anios[a].anio=anioInicial+a;
 					ObjetoCosto.stanio anioObj = objetoCosto.anios[a];
 					if(objetoCosto.getFecha_inicial()!=null && objetoCosto.getFecha_final()!=null){
-						int diaInicial = objetoCosto.getFecha_inicial().getDayOfMonth();
 						int mesInicial = objetoCosto.getFecha_inicial().getMonthOfYear() -1;
 						int anioInicialObj = objetoCosto.getFecha_inicial().getYear();
-						int diaFinal = objetoCosto.getFecha_final().getDayOfMonth();
 						int mesFinal = objetoCosto.getFecha_final().getMonthOfYear() -1;
 						int anioFinalObj = objetoCosto.getFecha_final().getYear();
 						if((anioInicial+a) >= anioInicialObj && (anioInicial+a)<=anioFinalObj){
@@ -439,33 +437,13 @@ public class ObjetoDAO {
 									anioObj.mes[mesInicial].planificado =  objetoCosto.getCosto() != null ? objetoCosto.getCosto() : new BigDecimal(0);
 								}
 							}else if(acumulacionCostoId.compareTo(2)==0){
-								int dias = (int)((objetoCosto.getFecha_final().getMillis() - objetoCosto.getFecha_inicial().getMillis())/(1000*60*60*24));
-								BigDecimal costoDiario = objetoCosto.getCosto() != null && dias > 0 ? objetoCosto.getCosto().divide(new BigDecimal(dias),5, BigDecimal.ROUND_HALF_UP) : new BigDecimal(0);
-								int inicioActual = 0;
-								if(anioObj.anio == anioInicialObj){
-									inicioActual = mesInicial;
-								}
-								
-								int finMes = anioObj.anio==anioFinalObj ? mesFinal : 11;
-								for(int m=inicioActual; m<=finMes; m++){
-									if(anioObj.anio == anioInicialObj && m==mesInicial){
-										if(m==mesFinal){
-											int diasMes = diaFinal-diaInicial;
-											anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
-										}else{
-											Calendar cal = new GregorianCalendar(anioObj.anio, m, 1); 
-											int diasMes = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-											diasMes = diasMes-diaInicial;
-											anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
-										}
-									}else if(anioObj.anio == anioFinalObj && m== mesFinal){
-										anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diaFinal));
-									}else{
-										Calendar cal = new GregorianCalendar(anioObj.anio, m, 1); 
-										int diasMes = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-										anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
-									}
-								}
+								List<PagoPlanificado> lstPagosPlanificados = PagoPlanificadoDAO.getPagosPlanificadosPorObjeto(objetoCosto.objeto_id,objetoCosto.objeto_tipo);
+								Calendar cal = Calendar.getInstance();
+								for(PagoPlanificado pago : lstPagosPlanificados){
+									cal.setTime(pago.getFechaPago());
+									int mesPago = cal.get(Calendar.MONTH); 
+									anioObj.mes[mesPago].planificado = anioObj.mes[mesPago].planificado.add(pago.getPago());
+								}								
 							}else{
 								if(anioFinalObj == anioObj.anio){
 									anioObj.mes[mesFinal].planificado =  objetoCosto.getCosto() != null ? objetoCosto.getCosto() : new BigDecimal(0);
