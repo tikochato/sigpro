@@ -97,7 +97,7 @@
 							</div>
 							<div class="col-sm-2"></div>
 							<div class="col-sm-5">
-								<label class="label-form">* Porcentaje de Probabilidad</label>
+								<label class="label-form">* Probabilidad de Ocurrencia</label>
 								<div class="row" style="margin-top: 15px;">
 									<div class="col-sm-8">
 										<input type="range" class="riesgos" min="0.01" max="0.99" step="0.01" 
