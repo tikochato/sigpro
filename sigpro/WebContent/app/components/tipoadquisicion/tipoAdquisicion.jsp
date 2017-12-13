@@ -113,7 +113,7 @@
 				</div>
 				<br />
 				<div class="form-group">
- 					<input type="checkbox" id="chkConvenioCDirecta" ng-model="controller.tipoAdquisicion.esConvevioCdirecta" ng-value="controller.tipoAdquisicion.esConvevioCdirecta"/>
+ 					<input type="checkbox" id="chkConvenioCDirecta" ng-model="controller.tipoAdquisicion.esConvenioCdirecta" ng-value="controller.tipoAdquisicion.esConvenioCdirecta"/>
  					<label for="chkConvenioCDirecta" class="floating-label">¿Es convenio o compra directa?</label>
 				</div>
 				<br />
