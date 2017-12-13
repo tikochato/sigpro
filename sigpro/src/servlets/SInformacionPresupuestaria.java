@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -28,7 +29,9 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.ObjetoCosto;
 import dao.ObjetoDAO;
+import dao.PrestamoDAO;
 import dao.ProyectoDAO;
+import pojo.Prestamo;
 import pojo.Proyecto;
 import utilities.CExcel;
 import utilities.CGraficaExcel;
@@ -166,6 +169,44 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				}
 	
 				
+			}else if(accion.equals("getvigente")){
+				Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
+				Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
+				Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
+				String lineaBase = map.get("lineaBase");
+				
+				Proyecto proyecto = ProyectoDAO.getProyectoHistory(idPrestamo, lineaBase);
+				Prestamo prestamo = PrestamoDAO.getPrestamoByIdHistory(proyecto.getPrestamo().getId(), lineaBase);
+				Integer fuente = Integer.parseInt((prestamo.getCodigoPresupuestario()+"").substring(0, 2));
+				Integer organismo = Integer.parseInt((prestamo.getCodigoPresupuestario()+"").substring(3, 6));
+				Integer correlativo = Integer.parseInt((prestamo.getCodigoPresupuestario()+"").substring(7, 10));
+				String valores_text="";
+				
+				Calendar fecha = Calendar.getInstance();
+			    int anio = fecha.get(Calendar.YEAR);
+			    int mes =  anioFinal < anio ? 12 : fecha.get(Calendar.MONTH) + 1;
+				
+				for (int x = anioInicial; x<= anioFinal; x++){
+					List<?> vigente = ObjetoDAO.getVigente(fuente, organismo, correlativo, anioInicial, mes, 
+							proyecto.getUnidadEjecutora().getId().getUnidadEjecutora(), proyecto.getUnidadEjecutora().getId().getEntidadentidad());
+					Object valores [] = (Object[]) vigente.get(0);
+					for (int y = 0 ; y< 12; y++)
+						valores_text = String.join("", valores_text,valores_text.length()> 0 ? ",":"",
+								(valores[y]!=null ? (BigDecimal) valores[y] : new BigDecimal(0)).toString());
+				}
+				
+		        response_text = String.join("", "\"vigente\": [",valores_text,"]");
+		        response_text = String.join("", "{\"success\":true,", response_text, "}");
+		        
+		        response.setHeader("Content-Encoding", "gzip");
+				response.setCharacterEncoding("UTF-8");
+		
+		        OutputStream output = response.getOutputStream();
+				GZIPOutputStream gz = new GZIPOutputStream(output);
+		        gz.write(response_text.getBytes("UTF-8"));
+		        gz.close();
+		        output.close();
+		        
 			}
 		}catch(Exception e){
 			CLogger.write("2", SInformacionPresupuestaria.class, e);		

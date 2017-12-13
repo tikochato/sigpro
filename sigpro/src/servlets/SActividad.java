@@ -24,6 +24,9 @@ import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
@@ -31,6 +34,7 @@ import dao.ActividadPropiedadDAO;
 import dao.ActividadPropiedadValorDAO;
 import dao.AsignacionRaciDAO;
 import dao.ObjetoDAO;
+import dao.PagoPlanificadoDAO;
 import dao.ProyectoDAO;
 import dao.SubproductoDAO;
 import pojo.Actividad;
@@ -41,6 +45,7 @@ import pojo.ActividadTipo;
 import pojo.AcumulacionCosto;
 import pojo.AsignacionRaci;
 import pojo.Colaborador;
+import pojo.PagoPlanificado;
 import pojo.Proyecto;
 import pojo.Subproducto;
 import utilities.Utils;
@@ -299,6 +304,7 @@ public class SActividad extends HttpServlet {
 					Integer acumulacionCostoid = Utils.String2Int(map.get("acumulacionCosto"), null);
 					Integer renglon = map.get("renglon")!=null ? Integer.parseInt(map.get("renglon")):null;
 					Integer ubicacionGeografica = map.get("ubicacionGeografica")!=null ? Integer.parseInt(map.get("ubicacionGeografica")):null;
+					
 					proyectoBase = null;
 					componenteBase = null;
                     productoBase = null;
@@ -425,6 +431,30 @@ public class SActividad extends HttpServlet {
 									asigna_temp.setUsuarioCreo(usuario);
 									result = result && AsignacionRaciDAO.guardarAsignacion(asigna_temp);
 								}
+							}
+						}
+					}
+					
+					
+					if(result){
+						String pagosPlanificados = map.get("pagosPlanificados");
+						if(!acumulacionCostoid.equals(2)  || pagosPlanificados!= null && pagosPlanificados.replace("[", "").replace("]", "").length()>0 ){
+							List<PagoPlanificado> pagosActuales = PagoPlanificadoDAO.getPagosPlanificadosPorObjeto(actividad.getId(), 5);
+							for (PagoPlanificado pagoTemp : pagosActuales){
+								PagoPlanificadoDAO.eliminarTotalPagoPlanificado(pagoTemp);
+							}
+						}
+							
+						if (acumulacionCostoid.equals(2) && pagosPlanificados!= null && pagosPlanificados.replace("[", "").replace("]", "").length()>0){
+							JsonParser parser = new JsonParser();
+							JsonArray pagosArreglo = parser.parse(pagosPlanificados).getAsJsonArray();
+							for(int i=0; i<pagosArreglo.size(); i++){
+								JsonObject objeto = pagosArreglo.get(i).getAsJsonObject();
+								Date fechaPago = objeto.get("fechaPago").isJsonNull() ? null : Utils.stringToDate(objeto.get("fechaPago").getAsString());
+								BigDecimal monto = objeto.get("pago").isJsonNull() ? null : objeto.get("pago").getAsBigDecimal();
+								
+								PagoPlanificado pagoPlanificado = new PagoPlanificado(fechaPago, monto, actividad.getId(), 5, usuario, null, new Date(), null, 1);
+								result = result && PagoPlanificadoDAO.guardar(pagoPlanificado);
 							}
 						}
 					}

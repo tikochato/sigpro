@@ -22,6 +22,11 @@
 	<script type="text/ng-template" id="buscarPorProducto.jsp">
 	    <%@ include file="/app/components/producto/buscarPorProducto.jsp"%>
 	</script>
+	
+	<script type="text/ng-template" id="pago_planificado.jsp">
+    	<%@ include file="/app/components/pago_planificado/pago_planificado.jsp"%>
+  	</script>
+  	    
 	<shiro:lacksPermission name="21010">
 		<span ng-init="producto.redireccionSinPermisos()"></span>
 	</shiro:lacksPermission>
@@ -105,10 +110,18 @@
 				<span class="glyphicon glyphicon-time"></span></label>
 				<label class="btn btn-default" ng-click="producto.verHistoria()" uib-tooltip="Ver Historia">
 				<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
+				<label class="btn btn-default" ng-click="producto.producto.acumulacionCostoId == 2 ? producto.agregarPagos() : ''"
+					 uib-tooltip="Pagos planificados" tooltip-placement="left" ng-disabled = "producto.producto.acumulacionCostoId != 2">
+					<span class="glyphicon glyphicon-piggy-bank"></span></label>
 			</div>
 			<div ng-if="producto.esTreeview">
-		      	<label class="btn btn-default" ng-click="producto.verHistoria()" uib-tooltip="Ver Historia">
-				<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
+				<div class="btn-group">
+			      	<label class="btn btn-default" ng-click="producto.verHistoria()" uib-tooltip="Ver Historia">
+					<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
+					<label class="btn btn-default" ng-click="producto.producto.acumulacionCostoId == 2 ? producto.agregarPagos() : ''" uib-tooltip="Pagos planificados"
+							ng-disabled = "producto.producto.acumulacionCostoId != 2" >
+							<span class="glyphicon glyphicon-piggy-bank"></span></label>
+				</div>
 		     </div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="21020">

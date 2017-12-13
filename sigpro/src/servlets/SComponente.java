@@ -24,12 +24,16 @@ import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ComponenteDAO;
 import dao.ComponentePropiedadDAO;
 import dao.ComponentePropiedadValorDAO;
 import dao.ObjetoDAO;
+import dao.PagoPlanificadoDAO;
 import dao.ProyectoDAO;
 import dao.UnidadEjecutoraDAO;
 import pojo.AcumulacionCosto;
@@ -38,6 +42,7 @@ import pojo.ComponentePropiedad;
 import pojo.ComponentePropiedadValor;
 import pojo.ComponentePropiedadValorId;
 import pojo.ComponenteTipo;
+import pojo.PagoPlanificado;
 import pojo.Proyecto;
 import pojo.UnidadEjecutora;
 import utilities.Utils;
@@ -351,6 +356,29 @@ public class SComponente extends HttpServlet {
 						componente.setComponenteTipo(componenteTipo);
 					}
 					result = ComponenteDAO.guardarComponente(componente, true);
+					
+					if(result){
+						String pagosPlanificados = map.get("pagosPlanificados");
+						if(!acumulacionCostoid.equals(2)  || pagosPlanificados!= null && pagosPlanificados.replace("[", "").replace("]", "").length()>0 ){
+							List<PagoPlanificado> pagosActuales = PagoPlanificadoDAO.getPagosPlanificadosPorObjeto(componente.getId(), 1);
+							for (PagoPlanificado pagoTemp : pagosActuales){
+								PagoPlanificadoDAO.eliminarTotalPagoPlanificado(pagoTemp);
+							}
+						}
+							
+						if (acumulacionCostoid.equals(2) && pagosPlanificados!= null && pagosPlanificados.replace("[", "").replace("]", "").length()>0){
+							JsonParser parser = new JsonParser();
+							JsonArray pagosArreglo = parser.parse(pagosPlanificados).getAsJsonArray();
+							for(int i=0; i<pagosArreglo.size(); i++){
+								JsonObject objeto = pagosArreglo.get(i).getAsJsonObject();
+								Date fechaPago = objeto.get("fechaPago").isJsonNull() ? null : Utils.stringToDate(objeto.get("fechaPago").getAsString());
+								BigDecimal monto = objeto.get("pago").isJsonNull() ? null : objeto.get("pago").getAsBigDecimal();
+								
+								PagoPlanificado pagoPlanificado = new PagoPlanificado(fechaPago, monto, componente.getId(), 1, usuario, null, new Date(), null, 1);
+								result = result && PagoPlanificadoDAO.guardar(pagoPlanificado);
+							}
+						}
+					}
 					
 					Set<ComponentePropiedadValor> valores_temp = componente.getComponentePropiedadValors();
 					componente.setComponentePropiedadValors(null);

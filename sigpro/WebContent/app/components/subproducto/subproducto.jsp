@@ -20,6 +20,11 @@
 	<script type="text/ng-template" id="buscarPorSubproducto.jsp">
 	    <%@ include file="/app/components/subproducto/buscarPorSubproducto.jsp"%>
 	</script>
+	
+	 <script type="text/ng-template" id="pago_planificado.jsp">
+    	<%@ include file="/app/components/pago_planificado/pago_planificado.jsp"%>
+  	 </script>
+	    
 	<shiro:lacksPermission name="40010">
 		<span ng-init="subproducto.redireccionSinPermisos()"></span>
 	</shiro:lacksPermission>
@@ -99,10 +104,18 @@
 				<span class="glyphicon glyphicon-time"></span></label>
 				<label class="btn btn-default" ng-click="subproducto.verHistoria()" uib-tooltip="Ver Historia">
 				<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
+				<label class="btn btn-default" ng-click="subproducto.subproducto.acumulacionCosto == 2 ? subproducto.agregarPagos() : ''"
+				 uib-tooltip="Pagos planificados" tooltip-placement="left" ng-disabled = "subproducto.subproducto.acumulacionCosto != 2">
+				<span class="glyphicon glyphicon-piggy-bank"></span></label>
 			</div>
 			<div ng-if="subproducto.esTreeview">
-		      	<label class="btn btn-default" ng-click="subproducto.verHistoria()" uib-tooltip="Ver Historia">
-				<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
+				<div class="btn-group">
+			      	<label class="btn btn-default" ng-click="subproducto.verHistoria()" uib-tooltip="Ver Historia">
+					<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
+					<label class="btn btn-default" ng-click="subproducto.subproducto.acumulacionCosto == 2 ? subproducto.agregarPagos() : ''" uib-tooltip="Pagos planificados"
+					ng-disabled = "subproducto.subproducto.acumulacionCosto != 2" >
+					<span class="glyphicon glyphicon-piggy-bank"></span></label>
+				</div>
 		     </div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="40020">
@@ -123,7 +136,6 @@
 						<label for="id" class="floating-label id_class">ID {{subproducto.subproducto.id}}</label>
 						<br/><br/> 
 					</div>
-				
 				
 					<div class="form-group">
 						<input type="text" id="nombre" class="inputText" ng-model="subproducto.subproducto.nombre" ng-required="true" 
