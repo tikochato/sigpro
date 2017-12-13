@@ -210,4 +210,5 @@
 	<table-filter match-name="prestamo_usuario" match-catalog="sipro"></table-filter>
 	<table-filter match-name="pep_detalle" match-catalog="sipro"></table-filter>
 	<table-filter match-name="linea_base" match-catalog="sipro"></table-filter>
+	<table-filter match-name="pago_planificado" match-catalog="sipro"></table-filter>
 </hibernate-reverse-engineering>

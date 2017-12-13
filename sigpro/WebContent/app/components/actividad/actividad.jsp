@@ -31,6 +31,10 @@
 		<script type="text/ng-template" id="buscarAcumulacionCosto.jsp">
     		<%@ include file="/app/components/actividad/buscarAcumulacionCosto.jsp"%>
   	    </script>
+  	    
+  	    <script type="text/ng-template" id="pago_planificado.jsp">
+    		<%@ include file="/app/components/pago_planificado/pago_planificado.jsp"%>
+  	    </script>
 
   	    <shiro:lacksPermission name="1010">
 			<span ng-init="actividadc.redireccionSinPermisos()"></span>
@@ -110,10 +114,18 @@
 					<span class="glyphicon glyphicon-time"></span></label>
 					<label class="btn btn-default" ng-click="actividadc.verHistoria()" uib-tooltip="Ver Historia">
 					<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
+					<label class="btn btn-default btn-sm" ng-click="actividadc.actividad.acumulacionCostoId == 2 ? actividadc.agregarPagos() : ''"
+					 uib-tooltip="Pagos planificados" tooltip-placement="left" ng-disabled = "actividadc.actividad.acumulacionCostoId != 2">
+					<span class="glyphicon glyphicon-piggy-bank"></span></label>
 				</div>
 				<div ng-if="actividadc.esTreeview">
-			      	<label class="btn btn-default" ng-click="actividadc.verHistoria()" uib-tooltip="Ver Historia">
-					<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
+					<div class="btn-group">
+				      	<label class="btn btn-default" ng-click="actividadc.verHistoria()" uib-tooltip="Ver Historia">
+						<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
+						<label class="btn btn-default" ng-click="actividadc.actividad.acumulacionCostoId == 2 ? actividadc.agregarPagos() : ''" uib-tooltip="Pagos planificados"
+						ng-disabled = "actividadc.actividad.acumulacionCostoId != 2" >
+						<span class="glyphicon glyphicon-piggy-bank"></span></label>
+					</div>
 			     </div>
 				<div class="btn-group" style="float: right;">
 					<shiro:hasPermission name="1020">
@@ -126,6 +138,8 @@
 					<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 				</div>
 			</div>
+			
+			
 			<div class="col-sm-12">
 				<form name="actividadc.mForm">
 					<uib-tabset active="actividadc.activeTab">
