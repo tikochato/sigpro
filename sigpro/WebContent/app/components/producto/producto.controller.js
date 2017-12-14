@@ -273,6 +273,14 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		if(selected!== undefined){
 			mi.producto.acumulacionCostoNombre = selected.originalObject.nombre;
 			mi.producto.acumulacionCostoId = selected.originalObject.id;
+			
+			if(mi.producto.acumulacionCostoId == 2){
+				mi.producto.costo = null;
+				mi.bloquearCosto = true;
+			}else{
+				mi.producto.costo = null;
+				mi.bloquearCosto = false;
+			}
 		}
 		else{
 			mi.producto.acumulacionCostoNombre="";
@@ -481,6 +489,11 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			mi.tipo = mi.producto.idProductoTipo;
 			mi.tipoNombre = mi.producto.productoTipo;
 		
+			if(mi.producto.acumulacionCostoId==2){
+				mi.bloquearCosto = true;
+			}else{
+				mi.bloquearCosto = false;
+			}
 			
 			if(mi.producto.duracionDimension == 'd'){
 				mi.duracionDimension = mi.dimensiones[0];
@@ -938,10 +951,14 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		}
 		
 		mi.validarAsignado = function(){
-			if(mi.producto.costo <= mi.asignado)
-				mi.sobrepaso = false;
-			else
-				mi.sobrepaso = true;
+			if(mi.producto.costo != null){
+				if(mi.producto.programa != null){
+					if(mi.producto.costo <= mi.asignado)
+						mi.sobrepaso = false;
+					else
+						mi.sobrepaso = true;
+				}
+			}
 		}
 	  
 }

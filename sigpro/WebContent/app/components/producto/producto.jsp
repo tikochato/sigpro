@@ -244,7 +244,7 @@
 			        <div class="form-group" >
 				    	<input type="text" class="inputText" ng-model="producto.producto.costo" ng-value="producto.producto.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left"
 			       		ng-required="producto.producto.acumulacionCostoNombre != null" ng-change="producto.validarAsignado();"
-						ui-number-mask="2" ng-readonly="producto.producto.tieneHijos || producto.congelado"/>
+						ui-number-mask="2" ng-readonly="producto.producto.tieneHijos || producto.congelado || producto.bloquearCosto"/>
 				        <label for="iprog" class="floating-label">{{producto.producto.acumulacionCostoNombre  != null ?"* Monto Planificado":"Monto Planificado"}}</label>				        					        	
 				     </div>
 			     	<div class="form-group" >

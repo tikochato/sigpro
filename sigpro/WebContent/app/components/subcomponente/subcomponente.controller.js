@@ -89,6 +89,14 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 			if(selected!== undefined){
 				mi.subcomponente.acumulacionCostoNombre = selected.originalObject.nombre;
 				mi.subcomponente.acumulacionCostoId = selected.originalObject.id;
+				
+				if(mi.subcomponente.acumulacionCostoId == 2){
+					mi.subcomponente.costo = null;
+					mi.bloquearCosto = true;
+				}else{
+					mi.subcomponente.costo = null;
+					mi.bloquearCosto = false;
+				}
 			}
 			else{
 				mi.subcomponente.acumulacionCostoNombre="";
@@ -334,6 +342,12 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 					mi.duracionDimension = mi.dimensiones[0];
 				}else{
 					mi.duracionDimension = mi.dimensiones[0];
+				}
+				
+				if(mi.subcomponente.acumulacionCostoId==2){
+					mi.bloquearCosto = true;
+				}else{
+					mi.bloquearCosto = false;
 				}
 				
 				mi.mostraringreso = true;
@@ -799,10 +813,14 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 			}
 			
 			mi.validarAsignado = function(){
-				if(mi.subcomponente.costo <= mi.asignado)
-					mi.sobrepaso = false;
-				else
-					mi.sobrepaso = true;
+				if(mi.subcomponente.costo != null){
+					if(mi.subcomponente.programa != null){
+						if(mi.subcomponente.costo <= mi.asignado)
+							mi.sobrepaso = false;
+						else
+							mi.sobrepaso = true;	
+					}
+				}
 			}
 } ]);
 

@@ -120,6 +120,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 					mi.actividad.costo = null;
 					mi.bloquearCosto = true;
 				}else{
+					mi.actividad.costo = null;
 					mi.bloquearCosto = false;
 				}
 			}
@@ -966,10 +967,14 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 		}
 		
 		mi.validarAsignado = function(){
-			if(mi.actividad.costo <= mi.asignado)
-				mi.sobrepaso = false;
-			else
-				mi.sobrepaso = true;
+			if(mi.actividad.costo != null){
+				if(mi.actividad.programa != null){
+					if(mi.actividad.costo <= mi.asignado)
+						mi.sobrepaso = false;
+					else
+						mi.sobrepaso = true;
+				}
+			}
 		}
 		
 } ]);

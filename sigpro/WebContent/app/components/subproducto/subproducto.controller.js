@@ -105,6 +105,14 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 		if(selected!== undefined){
 			mi.subproducto.acumulacionCostoNombre = selected.originalObject.nombre;
 			mi.subproducto.acumulacionCosto = selected.originalObject.id;
+			
+			if(mi.subproducto.acumulacionCostoId == 2){
+				mi.subproducto.costo = null;
+				mi.bloquearCosto = true;
+			}else{
+				mi.subproducto.costo = null;
+				mi.bloquearCosto = false;
+			}
 		}
 		else{
 			mi.subproducto.acumulacionCostoNombre="";
@@ -449,6 +457,12 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 			mi.esNuevo = false;
 			mi.tipo = mi.subproducto.idSubproductoTipo; 
 			mi.tipoNombre = mi.subproducto.subProductoTipo;
+			
+			if(mi.subproducto.acumulacionCostoId==2){
+				mi.bloquearCosto = true;
+			}else{
+				mi.bloquearCosto = false;
+			}
 			
 			mi.productoid = mi.subproducto.idProducto;
 			
@@ -882,10 +896,14 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 		}
 		
 		mi.validarAsignado = function(){
-			if(mi.subproducto.costo <= mi.asignado)
-				mi.sobrepaso = false;
-			else
-				mi.sobrepaso = true;
+			if(mi.subproducto.costo != null){
+				if(mi.subproducto.programa != null){
+					if(mi.subproducto.costo <= mi.asignado)
+						mi.sobrepaso = false;
+					else
+						mi.sobrepaso = true;
+				}
+			}
 		}
 }
 

@@ -387,7 +387,7 @@ public class SGestionAdquisiciones extends HttpServlet {
 			cal.setTime(proyecto.getFechaInicio());
 			int anioInicial = cal.get(Calendar.YEAR);
 			
-			List<ObjetoCosto> estructuraProyecto = ObjetoDAO.getEstructuraConCosto(proyectoId, anioInicial, fechaFinal, true, false, false, lineaBase, usuario);
+			List<ObjetoCosto> estructuraProyecto = ObjetoDAO.getEstructuraConCosto(proyectoId, anioInicial, fechaFinal, true, false, null, lineaBase, usuario);
 			stcomponentegestionadquisicion temp = null;
 			
 			List<CategoriaAdquisicion> lstCategorias = CategoriaAdquisicionDAO.getCategoriaAdquisicion(); 

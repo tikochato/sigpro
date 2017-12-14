@@ -276,7 +276,7 @@
 					       <input type="text" class="inputText" ng-model="componentec.componente.costo" ng-value="componentec.componente.costo" ui-number-mask="2"
 					       ng-required="componentec.componente.acumulacionCostoId > 0" onblur="this.setAttribute('value', this.value);" style="text-align: left" 
 					       ng-change="componentec.validarAsignado();"
-					       ng-readonly="componentec.componente.tieneHijos || componentec.congelado == 1" />
+					       ng-readonly="componentec.componente.tieneHijos || componentec.congelado == 1 || componentec.bloquearCosto" />
 					       <label for="iprog" class="floating-label">{{componentec.componente.acumulacionCostoId > 0 ? "* Monto Planificado" : "Monto Planificado"}}</label>
 						</div>
 						
