@@ -96,7 +96,8 @@
 			float: left; 
 			display: inline-block;
 			white-space: nowrap;	
-			overflow:hidden;		
+			overflow:hidden;	
+			width: 100%;	
 		}
 		
 		.theadDatos {
@@ -189,11 +190,11 @@
 					</div>
 				</div>
 	    		<div class="divTablas" ng-hide="!pep.mostrarTablas">	
-	    			<div class="row" style="height: 100%; max-width: {{pep.tamanoPantalla}}; min-width: {{pep.tamanoPantalla}}">
-	    				<div class="divPadreDatos" style="height: 100%;min-width: {{pep.tamanoPantalla}}px; max-width: {{pep.tamanoPantalla}}px;">
+	    			<div class="row" style="height: 100%;">
+	    				<div class="divPadreDatos" style="height: 100%;">
 	    					<div class="divTabla">
 		    					<table st-table="pep.displayedCollectionPrestamo" st-safe-src="pep.rowCollectionPrestamo" class="table table-striped tablaDatos"
-		    						style="max-width: {{pep.tamanoPantalla}}px;">
+		    						style="">
 		    						<thead id="divCabecerasDatos" class="theadDatos">
 		    							<tr>
 		    								<th class="label-form" style="text-align: left; min-width:300px; max-width:300px;">Nombre</th>
