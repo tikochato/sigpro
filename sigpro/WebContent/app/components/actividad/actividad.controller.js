@@ -427,8 +427,10 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 						if(mi.child_adquisiciones!=null)
 							mi.child_adquisiciones.guardar(null,'Actividad '+(mi.esNuevo ? 'creada' : 'guardada')+' con éxito',
 								'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' la Actividad', null);
-						else
+						else{
 							$utilidades.mensaje('success','Actividad '+(mi.esNuevo ? 'creada' : 'guardada')+' con éxito');
+							mi.getAsignado();
+						}
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' la Actividad');
@@ -565,6 +567,8 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 						}
 					}
 				});
+				
+				mi.getAsignado();
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar la Actividad que desea editar');
@@ -964,6 +968,35 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 				mi.pagos=pagos;
 			});
 		};
+		
+		mi.getAsignado = function(){
+			if(mi.actividad.programa != null){
+				$http.post('/SActividad', {
+					accion: 'getValidacionAsignado',
+					id: mi.actividad.id,
+					programa: mi.actividad.programa,
+					subprograma: mi.actividad.subprograma,
+					proyecto: mi.actividad.proyecto,
+					actividad: mi.actividad.actividad,
+					obra: mi.actividad.obra,
+					renglon: mi.actividad.renglon,
+					geografico: mi.actividad.ubicacionGeografica,
+					t: new Date().getTime()
+				}).success(function(response){
+					if(response.success){
+						mi.asignado = response.asignado;
+						mi.sobrepaso = response.sobrepaso;
+					}
+				});
+			}
+		}
+		
+		mi.validarAsignado = function(){
+			if(mi.actividad.costo <= mi.asignado)
+				mi.sobrepaso = false;
+			else
+				mi.sobrepaso = true;
+		}
 		
 } ]);
 

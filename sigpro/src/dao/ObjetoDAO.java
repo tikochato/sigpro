@@ -840,7 +840,7 @@ public class ObjetoDAO {
 		return  ret;
 	}
 	
-	public static BigDecimal getAsignadoPorLineaPresupuestaria(Integer ejercicio, String entidad, Integer unidadEjecutora, 
+	public static BigDecimal getAsignadoPorLineaPresupuestaria(Integer ejercicio, Integer entidad, Integer unidadEjecutora, 
 			Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra, Integer renglon, Integer geografico){
 		
 		BigDecimal ret = new BigDecimal(0);

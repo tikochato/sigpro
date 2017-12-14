@@ -65,6 +65,11 @@
 			  </shiro:hasPermission>
 			  </div>
 			</div>
+			<br>
+			<div class="col-sm-12" ng-if="actividadc.sobrepaso != null && actividadc.sobrepaso == true">
+				<div class="alert alert-danger" style="text-align: center;">La planificación sobrepasa la asignación presupuestaria</div>
+			</div>
+			<br>
     		<shiro:hasPermission name="1010">
     		<div class="col-sm-12" align="center">
     			<div style="height: 35px;">
@@ -138,7 +143,11 @@
 					<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 				</div>
 			</div>
-			
+			<br><br>
+			<div class="col-sm-12" ng-if="actividadc.sobrepaso != null && actividadc.sobrepaso == true">
+				<div class="alert alert-danger" style="text-align: center;">La planificación sobrepasa la asignación presupuestaria</div>
+			</div>
+			<br>
 			
 			<div class="col-sm-12">
 				<form name="actividadc.mForm">
@@ -284,10 +293,21 @@
 						</div>
 						
 						<div class="form-group" >
-					       <input type="text" class="inputText" ng-model="actividadc.actividad.costo" ng-value="actividadc.actividad.costo" ui-number-mask="2"
-					       	onblur="this.setAttribute('value', this.value);" style="text-align: left" ng-required="actividadc.actividad.acumulacionCostoId > 0" 
-					       	ng-readonly="actividadc.actividad.tieneHijos || actividadc.congelado"/>
-					       <label for="iprog" class="floating-label">{{actividadc.actividad.acumulacionCostoId > 0 ? "* Monto Planificado" : "Monto Planificado"}}</label>
+							<div class="row">
+								<div class="form-group col-sm-6">
+									<input type="text" class="inputText" ng-model="actividadc.actividad.costo" ng-value="actividadc.actividad.costo" ui-number-mask="2"
+						       		onblur="this.setAttribute('value', this.value);" style="text-align: left" ng-required="actividadc.actividad.acumulacionCostoId > 0" 
+						       		ng-change="actividadc.validarAsignado();"
+						       		ng-readonly="actividadc.actividad.tieneHijos || actividadc.congelado"/>
+						       		<label for="iprog" class="floating-label">{{actividadc.actividad.acumulacionCostoId > 0 ? "* Monto Planificado" : "Monto Planificado"}}</label>
+								</div>
+							<div class="form-group col-sm-6">
+									<input type="text" class="inputText" ng-model="actividadc.asignado" ng-value="actividadc.asignado" ui-number-mask="2"
+						       		onblur="this.setAttribute('value', this.value);" style="text-align: left" 
+						       		ng-readonly="true"/>
+						       		<label for="iprog" class="floating-label">Presupuesto Asignado (Año Fiscal)</label>
+								</div>
+							</div>
 						</div>
 						<div class="form-group" >
 							<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="actividadc.cambioAcumulacionCosto"
