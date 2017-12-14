@@ -1,7 +1,7 @@
 var app = angular.module('componenteController', ['smart-table']);
 
-app.controller('componenteController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q', 'dialogoConfirmacion','historia', 
-	function($scope,$rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion, $historia) {
+app.controller('componenteController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q', 'dialogoConfirmacion','historia','pagoplanificado', 
+	function($scope,$rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion, $historia, $pagoplanificado) {
 		var mi=this;
 		
 		mi.esTreeview = $rootScope.treeview;
@@ -91,6 +91,14 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 			if(selected!== undefined){
 				mi.componente.acumulacionCostoNombre = selected.originalObject.nombre;
 				mi.componente.acumulacionCostoId = selected.originalObject.id;
+				
+				if(mi.componente.acumulacionCostoId == 2){
+					mi.componente.costo = null;
+					mi.bloquearCosto = true;
+				}else{
+					mi.componente.costo = null;
+					mi.bloquearCosto = false;
+				}
 			}
 			else{
 				mi.componente.acumulacionCostoNombre="";
@@ -267,6 +275,8 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 						else
 							$utilidades.mensaje('success','Componente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
+						
+						mi.getAsignado();
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el Componente');
@@ -343,6 +353,12 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 					mi.duracionDimension = mi.dimensiones[0];
 				}
 				
+				if(mi.componente.acumulacionCostoId==2){
+					mi.bloquearCosto = true;
+				}else{
+					mi.bloquearCosto = false;
+				}
+				
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
 				mi.coordenadas = (mi.componente.latitud !=null ?  mi.componente.latitud : '') +
@@ -377,6 +393,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 						}
 					}
 					$utilidades.setFocus(document.getElementById("nombre"));
+					mi.getAsignado();
 				});
 			}
 			else
@@ -770,61 +787,58 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 				$rootScope.$emit("crearNodo",{ id: id, nombre: nombre, objeto_tipo: objeto_tipo, estado: estado })
 			};
 			
-		mi.llamarModalPagosPlanificados = function(objetoId, objetoTipo,datosCarga,techo) {
-			var resultado = $q.defer();
-			var modalInstance = $uibModal.open({
-				animation : 'true',
-				ariaLabelledBy : 'modal-title',
-				ariaDescribedBy : 'modal-body',
-				templateUrl : 'pago_planificado.jsp',
-				controller : 'modalPagos',
-				controllerAs : 'pagoc',
-				backdrop : 'static',
-				size : 'md',
-				resolve : {
-					$objetoId : function() {
-						return objetoId;
-					},
-					$objetoTipo : function() {
-						return objetoTipo;
-					},
-					$datosCarga : function() {
-						return datosCarga;
-					},
-					$techo : function() {
-						return techo;
-					},
-					$fechaInicio : function() {
-						return mi.componente.fechaFin;
-					},
-					$fechaFin : function() {
-						return mi.componente.fechaInicio;
+			mi.agregarPagos = function() {
+				$pagoplanificado.getPagoPlanificado($scope, mi.componente.id,1, 
+				function(objetoId, objetoTipo){
+					return{
+						accion: 'getPagos',
+						objetoId: objetoId,
+						objetoTipo : objetoTipo
 					}
-					
-				}
-			});
-
-			modalInstance.result.then(function(pagos) {
-				resultado.resolve(pagos);
-			});
-			return resultado.promise;
-		};
-		
-		
-		mi.agregarPagos = function() {
-			var resultado = mi.llamarModalPagosPlanificados(mi.componente.id,1, 
-			function(objetoId, objetoTipo){
-				return{
-					accion: 'getPagos',
-					objetoId: objetoId,
-					objetoTipo : objetoTipo
-				}
-			}, mi.componente.costo != null ? mi.componente.costo : 0);
+				}, mi.componente.costo != null ? mi.componente.costo : 0,mi.componente.fechaInicio,mi.componente.fechaFin)
+				.result.then(function(data) {
+					mi.pagos=data;
+					mi.componente.costo = 0;
+					for (x in mi.pagos){
+						mi.componente.costo += mi.pagos[x].pago;
+					}
+				}, function(){
+				});
+			};
 			
-			resultado.then(function(pagos){
-				mi.pagos=pagos;
-			});
-		};
+		
+		mi.getAsignado = function(){
+			if(mi.componente.programa != null){
+				$http.post('/SComponente', {
+					accion: 'getValidacionAsignado',
+					id: mi.componente.id,
+					programa: mi.componente.programa,
+					subprograma: mi.componente.subprograma,
+					proyecto: mi.componente.proyecto,
+					componente: mi.componente.componente,
+					obra: mi.componente.obra,
+					renglon: mi.componente.renglon,
+					geografico: mi.componente.ubicacionGeografica,
+					t: new Date().getTime()
+				}).success(function(response){
+					if(response.success){
+						mi.asignado = response.asignado;
+						mi.sobrepaso = response.sobrepaso;
+					}
+				});
+			}
+		}
+		
+		mi.validarAsignado = function(){
+			if(mi.componente.costo != null){
+				if(mi.componente.programa != null){
+					if(mi.componente.costo <= mi.asignado)
+						mi.sobrepaso = false;
+					else
+						mi.sobrepaso = true;
+				}
+			}
+		}
 } ]);
 
 app.controller('buscarPorComponente', [ '$uibModalInstance',
@@ -1013,108 +1027,3 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
 	  };
 }]);
 
-app.controller('modalPagos', [ '$uibModalInstance',
-	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log','dialogoConfirmacion', '$objetoId', '$objetoTipo', '$datosCarga', '$techo', 
-	'$fechaInicio','$fechaFin',modalPagos ]);
-
-function modalPagos($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, $dialogoConfirmacion, $objetoId,$objetoTipo,$datosCarga,$techo,
-	$fechaInicio, $fechaFin) {
-
-	$scope.pagos = [];
-	var mi = this;
-	mi.pagos = $scope.pagos;
-	mi.techo = $techo;
-	mi.formatofecha = 'dd/MM/yyyy';
-	mi.altformatofecha = ['d!/M!/yyyy'];
-	mi.totalPagos=0;
-	//mi.congelado = congelado;
-	
-	mi.abrirPopupFecha = function(index, tipo) {
-		if(tipo==0){
-			mi.pagos[index].isOpen = true;
-		}else{
-			mi.pagos[index].isOpenValor = true;
-		}
-		
-	};
-
-	mi.fechaOptions = {
-			formatYear : 'yy',
-			startingDay : 1,
-			maxDate: $fechaInicio, 
-			minDate: $fechaFin
-	};
-	
-	
-	$http.post('SPagoPlanificado', {accion:'getPagos',objetoId: $objetoId, objetoTipo: $objetoTipo}).success(
-		function(response) {
-			$scope.pagos = response.pagos;
-			for (x in $scope.pagos){
-				$scope.pagos[x].fechaPago = moment($scope.pagos[x].fechaPago,'DD/MM/YYYY').toDate() 
-			}
-			mi.pagos = $scope.pagos;
-	});
-
-	
-	
-	mi.cancel = function() {
-		$uibModalInstance.dismiss('cancel');
-	};
-	
-	mi.guardarFecha = function(row){
-		row.fecha = row.fechaPago!=null ? moment(row.fechaPago).format('DD/MM/YYYY') : null;
-	}
-			
-	mi.nuevoPago = function(){
-		$scope.pagos.push({  
-               fechaPago: null,
-               pago: null
-            });
-	}
-	
-	mi.borrarPago = function(row){
-		$dialogoConfirmacion.abrirDialogoConfirmacion($scope
-				, "Confirmación de Borrado"
-				, '¿Desea borrar el pago con fecha '+(row.fecha!=null ? moment(row.fecha).format('DD/MM/YYYY') : '')+'?'
-				, "Borrar"
-				, "Cancelar")
-		.result.then(function(data) {
-			if(data){
-				var index = mi.pagos.indexOf(row);
-				if (index > -1) {
-					mi.pagos.splice(index, 1);
-				}
-			}
-		}, function(){
-			
-		});
-	}
-	
-	mi.ok = function() {
-		var pagosTemp = [];
-		
-		for(x in $scope.pagos){
-			var pagoTemp = {fechaPago: moment($scope.pagos[x].fechaPago).format('DD/MM/YYYY'),  pago:$scope.pagos[x].pago};
-			pagosTemp.push(pagoTemp)
-		}
-		$uibModalInstance.close(pagosTemp);
-	};
-	
-	$scope.$watch('pagos', function(array) {
-	     var total = 0;
-	     if (array) {
-	         mi.totalPagos = array.reduce(function(total,item) {
-	        	 if(total+item.pago <= mi.techo)
-	        		 return total + item.pago;
-	        	 else{
-	        		 $utilidades.mensaje('warning','Los pagos sobrepasan el Monto del contrato');
-	        		 $scope.pagos.splice($scope.pagos.length-1, 1);
-	        		 return total;
-	        	 }
-	         },0);
-	     } 
-	 }, true);
-	
-};

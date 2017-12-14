@@ -30,6 +30,7 @@ public class SPagoPlanificado extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
 	class stpago{
+		int id;
 		String fechaPago;
 		BigDecimal pago;
 		int estado;
@@ -68,6 +69,7 @@ public class SPagoPlanificado extends HttpServlet {
 			List<stpago> stpagos = new ArrayList<stpago>();
 			for (PagoPlanificado pago : pagos){
 				stpago temp = new stpago();
+				temp.id = pago.getId();
 				temp.fechaPago = Utils.formatDate(pago.getFechaPago());
 				temp.pago = pago.getPago();
 				temp.estado = pago.getEstado();
@@ -79,7 +81,14 @@ public class SPagoPlanificado extends HttpServlet {
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 			
 		}
-		else
+		else if(accion.equals("borrarPago")){
+			int idPago = Utils.String2Int(map.get("idPago"));
+			if (idPago>0){
+				PagoPlanificado pagoPlanificado = PagoPlanificadoDAO.getPagosPlanificadosPorId(idPago);
+				PagoPlanificadoDAO.eliminarTotalPagoPlanificado(pagoPlanificado);
+			}
+			
+		} else
 			response_text = "{ \"success\": false }";
 
 		response.setHeader("Content-Encoding", "gzip");

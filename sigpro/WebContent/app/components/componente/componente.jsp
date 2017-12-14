@@ -58,6 +58,11 @@
 			  </shiro:hasPermission>
 			  </div>
 			</div>
+			<br><br>
+				<div class="col-sm-12" ng-if="componentec.sobrepaso != null && componentec.sobrepaso == true">
+					<div class="alert alert-danger" style="text-align: center;">La planificación sobrepasa la asignación presupuestaria</div>
+				</div>
+			<br>
     		<shiro:hasPermission name="5010">
     		<div class="col-sm-12" align="center">
     			<div style="height: 35px;">
@@ -138,6 +143,12 @@
 			<div class="col-sm-12" ng-if="componentec.componente.esDeSigade">
 				<div class="componente_sigade">Componente SIGADE</div>
 			</div>
+			
+			<br><br>
+				<div class="col-sm-12" ng-if="componentec.sobrepaso != null && componentec.sobrepaso == true">
+					<div class="alert alert-danger" style="text-align: center;">La planificación sobrepasa la asignación presupuestaria</div>
+				</div>
+			<br>
 			<div class="col-sm-12">
 				<form name="componentec.mForm">
 					<uib-tabset active="componentec.active">
@@ -264,8 +275,16 @@
 						<div class="form-group" >
 					       <input type="text" class="inputText" ng-model="componentec.componente.costo" ng-value="componentec.componente.costo" ui-number-mask="2"
 					       ng-required="componentec.componente.acumulacionCostoId > 0" onblur="this.setAttribute('value', this.value);" style="text-align: left" 
-					       ng-readonly="componentec.componente.tieneHijos || componentec.congelado == 1" />
+					       ng-change="componentec.validarAsignado();"
+					       ng-readonly="componentec.componente.tieneHijos || componentec.congelado == 1 || componentec.bloquearCosto" />
 					       <label for="iprog" class="floating-label">{{componentec.componente.acumulacionCostoId > 0 ? "* Monto Planificado" : "Monto Planificado"}}</label>
+						</div>
+						
+						<div class="form-group" >
+			        		<input type="text" class="inputText" ng-model="componentec.asignado" ng-value="componentec.asignado" ui-number-mask="2"
+				       		onblur="this.setAttribute('value', this.value);" style="text-align: left" 
+				       		ng-readonly="true"/>
+				       		<label for="iprog" class="floating-label">Presupuesto Asignado (Año Fiscal)</label>
 						</div>
 						
 						<div class="form-group">

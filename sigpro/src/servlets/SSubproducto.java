@@ -2,6 +2,7 @@ package servlets;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -156,6 +157,66 @@ public class SSubproducto extends HttpServlet {
 			Integer version = Utils.String2Int(parametro.get("version"));
 			String resultado = SubproductoDAO.getHistoria(id, version); 
 			String response_text = String.join("", "{\"success\":true, \"historia\":" + resultado + "}");
+			Utils.writeJSon(response, response_text);
+		}else if(parametro.get("accion").equals("getValidacionAsignado")){
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(new Date());
+			Integer ejercicio = cal.get(Calendar.YEAR);
+			Integer id = Utils.String2Int(parametro.get("id"));
+			
+			Subproducto objSubproducto = SubproductoDAO.getSubproductoPorId(id);
+			Proyecto objProyecto = ProyectoDAO.getProyectobyTreePath(objSubproducto.getTreePath());
+			
+			Integer unidadEjecutora = objProyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
+			Integer entidad = objProyecto.getUnidadEjecutora().getId().getEntidadentidad();
+			
+			Integer programa = Utils.String2Int(parametro.get("programa"));
+			Integer subprograma = Utils.String2Int(parametro.get("subprograma"));
+			Integer proyecto = Utils.String2Int(parametro.get("proyecto"));
+			Integer actividad = Utils.String2Int(parametro.get("actividad"));
+			Integer obra = Utils.String2Int(parametro.get("obra"));
+			Integer renglon = Utils.String2Int(parametro.get("renglon"));
+			Integer geografico = Utils.String2Int(parametro.get("geografico"));
+			BigDecimal asignado = ObjetoDAO.getAsignadoPorLineaPresupuestaria(ejercicio, entidad, unidadEjecutora, programa, subprograma, 
+					proyecto, actividad, obra, renglon, geografico);
+			
+			BigDecimal planificado = new BigDecimal(0);
+			switch(objSubproducto.getAcumulacionCosto().getId()){
+				case 1:
+					cal.setTime(objSubproducto.getFechaInicio());
+					Integer ejercicioInicial = cal.get(Calendar.YEAR);
+					if(ejercicio.equals(ejercicioInicial)){
+						planificado = objSubproducto.getCosto();
+					}
+					break;
+				case 2:
+					List<PagoPlanificado> lstPagos = PagoPlanificadoDAO.getPagosPlanificadosPorObjeto(objSubproducto.getId(), 4);
+					for(PagoPlanificado pago : lstPagos){
+						cal.setTime(pago.getFechaPago());
+						Integer ejercicioPago = cal.get(Calendar.YEAR);
+						if(ejercicio.equals(ejercicioPago)){
+							planificado = planificado.add(pago.getPago());
+						}
+					}
+					break;
+				case 3:
+					cal.setTime(objSubproducto.getFechaFin());
+					Integer ejercicioFinal = cal.get(Calendar.YEAR);
+					if(ejercicio.equals(ejercicioFinal)){
+						planificado = objSubproducto.getCosto();
+					}
+					break;
+			}
+			
+			String response_text = "";
+			
+			if(asignado.subtract(planificado).compareTo(new BigDecimal(0)) == -1){
+				response_text = ",\"asignado\": " + asignado + ",\"sobrepaso\": " + true;
+			}else{
+				response_text = ",\"asignado\": " + asignado + ",\"sobrepaso\": " + false;
+			}
+			
+			response_text = String.join(" ", "{ \"success\" : true ", response_text, "}");
 			Utils.writeJSon(response, response_text);
 		}
 	}

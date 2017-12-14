@@ -344,7 +344,7 @@ public class ObjetoDAO {
 					}
 					catch(Throwable e){
 						root = null;
-						CLogger.write("2", EstructuraProyectoDAO.class, e);
+						CLogger.write("3", ObjetoDAO.class, e);
 					}
 					
 				}
@@ -662,7 +662,7 @@ public class ObjetoDAO {
 				hojas.add(temp);
 			}
 		}catch(Exception e){
-			CLogger.write("", ObjetoDAO.class, e);
+			CLogger.write("4", ObjetoDAO.class, e);
 		}finally {
 			session.close();
 		}
@@ -702,7 +702,7 @@ public class ObjetoDAO {
 			else
 				costo = (BigDecimal)getCosto.invoke(objeto);
 		}catch(Exception e){
-			CLogger.write("3", Proyecto.class, e);
+			CLogger.write("5", ObjetoDAO.class, e);
 		}
 		
 		return costo;
@@ -777,7 +777,7 @@ public class ObjetoDAO {
 			
 			ret = true;
 		}catch(Throwable e){
-			CLogger.write("4", ObjetoDAO.class, e);
+			CLogger.write("6", ObjetoDAO.class, e);
 			ret = false;
 		}
 		
@@ -829,11 +829,53 @@ public class ObjetoDAO {
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
-			CLogger.write("6", DataSigadeDAO.class, e);
+			CLogger.write("7", ObjetoDAO.class, e);
 		}
 		finally{
 			session.close();
 		}
 		return  ret;
+	}
+	
+	public static BigDecimal getAsignadoPorLineaPresupuestaria(Integer ejercicio, Integer entidad, Integer unidadEjecutora, 
+			Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra, Integer renglon, Integer geografico){
+		
+		BigDecimal ret = new BigDecimal(0);
+		List<?> lstret = null;
+		
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "select sum(asignado) asignado from sipro_analytic.mv_ep_ejec_asig_vige c where", 
+				"programa= ?1",
+				"and subprograma=?2",
+				"and proyecto=?3",
+				"and actividad=?4",
+				"and obra=?5",
+				"and renglon=?6",
+				"and geografico=?7",
+				"and ejercicio=?8",
+				"and entidad=?9",
+				"and unidad_ejecutra=?10");
+			Query<?> criteria = session.createNativeQuery(query);
+			criteria.setParameter("1", programa);
+			criteria.setParameter("2", subprograma);
+			criteria.setParameter("3", proyecto);
+			criteria.setParameter("4", actividad);
+			criteria.setParameter("5", obra);
+			criteria.setParameter("6", renglon);
+			criteria.setParameter("7", geografico);
+			criteria.setParameter("8", ejercicio);
+			criteria.setParameter("9", entidad);
+			criteria.setParameter("10", unidadEjecutora);
+			lstret = criteria.getResultList();
+			
+			if(!lstret.isEmpty()){
+				ret = new BigDecimal(lstret.get(0).toString());
+			}
+		}catch(Exception e){
+			CLogger.write("8", ObjetoDAO.class, e);
+		}
+		
+		return ret;
 	}
 }
