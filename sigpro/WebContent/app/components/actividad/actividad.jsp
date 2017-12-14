@@ -296,7 +296,7 @@
 							<input type="text" class="inputText" ng-model="actividadc.actividad.costo" ng-value="actividadc.actividad.costo" ui-number-mask="2"
 				       		onblur="this.setAttribute('value', this.value);" style="text-align: left" ng-required="actividadc.actividad.acumulacionCostoId > 0" 
 				       		ng-change="actividadc.validarAsignado();"
-				       		ng-readonly="actividadc.actividad.tieneHijos || actividadc.congelado"/>
+				       		ng-readonly="actividadc.actividad.tieneHijos || actividadc.congelado || actividadc.bloquearCosto"/>
 				       		<label for="iprog" class="floating-label">{{actividadc.actividad.acumulacionCostoId > 0 ? "* Monto Planificado" : "Monto Planificado"}}</label>
 						</div>
 						<div class="form-group" >

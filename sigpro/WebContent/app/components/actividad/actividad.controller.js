@@ -115,6 +115,13 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 			if(selected!== undefined){
 				mi.actividad.acumulacionCostoNombre=selected.originalObject.nombre;
 				mi.actividad.acumulacionCostoId=selected.originalObject.id;
+				
+				if(mi.actividad.acumulacionCostoId == 2){
+					mi.actividad.costo = null;
+					mi.bloquearCosto = true;
+				}else{
+					mi.bloquearCosto = false;
+				}
 			}
 			else{
 				mi.actividad.acumulacionCostoNombre="";
@@ -507,6 +514,11 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
 				mi.activeTab = 0;
+				if(mi.actividad.acumulacionCostoId==2){
+					mi.bloquearCosto = true;
+				}else{
+					mi.bloquearCosto = false;
+				}
 				
 				$scope.$broadcast('angucomplete-alt:changeInput','acumulacionCosto');
 				$scope.$broadcast('angucomplete-alt:changeInput','tipoNombre');
@@ -934,9 +946,6 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 					$datosCarga : function() {
 						return datosCarga;
 					},
-					$techo : function() {
-						return techo;
-					},
 					$fechaInicio : function() {
 						return mi.actividad.fechaFin;
 					},
@@ -949,6 +958,12 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 
 			modalInstance.result.then(function(pagos) {
 				resultado.resolve(pagos);
+				
+				mi.actividad.costo = 0;
+				
+				for(x in pagos){
+					mi.actividad.costo += pagos[x].pago;
+				}
 			});
 			return resultado.promise;
 		};
@@ -1161,21 +1176,19 @@ function modalBuscar($uibModalInstance, $scope, $http, $interval,
 
 app.controller('modalPagos', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log','dialogoConfirmacion', '$objetoId', '$objetoTipo', '$datosCarga', '$techo', 
-	'$fechaInicio','$fechaFin',modalPagos ]);
+	'$timeout', '$log','dialogoConfirmacion', '$objetoId', '$objetoTipo', '$datosCarga', '$fechaInicio',
+	'$fechaFin',modalPagos ]);
 
 function modalPagos($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, $dialogoConfirmacion, $objetoId,$objetoTipo,$datosCarga,$techo,
-	$fechaInicio, $fechaFin) {
+	i18nService, $utilidades, $timeout, $log, $dialogoConfirmacion, $objetoId,$objetoTipo,$datosCarga,$fechaInicio, 
+	$fechaFin) {
 
 	$scope.pagos = [];
 	var mi = this;
 	mi.pagos = $scope.pagos;
-	mi.techo = $techo;
 	mi.formatofecha = 'dd/MM/yyyy';
 	mi.altformatofecha = ['d!/M!/yyyy'];
 	mi.totalPagos=0;
-	//mi.congelado = congelado;
 	
 	mi.abrirPopupFecha = function(index, tipo) {
 		if(tipo==0){
@@ -1252,13 +1265,7 @@ function modalPagos($uibModalInstance, $scope, $http, $interval,
 	     var total = 0;
 	     if (array) {
 	         mi.totalPagos = array.reduce(function(total,item) {
-	        	 if(total+item.pago <= mi.techo)
-	        		 return total + item.pago;
-	        	 else{
-	        		 $utilidades.mensaje('warning','Los pagos sobrepasan el Monto del contrato');
-	        		 $scope.pagos.splice($scope.pagos.length-1, 1);
-	        		 return total;
-	        	 }
+        		 return total + item.pago;
 	         },0);
 	     } 
 	 }, true);
