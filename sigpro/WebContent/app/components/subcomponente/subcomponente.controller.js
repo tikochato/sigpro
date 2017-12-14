@@ -765,7 +765,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 						objetoId: objetoId,
 						objetoTipo : objetoTipo
 					}
-				}, mi.subcomponente.costo != null ? mi.subcomponente.costo : 0,mi.subcomponente.fechaInicio,mi.subcomponente.fechaFin)
+				}, mi.subcomponente.fechaInicio,mi.subcomponente.fechaFin)
 				.result.then(function(data) {
 					mi.pagos=data;
 					mi.subcomponente.costo = 0;

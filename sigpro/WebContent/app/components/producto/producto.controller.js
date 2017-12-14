@@ -904,7 +904,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 					objetoId: objetoId,
 					objetoTipo : objetoTipo
 				}
-			}, mi.producto.costo != null ? mi.producto.costo : 0,mi.producto.fechaInicio,mi.producto.fechaFin)
+			}, mi.producto.fechaInicio,mi.producto.fechaFin)
 			.result.then(function(data) {
 				mi.pagos=data;
 				mi.producto.costo = 0;
