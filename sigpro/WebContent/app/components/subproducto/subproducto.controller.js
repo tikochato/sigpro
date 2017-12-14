@@ -862,7 +862,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 					objetoId: objetoId,
 					objetoTipo : objetoTipo
 				}
-			}, mi.subproducto.costo != null ? mi.subproducto.costo : 0,mi.subproducto.fechaInicio,mi.subproducto.fechaFin)
+			},mi.subproducto.fechaInicio,mi.subproducto.fechaFin)
 			.result.then(function(data) {
 				mi.pagos=data;
 				mi.subproducto.costo = 0;

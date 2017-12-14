@@ -795,7 +795,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 						objetoId: objetoId,
 						objetoTipo : objetoTipo
 					}
-				}, mi.componente.costo != null ? mi.componente.costo : 0,mi.componente.fechaInicio,mi.componente.fechaFin)
+				}, mi.componente.fechaInicio,mi.componente.fechaFin)
 				.result.then(function(data) {
 					mi.pagos=data;
 					mi.componente.costo = 0;

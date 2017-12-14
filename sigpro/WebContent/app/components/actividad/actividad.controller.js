@@ -933,7 +933,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 					objetoId: objetoId,
 					objetoTipo : objetoTipo
 				}
-			}, mi.actividad.costo != null ? mi.actividad.costo : 0,mi.actividad.fechaInicio,mi.actividad.fechaFin)
+			}, mi.actividad.fechaInicio,mi.actividad.fechaFin)
 			.result.then(function(data) {
 				mi.pagos=data;
 				mi.actividad.costo = 0;
