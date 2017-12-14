@@ -267,6 +267,8 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 						else
 							$utilidades.mensaje('success','Componente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
+						
+						mi.getAsignado();
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el Componente');
@@ -377,6 +379,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 						}
 					}
 					$utilidades.setFocus(document.getElementById("nombre"));
+					mi.getAsignado();
 				});
 			}
 			else
@@ -825,6 +828,35 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 				mi.pagos=pagos;
 			});
 		};
+		
+		mi.getAsignado = function(){
+			if(mi.componente.programa != null){
+				$http.post('/SComponente', {
+					accion: 'getValidacionAsignado',
+					id: mi.componente.id,
+					programa: mi.componente.programa,
+					subprograma: mi.componente.subprograma,
+					proyecto: mi.componente.proyecto,
+					componente: mi.componente.componente,
+					obra: mi.componente.obra,
+					renglon: mi.componente.renglon,
+					geografico: mi.componente.ubicacionGeografica,
+					t: new Date().getTime()
+				}).success(function(response){
+					if(response.success){
+						mi.asignado = response.asignado;
+						mi.sobrepaso = response.sobrepaso;
+					}
+				});
+			}
+		}
+		
+		mi.validarAsignado = function(){
+			if(mi.componente.costo <= mi.asignado)
+				mi.sobrepaso = false;
+			else
+				mi.sobrepaso = true;
+		}
 } ]);
 
 app.controller('buscarPorComponente', [ '$uibModalInstance',

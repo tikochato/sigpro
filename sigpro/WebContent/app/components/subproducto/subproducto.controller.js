@@ -426,7 +426,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 							}
 							mi.esNuevo = false;
 							
-							
+							mi.getAsignado();
 						} else {
 							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Subproducto');
 						}
@@ -494,6 +494,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 				mi.riesgos = false;
 				
 				mi.activeTab = 0;
+				mi.getAsignado();
 			});
 		} else {
 			$utilidades.mensaje('warning', 'Debe seleccionar un subproducto');
@@ -894,6 +895,35 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 				mi.pagos=pagos;
 			});
 		};
+		
+		mi.getAsignado = function(){
+			if(mi.subproducto.programa != null){
+				$http.post('/SSubproducto', {
+					accion: 'getValidacionAsignado',
+					id: mi.subproducto.id,
+					programa: mi.subproducto.programa,
+					subprograma: mi.subproducto.subprograma,
+					proyecto: mi.subproducto.proyecto,
+					subproducto: mi.subproducto.subproducto,
+					obra: mi.subproducto.obra,
+					renglon: mi.subproducto.renglon,
+					geografico: mi.subproducto.ubicacionGeografica,
+					t: new Date().getTime()
+				}).success(function(response){
+					if(response.success){
+						mi.asignado = response.asignado;
+						mi.sobrepaso = response.sobrepaso;
+					}
+				});
+			}
+		}
+		
+		mi.validarAsignado = function(){
+			if(mi.subproducto.costo <= mi.asignado)
+				mi.sobrepaso = false;
+			else
+				mi.sobrepaso = true;
+		}
 }
 
 moduloSubproducto.controller('modalBuscarPorSubproducto', [ '$uibModalInstance',

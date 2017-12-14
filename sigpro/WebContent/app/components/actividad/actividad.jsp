@@ -293,21 +293,17 @@
 						</div>
 						
 						<div class="form-group" >
-							<div class="row">
-								<div class="form-group col-sm-6">
-									<input type="text" class="inputText" ng-model="actividadc.actividad.costo" ng-value="actividadc.actividad.costo" ui-number-mask="2"
-						       		onblur="this.setAttribute('value', this.value);" style="text-align: left" ng-required="actividadc.actividad.acumulacionCostoId > 0" 
-						       		ng-change="actividadc.validarAsignado();"
-						       		ng-readonly="actividadc.actividad.tieneHijos || actividadc.congelado"/>
-						       		<label for="iprog" class="floating-label">{{actividadc.actividad.acumulacionCostoId > 0 ? "* Monto Planificado" : "Monto Planificado"}}</label>
-								</div>
-							<div class="form-group col-sm-6">
-									<input type="text" class="inputText" ng-model="actividadc.asignado" ng-value="actividadc.asignado" ui-number-mask="2"
-						       		onblur="this.setAttribute('value', this.value);" style="text-align: left" 
-						       		ng-readonly="true"/>
-						       		<label for="iprog" class="floating-label">Presupuesto Asignado (Año Fiscal)</label>
-								</div>
-							</div>
+							<input type="text" class="inputText" ng-model="actividadc.actividad.costo" ng-value="actividadc.actividad.costo" ui-number-mask="2"
+				       		onblur="this.setAttribute('value', this.value);" style="text-align: left" ng-required="actividadc.actividad.acumulacionCostoId > 0" 
+				       		ng-change="actividadc.validarAsignado();"
+				       		ng-readonly="actividadc.actividad.tieneHijos || actividadc.congelado"/>
+				       		<label for="iprog" class="floating-label">{{actividadc.actividad.acumulacionCostoId > 0 ? "* Monto Planificado" : "Monto Planificado"}}</label>
+						</div>
+						<div class="form-group" >
+							<input type="text" class="inputText" ng-model="actividadc.asignado" ng-value="actividadc.asignado" ui-number-mask="2"
+				       		onblur="this.setAttribute('value', this.value);" style="text-align: left" 
+				       		ng-readonly="true"/>
+				       		<label for="iprog" class="floating-label">Presupuesto Asignado (Año Fiscal)</label>
 						</div>
 						<div class="form-group" >
 							<div id="acumulacionCosto" angucomplete-alt placeholder="" pause="100" selected-object="actividadc.cambioAcumulacionCosto"

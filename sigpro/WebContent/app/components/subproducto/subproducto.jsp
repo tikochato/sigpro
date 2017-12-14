@@ -54,6 +54,11 @@
 				</shiro:hasPermission>
 			</div>
 		</div>
+		<br><br>
+			<div class="col-sm-12" ng-if="subproducto.sobrepaso != null && subproducto.sobrepaso == true">
+				<div class="alert alert-danger" style="text-align: center;">La planificación sobrepasa la asignación presupuestaria</div>
+			</div>
+		<br>
 		<shiro:hasPermission name="40010">
 			<div class="col-sm-12" align="center">
 				<div style="height: 35px;">
@@ -128,6 +133,11 @@
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>
+		<br><br>
+			<div class="col-sm-12" ng-if="subproducto.sobrepaso != null && subproducto.sobrepaso == true">
+				<div class="alert alert-danger" style="text-align: center;">La planificación sobrepasa la asignación presupuestaria</div>
+			</div>
+		<br>
 		<form name="subproducto.mForm" class="css-form">
 		<uib-tabset active="subproducto.activeTab">
     	<uib-tab index="0" name="tproducto" heading="Subproducto">
@@ -221,9 +231,16 @@
 			          <label class="floating-label">Unidad Ejecutora</label>
 			        </div>
 			        <div class="form-group" >
-				       <input type="text" class="inputText" ng-model="subproducto.subproducto.costo" ng-value="subproducto.subproducto.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left" ui-number-mask="2"
-				        ng-readonly="subproducto.subproducto.tieneHijos || subproducto.congelado"/>
-				       <label for="iprog" class="floating-label">Monto Planificado</label>
+	        			<input type="text" class="inputText" ng-model="subproducto.subproducto.costo" ng-value="subproducto.subproducto.costo" onblur="this.setAttribute('value', this.value);" 
+	        			style="text-align: left" ui-number-mask="2" ng-change="subproducto.validarAsignado();"
+		        		ng-readonly="subproducto.subproducto.tieneHijos || subproducto.congelado"/>
+		       			<label for="iprog" class="floating-label">Monto Planificado</label>
+	        		</div>
+			        <div class="form-group" >
+	        			<input type="text" class="inputText" ng-model="subproducto.asignado" ng-value="subproducto.asignado" ui-number-mask="2"
+			       		onblur="this.setAttribute('value', this.value);" style="text-align: left" 
+			       		ng-readonly="true"/>
+			       		<label for="iprog" class="floating-label">Presupuesto Asignado (Año Fiscal)</label>			        				       
 					</div>
 					
 					<div class="form-group">

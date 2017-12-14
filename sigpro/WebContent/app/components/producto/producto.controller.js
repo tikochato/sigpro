@@ -453,6 +453,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 									mi.t_crearNodo(mi.producto.id,mi.producto.nombre,3,true);
 							}
 							mi.esNuevo = false;
+							
+							mi.getAsignado();
 						} else {
 							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'crear' : 'guardar')+' el Producto');
 						}
@@ -520,6 +522,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				
 				mi.activeTab = 0;
 				$utilidades.setFocus(document.getElementById("nombre"));
+				mi.getAsignado();
 			});
 		} else {
 			$utilidades.mensaje('warning', 'Debe seleccionar el producto que desee editar');
@@ -948,6 +951,35 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				mi.pagos=pagos;
 			});
 		};
+		
+		mi.getAsignado = function(){
+			if(mi.producto.programa != null){
+				$http.post('/SProducto', {
+					accion: 'getValidacionAsignado',
+					id: mi.producto.id,
+					programa: mi.producto.programa,
+					subprograma: mi.producto.subprograma,
+					proyecto: mi.producto.proyecto,
+					producto: mi.producto.producto,
+					obra: mi.producto.obra,
+					renglon: mi.producto.renglon,
+					geografico: mi.producto.ubicacionGeografica,
+					t: new Date().getTime()
+				}).success(function(response){
+					if(response.success){
+						mi.asignado = response.asignado;
+						mi.sobrepaso = response.sobrepaso;
+					}
+				});
+			}
+		}
+		
+		mi.validarAsignado = function(){
+			if(mi.producto.costo <= mi.asignado)
+				mi.sobrepaso = false;
+			else
+				mi.sobrepaso = true;
+		}
 	  
 }
 
