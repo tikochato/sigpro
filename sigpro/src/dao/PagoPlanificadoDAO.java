@@ -29,6 +29,26 @@ public class PagoPlanificadoDAO {
 		return ret;
 	}
 	
+	public static PagoPlanificado getPagosPlanificadosPorId(int id){
+		PagoPlanificado ret = null;
+		List<PagoPlanificado> ret_list = new ArrayList<PagoPlanificado>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<PagoPlanificado> criteria = session.createQuery("SELECT p FROM PagoPlanificado p where p.id = ?1 ", PagoPlanificado.class);
+			criteria.setParameter(1, id);
+			ret_list = criteria.getResultList();
+			if (ret_list!=null && !ret_list.isEmpty())
+				ret = ret_list.get(0);
+		}
+		catch(Throwable e){
+			CLogger.write("1", PagoPlanificado.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
 	public static boolean guardar(PagoPlanificado pagoPlanificado){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();

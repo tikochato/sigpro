@@ -1243,7 +1243,12 @@ function modalPagos($uibModalInstance, $scope, $http, $interval,
 			if(data){
 				var index = mi.pagos.indexOf(row);
 				if (index > -1) {
-					mi.pagos.splice(index, 1);
+					$http.post('SPagoPlanificado', {accion:'borrarPago',idPago:row.id}).success(
+							function(response) {
+								mi.pagos.splice(index, 1);
+					});
+					
+					
 				}
 			}
 		}, function(){
