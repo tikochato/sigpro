@@ -233,7 +233,7 @@
 			        <div class="form-group" >
 	        			<input type="text" class="inputText" ng-model="subproducto.subproducto.costo" ng-value="subproducto.subproducto.costo" onblur="this.setAttribute('value', this.value);" 
 	        			style="text-align: left" ui-number-mask="2" ng-change="subproducto.validarAsignado();"
-		        		ng-readonly="subproducto.subproducto.tieneHijos || subproducto.congelado"/>
+		        		ng-readonly="subproducto.subproducto.tieneHijos || subproducto.congelado || subproducto.bloquearCosto"/>
 		       			<label for="iprog" class="floating-label">Monto Planificado</label>
 	        		</div>
 			        <div class="form-group" >
