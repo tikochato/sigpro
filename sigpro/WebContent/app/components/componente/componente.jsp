@@ -24,6 +24,11 @@
   	    <script type="text/ng-template" id="buscarAcumulacionCosto.jsp">
     		<%@ include file="/app/components/componente/buscarAcumulacionCosto.jsp"%>
   	    </script>
+  	    
+  	    <script type="text/ng-template" id="pago_planificado.jsp">
+    		<%@ include file="/app/components/pago_planificado/pago_planificado.jsp"%>
+  	    </script>
+  	    
   	    <shiro:lacksPermission name="5010">
 			<span ng-init="componentec.redireccionSinPermisos()"></span>
 		</shiro:lacksPermission>
@@ -106,10 +111,18 @@
 				<span class="glyphicon glyphicon-time"></span></label>
 				<label class="btn btn-default" ng-click="componentec.verHistoria()" uib-tooltip="Ver Historia">
 				<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
+				<label class="btn btn-default" ng-click="componentec.componente.acumulacionCostoId == 2 ? componentec.agregarPagos() : ''"
+					 uib-tooltip="Pagos planificados" tooltip-placement="left" ng-disabled = "componentec.componentec.acumulacionCostoId != 2">
+					<span class="glyphicon glyphicon-piggy-bank"></span></label>
 		      </div>
 		      <div ng-if="componentec.esTreeview">
-		      	<label class="btn btn-default" ng-click="componentec.verHistoria()" uib-tooltip="Ver Historia">
-				<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
+			      <div class="btn-group">
+			      	<label class="btn btn-default" ng-click="componentec.verHistoria()" uib-tooltip="Ver Historia">
+					<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
+					<label class="btn btn-default" ng-click="componentec.componente.acumulacionCostoId == 2 ? componentec.agregarPagos() : ''" uib-tooltip="Pagos planificados"
+							ng-disabled = "componentec.componente.acumulacionCostoId != 2" >
+							<span class="glyphicon glyphicon-piggy-bank"></span></label>
+				  </div>
 		      </div>
 			  <div class="btn-group" style="float: right;">
 			    <shiro:hasPermission name="5020">

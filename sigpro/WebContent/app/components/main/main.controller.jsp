@@ -166,7 +166,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/mapa/:proyecto_id?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'mapaController\'" class="all_page"></div>'
             })
-            .when('/matrizriesgo/:proyectoId',{
+            .when('/matrizriesgo/',{
             	template: '<div load-on-demand="\'matrizriesgoController\'" class="all_page"></div>'
             })
             .when('/agenda/:proyectoId',{

@@ -45,8 +45,11 @@ public class SMatrizRiesgo extends HttpServlet {
 		String tipoNombre;
 		BigDecimal impacto;
 		BigDecimal probabilidad;
+		BigDecimal calificacion;
 		BigDecimal impactoMonto;
 		BigDecimal impactoTiempo;
+		BigDecimal contingenciaMonto;
+		BigDecimal contingenciaTiempo;
 		String gatillos;
 		String consecuencia;
 		String solucion;
@@ -89,7 +92,9 @@ public class SMatrizRiesgo extends HttpServlet {
 		
 		if(accion.equals("getMatrizRiesgos")){
 			int proyectoId = Utils.String2Int(map.get("proyectoid"), 0);
-			List<Riesgo> riesgos = RiesgoDAO.getMatrizRiesgo(proyectoId);
+			int prestamoId = Utils.String2Int(map.get("prestamoid"), 0);
+			String lineaBase = map.get("lineabase");
+			List<Riesgo> riesgos = RiesgoDAO.getMatrizRiesgo(prestamoId, proyectoId, lineaBase);
 			List<stmatriz> matriz = new ArrayList<>();
 			for (Riesgo riesgo : riesgos){
 				stmatriz temp = new stmatriz();
@@ -97,10 +102,13 @@ public class SMatrizRiesgo extends HttpServlet {
 				temp.nombre = riesgo.getNombre();
 				temp.tipoId = riesgo.getRiesgoTipo().getId();
 				temp.tipoNombre = riesgo.getRiesgoTipo().getNombre();
-				temp.impacto = riesgo.getImpacto();
-				temp.probabilidad = riesgo.getProbabilidad();
+				temp.impacto = riesgo.getImpacto()!=null?riesgo.getImpacto().multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP):new BigDecimal(0);
+				temp.probabilidad = riesgo.getProbabilidad()!=null?riesgo.getProbabilidad().multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP):new BigDecimal(0);
+				temp.calificacion = (temp.impacto.multiply(temp.probabilidad)).multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP);
 				temp.impactoMonto = riesgo.getImpactoMonto()!=null ? riesgo.getImpactoMonto() : new BigDecimal(0);
 				temp.impactoTiempo = riesgo.getImpactoTiempo()!=null ? riesgo.getImpactoTiempo() : new BigDecimal(0);
+				temp.contingenciaMonto = (temp.calificacion.multiply(temp.impactoMonto)).setScale(2, BigDecimal.ROUND_HALF_UP);
+				temp.contingenciaTiempo = (temp.calificacion.multiply(temp.impactoTiempo)).setScale(2, BigDecimal.ROUND_HALF_UP);
 				temp.gatillos = riesgo.getGatillo();
 				temp.consecuencia = riesgo.getConsecuencia();
 				temp.solucion = riesgo.getSolucion();
@@ -148,9 +156,11 @@ public class SMatrizRiesgo extends HttpServlet {
 	        
 		} else if (accion.equals("exportarExcel")){
 			int proyectoId = Utils.String2Int(map.get("proyectoid"), 0);
+			int prestamoId = Utils.String2Int(map.get("prestamoid"), 0);
+			String lineaBase = map.get("lineabase");
 			
 			try{
-		        byte [] outArray = exportarExcel(proyectoId, usuario);
+		        byte [] outArray = exportarExcel(prestamoId, proyectoId, lineaBase, usuario);
 			
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
@@ -165,7 +175,7 @@ public class SMatrizRiesgo extends HttpServlet {
 		}
 	}
 	
-	private byte[] exportarExcel(int proyectoId, String usuario) throws IOException{
+	private byte[] exportarExcel(int prestamoId, int proyectoId, String lineaBase, String usuario) throws IOException{
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -176,7 +186,7 @@ public class SMatrizRiesgo extends HttpServlet {
 		try{		
 			excel = new CExcel("Matriz de Riesgos", false, null);
 			headers = generarHeaders();
-			datos = generarDatos(proyectoId,headers[0].length);
+			datos = generarDatos(prestamoId, proyectoId, lineaBase, headers[0].length);
 			wb=excel.generateExcelOfData(datos, "Matriz de Riesgos - "+ProyectoDAO.getProyecto(proyectoId).getNombre(), headers, null, true, usuario);
 		
 		wb.write(outByteStream);
@@ -210,7 +220,7 @@ public class SMatrizRiesgo extends HttpServlet {
 		tipo[7]="double";
 		titulo[8]="Impacto en Tiempo";
 		tipo[8]="double";
-		titulo[9]="Contingenica en Tiempo";
+		titulo[9]="Contingencia en Tiempo";
 		tipo[9]="double";
 		titulo[10]="Impacto en Monto (Q)";
 		tipo[10]="double";
@@ -249,9 +259,9 @@ public class SMatrizRiesgo extends HttpServlet {
 		return headers;
 	}
 	
-	public String[][] generarDatos(int proyectoId, int columnasTotal){
+	public String[][] generarDatos(int prestamoId, int proyectoId, String lineaBase, int columnasTotal){
 		String[][] datos = null;
-		List<Riesgo> riesgos = RiesgoDAO.getMatrizRiesgo(proyectoId);		
+		List<Riesgo> riesgos = RiesgoDAO.getMatrizRiesgo(prestamoId, proyectoId, lineaBase);		
 		if (riesgos != null && !riesgos.isEmpty()){
 			datos = new String[riesgos.size()][columnasTotal];
 			for (int i=0; i<riesgos.size(); i++){

@@ -24,6 +24,9 @@ import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import dao.SubComponenteDAO;
@@ -31,10 +34,12 @@ import dao.SubComponentePropiedadDAO;
 import dao.SubComponentePropiedadValorDAO;
 import dao.ComponenteDAO;
 import dao.ObjetoDAO;
+import dao.PagoPlanificadoDAO;
 import dao.ProyectoDAO;
 import dao.UnidadEjecutoraDAO;
 import pojo.AcumulacionCosto;
 import pojo.Componente;
+import pojo.PagoPlanificado;
 import pojo.Proyecto;
 import pojo.Subcomponente;
 import pojo.SubcomponentePropiedad;
@@ -336,6 +341,29 @@ public class SSubComponente extends HttpServlet {
 						subcomponente.setSubcomponenteTipo(subcomponenteTipo);
 					}
 					result = SubComponenteDAO.guardarSubComponente(subcomponente, true);
+					
+					if(result){
+						String pagosPlanificados = map.get("pagosPlanificados");
+						if(!acumulacionCostoid.equals(2)  || pagosPlanificados!= null && pagosPlanificados.replace("[", "").replace("]", "").length()>0 ){
+							List<PagoPlanificado> pagosActuales = PagoPlanificadoDAO.getPagosPlanificadosPorObjeto(subcomponente.getId(), 2);
+							for (PagoPlanificado pagoTemp : pagosActuales){
+								PagoPlanificadoDAO.eliminarTotalPagoPlanificado(pagoTemp);
+							}
+						}
+							
+						if (acumulacionCostoid.equals(2) && pagosPlanificados!= null && pagosPlanificados.replace("[", "").replace("]", "").length()>0){
+							JsonParser parser = new JsonParser();
+							JsonArray pagosArreglo = parser.parse(pagosPlanificados).getAsJsonArray();
+							for(int i=0; i<pagosArreglo.size(); i++){
+								JsonObject objeto = pagosArreglo.get(i).getAsJsonObject();
+								Date fechaPago = objeto.get("fechaPago").isJsonNull() ? null : Utils.stringToDate(objeto.get("fechaPago").getAsString());
+								BigDecimal monto = objeto.get("pago").isJsonNull() ? null : objeto.get("pago").getAsBigDecimal();
+								
+								PagoPlanificado pagoPlanificado = new PagoPlanificado(fechaPago, monto, subcomponente.getId(), 2, usuario, null, new Date(), null, 1);
+								result = result && PagoPlanificadoDAO.guardar(pagoPlanificado);
+							}
+						}
+					}
 					
 					Set<SubcomponentePropiedadValor> valores_temp = subcomponente.getSubcomponentePropiedadValors();
 					subcomponente.setSubcomponentePropiedadValors(null);
