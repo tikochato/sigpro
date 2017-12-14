@@ -3,6 +3,10 @@ app.controller('planEstructuralProyectoController',['$scope', '$rootScope', '$ht
 	function($scope, $rootScope, $http, $window, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion, $filter,$uibModal){
 	var mi = this;
 	
+	mi.fechaCorte = null;
+	mi.formatofecha = 'dd/MM/yyyy';
+	mi.altformatofecha = ['d!/M!/yyyy'];
+	
 	mi.mostrarCargando = false;
 	mi.enMillones = false;
 	mi.tooltipObjetoTipo = [$rootScope.etiquetas.proyecto,"Componente","Subcomponente","Producto","Sub Producto","Actividad"];
@@ -28,6 +32,17 @@ app.controller('planEstructuralProyectoController',['$scope', '$rootScope', '$ht
 	        case 5:
 	            return 'glyphicon glyphicon-time';
 	    }
+	};
+	
+	mi.abrirPopupFecha = function() {
+		mi.isOpen = true; 
+	};
+
+	mi.fechaOptions = {
+			formatYear : 'yy',
+			maxDate : new Date(2050, 12, 31),
+			minDate : new Date(1990, 1, 1),
+			startingDay : 1
 	};
 	
 	$scope.divActivo = "";
@@ -124,24 +139,28 @@ app.controller('planEstructuralProyectoController',['$scope', '$rootScope', '$ht
 	
 	mi.generar = function(){
 		if(mi.pepId > 0){
-			mi.mostrarCargando = true;
-			mi.mostrarTablas = false;
-			$http.post('/SPlanEstructuralProyecto',{
-				accion: 'generarPlan',
-				proyectoId: mi.pepId,
-				lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null
-			}).success(function(response){
-				if(response.success){
-					mi.crearArbol(response.proyecto);
-					mi.fechaSuscripcion = moment(response.fechaSuscripcion,'DD/MM/YYYY').toDate();
-					mi.fechaCierre = moment(response.fechaCierre,'DD/MM/YYYY').toDate();
-					mi.cooperanteId = response.cooperanteId;
-					mi.mostrarCargando = false;
-					mi.mostrarBotones = true;
-					mi.mostrarTablas = true;
-					mi.calcularTamanosPantalla();
-				}
-			});
+			if(mi.fechaCorte != null)
+			{
+				mi.mostrarCargando = true;
+				mi.mostrarTablas = false;
+				$http.post('/SPlanEstructuralProyecto',{
+					accion: 'generarPlan',
+					proyectoId: mi.pepId,
+					fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY'),
+					lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null
+				}).success(function(response){
+					if(response.success){
+						mi.crearArbol(response.proyecto);
+						mi.fechaSuscripcion = moment(response.fechaSuscripcion,'DD/MM/YYYY').toDate();
+						mi.fechaCierre = moment(response.fechaCierre,'DD/MM/YYYY').toDate();
+						mi.cooperanteId = response.cooperanteId;
+						mi.mostrarCargando = false;
+						mi.mostrarBotones = true;
+						mi.mostrarTablas = true;
+						mi.calcularTamanosPantalla();
+					}
+				});
+			}
 		}
 	}
 	
