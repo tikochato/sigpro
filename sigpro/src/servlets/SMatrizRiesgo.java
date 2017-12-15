@@ -104,7 +104,7 @@ public class SMatrizRiesgo extends HttpServlet {
 				temp.tipoNombre = riesgo.getRiesgoTipo().getNombre();
 				temp.impacto = riesgo.getImpacto()!=null?riesgo.getImpacto().multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP):new BigDecimal(0);
 				temp.probabilidad = riesgo.getProbabilidad()!=null?riesgo.getProbabilidad().multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP):new BigDecimal(0);
-				temp.calificacion = (temp.impacto.multiply(temp.probabilidad)).multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP);
+				temp.calificacion = (riesgo.getProbabilidad()!=null && riesgo.getProbabilidad().compareTo(BigDecimal.ZERO)!=0)?(riesgo.getImpacto()!=null?(riesgo.getImpacto().multiply(riesgo.getProbabilidad()).multiply(new BigDecimal(100))).setScale(2, BigDecimal.ROUND_HALF_UP):new BigDecimal(0)):new BigDecimal(0);
 				temp.impactoMonto = riesgo.getImpactoMonto()!=null ? riesgo.getImpactoMonto() : new BigDecimal(0);
 				temp.impactoTiempo = riesgo.getImpactoTiempo()!=null ? riesgo.getImpactoTiempo() : new BigDecimal(0);
 				temp.contingenciaMonto = (temp.calificacion.multiply(temp.impactoMonto)).setScale(2, BigDecimal.ROUND_HALF_UP);

@@ -160,9 +160,9 @@
 						<td><p class="nombreFormat textoRiesgo">{{row.nombre}}</p></td>
 						<td><p class="nombreFormat textoRiesgo">{{row.tipoNombre}}</p></td>
 						<td><p class="nombreFormat textoRiesgo">{{row.objetoTipoNombre}}</p></td>
-						<td><p class="nombreFormat numeroRiesgo derecha">{{row.impacto}}</p></td>
-						<td><p class="nombreFormat numeroRiesgo derecha">{{row.probabilidad}}</p></td>
-						<td><p class="nombreFormat numeroRiesgo derecha">{{row.calificacion}} </p></td>
+						<td><p class="nombreFormat numeroRiesgo derecha">{{row.impacto}}%</p></td>
+						<td><p class="nombreFormat numeroRiesgo derecha">{{row.probabilidad}}%</p></td>
+						<td><p class="nombreFormat numeroRiesgo derecha">{{row.calificacion}}%</p></td>
 						<td><p class="nombreFormat numeroRiesgo derecha">{{row.impactoTiempo}}</p></td>
 						<td><p class="nombreFormat numeroRiesgo derecha">{{row.contingenciaTiempo}}</p></td>
 						<td><p class="nombreFormat montoRiesgo derecha">{{row.impactoMonto| formatoMillones : 0}}</p></td>

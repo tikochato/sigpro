@@ -116,7 +116,8 @@ public class DataSigadeDAO {
 			criteria.setParameter(2, new Long(anio_inicio));
 			criteria.setParameter(3, new Long(anio_fin));
 			criteria.setParameter(4, entidad);
-			criteria.setParameter(5, unidadEjecutora);
+			//TODO Validacion prestamo 2766
+			criteria.setParameter(5, codigoPresupeustario.equals("5204020122") ? 0 : unidadEjecutora);
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
@@ -246,6 +247,7 @@ public class DataSigadeDAO {
 		List<DtmAvanceFisfinanDetDti> ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
+			
 			String query =String.join("", "SELECT * FROM sipro_analytic.dtm_avance_fisfinan_det_dti d ",
 					"where d.codigo_presupuestario = ?1 ",
 					"and d.entidad_sicoin = ?2 ",
@@ -254,7 +256,8 @@ public class DataSigadeDAO {
 			Query<DtmAvanceFisfinanDetDti> criteria = session.createNativeQuery(query, DtmAvanceFisfinanDetDti.class);
 			criteria.setParameter("1", codigoPresupuestario);
 			criteria.setParameter("2", entidad);
-			criteria.setParameter("3", UE);
+			//TODO validacion prestamo 2766
+			criteria.setParameter("3", codigoPresupuestario.equals("5204020122")  ? 0: UE );
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
