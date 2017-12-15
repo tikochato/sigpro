@@ -798,7 +798,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 						programa: mi.subcomponente.programa,
 						subprograma: mi.subcomponente.subprograma,
 						proyecto: mi.subcomponente.proyecto,
-						componente: mi.subcomponente.componente,
+						actividad: mi.subcomponente.actividad,
 						obra: mi.subcomponente.obra,
 						renglon: mi.subcomponente.renglon,
 						geografico: mi.subcomponente.ubicacionGeografica,

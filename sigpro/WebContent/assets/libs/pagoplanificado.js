@@ -65,8 +65,8 @@ function modalPagos($uibModalInstance, $scope, $http, $interval,
 	mi.fechaOptions = {
 			formatYear : 'yy',
 			startingDay : 1,
-			maxDate: $fechaInicio, 
-			minDate: $fechaFin
+			maxDate:  $fechaFin, 
+			minDate: $fechaInicio
 	};
 	
 	

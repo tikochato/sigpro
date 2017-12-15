@@ -573,7 +573,7 @@ public class SSubproducto extends HttpServlet {
 	
 	private void obtenerSubproductoPorId(Map<String, String> parametro, HttpServletResponse response) throws IOException {
 		Integer id = parametro.get("id")!=null ? Integer.parseInt(parametro.get("id")) : 0;
-		Subproducto subproducto = SubproductoDAO.getSubproductoPorId(id,usuario);
+		Subproducto subproducto = SubproductoDAO.getSubproductoPorId(id);
 		String resultadoJson = "";
 		
 		resultadoJson = String.join("","{ \"success\": ",(subproducto!=null && subproducto.getId()!=null ? "true" : "false"),", "
@@ -587,7 +587,7 @@ public class SSubproducto extends HttpServlet {
 	
 	private void getSubproductoPorId(Map<String, String> parametro, HttpServletResponse response) throws IOException {
 		Integer id = parametro.get("id")!=null ? Integer.parseInt(parametro.get("id")) : 0;
-		Subproducto subproducto = SubproductoDAO.getSubproductoPorId(id,usuario);
+		Subproducto subproducto = SubproductoDAO.getSubproductoPorId(id);
 		String resultadoJson="";
 		if (subproducto!=null){
 			EstructuraPojo temp = new EstructuraPojo();
