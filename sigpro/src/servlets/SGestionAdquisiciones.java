@@ -405,6 +405,7 @@ public class SGestionAdquisiciones extends HttpServlet {
 				temp.nombre = cat.nombre;
 				temp.anioPlan = inicializarStAnioGestion(fechaInicial, fechaFinal);
 				temp.cantidadAdquisiciones = 0;
+				temp.acumulado = new BigDecimal(0);
 				for(ObjetoCosto objeto: estructuraProyecto){
 					if(objeto.getObjeto_tipo() == 3 || objeto.getObjeto_tipo() == 4 || objeto.getObjeto_tipo() == 5){
 						PlanAdquisicion lstplan = PlanAdquisicionDAO.getPlanAdquisicionByObjetoLB(objeto.getObjeto_tipo(), objeto.getObjeto_id(), lineaBase);
@@ -412,7 +413,7 @@ public class SGestionAdquisiciones extends HttpServlet {
 							if(cat.categoriaId==lstplan.getCategoriaAdquisicion().getId()){
 								temp.cantidadAdquisiciones++;
 								temp.anioPlan = mergeGestionPlan(temp.anioPlan, objeto, fechaInicial, fechaFinal);
-								temp.acumulado = getAcumuladoPlan(temp.anioPlan, objeto);
+								temp.acumulado = temp.acumulado.add(getAcumuladoPlan(objeto));
 							}
 						}
 					}
@@ -488,7 +489,7 @@ public class SGestionAdquisiciones extends HttpServlet {
 		return aAnios;
 	}
 	
-	private BigDecimal getAcumuladoPlan(Object anios, ObjetoCosto objetoAnios){
+	private BigDecimal getAcumuladoPlan(ObjetoCosto objetoAnios){
 		BigDecimal totalAcumulado = new BigDecimal(0);
 		try{
 			ObjetoCosto.stanio[] anioPlan = objetoAnios.getAnios();
