@@ -881,7 +881,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 					programa: mi.subproducto.programa,
 					subprograma: mi.subproducto.subprograma,
 					proyecto: mi.subproducto.proyecto,
-					subproducto: mi.subproducto.subproducto,
+					actividad: mi.subproducto.actividad,
 					obra: mi.subproducto.obra,
 					renglon: mi.subproducto.renglon,
 					geografico: mi.subproducto.ubicacionGeografica,
