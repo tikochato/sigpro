@@ -49,6 +49,7 @@
 			overflow-y:hidden;
 			overflow-x:hidden;
 			height: 375px;
+			width: 100%
 		}
 		
 		.tablaDatos {
