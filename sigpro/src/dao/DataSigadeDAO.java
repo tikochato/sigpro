@@ -116,7 +116,8 @@ public class DataSigadeDAO {
 			criteria.setParameter(2, new Long(anio_inicio));
 			criteria.setParameter(3, new Long(anio_fin));
 			criteria.setParameter(4, entidad);
-			criteria.setParameter(5, unidadEjecutora);
+			//TODO Validacion prestamo 2766
+			criteria.setParameter(5, codigoPresupeustario.equals("5204020122") ? 0 : unidadEjecutora);
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
