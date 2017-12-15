@@ -256,7 +256,7 @@ public class DataSigadeDAO {
 			criteria.setParameter("1", codigoPresupuestario);
 			criteria.setParameter("2", entidad);
 			//TODO validacion prestamo 2766
-			criteria.setParameter("3", codigoPresupuestario.equals("5204020122")  ? 205: UE );
+			criteria.setParameter("3", codigoPresupuestario.equals("5204020122")  ? 0: UE );
 			ret = criteria.getResultList();
 		}
 		catch(Throwable e){
