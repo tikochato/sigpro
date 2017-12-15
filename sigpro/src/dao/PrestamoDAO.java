@@ -359,11 +359,11 @@ public class PrestamoDAO {
 	}
 	
 	public static BigDecimal[] getComponenteMatrizHistoria(Integer prestamoId, Integer orden, Integer entidadId, Integer ejercicio, Integer unidadEjuctoraId, Integer version){
-		BigDecimal[] resultado = new BigDecimal[4];
+		BigDecimal[] resultado = new BigDecimal[5];
 		List<?> ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{	
-			String query = "SELECT cm.techo, cm.fuente_prestamo, cm.fuente_donacion, cm.fuente_nacional "
+			String query = "SELECT cm.techo, cm.fuente_prestamo, cm.fuente_donacion, cm.fuente_nacional, cm.fecha_actualizacion "
 					+ " FROM sipro_history.componente_matriz cm "
 					+ " JOIN sipro.componente_sigade cs ON cm.componente_sigadeid = cs.id "
 					+ " WHERE cm.prestamoid = " + prestamoId
@@ -381,6 +381,7 @@ public class PrestamoDAO {
 				resultado[1] = dato[1]!=null?(BigDecimal)dato[1]:new BigDecimal(0);
 				resultado[2] = dato[2]!=null?(BigDecimal)dato[2]:new BigDecimal(0);
 				resultado[3] = dato[3]!=null?(BigDecimal)dato[3]:new BigDecimal(0);
+				resultado[4] = dato[4]!=null?new BigDecimal(((Date)dato[4]).getTime()):new BigDecimal(0);
 			}
 		}
 		catch(Throwable e){
