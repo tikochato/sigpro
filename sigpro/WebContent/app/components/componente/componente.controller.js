@@ -815,7 +815,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 					programa: mi.componente.programa,
 					subprograma: mi.componente.subprograma,
 					proyecto: mi.componente.proyecto,
-					componente: mi.componente.componente,
+					actividad: mi.componente.actividad,
 					obra: mi.componente.obra,
 					renglon: mi.componente.renglon,
 					geografico: mi.componente.ubicacionGeografica,
