@@ -333,15 +333,15 @@ public class EstructuraProyectoDAO {
 		Nodo root = null;
 		Prestamo prestamo = PrestamoDAO.getPrestamoById(id);
 		if(prestamo != null){
+			int id_ = prestamo.getId();
+			int objeto_tipo = -1;
+			String nombre = prestamo.getProyectoPrograma();
+			int nivel = 0;
+			boolean estado= checkPermiso(id,objeto_tipo, usuario);
+			root = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, estado);
+			
 			Set<Proyecto> proyectos = prestamo.getProyectos();
 			if(proyectos != null && proyectos.size() > 0){
-				int id_ = prestamo.getId();
-				int objeto_tipo = -1;
-				String nombre = prestamo.getProyectoPrograma();
-				int nivel = 0;
-				boolean estado= checkPermiso(id,objeto_tipo, usuario);
-				root = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, estado);
-				
 				Iterator<Proyecto> iterador = proyectos.iterator();
 				while(iterador.hasNext()){
 					Proyecto proyecto = iterador.next();
@@ -354,7 +354,7 @@ public class EstructuraProyectoDAO {
 							objeto_tipo = dato[2]!=null ? ((BigInteger)dato[2]).intValue() : 0;
 							nombre = dato[1]!=null ? (String)dato[1] : null;
 							nivel = (dato[3]!=null) ? (((String)dato[3]).length()/8)+1 : 1;
-							estado = checkPermiso(id,objeto_tipo,usuario);
+							estado = checkPermiso(id_,objeto_tipo,usuario);
 							Nodo nodo = new Nodo(id_, objeto_tipo, nombre, nivel, new ArrayList<Nodo>(), null, estado);
 							nodo.parent = root;
 							root.children.add(nodo);
