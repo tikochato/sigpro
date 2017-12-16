@@ -136,12 +136,18 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 					switch(pos){
 					case 2:
 						if(tipo==1){
-							if(fecha < mi.adquisicion.preparacionDocumentosPlanificada){
+							if(mi.adquisicion.preparacionDocumentosPlanificada == null){
+								mi.adquisicion.lanzamientoEventoPlanificada = null;
+								$utilidades.mensaje('warning', 'Ingresar fecha "Preparación de documentos (Planificada)".');
+							}else if(fecha < mi.adquisicion.preparacionDocumentosPlanificada){
 								mi.adquisicion.lanzamientoEventoPlanificada = null;
 								$utilidades.mensaje('warning', 'Fecha de "Lanzamiento de eventos (Planificada)" no debe ser menor que la fecha de "Preparación de documentos (Planificada)".');
 							}	
 						}else if(tipo==2){
-							if(fecha < mi.adquisicion.preparacionDocumentosReal){
+							if(mi.adquisicion.preparacionDocumentosReal == null){
+								mi.adquisicion.lanzamientoEventoReal = null;
+								$utilidades.mensaje('warning', 'Ingresar fecha "Preparación de documentos (Real)".');
+							} else if(fecha < mi.adquisicion.preparacionDocumentosReal){
 								mi.adquisicion.lanzamientoEventoReal = null;
 								$utilidades.mensaje('warning', 'Fecha de "Lanzamiento de eventos (Real)" no debe ser menor que la fecha de "Preparación de documentos (Real)".');
 							}
@@ -149,12 +155,18 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 						break;
 					case 3:
 						if(tipo==1){
-							if(fecha < mi.adquisicion.lanzamientoEventoPlanificada){
+							if(mi.adquisicion.lanzamientoEventoPlanificada == null){
+								mi.adquisicion.recepcionOfertasPlanificada = null;
+								$utilidades.mensaje('warning', 'Ingresar fecha "Lanzamiento de eventos (Planificada)".');
+							} else if(fecha < mi.adquisicion.lanzamientoEventoPlanificada){
 								mi.adquisicion.recepcionOfertasPlanificada = null;
 								$utilidades.mensaje('warning', 'Fecha de "Recepción de ofertas (Planificada)" no debe ser menor que la fecha de "Lanzamiento de eventos (Planificada)".');
 							}	
 						}else if(tipo==2){
-							if(fecha < mi.adquisicion.lanzamientoEventoReal){
+							if(mi.adquisicion.lanzamientoEventoRea == null){
+								mi.adquisicion.recepcionOfertasReal = null;
+								$utilidades.mensaje('warning', 'Ingresar fecha "Lanzamiento de eventos (Real)".');
+							} else if(fecha < mi.adquisicion.lanzamientoEventoReal){
 								mi.adquisicion.recepcionOfertasReal = null;
 								$utilidades.mensaje('warning', 'Fecha de "Recepción de ofertas (Real)" no debe ser menor que la fecha de "Lanzamiento de eventos (Real)".');
 							}
@@ -162,12 +174,18 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 						break;
 					case 4:
 						if(tipo==1){
-							if(fecha < mi.adquisicion.recepcionOfertasPlanificada){
+							if(mi.adquisicion.recepcionOfertasPlanificada == null){
+								mi.adquisicion.adjudicacionPlanificada = null;
+								$utilidades.mensaje('warning', 'Ingresar fecha "Recepción de ofertas (Planificada)".');
+							} else if(fecha < mi.adquisicion.recepcionOfertasPlanificada){
 								mi.adquisicion.adjudicacionPlanificada = null;
 								$utilidades.mensaje('warning', 'Fecha de "Adjudicación (Planificada)" no debe ser menor que la fecha de "Recepción de ofertas (Planificada)".');
 							}	
 						}else if(tipo==2){
-							if(fecha < mi.adquisicion.recepcionOfertasReal){
+							if(mi.adquisicion.recepcionOfertasReal == null){
+								mi.adquisicion.adjudicacionReal = null;
+								$utilidades.mensaje('warning', 'Ingresar fecha "Recepción de ofertas (Real)".');
+							} else if(fecha < mi.adquisicion.recepcionOfertasReal){
 								mi.adquisicion.adjudicacionReal = null;
 								$utilidades.mensaje('warning', 'Fecha de "Adjudicación (Real)" no debe ser menor que la fecha de "Recepción de ofertas (Real)".');
 							}
@@ -175,12 +193,18 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 						break;
 					case 5:
 						if(tipo==1){
-							if(fecha < mi.adquisicion.adjudicacionPlanificada){
+							if(mi.adquisicion.adjudicacionPlanificada == null){
+								mi.adquisicion.firmaContratoPlanificada = null;
+								$utilidades.mensaje('warning', 'Ingresar fecha "Adjudicación (Planificada)".');
+							} else if(fecha < mi.adquisicion.adjudicacionPlanificada){
 								mi.adquisicion.firmaContratoPlanificada = null;
 								$utilidades.mensaje('warning', 'Fecha de "Firma de contrato (Planificada)" no debe ser menor que la fecha de "Adjudicación (Planificada)".');
 							}	
 						}else if(tipo==2){
-							if(fecha < mi.adquisicion.adjudicacionReal){
+							if(mi.adquisicion.adjudicacionReal == null){
+								mi.adquisicion.firmaContratoReal = null;
+								$utilidades.mensaje('warning', 'Ingresar fecha "Adjudicación (Real)".');
+							} else if(fecha < mi.adquisicion.adjudicacionReal){
 								mi.adquisicion.firmaContratoReal = null;
 								$utilidades.mensaje('warning', 'Fecha de "Firma de contrato (Real)" no debe ser menor que la fecha de "Adjudicación (Real)".');
 							}
@@ -213,6 +237,7 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 			if(selected!== undefined){
 				mi.adquisicion.tipoNombre=selected.originalObject.nombre;
 				mi.adquisicion.tipoId=selected.originalObject.id;
+				mi.esConvenioCDirecta(mi.adquisicion.tipoId);
 			}
 			else{
 				mi.adquisicion.tipoNombre="";
@@ -226,6 +251,21 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 				$scope.$broadcast('angucomplete-alt:clearInput','tipo');
 			}
 			mi.actualizaObligatorios();
+		}
+		
+		mi.esConvenioCDirecta = function(tipoAdquisicion){
+			if(tipoAdquisicion != null){
+				$http.post('STipoAdquisicion', {
+					accion: 'obtenerConvenioCDirecta',
+					adquisicionTipoId: tipoAdquisicion 
+				}).success(function(response){
+					if(response.success){
+						mi.adquisicion.esConvenioCDirecta = response.esConvenioCDirecta;
+						mi.adquisicion.firmaContratoPlanificada = null;
+						mi.adquisicion.firmaContratoReal = null;
+					}
+				});
+			}
 		}
 		
 		mi.cambioCategoria=function(selected){
@@ -268,7 +308,7 @@ app.controller('adquisicionController',['$scope','$http','$interval','i18nServic
 						if(response.adquisicion!=null){
 							mi.adquisicion = response.adquisicion;
 							mi.mostrarcargando = false;
-							
+							mi.esConvenioCDirecta(mi.adquisicion.tipoId);
 							mi.adquisicion.adjudicacionPlanificada = mi.adquisicion.adjudicacionPlanificada!==undefined && mi.adquisicion.adjudicacionPlanificada!='' ? moment(mi.adquisicion.adjudicacionPlanificada,'DD/MM/YYYY').toDate() : null;
 							mi.adquisicion.adjudicacionReal = mi.adquisicion.adjudicacionReal!==undefined && mi.adquisicion.adjudicacionReal!='' ? moment(mi.adquisicion.adjudicacionReal,'DD/MM/YYYY').toDate() : null;
 							mi.adquisicion.firmaContratoPlanificada = mi.adquisicion.firmaContratoPlanificada!==undefined && mi.adquisicion.firmaContratoPlanificada!='' ? moment(mi.adquisicion.firmaContratoPlanificada,'DD/MM/YYYY').toDate() : null;

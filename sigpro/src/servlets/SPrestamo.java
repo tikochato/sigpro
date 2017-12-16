@@ -166,6 +166,7 @@ public class SPrestamo extends HttpServlet {
     	public int orden;
     	public String descripcion;
     	public List<stunidadejecutora> unidadesEjecutoras;
+    	public long fechaActualizacion;
     }
     
     public class stunidadejecutora{
@@ -678,7 +679,7 @@ public class SPrestamo extends HttpServlet {
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}else if(accion.equals("getUnidadesEjecutoras")){
 			String codigoPresupuestario = map.get("codigoPresupuestario");
-			Integer proyectoId = Utils.String2Int(map.get("proyectoId"), 0);
+			Integer prestamoId = Utils.String2Int(map.get("proyectoId"), 0);
 			int ejercicio = Year.now().getValue();
 			
 			List<?> unidadesEjecutoras = DataSigadeDAO.getUnidadesEjecutoras(codigoPresupuestario, ejercicio);
@@ -691,13 +692,17 @@ public class SPrestamo extends HttpServlet {
 				UnidadEjecutora EU = UnidadEjecutoraDAO.getUnidadEjecutora((Integer)objEU[1], (Integer)objEU[2], (Integer)objEU[3]);
 				if(EU != null){
 					temp.id = EU.getId().getUnidadEjecutora();
+					//TODO: quitar id Unidad Ejecutora quemado
+					if(prestamoId == 10){
+						temp.id = 205;
+					}
 					temp.ejercicio = EU.getId().getEjercicio();
 					temp.entidad = EU.getEntidad().getNombre();
 					temp.entidadId = EU.getEntidad().getId().getEntidad();
 					temp.nombre = EU.getNombre();
 
-					if(proyectoId>0){
-						Proyecto proyecto = ProyectoDAO.getProyectoPorUnidadEjecutora(temp.id, proyectoId, temp.entidadId);
+					if(prestamoId>0){
+						Proyecto proyecto = ProyectoDAO.getProyectoPorUnidadEjecutora(temp.id, prestamoId, temp.entidadId);
 						if(proyecto!=null){
 							temp.esCoordinador = proyecto.getCoordinador()!=null ? proyecto.getCoordinador() : 0;
 							temp.fechaElegibilidad = Utils.formatDate(proyecto.getFechaElegibilidad());
@@ -1273,6 +1278,7 @@ public class SPrestamo extends HttpServlet {
 								temp_.prestamo = techos[1]!=null?techos[1].doubleValue():0;
 								temp_.donacion = techos[2]!=null?techos[2].doubleValue():0;
 								temp_.nacional = techos[3]!=null?techos[3].doubleValue():0;
+								temp.fechaActualizacion = techos[4]!=null?techos[4].longValue():0;
 							}								
 							unidadesEjecutroas.add(temp_);
 						}
@@ -1325,14 +1331,15 @@ public class SPrestamo extends HttpServlet {
 	
 	private Proyecto crearEditarProyecto(JsonObject unidad,Prestamo prestamo,String usuario, JsonArray est_unidadesEjecutoras,int existeData){
 		Proyecto ret = null;
-		Integer esCoordinador = null;
+		Integer esCoordinador = 0;
 		Date fechaElegibilidad = null;
 		Date fechaCierre = null;
+		//TODO: unidad ejecutora quemada en if
 		for(int j=0; j<est_unidadesEjecutoras.size(); j++){
 			JsonObject unidad_ = est_unidadesEjecutoras.get(j).getAsJsonObject();
 			if (unidad.get("ejercicio").getAsString().equals(unidad_.get("ejercicio").getAsString()) &&
 					unidad.get("entidad").getAsString().equals(unidad_.get("entidadId").getAsString()) && 
-					unidad.get("id").getAsString().equals(unidad_.get("id").getAsString())){
+					(unidad.get("id").getAsString().equals(unidad_.get("id").getAsString())|| unidad_.get("id").getAsInt()==205)){
 				esCoordinador = Utils.String2Boolean(unidad_.get("esCoordinador").getAsString(), 0);
 				fechaElegibilidad = !unidad_.get("fechaElegibilidad").isJsonNull() ? Utils.stringToDateZ(unidad_.get("fechaElegibilidad").getAsString()) : null;
 				fechaCierre = !unidad_.get("fechaCierre").isJsonNull() ? Utils.stringToDateZ(unidad_.get("fechaCierre").getAsString()) : null;

@@ -2,6 +2,7 @@ package servlets;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -20,10 +21,14 @@ import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import dao.SubComponenteDAO;
 import dao.ObjetoDAO;
+import dao.PagoPlanificadoDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
 import dao.SubproductoDAO;
@@ -34,6 +39,7 @@ import dao.SubproductoUsuarioDAO;
 import dao.UnidadEjecutoraDAO;
 import dao.UsuarioDAO;
 import pojo.AcumulacionCosto;
+import pojo.PagoPlanificado;
 import pojo.Producto;
 import pojo.Proyecto;
 import pojo.Subproducto;
@@ -152,6 +158,66 @@ public class SSubproducto extends HttpServlet {
 			String resultado = SubproductoDAO.getHistoria(id, version); 
 			String response_text = String.join("", "{\"success\":true, \"historia\":" + resultado + "}");
 			Utils.writeJSon(response, response_text);
+		}else if(parametro.get("accion").equals("getValidacionAsignado")){
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(new Date());
+			Integer ejercicio = cal.get(Calendar.YEAR);
+			Integer id = Utils.String2Int(parametro.get("id"));
+			
+			Subproducto objSubproducto = SubproductoDAO.getSubproductoPorId(id);
+			Proyecto objProyecto = ProyectoDAO.getProyectobyTreePath(objSubproducto.getTreePath());
+			
+			Integer unidadEjecutora = objProyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
+			Integer entidad = objProyecto.getUnidadEjecutora().getId().getEntidadentidad();
+			
+			Integer programa = Utils.String2Int(parametro.get("programa"));
+			Integer subprograma = Utils.String2Int(parametro.get("subprograma"));
+			Integer proyecto = Utils.String2Int(parametro.get("proyecto"));
+			Integer actividad = Utils.String2Int(parametro.get("actividad"));
+			Integer obra = Utils.String2Int(parametro.get("obra"));
+			Integer renglon = Utils.String2Int(parametro.get("renglon"));
+			Integer geografico = Utils.String2Int(parametro.get("geografico"));
+			BigDecimal asignado = ObjetoDAO.getAsignadoPorLineaPresupuestaria(ejercicio, entidad, unidadEjecutora, programa, subprograma, 
+					proyecto, actividad, obra, renglon, geografico);
+			
+			BigDecimal planificado = new BigDecimal(0);
+			switch(objSubproducto.getAcumulacionCosto().getId()){
+				case 1:
+					cal.setTime(objSubproducto.getFechaInicio());
+					Integer ejercicioInicial = cal.get(Calendar.YEAR);
+					if(ejercicio.equals(ejercicioInicial)){
+						planificado = objSubproducto.getCosto();
+					}
+					break;
+				case 2:
+					List<PagoPlanificado> lstPagos = PagoPlanificadoDAO.getPagosPlanificadosPorObjeto(objSubproducto.getId(), 4);
+					for(PagoPlanificado pago : lstPagos){
+						cal.setTime(pago.getFechaPago());
+						Integer ejercicioPago = cal.get(Calendar.YEAR);
+						if(ejercicio.equals(ejercicioPago)){
+							planificado = planificado.add(pago.getPago());
+						}
+					}
+					break;
+				case 3:
+					cal.setTime(objSubproducto.getFechaFin());
+					Integer ejercicioFinal = cal.get(Calendar.YEAR);
+					if(ejercicio.equals(ejercicioFinal)){
+						planificado = objSubproducto.getCosto();
+					}
+					break;
+			}
+			
+			String response_text = "";
+			
+			if(asignado.subtract(planificado).compareTo(new BigDecimal(0)) == -1){
+				response_text = ",\"asignado\": " + asignado + ",\"sobrepaso\": " + true;
+			}else{
+				response_text = ",\"asignado\": " + asignado + ",\"sobrepaso\": " + false;
+			}
+			
+			response_text = String.join(" ", "{ \"success\" : true ", response_text, "}");
+			Utils.writeJSon(response, response_text);
 		}
 	}
 
@@ -266,6 +332,29 @@ public class SSubproducto extends HttpServlet {
 				subproducto.setDuracionDimension(duracionDimension);
 			}
 			ret = SubproductoDAO.guardarSubproducto(subproducto, true);
+			
+			if(ret){
+				String pagosPlanificados = map.get("pagosPlanificados");
+				if(!acumulacionCostoid.equals(2)  || pagosPlanificados!= null && pagosPlanificados.replace("[", "").replace("]", "").length()>0 ){
+					List<PagoPlanificado> pagosActuales = PagoPlanificadoDAO.getPagosPlanificadosPorObjeto(subproducto.getId(), 4);
+					for (PagoPlanificado pagoTemp : pagosActuales){
+						PagoPlanificadoDAO.eliminarTotalPagoPlanificado(pagoTemp);
+					}
+				}
+					
+				if (acumulacionCostoid.equals(2) && pagosPlanificados!= null && pagosPlanificados.replace("[", "").replace("]", "").length()>0){
+					JsonParser parser = new JsonParser();
+					JsonArray pagosArreglo = parser.parse(pagosPlanificados).getAsJsonArray();
+					for(int i=0; i<pagosArreglo.size(); i++){
+						JsonObject objeto = pagosArreglo.get(i).getAsJsonObject();
+						Date fechaPago = objeto.get("fechaPago").isJsonNull() ? null : Utils.stringToDate(objeto.get("fechaPago").getAsString());
+						BigDecimal monto = objeto.get("pago").isJsonNull() ? null : objeto.get("pago").getAsBigDecimal();
+						
+						PagoPlanificado pagoPlanificado = new PagoPlanificado(fechaPago, monto, subproducto.getId(), 4, usuario, null, new Date(), null, 1);
+						ret = ret && PagoPlanificadoDAO.guardar(pagoPlanificado);
+					}
+				}
+			}
 			
 			if (ret){
 				SubproductoUsuarioId subproductoUsuarioId = new SubproductoUsuarioId(subproducto.getId(), usuario);
@@ -484,7 +573,7 @@ public class SSubproducto extends HttpServlet {
 	
 	private void obtenerSubproductoPorId(Map<String, String> parametro, HttpServletResponse response) throws IOException {
 		Integer id = parametro.get("id")!=null ? Integer.parseInt(parametro.get("id")) : 0;
-		Subproducto subproducto = SubproductoDAO.getSubproductoPorId(id,usuario);
+		Subproducto subproducto = SubproductoDAO.getSubproductoPorId(id);
 		String resultadoJson = "";
 		
 		resultadoJson = String.join("","{ \"success\": ",(subproducto!=null && subproducto.getId()!=null ? "true" : "false"),", "
@@ -498,7 +587,7 @@ public class SSubproducto extends HttpServlet {
 	
 	private void getSubproductoPorId(Map<String, String> parametro, HttpServletResponse response) throws IOException {
 		Integer id = parametro.get("id")!=null ? Integer.parseInt(parametro.get("id")) : 0;
-		Subproducto subproducto = SubproductoDAO.getSubproductoPorId(id,usuario);
+		Subproducto subproducto = SubproductoDAO.getSubproductoPorId(id);
 		String resultadoJson="";
 		if (subproducto!=null){
 			EstructuraPojo temp = new EstructuraPojo();

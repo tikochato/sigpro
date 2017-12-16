@@ -24,6 +24,9 @@
 	Integer proyectoId = request.getParameter("proyecto")!=null ? Utils.String2Int(request.getParameter("proyecto").toString()):0;
 	Long fecha = request.getParameter("fecha")!=null ? Utils.String2Long(request.getParameter("fecha").toString()): new Date().getTime();
 	String lineaBase = request.getParameter("lb")!=null ? ("|lb"+request.getParameter("lb").toString()+"|"): null;
+
+	Date fechaCorte = new Date(fecha);
+	DateTime dateTime = new DateTime(fechaCorte);
 	
 	HttpSession sesionweb = request.getSession();
 	String usuario = sesionweb.getAttribute("usuario")!= null ? sesionweb.getAttribute("usuario").toString() : null;
@@ -31,14 +34,12 @@
 	JasperPrint jasperPrint = null;
 	switch(reporteId){
 		case 0: 
-			Date fechaCorte = new Date(fecha);
-			DateTime dateTime = new DateTime(fechaCorte);
 			
 			Map<String, Object> parameters = new HashMap<String, Object>();
 			parameters.put("proyectoId",proyectoId);
 			parameters.put("usuario",usuario);
 			
-			List<ObjetoCostoJasper> listadoCostos = ObjetoDAO.getEstructuraConCostoJasper(proyectoId, dateTime.getYear(), dateTime.getYear(), lineaBase, usuario);
+			List<ObjetoCostoJasper> listadoCostos = ObjetoDAO.getEstructuraConCostoJasper(proyectoId, dateTime.getYear(), dateTime.getYear(), dateTime.getMonthOfYear(), lineaBase, usuario);
 			parameters.put("costos",listadoCostos);
 			
 			ArrayList<BigDecimal> costoReal = new ArrayList<BigDecimal>();
@@ -74,7 +75,7 @@
 		case 2: jasperPrint = PlanEjecucionDAO.generarJasper(proyectoId, usuario);
 			break;
 		case 3: 
-			jasperPrint = InformacionPresupuestariaDAO.generarJasper(proyectoId, DateTime.now().getYear(), lineaBase, usuario);
+			jasperPrint = InformacionPresupuestariaDAO.generarJasper(proyectoId, dateTime.getYear(), dateTime.getMonthOfYear(), lineaBase, usuario);
 			break;
 	}
 	

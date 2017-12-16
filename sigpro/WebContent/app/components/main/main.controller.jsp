@@ -3,7 +3,7 @@
     <%@ page import="servlets.SLogin.stetiqueta" %>
 var app = angular.module('sipro',['ngRoute','ui.bootstrap','chart.js', 'loadOnDemand','ngAnimate',
                                        'ui.grid', 'ui.grid.treeView', 'ui.grid.selection','ui.grid.moveColumns', 'ui.grid.resizeColumns', 'ui.grid.saveState','ui.grid.pinning',
-                                       'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize','ngFlash','ngUtilidades','documentoAdjunto','dialogoConfirmacion','historia',
+                                       'uiGmapgoogle-maps','ng.deviceDetector','ui.grid.grouping','ui.grid.autoResize','ngFlash','ngUtilidades','documentoAdjunto','dialogoConfirmacion','historia','pagoplanificado',
                                        'ngAria','ngMaterial','ngMessages','angucomplete-alt','ui.utils.masks']);
 
 app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($routeProvider, $locationProvider,FlashProvider) {
@@ -166,7 +166,7 @@ app.config(['$routeProvider', '$locationProvider','FlashProvider',function ($rou
             .when('/mapa/:proyecto_id?/:reiniciar_vista?',{
             	template: '<div load-on-demand="\'mapaController\'" class="all_page"></div>'
             })
-            .when('/matrizriesgo/:proyectoId',{
+            .when('/matrizriesgo/',{
             	template: '<div load-on-demand="\'matrizriesgoController\'" class="all_page"></div>'
             })
             .when('/agenda/:proyectoId',{

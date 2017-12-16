@@ -3,12 +3,12 @@ var moduloProducto = angular.module('moduloProducto', [ 'ngTouch',
 
 moduloProducto.controller('controlProducto', [ '$scope', '$routeParams',
 		'$route', '$window', '$location', '$mdDialog', '$uibModal', '$http', '$rootScope',
-		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', '$q', 'uiGridTreeBaseService','uiGridConstants', 'dialogoConfirmacion', 'historia', 
+		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', '$q', 'uiGridTreeBaseService','uiGridConstants', 'dialogoConfirmacion', 'historia','pagoplanificado', 
 		controlProducto ]);
 
 function controlProducto($scope, $routeParams, $route, $window, $location,
 		$mdDialog, $uibModal, $http, $rootScope, $interval, i18nService, $utilidades,
-		$timeout, $log, $q, uiGridTreeBaseService,uiGridConstants, $dialogoConfirmacion, $historia) {
+		$timeout, $log, $q, uiGridTreeBaseService,uiGridConstants, $dialogoConfirmacion, $historia,$pagoplanificado) {
 	var mi = this;  
 	i18nService.setCurrentLang('es');
 	
@@ -50,6 +50,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.metasCargadas = false;
 	mi.adquisicionesCargadas = false;
 	mi.riesgos = false;
+	mi.pagos = [];
 	
 	mi.dimensiones = [
 		{value:1,nombre:'Dias',sigla:'d'}
@@ -272,6 +273,14 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		if(selected!== undefined){
 			mi.producto.acumulacionCostoNombre = selected.originalObject.nombre;
 			mi.producto.acumulacionCostoId = selected.originalObject.id;
+			
+			if(mi.producto.acumulacionCostoId == 2){
+				mi.producto.costo = null;
+				mi.bloquearCosto = true;
+			}else{
+				mi.producto.costo = null;
+				mi.bloquearCosto = false;
+			}
 		}
 		else{
 			mi.producto.acumulacionCostoNombre="";
@@ -416,6 +425,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				duracionDimension: mi.duracionDimension.sigla,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
 				esnuevo : mi.esNuevo,
+				pagosPlanificados: JSON.stringify(mi.pagos),
 				t: (new Date()).getTime()
 			};
 
@@ -451,6 +461,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 									mi.t_crearNodo(mi.producto.id,mi.producto.nombre,3,true);
 							}
 							mi.esNuevo = false;
+							
+							mi.getAsignado();
 						} else {
 							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'crear' : 'guardar')+' el Producto');
 						}
@@ -477,6 +489,11 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			mi.tipo = mi.producto.idProductoTipo;
 			mi.tipoNombre = mi.producto.productoTipo;
 		
+			if(mi.producto.acumulacionCostoId==2){
+				mi.bloquearCosto = true;
+			}else{
+				mi.bloquearCosto = false;
+			}
 			
 			if(mi.producto.duracionDimension == 'd'){
 				mi.duracionDimension = mi.dimensiones[0];
@@ -518,6 +535,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				
 				mi.activeTab = 0;
 				$utilidades.setFocus(document.getElementById("nombre"));
+				mi.getAsignado();
 			});
 		} else {
 			$utilidades.mensaje('warning', 'Debe seleccionar el producto que desee editar');
@@ -888,6 +906,58 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		mi.riesgosActivo = function(){
 			if(!mi.riesgos){
 				mi.riesgos = true;
+			}
+		};
+		
+		mi.agregarPagos = function() {
+			$pagoplanificado.getPagoPlanificado($scope, mi.producto.id,3, 
+			function(objetoId, objetoTipo){
+				return{
+					accion: 'getPagos',
+					objetoId: objetoId,
+					objetoTipo : objetoTipo
+				}
+			}, mi.producto.fechaInicio,mi.producto.fechaFin)
+			.result.then(function(data) {
+				mi.pagos=data;
+				mi.producto.costo = 0;
+				for (x in mi.pagos){
+					mi.producto.costo += mi.pagos[x].pago;
+				}
+			}, function(){
+			});
+		};
+		
+		mi.getAsignado = function(){
+			if(mi.producto.programa != null){
+				$http.post('/SProducto', {
+					accion: 'getValidacionAsignado',
+					id: mi.producto.id,
+					programa: mi.producto.programa,
+					subprograma: mi.producto.subprograma,
+					proyecto: mi.producto.proyecto,
+					actividad: mi.producto.actividad,
+					obra: mi.producto.obra,
+					renglon: mi.producto.renglon,
+					geografico: mi.producto.ubicacionGeografica,
+					t: new Date().getTime()
+				}).success(function(response){
+					if(response.success){
+						mi.asignado = response.asignado;
+						mi.sobrepaso = response.sobrepaso;
+					}
+				});
+			}
+		}
+		
+		mi.validarAsignado = function(){
+			if(mi.producto.costo != null){
+				if(mi.producto.programa != null){
+					if(mi.producto.costo <= mi.asignado)
+						mi.sobrepaso = false;
+					else
+						mi.sobrepaso = true;
+				}
 			}
 		}
 	  

@@ -115,7 +115,7 @@
 							<div class="col-sm-3">
 								<div class="form-group">
 									<input type="text" class="inputText" ng-model="adquisicionc.adquisicion.numeroContrato" style="text-align: left;"  ng-readonly="adquisicionc.congelado"
-									ng-value="adquisicionc.adquisicion.numeroContrato" onblur="this.setAttribute('value', this.value);" ng-disabled="adquisicionc.inhabilitarFechas"
+									ng-value="adquisicionc.adquisicion.numeroContrato" onblur="this.setAttribute('value', this.value);" ng-disabled="adquisicionc.inhabilitarFechas || (!adquisicionc.adquisicion.esConvenioCDirecta ? adquisicionc.adquisicion.firmaContratoReal == null : '')"
 									ng-disabled="adquisicionc.adquisicion.montoContrato != null"/>
 										<label class="floating-label" >Número de contrato</label>
 								</div>
@@ -123,7 +123,7 @@
 							<div class="col-sm-3">
 								<div class="form-group">
 									<input type="text" class="inputText input-money" ng-model="adquisicionc.adquisicion.montoContrato" ui-number-mask="2"  ng-readonly="adquisicionc.congelado"
-									ng-value="adquisicionc.adquisicion.montoContrato" onblur="this.setAttribute('value', this.value);" ng-disabled="adquisicionc.inhabilitarFechas"
+									ng-value="adquisicionc.adquisicion.montoContrato" onblur="this.setAttribute('value', this.value);" ng-disabled="adquisicionc.inhabilitarFechas || (!adquisicionc.adquisicion.esConvenioCDirecta ? adquisicionc.adquisicion.firmaContratoReal == null : '')"
 									ng-disabled="adquisicionc.adquisicion.montoContrato != null"/>
 										<label class="floating-label" >Monto del contrato (Q)</label>
 								</div>
@@ -246,9 +246,9 @@
 										<input type="text" class="inputText" uib-datepicker-popup="{{adquisicionc.formatofecha}}" alt-input-formats="{{adquisicionc.altformatofecha}}"
 										 	ng-model="adquisicionc.adquisicion.firmaContratoPlanificada" is-open="adquisicionc.popup_fechas[8]"
 										 	ng-blur="adquisicionc.validarFechas(adquisicionc.adquisicion.firmaContratoPlanificada, 5, 1);"
-											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-readonly="adquisicionc.congelado"
+											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-readonly="adquisicionc.congelado || adquisicionc.adquisicion.esConvenioCDirecta"
 											ng-value="adquisicionc.adquisicion.firmaContratoPlanificada" onblur="this.setAttribute('value', this.value);"/>
-											<span class="label-icon" ng-click="adquisicionc.congelado?'':adquisicionc.abrirPopupFecha(8)" tabindex="-1">
+											<span class="label-icon" ng-click="adquisicionc.congelado || adquisicionc.adquisicion.esConvenioCDirecta ? '':adquisicionc.abrirPopupFecha(8)" tabindex="-1">
 												<i class="glyphicon glyphicon-calendar"></i>
 											</span>
 											<label class="floating-label">Firma contrato (Planificada)</label>
@@ -258,10 +258,10 @@
     								<div class="form-group">
 										<input type="text" class="inputText" uib-datepicker-popup="{{adquisicionc.formatofecha}}" alt-input-formats="{{adquisicionc.altformatofecha}}"
 										 	ng-model="adquisicionc.adquisicion.firmaContratoReal" is-open="adquisicionc.popup_fechas[9]"
-										 	ng-blur="adquisicionc.validarFechas(adquisicionc.adquisicion.firmaContratoReal, 5, 2);"
+										 	ng-blur="adquisicionc.validarFechas(adquisicionc.adquisicion.firmaContratoReal, 5, 2);" ng-readonly="adquisicionc.adquisicion.esConvenioCDirecta"
 											datepicker-options="adquisicionc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"
 											ng-value="adquisicionc.adquisicion.firmaContratoReal" onblur="this.setAttribute('value', this.value);" ng-disabled="adquisicionc.inhabilitarFechas"/>
-											<span class="label-icon" ng-click="adquisicionc.abrirPopupFecha(9)" tabindex="-1">
+											<span class="label-icon" ng-click="adquisicionc.adquisicion.esConvenioCDirecta ? '' : adquisicionc.abrirPopupFecha(9)" tabindex="-1">
 												<i class="glyphicon glyphicon-calendar"></i>
 											</span>
 											<label class="floating-label">Firma contrato (Real)</label>

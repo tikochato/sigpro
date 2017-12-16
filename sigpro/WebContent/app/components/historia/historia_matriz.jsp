@@ -27,7 +27,7 @@
 						</div>
 					</div>
 					<div style="overflow: auto; min-height: 300px; max-height: 300px; z-index: -1">
-						<table class="table" ng-hide="modalh.mostrarCargando">
+						<table class="table" ng-hide="modalh.mostrarCargando || modalh.totalVersiones==0">
 						 	<tr>
 						 		<th rowspan="2" class="label-form" style="vertical-align: middle;">COMPONENTES</th>
 						 		<th colspan="3"  class="label-form" ng-repeat= "organismo in modalh.m_organismosEjecutores"
@@ -120,17 +120,17 @@
 						</table>
 					</div>
 	        		<div align="right" style="font-size: 12px; z-index: -1">
-	        			<b>Total de versiones: {{modalh.posicion + 1}} de {{modalh.totalVersiones}}</b>
+	        			<b>Total de versiones: {{modalh.totalVersiones != 0 ? modalh.posicion + 1 : 0}} de {{modalh.totalVersiones}}</b>
 	        		</div> 
 	    		</div>
 	    		<div class="row" align="center" style="z-index: -1" ng-hide="modalh.totalFechas == 0">
-	    			<label class="btn btn-default" ng-click="modalh.disabledInicio != true ? modalh.inicio() : ''" uib-tooltip="Primero" tooltip-placement="bottom" ng-disabled="modalh.mostrarCargando || modalh.disabledInicio">
+	    			<label class="btn btn-default" ng-click="modalh.disabledInicio != true ? modalh.inicio() : ''" uib-tooltip="Primero" tooltip-placement="bottom" ng-disabled="modalh.mostrarCargando || modalh.disabledInicio || modalh.totalVersiones==0">
 					<span class="glyphicon glyphicon-fast-backward"></span></label>
-	    			<label class="btn btn-default" ng-click="modalh.disabledInicio != true ? modalh.atras() : ''" uib-tooltip="Atrás" tooltip-placement="bottom" ng-disabled="modalh.mostrarCargando || modalh.disabledInicio">
+	    			<label class="btn btn-default" ng-click="modalh.disabledInicio != true ? modalh.atras() : ''" uib-tooltip="Atrás" tooltip-placement="bottom" ng-disabled="modalh.mostrarCargando || modalh.disabledInicio || modalh.totalVersiones==0">
 					<span class="glyphicon glyphicon-backward"></span></label>
-					<label class="btn btn-default" ng-click="modalh.disabledFin != true ? modalh.siguiente() : ''" uib-tooltip="Siguiente" tooltip-placement="bottom" ng-disabled="modalh.mostrarCargando || modalh.disabledFin">
+					<label class="btn btn-default" ng-click="modalh.disabledFin != true ? modalh.siguiente() : ''" uib-tooltip="Siguiente" tooltip-placement="bottom" ng-disabled="modalh.mostrarCargando || modalh.disabledFin || modalh.totalVersiones==0">
 					<span class="glyphicon glyphicon-forward"></span></label>
-	    			<label class="btn btn-default" ng-click="modalh.disabledFin != true ? modalh.ultimo() : ''" uib-tooltip="Último" tooltip-placement="bottom" ng-disabled="modalh.mostrarCargando || modalh.disabledFin">
+	    			<label class="btn btn-default" ng-click="modalh.disabledFin != true ? modalh.ultimo() : ''" uib-tooltip="Último" tooltip-placement="bottom" ng-disabled="modalh.mostrarCargando || modalh.disabledFin || modalh.totalVersiones==0">
 					<span class="glyphicon glyphicon-fast-forward"></span></label>
 	    		</div>	        	
 			</div>

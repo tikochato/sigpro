@@ -347,6 +347,11 @@ public class ProyectoDAO implements java.io.Serializable  {
 		List<Proyecto> listRet = new ArrayList<Proyecto>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
+
+			//TODO: quitar Unidad Ejecutora quemado
+			if(prestamoId==10){
+				unidadEjecutoraId = 205;
+			}
 			String query = "select p from Proyecto p "
 					+ "inner join p.unidadEjecutora pp "
 					+ "where p.estado=1 "

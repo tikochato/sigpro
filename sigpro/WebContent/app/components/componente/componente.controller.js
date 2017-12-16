@@ -1,7 +1,7 @@
 var app = angular.module('componenteController', ['smart-table']);
 
-app.controller('componenteController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q', 'dialogoConfirmacion','historia', 
-	function($scope,$rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion, $historia) {
+app.controller('componenteController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q', 'dialogoConfirmacion','historia','pagoplanificado', 
+	function($scope,$rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion, $historia, $pagoplanificado) {
 		var mi=this;
 		
 		mi.esTreeview = $rootScope.treeview;
@@ -46,6 +46,8 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 		mi.riesgos=undefined;
 		mi.active=0;
 		mi.child_riesgos=null;
+		
+		mi.pagos = [];
 
 		mi.dimensiones = [
 			{value:1,nombre:'Dias',sigla:'d'}
@@ -89,6 +91,14 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 			if(selected!== undefined){
 				mi.componente.acumulacionCostoNombre = selected.originalObject.nombre;
 				mi.componente.acumulacionCostoId = selected.originalObject.id;
+				
+				if(mi.componente.acumulacionCostoId == 2){
+					mi.componente.costo = null;
+					mi.bloquearCosto = true;
+				}else{
+					mi.componente.costo = null;
+					mi.bloquearCosto = false;
+				}
 			}
 			else{
 				mi.componente.acumulacionCostoNombre="";
@@ -241,6 +251,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 					duaracion: mi.componente.duracion,
 					duracionDimension: mi.duracionDimension.sigla,
 					esDeSigade: 0,
+					pagosPlanificados: JSON.stringify(mi.pagos),
 					datadinamica : JSON.stringify(mi.camposdinamicos),
 				}).success(function(response){
 					if(response.success){
@@ -264,6 +275,8 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 						else
 							$utilidades.mensaje('success','Componente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
+						
+						mi.getAsignado();
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el Componente');
@@ -340,6 +353,12 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 					mi.duracionDimension = mi.dimensiones[0];
 				}
 				
+				if(mi.componente.acumulacionCostoId==2){
+					mi.bloquearCosto = true;
+				}else{
+					mi.bloquearCosto = false;
+				}
+				
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
 				mi.coordenadas = (mi.componente.latitud !=null ?  mi.componente.latitud : '') +
@@ -374,6 +393,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 						}
 					}
 					$utilidades.setFocus(document.getElementById("nombre"));
+					mi.getAsignado();
 				});
 			}
 			else
@@ -765,7 +785,60 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 			
 			mi.t_crearNodo=function(id,nombre,objeto_tipo,estado){
 				$rootScope.$emit("crearNodo",{ id: id, nombre: nombre, objeto_tipo: objeto_tipo, estado: estado })
+			};
+			
+			mi.agregarPagos = function() {
+				$pagoplanificado.getPagoPlanificado($scope, mi.componente.id,1, 
+				function(objetoId, objetoTipo){
+					return{
+						accion: 'getPagos',
+						objetoId: objetoId,
+						objetoTipo : objetoTipo
+					}
+				}, mi.componente.fechaInicio,mi.componente.fechaFin)
+				.result.then(function(data) {
+					mi.pagos=data;
+					mi.componente.costo = 0;
+					for (x in mi.pagos){
+						mi.componente.costo += mi.pagos[x].pago;
+					}
+				}, function(){
+				});
+			};
+			
+		
+		mi.getAsignado = function(){
+			if(mi.componente.programa != null){
+				$http.post('/SComponente', {
+					accion: 'getValidacionAsignado',
+					id: mi.componente.id,
+					programa: mi.componente.programa,
+					subprograma: mi.componente.subprograma,
+					proyecto: mi.componente.proyecto,
+					actividad: mi.componente.actividad,
+					obra: mi.componente.obra,
+					renglon: mi.componente.renglon,
+					geografico: mi.componente.ubicacionGeografica,
+					t: new Date().getTime()
+				}).success(function(response){
+					if(response.success){
+						mi.asignado = response.asignado;
+						mi.sobrepaso = response.sobrepaso;
+					}
+				});
 			}
+		}
+		
+		mi.validarAsignado = function(){
+			if(mi.componente.costo != null){
+				if(mi.componente.programa != null){
+					if(mi.componente.costo <= mi.asignado)
+						mi.sobrepaso = false;
+					else
+						mi.sobrepaso = true;
+				}
+			}
+		}
 } ]);
 
 app.controller('buscarPorComponente', [ '$uibModalInstance',
@@ -953,3 +1026,4 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
 		  $uibModalInstance.close(null);
 	  };
 }]);
+

@@ -44,6 +44,7 @@ public class STipoAdquisicion extends HttpServlet {
     	String fechaCreacion;
     	String fechaActualizacion;
     	Integer estado;
+    	Boolean esConvenioCdirecta;
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -91,6 +92,7 @@ public class STipoAdquisicion extends HttpServlet {
 				temp.fechaCreacion = Utils.formatDateHour(tipoAdquisicion.getFechaCreacion());	
 				temp.usuarioActualizo = tipoAdquisicion.getUsuarioActualizo();
 				temp.usuarioCreo = tipoAdquisicion.getUsuarioCreo();
+				temp.esConvenioCdirecta = tipoAdquisicion.getConvenioCdirecta() == 1 ? true : false;
 				sttipoadquisicion.add(temp);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(sttipoadquisicion);
@@ -119,6 +121,7 @@ public class STipoAdquisicion extends HttpServlet {
 				temp.fechaCreacion = Utils.formatDateHour(tipoAdquisicion.getFechaCreacion());	
 				temp.usuarioActualizo = tipoAdquisicion.getUsuarioActualizo();
 				temp.usuarioCreo = tipoAdquisicion.getUsuarioCreo();
+				temp.esConvenioCdirecta = tipoAdquisicion.getConvenioCdirecta() == 1 ? true : false;;
 				sttipoadquisicion.add(temp);
 			}
 			response_text=new GsonBuilder().serializeNulls().create().toJson(sttipoadquisicion);
@@ -128,19 +131,21 @@ public class STipoAdquisicion extends HttpServlet {
 			Integer cooperanteCodigo = Utils.String2Int(map.get("cooperanteCodigo"));
 			String nombreTipoAdquisicion = map.get("nombreTipoAdquisicion");
 			Integer idTipoAdquisicion = Utils.String2Int(map.get("idTipoAdquisicion"));
+			Integer convenioCDirecta = Utils.String2Int(map.get("convenioCDirecta"));
 			
 			boolean result = false;
 			boolean esNuevo = map.get("esNuevo").equals("true");
 			TipoAdquisicion tipoAdquisicion = null;
 			
 			if(esNuevo){
-				tipoAdquisicion = new TipoAdquisicion(cooperanteCodigo, nombreTipoAdquisicion, usuario, null, new Date(), null, 1, null, null);
+				tipoAdquisicion = new TipoAdquisicion(cooperanteCodigo, nombreTipoAdquisicion, usuario, null, new Date(), null, 1, convenioCDirecta, null);
 			}else{
 				tipoAdquisicion = TipoAdquisicionDAO.getTipoAdquisicionPorId(idTipoAdquisicion);
 				tipoAdquisicion.setCooperantecodigo(cooperanteCodigo);
 				tipoAdquisicion.setNombre(nombreTipoAdquisicion);
 				tipoAdquisicion.setFechaActualizacion(new Date());
 				tipoAdquisicion.setUsuarioActualizo(usuario);
+				tipoAdquisicion.setConvenioCdirecta(convenioCDirecta);
 			}
 			
 			result = TipoAdquisicionDAO.guardarTipoAdquisicion(tipoAdquisicion);
@@ -183,12 +188,17 @@ public class STipoAdquisicion extends HttpServlet {
 				temp.fechaCreacion = Utils.formatDateHour(tipoAdquisicion.getFechaCreacion());
 				temp.usuarioActualizo = tipoAdquisicion.getUsuarioActualizo();
 				temp.usuarioCreo = tipoAdquisicion.getUsuarioCreo();
+				temp.esConvenioCdirecta = tipoAdquisicion.getConvenioCdirecta() == 1 ? true : false;
 				stTipoAdquisicion.add(temp);
 			}
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stTipoAdquisicion);
 	        response_text = String.join("", "\"tipoAdquisicion\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+		} else if(accion.equals("obtenerConvenioCDirecta")){
+			Integer adquisicionTipoId = Utils.String2Int(map.get("adquisicionTipoId"));
+			TipoAdquisicion tipoAdquisicion = TipoAdquisicionDAO.getTipoAdquisicionPorId(adquisicionTipoId);
+			response_text = String.join("", "{\"success\": true, \"esConvenioCDirecta\": " + (tipoAdquisicion.getConvenioCdirecta() == 1 ? true : false) + "}");
 		}
 		
 		response.setHeader("Content-Encoding", "gzip");

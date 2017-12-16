@@ -3,12 +3,12 @@ var moduloSubproducto = angular.module('moduloSubproducto', [ 'ngTouch',
 
 moduloSubproducto.controller('controlSubproducto', [ '$rootScope','$scope', '$routeParams',
 		'$route', '$window', '$location', '$mdDialog', '$uibModal', '$http',
-		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', '$q', 'dialogoConfirmacion', 'historia',
+		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', '$q', 'dialogoConfirmacion', 'historia', 'pagoplanificado',
 		controlSubproducto ]);
 
 function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $location,
 		$mdDialog, $uibModal, $http, $interval, i18nService, $utilidades,
-		$timeout, $log, $q, $dialogoConfirmacion, $historia) {
+		$timeout, $log, $q, $dialogoConfirmacion, $historia,$pagoplanificado) {
 	var mi = this;  
 	i18nService.setCurrentLang('es');
 	mi.esTreeview = $rootScope.treeview;
@@ -61,6 +61,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 	
 	mi.adquisicionesCargadas = false;
 	mi.riesgos = false;
+	mi.pagos = [];
 	
 	mi.verHistoria = function(){
 		$historia.getHistoria($scope, 'Sub Producto', '/SSubproducto',mi.subproducto.id, 4, true, true, false, false)
@@ -104,6 +105,14 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 		if(selected!== undefined){
 			mi.subproducto.acumulacionCostoNombre = selected.originalObject.nombre;
 			mi.subproducto.acumulacionCosto = selected.originalObject.id;
+			
+			if(mi.subproducto.acumulacionCostoId == 2){
+				mi.subproducto.costo = null;
+				mi.bloquearCosto = true;
+			}else{
+				mi.subproducto.costo = null;
+				mi.bloquearCosto = false;
+			}
 		}
 		else{
 			mi.subproducto.acumulacionCostoNombre="";
@@ -390,6 +399,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 				duracionDimension: mi.duracionDimension.sigla,
 				latitud : mi.subproducto.latitud,
 				esnuevo : mi.esNuevo,
+				pagosPlanificados: JSON.stringify(mi.pagos),
 				t: (new Date()).getTime()
 			};
 
@@ -424,7 +434,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 							}
 							mi.esNuevo = false;
 							
-							
+							mi.getAsignado();
 						} else {
 							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Subproducto');
 						}
@@ -447,6 +457,12 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 			mi.esNuevo = false;
 			mi.tipo = mi.subproducto.idSubproductoTipo; 
 			mi.tipoNombre = mi.subproducto.subProductoTipo;
+			
+			if(mi.subproducto.acumulacionCostoId==2){
+				mi.bloquearCosto = true;
+			}else{
+				mi.bloquearCosto = false;
+			}
 			
 			mi.productoid = mi.subproducto.idProducto;
 			
@@ -492,6 +508,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 				mi.riesgos = false;
 				
 				mi.activeTab = 0;
+				mi.getAsignado();
 			});
 		} else {
 			$utilidades.mensaje('warning', 'Debe seleccionar un subproducto');
@@ -835,6 +852,58 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 			if(!mi.riesgos){
 				mi.riesgos = true;
 			}
+		};
+		
+		mi.agregarPagos = function() {
+			$pagoplanificado.getPagoPlanificado($scope, mi.subproducto.id,4, 
+			function(objetoId, objetoTipo){
+				return{
+					accion: 'getPagos',
+					objetoId: objetoId,
+					objetoTipo : objetoTipo
+				}
+			},mi.subproducto.fechaInicio,mi.subproducto.fechaFin)
+			.result.then(function(data) {
+				mi.pagos=data;
+				mi.subproducto.costo = 0;
+				for (x in mi.pagos){
+					mi.subproducto.costo += mi.pagos[x].pago;
+				}
+			}, function(){
+			});
+		};
+		
+		mi.getAsignado = function(){
+			if(mi.subproducto.programa != null){
+				$http.post('/SSubproducto', {
+					accion: 'getValidacionAsignado',
+					id: mi.subproducto.id,
+					programa: mi.subproducto.programa,
+					subprograma: mi.subproducto.subprograma,
+					proyecto: mi.subproducto.proyecto,
+					actividad: mi.subproducto.actividad,
+					obra: mi.subproducto.obra,
+					renglon: mi.subproducto.renglon,
+					geografico: mi.subproducto.ubicacionGeografica,
+					t: new Date().getTime()
+				}).success(function(response){
+					if(response.success){
+						mi.asignado = response.asignado;
+						mi.sobrepaso = response.sobrepaso;
+					}
+				});
+			}
+		}
+		
+		mi.validarAsignado = function(){
+			if(mi.subproducto.costo != null){
+				if(mi.subproducto.programa != null){
+					if(mi.subproducto.costo <= mi.asignado)
+						mi.sobrepaso = false;
+					else
+						mi.sobrepaso = true;
+				}
+			}
 		}
 }
 
@@ -1021,3 +1090,5 @@ moduloSubproducto.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout'
 		  $uibModalInstance.close($scope.posicion);
 	  };
 }]);
+
+

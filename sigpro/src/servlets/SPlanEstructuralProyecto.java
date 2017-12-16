@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -21,6 +21,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.codec.Base64;
+import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -98,7 +99,8 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 		if(accion.equals("generarPlan")){
 			try{
 				String lineaBase = map.get("lineaBase");
-				List<stplanestructuralproyecto> lstprestamo = generarPlan(proyectoId, lineaBase, usuario);
+				Date fechaCorte = Utils.dateFromString(map.get("fechaCorte"));
+				List<stplanestructuralproyecto> lstprestamo = generarPlan(proyectoId, lineaBase, fechaCorte, usuario);
 				
 				response_text=new GsonBuilder().serializeNulls().create().toJson(lstprestamo);
 		        response_text = String.join("", "\"proyecto\":",response_text);
@@ -109,7 +111,8 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 		}else if(accion.equals("exportarExcel")){
 			try{ 
 				String lineaBase = map.get("lineaBase");
-				byte [] outArray = exportarExcel(proyectoId, lineaBase, usuario);
+				Date fechaCorte = Utils.dateFromString(map.get("fechaCorte"));
+				byte [] outArray = exportarExcel(proyectoId, lineaBase, fechaCorte, usuario);
 				
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
@@ -133,7 +136,7 @@ public class SPlanEstructuralProyecto extends HttpServlet {
         output.close();
 	}
 	
-	private byte[] exportarExcel(Integer proyectoId, String lineaBase, String usuario) throws IOException{
+	private byte[] exportarExcel(Integer proyectoId, String lineaBase, Date fechaCorte, String usuario) throws IOException{
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -143,7 +146,7 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
 			headers = generarHeaders();
-			datos = generarDatos(proyectoId, lineaBase, usuario);
+			datos = generarDatos(proyectoId, lineaBase, fechaCorte, usuario);
 			excel = new CExcel("Plan estructural del préstamo", false, null);
 			Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
 			wb=excel.generateExcelOfData(datos, "Plan estructural del préstamo - "+proyecto.getNombre(), headers, null, true, usuario);
@@ -173,11 +176,11 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 		return headers;
 	}
 	
-	public String[][] generarDatos(Integer proyectoId, String lineaBase, String usuario){
+	public String[][] generarDatos(Integer proyectoId, String lineaBase, Date fechaCorte, String usuario){
 		String[][] datos = null;
 		List<stplanestructuralproyecto> lstprestamo;
 		try {
-			lstprestamo = generarPlan(proyectoId, lineaBase, usuario);
+			lstprestamo = generarPlan(proyectoId, lineaBase, fechaCorte, usuario);
 			
 			if (lstprestamo != null && !lstprestamo.isEmpty()){ 
 				datos = new String[lstprestamo.size()][13];
@@ -210,14 +213,15 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 		return datos;
 	}
 	
-	private List<stplanestructuralproyecto> generarPlan(Integer IdProyecto, String lineaBase, String usuario) throws Exception{
+	private List<stplanestructuralproyecto> generarPlan(Integer IdProyecto, String lineaBase, Date fechaCorte, String usuario) throws Exception{
 		try{
 			List<stplanestructuralproyecto> lstPrestamo = new ArrayList<>();
 			
-			Calendar now = Calendar.getInstance();
-			int anio = now.get(Calendar.YEAR);
+			DateTime dateTime = new DateTime(fechaCorte);
+			int anio = dateTime.getYear();
+			int mes = dateTime.getMonthOfYear();
 			
-			List<ObjetoCosto> lstArbol = ObjetoDAO.getEstructuraConCosto(IdProyecto, anio, anio, true, true, true, lineaBase, usuario);
+			List<ObjetoCosto> lstArbol = ObjetoDAO.getEstructuraConCosto(IdProyecto, anio, anio, true, true, mes, lineaBase, usuario);
 			
 			stplanestructuralproyecto temp = null;
 			
@@ -263,7 +267,7 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 					temp.presupuestoDevengado = objeto.getEjecutado();
 					temp.presupuestoAprobado = objeto.getAsignado();
 					temp.asignacionPresupuestariaVigente = objeto.getModificaciones();
-					temp.avanceFinanciero = objeto.getModificaciones() != null && objeto.getEjecutado() != null ? (objeto.getModificaciones().compareTo(BigDecimal.ZERO) > 0 ? objeto.getEjecutado().divide(objeto.getModificaciones()).doubleValue() : new BigDecimal(0).doubleValue()) : new BigDecimal(0).doubleValue();
+					temp.avanceFinanciero = objeto.getModificaciones() != null && objeto.getEjecutado() != null ? (objeto.getModificaciones().compareTo(BigDecimal.ZERO) > 0 ? objeto.getEjecutado().divide(objeto.getModificaciones(),3,BigDecimal.ROUND_HALF_UP).doubleValue() : new BigDecimal(0).doubleValue()) : new BigDecimal(0).doubleValue();
 					lstPrestamo.add(temp);
 				}
 			}

@@ -624,3 +624,31 @@ h2 {
 .form-control[disabled], .form-control[readonly] {
     background-color: initial;
 }
+
+input.riesgos[type="range"]{
+    -webkit-appearance: none;
+    -moz-apperance: none;
+    border-radius: 6px;
+    height: 6px;
+    outline: none;
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        right top,
+        color-stop(0.15, #43a047),
+        color-stop(0.15, #C5C5C5)
+    );
+}
+
+input.riesgos[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    background-color: #E9E9E9;
+    border: 1px solid #CECECE;
+    height: 15px;
+    width: 15px;
+}
+
+input.riesgos[type='range']::-webkit-slider-thumb {
+		background-color: #607d8b;
+	}
+
