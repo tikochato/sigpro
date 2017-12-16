@@ -1,7 +1,7 @@
 var app = angular.module('actividadController', ['smart-table']);
 
-app.controller('actividadController',['$rootScope','$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$sce','uiGmapGoogleMapApi', 'dialogoConfirmacion','documentoAdjunto','historia', 
-	function($rootScope,$scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$sce,uiGmapGoogleMapApi, $dialogoConfirmacion, $documentoAdjunto, $historia) {
+app.controller('actividadController',['$rootScope','$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$sce','uiGmapGoogleMapApi', 'dialogoConfirmacion','documentoAdjunto','historia','pagoplanificado', 
+	function($rootScope,$scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$sce,uiGmapGoogleMapApi, $dialogoConfirmacion, $documentoAdjunto, $historia,$pagoplanificado) {
 		var mi=this;
 
 		mi.rowCollection = [];
@@ -41,6 +41,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 		
 		mi.tipos=[];
 		mi.acumulacionCostos=[];
+		mi.pagos = [];
 		
 		mi.congelado = 0;
 		
@@ -114,6 +115,14 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 			if(selected!== undefined){
 				mi.actividad.acumulacionCostoNombre=selected.originalObject.nombre;
 				mi.actividad.acumulacionCostoId=selected.originalObject.id;
+				
+				if(mi.actividad.acumulacionCostoId == 2){
+					mi.actividad.costo = null;
+					mi.bloquearCosto = true;
+				}else{
+					mi.actividad.costo = null;
+					mi.bloquearCosto = false;
+				}
 			}
 			else{
 				mi.actividad.acumulacionCostoNombre="";
@@ -399,6 +408,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 					fechaFin: moment(mi.actividad.fechaFin).format('DD/MM/YYYY'),
 					duaracion: mi.actividad.duracion,
 					duracionDimension: mi.duracionDimension.sigla,
+					pagosPlanificados: JSON.stringify(mi.pagos),
 					datadinamica : JSON.stringify(mi.camposdinamicos),
 					t: new Date().getTime()
 				}).success(function(response){
@@ -425,8 +435,10 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 						if(mi.child_adquisiciones!=null)
 							mi.child_adquisiciones.guardar(null,'Actividad '+(mi.esNuevo ? 'creada' : 'guardada')+' con éxito',
 								'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' la Actividad', null);
-						else
+						else{
 							$utilidades.mensaje('success','Actividad '+(mi.esNuevo ? 'creada' : 'guardada')+' con éxito');
+							mi.getAsignado();
+						}
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' la Actividad');
@@ -503,6 +515,11 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
 				mi.activeTab = 0;
+				if(mi.actividad.acumulacionCostoId==2){
+					mi.bloquearCosto = true;
+				}else{
+					mi.bloquearCosto = false;
+				}
 				
 				$scope.$broadcast('angucomplete-alt:changeInput','acumulacionCosto');
 				$scope.$broadcast('angucomplete-alt:changeInput','tipoNombre');
@@ -563,6 +580,8 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 						}
 					}
 				});
+				
+				mi.getAsignado();
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar la Actividad que desea editar');
@@ -904,7 +923,60 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 			if(!mi.adquisicionesCargadas){
 				mi.adquisicionesCargadas = true;
 			}
+		};
+		
+		mi.agregarPagos = function() {
+			$pagoplanificado.getPagoPlanificado($scope, mi.actividad.id,5, 
+			function(objetoId, objetoTipo){
+				return{
+					accion: 'getPagos',
+					objetoId: objetoId,
+					objetoTipo : objetoTipo
+				}
+			}, mi.actividad.fechaInicio,mi.actividad.fechaFin)
+			.result.then(function(data) {
+				mi.pagos=data;
+				mi.actividad.costo = 0;
+				for (x in mi.pagos){
+					mi.actividad.costo += mi.pagos[x].pago;
+				}
+			}, function(){
+			});
+		};
+		
+		mi.getAsignado = function(){
+			if(mi.actividad.programa != null){
+				$http.post('/SActividad', {
+					accion: 'getValidacionAsignado',
+					id: mi.actividad.id,
+					programa: mi.actividad.programa,
+					subprograma: mi.actividad.subprograma,
+					proyecto: mi.actividad.proyecto,
+					actividad: mi.actividad.actividad,
+					obra: mi.actividad.obra,
+					renglon: mi.actividad.renglon,
+					geografico: mi.actividad.ubicacionGeografica,
+					t: new Date().getTime()
+				}).success(function(response){
+					if(response.success){
+						mi.asignado = response.asignado;
+						mi.sobrepaso = response.sobrepaso;
+					}
+				});
+			}
 		}
+		
+		mi.validarAsignado = function(){
+			if(mi.actividad.costo != null){
+				if(mi.actividad.programa != null){
+					if(mi.actividad.costo <= mi.asignado)
+						mi.sobrepaso = false;
+					else
+						mi.sobrepaso = true;
+				}
+			}
+		}
+		
 } ]);
 
 
@@ -1063,4 +1135,6 @@ function modalBuscar($uibModalInstance, $scope, $http, $interval,
 	mi.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
 	};
-}
+};
+
+

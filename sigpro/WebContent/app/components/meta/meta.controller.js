@@ -663,11 +663,21 @@ app.controller('modalMetaAvances', [ '$uibModalInstance',
 			}
 			
 		};
-
+		
+		var fechaActual = new Date();
+		var diaActual = fechaActual.getDate();
+		var mesActual = fechaActual.getMonth();
+		var anioActual = fechaActual.getFullYear();
+		
+		if(diaActual>15){
+			mesActual = mesActual+1;
+		}
+	    var fechaMinima = anioActual+"-"+mesActual+"-02";
+		fechaMinima = new Date(fechaMinima);
 		mi.fechaOptions = {
 				formatYear : 'yy',
 				maxDate : new Date(),
-				minDate : fechaInicio,
+				minDate : fechaMinima,
 				startingDay : 1
 		};
 		

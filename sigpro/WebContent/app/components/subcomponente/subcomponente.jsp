@@ -24,6 +24,9 @@
   	    <script type="text/ng-template" id="buscarAcumulacionCosto.jsp">
     		<%@ include file="/app/components/subcomponente/buscarAcumulacionCosto.jsp"%>
   	    </script>
+  	    <script type="text/ng-template" id="pago_planificado.jsp">
+    		<%@ include file="/app/components/pago_planificado/pago_planificado.jsp"%>
+  	    </script>
   	    <shiro:lacksPermission name="5010">
 			<span ng-init="subcomponentec.redireccionSinPermisos()"></span>
 		</shiro:lacksPermission>
@@ -53,6 +56,11 @@
 			  </shiro:hasPermission>
 			  </div>
 			</div>
+			<br><br>
+				<div class="col-sm-12" ng-if="subcomponentec.sobrepaso != null && subcomponentec.sobrepaso == true">
+					<div class="alert alert-danger" style="text-align: center;">La planificación sobrepasa la asignación presupuestaria</div>
+				</div>
+			<br>
     		<shiro:hasPermission name="5010">
     		<div class="col-sm-12" align="center">
     			<div style="height: 35px;">
@@ -104,10 +112,18 @@
 				<span class="glyphicon glyphicon-time"></span></label>
 				<label class="btn btn-default" ng-click="subcomponentec.verHistoria()" uib-tooltip="Ver Historia">
 				<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
+				<label class="btn btn-default" ng-click="subcomponentec.subcomponente.acumulacionCostoId == 2 ? subcomponentec..agregarPagos() : ''"
+					 uib-tooltip="Pagos planificados" tooltip-placement="left" ng-disabled = "subcomponentec.subcomponente.acumulacionCostoId != 2">
+					<span class="glyphicon glyphicon-piggy-bank"></span></label>
 		      </div>
 		      <div ng-if="subcomponentec.esTreeview">
-		      	<label class="btn btn-default" ng-click="subcomponentec.verHistoria()" uib-tooltip="Ver Historia">
-				<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
+			      <div class="btn-group">
+			      	<label class="btn btn-default" ng-click="subcomponentec.verHistoria()" uib-tooltip="Ver Historia">
+					<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
+					<label class="btn btn-default" ng-click="subcomponentec.subcomponente.acumulacionCostoId == 2 ? subcomponentec.agregarPagos() : ''" uib-tooltip="Pagos planificados"
+							ng-disabled = "subcomponentec.subcomponente.acumulacionCostoId != 2" >
+							<span class="glyphicon glyphicon-piggy-bank"></span></label>
+					</div>
 		      </div>
 			  <div class="btn-group" style="float: right;">
 			    <shiro:hasPermission name="5020">
@@ -120,6 +136,11 @@
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			  </div>
 			</div>
+			<br><br>
+				<div class="col-sm-12" ng-if="subcomponentec.sobrepaso != null && subcomponentec.sobrepaso == true">
+					<div class="alert alert-danger" style="text-align: center;">La planificación sobrepasa la asignación presupuestaria</div>
+				</div>
+			<br>
 			<div class="col-sm-12">
 				<form name="subcomponentec.mForm">
 					<uib-tabset active="subcomponentec.active">
@@ -225,9 +246,17 @@
 						
 						<div class="form-group" >
 					       <input type="text" class="inputText" ng-model="subcomponentec.subcomponente.costo" ng-value="subcomponentec.subcomponente.costo" ui-number-mask="2"
-					       ng-required="subcomponentec.subcomponente.acumulacionCostoId > 0" onblur="this.setAttribute('value', this.value);" style="text-align: left" 
-					       ng-readonly="subcomponentec.subcomponente.tieneHijos || subcomponentec.congelado == 1" />
+					       ng-required="subcomponentec.subcomponente.acumulacionCostoId > 0" onblur="this.setAttribute('value', this.value);" style="text-align: left"
+					       ng-change="subcomponentec.validarAsignado();"
+					       ng-readonly="subcomponentec.subcomponente.tieneHijos || subcomponentec.congelado == 1 || subcomponentec.bloquearCosto" />
 					       <label for="iprog" class="floating-label">{{subcomponentec.subcomponente.acumulacionCostoId > 0 ? "* Monto Planificado" : "Monto Planificado"}}</label>
+						</div>
+						
+						<div class="form-group" >
+			        		<input type="text" class="inputText" ng-model="subcomponentec.asignado" ng-value="subcomponentec.asignado" ui-number-mask="2"
+				       		onblur="this.setAttribute('value', this.value);" style="text-align: left" 
+				       		ng-readonly="true"/>
+				       		<label for="iprog" class="floating-label">Presupuesto Asignado (Año Fiscal)</label>
 						</div>
 												
 						<div class="form-group">

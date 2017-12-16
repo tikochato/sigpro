@@ -3,6 +3,7 @@ package servlets;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -22,11 +23,15 @@ import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import dao.SubComponenteDAO;
 import dao.ComponenteDAO;
 import dao.ObjetoDAO;
+import dao.PagoPlanificadoDAO;
 import dao.ProductoDAO;
 import dao.ProductoPropiedadDAO;
 import dao.ProductoPropiedadValorDAO;
@@ -36,6 +41,7 @@ import dao.UnidadEjecutoraDAO;
 import dao.UsuarioDAO;
 import pojo.AcumulacionCosto;
 import pojo.Componente;
+import pojo.PagoPlanificado;
 import pojo.Producto;
 import pojo.ProductoPropiedad;
 import pojo.ProductoPropiedadValor;
@@ -361,6 +367,29 @@ public class SProducto extends HttpServlet {
 				}
 				
 				ret = ProductoDAO.guardarProducto(producto, true);
+				
+				if(ret){
+					String pagosPlanificados = parametro.get("pagosPlanificados");
+					if(acumulacionCostoid != null && !acumulacionCostoid.equals(2)  || pagosPlanificados!= null && pagosPlanificados.replace("[", "").replace("]", "").length()>0 ){
+						List<PagoPlanificado> pagosActuales = PagoPlanificadoDAO.getPagosPlanificadosPorObjeto(producto.getId(), 3);
+						for (PagoPlanificado pagoTemp : pagosActuales){
+							PagoPlanificadoDAO.eliminarTotalPagoPlanificado(pagoTemp);
+						}
+					}
+						
+					if ((acumulacionCostoid != null && acumulacionCostoid.equals(2)) && pagosPlanificados!= null && pagosPlanificados.replace("[", "").replace("]", "").length()>0){
+						JsonParser parser = new JsonParser();
+						JsonArray pagosArreglo = parser.parse(pagosPlanificados).getAsJsonArray();
+						for(int i=0; i<pagosArreglo.size(); i++){
+							JsonObject objeto = pagosArreglo.get(i).getAsJsonObject();
+							Date fechaPago = objeto.get("fechaPago").isJsonNull() ? null : Utils.stringToDate(objeto.get("fechaPago").getAsString());
+							BigDecimal monto = objeto.get("pago").isJsonNull() ? null : objeto.get("pago").getAsBigDecimal();
+							
+							PagoPlanificado pagoPlanificado = new PagoPlanificado(fechaPago, monto, producto.getId(), 3, usuario, null, new Date(), null, 1);
+							ret = ret && PagoPlanificadoDAO.guardar(pagoPlanificado);
+						}
+					}
+				}
 				
 				if (ret){
 					ProductoUsuarioId productoUsuarioId = new ProductoUsuarioId(producto.getId(), usuario);
@@ -1067,6 +1096,64 @@ public class SProducto extends HttpServlet {
 			Integer version = Utils.String2Int(parametro.get("version"));
 			String resultado = ProductoDAO.getHistoria(id, version); 
 			response_text = String.join("", "{\"success\":true, \"historia\":" + resultado + "}");
+		}else if(accion.equals("getValidacionAsignado")){
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(new Date());
+			Integer ejercicio = cal.get(Calendar.YEAR);
+			Integer id = Utils.String2Int(parametro.get("id"));
+			
+			Producto objProducto = ProductoDAO.getProductoPorId(id);
+			Proyecto objProyecto = ProyectoDAO.getProyectobyTreePath(objProducto.getTreePath());
+			
+			Integer unidadEjecutora = objProyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
+			Integer entidad = objProyecto.getUnidadEjecutora().getId().getEntidadentidad();
+			
+			Integer programa = Utils.String2Int(parametro.get("programa"));
+			Integer subprograma = Utils.String2Int(parametro.get("subprograma"));
+			Integer proyecto = Utils.String2Int(parametro.get("proyecto"));
+			Integer actividad = Utils.String2Int(parametro.get("actividad"));
+			Integer obra = Utils.String2Int(parametro.get("obra"));
+			Integer renglon = Utils.String2Int(parametro.get("renglon"));
+			Integer geografico = Utils.String2Int(parametro.get("geografico"));
+			BigDecimal asignado = ObjetoDAO.getAsignadoPorLineaPresupuestaria(ejercicio, entidad, unidadEjecutora, programa, subprograma, 
+					proyecto, actividad, obra, renglon, geografico);
+			
+			BigDecimal planificado = new BigDecimal(0);
+			switch(objProducto.getAcumulacionCosto().getId()){
+				case 1:
+					cal.setTime(objProducto.getFechaInicio());
+					Integer ejercicioInicial = cal.get(Calendar.YEAR);
+					if(ejercicio.equals(ejercicioInicial)){
+						planificado = objProducto.getCosto();
+					}
+					break;
+				case 2:
+					List<PagoPlanificado> lstPagos = PagoPlanificadoDAO.getPagosPlanificadosPorObjeto(objProducto.getId(), 3);
+					for(PagoPlanificado pago : lstPagos){
+						cal.setTime(pago.getFechaPago());
+						Integer ejercicioPago = cal.get(Calendar.YEAR);
+						if(ejercicio.equals(ejercicioPago)){
+							planificado = planificado.add(pago.getPago());
+						}
+					}
+					break;
+				case 3:
+					cal.setTime(objProducto.getFechaFin());
+					Integer ejercicioFinal = cal.get(Calendar.YEAR);
+					if(ejercicio.equals(ejercicioFinal)){
+						planificado = objProducto.getCosto();
+					}
+					break;
+			}
+			
+			if(asignado.subtract(planificado).compareTo(new BigDecimal(0)) == -1){
+				response_text = ",\"asignado\": " + asignado + ",\"sobrepaso\": " + true;
+			}else{
+				response_text = ",\"asignado\": " + asignado + ",\"sobrepaso\": " + false;
+			}
+			
+			response_text = String.join(" ", "{ \"success\" : true ", response_text, "}");
+			Utils.writeJSon(response, response_text);
 		}
 		else 
 			response_text = "{ \"success\": false }";

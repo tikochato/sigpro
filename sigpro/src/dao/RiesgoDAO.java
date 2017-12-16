@@ -173,56 +173,84 @@ public class RiesgoDAO {
 		return ret;
 	}
 	
-	public static List<Riesgo> getMatrizRiesgo (int proyectoId){
+	public static List<Riesgo> getMatrizRiesgo (int prestamoId, int proyectoId, String lineaBase){
 		List<Riesgo> ret = new ArrayList<Riesgo>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String query = String.join(" ", "select r.* from riesgo r join objeto_riesgo obr on obr.riesgoid = r.id where r.estado = 1 and obr.objeto_id = :idP and obr.objeto_tipo = 0 ", 
-					"UNION ",
-					"select r.* from riesgo r join objeto_riesgo obr on obr.riesgoid = r.id where r.estado = 1 and obr.objeto_tipo = 1 and obr.objeto_id in ", 
-					"(select c.id from proyecto p join componente c on c.proyectoid = p.id where c.estado  = 1 and p.id = :idP ) ",
-					"UNION ",
-					"select r.* from riesgo r join objeto_riesgo obr on obr.riesgoid = r.id where r.estado = 1 and obr.objeto_tipo = 2 and obr.objeto_id in ", 
-					"(select sc.id from proyecto p join componente c on c.proyectoid = p.id join subcomponente sc on c.id = sc.componenteid where sc.estado=1 and c.estado  = 1 and p.id = :idP ) ",
-					"UNION ",
-					"select r.* from riesgo r join objeto_riesgo obr on obr.riesgoid = r.id where r.estado = 1 and obr.objeto_tipo = 3 and obr.objeto_id in ", 
-					"(select pr.id from proyecto p join componente c on c.proyectoid = p.id join producto pr ON pr.componenteid = c.id ", 
-					"where c.estado  = 1 and pr.estado =1 and pr.estado = 1 and p.id = :idP UNION ", 
-					"select pr.id from proyecto p join componente c on c.proyectoid = p.id join subcomponente sc on c.id = sc.componenteid ",
-					"join producto pr ON pr.subcomponenteid = sc.id where sc.estado=1 and c.estado  = 1 and pr.estado =1 and pr.estado = 1 and p.id = :idP) ", 
-					"UNION ",
-					"select r.* from riesgo r join objeto_riesgo obr on obr.riesgoid = r.id where r.estado = 1 and obr.objeto_tipo = 4 and obr.objeto_id in ",  
-					"(select spr.id from proyecto p join componente c on c.proyectoid = p.id join producto pr ON pr.componenteid = c.id ", 
-					"join subproducto spr ON spr.productoid = pr.id where c.estado  = 1 and pr.estado = 1 and spr.estado = 1 and p.id = :idP UNION ", 
-					"select spr.id from proyecto p join componente c on c.proyectoid = p.id join subcomponente sc on sc.componenteid = c.id join producto pr ON pr.subcomponenteid = sc.id ", 
-					"join subproducto spr ON spr.productoid = pr.id where c.estado  = 1 and sc.estado=1 and pr.estado = 1 and spr.estado = 1 and p.id = :idP ) ", 
-					"UNION ",
-					"select r.* from riesgo r join objeto_riesgo obr on obr.riesgoid = r.id where r.estado = 1 and obr.objeto_tipo = 5 and obr.objeto_id in ",   
-					"(select a.id from actividad a where a.estado = 1 and a.objeto_id = :idP and a.objeto_tipo = 0) ", 
-					"UNION ",
-					"select r.* from riesgo r join objeto_riesgo obr on obr.riesgoid = r.id where r.estado = 1 and obr.objeto_tipo = 5 and obr.objeto_id in ( ",
-					"select a.id from actividad a where a.estado = 1 and a.objeto_id = :idP and a.objeto_tipo = 0 UNION ",
-					"select a.id from actividad a where a.estado = 1 and a.objeto_tipo = 1 and a.objeto_id in ( ",
-					"select c.id from proyecto p join componente c on c.proyectoid = p.id where c.estado  = 1 and p.id = :idP ) UNION ",
-					"select a.id from actividad a where a.estado = 1 and a.objeto_tipo = 2 and a.objeto_id in ( ",
-					"select sc.id from proyecto p join componente c on c.proyectoid = p.id join subcomponente sc on sc.componenteid = c.id ", 
-					"where c.estado  = 1 and sc.estado=1 and p.id = :idP )  UNION ",
-					"select a.id from actividad a where a.estado = 1 and a.objeto_tipo = 3 and a.objeto_id in ( ",
-					"select pr.id from proyecto p join componente c on c.proyectoid = p.id ", 
-					"join producto pr ON pr.componenteid = c.id where c.estado  = 1 and pr.estado =1 and pr.estado = 1 and p.id = :idP ) UNION ",
-					"select a.id from actividad a where a.estado = 1 and a.objeto_tipo = 3 and a.objeto_id in ( ",
-					"select pr.id from proyecto p join componente c on c.proyectoid = p.id join subcomponente sc on sc.componenteid = c.id ", 
-					"join producto pr ON pr.subcomponenteid = sc.id where c.estado  = 1 and sc.estado=1 and pr.estado = 1 and p.id = :idP ) UNION ",
-					"select a.id from actividad a where a.estado = 1 and a.objeto_tipo = 4 and a.objeto_id in ( ",
-					"select spr.id from proyecto p join componente c on c.proyectoid = p.id join producto pr ON pr.componenteid = c.id join subproducto spr ON spr.productoid = pr.id ", 
-					"where c.estado  = 1 and pr.estado = 1 and spr.estado = 1 and pr.estado =1 and pr.estado = 1 and p.id = :idP ) UNION ",
-					"select a.id from actividad a where a.estado = 1 and a.objeto_tipo = 4 and a.objeto_id in ( ",
-					"select spr.id from proyecto p join componente c on c.proyectoid = p.id join subcomponente sc ON sc.componenteid = c.id join producto pr ON pr.subcomponenteid = sc.id ", 
-					"join subproducto spr ON spr.productoid = pr.id ", 
-					"where c.estado  = 1 and sc.estado=1 and pr.estado = 1 and spr.estado = 1 and pr.estado =1 and pr.estado = 1 and p.id = :idP )) ");
+			String queryVersionR = "";
+			String queryVersionObr = "";
+			String queryVersionP = "";
+			String queryVersionC = "";
+			String queryVersionSc = "";
+			String queryVersionPr = "";
+			String queryVersionSpr = "";
+			String queryVersionA = "";
+			if(lineaBase==null){
+				queryVersionR = " and r.actual = 1 ";
+				queryVersionObr = " and obr.actual = 1 ";
+				queryVersionP = " and p.actual = 1 ";
+				queryVersionC = " and c.actual = 1 ";
+				queryVersionSc = " and sc.actual = 1 ";
+				queryVersionPr = " and pr.actual = 1 ";
+				queryVersionSpr = " and spr.actual = 1 ";
+				queryVersionA = " and a.actual = 1 ";
+			}else{
+				queryVersionR = " and r.linea_base like '%"+lineaBase+"%' ";
+				queryVersionObr = " and obr.linea_base like '%"+lineaBase+"%' ";
+				queryVersionP = " and p.linea_base like '%"+lineaBase+"%' ";
+				queryVersionC = " and c.linea_base like '%"+lineaBase+"%' ";
+				queryVersionSc = " and sc.linea_base like '%"+lineaBase+"%' ";
+				queryVersionPr = " and pr.linea_base like '%"+lineaBase+"%' ";
+				queryVersionSpr = " and spr.linea_base like '%"+lineaBase+"%' ";
+				queryVersionA = " and a.linea_base like '%"+lineaBase+"%' ";
+			}
+
+			String query = "select r.id, r.nombre, r.descripcion, r.riesgo_tipoid, r.impacto, r.probabilidad, r.impacto_monto, r.impacto_tiempo, r.gatillo, r.consecuencia, r.solucion, r.riesgo_segundarios riesgos_segundarios, r.ejecutado, r.fecha_ejecucion, r.resultado, r.observaciones, r.colaboradorid, r.usuario_creo, r.usuario_actualizo, r.fecha_creacion, r.fecha_actualizacion, r.estado from sipro_history.riesgo r join sipro_history.objeto_riesgo obr on obr.riesgoid = r.id "+queryVersionObr+" where r.estado = 1 "+queryVersionR+" and obr.objeto_id = "+prestamoId+" and obr.objeto_tipo = -1 "  
+					+ " UNION  "  
+					+ " select r.id, r.nombre, r.descripcion, r.riesgo_tipoid, r.impacto, r.probabilidad, r.impacto_monto, r.impacto_tiempo, r.gatillo, r.consecuencia, r.solucion, r.riesgo_segundarios riesgos_segundarios, r.ejecutado, r.fecha_ejecucion, r.resultado, r.observaciones, r.colaboradorid, r.usuario_creo, r.usuario_actualizo, r.fecha_creacion, r.fecha_actualizacion, r.estado from sipro_history.riesgo r join sipro_history.objeto_riesgo obr on obr.riesgoid = r.id "+queryVersionObr+" where r.estado = 1 "+queryVersionR+" and obr.objeto_id = "+proyectoId+" and obr.objeto_tipo = 0  "   
+					+ " UNION  "  
+					+ " select r.id, r.nombre, r.descripcion, r.riesgo_tipoid, r.impacto, r.probabilidad, r.impacto_monto, r.impacto_tiempo, r.gatillo, r.consecuencia, r.solucion, r.riesgo_segundarios riesgos_segundarios, r.ejecutado, r.fecha_ejecucion, r.resultado, r.observaciones, r.colaboradorid, r.usuario_creo, r.usuario_actualizo, r.fecha_creacion, r.fecha_actualizacion, r.estado from sipro_history.riesgo r join sipro_history.objeto_riesgo obr on obr.riesgoid = r.id "+queryVersionObr+" where r.estado = 1 "+queryVersionR+" and obr.objeto_tipo = 1 and obr.objeto_id in  "   
+					+ " (select c.id from sipro_history.proyecto p join sipro_history.componente c on c.proyectoid = p.id "+queryVersionC+" where c.estado  = 1 "+queryVersionP+" and p.id = "+proyectoId+" )  "  
+					+ " UNION  "  
+					+ " select r.id, r.nombre, r.descripcion, r.riesgo_tipoid, r.impacto, r.probabilidad, r.impacto_monto, r.impacto_tiempo, r.gatillo, r.consecuencia, r.solucion, r.riesgo_segundarios riesgos_segundarios, r.ejecutado, r.fecha_ejecucion, r.resultado, r.observaciones, r.colaboradorid, r.usuario_creo, r.usuario_actualizo, r.fecha_creacion, r.fecha_actualizacion, r.estado from sipro_history.riesgo r join sipro_history.objeto_riesgo obr on obr.riesgoid = r.id "+queryVersionObr+" where r.estado = 1 "+queryVersionR+" and obr.objeto_tipo = 2 and obr.objeto_id in  "   
+					+ " (select sc.id from sipro_history.proyecto p join sipro_history.componente c on c.proyectoid = p.id "+queryVersionC+" join sipro_history.subcomponente sc on c.id = sc.componenteid "+queryVersionSc+" where sc.estado=1 and c.estado  = 1 "+queryVersionP+" and p.id = "+proyectoId+" )  "  
+					+ " UNION  "  
+					+ " select r.id, r.nombre, r.descripcion, r.riesgo_tipoid, r.impacto, r.probabilidad, r.impacto_monto, r.impacto_tiempo, r.gatillo, r.consecuencia, r.solucion, r.riesgo_segundarios riesgos_segundarios, r.ejecutado, r.fecha_ejecucion, r.resultado, r.observaciones, r.colaboradorid, r.usuario_creo, r.usuario_actualizo, r.fecha_creacion, r.fecha_actualizacion, r.estado from sipro_history.riesgo r join sipro_history.objeto_riesgo obr on obr.riesgoid = r.id "+queryVersionObr+" where r.estado = 1 and obr.objeto_tipo = 3 "+queryVersionR+" and obr.objeto_id in  "   
+					+ " (select pr.id from sipro_history.proyecto p join sipro_history.componente c on c.proyectoid = p.id "+queryVersionC+" join sipro_history.producto pr ON pr.componenteid = c.id "+queryVersionPr+"  "   
+					+ " where c.estado  = 1 and pr.estado =1 and pr.estado = 1 "+queryVersionP+" and p.id = "+proyectoId+" UNION  "   
+					+ " select pr.id from sipro_history.proyecto p join sipro_history.componente c on c.proyectoid = p.id "+queryVersionC+" join sipro_history.subcomponente sc on c.id = sc.componenteid "+queryVersionSc+"  "  
+					+ " join sipro_history.producto pr ON pr.subcomponenteid = sc.id "+queryVersionPr+" where sc.estado=1 and c.estado  = 1 "+queryVersionP+" and pr.estado =1 and pr.estado = 1 and p.id = "+proyectoId+")  "   
+					+ " UNION  "  
+					+ " select r.id, r.nombre, r.descripcion, r.riesgo_tipoid, r.impacto, r.probabilidad, r.impacto_monto, r.impacto_tiempo, r.gatillo, r.consecuencia, r.solucion, r.riesgo_segundarios riesgos_segundarios, r.ejecutado, r.fecha_ejecucion, r.resultado, r.observaciones, r.colaboradorid, r.usuario_creo, r.usuario_actualizo, r.fecha_creacion, r.fecha_actualizacion, r.estado from sipro_history.riesgo r join sipro_history.objeto_riesgo obr on obr.riesgoid = r.id "+queryVersionObr+" where r.estado = 1 and obr.objeto_tipo = 4 "+queryVersionR+" and obr.objeto_id in  "    
+					+ " (select spr.id from sipro_history.proyecto p join sipro_history.componente c on c.proyectoid = p.id "+queryVersionC+" join sipro_history.producto pr ON pr.componenteid = c.id "+queryVersionPr+"  "   
+					+ " join sipro_history.subproducto spr ON spr.productoid = pr.id "+queryVersionSpr+" where c.estado  = 1 and pr.estado = 1 and spr.estado = 1 "+queryVersionP+" and p.id = "+proyectoId+" UNION  "   
+					+ " select spr.id from sipro_history.proyecto p join sipro_history.componente c on c.proyectoid = p.id "+queryVersionC+" join sipro_history.subcomponente sc on sc.componenteid = c.id "+queryVersionSc+" join sipro_history.producto pr ON pr.subcomponenteid = sc.id "+queryVersionPr+"  "   
+					+ " join sipro_history.subproducto spr ON spr.productoid = pr.id "+queryVersionSpr+" where c.estado  = 1 and sc.estado=1 and pr.estado = 1 and spr.estado = 1 "+queryVersionP+" and p.id = "+proyectoId+" )  "   
+					+ " UNION  "  
+					+ " select r.id, r.nombre, r.descripcion, r.riesgo_tipoid, r.impacto, r.probabilidad, r.impacto_monto, r.impacto_tiempo, r.gatillo, r.consecuencia, r.solucion, r.riesgo_segundarios riesgos_segundarios, r.ejecutado, r.fecha_ejecucion, r.resultado, r.observaciones, r.colaboradorid, r.usuario_creo, r.usuario_actualizo, r.fecha_creacion, r.fecha_actualizacion, r.estado from sipro_history.riesgo r join sipro_history.objeto_riesgo obr on obr.riesgoid = r.id "+queryVersionObr+" where r.estado = 1 and obr.objeto_tipo = 5 "+queryVersionR+" and obr.objeto_id in  "     
+					+ " (select a.id from sipro_history.actividad a where a.estado = 1 "+queryVersionA+" and a.objeto_id = "+proyectoId+" and a.objeto_tipo = 0)  "   
+					+ " UNION  "  
+					+ " select r.id, r.nombre, r.descripcion, r.riesgo_tipoid, r.impacto, r.probabilidad, r.impacto_monto, r.impacto_tiempo, r.gatillo, r.consecuencia, r.solucion, r.riesgo_segundarios riesgos_segundarios, r.ejecutado, r.fecha_ejecucion, r.resultado, r.observaciones, r.colaboradorid, r.usuario_creo, r.usuario_actualizo, r.fecha_creacion, r.fecha_actualizacion, r.estado from sipro_history.riesgo r join sipro_history.objeto_riesgo obr on obr.riesgoid = r.id "+queryVersionObr+" where r.estado = 1 and obr.objeto_tipo = 5 "+queryVersionR+" and obr.objeto_id in (  "  
+					+ " select a.id from sipro_history.actividad a where a.estado = 1 "+queryVersionA+" and a.objeto_id = "+proyectoId+" and a.objeto_tipo = 0 UNION  "  
+					+ " select a.id from sipro_history.actividad a where a.estado = 1 and a.objeto_tipo = 1 "+queryVersionA+" and a.objeto_id in (  "  
+					+ " select c.id from sipro_history.proyecto p join sipro_history.componente c on c.proyectoid = p.id "+queryVersionC+" where c.estado  = 1 "+queryVersionP+" and p.id = "+proyectoId+" ) UNION  "  
+					+ " select a.id from sipro_history.actividad a where a.estado = 1 and a.objeto_tipo = 2 "+queryVersionA+" and a.objeto_id in (  "  
+					+ " select sc.id from sipro_history.proyecto p join sipro_history.componente c on c.proyectoid = p.id "+queryVersionC+" join sipro_history.subcomponente sc on sc.componenteid = c.id "+queryVersionSc+"  "   
+					+ " where c.estado  = 1 and sc.estado=1 "+queryVersionP+" and p.id = "+proyectoId+" )  UNION  "  
+					+ " select a.id from sipro_history.actividad a where a.estado = 1 and a.objeto_tipo = 3 "+queryVersionA+" and a.objeto_id in (  "  
+					+ " select pr.id from sipro_history.proyecto p join sipro_history.componente c on c.proyectoid = p.id "+queryVersionC+"  "   
+					+ " join sipro_history.producto pr ON pr.componenteid = c.id "+queryVersionPr+" where c.estado  = 1 and pr.estado =1 and pr.estado = 1 "+queryVersionP+" and p.id = "+proyectoId+" ) UNION  "  
+					+ " select a.id from sipro_history.actividad a where a.estado = 1 and a.objeto_tipo = 3 "+queryVersionA+" and a.objeto_id in (  "  
+					+ " select pr.id from sipro_history.proyecto p join sipro_history.componente c on c.proyectoid = p.id "+queryVersionC+" join sipro_history.subcomponente sc on sc.componenteid = c.id "+queryVersionSc+"  "   
+					+ " join sipro_history.producto pr ON pr.subcomponenteid = sc.id "+queryVersionPr+" where c.estado  = 1 and sc.estado=1 and pr.estado = 1 "+queryVersionP+" and p.id = "+proyectoId+" ) UNION  "  
+					+ " select a.id from sipro_history.actividad a where a.estado = 1 and a.objeto_tipo = 4 "+queryVersionA+" and a.objeto_id in (  "  
+					+ " select spr.id from sipro_history.proyecto p join sipro_history.componente c on c.proyectoid = p.id "+queryVersionC+" join sipro_history.producto pr ON pr.componenteid = c.id "+queryVersionPr+" join sipro_history.subproducto spr ON spr.productoid = pr.id "+queryVersionSpr+"  "   
+					+ " where c.estado  = 1 and pr.estado = 1 and spr.estado = 1 and pr.estado =1 and pr.estado = 1 "+queryVersionP+" and p.id = "+proyectoId+" ) UNION  "  
+					+ " select a.id from sipro_history.actividad a where a.estado = 1 and a.objeto_tipo = 4 "+queryVersionA+" and a.objeto_id in (  "  
+					+ " select spr.id from sipro_history.proyecto p join sipro_history.componente c on c.proyectoid = p.id "+queryVersionC+" join sipro_history.subcomponente sc ON sc.componenteid = c.id "+queryVersionSc+" join sipro_history.producto pr ON pr.subcomponenteid = sc.id "+queryVersionPr+"  "   
+					+ " join sipro_history.subproducto spr ON spr.productoid = pr.id "+queryVersionSpr+"  "   
+					+ " where c.estado  = 1 and sc.estado=1 and pr.estado = 1 and spr.estado = 1 and pr.estado =1 and pr.estado = 1 "+queryVersionP+" and p.id = "+proyectoId+" )) ";
 			Query<Riesgo> criteria = session.createNativeQuery(query,Riesgo.class);
-			criteria.setParameter("idP", proyectoId);
-			
 			
 			ret = criteria.getResultList();
 		}

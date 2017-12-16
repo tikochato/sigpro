@@ -130,10 +130,9 @@
 	   						<label class="floating-label">* Vuelva a ingresar la contraseña</label>
 						</div>
     				</div>
-    			</form>
     				<br/>
-    				<div class="row">
-    					<div class="col-sm-6">
+	   				<div class="row">
+	   					<div class="col-sm-6">
 							<h3 ng-show="!usuarioc.esNuevo">Estructuras</h3>
 						</div>
 						<div class="col-sm-6" align="right">
@@ -162,71 +161,69 @@
 								</span>
 							</div>
 						</div>
-    				</div>
-    				<br/>
-    				<div class="row">
-    					<div>
-    						<div ng-show="usuarioc.isCollapsed">
-								<h3 style="margin-left: 15px;" ng-show="usuarioc.isCollapsed">Permisos</h3>
-								<div class="col-sm-12 operation_buttons" align="right"  ng-if="usuarioc.esNuevo">
-									<div class="btn-group">
-										<label class="btn btn-default" ng-click="usuarioc.buscarPermiso(0)"
-																ng-disabled="" 
-															uib-tooltip="Agregar permiso" ng-disabled="usuarioc.cargandoPermisos">
-											<span class="glyphicon glyphicon-plus"></span>
-											Agregar permiso.
-										</label>
-									</div>
-								</div>
-								<div class="col-sm-12 operation_buttons" align="right"  ng-if="!usuarioc.esNuevo">
-									<div class="btn-group">
-										<label class="btn btn-default" ng-click="usuarioc.buscarPermiso(0)"
-																ng-disabled="" 
-															uib-tooltip="Agregar permiso" ng-disabled="usuarioc.cargandoPermisos">
-											<span class="glyphicon glyphicon-plus"></span>
-											Agregar permiso.
-										</label>
-									</div>
-								</div>			
-								<br>
-								<table style="width: 100%; overflow-y: scroll; height: 175px; margin-bottom: 20px;"
-								st-table="usuarioc.permisosAsignados"
-								class="table table-striped  table-bordered table-hover table-propiedades">
-									<thead >
-										<tr>
-											<th style="white-space: nowrap;">Nombre</th>
-											<th style="white-space: nowrap;">Descripción</th>
-											<th style="width: 30px;">Quitar</th>
-					
-										</tr>
-									</thead>
-									<tbody>
-										<tr st-select-row="row"
-											ng-repeat="row in usuarioc.permisosAsignados">
-											<td style="white-space: nowrap;">{{row.nombre}}</td>
-											<td style="white-space: nowrap;">{{row.descripcion}}</td>
-											<td>
-												<button type="button"
-													ng-click="usuarioc.eliminarPermiso(row)"
-													class="btn btn-sm btn-danger">
-													<i class="glyphicon glyphicon-minus-sign"> </i>
-												</button>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-								<div class="grid_loading" ng-if="usuarioc.cargandoPermisos" style="margin-top:80px; width: 96%; margin-left: 1%;">
-									<div class="msg">
-										<span><i class="fa fa-spinner fa-spin fa-4x"></i>
-											<br><br>
-											<b>Cargando, por favor espere...</b>
-										</span>
-									</div>
-								</div> 
-								
+	   				</div>
+	   				<br/>
+	   				<div class="row">
+						<h3 style="margin-left: 15px;" ng-show="usuarioc.isCollapsed">Permisos</h3>
+						<div class="col-sm-12 operation_buttons" align="right"  ng-if="usuarioc.esNuevo">
+							<div class="btn-group">
+								<label class="btn btn-default" ng-click="usuarioc.buscarPermiso(0)"
+									uib-tooltip="Agregar permiso" ng-disabled="usuarioc.cargandoPermisos">
+									<span class="glyphicon glyphicon-plus"></span>
+									Agregar permiso.
+								</label>
 							</div>
-    					</div>
-    				</div>
+						</div>
+						<div class="col-sm-12 operation_buttons" align="right"  ng-if="!usuarioc.esNuevo">
+							<div class="btn-group">
+								<label class="btn btn-default" ng-click="usuarioc.buscarPermiso(0)"
+														ng-disabled="" 
+													uib-tooltip="Agregar permiso" ng-disabled="usuarioc.cargandoPermisos">
+									<span class="glyphicon glyphicon-plus"></span>
+									Agregar permiso.
+								</label>
+							</div>
+						</div>
+					</div>
+					<br>
+					<div class="row">		
+						<div style="max-height: 375px; overflow: auto">
+							<table style="width: 100%; margin-bottom: 20px;" st-table="usuarioc.permisosAsignados"
+								class="table table-striped  table-bordered table-hover table-propiedades">
+								<thead>
+									<tr>
+										<th style="white-space: nowrap;">Nombre</th>
+										<th style="white-space: nowrap;">Descripción</th>
+										<th style="width: 30px;">Quitar</th>
+				
+									</tr>
+								</thead>
+								<tbody>
+									<tr st-select-row="row"
+										ng-repeat="row in usuarioc.permisosAsignados">
+										<td style="white-space: nowrap;">{{row.nombre}}</td>
+										<td style="white-space: nowrap;">{{row.descripcion}}</td>
+										<td>
+											<button type="button"
+												ng-click="usuarioc.eliminarPermiso(row)"
+												class="btn btn-sm btn-danger">
+												<i class="glyphicon glyphicon-minus-sign"> </i>
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<div class="grid_loading" ng-if="usuarioc.cargandoPermisos" style="margin-top:80px; width: 96%; margin-left: 1%;">
+								<div class="msg">
+									<span><i class="fa fa-spinner fa-spin fa-4x"></i>
+										<br><br>
+										<b>Cargando, por favor espere...</b>
+									</span>
+								</div>
+							</div> 	
+						</div>							
+	   				</div>
+    			</form>
     		</div>
 		</div>
 	</div>

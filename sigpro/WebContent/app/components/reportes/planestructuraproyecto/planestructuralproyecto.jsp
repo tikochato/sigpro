@@ -48,8 +48,8 @@
 			float: left;			
 			overflow-y:hidden;
 			overflow-x:hidden;
-			height: 100%;
-			height: 100%;
+			height: 375px;
+			width: 100%
 		}
 		
 		.tablaDatos {
@@ -97,7 +97,8 @@
 			float: left; 
 			display: inline-block;
 			white-space: nowrap;	
-			overflow:hidden;		
+			overflow:hidden;	
+			width: 100%;	
 		}
 		
 		.theadDatos {
@@ -145,13 +146,24 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="form-group col-sm-6" align="left">
+						<div class="form-group col-sm-4" align="left">
 							<div id= "lineaBase" angucomplete-alt placeholder="" pause="100" selected-object="pep.cambioLineaBase"
 								  local-data="pep.lineasBase" search-fields="nombre" title-field="nombre" 
 								  field-required="true" field-label="* Linea Base" minlength="1" input-class="form-control form-control-small field-angucomplete inputText" 
 								  match-class="angucomplete-highlight" initial-value="pep.lineaBaseNombre" 
 								  focus-out="pep.blurLineaBase()" input-name="lineaBase"></div>
 							<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+						</div>
+						<div class="form-group col-sm-2" style="margin-top: 5px;">
+							<input type="text"  class="inputText" uib-datepicker-popup="{{pep.formatofecha}}" alt-input-formats="{{pep.altformatofecha}}"
+								ng-model="pep.fechaCorte" is-open="pep.isOpen"
+					            datepicker-options="pep.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  
+					            ng-required="true" ng-change="pep.generar()"
+					            ng-value="pep.fechaCorte" onblur="this.setAttribute('value', this.value);"/>
+					            <span class="label-icon" ng-click="pep.abrirPopupFecha()">
+					              <i class="glyphicon glyphicon-calendar"></i>
+					            </span>
+						  	<label for="campo.id" class="floating-label">*Fecha Corte</label>
 						</div>
 						<div class="form-group col-sm-6" align="right">
 							<div class="operation_buttons">
@@ -179,11 +191,11 @@
 					</div>
 				</div>
 	    		<div class="divTablas" ng-hide="!pep.mostrarTablas">	
-	    			<div class="row" style="height: 100%; max-width: {{pep.tamanoPantalla}}; min-width: {{pep.tamanoPantalla}}">
-	    				<div class="divPadreDatos" style="height: 100%;min-width: {{pep.tamanoPantalla}}px; max-width: {{pep.tamanoPantalla}}px;">
+	    			<div class="row" style="height: 100%;">
+	    				<div class="divPadreDatos" style="height: 100%;">
 	    					<div class="divTabla">
 		    					<table st-table="pep.displayedCollectionPrestamo" st-safe-src="pep.rowCollectionPrestamo" class="table table-striped tablaDatos"
-		    						style="max-width: {{pep.tamanoPantalla}}px;">
+		    						style="">
 		    						<thead id="divCabecerasDatos" class="theadDatos">
 		    							<tr>
 		    								<th class="label-form" style="text-align: left; min-width:300px; max-width:300px;">Nombre</th>

@@ -691,8 +691,7 @@ public class InformacionPresupuestariaDAO {
 						str_Query += correlativo!=null? " and correlativo = "+correlativo : "";
 						str_Query += organismo!=null? " and organismo = "+organismo : "";
 						str_Query += fuente!=null? " and fuente = "+fuente : "";
-						str_Query += " and mes > 0 "
-						+ " and mes <= "+mes
+						str_Query += " and mes = "+mes
 						+ " group by entidad "
 						+ " UNION " 
 						+ " select 0 asignado, 0 devengado, sum(modificaciones) modificaciones "
@@ -709,8 +708,7 @@ public class InformacionPresupuestariaDAO {
 						str_Query += correlativo!=null? " and correlativo = "+correlativo : "";
 						str_Query += organismo!=null? " and organismo = "+organismo : "";
 						str_Query += fuente!=null? " and fuente = "+fuente : "";
-						str_Query += " and mes > 0 "
-						+ " and mes < "+mes
+						str_Query += " and mes = "+mes
 						+ " group by entidad "
 						+ " ) t1 ";
 
@@ -736,7 +734,7 @@ public class InformacionPresupuestariaDAO {
 		return result;
 	}
     
-    public static JasperPrint generarJasper(Integer proyectoId, Integer anio, String lineaBase, String usuario) throws JRException, SQLException{
+    public static JasperPrint generarJasper(Integer proyectoId, Integer anio, Integer mesPresupuestos, String lineaBase, String usuario) throws JRException, SQLException{
 		JasperPrint jasperPrint = null;
 		Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
 		if (proyecto!=null){
@@ -744,7 +742,7 @@ public class InformacionPresupuestariaDAO {
 			parameters.put("proyectoId",proyectoId);
 			parameters.put("usuario",usuario);
 			
-			List<ObjetoCostoJasper> listadoCostos = ObjetoDAO.getEstructuraConCostoJasper(proyectoId, anio, anio, usuario, lineaBase);
+			List<ObjetoCostoJasper> listadoCostos = ObjetoDAO.getEstructuraConCostoJasper(proyectoId, anio, anio, mesPresupuestos, usuario, lineaBase);
 			
 			parameters.put("costos",listadoCostos);
 			jasperPrint = CJasperReport.reporteJasperPrint(CJasperReport.PLANTILLA_EJECUCIONFINANCIERA, parameters);

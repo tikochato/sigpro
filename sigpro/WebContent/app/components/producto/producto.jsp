@@ -22,6 +22,11 @@
 	<script type="text/ng-template" id="buscarPorProducto.jsp">
 	    <%@ include file="/app/components/producto/buscarPorProducto.jsp"%>
 	</script>
+	
+	<script type="text/ng-template" id="pago_planificado.jsp">
+    	<%@ include file="/app/components/pago_planificado/pago_planificado.jsp"%>
+  	</script>
+  	    
 	<shiro:lacksPermission name="21010">
 		<span ng-init="producto.redireccionSinPermisos()"></span>
 	</shiro:lacksPermission>
@@ -53,6 +58,11 @@
 				</shiro:hasPermission>
 			</div>
 		</div>
+		<br><br>
+			<div class="col-sm-12" ng-if="producto.sobrepaso != null && producto.sobrepaso == true">
+				<div class="alert alert-danger" style="text-align: center;">La planificación sobrepasa la asignación presupuestaria</div>
+			</div>
+		<br>
 		<shiro:hasPermission name="21010">
 			<div class="col-sm-12" align="center">
 				<div style="height: 35px;">
@@ -105,10 +115,18 @@
 				<span class="glyphicon glyphicon-time"></span></label>
 				<label class="btn btn-default" ng-click="producto.verHistoria()" uib-tooltip="Ver Historia">
 				<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
+				<label class="btn btn-default" ng-click="producto.producto.acumulacionCostoId == 2 ? producto.agregarPagos() : ''"
+					 uib-tooltip="Pagos planificados" tooltip-placement="left" ng-disabled = "producto.producto.acumulacionCostoId != 2">
+					<span class="glyphicon glyphicon-piggy-bank"></span></label>
 			</div>
 			<div ng-if="producto.esTreeview">
-		      	<label class="btn btn-default" ng-click="producto.verHistoria()" uib-tooltip="Ver Historia">
-				<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
+				<div class="btn-group">
+			      	<label class="btn btn-default" ng-click="producto.verHistoria()" uib-tooltip="Ver Historia">
+					<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
+					<label class="btn btn-default" ng-click="producto.producto.acumulacionCostoId == 2 ? producto.agregarPagos() : ''" uib-tooltip="Pagos planificados"
+							ng-disabled = "producto.producto.acumulacionCostoId != 2" >
+							<span class="glyphicon glyphicon-piggy-bank"></span></label>
+				</div>
 		     </div>
 			<div class="btn-group" style="float: right;">
 				<shiro:hasPermission name="21020">
@@ -121,6 +139,11 @@
 				<span class="glyphicon glyphicon-trash"></span> Borrar</label>
 			</div>
 		</div>
+		<br><br>
+			<div class="col-sm-12" ng-if="producto.sobrepaso != null && producto.sobrepaso == true">
+				<div class="alert alert-danger" style="text-align: center;">La planificación sobrepasa la asignación presupuestaria</div>
+			</div>
+		<br>
 		<div class="col-sm-12" style="margin-top: 10px;">
 		<form name="producto.mForm" class="css-form">
 		<uib-tabset active="producto.activeTab">
@@ -219,10 +242,16 @@
 					</div>
 						
 			        <div class="form-group" >
-				       <input type="text" class="inputText" ng-model="producto.producto.costo" ng-value="producto.producto.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left"
-				       		ng-required="producto.producto.acumulacionCostoNombre != null"
-							ui-number-mask="2" ng-readonly="producto.producto.tieneHijos || producto.congelado"/>
-				       <label for="iprog" class="floating-label">{{producto.producto.acumulacionCostoNombre  != null ?"* Monto Planificado":"Monto Planificado"}}</label>
+				    	<input type="text" class="inputText" ng-model="producto.producto.costo" ng-value="producto.producto.costo" onblur="this.setAttribute('value', this.value);" style="text-align: left"
+			       		ng-required="producto.producto.acumulacionCostoNombre != null" ng-change="producto.validarAsignado();"
+						ui-number-mask="2" ng-readonly="producto.producto.tieneHijos || producto.congelado || producto.bloquearCosto"/>
+				        <label for="iprog" class="floating-label">{{producto.producto.acumulacionCostoNombre  != null ?"* Monto Planificado":"Monto Planificado"}}</label>				        					        	
+				     </div>
+			     	<div class="form-group" >
+		        		<input type="text" class="inputText" ng-model="producto.asignado" ng-value="producto.asignado" ui-number-mask="2"
+			       		onblur="this.setAttribute('value', this.value);" style="text-align: left" 
+			       		ng-readonly="true"/>
+			       		<label for="iprog" class="floating-label">Presupuesto Asignado (Año Fiscal)</label>
 					</div>
 						
 				    <div class="form-group">

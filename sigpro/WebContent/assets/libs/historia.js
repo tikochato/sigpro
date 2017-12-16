@@ -312,8 +312,11 @@ function historiaMatrizController($uibModalInstance, $scope, $http, $interval, i
 		if(response.success){
 			mi.versiones = response.versiones;
 			mi.totalVersiones = mi.versiones.length;
-			mi.cargarData(mi.versiones[0]);
-			mi.desHabilitarBotones();
+			if(mi.totalVersiones > 0){
+				mi.cargarData(mi.versiones[0]);
+				mi.desHabilitarBotones();
+			}else
+				mi.mostrarCargando = false;
 		}
 	});
 	
