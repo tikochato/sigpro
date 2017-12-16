@@ -294,10 +294,10 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 			<property name="com.jaspersoft.studio.field.label" value="diciembre"/>
 		</field>
 		<variable name="real" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
-			<variableExpression><![CDATA[IF($F{gasto}.equals( "Gasto real"),$F{enero}.add( $F{febrero}.add($F{marzo}.add($F{abril}.add( $F{mayo}.add($F{junio}.add( $F{julio}.add( $F{agosto}.add( $F{septiembre}.add( $F{octubre}.add( $F{noviembre}.add( $F{diciembre}))) )))))))),0)]]></variableExpression>
+			<variableExpression><![CDATA[IF($F{gasto}.equals( "Gasto real"),$F{enero}.add( $F{febrero}.add($F{marzo}.add($F{abril}.add( $F{mayo}.add($F{junio}.add( $F{julio}.add( $F{agosto}.add( $F{septiembre}.add( $F{octubre}.add( $F{noviembre}.add( $F{diciembre}))) )))))))),$V{real})]]></variableExpression>
 		</variable>
 		<variable name="planificado" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
-			<variableExpression><![CDATA[IF($F{gasto}.equals( "Gasto programado"),$F{enero}.add( $F{febrero}.add($F{marzo}.add($F{abril}.add( $F{mayo}.add($F{junio}.add( $F{julio}.add( $F{agosto}.add( $F{septiembre}.add( $F{octubre}.add( $F{noviembre}.add( $F{diciembre}))) )))))))),0)]]></variableExpression>
+			<variableExpression><![CDATA[IF($F{gasto}.equals( "Gasto programado"),$F{enero}.add( $F{febrero}.add($F{marzo}.add($F{abril}.add( $F{mayo}.add($F{junio}.add( $F{julio}.add( $F{agosto}.add( $F{septiembre}.add( $F{octubre}.add( $F{noviembre}.add( $F{diciembre}))) )))))))),$V{planificado})]]></variableExpression>
 		</variable>
 	</subDataset>
 	<parameter name="usuario" class="java.lang.String"/>
