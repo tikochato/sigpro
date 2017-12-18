@@ -929,7 +929,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 				</textField>
 			</frame>
 			<componentElement>
-				<reportElement key="" style="Estilo_grafica" stretchType="RelativeToTallestObject" x="171" y="312" width="410" height="169" uuid="7f5f1c90-d740-4504-9d34-463c9f2be709"/>
+				<reportElement key="" style="Estilo_grafica" stretchType="RelativeToTallestObject" x="171" y="312" width="410" height="169" uuid="e0bf1d04-8db3-4951-a5f4-3e31d532e116"/>
 				<sc:spiderChart xmlns:sc="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<sc:chartSettings>
 						<chartTitle/>
@@ -938,7 +938,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 					</sc:chartSettings>
 					<sc:spiderDataset>
 						<dataset>
-							<datasetRun subDataset="Dataset1" uuid="f0d08a49-257b-4927-b300-f0770a573e10">
+							<datasetRun subDataset="Dataset1" uuid="023042a8-457d-403c-8afa-b19c5201fe2e">
 								<datasetParameter name="proyectoId">
 									<datasetParameterExpression><![CDATA[$P{proyectoId}]]></datasetParameterExpression>
 								</datasetParameter>
@@ -951,12 +951,6 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 								<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 							</datasetRun>
 						</dataset>
-						<categorySeries>
-							<seriesExpression><![CDATA["Planificado"]]></seriesExpression>
-							<categoryExpression><![CDATA[$F{categoria}]]></categoryExpression>
-							<valueExpression><![CDATA[$F{valor_plan}]]></valueExpression>
-							<labelExpression><![CDATA["Planificado"]]></labelExpression>
-						</categorySeries>
 						<categorySeries>
 							<seriesExpression><![CDATA["Real"]]></seriesExpression>
 							<categoryExpression><![CDATA[$F{categoria}]]></categoryExpression>
