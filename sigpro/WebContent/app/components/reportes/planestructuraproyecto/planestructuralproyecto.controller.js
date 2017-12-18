@@ -3,6 +3,9 @@ app.controller('planEstructuralProyectoController',['$scope', '$rootScope', '$ht
 	function($scope, $rootScope, $http, $window, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$timeout, uiGridTreeBaseService, $q, $dialogoConfirmacion, $filter,$uibModal){
 	var mi = this;
 	
+	$window.document.title = $utilidades.sistema_nombre+' - Plan de Ejecución ';
+	i18nService.setCurrentLang('es');
+	
 	mi.fechaCorte = null;
 	mi.formatofecha = 'dd/MM/yyyy';
 	mi.altformatofecha = ['d!/M!/yyyy'];
