@@ -235,11 +235,12 @@ public class SUsuario extends HttpServlet {
 					Integer unidadEjecutora =0;
 					if(rol>0)
 						unidadEjecutora = UsuarioDAO.getUnidadEjecutora(usuario).getId().getUnidadEjecutora();
-					Integer cooperante = UsuarioDAO.getCooperantePorUsuario(usuario).getId();
+					//Integer cooperante = UsuarioDAO.getCooperantePorUsuario(usuario).getId();
 					String respuesta = new GsonBuilder().serializeNulls().create().toJson(stpermisos);
 					String proyectos_usuarios= new GsonBuilder().serializeNulls().create().toJson(stproyectos);
 					response_text  = String.join("", "\"permisos\":",respuesta);
-					response_text = String.join("", "{\"success\":true,", response_text ,",\"proyectos\": "+proyectos_usuarios+"," +"\"rol\": "+rol+",\"unidadEjecutora\": "+unidadEjecutora+"," +"\"cooperante\": "+cooperante+"}");
+					response_text = String.join("", "{\"success\":true,", response_text ,",\"proyectos\": "+proyectos_usuarios+"," +"\"rol\": "+rol+",\"unidadEjecutora\": "+unidadEjecutora +"}");
+					//response_text = String.join("", "{\"success\":true,", response_text ,",\"proyectos\": "+proyectos_usuarios+"," +"\"rol\": "+rol+",\"unidadEjecutora\": "+unidadEjecutora+"," +"\"cooperante\": "+cooperante+"}");
 				}
 			}else if(accion.compareTo("getUsuarios")==0){
 				int pagina = map.get("pagina")!=null  ? Integer.parseInt(map.get("pagina")) : 0;
@@ -355,7 +356,7 @@ public class SUsuario extends HttpServlet {
 						String nuevopassword = map.get("password");
 						String nuevomail = map.get("email").toLowerCase();
 						String permisosAsignados = map.get("permisos");
-						String prestamosAsignados=map.get("prestamos");
+//						String prestamosAsignados=map.get("prestamos");
 						Integer sistemaUsuario= Utils.String2Int(map.get("sistemaUsuario"), 1);
 						String rol =map.get("rol");
 						if(nuevousuario!=null && nuevopassword!=null && nuevomail != null && permisosAsignados!=null && rol!=null){
@@ -387,20 +388,20 @@ public class SUsuario extends HttpServlet {
 												}
 											}
 										}
-										if(prestamosAsignados!=null && prestamosAsignados.compareTo("[]")!=0){
-											Gson entradaJson = new Gson();
-											Type tipo = new TypeToken<List<Integer>>() {}.getType();
-											List<Integer> prestamos = entradaJson.fromJson(prestamosAsignados, tipo);
-											UsuarioDAO.asignarPrestamos(usuario, prestamos,usuario_texto);
-											UsuarioDAO.asignarPrestamoRol(usuario, prestamos, Integer.parseInt(rol));
-										}
+//										if(prestamosAsignados!=null && prestamosAsignados.compareTo("[]")!=0){
+//											Gson entradaJson = new Gson();
+//											Type tipo = new TypeToken<List<Integer>>() {}.getType();
+//											List<Integer> prestamos = entradaJson.fromJson(prestamosAsignados, tipo);
+//											UsuarioDAO.asignarPrestamos(usuario, prestamos,usuario_texto);
+//											UsuarioDAO.asignarPrestamoRol(usuario, prestamos, Integer.parseInt(rol));
+//										}
 										if(permisosAsignados!=null && permisosAsignados.compareTo("[]")!=0){
 											Gson entradaJson = new Gson();
 											Type tipo = new TypeToken<List<Integer>>() {}.getType();
 											List<Integer> permisos = entradaJson.fromJson(permisosAsignados, tipo);
-											response_text = String.join("","{ \"success\": ",(UsuarioDAO.asignarPermisosUsuario(nuevousuario, permisos, usuario_texto) ? "true ,  \"message\":\"Usuario creado y asignación de permisos exitosa\" " : "true, \"message\":\"Usuario creado, asignación de permisos no exitosa\""),"}");
+											response_text = String.join("","{ \"success\": ",(UsuarioDAO.asignarPermisosUsuario(nuevousuario, permisos, usuario_texto) ? "true ,  \"mensaje\":\"Usuario creado y asignación de permisos exitosa\" " : "true, \"mensaje\":\"Usuario creado, asignación de permisos no exitosa\""),"}");
 										}else{
-											response_text = String.join("", "{\"success\":true, \"message\":\"Usuario creado exitosamente\" }");
+											response_text = String.join("", "{\"success\":true, \"mensaje\":\"Usuario creado exitosamente\" }");
 										}
 										
 									}else{
