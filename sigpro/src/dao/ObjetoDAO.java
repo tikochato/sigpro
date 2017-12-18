@@ -442,8 +442,11 @@ public class ObjetoDAO {
 								Calendar cal = Calendar.getInstance();
 								for(PagoPlanificado pago : lstPagosPlanificados){
 									cal.setTime(pago.getFechaPago());
-									int mesPago = cal.get(Calendar.MONTH); 
-									anioObj.mes[mesPago].planificado = anioObj.mes[mesPago].planificado.add(pago.getPago());
+									int mesPago = cal.get(Calendar.MONTH);
+									int anioPago = cal.get(Calendar.YEAR);
+									if(anioObj.anio == anioPago){
+										anioObj.mes[mesPago].planificado = anioObj.mes[mesPago].planificado.add(pago.getPago());	
+									}
 								}								
 							}else{
 								if(anioFinalObj == anioObj.anio){
