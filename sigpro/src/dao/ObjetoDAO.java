@@ -287,7 +287,7 @@ public class ObjetoDAO {
 						}
 						
 						ObjetoCosto nivel_actual_estructura = root;
-						for(int i=1; i<estructuras.size(); i++){
+						for(int i=0; i<estructuras.size(); i++){
 							dato = (Object[]) estructuras.get(i);
 							objeto_id = dato[0]!=null ? (Integer)dato[0] : 0;
 							nombre = dato[1]!=null ? (String)dato[1] : null;
@@ -328,7 +328,7 @@ public class ObjetoDAO {
 								nodo = getPresupuestos(nodo, fuente, organismo, correlativo, anioInicial, mesPresupuestos, conn_analytic, usuario);
 							}
 							
-							if(nodo.nivel!=nivel_actual_estructura.nivel+1){
+							if(nodo.objeto_tipo > 0 && nodo.nivel!=nivel_actual_estructura.nivel+1){
 								if(nodo.nivel>nivel_actual_estructura.nivel){
 									nivel_actual_estructura = nivel_actual_estructura.children.get(nivel_actual_estructura.children.size()-1);
 								}
@@ -338,8 +338,12 @@ public class ObjetoDAO {
 										nivel_actual_estructura=nivel_actual_estructura.parent;
 								}
 							}
-							nodo.parent = nivel_actual_estructura;
-							nivel_actual_estructura.children.add(nodo);
+
+							if(nodo.objeto_tipo > 0){
+								nodo.parent = nivel_actual_estructura;
+								nivel_actual_estructura.children.add(nodo);
+							}else
+								nodo.parent = null;
 						}
 					}
 					catch(Throwable e){

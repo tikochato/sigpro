@@ -123,7 +123,7 @@
 	    		<div style="width: 100%;">
 		    		<div class="row">
 		    			<div class="panel panel-default">
-			  				<div class="panel-heading"><h3>Plan estructural del préstamo</h3></div>
+			  				<div class="panel-heading"><h3>Plan de Ejecución</h3></div>
 						</div>
 		    		</div>
 		    		<br>
