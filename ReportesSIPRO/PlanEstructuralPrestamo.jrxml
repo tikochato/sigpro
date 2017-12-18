@@ -55,7 +55,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="Arial" size="16" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Plan Estructural del Préstamo]]></text>
+				<text><![CDATA[Plan de Ejecución Anual]]></text>
 			</staticText>
 		</band>
 	</title>
