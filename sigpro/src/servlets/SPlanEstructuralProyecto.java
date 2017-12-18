@@ -264,10 +264,22 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 					}
 					
 					temp.costoPlanificado = objeto.getCosto();
-					temp.presupuestoDevengado = objeto.getEjecutado();
+					
+					ObjetoCosto.stanio[] anios = objeto.getAnios();
+					
+					BigDecimal ejecutado = new BigDecimal(0);
+					for(ObjetoCosto.stanio anioC : anios){
+						if(anioC.anio >= anio && anioC.anio <= anio){							
+							for(int i=0; i<12;i++){
+								ejecutado = ejecutado.add(anioC.mes[i].real);
+							}
+						}
+					}
+					
+					temp.presupuestoDevengado = ejecutado;
 					temp.presupuestoAprobado = objeto.getAsignado();
 					temp.asignacionPresupuestariaVigente = objeto.getModificaciones();
-					temp.avanceFinanciero = objeto.getModificaciones() != null && objeto.getEjecutado() != null ? (objeto.getModificaciones().compareTo(BigDecimal.ZERO) > 0 ? objeto.getEjecutado().divide(objeto.getModificaciones(),3,BigDecimal.ROUND_HALF_UP).doubleValue() : new BigDecimal(0).doubleValue()) : new BigDecimal(0).doubleValue();
+					temp.avanceFinanciero = objeto.getModificaciones() != null && ejecutado != null ? (objeto.getModificaciones().compareTo(BigDecimal.ZERO) > 0 ? ejecutado.divide(objeto.getModificaciones(),3,BigDecimal.ROUND_HALF_UP).doubleValue() * 100 : new BigDecimal(0).doubleValue()) : new BigDecimal(0).doubleValue();
 					lstPrestamo.add(temp);
 				}
 			}
