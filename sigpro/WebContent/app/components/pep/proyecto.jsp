@@ -368,6 +368,21 @@
 						</div>
 					</div>
 					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group money-input">
+								<input type="text" 
+								 class="inputText input-money"  
+								 ng-model="controller.montoTechos"
+								 ng-value="controller.montoTechos"
+								 onblur="this.setAttribute('value', this.value);" 
+								 ui-number-mask="2"
+								 ng-readonly="true"
+								 >
+								<label class="floating-label" >Total asignado</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group money-input">
 								<input type="text" class="inputText "  

@@ -452,9 +452,9 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				$http.post('/SProyecto', { accion: 'obtenerMontoTechos', id: mi.proyecto.id }).then(
 					function(response){
 					if(response.data.success){
-						mi.MontoTechos = response.data.techoPep;	
+						mi.montoTechos = response.data.techoPep;	
 						
-						if(mi.proyecto.costo > mi.MontoTechos)
+						if(mi.proyecto.costo > mi.montoTechos)
 							mi.sobrepaso = true;
 						else
 							mi.sobrepaso = false;
@@ -464,7 +464,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 								if(response.data.success){
 									mi.montoDesembolsadoUE = response.data.montoDesembolsadoUE;
 									
-									mi.montoPorDesembolsar = mi.MontoTechos - mi.montoDesembolsadoUE;
+									mi.montoPorDesembolsar = mi.montoTechos - mi.montoDesembolsadoUE;
 									
 									$http.post('/SDataSigade', { accion: 'getMontoDesembolsosUEALaFecha', codPrep: mi.codigoPresupuestario, entidad: mi.proyecto.entidadentidad, ue: mi.proyecto.unidadejecutoraid}).then(
 										function(response){
