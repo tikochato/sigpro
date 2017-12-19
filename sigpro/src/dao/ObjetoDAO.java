@@ -844,7 +844,7 @@ public class ObjetoDAO {
 		return  ret;
 	}
 	
-	public static BigDecimal getAsignadoPorLineaPresupuestaria(Integer ejercicio, Integer entidad, Integer unidadEjecutora, 
+	public static BigDecimal getAsignadoPorLineaPresupuestaria(Integer ejercicio, Integer entidad,  
 			Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra, Integer renglon, Integer geografico){
 		
 		BigDecimal ret = new BigDecimal(0);
@@ -873,7 +873,7 @@ public class ObjetoDAO {
 			criteria.setParameter("7", geografico);
 			criteria.setParameter("8", ejercicio);
 			criteria.setParameter("9", entidad);
-			criteria.setParameter("10", unidadEjecutora);
+//			criteria.setParameter("10", unidadEjecutora);
 			lstret = criteria.getResultList();
 			
 			if(!lstret.isEmpty()){
