@@ -454,6 +454,11 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 					if(response.data.success){
 						mi.MontoTechos = response.data.techoPep;	
 						
+						if(mi.proyecto.costo > mi.MontoTechos)
+							mi.sobrepaso = true;
+						else
+							mi.sobrepaso = false;
+						
 						$http.post('/SDataSigade', { accion: 'getMontoDesembolsosUE', codPrep: mi.codigoPresupuestario, ejercicio: mi.proyecto.ejercicio, entidad: mi.proyecto.entidadentidad, ue: mi.proyecto.unidadejecutoraid}).then(
 							function(response){
 								if(response.data.success){
@@ -477,8 +482,6 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			}
 			mi.getDocumentosAdjuntos( mi.proyecto.id,0);
 			$scope.active = 0;
-			
-			
 		}
 		else
 			$utilidades.mensaje('warning','Debe seleccionar el '+$rootScope.etiquetas.proyecto+' que desea editar');

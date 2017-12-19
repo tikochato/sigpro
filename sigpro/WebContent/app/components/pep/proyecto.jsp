@@ -92,6 +92,11 @@
 			</shiro:hasPermission>
 			</div>
 		</div>
+		<br><br>
+			<div class="col-sm-12" ng-if="controller.sobrepaso != null && controller.sobrepaso == true">
+				<div class="alert alert-danger" style="text-align: center;">La planificación sobrepasa el techo asignado</div>
+			</div>
+		<br>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group" role="group" aria-label="">
 					<shiro:hasPermission name="24010">
@@ -182,6 +187,11 @@
 		</div>
 		<div class="col-sm-12" ng-if="controller.proyecto.projectCargado==1">
 				<div class="componente_sigade">Estructura importada desde un archivo de Project</div>
+			</div>
+		<br>
+		<br><br>
+			<div class="col-sm-12" ng-if="controller.sobrepaso != null && controller.sobrepaso == true">
+				<div class="alert alert-danger" style="text-align: center;">La planificación sobrepasa el techo asignado</div>
 			</div>
 		<br>
 		<div class="col-sm-12">
