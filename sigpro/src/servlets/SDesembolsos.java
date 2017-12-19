@@ -123,7 +123,7 @@ public class SDesembolsos extends HttpServlet {
 				}
 				
 				List<?> dtmAvance = DataSigadeDAO.getAVANCE_FISFINAN_DET_DTIRango( 
-						prestamo.getCodigoPresupuestario()+"",anio_inicial,anio_final,1, proyecto.getUnidadEjecutora().getId().getEntidadentidad(), proyecto.getUnidadEjecutora().getId().getUnidadEjecutora());
+						prestamo.getCodigoPresupuestario()+"",anio_inicial,anio_final,1, proyecto.getUnidadEjecutora().getId().getEntidadentidad());
 				
 				String realQ="";
 				for (int i = anio_inicial ; i<=anio_final ; i++){
@@ -143,7 +143,7 @@ public class SDesembolsos extends HttpServlet {
 				}
 				
 				List<?> dtmAvanceD = DataSigadeDAO.getAVANCE_FISFINAN_DET_DTIRango( 
-						prestamo.getCodigoPresupuestario()+"",anio_inicial,anio_final,2, proyecto.getUnidadEjecutora().getId().getEntidadentidad(), proyecto.getUnidadEjecutora().getId().getUnidadEjecutora());
+						prestamo.getCodigoPresupuestario()+"",anio_inicial,anio_final,2, proyecto.getUnidadEjecutora().getId().getEntidadentidad());
 				
 				String realD="";
 				for (int i = anio_inicial ; i<=anio_final ; i++){

@@ -1085,7 +1085,7 @@ public class SPrestamo extends HttpServlet {
 					
 					
 					temp.desembolsadoAFecha = DataSigadeDAO.totalDesembolsadoAFechaRealDolaresPorEntidad(prestamo.getCodigoPresupuestario() + "", 
-							anio, mes,proyecto.getUnidadEjecutora().getId().getEntidadentidad(),proyecto.getUnidadEjecutora().getId().getUnidadEjecutora());
+							anio, mes,proyecto.getUnidadEjecutora().getId().getEntidadentidad());
 					if (temp.desembolsadoAFecha == null)
 						temp.desembolsadoAFecha = new BigDecimal(0);
 					
