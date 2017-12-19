@@ -46,6 +46,7 @@
 	<parameter name="queryMa" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" ma.linea_base like '%"+$P{lineaBase}+"%' ":" ma.actual=1 "]]></defaultValueExpression>
 	</parameter>
+	<parameter name="nombreLineaBase" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT meta.*, valores.*
 FROM (SELECT c.nombre componente, p.nombre producto, um.nombre unidadmedida, m.id, m.nombre meta, 
@@ -925,6 +926,15 @@ group by metaid ) valores ON meta.id = valores.metaid]]>
 				</textElement>
 				<text><![CDATA[Usuario:]]></text>
 			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="450" y="20" width="300" height="10" uuid="5f14ef7b-bc10-416f-ac65-d7af2fe2d41e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nombreLineaBase}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageFooter>
 </jasperReport>

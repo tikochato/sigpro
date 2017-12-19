@@ -1478,11 +1478,15 @@ function modalGenerarReporte($uibModalInstance, $scope, $http, $interval,
 						console.log(response.detalle);
 					}
 				});
-		var resultado = {
-				fechaCorte : mi.fechaCorte, 
-				lineaBase : mi.lineaBaseId
+		if(mi.lineaBaseNombre!=null && mi.lineaBaseNombre!=""){
+			var resultado = {
+					fechaCorte : mi.fechaCorte, 
+					lineaBase : mi.lineaBaseId
+			}
+			$uibModalInstance.close(resultado);
+		}else{
+			$utilidades.mensaje('warning', 'Debe seleccionar una línea Base');
 		}
-		$uibModalInstance.close(resultado);
 	};
 
 	mi.cancel = function() {
