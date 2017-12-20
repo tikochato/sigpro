@@ -188,7 +188,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				
 				for (int x = anioInicial; x<= anioFinal; x++){
 					List<?> vigente = ObjetoDAO.getVigente(fuente, organismo, correlativo, anioInicial, mes, 
-							proyecto.getUnidadEjecutora().getId().getUnidadEjecutora(), proyecto.getUnidadEjecutora().getId().getEntidadentidad());
+							proyecto.getUnidadEjecutora().getId().getEntidadentidad());
 					Object valores [] = (Object[]) vigente.get(0);
 					for (int y = 0 ; y< 12; y++)
 						valores_text = String.join("", valores_text,valores_text.length()> 0 ? ",":"",

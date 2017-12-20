@@ -27,6 +27,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 		mi.totales = [];
 		mi.scrollPosicion = 0;
 		mi.vigente = [];
+		mi.millonesConvertidos = false;
 		
 		mi.lprestamos = [];
 		
@@ -346,7 +347,11 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 					datos.accion = "getvigente";
 					$http.post('/SInformacionPresupuestaria', datos).then(function(response) {
 						mi.vigenteOriginal = response.data.vigente;
+						mi.enMillones = true;
 						mi.agruparVigente(mi.agrupacionActual);
+						
+						//mi.convertirMillones(true);
+						
 					})
 					
 					
@@ -567,15 +572,14 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 				mi.dataGraficaAcumulado[0][x] = x == 0 ? mi.dataGrafica[0][x] : mi.dataGraficaAcumulado[0][x -1] +  mi.dataGrafica[0][x];
 				mi.dataGraficaAcumulado[1][x] = x == 0 ? mi.dataGrafica[1][x] : mi.dataGraficaAcumulado[1][x -1] +  mi.dataGrafica[1][x];
 			}
-			
-			  
 				
 			mi.series = ['Planificado', 'Real','Vigente'];
 			
-			mi.convertirMillones();
+			//mi.convertirMillones();
 		}
 		
 		mi.convertirMillones = function(){
+			if (mi.dataGrafica.length == 3 && mi.dataGrafica[2].length > 0 ){
 			for(h in mi.dataGrafica){
 				for(k in mi.dataGrafica[h]){
 					if(mi.enMillones){
@@ -584,12 +588,17 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 						mi.optionsGrafica.scales.yAxes[0].scaleLabel.labelString = "Monto en millones de quetzales";
 					}
 					else{
-						mi.dataGrafica[h][k] = mi.dataGrafica[h][k] * 1000000;
-						mi.dataGraficaAcumulado[h][k] = mi.dataGraficaAcumulado[h][k] * 1000000;
-						mi.optionsGrafica.scales.yAxes[0].scaleLabel.labelString = "Monto en quetzales";
+						if (mi.millonesConvertidos){
+							mi.dataGrafica[h][k] = mi.dataGrafica[h][k] * 1000000;
+							mi.dataGraficaAcumulado[h][k] = mi.dataGraficaAcumulado[h][k] * 1000000;
+							mi.optionsGrafica.scales.yAxes[0].scaleLabel.labelString = "Monto en quetzales";
+						}
+						
 					}
 				}
 			}
+			mi.millonesConvertidos = mi.enMillones;
+		}
 		}
 		
 		mi.optionsGrafica = {
@@ -818,12 +827,12 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 		
 		
 		
-		if(mi.enMillones){
+	/*	if(mi.enMillones){
 			for (x in mi.vigente){
 				mi.vigente[x] = mi.vigente[x] / 1000000;
 				mi.vigenteAcumulado[x] = mi.vigenteAcumulado[x] / 1000000;
 			}
-		}
+		} */
 		
 		switch (agrupacion){
 			case 1:
@@ -891,6 +900,9 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 		
 		mi.dataGrafica.push(vigenteTemp);
 		mi.dataGraficaAcumulado.push(mi.vigenteAcumulado);
+		
+		mi.convertirMillones();
+		
 	}
 		
 }]);

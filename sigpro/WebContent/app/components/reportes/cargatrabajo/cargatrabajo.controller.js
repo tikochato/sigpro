@@ -212,10 +212,6 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 			{value: 0, text: 'Seleccione una opción'}
 		]
 		
-		mi.unidadesEjecutoras = [
-			{value: 0, text: "Seleccione una opción"}
-		]
-		
 		mi.peps = [
 			{value: 0,text: "Seleccione una opción"}
 		];
@@ -233,7 +229,6 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 		];
 		
 		mi.entidad = mi.entidades[0];
-		mi.unidadEjecutora = mi.unidadesEjecutoras[0];
 		mi.pep = mi.peps[0];
 		mi.componente = mi.componentes[0];
 		mi.producto = mi.productos[0];
@@ -244,7 +239,6 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 		//mi.mostrarcargando=false;
 		if(objetoSeleccionado === 0){
 			mi.entidadHide = false;
-			mi.unidadEjecutoraHide = false;
 			mi.pepHide = false;
 			mi.componenteHide = false;
 			mi.productoHide = false;
@@ -252,7 +246,6 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 			mi.reset();
 		}else if(objetoSeleccionado === 1){
 			mi.entidadHide = true;
-			mi.unidadEjecutoraHide = true;
 			mi.pepHide = true;
 			mi.componenteHide = false;
 			mi.productoHide = false;
@@ -261,7 +254,6 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 			mi.getEntidades();
 		}else if(objetoSeleccionado === 2){
 			mi.entidadHide = true;
-			mi.unidadEjecutoraHide = true;
 			mi.pepHide = true;
 			mi.componenteHide = true;
 			mi.productoHide = false;
@@ -270,7 +262,6 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 			mi.getEntidades();
 		}else if (objetoSeleccionado === 3){
 			mi.entidadHide = true;
-			mi.unidadEjecutoraHide = true;
 			mi.pepHide = true;
 			mi.componenteHide = true;
 			mi.productoHide = true;
@@ -279,7 +270,6 @@ app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interva
 			mi.getEntidades();
 		}else if (objetoSeleccionado === 4){
 			mi.entidadHide = true;
-			mi.unidadEjecutoraHide = true;
 			mi.pepHide = true;
 			mi.componenteHide = true;
 			mi.productoHide = true;

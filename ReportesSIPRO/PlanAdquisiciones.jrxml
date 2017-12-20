@@ -29,6 +29,7 @@
 	<parameter name="queryP" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" p.linea_base like '%"+$P{lineaBase}+"%' ":" p.actual=1 "]]></defaultValueExpression>
 	</parameter>
+	<parameter name="nombreLineaBase" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT c.nombre componente, pr.nombre producto, sp.nombre subproducto, ta.nombre metodo, 
 CASE WHEN pa.preparacion_doc_planificado 
@@ -127,7 +128,7 @@ JOIN sipro_history.producto pr on pr.id=sp.productoid and  $P!{queryPr}
 JOIN sipro_history.componente c on c.id=pr.componenteid and  $P!{queryC} 
 JOIN sipro_history.proyecto p on p.id=c.proyectoid and  $P!{queryP} 
 JOIN sipro_history.tipo_adquisicion ta on pa.tipo_adquisicion=ta.id and ta.actual = 1
-WHERE p.id= $P{proyectoId} and  $P!{queryPa} ]]>
+WHERE p.id= $P{proyectoId} and  $P!{queryPa}]]>
 	</queryString>
 	<field name="componente" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="componente"/>
@@ -853,6 +854,15 @@ WHERE p.id= $P{proyectoId} and  $P!{queryPa} ]]>
 					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="450" y="34" width="300" height="10" uuid="3f3883ff-028f-410f-93d0-3d14ff517e36">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nombreLineaBase}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>

@@ -92,6 +92,11 @@
 			</shiro:hasPermission>
 			</div>
 		</div>
+		<br><br>
+			<div class="col-sm-12" ng-if="controller.sobrepaso != null && controller.sobrepaso == true">
+				<div class="alert alert-danger" style="text-align: center;">La planificación sobrepasa el techo asignado</div>
+			</div>
+		<br>
 		<div class="col-sm-12 operation_buttons" align="right">
 			<div class="btn-group" role="group" aria-label="">
 					<shiro:hasPermission name="24010">
@@ -164,8 +169,10 @@
 				<span class="glyphicon glyphicon-user"></span></label>
 				<label class="btn btn-default" ng-click="controller.generarReporte()" uib-tooltip="Plan Anual de Ejecución">
 				<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
-				<label class="btn btn-default" ng-click="controller.congelado?'':controller.congelar()" uib-tooltip="Congelar línea base" ng-disabled="controller.congelado">
+				<label class="btn btn-default" ng-click="controller.congelado?'':controller.congelar(1)" uib-tooltip="Crear línea base" ng-disabled="controller.congelado">
 				<span class="glyphicon glyphicon glyphicon-bookmark" aria-hidden="true"></span></label>
+				<label class="btn btn-default" ng-click="!controller.congelado?'':controller.congelar(2)" uib-tooltip="Congelar" ng-disabled="!controller.congelado">
+				<span class="glyphicon glyphicon glyphicon-duplicate" aria-hidden="true"></span></label>
 				<label class="btn btn-default" ng-click="controller.verHistoria()" uib-tooltip="Ver Historia">
 				<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
 		</div>
@@ -182,6 +189,11 @@
 		</div>
 		<div class="col-sm-12" ng-if="controller.proyecto.projectCargado==1">
 				<div class="componente_sigade">Estructura importada desde un archivo de Project</div>
+			</div>
+		<br>
+		<br><br>
+			<div class="col-sm-12" ng-if="controller.sobrepaso != null && controller.sobrepaso == true">
+				<div class="alert alert-danger" style="text-align: center;">La planificación sobrepasa el techo asignado</div>
 			</div>
 		<br>
 		<div class="col-sm-12">
@@ -244,7 +256,7 @@
 			          	
 					</div>
 	
-					<div class="form-group" >
+					<div class="form-group" ng-hide="true">
 			            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="controller.unidadejecutoranombre" ng-readonly="true"
 			            	ng-click="controller.prestamoid != null ? '' : controller.buscarUnidadEjecutora()" ng-value="controller.unidadejecutoranombre" onblur="this.setAttribute('value', this.value);"/>
 			            <span class="label-icon" ng-click="controller.prestamoid != null ? '' : controller.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
@@ -354,6 +366,21 @@
 								 ng-readonly="true"
 								 >
 								<label class="floating-label" >Costo</label>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group money-input">
+								<input type="text" 
+								 class="inputText input-money"  
+								 ng-model="controller.montoTechos"
+								 ng-value="controller.montoTechos"
+								 onblur="this.setAttribute('value', this.value);" 
+								 ui-number-mask="2"
+								 ng-readonly="true"
+								 >
+								<label class="floating-label" >Total asignado</label>
 							</div>
 						</div>
 					</div>

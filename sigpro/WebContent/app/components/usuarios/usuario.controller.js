@@ -244,6 +244,9 @@ app.controller('usuarioController', ['$scope','$rootScope', '$http', '$interval'
 											mi.tipoUsuarioRol=mi.tipoUsuario.nombre;
 											$utilidades.mensaje('success',data.mensaje);
 											mi.botones=true;
+										}else{
+											$utilidades.mensaje('danger',data.error);
+											mi.botones=true;
 										}
 							});
 					}else{

@@ -397,7 +397,7 @@ public class UsuarioDAO {
 		Cooperante ret = new Cooperante();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		List <Cooperante> unidades = new ArrayList <Cooperante> ();
-		String consulta ="Select u FROM Cooperante u, RolUsuarioProyecto r, Proyecto p where p.id =r.id.proyecto and p.cooperante.id = u.id and r.id.usuario =:usuario ";
+		String consulta ="Select u FROM Cooperante u, RolUsuarioProyecto r, Proyecto p where r.id.proyecto=p.id and p.cooperante.id=u.id and r.id.usuario =:usuario ";
 		try{
 			session.beginTransaction();
 			Query<Cooperante> criteria = session.createQuery(consulta, Cooperante.class);

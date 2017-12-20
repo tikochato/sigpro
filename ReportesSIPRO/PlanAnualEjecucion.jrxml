@@ -32,6 +32,12 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<parameter name="lineaBase" class="java.lang.String"/>
+	<parameter name="esReportePrevio" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nombreLineaBase" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Actual"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[select 1 from dual]]>
 	</queryString>
@@ -39,7 +45,14 @@
 		<property name="com.jaspersoft.studio.field.label" value="1"/>
 	</field>
 	<background>
-		<band splitType="Stretch"/>
+		<band height="612" splitType="Stretch">
+			<image>
+				<reportElement mode="Transparent" x="80" y="40" width="680" height="530" uuid="ff61bf00-dddf-4918-b8c6-faadec7afe3b">
+					<printWhenExpression><![CDATA[$P{esReportePrevio}.compareTo( 1 )==0]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA["img/marca_agua.png"]]></imageExpression>
+			</image>
+		</band>
 	</background>
 	<detail>
 		<band height="371">
@@ -58,6 +71,9 @@
 				</subreportParameter>
 				<subreportParameter name="lineaBase">
 					<subreportParameterExpression><![CDATA[$P{lineaBase}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="nombreLineaBase">
+					<subreportParameterExpression><![CDATA[$P{nombreLineaBase}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["InformacionGeneral.jasper"]]></subreportExpression>
@@ -83,6 +99,9 @@
 				<subreportParameter name="lineaBase">
 					<subreportParameterExpression><![CDATA[$P{lineaBase}]]></subreportParameterExpression>
 				</subreportParameter>
+				<subreportParameter name="nombreLineaBase">
+					<subreportParameterExpression><![CDATA[$P{nombreLineaBase}]]></subreportParameterExpression>
+				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["InformacionGeneral_Cuadro2.jasper"]]></subreportExpression>
 			</subreport>
@@ -104,6 +123,9 @@
 				</subreportParameter>
 				<subreportParameter name="lineaBase">
 					<subreportParameterExpression><![CDATA[$P{lineaBase}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="nombreLineaBase">
+					<subreportParameterExpression><![CDATA[$P{nombreLineaBase}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["Metas.jasper"]]></subreportExpression>
@@ -127,6 +149,9 @@
 				<subreportParameter name="lineaBase">
 					<subreportParameterExpression><![CDATA[$P{lineaBase}]]></subreportParameterExpression>
 				</subreportParameter>
+				<subreportParameter name="nombreLineaBase">
+					<subreportParameterExpression><![CDATA[$P{nombreLineaBase}]]></subreportParameterExpression>
+				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["PlanAdquisiciones.jasper"]]></subreportExpression>
 			</subreport>
@@ -142,6 +167,9 @@
 				</subreportParameter>
 				<subreportParameter name="costos">
 					<subreportParameterExpression><![CDATA[$P{costos}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="nombreLineaBase">
+					<subreportParameterExpression><![CDATA[$P{nombreLineaBase}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["EjecucionFinanciera.jasper"]]></subreportExpression>
@@ -168,6 +196,9 @@
 				<subreportParameter name="costoPlanificado">
 					<subreportParameterExpression><![CDATA[$P{costoReal}]]></subreportParameterExpression>
 				</subreportParameter>
+				<subreportParameter name="nombreLineaBase">
+					<subreportParameterExpression><![CDATA[$P{nombreLineaBase}]]></subreportParameterExpression>
+				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["Gasto.jasper"]]></subreportExpression>
 			</subreport>
@@ -190,6 +221,9 @@
 				<subreportParameter name="lineaBase">
 					<subreportParameterExpression><![CDATA[$P{lineaBase}]]></subreportParameterExpression>
 				</subreportParameter>
+				<subreportParameter name="nombreLineaBase">
+					<subreportParameterExpression><![CDATA[$P{nombreLineaBase}]]></subreportParameterExpression>
+				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["Desembolsos.jasper"]]></subreportExpression>
 			</subreport>
@@ -208,6 +242,9 @@
 				</subreportParameter>
 				<subreportParameter name="costos">
 					<subreportParameterExpression><![CDATA[$P{costos}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="nombreLineaBase">
+					<subreportParameterExpression><![CDATA[$P{nombreLineaBase}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["PlanEstructuralPrestamo.jasper"]]></subreportExpression>
@@ -352,6 +389,15 @@
 					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="472" y="1" width="300" height="10" uuid="24bd4d9d-8042-4456-8a49-63b742bad8e1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nombreLineaBase}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>

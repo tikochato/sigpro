@@ -30,6 +30,7 @@ from sipro_analytic.dtm_avance_fisfinan_det_dti d
 join sipro.prestamo ps ON d.codigo_presupuestario = ps.codigo_presupuestario
 join sipro_history.proyecto pr ON pr.prestamoid = ps.id and  $P!{queryPr1} 
 where pr.id =  $P{proyectoIdG} 
+and d.entidad_sicoin = pr.entidad
 and d.ejercicio_fiscal = YEAR($P{fechaCorte} )
  and CAST(d.mes_desembolso AS UNSIGNED) <= MONTH( $P{fechaCorte} )
 group by d.ejercicio_fiscal,d.mes_desembolso
@@ -63,6 +64,7 @@ ORDER BY mes asc]]>
 	<parameter name="queryPr" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" pr.linea_base like '%"+$P{lineaBase}+"%' ":" pr.actual=1 "]]></defaultValueExpression>
 	</parameter>
+	<parameter name="nombreLineaBase" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[select SUM(eneroP) eneroP, SUM(eneroR) eneroR, SUM(febreroP) febreroP, SUM(febreroR) febreroR,
 SUM(marzoP) marzoP, SUM(marzoR) marzoR, SUM(abrilP) abrilP, SUM(abrilR) abrilR, SUM(mayoP) mayoP, SUM(mayoR) mayoR, SUM(junioP) junioP, SUM(junioR) junioR,
@@ -115,6 +117,7 @@ from sipro_analytic.dtm_avance_fisfinan_det_dti d
 join sipro.prestamo ps ON d.codigo_presupuestario = ps.codigo_presupuestario 
 join sipro_history.proyecto pr ON pr.prestamoid = ps.id and  $P!{queryPr} 
 where pr.id =  $P{proyectoId} 
+and d.entidad_sicoin = pr.entidad
 and d.ejercicio_fiscal = YEAR($P{fechaCorte} )
 and CAST(d.mes_desembolso AS UNSIGNED) <= MONTH( $P{fechaCorte} )
 group by d.ejercicio_fiscal,d.mes_desembolso
@@ -1296,7 +1299,7 @@ group by t1.anio
 		</band>
 	</title>
 	<pageFooter>
-		<band height="40" splitType="Stretch">
+		<band height="45" splitType="Stretch">
 			<printWhenExpression><![CDATA[$P{esSubreporte}==false]]></printWhenExpression>
 			<staticText>
 				<reportElement x="0" y="30" width="70" height="10" uuid="bb31fbbf-4ff8-4e11-80ed-ff4ad82fe79c">
@@ -1342,6 +1345,15 @@ group by t1.anio
 					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="450" y="20" width="300" height="10" uuid="a7a6324e-9bcd-468e-ae81-3b7ce0b0b791">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nombreLineaBase}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>

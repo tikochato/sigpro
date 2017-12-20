@@ -12,6 +12,8 @@
 	<subDataset name="Dataset1" uuid="9638d801-570c-425b-a3d4-d37c8cf36a51">
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MariaDB Server"/>
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="266"/>
+		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="727"/>
 		<parameter name="proyectoId" class="java.lang.Integer">
 			<defaultValueExpression><![CDATA[8]]></defaultValueExpression>
 		</parameter>
@@ -69,7 +71,6 @@ from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro_history.proyecto py, 
 where des.codigo_presupuestario= ps.codigo_presupuestario
 and py.prestamoid = ps.id
 and  $P!{queryPy} 
-and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora
 and des.entidad_sicoin = py.entidad
 and py.id = $P{proyectoId}	
 and ( (	des.mes_desembolso<= month( $P{fechaCorte} ) and des.ejercicio_fiscal=year( $P{fechaCorte} ))
@@ -85,7 +86,6 @@ from sipro_analytic.dtm_avance_fisfinan_det_dti des, sipro_history.proyecto py, 
 where des.codigo_presupuestario= ps.codigo_presupuestario
 and  $P!{queryPy} 
 and py.prestamoid = ps.id
-and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora
 and des.entidad_sicoin = py.entidad
 and py.id = $P{proyectoId}	) from dual
 union
@@ -137,6 +137,7 @@ select "Ejecucion Fisica",
 	<parameter name="lineaBaseQuery" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" py.linea_base like '%"+$P{lineaBase}+"%' and c.linea_base like '%"+$P{lineaBase}+"%'  ":" py.actual = 1 and c.actual= 1 "]]></defaultValueExpression>
 	</parameter>
+	<parameter name="nombreLineaBase" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT ps.proyecto_programa proyecto,  ue.nombre unidad_ejecutora, ps.numero_prestamo, ps.codigo_presupuestario, co.nombre organismo_financiero,
 tm.simbolo moneda, ps.monto_contratado,
@@ -154,7 +155,6 @@ sum(c.fuente_prestamo) monto_unidad_ejecutora,
 	from sipro_analytic.dtm_avance_fisfinan_det_dti des
 	where des.codigo_presupuestario = ps.codigo_presupuestario
 	and des.entidad_sicoin = py.entidad
-	and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora
 ) desembolsos_a_la_fecha,
 DATEDIFF(py.fecha_inicio, $P{fechaCorte} )/DATEDIFF(py.fecha_inicio,py.fecha_fin) plazo_ejecucion,
 py.ejecucion_fisica_real
@@ -441,7 +441,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 					</textElement>
 					<textFieldExpression><![CDATA[$F{fecha_actualizacion}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="$ #,##0.00#" isBlankWhenNull="true">
 					<reportElement x="175" y="100" width="175" height="25" uuid="932e181c-60b5-4b62-adbc-bc7ea048b18b">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -819,7 +819,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 					</textElement>
 					<text><![CDATA[Número de Préstamo]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="$ #,##0.00#" isBlankWhenNull="true">
 					<reportElement x="175" y="125" width="175" height="25" uuid="b71a8375-daf1-480a-b10a-7b9204dca0d9">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -837,7 +837,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 					</textElement>
 					<textFieldExpression><![CDATA[$F{monto_unidad_ejecutora}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="$ #,##0.00#" isBlankWhenNull="true">
 					<reportElement x="175" y="150" width="125" height="25" uuid="fc1379df-6bf0-4605-8a61-258e37165a90">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -873,7 +873,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 					</textElement>
 					<textFieldExpression><![CDATA[$F{desembolsos_a_la_fecha}.divide($F{monto_unidad_ejecutora},4,BigDecimal.ROUND_HALF_UP)]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="$ #,##0.00#" isBlankWhenNull="true">
 					<reportElement x="175" y="175" width="125" height="25" uuid="d14f0630-d52d-4fd7-9210-b86000c85a7f">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -929,7 +929,9 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 				</textField>
 			</frame>
 			<componentElement>
-				<reportElement key="" style="Estilo_grafica" stretchType="RelativeToTallestObject" x="171" y="312" width="410" height="169" uuid="7f5f1c90-d740-4504-9d34-463c9f2be709"/>
+				<reportElement key="" style="Estilo_grafica" stretchType="RelativeToTallestObject" x="171" y="312" width="410" height="169" uuid="e0bf1d04-8db3-4951-a5f4-3e31d532e116">
+					<property name="net.sf.jasperreports.style.mode" value="Transparent"/>
+				</reportElement>
 				<sc:spiderChart xmlns:sc="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<sc:chartSettings>
 						<chartTitle/>
@@ -938,7 +940,7 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 					</sc:chartSettings>
 					<sc:spiderDataset>
 						<dataset>
-							<datasetRun subDataset="Dataset1" uuid="f0d08a49-257b-4927-b300-f0770a573e10">
+							<datasetRun subDataset="Dataset1" uuid="023042a8-457d-403c-8afa-b19c5201fe2e">
 								<datasetParameter name="proyectoId">
 									<datasetParameterExpression><![CDATA[$P{proyectoId}]]></datasetParameterExpression>
 								</datasetParameter>
@@ -951,12 +953,6 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 								<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 							</datasetRun>
 						</dataset>
-						<categorySeries>
-							<seriesExpression><![CDATA["Planificado"]]></seriesExpression>
-							<categoryExpression><![CDATA[$F{categoria}]]></categoryExpression>
-							<valueExpression><![CDATA[$F{valor_plan}]]></valueExpression>
-							<labelExpression><![CDATA["Planificado"]]></labelExpression>
-						</categorySeries>
 						<categorySeries>
 							<seriesExpression><![CDATA["Real"]]></seriesExpression>
 							<categoryExpression><![CDATA[$F{categoria}]]></categoryExpression>
@@ -1016,6 +1012,15 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="453" y="2" width="300" height="10" uuid="014825ae-00d8-4528-91aa-6e628ae3fbee">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nombreLineaBase}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>

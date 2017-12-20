@@ -226,7 +226,7 @@
 			          	
 					</div>
 			        
-			        <div class="form-group">
+			        <div class="form-group" ng-hide="true">
 			            <input type="text" class="inputText" ng-model="producto.unidadEjecutoraNombre" ng-value="producto.unidadEjecutoraNombre" 
 			            	ng-click="producto.prestamoId != null ? '' : producto.buscarUnidadEjecutora()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" />
 			            <span class="label-icon" ng-click="producto.prestamoId != null ? '' : producto.buscarUnidadEjecutora()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>

@@ -1,5 +1,5 @@
 package pojo;
-// Generated Dec 13, 2017 9:28:15 AM by Hibernate Tools 5.2.3.Final
+// Generated Dec 19, 2017 2:59:18 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -24,7 +24,7 @@ public class LineaBase implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4542424089255071022L;
+	private static final long serialVersionUID = -4201202772586360144L;
 	private Integer id;
 	private Proyecto proyecto;
 	private String nombre;
@@ -32,25 +32,30 @@ public class LineaBase implements java.io.Serializable {
 	private String usuarioActualizo;
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
+	private int tipoLineaBase;
+	private Integer sobreescribir;
 
 	public LineaBase() {
 	}
 
-	public LineaBase(Proyecto proyecto, String nombre, String usuarioCreo, Date fechaCreacion) {
+	public LineaBase(Proyecto proyecto, String nombre, String usuarioCreo, Date fechaCreacion, int tipoLineaBase) {
 		this.proyecto = proyecto;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
+		this.tipoLineaBase = tipoLineaBase;
 	}
 
 	public LineaBase(Proyecto proyecto, String nombre, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
-			Date fechaActualizacion) {
+			Date fechaActualizacion, int tipoLineaBase, Integer sobreescribir) {
 		this.proyecto = proyecto;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.usuarioActualizo = usuarioActualizo;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
+		this.tipoLineaBase = tipoLineaBase;
+		this.sobreescribir = sobreescribir;
 	}
 
 	@Id
@@ -120,6 +125,24 @@ public class LineaBase implements java.io.Serializable {
 
 	public void setFechaActualizacion(Date fechaActualizacion) {
 		this.fechaActualizacion = fechaActualizacion;
+	}
+
+	@Column(name = "tipo_linea_base", nullable = false)
+	public int getTipoLineaBase() {
+		return this.tipoLineaBase;
+	}
+
+	public void setTipoLineaBase(int tipoLineaBase) {
+		this.tipoLineaBase = tipoLineaBase;
+	}
+
+	@Column(name = "sobreescribir")
+	public Integer getSobreescribir() {
+		return this.sobreescribir;
+	}
+
+	public void setSobreescribir(Integer sobreescribir) {
+		this.sobreescribir = sobreescribir;
 	}
 
 }
