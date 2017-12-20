@@ -232,7 +232,7 @@
 			          	
 						</div>
 						
-						<div class="form-group">
+						<div class="form-group" ng-hide="true">
 				            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="componentec.unidadejecutoranombre" ng-readonly="true" 
 				            	ng-click="componentec.prestamoId != null ? '' : componentec.buscarUnidadEjecutora()" ng-value="componentec.unidadejecutoranombre" onblur="this.setAttribute('value', this.value);"/>
 				            <span class="label-icon" ng-click="componentec.prestamoId != null ? '' : componentec.buscarUnidadEjecutora()" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>

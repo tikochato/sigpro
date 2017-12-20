@@ -861,8 +861,8 @@ public class ObjetoDAO {
 				"and renglon=?6",
 				"and geografico=?7",
 				"and ejercicio=?8",
-				"and entidad=?9",
-				"and unidad_ejecutra=?10");
+				"and entidad=?9");//,
+//				"and unidad_ejecutra=?10");
 			Query<?> criteria = session.createNativeQuery(query);
 			criteria.setParameter("1", programa);
 			criteria.setParameter("2", subprograma);

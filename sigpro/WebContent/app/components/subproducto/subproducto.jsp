@@ -223,7 +223,7 @@
 			          	
 					</div>
 			        
-			        <div class="form-group">
+			        <div class="form-group" ng-hide="true">
 			            <input type="text" class="inputText" ng-model="subproducto.unidadEjecutoraNombre" ng-readonly="true" 
 			            	ng-value="subproducto.unidadEjecutoraNombre" onblur="this.setAttribute('value', this.value);" 
 			            	ng-click="subproducto.prestamoId != null ? '' : subproducto.buscarUnidadEjecutora()"/>
