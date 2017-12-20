@@ -60,6 +60,7 @@ public class ObjetoCostoJasper {
 	BigDecimal modificaciones = new BigDecimal(0);
 	
 	Integer avance_fisico = 0;
+	Integer inversion_nueva;
 	
 	public ObjetoCostoJasper(String nombre, Integer objeto_id, int objeto_tipo, Integer nivel, Date fecha_inicial,
 			Date fecha_final, Date fecha_inicial_real, Date fecha_final_real, Integer duracion, 
@@ -70,7 +71,7 @@ public class ObjetoCostoJasper {
 			BigDecimal septiembreP, BigDecimal octubreP, BigDecimal noviembreP, BigDecimal diciembreP,
 			BigDecimal eneroR, BigDecimal febreroR, BigDecimal marzoR, BigDecimal abrilR, BigDecimal mayoR,
 			BigDecimal junioR, BigDecimal julioR, BigDecimal agostoR, BigDecimal septiembreR, BigDecimal octubreR,
-			BigDecimal noviembreR, BigDecimal diciembreR, BigDecimal ejecutado, BigDecimal asignado, BigDecimal modificaciones, Integer avance_fisico) {
+			BigDecimal noviembreR, BigDecimal diciembreR, BigDecimal ejecutado, BigDecimal asignado, BigDecimal modificaciones, Integer avance_fisico, Integer inversion_nueva) {
 		super();
 		this.nombre = nombre;
 		this.objeto_id = objeto_id;
@@ -92,6 +93,7 @@ public class ObjetoCostoJasper {
 		this.renglon = renglon;
 		this.geografico = geografico;
 		this.treePath = treePath;
+		this.inversion_nueva = inversion_nueva;
 		this.eneroP = eneroP!=null?eneroP:new BigDecimal(0);
 		this.febreroP = febreroP!=null?febreroP:new BigDecimal(0);
 		this.marzoP = marzoP!=null?marzoP:new BigDecimal(0);
@@ -523,6 +525,14 @@ public class ObjetoCostoJasper {
 
 	public void setAvance_fisico(Integer avance_fisico) {
 		this.avance_fisico = avance_fisico;
+	}
+
+	public Integer getInversion_nueva() {
+		return inversion_nueva;
+	}
+
+	public void setInversion_nueva(Integer inversion_nueva) {
+		this.inversion_nueva = inversion_nueva;
 	}
 	
 }
