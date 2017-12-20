@@ -256,7 +256,7 @@
 			          	
 					</div>
 	
-					<div class="form-group" >
+					<div class="form-group" ng-hide="true">
 			            <input type="text" class="inputText" id="iunie" name="iunie" ng-model="controller.unidadejecutoranombre" ng-readonly="true"
 			            	ng-click="controller.prestamoid != null ? '' : controller.buscarUnidadEjecutora()" ng-value="controller.unidadejecutoranombre" onblur="this.setAttribute('value', this.value);"/>
 			            <span class="label-icon" ng-click="controller.prestamoid != null ? '' : controller.buscarUnidadEjecutora()"><i class="glyphicon glyphicon-search"></i></span>
