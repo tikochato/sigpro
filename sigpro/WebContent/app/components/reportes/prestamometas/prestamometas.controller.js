@@ -1,8 +1,8 @@
 var app = angular.module('prestamometasController', [ 'smart-table']);
 
 
-app.controller('prestamometasController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
+app.controller('prestamometasController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
+	function($scope, $rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
 	
 	var mi = this;
 	mi.fechaInicio = "";
@@ -14,7 +14,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	mi.AnteriorActivo = false;
 	mi.enMillones = true;
 	mi.agrupacionActual = 1
-	mi.columnasTotal = 3;
+	mi.columnasTotal = 4;
 	mi.limiteAnios = 5;
 	mi.tamanioMinimoColumna = 125;
 	mi.tamanioMinimoColumnaMillones = 60;
@@ -26,6 +26,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	mi.dataOriginal = [];
 	mi.totales = [];
 	mi.scrollPosicion = 0;
+	mi.prestamoId=null;
 	
 	mi.VALOR_PLANIFICADO= 0;
 	mi.VALOR_REAL= 1;
@@ -47,23 +48,22 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	
 	
 	$scope.divActivo = "";
-	mi.activarScroll = function(id){
-		$scope.divActivo = id;
-    }
-	
+		
 	mi.iconoObjetoTipo = {
-			0: "glyphicon glyphicon-scale",
-			1: "glyphicon glyphicon-record",
-		    2: "glyphicon glyphicon-th",
+			10: "glyphicon glyphicon-scale",
+			0: "glyphicon glyphicon-record",
+		    1: "glyphicon glyphicon-th",
+		    2: "glyphicon glyphicon-equalizer",
 		    3: "glyphicon glyphicon-certificate",
 		    4: "glyphicon glyphicon-link",
-		    5: "glyphicon glyphicon-th-list",
+		    5: "glyphicon glyphicon-time",
 		};
 		
 		mi.tooltipObjetoTipo = {
-			0: "Meta",
-		    1: "Proyecto",
-		    2: "Componente",
+			10: "Meta",
+		    0: "Proyecto",
+		    1: "Componente",
+		    2: "Subcomponente",
 		    3: "Producto",
 		    4: "Subproducto",
 		    5: "Actividad",
@@ -92,7 +92,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 				$location.path('/prestamometas/rv');
 		}
 	    
-	$window.document.title = $utilidades.sistema_nombre+' - Metas de Préstamo';
+	$window.document.title = $utilidades.sistema_nombre+' - Avance de Metas';
 	i18nService.setCurrentLang('es');
 		
 	mi.formatofecha = 'yyyy';
@@ -109,35 +109,91 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 	    startingDay: 1,
 	    minMode: 'year'
 	};
-	
-	$http.post('/SMeta', { accion: 'getMetasUnidadesMedida' }).success(
-			function(response) {
-				mi.unidadesMedida = response.MetasUnidades;
-	});
-	
-	$http.post('/SProyecto',{accion: 'getProyectos'}).success(
-			function(response) {
-				mi.prestamos = [];
-				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione una opción'});
-				if (response.success){
-					for (var i = 0; i < response.entidades.length; i++){
-						mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
-					}
-					mi.prestamo = mi.prestamos[0];
-				}
-			});
-
-		mi.nombreUnidadMedida = function(id){
-			if (id != null && id > 0){
-				for (i=0; i<mi.unidadesMedida.length; i++){
-					if(mi.unidadesMedida[i].id == id){
-						return mi.unidadesMedida[i].nombre;
-					}
-				}
+		
+	$http.post('/SPrestamo', {accion: 'getPrestamos', t: (new Date()).getTime()}).then(
+			function(response){
+				if(response.data.success){
+					mi.lprestamos = response.data.prestamos;
+				}	
+		});
+		
+		mi.blurPrestamo=function(){
+			if(document.getElementById("prestamo_value").defaultValue!=mi.prestamoNombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','prestamo');
 			}
-			return "";
 		}
+		
+		mi.cambioPrestamo=function(selected){
+			if(selected!== undefined){
+				mi.prestamoNombre = selected.originalObject.proyectoPrograma;
+				mi.prestamoId = selected.originalObject.id;
+				$scope.$broadcast('angucomplete-alt:clearInput', 'pep');
+				$scope.$broadcast('angucomplete-alt:clearInput', 'lineaBase');
+				mi.getPeps(mi.prestamoId);
+			}
+			else{
+				mi.prestamoNombre="";
+				mi.prestamoId=null;
+			}
+		}
+		
+		mi.blurPep=function(){
+			if(document.getElementById("pep_value").defaultValue!=mi.pepNombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','pep');
+			}
+		}
+		
+		mi.cambioPep=function(selected){
+			if(selected!== undefined){
+				mi.pepNombre = selected.originalObject.nombre;
+				mi.pepId = selected.originalObject.id;
+				$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+				mi.getLineasBase(mi.pepId);
+			}
+			else{
+				mi.pepNombre="";
+				mi.pepId="";
+			}
+		}
+		
+		mi.getPeps = function(prestamoId){
+			$http.post('/SProyecto',{accion: 'getProyectos', prestamoid: prestamoId}).success(
+				function(response) {
+					mi.peps = [];
+					if (response.success){
+						mi.peps = response.entidades;
+					}
+			});	
+		}
+		
+		mi.blurLineaBase=function(){
+			if(document.getElementById("lineaBase_value").defaultValue!=mi.lineaBaseNombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+			}
+		};
+		
+		mi.cambioLineaBase=function(selected){
+			if(selected!== undefined){
+				mi.lineaBaseNombre = selected.originalObject.nombre;
+				mi.lineaBaseId = selected.originalObject.id;
+				mi.validar(1);
+			}
+			else{
+				mi.lineaBaseNombre="";
+				mi.lineaBaseId=null;
+			}
+		};
 
+
+		mi.getLineasBase = function(proyectoId){
+			$http.post('/SProyecto',{accion: 'getLineasBase', proyectoId: proyectoId}).success(
+				function(response) {
+					mi.lineasBase = [];
+					if (response.success){
+						mi.lineasBase = response.lineasBase;
+					}
+			});	
+		}
 		
 		mi.anterior = function(){
 			var elemento = document.getElementById("divTablaDatos");
@@ -185,11 +241,12 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			 }
 			$http.post('/SPrestamoMetas', { 
 				accion: 'exportarPdf',
-				proyectoid: mi.prestamo.value,
+				proyectoid: mi.pepId,
 				fechaInicio: mi.fechaInicio,
 				fechaFin: mi.fechaFin,
 				agrupacion: mi.agrupacionActual,
 				tipoVisualizacion: tipoVisualizacion,
+				lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
@@ -197,7 +254,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 						    anchor.attr({
 						         href: 'data:application/pdf;base64,' + response.data,
 						         target: '_blank',
-						         download: 'PrestamoMetas.pdf'
+						         download: 'AvanceDeMetas.pdf'
 						     })[0].click();
 						  }.bind(this), function errorCallback(response){
 						 	}
@@ -205,7 +262,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 		};
 		
 		mi.validar = function(noElemento){
-			if(mi.prestamo.value > 0)
+			if(mi.pepId != null && mi.pepId > 0)
 			{
 				if(mi.fechaInicio != null && mi.fechaInicio.toString().length == 4 && 
 						mi.fechaFin != null && mi.fechaFin.toString().length == 4)
@@ -277,9 +334,10 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 		mi.cargarTabla = function() {			
 			var datos = {
 				accion : 'getMetasProducto',
-				idPrestamo: mi.prestamo.value,
+				idPrestamo: mi.pepId,
 				anioInicial: mi.fechaInicio,
-				anioFinal: mi.fechaFin
+				anioFinal: mi.fechaFin,
+				lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null
 			};
 		
 			mi.mostrarCargando = true;
@@ -294,9 +352,11 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 					mi.totales = [];
 					 for (x in mi.data){
 						 var totalFinal = {"planificado": null, "real": null};
+						 var totalAcumulado = {"planificado": null, "real": null};
 						 var fila = [];
-						 if(mi.data[x].objeto_tipo == 0){
+						 if(mi.data[x].objeto_tipo == 10){
 							 totalFinal = {"planificado": 0, "real": 0};
+							 totalAcumulado = {"planificado": mi.data[x].metaAcumuladaP, "real": mi.data[x].metaAcumuladaR};
 							 for(a in mi.data[x].anios){
 								 var totalAnual = {"planificado": 0, "real": 0};
 								 var anio = mi.data[x].anios[a];
@@ -325,6 +385,8 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 							 }
 						 }
 						 var tot = {"valor": totalFinal};
+						 fila.push(tot);
+						 var tot = {"valor": totalAcumulado};
 						 fila.push(tot);
 						 var tot = {"anio": fila};
 						 mi.totales.push(tot);
@@ -388,7 +450,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 		}
 		
 		mi.cambiarAgrupacion = function(agrupacion){
-			if(mi.prestamo.value > 0)
+			if(mi.pepId > 0)
 			{
 				if(mi.fechaInicio != null && mi.fechaFin != null)
 				{
@@ -397,7 +459,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 							mi.data = JSON.parse(JSON.stringify(mi.dataOriginal));
 							mi.agrupacionActual = agrupacion;
 							for (x in mi.data){
-								 if(mi.data[x].objeto_tipo == 0){
+								 if(mi.data[x].objeto_tipo == 10){
 									 for(a in mi.data[x].anios){
 										 var anio = mi.data[x].anios[a];
 										 mi.data[x].anios[a] = mi.agruparMeses(anio);
@@ -411,11 +473,11 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 				}else
 					$utilidades.mensaje('warning','Favor de ingresar un año inicial y final válido');
 			}else
-				$utilidades.mensaje('warning','Debe de seleccionar un préstamo');
+				$utilidades.mensaje('warning','Debe de seleccionar un '+$rootScope.etiquetas.proyecto);
 		}
 		
 		mi.generar = function(agrupacion){
-			if(mi.prestamo.value > 0)
+			if(mi.pepId > 0)
 			{
 				if(mi.fechaInicio != null && mi.fechaFin != null)
 				{
@@ -430,7 +492,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 				}else
 					$utilidades.mensaje('warning','Favor de ingresar un año inicial y final válido');
 			}else
-				$utilidades.mensaje('warning','Debe de seleccionar un préstamo');
+				$utilidades.mensaje('warning','Debe de seleccionar un '+$rootScope.etiquetas.proyecto);
 		}
 		
 		mi.renderizaTabla = function(){
@@ -514,11 +576,17 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			anio = indice - (mes*mi.aniosTotal.length);
 			var item = mi.data[itemIndice];
 			var valor = Object.values(item.anios[anio])[mes];
-			if(valor[tipoMeta]==null && mi.data[itemIndice].objeto_tipo==0){
+			if(valor[tipoMeta]==null && mi.data[itemIndice].objeto_tipo==10){
 				return 0;
 			}
 			return valor[tipoMeta];
 		};
+		
+		angular.element($window).bind('resize', function(){ 
+            mi.calcularTamaniosCeldas();
+            $scope.$digest();
+          });
+        $scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
 		
 		mi.exportarExcel = function(){
 			 var tipoVisualizacion = 0;
@@ -529,11 +597,12 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 			 }
 			 $http.post('/SPrestamoMetas', { 
 				 accion: 'exportarExcel', 
-				 proyectoid: mi.prestamo.value,
+				 proyectoid: mi.pepId,
 				 fechaInicio: mi.fechaInicio,
 				 fechaFin: mi.fechaFin,
 				 agrupacion: mi.agrupacionActual,
 				 tipoVisualizacion: tipoVisualizacion,
+				 lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				 t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
@@ -541,7 +610,7 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 						  anchor.attr({
 					         href: 'data:application/ms-excel;base64,' + response.data,
 					         target: '_blank',
-					         download: 'MetasPrestamo.xls'
+					         download: 'AvanceDeMetas.xls'
 						  })[0].click();
 					  }.bind(this), function errorCallback(response){
 				 	}
@@ -551,36 +620,4 @@ app.controller('prestamometasController',['$scope','$http','$interval','i18nServ
 		
 }]);
 
-app.directive('scrollespejo', ['$window', function($window) {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-            element.bind('scroll', function() {
-                var elemento = element[0];
-                if (elemento.id == scope.divActivo){
-      	          if(elemento.id == 'divTablaNombres'){
-      	            document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
-      	            document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
-      	          }else if(elemento.id == 'divTablaDatos'){
-      	        	if(Math.abs(scope.controller.scrollPosicion-element[0].scrollLeft)<scope.controller.tamanoCelda){//bloquear scroll horizontal
-                  		element[0].scrollLeft = scope.controller.scrollPosicion;
-                  	}
-      	            document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
-      	            document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
-      	          }else{
-      	            document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
-      	            document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
-      	          }
-      	        }
-            });
-            angular.element($window).bind('resize', function(){ 
-                scope.controller.calcularTamaniosCeldas();
-                scope.$digest();
-              });
-            scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
-        }
-    };
-}])
-
-;
 		

@@ -66,7 +66,9 @@
 		match-catalog="sipro">
 	</table-filter>
 	<table-filter match-name="interes_tipo" match-catalog="sipro"></table-filter>
-	<table-filter match-name="matriz_raci" match-catalog="sipro"></table-filter>
+	<table-filter match-name="matriz_raci" match-catalog="sipro"
+		exclude="true">
+	</table-filter>
 	<table-filter match-name="meta" match-catalog="sipro"></table-filter>
 	<table-filter match-name="meta_avance" match-catalog="sipro"></table-filter>
 	<table-filter match-name="meta_planificado" match-catalog="sipro"></table-filter>
@@ -177,4 +179,36 @@
 	<table-filter match-name="plan_adquisicion_pago"
 		match-catalog="sipro">
 	</table-filter>
+	<table-filter match-name="etiqueta" match-catalog="sipro"></table-filter>
+	<table-filter match-name="componente_sigade"
+		match-catalog="sipro">
+	</table-filter>
+	<table-filter match-name="subcomponente" match-catalog="sipro"></table-filter>
+	<table-filter match-name="subcomponente_propiedad"
+		match-catalog="sipro">
+	</table-filter>
+	<table-filter match-name="subcomponente_propiedad_valor"
+		match-catalog="sipro">
+	</table-filter>
+	<table-filter match-name="subcomponente_tipo"
+		match-catalog="sipro">
+	</table-filter>
+	<table-filter match-name="sctipo_propiedad" match-catalog="sipro"></table-filter>
+	<table-filter match-name="subcomponente_usuario"
+		match-catalog="sipro">
+	</table-filter>
+	<table-filter match-name="prestamo_tipo" match-catalog="sipro"></table-filter>
+	<table-filter match-name="prestamo_tipo_prestamo"
+		match-catalog="sipro">
+	</table-filter>
+	<table-filter match-name="rol_unidad_ejecutora"
+		match-catalog="sipro">
+	</table-filter>
+	<table-filter match-name="proyecto_rol_colaborador"
+		match-catalog="sipro">
+	</table-filter>
+	<table-filter match-name="prestamo_usuario" match-catalog="sipro"></table-filter>
+	<table-filter match-name="pep_detalle" match-catalog="sipro"></table-filter>
+	<table-filter match-name="linea_base" match-catalog="sipro"></table-filter>
+	<table-filter match-name="pago_planificado" match-catalog="sipro"></table-filter>
 </hibernate-reverse-engineering>

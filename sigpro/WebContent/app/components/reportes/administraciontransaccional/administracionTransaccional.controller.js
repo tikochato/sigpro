@@ -2,7 +2,15 @@ var app = angular.module('administracionTransaccionalController',['ngTouch','sma
 app.controller('administracionTransaccionalController',['$scope', '$http', '$interval','Utilidades','i18nService','$window',
 	function($scope, $http, $interval, $utilidades,i18nService,$window){
 		var mi = this;
+		
+		mi.mostrarGrafica = false;
+		mi.nombres = function(row){
+			if(row.nivel == 0)
+				return "etiquetaNombre";
+		}
+		
 		mi.formatofecha = 'dd/MM/yyyy';
+		mi.altformatofecha = ['d!/M!/yyyy'];
 		
 		mi.abrirPopupFecha = function(index) {
 			switch(index){
@@ -13,7 +21,10 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 		
 		mi.validarFecha = function(fecha1, fecha2){
 			if(fecha1 != null && fecha2 != null)
-				mi.generar();
+				if(fecha2 >= fecha1)
+					mi.generar();
+				else
+					$utilidades.mensaje('warning','La fecha inicial es mayor que la fecha final');
 		}
 		
 		mi.fechaOptions = {
@@ -59,7 +70,11 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 		
 		mi.generar = function(){
 			mi.mostrarcargando = true;
-			mi.mostrarTablas = false;
+			mi.mostrarTablas = true;
+			mi.mostrarGrafica = false;
+			mi.displayedDatos = [];
+			mi.datos = [];
+			mi.totalCreados = mi.totalActualizados = mi.totalEliminados = 0;
 			$http.post('/SAdministracionTransaccional', {accion: 'getTransacciones', fechaInicio: moment(mi.fechaInicio).format('DD/MM/YYYY'), fechaFin: moment(mi.fechaFin).format('DD/MM/YYYY'), t: new Date().getTime()}).success(
 					function(response){
 						mi.rowDatos = response.usuarios;
@@ -69,9 +84,9 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 						mi.totalActualizados = 0;
 						mi.totalEliminados = 0;
 						for(x in mi.rowDatos){
-							mi.totalCreados += mi.rowDatos[x].creados;
-							mi.totalActualizados += mi.rowDatos[x].actualizados;
-							mi.totalEliminados += mi.rowDatos[x].eliminados;
+							mi.totalCreados += mi.rowDatos[x].transacciones.creados;
+							mi.totalActualizados += mi.rowDatos[x].transacciones.actualizados;
+							mi.totalEliminados += mi.rowDatos[x].transacciones.eliminados;
 						}
 						
 						mi.generarGrafica(response.creados[0].anios, response.actualizados[0].anios, response.eliminados[0].anios);
@@ -83,7 +98,7 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 						mi.data = mi.datos;
 						
 						mi.mostrarcargando = false;
-						mi.mostrarTablas = true;
+						mi.mostrarGrafica = true;
 					});
 		}
 		
@@ -99,14 +114,15 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 		
 		mi.calcularTamanosPantalla = function(){
 			mi.tamanoPantalla = Math.floor(document.getElementById("reporte").offsetWidth);
-			mi.tamanoCelda = mi.tamanoPantalla / 5;
+			mi.tamanoCelda = (mi.tamanoPantalla -300) / 4;
 			mi.anchoPantalla = Math.floor(document.getElementById("reporte").offsetHeight);
 		}
 		
 		angular.element($window).bind('resize', function(){ 
             mi.calcularTamanosPantalla();
             $scope.$digest();
-        });
+        });		
+		$scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
 		
 		mi.calcularTamanosPantalla();
 		
@@ -132,7 +148,8 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 			mi.descargarExcelDetalle = function(row){
 				$http.post('/SAdministracionTransaccional', {
 					accion: 'exportarExcelDetalle',
-					usuarioDetalle: row.usuario,
+					proyectoId: row.objeto_id,
+					proyectoNombre: row.nombre,
 					fechaInicio: moment(mi.fechaInicio).format('DD/MM/YYYY'), 
 					fechaFin: moment(mi.fechaFin).format('DD/MM/YYYY'),
 					t:moment().unix()
@@ -142,7 +159,7 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 							  anchor.attr({
 						         href: 'data:application/ms-excel;base64,' + response.data,
 						         target: '_blank',
-						         download: 'AdministracionTransaccional_' + row.usuario +'_' + moment(mi.fechaInicio).format('DD/MM/YYYY') + '_al_' + moment(mi.fechaFin).format('DD/MM/YYYY') + '_.xls'
+						         download: 'AdministracionTransaccional_' + row.nombre +'_' + moment(mi.fechaInicio).format('DD/MM/YYYY') + '_al_' + moment(mi.fechaFin).format('DD/MM/YYYY') + '_.xls'
 							  })[0].click();
 						  }.bind(this), function errorCallback(response){
 					 	}
@@ -154,7 +171,8 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 				 accion: 'exportarPdfDetalle', 
 				 fechaInicio: moment(mi.fechaInicio).format('DD/MM/YYYY'), 
 				 fechaFin: moment(mi.fechaFin).format('DD/MM/YYYY'),
-				 usuarioDetalle: row.usuario,
+				 proyectoId: row.objeto_id,
+				 proyectoNombre: row.nombre,
 				 t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
@@ -162,7 +180,7 @@ app.controller('administracionTransaccionalController',['$scope', '$http', '$int
 						  anchor.attr({
 					         href: 'data:application/pdf;base64,' + response.data,
 					         target: '_blank',
-					         download: 'AdministracionTransaccional_' + row.usuario +'_' + moment(mi.fechaInicio).format('DD/MM/YYYY') + '_al_' + moment(mi.fechaFin).format('DD/MM/YYYY') + '_.pdf'
+					         download: 'AdministracionTransaccional_' + row.nombre +'_' + moment(mi.fechaInicio).format('DD/MM/YYYY') + '_al_' + moment(mi.fechaFin).format('DD/MM/YYYY') + '_.pdf'
 						  })[0].click();
 					  }.bind(this), function errorCallback(response){
 				 	}

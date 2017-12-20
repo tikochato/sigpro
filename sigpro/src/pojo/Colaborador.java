@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 2, 2017 5:12:50 PM by Hibernate Tools 5.2.3.Final
+// Generated Dec 13, 2017 9:28:15 AM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -28,7 +28,7 @@ public class Colaborador implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 3268583873209762646L;
 	private Integer id;
 	private UnidadEjecutora unidadEjecutora;
 	private Usuario usuario;
@@ -45,6 +45,7 @@ public class Colaborador implements java.io.Serializable {
 	private Set<AsignacionRaci> asignacionRacis = new HashSet<AsignacionRaci>(0);
 	private Set<Proyecto> proyectos = new HashSet<Proyecto>(0);
 	private Set<ProyectoMiembro> proyectoMiembros = new HashSet<ProyectoMiembro>(0);
+	private Set<ProyectoRolColaborador> proyectoRolColaboradors = new HashSet<ProyectoRolColaborador>(0);
 	private Set<Riesgo> riesgos = new HashSet<Riesgo>(0);
 
 	public Colaborador() {
@@ -64,7 +65,8 @@ public class Colaborador implements java.io.Serializable {
 	public Colaborador(UnidadEjecutora unidadEjecutora, Usuario usuario, String pnombre, String snombre,
 			String papellido, String sapellido, long cui, int estado, String usuarioCreo, String usuarioActualizo,
 			Date fechaCreacion, Date fechaActualizacion, Set<AsignacionRaci> asignacionRacis, Set<Proyecto> proyectos,
-			Set<ProyectoMiembro> proyectoMiembros, Set<Riesgo> riesgos) {
+			Set<ProyectoMiembro> proyectoMiembros, Set<ProyectoRolColaborador> proyectoRolColaboradors,
+			Set<Riesgo> riesgos) {
 		this.unidadEjecutora = unidadEjecutora;
 		this.usuario = usuario;
 		this.pnombre = pnombre;
@@ -80,6 +82,7 @@ public class Colaborador implements java.io.Serializable {
 		this.asignacionRacis = asignacionRacis;
 		this.proyectos = proyectos;
 		this.proyectoMiembros = proyectoMiembros;
+		this.proyectoRolColaboradors = proyectoRolColaboradors;
 		this.riesgos = riesgos;
 	}
 
@@ -235,6 +238,15 @@ public class Colaborador implements java.io.Serializable {
 
 	public void setProyectoMiembros(Set<ProyectoMiembro> proyectoMiembros) {
 		this.proyectoMiembros = proyectoMiembros;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborador")
+	public Set<ProyectoRolColaborador> getProyectoRolColaboradors() {
+		return this.proyectoRolColaboradors;
+	}
+
+	public void setProyectoRolColaboradors(Set<ProyectoRolColaborador> proyectoRolColaboradors) {
+		this.proyectoRolColaboradors = proyectoRolColaboradors;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "colaborador")

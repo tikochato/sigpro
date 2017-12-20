@@ -2,13 +2,9 @@ var app = angular.module('ganttController', ['DlhSoft.ProjectData.GanttChart.Dir
 		'DlhSoft.Kanban.Angular.Components','ui.grid.edit', 'ui.grid.rowEdit','ui.bootstrap.contextMenu']);
 
 var GanttChartView = DlhSoft.Controls.GanttChartView;
-//Query string syntax: ?theme
-//Supported themes: Default, Generic-bright, Generic-blue, DlhSoft-gray, Purple-green, Steel-blue, Dark-black, Cyan-green, Blue-navy, Orange-brown, Teal-green, Purple-beige, Gray-blue, Aero.
-var queryString = window.location.search;
-var theme = queryString ? queryString.substr(1) : null;
 
-app.controller('ganttController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q) {
+app.controller('ganttController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q',
+	function($scope, $rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q) {
 
 		var mi=this;
 		mi.proyectoid = "";
@@ -21,14 +17,14 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		
 		$window.document.title = $utilidades.sistema_nombre+' - Gantt';
 		
-		var servlet_ = $routeParams.objeto_tipo == 1 ? '/SProyecto' : 'SPrograma';
-		var accion_ = $routeParams.objeto_tipo == 1 ? 'obtenerProyectoPorId' : 'obtenerProgramaPorId'
+		var servlet_ = $routeParams.objeto_tipo == 0 ? '/SProyecto' : 'SPrograma';
+		var accion_ = $routeParams.objeto_tipo == 0 ? 'obtenerProyectoPorId' : 'obtenerProgramaPorId'
 		
 		$http.post(servlet_, { accion: accion_, id: $routeParams.objeto_id }).success(
 				function(response) {
 					mi.proyectoid = response.id;
 					mi.proyectoNombre = response.nombre;
-					mi.objetoTipoNombre = $routeParams.objeto_tipo == 1 ? "Proyecto" : "Programa";
+					mi.objetoTipoNombre = $routeParams.objeto_tipo == 0 ? "Proyecto" : "Programa";
 		});
 		
 		mi.zoom = 2.0;
@@ -67,26 +63,30 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		
 		mi.getOjbetoTipo = function (item) {
 		    switch (item.objetoTipo) {
-		        case '1':
+		        case '0':
 		            return 'glyphicon glyphicon-record';
-		        case '2':
+		        case '1':
 		            return 'glyphicon glyphicon-th';
+		        case '2':
+		            return 'glyphicon glyphicon-equalizer';
 		        case '3':
 		            return 'glyphicon glyphicon-certificate';
 		        case '4':
 		            return 'glyphicon glyphicon-link';
 		        case '5':
-		            return 'glyphicon glyphicon-th-list';
+		            return 'glyphicon glyphicon-time';
 		    }
 		};
 		
 		
 		mi.getOjbetoTipoNombre = function (item) {
 		    switch (item.objetoTipo) {
-		        case '1':
+		        case '0':
 		            return 'Proyecto';
-		        case '2':
+		        case '1':
 		            return 'Componente';
+		        case '2':
+		            return 'Subcomponente';
 		        case '3':
 		            return 'Producto';
 		        case '4':
@@ -132,19 +132,9 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		var columns = DlhSoft.Controls.GanttChartView.getDefaultColumns(items, settings);
 		
 		
-		columns.splice(0, 0, {
-		    header: 'Id', 
-		    width: 50,
-		    isReadOnly: true,
-		    cellStyle: 'text-align: right;',
-		    cellTemplate: function (item) {
-		    	//return DlhSoft.Controls.GanttChartView.numberInputColumnTemplateBase(document, 50, function(){ return item.index+1 }, function(value){ item.index=value+1 })
-		    	return DlhSoft.Controls.GanttChartView.textColumnTemplateBase(document,  function(){ return item.id })
-		        //return DlhSoft.Controls.GanttChartView.textColumnTemplateBase(document, function () { return mi.getStatus(item); });
-		    }
-		});
 		
-		columns.splice(1, 0, {
+		
+		columns.splice(0, 0, {
 		    header: 'Orden', 
 		    width: 50,
 		    isReadOnly: true,
@@ -157,7 +147,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		});
 		
 		
-		columns.splice(2, 0, {
+		columns.splice(1, 0, {
 		    header: 'Tipo', width: 40,
 		    cellTemplate: function (item) {
 		        var rectangle = document.createElement('div');
@@ -170,14 +160,14 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		});
 		
 		
-		columns.splice(4, 0, {
+		columns.splice(3, 0, {
 		    header: 'Estado', width: 120,
 		    cellTemplate: function (item) {
 		        return DlhSoft.Controls.GanttChartView.textColumnTemplateBase(document, function () { return mi.getStatus(item); });
 		    }
 		});
 		
-		columns.splice(4, 0, {
+		columns.splice(3, 0, {
 		    header: '', width: 30,
 		    cellTemplate: function (item) {
 		        /*var rectangle = document.createElement('div');
@@ -194,35 +184,34 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		
 		
 		
-		columns.splice(9,0);
-		columns[3].header = 'Nombre';
-		columns[3].width = 300;
-		columns[5].header = 'Estado';
+		columns.splice(7,0);
+		columns[2].header = 'Nombre';
+		columns[2].width = 300;
+		columns[3].header = 'Estado';
+		columns[3].width = 85;
+		columns[4].header = '';
+		columns[5].header = 'Inicio';
 		columns[5].width = 85;
-		columns[6].header = 'Inicio';
+		columns[6].header = 'Fin';
 		columns[6].width = 85;
-		columns[7].header = 'Fin';
-		columns[7].width = 85;
-		columns[8].header = 'Hito';
-		columns[8].width = 60;
-		columns[8].isReadOnly = true;
-		columns[9].header = 'Completada';
-		columns[10].header = 'Responsable';
-		columns[10].isReadOnly = true;
+		columns[7].header = 'Completada';
 		
 		//columns.splice(10, 0, { header: 'Duración (d)', width: 80, cellTemplate: DlhSoft.Controls.GanttChartView.getDurationColumnTemplate(64, 8) });
-		columns.splice(11, 0, {
+		columns.splice(8, 0, {
 		    header: 'Duración (d)', 
 		    width: 80,
 		    isReadOnly: true,
 		    cellStyle: 'text-align: right;',
-		    cellTemplate: DlhSoft.Controls.GanttChartView.getDurationColumnTemplate(64, 8)
+		    cellTemplate: function (item) {
+		    	return DlhSoft.Controls.GanttChartView.textColumnTemplateBase(document, function () { return Number(item.duracion) });
+	
+		    }
 		});
 		
 		
 		//columns.push({ header: 'Costo Planificado (Q)', width: 110, cellTemplate: DlhSoft.Controls.GanttChartView.getCostColumnTemplate(84) });
-		columns.splice(12, 0, {
-		    header: 'Costo Planificado (Q)', 
+		columns.splice(9, 0, {
+		    header: 'Monto Planificado (Q)', 
 		    width: 110,
 		    isReadOnly: true,
 		    cellStyle: 'text-align: right;',
@@ -233,6 +222,8 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 
 		});		
 		
+		columns.splice(10,1);
+		columns.splice(10,1);
 		
 		
 		for(var i=0; i<columns.length;i++)
@@ -278,8 +269,8 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		mi.cargarProyecto = function (){
 			var formatData = new FormData();
 			 
-			formatData.append("accion",$routeParams.objeto_tipo == 1 ? 'getProyecto' : 'getPrograma');
-			formatData.append($routeParams.objeto_tipo == 1 ? "proyecto_id" : "programa_id",$routeParams.objeto_id);
+			formatData.append("accion",$routeParams.objeto_tipo == 0 ? 'getProyecto' : 'getPrograma');
+			formatData.append($routeParams.objeto_tipo == 0 ? "proyecto_id" : "programa_id",$routeParams.objeto_id);
 			formatData.append("t",new Date().getTime());
 			
 			$http.post('/SGantt', formatData, {
@@ -388,14 +379,14 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 		mi.exportar=function(){
 			var formatData = new FormData();
 			
-			$http.post('/SDownload', { accion: 'exportar', proyectoid:$routeParams.objeto_id,t:moment().unix()
+			$http.post('/SGantt', { accion: 'exportar', proyecto_id:$routeParams.objeto_id,t:moment().unix()
 			  }).then(
 					 function successCallback(response) {
 							var anchor = angular.element('<a/>');
 						    anchor.attr({
-						         href: 'data:application/ms-project;base64,' + response.data,
+						         href: 'data:application/xml,' + response.data,
 						         target: '_blank',
-						         download: 'Programa.mpx'
+						         download: mi.proyectoNombre + '.xml'
 						     })[0].click();
 						  }.bind(this), function errorCallback(response){
 						 		
@@ -421,11 +412,14 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 			
 		  settings.itemDoubleClickHandler = function (isOnChart, item){
 			switch (item.objetoTipo){
-				case '1':
+				case '0':
 					mi.editarPrestamo(item.objetoId,item.index);
 					break;
-				case '2':
+				case '1':
 					mi.editarComponente(item.objetoId,item.index,0,false);
+					break;
+				case '2':
+					mi.editarSubComponente(item.objetoId,item.index,0,false);
 					break;
 				case '3':
 					mi.editarProducto(item.objetoId,item.index,0,false);
@@ -477,7 +471,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 						$scope.items[index].content = resultado.nombre;
 						$utilidades.mensaje('success','Item modificado con éxito');
 					}else{
-						$utilidades.mensaje('danger', 'Error al guardar el item de prestamo');
+						$utilidades.mensaje('danger', 'Error al guardar el item de '+$rootScope.etiquetas.proyecto);
 					}
 
 				}, function() {
@@ -709,22 +703,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
 			}, function() {
 			});
 	};	
-	
-	mi.calcularTamanosPantalla = function(){
-		//mi.anchoPantalla = Math.floor(document.getElementById("reporte").offsetHeight);
-		mi.anchoGantt = Math.floor(document.getElementById("gantt").offsetHeight);
-		//mi.anchoPantalla = mi.anchoPantalla - (mi.anchoPantalla * 0.18);
-		//mi.anchoGantt = {"height" : + Math.round(mi.anchoGantt) + "px"};
-		mi.anchoGantt = Math.round(mi.anchoGantt - 32) + "px";
-	}
-	
-	mi.calcularTamanosPantalla();
-	
-	angular.element($window).bind('resize', function(){ 
-        mi.calcularTamanosPantalla();
-        $scope.$digest();
-    });
-	
+		
 	mi.nuevaActividad = function(objetoId, objetoTipo){
 		mi.editarActividad(0,0,objetoId,objetoTipo);
 	};
@@ -763,7 +742,7 @@ app.controller('ganttController',['$scope','$http','$interval','i18nService','Ut
         }, function() {
             return mi.objetoTipo==3; 
         }],
-        ['<div class="glyphicon glyphicon-th-list"></div><span>&nbsp;Nueva actividad</span>', function () {
+        ['<div class="glyphicon glyphicon-time"></div><span>&nbsp;Nueva actividad</span>', function () {
         	if (mi.objetoId != null && mi.objetoTipo != null){
         		
         		mi.nuevaActividad (mi.objetoId,mi.objetoTipo);
@@ -795,10 +774,10 @@ app.directive('customOnChange', function() {
 });
 
 app.controller('modalEditarPrestamo', [ '$uibModalInstance',
-	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
+	'$scope', '$rootScope', '$http', '$interval', 'i18nService', 'Utilidades',
 	'$timeout', '$log', '$uibModal', '$q', 'idprestamo', modalEditarPrestamo ]);
 
-function modalEditarPrestamo($uibModalInstance, $scope, $http, $interval,
+function modalEditarPrestamo($uibModalInstance, $scope, $rootScope, $http, $interval,
 	i18nService, $utilidades, $timeout, $log, $uibModal, $q, idprestamo) {
 
 	var mi = this;
@@ -970,6 +949,7 @@ function modalEditarComponente($uibModalInstance, $scope, $http, $interval,
 	var mi = this;
 	mi.componente = {};
 	mi.formatofecha = 'dd/MM/yyyy';
+	mi.altformatofecha = ['d!/M!/yyyy'];
 	mi.fechaInicio =  "";
 	mi.fechaFin = "";
 	
@@ -1165,6 +1145,7 @@ function modalEditarProducto($uibModalInstance, $scope, $http, $interval,
 	var mi = this;
 	mi.componente = {};
 	mi.formatofecha = 'dd/MM/yyyy';
+	mi.altformatofecha = ['d!/M!/yyyy'];
 	mi.fechaInicio =  "";
 	mi.fechaFin = "";
 	
@@ -1362,6 +1343,7 @@ function modalEditarSubproducto($uibModalInstance, $scope, $http, $interval,
 	var mi = this;
 	mi.componente = {};
 	mi.formatofecha = 'dd/MM/yyyy';
+	mi.altformatofecha = ['d!/M!/yyyy'];
 	mi.fechaInicio =  "";
 	mi.fechaFin = "";
 	
@@ -1585,6 +1567,7 @@ function modalEditarActividad($uibModalInstance, $scope, $http, $interval,
 	mi.dimensiones = [{id:1,nombre:'Dias',sigla:'d'}];
 	
 	mi.formatofecha = 'dd/MM/yyyy';
+	mi.altformatofecha = ['d!/M!/yyyy'];
 	
 	mi.fechaOptions = {
 			formatYear : 'yy',

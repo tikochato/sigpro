@@ -155,31 +155,50 @@
 					</div>
 				</div>
 		    	<br>
-	    		<div class="row" style="width: 100%; height: 15%">
-					<div class="form-group col-sm-3" align="left">
-						<select  class="inputText" ng-model="controller.prestamo"
-							ng-options="a.text for a in controller.prestamos"
-							ng-change="controller.validar(1)"></select>
+		    	<div class="row">
+		    		<div class="form-group col-sm-6" align="left">
+						<div id="prestamo" angucomplete-alt placeholder="" pause="100" selected-object="controller.cambioPrestamo"
+							  local-data="controller.lprestamos" search-fields="proyectoPrograma" title-field="proyectoPrograma" field-required="true" field-label="* Préstamo"
+							  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+							  initial-value="controller.prestamoNombre" focus-out="controller.blurPrestamo()" input-name="prestamo"></div>
+						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 					</div>
-					
-					<div align="left" class="form-group col-sm-1">
+		    	</div>
+		    	<div class="row">
+		    		<div class="form-group col-sm-6" align="left">
+						<div id="pep" angucomplete-alt placeholder="" pause="100" selected-object="controller.cambioPep"
+							  local-data="controller.peps" search-fields="nombre" title-field="nombre" field-required="true" field-label="* {{etiquetas.proyecto}}"
+							  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+							  initial-value="controller.pepNombre" focus-out="controller.blurPep()" input-name="pep" disable-input="controller.prestamoId==null"></div>
+						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+					</div>
+		    	</div>
+	    		<div class="row" style="height: 15%">
+	    			<div class="form-group col-sm-4" align="left">
+						<div id= "lineaBase" angucomplete-alt placeholder="" pause="100" selected-object="controller.cambioLineaBase"
+							  local-data="controller.lineasBase" search-fields="nombre" title-field="nombre" 
+							  field-required="true" field-label="* Linea Base" minlength="1" input-class="form-control form-control-small field-angucomplete inputText" 
+							  match-class="angucomplete-highlight" initial-value="controller.lineaBaseNombre" 
+							  focus-out="controller.blurLineaBase()" input-name="lineaBase"></div>
+						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+					</div>
+	    			<div align="left" class="form-group col-sm-1" style="margin-top: 5px;">
 						<input type="number"  class="inputText" ng-model="controller.fechaInicio" maxlength="4" 
 						ng-value="controller.fechaInicio" onblur="this.setAttribute('value', this.value);"
 						ng-change="controller.validar(2)"/>
-					  	<label for="campo.id" class="floating-label">*Año Inicial</label>
+					  	<label for="campo.id" class="floating-label" style="left: 0;">*Año Inicial</label>
 					</div>
 					
-					<div align="left" class="form-group col-sm-1">
+					<div align="left" class="form-group col-sm-1" style="margin-top: 5px;">
 						<input type="number"  class="inputText" ng-model="controller.fechaFin" maxlength="4" 
 						ng-value="controller.fechaFin" onblur="this.setAttribute('value', this.value);"
 						ng-change="controller.validar(3)"/>
 					  	<label for="campo.id" class="floating-label">*Año Final</label>
 					</div>
-					<div class="col-sm-7" align="right" ng-hide="!controller.mostrarDescargar">
-						<div class="form-group col-sm-1">
-						</div>
-						<div class="col-sm-11">
-							<div class="btn-group">
+					
+					<div class="col-sm-6" align="right" ng-hide="!controller.mostrarDescargar">
+						<div class="">
+							<div class="btn-group" style="margin-left: -20px;">
 								<label class="btn btn-default" ng-model="controller.enMillones" uib-btn-radio="true" ng-click="controller.calcularTamaniosCeldas(); controller.convertirMillones();" uib-tooltip="Millones de Quetzales" role="button" tabindex="0" aria-invalid="false">
 								<span>MQ</span></label>
 								<label class="btn btn-default" ng-model="controller.enMillones" uib-btn-radio="false" ng-click="controller.calcularTamaniosCeldas(); controller.convertirMillones();" uib-tooltip="Quetzales" role="button" tabindex="1" aria-invalid="false">
@@ -208,7 +227,7 @@
 							<div class="btn-group" style="padding-left: 20px;">
 								<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar a Excel">
 								<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-								<label class="btn btn-default" ng-click="controller.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="!controller.mostrarDescargar">
+								<label class="btn btn-default" ng-click="controller.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="true">
 								<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 							</div>
 						</div>
@@ -241,7 +260,7 @@
 				          				<th class="label-form">.</th>
 				         			</tr>
 								</thead>
-								<tbody class="cuerpoTablaNombres" id="divTablaNombres" ng-mouseover="controller.activarScroll('divTablaNombres')" scrollespejo style="max-height: 390px; margin-bottom: -15px;">
+								<tbody vs-repeat class="cuerpoTablaNombres" id="divTablaNombres"  style="max-height: 390px; margin-bottom: -15px;" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)">
 									<tr ng-repeat="item in controller.data">
 							      		<td nowrap style="min-width:200px; min-height: 35px; height: 35px;">
 							      			<div uib-tooltip="{{item.nombre}}" class="nombreFormat">
@@ -267,17 +286,17 @@
 				          				<th ng-repeat="a in controller.aniosfinales" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}}" class="label-form">{{a.anio}}</th>
 							        </tr>
 								</thead>
-								<tbody class="cuerpoTablaDatos" id="divTablaDatos" ng-mouseover="controller.activarScroll('divTablaDatos')" scrollespejo>
+								<tbody vs-repeat class="cuerpoTablaDatos" id="divTablaDatos" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)">
 							      	<tr ng-repeat="item in controller.data" style="">
 								      		<td ng-repeat="posicion in controller.columnastotales track by $index" style="{{controller.estiloCelda}} min-height: 35px; height: 35px; {{controller.estiloAlineacion}}">
 								      			<div style="{{controller.porcentajeCeldaValor}}">
-												<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{controller.getPlanificado($parent.$index,$index).planificado | formatoMillones : controller.enMillones}}</span>
+												<span ng-show="controller.grupoMostrado.planificado" class="colorPlanificado">{{controller.getPlanificado(item,$index).planificado | formatoMillones : controller.enMillones}}</span>
 								      			</div>
 								      			<div style="{{controller.porcentajeCeldaPipe}}">
-												<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real && controller.getPlanificado($parent.$index,$index)" > | </span>
+												<span ng-show="controller.grupoMostrado.planificado && controller.grupoMostrado.real && controller.getPlanificado(item,$index)" > | </span>
 								      			</div>
 								      			<div style="{{controller.porcentajeCeldaValor}}">
-												<span ng-show="controller.grupoMostrado.real" class="colorReal">{{controller.getPlanificado($parent.$index,$index).real | formatoMillones : controller.enMillones}}</span>
+												<span ng-show="controller.grupoMostrado.real" class="colorReal">{{controller.getPlanificado(item,$index).real | formatoMillones : controller.enMillones}}</span>
 												</div>
 								      		</td>
 							      	</tr>
@@ -296,7 +315,7 @@
 		          				<th ng-repeat="a in controller.aniosTotal" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};" class="label-form">{{a.anio}}</th>
 						        </tr>
 							</thead>
-							<tbody class="cuerpoTablaTotales bordeIzquierda" id="divTotales" ng-mouseover="controller.activarScroll('divTotales')" scrollespejo tot="{{mi.totales.length}}">
+							<tbody vs-repeat class="cuerpoTablaTotales bordeIzquierda" id="divTotales" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)" tot="{{mi.totales.length}}">
 								<tr ng-repeat="totales in controller.totales ">
 									<td ng-repeat="total in totales.anio" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};  min-height: 35px; height: 35px;">
 										<div style="{{controller.porcentajeCeldaValor}}">
@@ -336,6 +355,18 @@
 		    	<div class="row" ng-hide="!controller.mostrarDescargar" style="width: 70%">
 		    		<label class="label-form">Total Ejecutado</label>
 		    		<canvas id="line" class="chart chart-line" chart-data="controller.dataGrafica" 
+		    			chart-labels="controller.labels" chart-series="controller.series" 
+		    			chart-colors = "controller.lineColors" chart-legend="true"
+		    			chart-options="controller.optionsGrafica">
+					</canvas>
+		    	</div>
+		    	
+		    	<br/>
+		    	<br/>
+		    	
+		    	<div class="row" ng-hide="!controller.mostrarDescargar" style="width: 70%">
+		    		<label class="label-form">Total Acumulado</label>
+		    		<canvas id="line" class="chart chart-line" chart-data="controller.dataGraficaAcumulado" 
 		    			chart-labels="controller.labels" chart-series="controller.series" 
 		    			chart-colors = "controller.lineColors" chart-legend="true"
 		    			chart-options="controller.optionsGrafica">

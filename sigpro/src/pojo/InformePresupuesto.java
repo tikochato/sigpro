@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 2, 2017 5:12:50 PM by Hibernate Tools 5.2.3.Final
+// Generated Dec 13, 2017 9:28:15 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,7 +25,7 @@ public class InformePresupuesto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 8059106346886531225L;
 	private Integer id;
 	private EstadoInforme estadoInforme;
 	private int idPrestamo;

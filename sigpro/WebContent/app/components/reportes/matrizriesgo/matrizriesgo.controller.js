@@ -1,79 +1,156 @@
 var app = angular.module('matrizriesgoController', ['smart-table']);
 
 
-app.controller('matrizriesgoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
+app.controller('matrizriesgoController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
+	function($scope, $rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
 
 	var mi=this;
-	mi.proyectoId=[];
-	mi.proyectoId.value = $routeParams.proyectoId;
-	mi.proyectoNombre = ""; 
+	mi.prestamoId=null;
 	mi.objetoTipoNombre = "";
 	mi.mostrarTabla = false;
-	
+	mi.mostrarBuscar=false;
 		
 	$window.document.title = $utilidades.sistema_nombre+' - Matriz Riesgos';
 	i18nService.setCurrentLang('es');
 
 
-	$http.post('/SProyecto',{accion: 'getProyectos'}).success(
+	mi.redireccionSinPermisos=function(){
+		$window.location.href = '/main.jsp#!/forbidden';		
+	}
+	
+	$http.post('/SPrestamo', {accion: 'getPrestamos', t: (new Date()).getTime()}).then(
+		function(response){
+			if(response.data.success){
+				mi.lprestamos = response.data.prestamos;
+			}	
+	});
+	
+	mi.blurPrestamo=function(){
+		if(document.getElementById("prestamo_value").defaultValue!=mi.prestamoNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','prestamo');
+		}
+	}
+	
+	mi.cambioPrestamo=function(selected){
+		if(selected!== undefined){
+			mi.prestamoNombre = selected.originalObject.proyectoPrograma;
+			mi.prestamoId = selected.originalObject.id;
+			$scope.$broadcast('angucomplete-alt:clearInput', 'pep');
+			$scope.$broadcast('angucomplete-alt:clearInput', 'lineaBase');
+			mi.getPeps(mi.prestamoId);
+		}
+		else{
+			mi.prestamoNombre="";
+			mi.prestamoId=null;
+		}
+	}
+	
+	mi.blurPep=function(){
+		if(document.getElementById("pep_value").defaultValue!=mi.pepNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','pep');
+		}
+	}
+	
+	mi.cambioPep=function(selected){
+		if(selected!== undefined){
+			mi.pepNombre = selected.originalObject.nombre;
+			mi.pepId = selected.originalObject.id;
+			$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+			mi.getLineasBase(mi.pepId);
+		}
+		else{
+			mi.pepNombre="";
+			mi.pepId="";
+		}
+	}
+	
+	mi.getPeps = function(prestamoId){
+		$http.post('/SProyecto',{accion: 'getProyectos', prestamoid: prestamoId}).success(
 			function(response) {
-				mi.prestamos = [];
-				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un proyecto'});
+				mi.peps = [];
 				if (response.success){
-					for (var i = 0; i < response.entidades.length; i++){
-						mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
-					}
-					
-					if ($routeParams.proyectoId!=null && $routeParams.proyectoId != undefined){
-						for (x in mi.prestamos){
-							if (mi.prestamos[x].value == $routeParams.proyectoId){
-								mi.proyectoId = mi.prestamos[x];
-								mi.cargarMatriz();
-								break;
-							}
-						}
-					}else{
-						mi.prestamo = mi.prestamos[0];
-					}
+					mi.peps = response.entidades;
 				}
-		});
+		});	
+	}
+	
+	mi.blurLineaBase=function(){
+		if(document.getElementById("lineaBase_value").defaultValue!=mi.lineaBaseNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+		}
+	};
+	
+	mi.cambioLineaBase=function(selected){
+		if(selected!== undefined){
+			mi.lineaBaseNombre = selected.originalObject.nombre;
+			mi.lineaBaseId = selected.originalObject.id;
+			mi.cargarMatriz();
+		}
+		else{
+			mi.lineaBaseNombre="";
+			mi.lineaBaseId=null;
+		}
+	};
 
+
+	mi.getLineasBase = function(proyectoId){
+		$http.post('/SProyecto',{accion: 'getLineasBase', proyectoId: proyectoId}).success(
+			function(response) {
+				mi.lineasBase = [];
+				if (response.success){
+					mi.lineasBase = response.lineasBase;
+				}
+		});	
+	}
 	
 	mi.cargarMatriz = function(){
-			mi.lista = [];
-			mi.riesgos=[];
-			mi.mostrarTabla = false;
-			 $http.post('/SMatrizRiesgo', { accion: 'getMatrizRiesgos', proyectoid:mi.proyectoId.value, t: (new Date()).getTime()})
-			 .then(function(response){
-				 mi.lista = response.data.matrizriesgos;
-				 mi.riesgos = [].concat(mi.lista);
-				 if (mi.lista.length > 0){
-					 mi.mostrarTabla = true;
-				 }else{
-					 mi.mostrarTabla = false;
-					 if (mi.proyectoId.value>0)
-					 $utilidades.mensaje('warning','No se encontraron datos para el préstamo');
-				 }
-			});
-		}
+		mi.lista = [];
+		mi.riesgos=[];
+		mi.mostrarTabla = false;
+		 $http.post('/SMatrizRiesgo', { 
+			 accion: 'getMatrizRiesgos', 
+			 prestamoid:mi.prestamoId,
+			 proyectoid:mi.pepId, 
+			 lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
+			 t: (new Date()).getTime()})
+		 .then(function(response){
+			 mi.lista = response.data.matrizriesgos;
+			 mi.riesgos = [].concat(mi.lista);
+			 if (mi.lista.length > 0){
+				 mi.mostrarTabla = true;
+			 }else{
+				 mi.mostrarTabla = false;
+				 if (mi.pepId!=null && mi.pepId>0)
+				 $utilidades.mensaje('warning','No se encontraron datos para el '+$rootScope.etiquetas.proyecto);
+			 }
+		});
+	}
+	
+	mi.Buscar = function(){
+		mi.mostrarBuscar = !mi.mostrarBuscar;
+	}
 
 	 mi.exportarExcel = function(){
-			$http.post('/SMatrizRiesgo', { accion: 'exportarExcel', proyectoid:$routeParams.proyectoId,t:moment().unix(),
-				  } ).then(
-						  function successCallback(response) {
-								var anchor = angular.element('<a/>');
-							    anchor.attr({
-							         href: 'data:application/ms-excel;base64,' + response.data,
-							         target: '_blank',
-							         download: 'Matriz_Riesgos.xls'
-							     })[0].click();
-							  }.bind(this), function errorCallback(response){
-							 		
-							 	}
-						  
-					);
-		};
+		$http.post('/SMatrizRiesgo', { 
+			accion: 'exportarExcel',
+			prestamoid:mi.prestamoId,
+			proyectoid:mi.pepId,
+			lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
+			t:moment().unix() })
+		.then(
+		  function successCallback(response) {
+			var anchor = angular.element('<a/>');
+		    anchor.attr({
+		         href: 'data:application/ms-excel;base64,' + response.data,
+		         target: '_blank',
+		         download: 'Matriz_Riesgos.xls'
+		     })[0].click();
+		  }.bind(this), function errorCallback(response){
+		 		
+		 	}
+			  
+		);
+	};
 }]);
 
 

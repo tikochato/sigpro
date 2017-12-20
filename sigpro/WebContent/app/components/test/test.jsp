@@ -12,7 +12,7 @@
 						             <span ng-switch-when="2" class="glyphicon glyphicon-th" aria-hidden="true" style="color: #4169E1;"></span>
 						             <span ng-switch-when="3" class="glyphicon glyphicon-certificate" aria-hidden="true" style="color: #4169E1;"></span>
 						             <span ng-switch-when="4" class="glyphicon glyphicon-link" aria-hidden="true" style="color: #4169E1;"></span>
-						             <span ng-switch-when="5" class="glyphicon glyphicon-th-list" aria-hidden="true" style="color: #4169E1;"></span>
+						             <span ng-switch-when="5" class="glyphicon glyphicon-time" aria-hidden="true" style="color: #4169E1;"></span>
 						        </span><input type="checkbox" ng-model='node.estado' ng-change='testc.onChange(node)' indeterminate id="{{ node.objeto_tipo + '_' +node.id}}" />{{node.nombre}}
 					</div>
 		

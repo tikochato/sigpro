@@ -17,7 +17,7 @@
         	<label class="btn btn-primary" ng-click="subproductoPropiedad.nuevo()" uib-tooltip="Nuevo">
 			<span class="glyphicon glyphicon-plus"></span> Nuevo</label> 
       	</shiro:hasPermission>
-      	<shiro:hasPermission name="41010">
+      	<shiro:hasPermission name="41020">
         	<label class="btn btn-primary" ng-click="subproductoPropiedad.editar()" uib-tooltip="Editar">
 			<span class="glyphicon glyphicon-pencil"></span> Editar</label>
       	</shiro:hasPermission>
@@ -104,9 +104,11 @@
    		 </div>
 	
 	      <div class="form-group">
-	        <input type="text" class="inputText" ng-model="subproductoPropiedad.descripcion" ng-value="subproductoPropiedad.descripcion" onblur="this.setAttribute('value', this.value);" />
-	        <label class="floating-label">Descripción</label>
-	      </div>
+			   <textarea class="inputText" rows="4"
+			   ng-model="subproductoPropiedad.descripcion" ng-value="subproductoPropiedad.descripcion"   
+			   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+			   <label class="floating-label">Descripción</label>
+			</div>
 	      <div class="panel panel-default">
 				<div class="panel-heading label-form" style="text-align: center;">Datos de auditoría</div>
 				<div class="panel-body">

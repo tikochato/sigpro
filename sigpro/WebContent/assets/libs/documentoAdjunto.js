@@ -17,10 +17,10 @@ app.factory('documentoAdjunto',['$mdDialog','$uibModal', '$http',
 			    scope: $scope,
 			    resolve : {
 			    	tipoObjeto : function() {
-						return objetoId;
+						return tipoObjetoId ;
 					},
 					elementoId: function(){
-						return tipoObjetoId;
+						return objetoId;
 					},
 			    }
 
@@ -54,8 +54,8 @@ function ModalDialogController($uibModalInstance, $scope, $http, $interval, i18n
 	if (tipoObjeto > 0 && elementoId > 0){
 		var formatData = new FormData();
 		formatData.append("accion","getDocumentos");
-		formatData.append("idObjeto", tipoObjeto);
-		formatData.append("idTipoObjeto", elementoId);
+		formatData.append("idObjeto", elementoId);
+		formatData.append("idTipoObjeto", tipoObjeto);
 		formatData.append("t",moment().unix());
 		$http.post('/SDocumentosAdjuntos', formatData, {
 			headers: {'Content-Type': undefined},
@@ -84,8 +84,8 @@ function ModalDialogController($uibModalInstance, $scope, $http, $interval, i18n
 			var formatData = new FormData();
 			formatData.append("file",$scope.documentos);
 			formatData.append("accion",'agregarDocumento');
-			formatData.append("idObjeto", tipoObjeto);
-			formatData.append("idTipoObjeto", elementoId);
+			formatData.append("idObjeto", elementoId);
+			formatData.append("idTipoObjeto",tipoObjeto );
 			formatData.append("esNuevo",true);
 			$http.post('/SDocumentosAdjuntos', formatData, {
 				headers: {'Content-Type': undefined},

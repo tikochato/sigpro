@@ -25,7 +25,7 @@
 	    <label class="btn btn-primary" ng-click="colaborador.nuevo()" uib-tooltip="Nuevo">
 	    <span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 	  </shiro:hasPermission>
-	  <shiro:hasPermission name="4010">
+	  <shiro:hasPermission name="4020">
 	    <label class="btn btn-primary" ng-click="colaborador.editar()" uib-tooltip="Editar">
 	    <span class="glyphicon glyphicon-pencil"></span> Editar</label>
 	  </shiro:hasPermission>
@@ -85,10 +85,10 @@
     <div class="operation_buttons" align="right">
 	  <div class="btn-group">
 	    <shiro:hasPermission name="4020">
-	      <label class="btn btn-success" ng-click="form.$valid ? colaborador.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
+	      <label class="btn btn-success" ng-click="form.$valid ? colaborador.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
 	      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 	    </shiro:hasPermission>
-	    <label class="btn btn-primary" ng-click="colaborador.irATabla()" title="Ir a Tabla">
+	    <label class="btn btn-primary" ng-click="colaborador.irATabla()" uib-tooltip="Ir a Tabla">
 	    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 	  </div>
 	</div>
@@ -179,10 +179,10 @@
     <div class="col-sm-12 operation_buttons" align="right">
 	  <div class="btn-group">
 	    <shiro:hasPermission name="4020">
-	      <label class="btn btn-success" ng-click="form.$valid ? colaborador.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
+	      <label class="btn btn-success" ng-click="form.$valid ? colaborador.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
 	      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 	    </shiro:hasPermission>
-	    <label class="btn btn-primary" ng-click="colaborador.cancelar()" title="Ir a Tabla">
+	    <label class="btn btn-primary" ng-click="colaborador.cancelar()" uib-tooltip="Ir a Tabla">
 	    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 	  </div>
 	  </div>

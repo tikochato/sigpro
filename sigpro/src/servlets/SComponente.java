@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -24,11 +25,16 @@ import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ComponenteDAO;
 import dao.ComponentePropiedadDAO;
 import dao.ComponentePropiedadValorDAO;
+import dao.ObjetoDAO;
+import dao.PagoPlanificadoDAO;
 import dao.ProyectoDAO;
 import dao.UnidadEjecutoraDAO;
 import pojo.AcumulacionCosto;
@@ -37,6 +43,7 @@ import pojo.ComponentePropiedad;
 import pojo.ComponentePropiedadValor;
 import pojo.ComponentePropiedadValorId;
 import pojo.ComponenteTipo;
+import pojo.PagoPlanificado;
 import pojo.Proyecto;
 import pojo.UnidadEjecutora;
 import utilities.Utils;
@@ -81,6 +88,14 @@ public class SComponente extends HttpServlet {
 		BigDecimal costo;
 		Integer acumulacionCostoId;
 		String acumulacionCostoNombre;
+		BigDecimal fuentePrestamo;
+		BigDecimal fuenteDonacion;
+		BigDecimal fuenteNacional;
+		boolean tieneHijos;
+		boolean esDeSigade;
+		Integer prestamoId;
+		String fechaInicioReal;
+		String fechaFinReal;
 	}
 
 	class stdatadinamico {
@@ -175,6 +190,16 @@ public class SComponente extends HttpServlet {
 				temp.costo = componente.getCosto();
 				temp.acumulacionCostoId = componente.getAcumulacionCosto().getId();
 				temp.acumulacionCostoNombre = componente.getAcumulacionCosto().getNombre();
+				
+				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 1);
+				temp.esDeSigade = componente.getEsDeSigade().equals(1);
+				temp.fuentePrestamo = componente.getFuentePrestamo();
+				temp.fuenteDonacion = componente.getFuenteDonacion();
+				temp.fuenteNacional = componente.getFuenteNacional();
+				temp.prestamoId = componente.getProyecto().getPrestamo().getId();
+				temp.fechaInicioReal = Utils.formatDate(componente.getFechaInicioReal());
+				temp.fechaFinReal = Utils.formatDate(componente.getFechaFinReal());
+				
 				stcomponentes.add(temp);
 			}
 
@@ -231,6 +256,15 @@ public class SComponente extends HttpServlet {
 				temp.fechaFin = Utils.formatDate(componente.getFechaFin());
 				temp.duracion = componente.getDuracion();
 				temp.duracionDimension = componente.getDuracionDimension();
+				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 1);
+				temp.esDeSigade = componente.getEsDeSigade().equals(1);
+				temp.fuentePrestamo = componente.getFuentePrestamo();
+				temp.fuenteDonacion = componente.getFuenteDonacion();
+				temp.fuenteNacional = componente.getFuenteNacional();
+				temp.prestamoId = componente.getProyecto().getPrestamo().getId();
+				temp.fechaInicioReal = Utils.formatDate(componente.getFechaInicioReal());
+				temp.fechaFinReal = Utils.formatDate(componente.getFechaFinReal());
+				
 				stcomponentes.add(temp);
 			}
 
@@ -265,10 +299,11 @@ public class SComponente extends HttpServlet {
 					String longitud = map.get("longitud");
 					BigDecimal costo = Utils.String2BigDecimal(map.get("costo") != null && map.get("costo").equals("0") ? null : map.get("costo"), null);
 					Integer acumulacionCostoid = Utils.String2Int(map.get("acumulacionCosto"), null);
-					Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
-					Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
+					Date fechaInicio = Utils.dateFromStringCeroHoras(map.get("fechaInicio"));
+					Date fechaFin = Utils.dateFromStringCeroHoras(map.get("fechaFin"));
 					Integer duracion = Utils.String2Int(map.get("duaracion"), null);
 					String duracionDimension = map.get("duracionDimension");
+					Integer esDeSigade = Utils.String2Boolean(map.get("esDeSigade"),0);
 					
 					AcumulacionCosto acumulacionCosto = null;
 					if(acumulacionCostoid != null){
@@ -290,10 +325,11 @@ public class SComponente extends HttpServlet {
 					Componente componente;
 					if(esnuevo){
 						
-						componente = new Componente(acumulacionCosto,componenteTipo, proyecto, unidadEjecutora_, nombre,
+						componente = new Componente(acumulacionCosto,null,componenteTipo, proyecto, unidadEjecutora_, nombre,
 								descripcion, usuario, null, new DateTime().toDate(), null, 1,
 								snip, programa, subPrograma, proyecto_, actividad,obra, latitud,longitud, costo, renglon, 
-								ubicacionGeografica, fechaInicio, fechaFin, duracion, duracionDimension, null,null,null,null,null,null);
+								ubicacionGeografica, fechaInicio, fechaFin, duracion, duracionDimension, null,null,null,esDeSigade,
+								null,null,null,null,null, null,null,null,null);
 					}
 					else{
 						componente = ComponenteDAO.getComponentePorId(id,usuario);
@@ -320,7 +356,30 @@ public class SComponente extends HttpServlet {
 						componente.setUnidadEjecutora(unidadEjecutora_);
 						componente.setComponenteTipo(componenteTipo);
 					}
-					result = ComponenteDAO.guardarComponente(componente);
+					result = ComponenteDAO.guardarComponente(componente, true);
+					
+					if(result){
+						String pagosPlanificados = map.get("pagosPlanificados");
+						if(!acumulacionCostoid.equals(2)  || pagosPlanificados!= null && pagosPlanificados.replace("[", "").replace("]", "").length()>0 ){
+							List<PagoPlanificado> pagosActuales = PagoPlanificadoDAO.getPagosPlanificadosPorObjeto(componente.getId(), 1);
+							for (PagoPlanificado pagoTemp : pagosActuales){
+								PagoPlanificadoDAO.eliminarTotalPagoPlanificado(pagoTemp);
+							}
+						}
+							
+						if (acumulacionCostoid.equals(2) && pagosPlanificados!= null && pagosPlanificados.replace("[", "").replace("]", "").length()>0){
+							JsonParser parser = new JsonParser();
+							JsonArray pagosArreglo = parser.parse(pagosPlanificados).getAsJsonArray();
+							for(int i=0; i<pagosArreglo.size(); i++){
+								JsonObject objeto = pagosArreglo.get(i).getAsJsonObject();
+								Date fechaPago = objeto.get("fechaPago").isJsonNull() ? null : Utils.stringToDate(objeto.get("fechaPago").getAsString());
+								BigDecimal monto = objeto.get("pago").isJsonNull() ? null : objeto.get("pago").getAsBigDecimal();
+								
+								PagoPlanificado pagoPlanificado = new PagoPlanificado(fechaPago, monto, componente.getId(), 1, usuario, null, new Date(), null, 1);
+								result = result && PagoPlanificadoDAO.guardar(pagoPlanificado);
+							}
+						}
+					}
 					
 					Set<ComponentePropiedadValor> valores_temp = componente.getComponentePropiedadValors();
 					componente.setComponentePropiedadValors(null);
@@ -359,11 +418,6 @@ public class SComponente extends HttpServlet {
 						}
 					}
 					
-					/*if(result){
-						COrden orden = new COrden();
-						result = orden.calcularOrdenObjetosSuperiores(componente.getProyecto().getId(), 1, usuario, COrden.getSessionCalculoOrden(),componente.getProyecto().getId(), null, null);
-					}*/
-					
 					response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 							+ "\"id\": " + componente.getId() , ","
 							, "\"usuarioCreo\": \"" , componente.getUsuarioCreo(),"\","
@@ -378,115 +432,6 @@ public class SComponente extends HttpServlet {
 			catch (Throwable e){
 				response_text = "{ \"success\": false }";
 			}
-		}
-		else if(accion.equals("guardarModal")){
-			try{
-				boolean result = false;
-				int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
-				boolean esnuevo = map.get("esnuevo").equals("true");
-				Integer proyectoId = Utils.String2Int(map.get("proyectoId"));
-				
-				
-				
-				Componente componente = null;
-				if(id>0 || esnuevo ){
-					String nombre = map.get("nombre");	
-					int componentetipoid = map.get("componentetipoid")!=null ? Integer.parseInt(map.get("componentetipoid")) : 0;	
-					int unidadEjecutoraId = map.get("unidadejecutoraid") !=null ? Integer.parseInt(map.get("unidadejecutoraid")) : 0;
-					int entidad = Utils.String2Int(map.get("entidad"),0);
-					int ejercicio = Utils.String2Int(map.get("ejercicio"),0);
-					Date fechaInicio = Utils.dateFromString(map.get("fechaInicio"));
-					Date fechaFin = Utils.dateFromString(map.get("fechaFin"));
-					Integer duracion = Utils.String2Int(map.get("duaracion"), null);
-					String duracionDimension = map.get("duracionDimension");
-					ComponenteTipo componenteTipo= new ComponenteTipo();
-					componenteTipo.setId(componentetipoid);
-					UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidad,unidadEjecutoraId);
-					
-					if (esnuevo){
-						Proyecto proyecto = new Proyecto();
-						proyecto.setId(proyectoId);
-						componente = new Componente(componenteTipo, proyecto,  nombre, usuario, 
-								new Date(), 1);
-						componente.setFechaInicio(fechaInicio);
-						componente.setFechaFin(fechaFin);
-						componente.setDuracion(duracion);
-						componente.setDuracionDimension(duracionDimension);
-						
-					}else {
-						componente = ComponenteDAO.getComponentePorId(id,usuario);
-						componente.setNombre(nombre);
-						componente.setComponenteTipo(componenteTipo);
-						componente.setUnidadEjecutora(unidadEjecutora);
-						componente.setUsuarioActualizo(usuario);
-						componente.setFechaActualizacion(new DateTime().toDate());
-						componente.setFechaInicio(fechaInicio);
-						componente.setFechaFin(fechaFin);
-						componente.setDuracion(duracion);
-						componente.setDuracionDimension(duracionDimension);
-						
-					}
-					result = ComponenteDAO.guardarComponente(componente);
-					/*COrden orden = new COrden();
-					orden.calcularOrdenObjetosSuperiores(componente.getProyecto().getId(), 1,  usuario, COrden.getSessionCalculoOrden(),componente.getProyecto().getId(), null, null);
-					*/
-				}
-				stcomponente temp = new stcomponente();
-				if (result){
-					temp.id = componente.getId();
-					temp.nombre = componente.getNombre();
-					temp.componentetipoid = componente.getComponenteTipo().getId();
-					temp.componentetiponombre = componente.getComponenteTipo().getNombre();
-					
-					if(componente.getUnidadEjecutora() != null){
-						temp.unidadejecutoraid = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
-						temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
-						temp.entidadentidad = componente.getUnidadEjecutora().getId().getEntidadentidad();
-						temp.unidadejecutoranombre = componente.getUnidadEjecutora().getNombre();
-					}else{
-						Proyecto proyecto = ProyectoDAO.getProyecto(componente.getProyecto().getId());
-						temp.unidadejecutoraid = proyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
-						temp.ejercicio = proyecto.getUnidadEjecutora().getId().getEjercicio();
-						temp.entidadentidad = proyecto.getUnidadEjecutora().getId().getEntidadentidad();
-						temp.unidadejecutoranombre = proyecto.getUnidadEjecutora().getNombre();
-					}
-					
-					temp.entidadnombre = componente.getUnidadEjecutora().getEntidad().getNombre();
-					temp.fechaInicio = Utils.formatDate(componente.getFechaInicio());
-					temp.fechaFin = Utils.formatDate(componente.getFechaFin());
-					temp.duracion = componente.getDuracion();
-					temp.duracionDimension = componente.getDuracionDimension();
-					response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
-			        response_text = String.join("", "\"componente\":",response_text);
-			        response_text = String.join("", "{\"success\":true,", response_text,"}");
-				}else{
-					response_text = "{ \"success\": false }";
-				}	
-			}
-			catch (Throwable e){
-				response_text = "{ \"success\": false }";
-			}
-		}
-		else if(accion.equals("borrarComponente")){
-			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
-			if(id>0){
-				Componente componente = ComponenteDAO.getComponentePorId(id,usuario);
-				componente.setUsuarioActualizo(usuario);
-				
-				/*Integer objetoId = componente.getProyecto().getId();
-				Integer objetoTipo = 1;*/
-				
-				boolean eliminado = ComponenteDAO.eliminarComponente(componente);
-				
-				/*if(eliminado){
-					COrden orden = new COrden();
-					orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, COrden.getSessionCalculoOrden(),objetoId, null, null);
-				}*/
-				
-				response_text = String.join("","{ \"success\": ",(eliminado ? "true" : "false")," }");
-			}
-			else
-				response_text = "{ \"success\": false }";
 		}
 		else if(accion.equals("numeroComponentes")){
 			response_text = String.join("","{ \"success\": true, \"totalcomponentes\":",ComponenteDAO.getTotalComponentes(usuario).toString()," }");
@@ -507,6 +452,7 @@ public class SComponente extends HttpServlet {
 			String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
 			String columna_ordenada = map.get("columna_ordenada");
 			String orden_direccion = map.get("orden_direccion");
+			boolean esDeSigade = false;
 
 			List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(pagina, numeroCooperantes,proyectoId
 					,filtro_nombre,filtro_usuario_creo,filtro_fecha_creacion,columna_ordenada,orden_direccion,usuario);
@@ -556,19 +502,44 @@ public class SComponente extends HttpServlet {
 				temp.fechaFin = Utils.formatDate(componente.getFechaFin());
 				temp.duracion = componente.getDuracion();
 				temp.duracionDimension = componente.getDuracionDimension();
+				
+				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 1);
+				temp.esDeSigade = componente.getEsDeSigade().equals(1);
+				temp.fuentePrestamo = componente.getFuentePrestamo();
+				temp.fuenteDonacion = componente.getFuenteDonacion();
+				temp.fuenteNacional = componente.getFuenteNacional();
+				temp.prestamoId = componente.getProyecto().getPrestamo().getId();
+				esDeSigade = esDeSigade || temp.esDeSigade;
+				temp.fechaInicioReal = Utils.formatDate(componente.getFechaInicioReal());
+				temp.fechaFinReal = Utils.formatDate(componente.getFechaFinReal());
+				
 				stcomponentes.add(temp);
 			}
 
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stcomponentes);
 	        response_text = String.join("", "\"componentes\":",response_text);
-	        response_text = String.join("", "{\"success\":true,", response_text,"}");
+	        response_text = String.join("", "{\"success\":true,\"esDeSigade\":", esDeSigade ? "true" : "false" ,",",
+	        response_text,"}");
 		}
 		else if(accion.equals("obtenerComponentePorId")){
 			Integer id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			Componente componente = ComponenteDAO.getComponentePorId(id,usuario);
-
+			Integer congelado = 0;
+			if(componente != null){
+				Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(componente.getTreePath());
+				congelado = proyecto.getCongelado() != null ? proyecto.getCongelado() : 0;
+			}
+			
 			response_text = String.join("","{ \"success\": ",(componente!=null && componente.getId()!=null ? "true" : "false"),", "
-				+ "\"id\": " + (componente!=null ? componente.getId():"0") +", " + "\"fechaInicio\": \"" + (componente!=null ? Utils.formatDate(componente.getFechaInicio()): null) +"\", "
+				+ "\"id\": " + (componente!=null ? componente.getId():"0") +", "
+				+ "\"ejercicio\": " + (componente!=null && componente.getUnidadEjecutora() != null ? componente.getProyecto().getUnidadEjecutora().getId().getEjercicio() :"0") +", " 
+				+ "\"entidad\": " + (componente!=null && componente.getUnidadEjecutora() != null ? componente.getProyecto().getUnidadEjecutora().getId().getEntidadentidad() :"0") +", "
+				+ "\"entidadNombre\": \"" + (componente!=null && componente.getUnidadEjecutora() != null ? componente.getProyecto().getUnidadEjecutora().getEntidad().getNombre() : "") +"\", "
+				+ "\"unidadEjecutora\": " + (componente!=null && componente.getUnidadEjecutora() != null ? componente.getProyecto().getUnidadEjecutora().getId().getUnidadEjecutora() :"0") +", "
+				+ "\"unidadEjecutoraNombre\": \"" + (componente!=null && componente.getUnidadEjecutora() != null ? componente.getProyecto().getUnidadEjecutora().getNombre() : "") +"\", "
+				+ "\"prestamoId\": " + (componente!=null ? componente.getProyecto().getPrestamo() != null ? componente.getProyecto().getPrestamo().getId() : 0 : 0) +", "
+				+ "\"fechaInicio\": \"" + (componente!=null ? Utils.formatDate(componente.getFechaInicio()): null) +"\", "
+				+ "\"congelado\": " + congelado +", "
 				+ "\"nombre\": \"" + (componente!=null ? componente.getNombre():"Indefinido") +"\" }");
 
 		}else if(accion.equals("getComponentePorId")){
@@ -618,10 +589,95 @@ public class SComponente extends HttpServlet {
 			temp.fechaFin = Utils.formatDate(componente.getFechaFin());
 			temp.duracion = componente.getDuracion();
 			temp.duracionDimension = componente.getDuracionDimension();
+			
+			temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 1);
+			temp.esDeSigade = componente.getEsDeSigade().equals(1);
+			temp.fuentePrestamo = componente.getFuentePrestamo();
+			temp.fuenteDonacion = componente.getFuenteDonacion();
+			temp.fuenteNacional = componente.getFuenteNacional();
+			temp.prestamoId = componente.getProyecto().getPrestamo().getId();
+			temp.descripcion = componente.getDescripcion();
+			temp.longitud = componente.getLongitud();
+			temp.latitud = componente.getLatitud();
+			temp.fechaInicioReal = Utils.formatDate(componente.getFechaInicioReal());
+			temp.fechaFinReal = Utils.formatDate(componente.getFechaFinReal());
+
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"componente\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 
+		}else if(accion.equals("borrarComponente")){
+			Integer componentId = Utils.String2Int(map.get("id"));
+			Componente componente = ComponenteDAO.getComponente(componentId);
+			
+			 response_text = String.join("", "{\"success\":" + ObjetoDAO.borrarHijos(componente.getTreePath(), 1, usuario) + "}");
+		}else if(accion.equals("getCantidadHistoria")){
+			Integer componenteId = Utils.String2Int(map.get("id"));
+			String resultado = ComponenteDAO.getVersiones(componenteId); 
+			response_text = String.join("", "{\"success\":true, \"versiones\": [" + resultado + "]}");
+		}else if(accion.equals("getHistoria")){
+			Integer componenteId = Utils.String2Int(map.get("id"));
+			Integer version = Utils.String2Int(map.get("version"));
+			String resultado = ComponenteDAO.getHistoria(componenteId, version); 
+			response_text = String.join("", "{\"success\":true, \"historia\":" + resultado + "}");
+		}else if(accion.equals("getValidacionAsignado")){
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(new Date());
+			Integer ejercicio = cal.get(Calendar.YEAR);
+			Integer id = Utils.String2Int(map.get("id"));
+			
+			Componente objComponente = ComponenteDAO.getComponente(id);
+			Proyecto objProyecto = ProyectoDAO.getProyectobyTreePath(objComponente.getTreePath());
+			
+			Integer unidadEjecutora = objProyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
+			Integer entidad = objProyecto.getUnidadEjecutora().getId().getEntidadentidad();
+			
+			Integer programa = Utils.String2Int(map.get("programa"));
+			Integer subprograma = Utils.String2Int(map.get("subprograma"));
+			Integer proyecto = Utils.String2Int(map.get("proyecto"));
+			Integer actividad = Utils.String2Int(map.get("actividad"));
+			Integer obra = Utils.String2Int(map.get("obra"));
+			Integer renglon = Utils.String2Int(map.get("renglon"));
+			Integer geografico = Utils.String2Int(map.get("geografico"));
+			BigDecimal asignado = ObjetoDAO.getAsignadoPorLineaPresupuestaria(ejercicio, entidad, unidadEjecutora, programa, subprograma, 
+					proyecto, actividad, obra, renglon, geografico);
+			
+			BigDecimal planificado = new BigDecimal(0);
+			switch(objComponente.getAcumulacionCosto().getId()){
+				case 1:
+					cal.setTime(objComponente.getFechaInicio());
+					Integer ejercicioInicial = cal.get(Calendar.YEAR);
+					if(ejercicio.equals(ejercicioInicial)){
+						planificado = objComponente.getCosto();
+					}
+					break;
+				case 2:
+					List<PagoPlanificado> lstPagos = PagoPlanificadoDAO.getPagosPlanificadosPorObjeto(objComponente.getId(), 1);
+					for(PagoPlanificado pago : lstPagos){
+						cal.setTime(pago.getFechaPago());
+						Integer ejercicioPago = cal.get(Calendar.YEAR);
+						if(ejercicio.equals(ejercicioPago)){
+							planificado = planificado.add(pago.getPago());
+						}
+					}
+					break;
+				case 3:
+					cal.setTime(objComponente.getFechaFin());
+					Integer ejercicioFinal = cal.get(Calendar.YEAR);
+					if(ejercicio.equals(ejercicioFinal)){
+						planificado = objComponente.getCosto();
+					}
+					break;
+			}
+			
+			if(asignado.subtract(planificado).compareTo(new BigDecimal(0)) == -1){
+				response_text = ",\"asignado\": " + asignado + ",\"sobrepaso\": " + true;
+			}else{
+				response_text = ",\"asignado\": " + asignado + ",\"sobrepaso\": " + false;
+			}
+			
+			response_text = String.join(" ", "{ \"success\" : true ", response_text, "}");
+			Utils.writeJSon(response, response_text);
 		}
 		else{
 			response_text = "{ \"success\": false }";

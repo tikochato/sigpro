@@ -17,6 +17,7 @@ import org.hibernate.query.Query;
 
 import pojo.Desembolso;
 import utilities.CHibernateSession;
+import utilities.CHistoria;
 import utilities.CLogger;
 
 public class DesembolsoDAO {
@@ -157,7 +158,7 @@ public class DesembolsoDAO {
 		List<Desembolso> ret = new ArrayList<Desembolso>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String query = "SELECT d FROM Desembolso d WHERE estado = 1 AND d.proyecto.id = :proyId ";
+			String query = "SELECT d FROM Desembolso d WHERE estado = 1 AND d.proyecto.id = :proyId ORDER BY fecha";
 			Query<Desembolso> criteria = session.createQuery(query,Desembolso.class);
 			criteria.setParameter("proyId", proyectoId);
 			ret = criteria.getResultList();
@@ -200,14 +201,15 @@ public class DesembolsoDAO {
 		return ret;
 	}
 	
-	public static List<?> getDesembolsosPorEjercicio(Integer idProyecto, int anio_inicial, int anio_final){
+	public static List<?> getDesembolsosPorEjercicio(Integer idProyecto, int anio_inicial, int anio_final,String lineaBase){
 		List<?> ret= null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = String.join(" ", "select year (fecha) anio ,month(fecha) mes ,SUM(monto)  monto",
-				"from desembolso where proyectoid = ?1",
+				"from sipro_history.desembolso where proyectoid = ?1",
 				"and estado  = 1", 
 				"and  year(fecha) between ?2 and ?3",
+				lineaBase!=null ? "and linea_base like '%"+lineaBase+"%'" : "and actual = 1",
 				"GROUP BY year (fecha),month(fecha) order by year(fecha),month (fecha) asc");
 			Query<?>  desembolsos = session.createNativeQuery(query);
 			desembolsos.setParameter(1, idProyecto);
@@ -224,15 +226,15 @@ public class DesembolsoDAO {
 		return ret;
 	}
 	
-	public static List<?> getDesembolsosEntreFechas(Integer idProyecto, Date fechaInicio, Date fechaFin){
+	public static List<?> getDesembolsosEntreFechas(Integer idProyecto, Date fechaInicio, Date fechaFin, String lineaBase){
 		java.sql.Date fechaInicial = new java.sql.Date(fechaInicio.getTime());
 		java.sql.Date fechaFinal = new java.sql.Date(fechaFin.getTime());
 		List<?> ret= null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = String.join(" ", "select year (fecha) anio ,month(fecha) mes ,SUM(monto)  monto",
-				"from desembolso where proyectoid = ?1",
-				"and estado  = 1", 
+				"from sipro_history.desembolso where proyectoid = ?1",
+				lineaBase!=null ? "and linea_base like '%"+lineaBase+"%'" : "and actual = 1",
 				"and  fecha between ?2 and ?3",
 				"GROUP BY year (fecha),month(fecha) order by year(fecha),month (fecha) asc");
 			Query<?>  desembolsos = session.createNativeQuery(query);
@@ -291,27 +293,22 @@ public class DesembolsoDAO {
 		return ret;
 	}
 	
-	public static List<?> getCostosPorEjercicio(Integer idProyecto, int anio_inicial, int anio_final){
-		List<?> ret= null;
+	
+	
+	public static BigDecimal getTotalDesembolsosFuturos(int proyectoId, Date fechaActual,String lineaBase){
+		BigDecimal ret= new BigDecimal("0");
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String query = String.join(" ", "select year (a.fecha_inicio), month (a.fecha_inicio), a.costo",
-						"from actividad a",
-						"where a.estado=1 and ((a.proyecto_base= ?1)",
-						"OR (a.componente_base in (select id from componente where proyectoid= ?1))",
-						"OR (a.producto_base in (select p.id from producto p, componente c where p.componenteid=c.id and c.proyectoid= ?1))",
-						")",
-						"and  year (a.fecha_inicio) between ?2 and ?3",
-						"GROUP BY year (a.fecha_inicio), month (a.fecha_inicio)",
-						"order by year (a.fecha_inicio), month (a.fecha_inicio) asc");
-			Query<?>  desembolsos = session.createNativeQuery(query);
-			desembolsos.setParameter(1, idProyecto);
-			desembolsos.setParameter(2, anio_inicial);
-			desembolsos.setParameter(3, anio_final);
-			ret = desembolsos.getResultList();
+			String query = "select sum(d.monto) from sipro_history.desembolso d where d.proyectoid = ?1 and d.fecha > ?2 " + 
+					lineaBase!=null ? "and d.linea_base like '%"+lineaBase+"%'" : "and d.actual = 1";
+			Query<?> conteo = session.createNativeQuery(query);
+			conteo.setParameter(1, proyectoId);
+			conteo.setParameter(2, fechaActual);
+			Object res = conteo.getSingleResult();
+			ret = (BigDecimal) res;
 		}
 		catch(Throwable e){
-			CLogger.write("8", DesembolsoDAO.class, e);
+			CLogger.write("11", DesembolsoDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -319,22 +316,36 @@ public class DesembolsoDAO {
 		return ret;
 	}
 	
-	public static BigDecimal getTotalDesembolsosFuturos(int proyectoId, Date fechaActual){
-		BigDecimal ret= new BigDecimal("0");
-		Session session = CHibernateSession.getSessionFactory().openSession();
-		try{
-			Query<BigDecimal> conteo = 
-					session.createQuery("select sum(d.monto) from Desembolso d where d.proyecto.id = ?1 and d.fecha > ?2",BigDecimal.class);
-			conteo.setParameter(1, proyectoId);
-			conteo.setParameter(2, fechaActual);
-			ret = conteo.getSingleResult();
+	public static String getVersiones(Integer objeto_id){
+		String resultado = "";
+		String query = "SELECT DISTINCT(version) " 
+				+ "FROM sipro_history.desembolso "
+				+ "WHERE proyectoid="+objeto_id;
+		List<?> versiones = CHistoria.getVersiones(query);
+		if(versiones!=null){
+			for(int i=0; i<versiones.size(); i++){
+				if(!resultado.isEmpty()){
+					resultado+=",";
+				}
+				resultado+=(Integer)versiones.get(i);
+			}
 		}
-		catch(Throwable e){
-			CLogger.write("9", DesembolsoDAO.class, e);
-		}
-		finally{
-			session.close();
-		}
-		return ret;
+		return resultado;
+	}
+	
+	public static String getHistoria(Integer objeto_id, Integer version){
+		String resultado = "";
+		String query = "select d.version, d.fecha, d.monto, dt.nombre, d.usuario_creo, "
+			+ "d.usuario_actualizo, d.fecha_creacion, d.fecha_actualizacion, d.estado "
+			+ "FROM sipro_history.desembolso d, sipro_history.desembolso_tipo dt "
+			+ "WHERE d.proyectoid=" + objeto_id
+			+ " AND d.version=" + version
+			+ " AND d.desembolso_tipoid=dt.id ";
+		
+		String [] campos = {"Version", "Fecha Desembolso", "Monto del desembolso", "Tipo del desembolso", "Usuario que Creo", 
+				"Usuario que Actualizó", "Fecha de Creación", "Fecha de Actualización", 
+				"Estado"};
+		resultado = CHistoria.getHistoria(query, campos);
+		return resultado;
 	}
 }

@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,10 @@ import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.Weeks;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -190,6 +195,24 @@ public class Utils {
 		return rdate;
 	}
 	
+	public static Date dateFromStringCeroHoras(String date){
+		Calendar rdate=null;
+		if(date!=null && date.length()>0){
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			try {
+				rdate = Calendar.getInstance();
+				rdate.setTime(sdf.parse(date));
+				rdate.set(Calendar.HOUR_OF_DAY, 0);
+				rdate.set(Calendar.MINUTE, 0);
+				rdate.set(Calendar.SECOND, 0);
+				rdate.set(Calendar.MILLISECOND, 0);
+			} catch (ParseException e) {
+				
+			}
+		}
+		return rdate.getTime();
+	}
+	
 	public static Timestamp stringToTimestamp(String date){
 		Timestamp ret=null;
 		if(date!=null && date.length()>0){
@@ -242,6 +265,27 @@ public class Utils {
 		if (date != null)
 			return sdf.format(date);
 		return "";
+	}
+	
+	public static int getWorkingDays(DateTime fecha_inicio, DateTime fecha_fin) {
+
+	    int dias_sin_fines_de_semana = 5 * Weeks.weeksBetween(
+	            fecha_inicio.withDayOfWeek(DateTimeConstants.MONDAY), fecha_fin.withDayOfWeek(DateTimeConstants.MONDAY)).getWeeks();
+
+	    return dias_sin_fines_de_semana -
+	    		(fecha_inicio.getDayOfWeek()>5 ? 5 : fecha_inicio.getDayOfWeek()) + 
+	    		(fecha_fin.getDayOfWeek()>5 ? 5 :  fecha_fin.getDayOfWeek()) + 1;
+	}
+	
+	public static Date setDateCeroHoras(Date fecha){
+		Calendar cfecha = Calendar.getInstance();
+		cfecha.setTime(fecha);
+		cfecha.set(Calendar.HOUR_OF_DAY, 0);
+		cfecha.set(Calendar.MINUTE, 0);
+		cfecha.set(Calendar.SECOND, 0);
+		cfecha.set(Calendar.MILLISECOND, 0);
+		return cfecha.getTime();
+		
 	}
 
 }

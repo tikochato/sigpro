@@ -11,292 +11,402 @@ import utilities.CHibernateSession;
 import utilities.CLogger;
 
 public class AdministracionTransaccionalDAO {
-	public static List<?> obtenerTotalesPorUsuarios(Date fechaInicio, Date fechaFin){
-		List<?> ret = new ArrayList<List<String>>();
-		Session session = CHibernateSession.getSessionFactory().openSession();
-        try{
-        	String str_Query = String.join(" ","Select Q1.usuario, sum(Q1.creacion) creacion, sum(Q1.actualizacion) actualizacion, sum(Q1.eliminado) eliminado FROM (",
-        			"select usuario, sum(creacion) creacion, actualizacion, eliminado from (",
-        			"select usuario, count(p.id) creacion, 0 actualizacion, 0 eliminado from usuario u",
-        			"left outer join proyecto p on (p.usuario_creo=u.usuario)",
-        			"where p.fecha_creacion between :fechaInicio and :fechaFin",
-        			"group by u.usuario",
-        			"union all",
-        			"select usuario, count(c.id) creacion, 0 actualizacion, 0 eliminado from usuario u",
-        			"left outer join componente c on (c.usuario_creo=u.usuario)",
-        			"where c.fecha_creacion  between :fechaInicio and :fechaFin",
-        			"group by u.usuario",
-        			"union all",
-        			"select usuario, count(pr.id) creacion, 0 actualizacion, 0 eliminado from usuario u",
-        			"left outer join producto pr on (pr.usuario_creo=u.usuario)",
-        			"where pr.fecha_creacion  between :fechaInicio and :fechaFin",
-        			"group by u.usuario",
-        			"union all",
-        			"select usuario, count(sp.id) creacion, 0 actualizacion, 0 eliminado from usuario u",
-        			"left outer join subproducto sp on (sp.usuario_creo=u.usuario)",
-        			"where sp.fecha_creacion  between :fechaInicio and :fechaFin",
-        			"group by u.usuario",
-        			"union all",
-        			"select usuario, count(a.id) creacion, 0 actualizacion, 0 eliminado from usuario u",
-        			"left outer join actividad a on (a.usuario_creo=u.usuario)",
-        			"where a.fecha_creacion  between :fechaInicio and :fechaFin",
-        			"group by u.usuario) t1 group by t1.usuario",
-        			"UNION all",
-        			"select usuario, creacion, sum(actualizacion) actualizacion, eliminado from (",
-        			"select usuario, 0 creacion, count(p.id) actualizacion, 0 eliminado from usuario u",
-        			"left join proyecto p on (p.usuario_actualizo=u.usuario)",
-        			"where p.fecha_actualizacion between :fechaInicio and :fechaFin and p.estado=1",
-        			"group by u.usuario",
-        			"union all",
-        			"select usuario, 0 creacion, count(c.id) actualizacion, 0 eliminado from usuario u",
-        			"left outer join componente c on (c.usuario_actualizo=u.usuario)",
-        			"where c.fecha_actualizacion between :fechaInicio and :fechaFin and c.estado=1",
-        			"group by u.usuario",
-        			"union all",
-        			"select usuario, 0 creacion, count(pr.id) actualizacion, 0 eliminado from usuario u",
-        			"left outer join producto pr on (pr.usuario_actualizo=u.usuario)",
-        			"where pr.fecha_actualizacion between :fechaInicio and :fechaFin and pr.estado=1",
-        			"group by u.usuario",
-        			"union all",
-        			"select usuario, 0 creacion, count(sp.id) actualizacion, 0 eliminado from usuario u",
-        			"left outer join subproducto sp on (sp.usuario_actualizo=u.usuario)",
-        			"where sp.fecha_actualizacion between :fechaInicio and :fechaFin and sp.estado=1",
-        			"group by u.usuario",
-        			"union all",
-        			"select usuario, 0 creacion, count(a.id) actualizacion, 0 eliminado from usuario u",
-        			"left outer join actividad a on (a.usuario_actualizo=u.usuario)",
-        			"where a.fecha_actualizacion  between :fechaInicio and :fechaFin and a.estado=1",
-        			"group by u.usuario) t2 group by t2.usuario",
-        			"UNION all",
-        			"select usuario, creacion, actualizacion, sum(eliminados) eliminados from (",
-        			"select usuario, 0 creacion, 0 actualizacion, count(p.id) eliminados from usuario u",
-        			"left join proyecto p on (p.usuario_actualizo=u.usuario)",
-        			"where p.estado=0 and p.fecha_actualizacion  between :fechaInicio and :fechaFin",
-        			"group by u.usuario",
-        			"union all",
-        			"select usuario, 0 creacion, 0 actualizacion, count(c.id) eliminados from usuario u",
-        			"left outer join componente c on (c.usuario_actualizo=u.usuario)",
-        			"where c.estado=0 and c.fecha_actualizacion  between :fechaInicio and :fechaFin",
-        			"group by u.usuario",
-        			"union all",
-        			"select usuario, 0 creacion, 0 actualizacion, count(pr.id) eliminados from usuario u",
-        			"left outer join producto pr on (pr.usuario_actualizo=u.usuario)",
-        			"where pr.estado=0 and pr.fecha_actualizacion  between :fechaInicio and :fechaFin",
-        			"group by u.usuario",
-        			"union all",
-        			"select usuario, 0 creacion, 0 actualizacion, count(sp.id) eliminados from usuario u",
-        			"left outer join subproducto sp on (sp.usuario_actualizo=u.usuario)",
-        			"where sp.estado=0 and sp.fecha_actualizacion  between :fechaInicio and :fechaFin",
-        			"group by u.usuario",
-        			"union all",
-        			"select usuario, 0 creacion, 0 actualizacion, count(a.id) eliminados from usuario u",
-        			"left outer join actividad a on (a.usuario_actualizo=u.usuario)",
-        			"where a.estado=0 and a.fecha_actualizacion  between :fechaInicio and :fechaFin",
-        			"group by u.usuario",
-        			")t3 group by t3.usuario) Q1",
-        			"group by Q1.usuario");
-        	Query<?> criteria = session.createNativeQuery(str_Query);
-			criteria.setParameter("fechaInicio", fechaInicio);
-			criteria.setParameter("fechaFin", fechaFin);
-			ret = criteria.getResultList();
-        }catch(Throwable e){
-            CLogger.write("1", AdministracionTransaccionalDAO.class, e);
-        }finally {
-        	session.close();
-		}
-		return ret;
-	}
-	
-	public static List<?> obtenerTransaccionesPorUsuario(String usuarioDetalle, Date fechaInicio, Date fechaFin){
-		List<?> ret = new ArrayList<List<String>>();
-		Session session = CHibernateSession.getSessionFactory().openSession();
-        try{
-        	String str_Query = String.join(" ","select usuario, p.nombre creacion, 'Prestamo', 'Creado', p.fecha_creacion fecha from usuario u",
-        			"left outer join proyecto p on (p.usuario_creo=u.usuario)",
-        			"where p.fecha_creacion between :fechaInicio and :fechaFin and u.usuario=:usuario",
-        			"union all",
-        			"select usuario, c.nombre creacion, 'Componente', 'Creado', c.fecha_creacion fecha from usuario u",
-        			"left outer join componente c on (c.usuario_creo=u.usuario)",
-        			"where c.fecha_creacion  between :fechaInicio and :fechaFin and u.usuario=:usuario",
-        			"union all",
-        			"select usuario, pr.nombre creacion, 'Producto', 'Creado', pr.fecha_creacion fecha from usuario u",
-        			"left outer join producto pr on (pr.usuario_creo=u.usuario)",
-        			"where pr.fecha_creacion  between :fechaInicio and :fechaFin and u.usuario=:usuario",
-        			"union all",
-        			"select usuario, sp.nombre creacion, 'Sub Producto', 'Creado', sp.fecha_creacion fecha from usuario u",
-        			"left outer join subproducto sp on (sp.usuario_creo=u.usuario)",
-        			"where sp.fecha_creacion  between :fechaInicio and :fechaFin and u.usuario=:usuario",
-        			"union all",
-        			"select usuario, a.nombre creacion, 'Actividad', 'Creado', a.fecha_creacion fecha from usuario u",
-        			"left outer join actividad a on (a.usuario_creo=u.usuario)",
-        			"where a.fecha_creacion  between :fechaInicio and :fechaFin and u.usuario=:usuario",
-        			"UNION all",
-        			"select usuario, p.nombre creacion, 'Prestamo', 'Modificado', p.fecha_actualizacion fecha from usuario u",
-        			"left join proyecto p on (p.usuario_actualizo=u.usuario)",
-        			"where p.fecha_actualizacion between :fechaInicio and :fechaFin and p.estado=1 and u.usuario=:usuario",
-        			"union all",
-        			"select usuario, c.nombre creacion, 'Componente', 'Modificado', c.fecha_actualizacion fecha from usuario u",
-        			"left outer join componente c on (c.usuario_actualizo=u.usuario)",
-        			"where c.fecha_actualizacion between :fechaInicio and :fechaFin and c.estado=1 and u.usuario=:usuario",
-        			"union all",
-        			"select usuario, pr.nombre creacion, 'Producto', 'Modificado', pr.fecha_actualizacion fecha from usuario u",
-        			"left outer join producto pr on (pr.usuario_actualizo=u.usuario)",
-        			"where pr.fecha_actualizacion between :fechaInicio and :fechaFin and pr.estado=1 and u.usuario=:usuario",
-        			"union all",
-        			"select usuario, sp.nombre creacion, 'Sub Producto', 'Modificado', sp.fecha_actualizacion fecha from usuario u",
-        			"left outer join subproducto sp on (sp.usuario_actualizo=u.usuario)",
-        			"where sp.fecha_actualizacion between :fechaInicio and :fechaFin and sp.estado=1 and u.usuario=:usuario",
-        			"union all",
-        			"select usuario, a.nombre creacion, 'Actividad', 'Modificado', a.fecha_actualizacion fecha from usuario u",
-        			"left outer join actividad a on (a.usuario_actualizo=u.usuario)",
-        			"where a.fecha_actualizacion  between :fechaInicio and :fechaFin and a.estado=1 and u.usuario=:usuario",
-        			"UNION all",
-        			"select usuario, p.nombre creacion, 'Prestamo', 'Eliminado', p.fecha_actualizacion fecha from usuario u",
-        			"left join proyecto p on (p.usuario_actualizo=u.usuario)",
-        			"where p.estado=0 and p.fecha_actualizacion  between :fechaInicio and :fechaFin and u.usuario=:usuario",
-        			"union all",
-        			"select usuario, c.nombre creacion, 'Componente', 'Eliminado', c.fecha_actualizacion fecha from usuario u",
-        			"left outer join componente c on (c.usuario_actualizo=u.usuario)",
-        			"where c.estado=0 and c.fecha_actualizacion  between :fechaInicio and :fechaFin and u.usuario=:usuario",
-        			"union all",
-        			"select usuario, pr.nombre creacion, 'Producto', 'Eliminado', pr.fecha_actualizacion fecha from usuario u",
-        			"left outer join producto pr on (pr.usuario_actualizo=u.usuario)",
-        			"where pr.estado=0 and pr.fecha_actualizacion  between :fechaInicio and :fechaFin and u.usuario=:usuario",
-        			"union all",
-        			"select usuario, sp.nombre creacion, 'Sub Producto', 'Eliminado', sp.fecha_actualizacion fecha from usuario u",
-        			"left outer join subproducto sp on (sp.usuario_actualizo=u.usuario)",
-        			"where sp.estado=0 and sp.fecha_actualizacion  between :fechaInicio and :fechaFin and u.usuario=:usuario",
-        			"union all",
-        			"select usuario, a.nombre creacion, 'Actividad', 'Eliminado', a.fecha_actualizacion fecha from usuario u",
-        			"left outer join actividad a on (a.usuario_actualizo=u.usuario)",
-        			"where a.estado=0 and a.fecha_actualizacion  between :fechaInicio and :fechaFin and u.usuario=:usuario");
-        	Query<?> criteria = session.createNativeQuery(str_Query);
-			criteria.setParameter("fechaInicio", fechaInicio);
-			criteria.setParameter("fechaFin", fechaFin);
-			criteria.setParameter("usuario", usuarioDetalle);
-			ret = criteria.getResultList();
-        }catch(Throwable e){
-            CLogger.write("2", AdministracionTransaccionalDAO.class, e);
-        }finally {
-        	session.close();
-		}
-		return ret;
-	}
-	
-	public static List<?> obtenerTransaccionesCreadas(Date fechaInicio, Date fechaFin){
-		List<?> ret = new ArrayList<List<String>>();
+	public static Integer obtenerCreadosProyectoUsuario(Date fechaInicio, Date fechaFin, Integer proyectoId, String usuario){
+		Integer ret = 0;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String str_Query = String.join(" ","select sum(creacion) creacion, month(fecha_creacion) mes, year(fecha_creacion) anio from (",
-					"select count(p.id) creacion, p.fecha_creacion from usuario u",
-					"left outer join proyecto p on (p.usuario_creo=u.usuario)",
-					"where p.fecha_creacion between :fechaInicio and :fechaFin",
-					"union all",
-					"select count(c.id) creacion, c.fecha_creacion fecha  from usuario u",
-					"left outer join componente c on (c.usuario_creo=u.usuario)",
-					"where c.fecha_creacion  between :fechaInicio and :fechaFin",
-					"union all",
-					"select count(pr.id) creacion, pr.fecha_creacion fecha  from usuario u",
-					"left outer join producto pr on (pr.usuario_creo=u.usuario)",
-					"where pr.fecha_creacion  between :fechaInicio and :fechaFin",
-					"union all",
-					"select count(sp.id) creacion, sp.fecha_creacion fecha  from usuario u",
-					"left outer join subproducto sp on (sp.usuario_creo=u.usuario)",
-					"where sp.fecha_creacion  between :fechaInicio and :fechaFin",
-					"union all",
-					"select count(a.id) creacion, a.fecha_creacion fecha  from usuario u",
-					"left outer join actividad a on (a.usuario_creo=u.usuario)",
-					"where a.fecha_creacion  between :fechaInicio and :fechaFin",
-					") t1", 
-					"group by month(t1.fecha_creacion)",
-					"order by anio, mes");
-			Query<?> criteria = session.createNativeQuery(str_Query);
+			String query = String.join(" ", "SELECT count(p) FROM Proyecto p where p.fechaCreacion Between :fechaInicio AND :fechaFin",
+					"and p.id=:proyectoId and p.usuarioCreo=:usuario");
+			
+			Query<Long> criteria = session.createQuery(query,Long.class);
 			criteria.setParameter("fechaInicio", fechaInicio);
 			criteria.setParameter("fechaFin", fechaFin);
-			ret = criteria.getResultList();
-		}catch(Throwable e){
-            CLogger.write("3", AdministracionTransaccionalDAO.class, e);
-		}finally {
-        	session.close();
+			criteria.setParameter("proyectoId", proyectoId);
+			criteria.setParameter("usuario", usuario);
+			
+			ret = criteria.getSingleResult().intValue();
+			
+			query = String.join(" ", "SELECT count(c) FROM Componente c where c.fechaCreacion Between :fechaInicio AND :fechaFin",
+					"and c.proyecto.id=:proyectoId and c.usuarioCreo=:usuario");
+			criteria = session.createQuery(query,Long.class);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("proyectoId", proyectoId);
+			criteria.setParameter("usuario", usuario);
+			
+			ret += criteria.getSingleResult().intValue();
+			
+			query = String.join(" ", "SELECT count(pr) FROM Producto pr where pr.fechaCreacion Between :fechaInicio AND :fechaFin",
+					"and pr.componente.proyecto.id=:proyectoId and pr.usuarioCreo=:usuario");
+			criteria = session.createQuery(query,Long.class);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("proyectoId", proyectoId);
+			criteria.setParameter("usuario", usuario);
+			
+			ret += criteria.getSingleResult().intValue();
+			
+			query = String.join(" ", "SELECT count(sp) FROM Subproducto sp where sp.fechaCreacion Between :fechaInicio AND :fechaFin",
+					"and sp.producto.componente.proyecto.id=:proyectoId and sp.usuarioCreo=:usuario");
+			criteria = session.createQuery(query,Long.class);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("proyectoId", proyectoId);
+			criteria.setParameter("usuario", usuario);
+			
+			ret += criteria.getSingleResult().intValue();
+			
+			query = String.join(" ", "SELECT count(a) FROM Actividad a where a.fechaCreacion Between :fechaInicio AND :fechaFin",
+					"and a.treePath like '"+(10000000+proyectoId)+"%' and a.usuarioCreo=:usuario");
+			
+			criteria = session.createQuery(query,Long.class);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("usuario", usuario);
+			
+			ret += criteria.getSingleResult().intValue();
+		}catch(Exception e){
+			CLogger.write("1", AdministracionTransaccionalDAO.class, e);
 		}
+		
 		return ret;
 	}
 	
-	public static List<?> obtenerTransaccionesActualizadas(Date fechaInicio, Date fechaFin){
-		List<?> ret = new ArrayList<List<String>>();
+	public static Integer obtenerActualizadosProyectoUsuario(Date fechaInicio, Date fechaFin, Integer proyectoId, String usuario){
+		Integer ret = 0;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String str_Query = String.join(" ","select sum(actualizacion) actualizacion, month(fecha_actualizacion) mes, year(fecha_actualizacion) anio from (",
-					"select count(p.id) actualizacion, p.fecha_actualizacion from usuario u",
-					"left join proyecto p on (p.usuario_actualizo=u.usuario)",
-					"where p.fecha_actualizacion between :fechaInicio and :fechaFin and p.estado=1",
-					"union all",
-					"select count(c.id) actualizacion, c.fecha_actualizacion from usuario u",
-					"left outer join componente c on (c.usuario_actualizo=u.usuario)",
-					"where c.fecha_actualizacion between :fechaInicio and :fechaFin and c.estado=1",
-					"union all",
-					"select count(pr.id) actualizacion, pr.fecha_actualizacion from usuario u",
-					"left outer join producto pr on (pr.usuario_actualizo=u.usuario)",
-					"where pr.fecha_actualizacion between :fechaInicio and :fechaFin and pr.estado=1",
-					"union all",
-					"select count(sp.id) actualizacion, sp.fecha_actualizacion from usuario u",
-					"left outer join subproducto sp on (sp.usuario_actualizo=u.usuario)",
-					"where sp.fecha_actualizacion between :fechaInicio and :fechaFin and sp.estado=1",
-					"union all",
-					"select count(a.id) actualizacion, a.fecha_actualizacion from usuario u",
-					"left outer join actividad a on (a.usuario_actualizo=u.usuario)",
-					"where a.fecha_actualizacion  between :fechaInicio and :fechaFin and a.estado=1",
-					") t1",
-					"group by month(t1.fecha_actualizacion)",
-					"order by anio, mes");
-			Query<?> criteria = session.createNativeQuery(str_Query);
+			String query = String.join(" ", "SELECT count(p) FROM Proyecto p where p.fechaActualizacion Between :fechaInicio AND :fechaFin",
+					"and p.id=:proyectoId and p.usuarioActualizo=:usuario and p.estado=1");
+			
+			Query<Long> criteria = session.createQuery(query,Long.class);
 			criteria.setParameter("fechaInicio", fechaInicio);
 			criteria.setParameter("fechaFin", fechaFin);
-			ret = criteria.getResultList();
-		}catch(Throwable e){
-            CLogger.write("4", AdministracionTransaccionalDAO.class, e);
-		}finally {
-        	session.close();
+			criteria.setParameter("proyectoId", proyectoId);
+			criteria.setParameter("usuario", usuario);
+			
+			ret = criteria.getSingleResult().intValue();
+			
+			query = String.join(" ", "SELECT count(c) FROM Componente c where c.fechaActualizacion Between :fechaInicio AND :fechaFin",
+					"and c.proyecto.id=:proyectoId and c.usuarioActualizo=:usuario and c.estado=1");
+			criteria = session.createQuery(query,Long.class);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("proyectoId", proyectoId);
+			criteria.setParameter("usuario", usuario);
+			
+			ret += criteria.getSingleResult().intValue();
+			
+			query = String.join(" ", "SELECT count(pr) FROM Producto pr where pr.fechaActualizacion Between :fechaInicio AND :fechaFin",
+					"and pr.componente.proyecto.id=:proyectoId and pr.usuarioActualizo=:usuario and pr.estado=1");
+			criteria = session.createQuery(query,Long.class);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("proyectoId", proyectoId);
+			criteria.setParameter("usuario", usuario);
+			
+			ret += criteria.getSingleResult().intValue();
+			
+			query = String.join(" ", "SELECT count(sp) FROM Subproducto sp where sp.fechaActualizacion Between :fechaInicio AND :fechaFin",
+					"and sp.producto.componente.proyecto.id=:proyectoId and sp.usuarioActualizo=:usuario and sp.estado=1");
+			criteria = session.createQuery(query,Long.class);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("proyectoId", proyectoId);
+			criteria.setParameter("usuario", usuario);
+			
+			ret += criteria.getSingleResult().intValue();
+			
+			query = String.join(" ", "SELECT count(a) FROM Actividad a where a.fechaActualizacion Between :fechaInicio AND :fechaFin",
+					"and a.treePath like '"+(10000000+proyectoId)+"%' and a.usuarioActualizo=:usuario and a.estado=1");
+			
+			criteria = session.createQuery(query,Long.class);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("usuario", usuario);
+			
+			ret += criteria.getSingleResult().intValue();
+		}catch(Exception e){
+			CLogger.write("2", AdministracionTransaccionalDAO.class, e);
 		}
+		
 		return ret;
 	}
 	
-	public static List<?> obtenerTransaccionesEliminadas(Date fechaInicio, Date fechaFin){
-		List<?> ret = new ArrayList<List<String>>();
+	public static Integer obtenerEliminadosProyectoUsuario(Date fechaInicio, Date fechaFin, Integer proyectoId, String usuario){
+		Integer ret = 0;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String str_Query = String.join(" ","select sum(eliminados) eliminados, month(fecha_actualizacion) mes, year(fecha_actualizacion) anio from (",
-					"select count(p.id) eliminados, p.fecha_actualizacion from usuario u",
-					"left join proyecto p on (p.usuario_actualizo=u.usuario)",
-					"where p.estado=0 and p.fecha_actualizacion  between :fechaInicio and :fechaFin",
-					"union all",
-					"select count(c.id) eliminados, c.fecha_actualizacion from usuario u",
-					"left outer join componente c on (c.usuario_actualizo=u.usuario)",
-					"where c.estado=0 and c.fecha_actualizacion  between :fechaInicio and :fechaFin",
-					"union all",
-					"select count(pr.id) eliminados, pr.fecha_actualizacion from usuario u",
-					"left outer join producto pr on (pr.usuario_actualizo=u.usuario)",
-					"where pr.estado=0 and pr.fecha_actualizacion  between :fechaInicio and :fechaFin",
-					"union all",
-					"select count(sp.id) eliminados, sp.fecha_actualizacion from usuario u",
-					"left outer join subproducto sp on (sp.usuario_actualizo=u.usuario)",
-					"where sp.estado=0 and sp.fecha_actualizacion  between :fechaInicio and :fechaFin",
-					"union all",
-					"select count(a.id) eliminados, a.fecha_actualizacion from usuario u",
-					"left outer join actividad a on (a.usuario_actualizo=u.usuario)",
-					"where a.estado=0 and a.fecha_actualizacion  between :fechaInicio and :fechaFin",
-					") t1",
-					"group by month(t1.fecha_actualizacion)",
-					"order by anio, mes");
-			Query<?> criteria = session.createNativeQuery(str_Query);
+			String query = String.join(" ", "SELECT count(p) FROM Proyecto p where p.fechaActualizacion Between :fechaInicio AND :fechaFin",
+					"and p.id=:proyectoId and p.usuarioActualizo=:usuario and p.estado=0");
+			
+			Query<Long> criteria = session.createQuery(query,Long.class);
 			criteria.setParameter("fechaInicio", fechaInicio);
 			criteria.setParameter("fechaFin", fechaFin);
-			ret = criteria.getResultList();
-		}catch(Throwable e){
-            CLogger.write("5", AdministracionTransaccionalDAO.class, e);
-        }finally {
-        	session.close();
+			criteria.setParameter("proyectoId", proyectoId);
+			criteria.setParameter("usuario", usuario);
+			
+			ret = criteria.getSingleResult().intValue();
+			
+			query = String.join(" ", "SELECT count(c) FROM Componente c where c.fechaActualizacion Between :fechaInicio AND :fechaFin",
+					"and c.proyecto.id=:proyectoId and c.usuarioActualizo=:usuario and c.estado=0");
+			criteria = session.createQuery(query,Long.class);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("proyectoId", proyectoId);
+			criteria.setParameter("usuario", usuario);
+			
+			ret += criteria.getSingleResult().intValue();
+			
+			query = String.join(" ", "SELECT count(pr) FROM Producto pr where pr.fechaActualizacion Between :fechaInicio AND :fechaFin",
+					"and pr.componente.proyecto.id=:proyectoId and pr.usuarioActualizo=:usuario and pr.estado=0");
+			criteria = session.createQuery(query,Long.class);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("proyectoId", proyectoId);
+			criteria.setParameter("usuario", usuario);
+			
+			ret += criteria.getSingleResult().intValue();
+			
+			query = String.join(" ", "SELECT count(sp) FROM Subproducto sp where sp.fechaActualizacion Between :fechaInicio AND :fechaFin",
+					"and sp.producto.componente.proyecto.id=:proyectoId and sp.usuarioActualizo=:usuario and sp.estado=0");
+			criteria = session.createQuery(query,Long.class);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("proyectoId", proyectoId);
+			criteria.setParameter("usuario", usuario);
+			
+			ret += criteria.getSingleResult().intValue();
+			
+			query = String.join(" ", "SELECT count(a) FROM Actividad a where a.fechaActualizacion Between :fechaInicio AND :fechaFin",
+					"and a.treePath like '"+(10000000+proyectoId)+"%' and a.usuarioActualizo=:usuario and a.estado=0");
+			
+			criteria = session.createQuery(query,Long.class);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("usuario", usuario);
+			
+			ret += criteria.getSingleResult().intValue();
+		}catch(Exception e){
+			CLogger.write("3", AdministracionTransaccionalDAO.class, e);
 		}
+		
+		return ret;
+	}
+	
+	public static List<?> obtenerTransaccionesCreadosProyectoUsuario(Date fechaInicio, Date fechaFin, Integer proyectoId, String usuario){
+		List<Object> ret = new ArrayList<Object>();
+		List<?> ret2 = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "SELECT month(p.fechaCreacion), year(p.fechaCreacion), p.nombre, 1, p.usuarioCreo, 'Prestamo', 'Creado', p.fechaCreacion FROM Proyecto p where p.fechaCreacion Between :fechaInicio AND :fechaFin",
+					"and p.id=:proyectoId",  usuario != null ? " and p.usuarioCreo=:usuario" : "");
+			
+			Query<?> criteria = session.createQuery(query);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("proyectoId", proyectoId);
+			if(usuario != null)
+				criteria.setParameter("usuario", usuario);
+			
+			ret2 = criteria.getResultList();
+			ret.addAll(ret2);
+			
+			query = String.join(" ", "SELECT month(c.fechaCreacion), year(c.fechaCreacion), c.nombre, 2, c.usuarioCreo, 'Componente', 'Creado', c.fechaCreacion FROM Componente c where c.fechaCreacion Between :fechaInicio AND :fechaFin",
+					"and c.proyecto.id=:proyectoId", usuario != null ? "and c.usuarioCreo=:usuario" : "");
+			criteria = session.createQuery(query);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("proyectoId", proyectoId);
+			if(usuario != null)
+				criteria.setParameter("usuario", usuario);
+			
+			ret2 = criteria.getResultList();
+			ret.addAll(ret2);
+			
+			query = String.join(" ", "SELECT month(pr.fechaCreacion), year(pr.fechaCreacion), pr.nombre, 3, pr.usuarioCreo , 'Producto', 'Creado', pr.fechaCreacion FROM Producto pr where pr.fechaCreacion Between :fechaInicio AND :fechaFin",
+					"and pr.componente.proyecto.id=:proyectoId", usuario != null ? "and pr.usuarioCreo=:usuario" : "");
+			criteria = session.createQuery(query);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("proyectoId", proyectoId);
+			if(usuario != null)
+				criteria.setParameter("usuario", usuario);
+			
+			ret2 = criteria.getResultList();
+			ret.addAll(ret2);
+			
+			query = String.join(" ", "SELECT month(sp.fechaCreacion), year(sp.fechaCreacion), sp.nombre, 4, sp.usuarioCreo, 'Sub Producto', 'Creado', sp.fechaCreacion FROM Subproducto sp where sp.fechaCreacion Between :fechaInicio AND :fechaFin",
+					"and sp.producto.componente.proyecto.id=:proyectoId", usuario != null ? "and sp.usuarioCreo=:usuario" : "");
+			criteria = session.createQuery(query);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("proyectoId", proyectoId);
+			if(usuario != null)
+				criteria.setParameter("usuario", usuario);
+			
+			ret2 = criteria.getResultList();
+			ret.addAll(ret2);
+			
+			query = String.join(" ", "SELECT month(a.fechaCreacion), year(a.fechaCreacion), a.nombre, 5, a.usuarioCreo, 'Actividad', 'Creado', a.fechaCreacion FROM Actividad a where a.fechaCreacion Between :fechaInicio AND :fechaFin",
+					"and a.treePath like '"+(10000000+proyectoId)+"%'", usuario != null ? "and a.usuarioCreo=:usuario" : "");
+			
+			criteria = session.createQuery(query);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			if(usuario != null)
+				criteria.setParameter("usuario", usuario);
+			
+			ret2 = criteria.getResultList();
+			ret.addAll(ret2);
+		}catch(Exception e){
+			CLogger.write("4", AdministracionTransaccionalDAO.class, e);
+		}
+		
+		return ret;
+	}
+	
+	public static List<?> obtenerTransaccionesActualizadosProyectoUsuario(Date fechaInicio, Date fechaFin, Integer proyectoId, String usuario){
+		List<Object> ret = new ArrayList<Object>();
+		List<?> ret2 = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "SELECT month(p.fechaActualizacion), year(p.fechaActualizacion), p.nombre, 1, p.usuarioActualizo, 'Prestamo', 'Actualizado', p.fechaActualizacion FROM Proyecto p where p.fechaActualizacion Between :fechaInicio AND :fechaFin",
+					"and p.id=:proyectoId and p.estado=1", usuario != null ? "and p.usuarioActualizo=:usuario" : "");
+			
+			Query<?> criteria = session.createQuery(query);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("proyectoId", proyectoId);
+			if(usuario != null)
+				criteria.setParameter("usuario", usuario);
+			
+			ret2 = criteria.getResultList();
+			ret.addAll(ret2);
+			
+			query = String.join(" ", "SELECT month(c.fechaActualizacion), year(c.fechaActualizacion), c.nombre, 2, c.usuarioActualizo, 'Componente', 'Actualizado', c.fechaActualizacion FROM Componente c where c.fechaActualizacion Between :fechaInicio AND :fechaFin",
+					"and c.proyecto.id=:proyectoId and c.estado=1", usuario != null ? "and c.usuarioActualizo=:usuario" : "");
+			criteria = session.createQuery(query);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("proyectoId", proyectoId);
+			if(usuario != null)
+				criteria.setParameter("usuario", usuario);
+			
+			ret2 = criteria.getResultList();
+			ret.addAll(ret2);
+			
+			query = String.join(" ", "SELECT month(pr.fechaActualizacion), year(pr.fechaActualizacion), pr.nombre, 3, pr.usuarioActualizo , 'Producto', 'Actualizado', pr.fechaActualizacion FROM Producto pr where pr.fechaActualizacion Between :fechaInicio AND :fechaFin",
+					"and pr.componente.proyecto.id=:proyectoId and pr.estado=1", usuario != null ? "and pr.usuarioActualizo=:usuario" : "");
+			criteria = session.createQuery(query);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("proyectoId", proyectoId);
+			if(usuario != null)
+				criteria.setParameter("usuario", usuario);
+			
+			ret2 = criteria.getResultList();
+			ret.addAll(ret2);
+			
+			query = String.join(" ", "SELECT month(sp.fechaActualizacion), year(sp.fechaActualizacion), sp.nombre, 4, sp.usuarioActualizo, 'Sub Producto', 'Actualizado', sp.fechaActualizacion FROM Subproducto sp where sp.fechaActualizacion Between :fechaInicio AND :fechaFin",
+					"and sp.producto.componente.proyecto.id=:proyectoId and sp.estado=1", usuario != null ? "and sp.usuarioActualizo=:usuario" : "");
+			criteria = session.createQuery(query);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("proyectoId", proyectoId);
+			if(usuario != null)
+				criteria.setParameter("usuario", usuario);
+			
+			ret2 = criteria.getResultList();
+			ret.addAll(ret2);
+			
+			query = String.join(" ", "SELECT month(a.fechaActualizacion), year(a.fechaActualizacion), a.nombre, 5, a.usuarioActualizo, 'Actividad', 'Actualizado', a.fechaActualizacion FROM Actividad a where a.fechaActualizacion Between :fechaInicio AND :fechaFin",
+					"and a.treePath like '"+(10000000+proyectoId)+"%' and a.estado=1", usuario != null ? "and a.usuarioActualizo=:usuario" : "");
+			
+			criteria = session.createQuery(query);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			if(usuario != null)
+				criteria.setParameter("usuario", usuario);
+			
+			ret2 = criteria.getResultList();
+			ret.addAll(ret2);
+		}catch(Exception e){
+			CLogger.write("5", AdministracionTransaccionalDAO.class, e);
+		}
+		
+		return ret;
+	}
+	
+	public static List<?> obtenerTransaccionesEliminadasProyectoUsuario(Date fechaInicio, Date fechaFin, Integer proyectoId, String usuario){
+		List<Object> ret = new ArrayList<Object>();
+		List<?> ret2 = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "SELECT month(p.fechaActualizacion), year(p.fechaActualizacion), p.nombre, 1, p.usuarioActualizo, 'Prestamo', 'Eliminadas', p.fechaActualizacion FROM Proyecto p where p.fechaActualizacion Between :fechaInicio AND :fechaFin",
+					"and p.id=:proyectoId and p.estado=0", usuario != null ? "and p.usuarioActualizo=:usuario" : "");
+			
+			Query<?> criteria = session.createQuery(query);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("proyectoId", proyectoId);
+			if(usuario != null)
+				criteria.setParameter("usuario", usuario);
+			
+			ret2 = criteria.getResultList();
+			ret.addAll(ret2);
+			
+			query = String.join(" ", "SELECT month(c.fechaActualizacion), year(c.fechaActualizacion), c.nombre, 2, c.usuarioActualizo, 'Componente', 'Eliminadas', c.fechaActualizacion FROM Componente c where c.fechaActualizacion Between :fechaInicio AND :fechaFin",
+					"and c.proyecto.id=:proyectoId and c.estado=0", usuario != null ? "and c.usuarioActualizo=:usuario" : "");
+			criteria = session.createQuery(query);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("proyectoId", proyectoId);
+			if(usuario != null)
+				criteria.setParameter("usuario", usuario);
+			
+			ret2 = criteria.getResultList();
+			ret.addAll(ret2);
+			
+			query = String.join(" ", "SELECT month(pr.fechaActualizacion), year(pr.fechaActualizacion), pr.nombre, 3, pr.usuarioActualizo , 'Producto', 'Eliminadas', pr.fechaActualizacion FROM Producto pr where pr.fechaActualizacion Between :fechaInicio AND :fechaFin",
+					"and pr.componente.proyecto.id=:proyectoId and pr.estado=0", usuario != null ? "and pr.usuarioActualizo=:usuario" : "");
+			criteria = session.createQuery(query);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("proyectoId", proyectoId);
+			if(usuario != null)
+				criteria.setParameter("usuario", usuario);
+			
+			ret2 = criteria.getResultList();
+			ret.addAll(ret2);
+			
+			query = String.join(" ", "SELECT month(sp.fechaActualizacion), year(sp.fechaActualizacion), sp.nombre, 4, sp.usuarioActualizo, 'Sub Producto', 'Eliminadas', sp.fechaActualizacion FROM Subproducto sp where sp.fechaActualizacion Between :fechaInicio AND :fechaFin",
+					"and sp.producto.componente.proyecto.id=:proyectoId and sp.estado=0", usuario != null ? "and sp.usuarioActualizo=:usuario" : "");
+			criteria = session.createQuery(query);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			criteria.setParameter("proyectoId", proyectoId);
+			if(usuario != null)
+				criteria.setParameter("usuario", usuario);
+			
+			ret2 = criteria.getResultList();
+			ret.addAll(ret2);
+			
+			query = String.join(" ", "SELECT month(a.fechaActualizacion), year(a.fechaActualizacion), a.nombre, 5, a.usuarioActualizo, 'Eliminadas', 'Actualizado', a.fechaActualizacion FROM Actividad a where a.fechaActualizacion Between :fechaInicio AND :fechaFin",
+					"and a.treePath like '"+(10000000+proyectoId)+"%' and a.estado=0", usuario != null ? "and a.usuarioActualizo=:usuario" : "");
+			
+			criteria = session.createQuery(query);
+			criteria.setParameter("fechaInicio", fechaInicio);
+			criteria.setParameter("fechaFin", fechaFin);
+			if(usuario != null)
+				criteria.setParameter("usuario", usuario);
+			
+			ret2 = criteria.getResultList();
+			ret.addAll(ret2);
+		}catch(Exception e){
+			CLogger.write("6", AdministracionTransaccionalDAO.class, e);
+		}
+		
 		return ret;
 	}
 }

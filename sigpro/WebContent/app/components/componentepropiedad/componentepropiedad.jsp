@@ -18,7 +18,7 @@
 			    <label class="btn btn-primary" ng-click="componentepropiedadc.nuevo()" uib-tooltip="Nuevo">
 			    <span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			  </shiro:hasPermission>
-			  <shiro:hasPermission name="6010">
+			  <shiro:hasPermission name="6020">
 			    <label class="btn btn-primary" ng-click="componentepropiedadc.editar()" uib-tooltip="Editar">
 			    <span class="glyphicon glyphicon-pencil"></span> Editar</label>
 			  </shiro:hasPermission>
@@ -73,10 +73,10 @@
     		<div class="operation_buttons" align="right">
 			  <div class="btn-group">
 			    <shiro:hasPermission name="6020">
-			      <label class="btn btn-success" ng-click="form.$valid ? componentepropiedadc.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
+			      <label class="btn btn-success" ng-click="form.$valid ? componentepropiedadc.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
 			      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 			    </shiro:hasPermission>
-			    <label class="btn btn-primary" ng-click="componentepropiedadc.irATabla()" title="Ir a Tabla">
+			    <label class="btn btn-primary" ng-click="componentepropiedadc.irATabla()" uib-tooltip="Ir a Tabla">
 			    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			  </div>
 			</div>
@@ -103,9 +103,9 @@
 						    <label for="nombre" class="floating-label">* Tipo dato</label>
 						</div>
 						<div class="form-group">
-						   <input type="text" name="descripcion"  class="inputText" id="descripcion" 
-						     ng-model="componentepropiedadc.componentepropiedad.descripcion" ng-value="componentepropiedadc.componentepropiedad.descripcion"   
-						     onblur="this.setAttribute('value', this.value);"  >
+						   <textarea class="inputText" rows="4"
+						   ng-model="componentepropiedadc.componentepropiedad.descripcion" ng-value="componentepropiedadc.componentepropiedad.descripcion"   
+						   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
 						   <label class="floating-label">Descripción</label>
 						</div>
 						<br/>
@@ -148,10 +148,10 @@
     		<div class="col-sm-12 operation_buttons" align="right">
 			  <div class="btn-group">
 			    <shiro:hasPermission name="6020">
-			      <label class="btn btn-success" ng-click="form.$valid ? componentepropiedadc.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
+			      <label class="btn btn-success" ng-click="form.$valid ? componentepropiedadc.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
 			      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 			    </shiro:hasPermission>
-			    <label class="btn btn-primary" ng-click="componentepropiedadc.irATabla()" title="Ir a Tabla">
+			    <label class="btn btn-primary" ng-click="componentepropiedadc.irATabla()" uib-tooltip="Ir a Tabla">
 			    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			  </div>
 			</div>

@@ -22,7 +22,7 @@
 
 .panel-body {
     overflow-y: scroll;
-    overflow-x:hidden;
+    overflow-x:auto;
     height: 300px;
     
 }
@@ -45,10 +45,10 @@
   <div class="row">
     <div class="col-sm-12">
     <label class="etiqueta">Responsables</label>
-    <div class = "row" style="padding: 0px 0px 10px 10px;">
-    	<div ng-dropdown-multiselect="" options="estructura.responsables" 
+    <div class = "row" style="padding: 0px 0px 10px 10px; width: 100%">
+    	<div ng-dropdown-multiselect="" options="estructura.responsables" translation-texts="estructura.buttonText" 
     	selected-model="estructura.model" extra-settings="estructura.settings"
-    	events="estructura.selectColaborador">
+    	events="estructura.selectColaborador" style="width: 100%"> 
     	</div>
     </div>
     <div class="row">
@@ -62,13 +62,15 @@
 						<th></th>
 						<th>Fecha Inicio</th>
 						<th>Fecha Fin</th>
+						<th>Fecha Inicio Real</th>
+						<th>Fecha Fin Real</th>
 					</tr>
 					</thead>
 					<tbody>
 					<tr ng-repeat="row in estructura.estructuraProyecto">
 						<td>
 							<div style="height: 25px;">
-								<div><span ng-class="estructura.claseIcon(row);" style="margin-left: {{row.objetoTipo-1}}em" uib-tooltip="{{controller.tooltipObjetoTipo[row.objetoTipo-1]}}" >
+								<div><span ng-class="estructura.claseIcon(row);" uib-tooltip="{{controller.tooltipObjetoTipo[row.objetoTipo-1]}}" >
 								</span>{{row.nombre}}
 								</div>
 							</div>
@@ -76,6 +78,8 @@
 						<td style="width: {{estructura.tamanoSemaforo}}px"><span ng-style="estructura.obtenerColor(row);" class="glyphicon glyphicon-certificate" ng-if="row.objetoTipo == 5"></span></td>
 						<td>{{row.fechaInicio}}</td>
 						<td>{{row.fechaFin}}</td>
+						<td style="text-align: center;">{{row.fechaInicioReal}}</td>
+						<td style="text-align: center;">{{row.fechaFinReal}}</td>
 					</tr>
 					</tbody>
 				</table>

@@ -1,24 +1,8 @@
 var app = angular.module('usuarioController', [ 'ngTouch', 'ui.grid.edit','indeterminate' ,'treeControl']);
 
-app.controller(
- 'usuarioController',
- [
-  '$scope',
-  '$http',
-  '$interval',
-  '$q',
-  'i18nService',
-  'Utilidades',
-  '$routeParams',
-  'uiGridConstants',
-  '$mdDialog',
-  '$window',
-  '$location',
-  '$route',
-  '$q',
-  '$uibModal',
-  'dialogoConfirmacion', 
-  function($scope, $http, $interval, $q,i18nService,$utilidades,$routeParams,uiGridConstants,$mdDialog, $window, $location, $route,$q,$uibModal, $dialogoConfirmacion) {
+app.controller('usuarioController', ['$scope','$rootScope', '$http', '$interval', '$q', 'i18nService', 'Utilidades', '$routeParams', 'uiGridConstants', 
+	'$mdDialog', '$window', '$location', '$route', '$q', '$uibModal', 'dialogoConfirmacion', 
+  function($scope,$rootScope, $http, $interval, $q,i18nService,$utilidades,$routeParams,uiGridConstants,$mdDialog, $window, $location, $route,$q,$uibModal, $dialogoConfirmacion) {
 	var mi=this;
 	$window.document.title =$utilidades.sistema_nombre+' - Usuario';
 	mi.colaboradorSeleccionado =false;
@@ -60,6 +44,10 @@ app.controller(
 	mi.nombreUnidadEjecutora="";
 	mi.nombreCooperante="";
 	mi.rolUsuario=0;
+	mi.sistemasUsuario=[];
+	mi.sistemaSeleccionado=null;
+	
+	mi.botones = true;
 	
 	mi.treedata=[];
 	mi.expanded=[];
@@ -71,9 +59,14 @@ app.controller(
 			}
 		};			
 	
+	$http.post('/SUsuario', {accion : 'getSistemasUsuario', t: (new Date()).getTime()}).success(function(response) {
+		mi.sistemasUsuario = response.etiquetas;
+	});
+	
 	mi.editarElemento = function (event) {
         var filaId = angular.element(event.toElement).scope().rowRenderIndex;
         mi.gridApi.selection.selectRow(mi.gridOptions.data[filaId]);
+        mi.usuariosSelected=mi.gridOptions.data[filaId];
         mi.editarUsuario();
     };
 	
@@ -168,24 +161,12 @@ app.controller(
 	mi.cancelar = function() {
 		mi.colaboradorSeleccionado=false;
 		mi.verAreaPermisos=false;
-		mi.nombreUnidadEjecutora="";
-		mi.nombreCooperante="";
-		mi.tipoUsuario={id:"",nombre:"",grupo:""};
-		mi.nombreUnidadEjecutora="";
 		mi.isCollapsed = false;
 		mi.cambioPassword= false;
 		mi.mostrarCambioPassword = false;
 		mi.tieneColaborador=false;
 		mi.edicionPermisos=false;
 		mi.cargandoPermisos=false; 
-		mi.prestamosAsignados=[];
-		mi.unidadEjecutoraUsuario="";
-		mi.cooperanteUsuario="";
-		mi.rolUsuario="";
-		mi.prestamosNuevos=[];
-		mi.prestamosEliminados=[];
-		mi.prestamosNuevos=[];
-		mi.usuariosSelected={usuario:"", email:"",password:"", usuarioCreo:"", fechaCreacion:"", usuarioActualizo:"", fechaActualizacion:"", colaborador:""};
 	}
 
 	mi.verPermisos=function(){
@@ -194,7 +175,7 @@ app.controller(
 	mi.nuevoUsuario=function(){
 		mi.treedata=[];
 		mi.expanded=[];
-		
+		mi.gridApi.selection.clearSelectedRows();
 		mi.cargarArbol=false;
 		mi.claves.password1="";
 		mi.claves.password2="";
@@ -203,6 +184,7 @@ app.controller(
 		mi.isCollapsed = true;
 		mi.entityselected = null;
 		mi.esNuevo = true;
+		mi.sistemaSeleccionado=null;
 		$utilidades.setFocus(document.getElementById("mail"));
 		$http.post('/SProyecto',
 				{ accion: 'controlArbolTodosProyectos', usuario: '', t: (new Date()).getTime() }).success(
@@ -226,13 +208,17 @@ app.controller(
 	mi.guardarUsuario=function(){
 		var asignaciones =mi.getChecksArbol(mi.treedata);
 		var estructuras_permisos = mi.getChecksArbol(mi.treedata);
-		if(mi.esNuevo){
-			if(mi.claves.password1!=="" && mi.claves.password2!=="" && mi.usuariosSelected.usuario!=="" && mi.usuariosSelected.email!=="" && mi.nombreUnidadEjecutora!=="SIN UNIDAD EJECUTORA"){
-				if(validarEmail(mi.usuariosSelected.email)){
-					if(mi.claves.password1===mi.claves.password2){
-						mi.usuariosSelected.password= mi.claves.password1;						
+			if( mi.usuariosSelected.usuario!=="" && mi.usuariosSelected.email!=="" && mi.nombreUnidadEjecutora!=="SIN UNIDAD EJECUTORA"){
+				if(mi.usuariosSelected.password===mi.usuariosSelected.password2){
+					if(validarEmail(mi.usuariosSelected.email)){
 						var str = mi.getChecksArbol(mi.treedata);
-						console.log(str);
+						
+						for(var i=0;i < mi.permisosAsignados.length;i++){
+							if(mi.permisosAsignados[i].idPermiso != null){
+								mi.nuevosPermisos.push(mi.permisosAsignados[i].idPermiso);	
+							}							
+						}
+						mi.botones=false;
 						$http.post('/SUsuario',
 								{
 									accion: 'guardarUsuario',
@@ -242,148 +228,36 @@ app.controller(
 									permisos:JSON.stringify(mi.nuevosPermisos),
 									estructuraAsignada: estructuras_permisos,
 									rol: mi.tipoUsuario.id,
-									esnuevo:true,
+									esnuevo: mi.esNuevo,
+									sistemaUsuario: mi.sistemaSeleccionado.id,
 									t: (new Date()).getTime()
-
+	
 								}
 								).success(
 									function(data) {
 										if(data.success){
 											mi.paginaActual=1;
-											$utilidades.mensaje('success','Usuario creado exitosamente!');
 											check_mess=true;
 											mi.cargarTabla(mi.paginaActual);
 											mi.nuevosPermisos=[];
 											mi.esNuevo=false;
 											mi.tipoUsuarioRol=mi.tipoUsuario.nombre;
+											$utilidades.mensaje('success',data.mensaje);
+											mi.botones=true;
 										}
 							});
 					}else{
-						$utilidades.mensaje('danger','No coinciden la contraseña y su confirmación.');
+						$utilidades.mensaje('danger','El correo electrónico no es válido.');
 					}
 				}else{
-					$utilidades.mensaje('danger','correo electrónico no válido.');
+					$utilidades.mensaje('danger','Las contraseñas no coinciden');
 				}
-
 			}else{
-				$utilidades.mensaje('danger','Los campos obligatorios están vacíos.');
-			}
-		}else{
-			if(mi.usuariosSelected.email!==""){
-				if(validarEmail(mi.usuariosSelected.email)){
-					if(usuarioMail===mi.usuariosSelected.email && passwordLocal=== mi.usuariosSelected.password && mi.prestamosNuevos.length==0 && mi.prestamosEliminados.length==0){
-						var str = mi.getChecksArbol(mi.treedata);
-							$http.post('/SUsuario',
-									{
-										accion: 'actualizarPermisos',
-										usuario:mi.usuariosSelected.usuario,
-										permisosNuevos:JSON.stringify(mi.nuevosPermisos),
-										permisosEliminados:JSON.stringify(mi.permisosEliminados),
-										estructuraAsignada: estructuras_permisos,
-										t: (new Date()).getTime()
-									}).success(
-										function(data) {
-											if(data.success){
-												mi.cargarTabla(mi.paginaActual);
-												mi.nuevosPermisos=[];
-												mi.permisosEliminados=[];
-												if(mi.usuariosSelected.password!==passwordLocal){
-													$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password, t: (new Date()).getTime()}).success(
-															function(response) {
-																if(response.success){
-																	 $utilidades.mensaje('success', 'Cambio de contraseña Exitoso.');
-																}else{
-																	$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
-																}
-													});
-												}
-												$utilidades.mensaje('success', 'Actualización de permisos exitosa');
-											}
-								});
-						
-
-					}else{
-						$http.post('/SUsuario',
-								{
-									accion: 'guardarUsuario',
-									usuario:mi.usuariosSelected.usuario,
-									email:mi.usuariosSelected.email,
-									estructuraAsignada:asignaciones ,
-									prestamosEliminados: JSON.stringify(mi.prestamosEliminados),
-									estructuraAsignada: estructuras_permisos,
-									t: new Date().getTime(),
-									esnuevo:false
-								}).success(
-									function(data) {
-										if(data.success){
-											if(mi.nuevosPermisos.length==0 && mi.permisosEliminados.length==0){
-												mi.cargarTabla(mi.paginaActual);
-												if(mi.usuariosSelected.password!==passwordLocal){
-													$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password, t: (new Date()).getTime()}).success(
-															function(response) {
-																if(response.success){
-																	 $utilidades.mensaje('success', 'actualizacion de datos exitosa.');
-																}else{
-																	$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
-																}
-													});
-												}
-												if(!check_mess){
-													$utilidades.mensaje('success', 'Usuario creado exitosamente.');
-												}
-												
-											}else{
-												$http.post('/SUsuario',
-														{
-															accion: 'actualizarPermisos',
-															usuario:mi.usuariosSelected.usuario,
-															permisosNuevos:JSON.stringify(mi.nuevosPermisos),
-															permisosEliminados:JSON.stringify(mi.permisosEliminados),
-															estructuraAsignada: estructuras_permisos,
-															t: (new Date()).getTime()
-														}).success(
-															function(data) {
-																if(data.success){
-																	mi.nuevosPermisos=[];
-																	mi.permisosEliminados=[];
-																	if(mi.usuariosSelected.password!==passwordLocal){
-																		$http.post('/SUsuario', {accion: 'cambiarPassword' , usuario: mi.usuariosSelected.usuario,	password:mi.usuariosSelected.password, t: (new Date()).getTime()}).success(
-																				function(response) {
-																					if(response.success){
-																						mi.paginaActual=1;
-																						$utilidades.mensaje('success','información actualizada exitosamente.');
-																						mi.isCollapsed = false;
-																						mi.cargarTabla(mi.paginaActual);
-																					}else{
-																						$utilidades.mensaje('danger', 'No se pudo cambiar la contraseña.');
-																					}
-																		});
-																	}else{
-																		$utilidades.mensaje('success','información actualizada exitosamente.');
-																	}
-
-																}
-													});
-
-											}
-										}else {
-											$utilidades.mensaje('danger','No se pudo realizar cambios.');
-										}
-
-							});
-
-					}
-				}else{
-					$utilidades.mensaje('warning','correo electrónico no válido.');
-				}
-
-			}else{
-				$utilidades.mensaje('warning','Los campos no deben de quedar vacios.');
-			}
-		}
-    if(mi.colaboradorSeleccionado && mi.tipoUsuario.id==4 &&validarEmail(mi.usuariosSelected.email) ){
-      mi.asignarColaborador();
-    }
+				$utilidades.mensaje('danger','Existen campos obligatorios vacíos');
+			}	    
+		if(mi.colaboradorSeleccionado && mi.tipoUsuario.id==4 &&validarEmail(mi.usuariosSelected.email) ){
+			mi.asignarColaborador();
+	    }
   };
 
 
@@ -396,6 +270,7 @@ app.controller(
 					, "Cancelar")
 			.result.then(function(data) {
 				if(data){
+					mi.botones=false;
 					$http.post('/SUsuario', {
 						accion: 'eliminarUsuario',
 						usuario: mi.usuariosSelected.usuario,
@@ -408,6 +283,7 @@ app.controller(
 						}
 						else
 							$utilidades.mensaje('danger','Error al eliminar el usuario');
+						mi.botones=true;
 					});
 				}
 			}, function(){
@@ -422,16 +298,24 @@ app.controller(
 	    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	    return re.test(email);
 	}
-	mi.mostrarPermisos=function(){
-		mi.edicionPermisos=true;
-	};
 	
 	mi.editarUsuario=function(){
 		mi.tipoUsuarioRol="";
 		if(mi.usuariosSelected.usuario!==""){
-			
+			mi.usuariosSelected.password2 = mi.usuariosSelected.password;
+			mi.modificar = true;
 			mi.treedata=[];
 			mi.expanded=[];
+			
+			for(s=0;s<mi.sistemasUsuario.length;s++){
+				if(mi.sistemasUsuario[s].id == mi.usuariosSelected.sistemaUsuario){
+					mi.sistemaSeleccionado = {
+							"id" : mi.sistemasUsuario[s].id,
+							"nombre" : mi.sistemasUsuario[s].claseNombre
+					}
+					break;
+				}
+			}
 			
 			mi.cargarArbol=false;
 			mi.isCollapsed = true;
@@ -459,6 +343,7 @@ app.controller(
 	    	    mi.cooperanteUsuario=response.data.cooperante;
 	    	   mi.cargandoPermisos=false;
 	    	});
+			
 			$http.post('/SProyecto',
 					{ accion: 'controlArbolTodosProyectos', usuario: mi.usuariosSelected.usuario, t: (new Date()).getTime() }).success(
 				function(response) {
@@ -521,7 +406,7 @@ app.controller(
 				mi.prestamosNuevos.push(data.id);
 				
 			}catch(err){
-				$utilidades.mensaje('warning', 'Ya está agregado el préstamo.');
+				$utilidades.mensaje('warning', 'El '+$rootScope.etiquetas.proyecto+' ya se encuentra agregado');
 			}
 		}, function() {
 		});
@@ -659,7 +544,7 @@ app.controller(
 							}
 						} else {
 							$utilidades.mensaje('danger',
-									'Error al actualizar datos...!!!');
+									'No se pudieron actualizar los datos');
 						}
 					});
 		}
@@ -722,7 +607,7 @@ app.controller(
 										'Colaborador asignado con exito.');
 							} else {
 								$utilidades.mensaje('danger',
-										'Error al actualizar datos...!!!');
+										'No se pudieron actualizar los datos');
 							}
 						});
 		}else{
@@ -763,7 +648,7 @@ app.controller(
 	
 	
 	mi.showSelected=function(nodo){
-		//console.log(nodo);
+		
 	};
 	
 	mi.onChange = function(nodo){

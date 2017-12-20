@@ -1,6 +1,8 @@
 package dao;
 
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -9,15 +11,20 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.joda.time.DateTime;
 
 import pojo.Actividad;
 import pojo.ActividadUsuario;
 import pojo.ActividadUsuarioId;
 import pojo.Componente;
+import pojo.PlanAdquisicion;
+import pojo.PlanAdquisicionPago;
 import pojo.Producto;
 import pojo.Proyecto;
+import pojo.Subcomponente;
 import pojo.Subproducto;
 import utilities.CHibernateSession;
+import utilities.CHistoria;
 import utilities.CLogger;
 import utilities.Utils;
 
@@ -42,8 +49,8 @@ class duracionFecha{
 	
 	public int getDuracion(){
 		return this.duracion;
-	}
-	
+	} 
+	 
 	public void setFechaInicial(Date fechaInicial){
 		this.fecha_inicial = fechaInicial;
 	}
@@ -107,7 +114,7 @@ public class ActividadDAO {
 		return ret;
 	}
 
-	public static boolean guardarActividad(Actividad Actividad){
+	public static boolean guardarActividad(Actividad Actividad, boolean calcular_valores_agregados){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -116,13 +123,17 @@ public class ActividadDAO {
 				session.save(Actividad);
 				session.flush();
 				switch(Actividad.getObjetoTipo()){
-					case 1:
+					case 0:
 						Proyecto proyecto = ProyectoDAO.getProyecto(Actividad.getObjetoId());
 						Actividad.setTreePath(proyecto.getTreePath()+""+(10000000+Actividad.getId()));
 						break;
-					case 2:
+					case 1:
 						Componente componente = ComponenteDAO.getComponente(Actividad.getObjetoId());
 						Actividad.setTreePath(componente.getTreePath()+""+(10000000+Actividad.getId()));
+						break;
+					case 2:
+						Subcomponente subcomponente = SubComponenteDAO.getSubComponente(Actividad.getObjetoId());
+						Actividad.setTreePath(subcomponente.getTreePath()+""+(10000000+Actividad.getId()));
 						break;
 					case 3:
 						Producto producto = ProductoDAO.getProductoPorId(Actividad.getObjetoId());
@@ -141,11 +152,18 @@ public class ActividadDAO {
 			session.saveOrUpdate(Actividad);
 			ActividadUsuario au = new ActividadUsuario(new ActividadUsuarioId(Actividad.getId(), Actividad.getUsuarioCreo()),Actividad);
 			session.saveOrUpdate(au);
-			Actividad.setCosto(calcularActividadCosto(Actividad));
-			session.save(Actividad);
+			if(!Actividad.getUsuarioCreo().equals("admin")){
+				ActividadUsuario au_admin = 
+						new ActividadUsuario(new ActividadUsuarioId(Actividad.getId(), "admin"), Actividad, "admin",null,new Date(),null);
+				session.saveOrUpdate(au_admin);
+			}
 			session.getTransaction().commit();
 			session.close();
-			actualizarCostoPapa(Actividad);
+			
+			if(calcular_valores_agregados){
+				ProyectoDAO.calcularCostoyFechas(Integer.parseInt(Actividad.getTreePath().substring(0,8))-10000000);
+			}
+			
 			ret = true;
 		}
 		catch(Throwable e){
@@ -456,50 +474,25 @@ public class ActividadDAO {
 	        return true;
 	}
 	
-	
-	public static List<Actividad> getActividadsPorObjetos(String idPrestamos, String idComponentes, String idProductos,
-			String idSubproductos,int anio_inicio, int anio_fin){
+	public static List<Actividad> getActividadsPorObjetos(Integer idPrestamo,int anio_inicio, int anio_fin, String lineaBase){
 		List<Actividad> ret = new ArrayList<Actividad>();
-		List<Actividad> subactividades = new ArrayList<Actividad>();
+		
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String query = String.join(" ", "select distinct ac.* ",
-							"from actividad ac , (",
-							    "select p.id, 1 objeto_tipo",
-								"from proyecto p",
-								"where p.id = ",idPrestamos,
-								"union",
-								"select c.id, 2 objeto_tipo",
-								"from proyecto p",
-								"left outer join componente c on c.proyectoid = p.id",
-								"where c.id in (" + idComponentes + ")",
-								"union",
-								"select pr.id,3 objeto_tipo",
-								"from proyecto p",
-								"left outer join componente c on c.proyectoid = p.id",
-								"left outer join producto pr on pr.componenteid = c.id",
-								"where pr.id in ("+ idProductos + ")",
-								"union ",
-								"select s.id,4 objeto_tipo",
-								"from proyecto p",
-								"left outer join componente c on c.proyectoid = p.id",
-								"left outer join producto pr on pr.componenteid = c.id",
-								"left outer join subproducto s on s.productoid = pr.id",
-								"where s.id in (" + idSubproductos + ")",							    
-							    ") t1, asignacion_raci ar",
-							"where ac.objeto_id = t1.id",
-							"and (ac.id = ar.objeto_id and ar.objeto_tipo = 5)",
-							"and ac.objeto_tipo = t1.objeto_tipo",
-							"and ac.estado = 1",
-							"and year(ac.fecha_fin ) between ?1 and ?2");
+			String query = String.join(" ", "select a.* ", 
+							"from sipro_history.asignacion_raci ar, sipro_history.actividad a ",
+							"Where ar.objeto_id = a.id",
+							"and ar.objeto_tipo = 5",
+							"and ar.rol_raci = 'r'",
+							"and ar.estado=1",
+							"and a.treePath like '"+(10000000+idPrestamo)+"%'",
+							lineaBase != null ? "and ar.linea_base like '%"+lineaBase +"%'": "and ar.actual=1",
+							lineaBase != null ? "and a.linea_base like '%"+lineaBase +"%'": "and a.actual=1",
+							"and year(a.fecha_fin ) between ?1 and ?2");
 			Query<Actividad> criteria = session.createNativeQuery(query,Actividad.class);
 			criteria.setParameter("1", anio_inicio);
 			criteria.setParameter("2", anio_fin);
-			ret = criteria.getResultList();
-			for(Actividad actividad : ret){
-				subactividades.addAll(getActividadsSubactividadsPorObjeto(actividad.getId(), 5));
-			}
-			ret.addAll(subactividades);			
+			ret = criteria.getResultList();			
 		}
 		catch(Throwable e){
 			CLogger.write("11", ActividadDAO.class, e);
@@ -510,47 +503,26 @@ public class ActividadDAO {
 		return ret;
 	}
 	
-	public static List<?> getActividadesTerminadas(String idPrestamos, String idComponentes, String idProductos,
-			String idSubproductos, Integer colaboradorid, int anio_inicio, int anio_fin){
+	public static List<?> getActividadesTerminadas(Integer proyectoId, Integer colaboradorid, int anio_inicio, int anio_fin, String lineaBase){
 		List<?> ret= null;
 		
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String query = String.join(" ", "select year(t2.fecha_fin) anio, month(t2.fecha_fin) mes, count(t2.id) total",
-						"from (",
-							"select distinct ac.* ",
-							"from actividad ac , (",
-							    "select p.id, 1 objeto_tipo",
-								"from proyecto p",
-								"where p.id = ",idPrestamos,
-								"union",
-								"select c.id, 2 objeto_tipo",
-								"from proyecto p",
-								"left outer join componente c on c.proyectoid = p.id",
-								"where c.id in (" + idComponentes + ")",
-								"union",
-								"select pr.id,3 objeto_tipo",
-								"from proyecto p",
-								"left outer join componente c on c.proyectoid = p.id",
-								"left outer join producto pr on pr.componenteid = c.id",
-								"where pr.id in ("+ idProductos + ")",
-								"union ",
-								"select s.id,4 objeto_tipo",
-								"from proyecto p",
-								"left outer join componente c on c.proyectoid = p.id",
-								"left outer join producto pr on pr.componenteid = c.id",
-								"left outer join subproducto s on s.productoid = pr.id",
-								"where s.id in (" + idSubproductos + ")",							    
-							    ") t1, asignacion_raci ar",
-							"where ac.objeto_id = t1.id",
-							"and (ac.id = ar.objeto_id and ar.objeto_tipo = 5)",
-							"and ac.objeto_tipo = t1.objeto_tipo",
-							"and ac.estado = 1",
-							(colaboradorid != null && colaboradorid > 0 ?  "and ar.colaboradorid = ?1" : ""),
-							"and year(ac.fecha_fin ) between ?2 and ?3",
-							"and porcentaje_avance = 100",
-							") t2",
-							"group by year(t2.fecha_fin) , month(t2.fecha_fin) asc");
+			
+			String query = String.join(" ", "select year(t1.fecha_fin) anio, month(t1.fecha_fin) mes, count(t1.id) total from(",
+					"select distinct a.*", 
+					"from sipro_history.actividad a, sipro_history.asignacion_raci ar",
+					"where a.treePath like '"+(10000000+proyectoId)+"%'", 
+					"and a.porcentaje_avance=100",
+					"and year(a.fecha_fin) between ?2 and ?3",
+					(colaboradorid != null && colaboradorid > 0 ?  "and ar.colaboradorid = ?1" + (lineaBase != null ? " and ar.linea_base like '%" + lineaBase + "%'" : " and ar.actual=1") : ""),
+					"and a.id = ar.objeto_id",
+					"and a.objeto_tipo = ar.objeto_tipo",
+					"and a.estado = 1",
+					lineaBase != null ? "and a.linea_base like '%" + lineaBase + "%'" : "and a.actual=1",
+					") t1",
+					"group by year(t1.fecha_fin), month(t1.fecha_fin) asc");
+			
 			Query<?> criteria = session.createNativeQuery(query);
 			if (colaboradorid != null && colaboradorid > 0)
 				criteria.setParameter("1", colaboradorid);
@@ -568,19 +540,23 @@ public class ActividadDAO {
 		return ret;
 	}
 	
-	public static Actividad getActividadPorIdResponsable(int id, String responsables,String rol){
+	public static Actividad getActividadPorIdResponsable(int id, String responsables,String rol,String lineaBase){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		Actividad ret = null;
 		List<Actividad> listRet = null;
 		try{
 			String query = String.join(" ", "select a.*",
-				"from actividad a,asignacion_raci ar",
+				"from sipro_history.actividad a,sipro_history.asignacion_raci ar",
 				"where a.id = ar.objeto_id ",
 				"and ar.objeto_tipo = 5",
 				"and a.estado = 1",
 				"and a.id = ?1",
 				"and ar.colaboradorid in (",responsables ,")",
-				"and ar.rol_raci = ?3");
+				"and ar.rol_raci = ?3",
+				lineaBase != null ? "and a.linea_base like '%" + lineaBase + "%'" : "and a.actual = 1",
+				lineaBase != null ? "and ar.linea_base like '%" + lineaBase + "%'" : "and ar.actual = 1"
+				
+				);
 			Query<Actividad> criteria = session.createNativeQuery(query, Actividad.class);
 			criteria.setParameter("1", id);
 			criteria.setParameter("3", rol);
@@ -713,36 +689,219 @@ public class ActividadDAO {
 			Iterator<Actividad> actual = subactividades.iterator();
 			while (actual.hasNext()) {
 				Actividad hija = actual.next();
-				costo = calcularActividadCosto(hija);
+				BigDecimal costoHija = calcularActividadCosto(hija);
+				costo = costo.add(costoHija!=null ? costoHija : new BigDecimal(0));
 			}
 		}else{
-			costo = actividad.getCosto();
+			PlanAdquisicion pa = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(5, actividad.getId());
+			if(pa!=null){
+					if(pa.getPlanAdquisicionPagos()!=null && pa.getPlanAdquisicionPagos().size()>0){
+						BigDecimal pagos = new BigDecimal(0);
+						for(PlanAdquisicionPago pago: pa.getPlanAdquisicionPagos())
+							pagos=pagos.add(pago.getPago());
+						costo = pagos;
+					}
+					else
+						costo = pa.getTotal();
+			}
+			else
+				costo = actividad.getCosto();
 			costo = costo!=null ? costo : new BigDecimal(0);
 		}
 		return costo;
 	}
 	
-	public static void actualizarCostoPapa(Actividad actividad){
-		switch(actividad.getObjetoTipo()){
-			case 1:
-				Proyecto proyecto = ProyectoDAO.getProyecto(actividad.getObjetoId());
-				ProyectoDAO.guardarProyecto(proyecto); 
-				break;
-			case 2:
-				Componente componente = ComponenteDAO.getComponente(actividad.getObjetoId());
-				ComponenteDAO.guardarComponente(componente); 
-				break;
-			case 3:
-				Producto producto = ProductoDAO.getProductoPorId(actividad.getObjetoId());
-				ProductoDAO.guardarProducto(producto);
-				break;
-			case 4: 
-				Subproducto subproducto = SubproductoDAO.getSubproductoPorId(actividad.getObjetoId());
-				SubproductoDAO.guardarSubproducto(subproducto);
-				break;
-			case 5:
-				Actividad padre = getActividadPorId(actividad.getObjetoId());
-				guardarActividad(padre);
+	public static List<Actividad> obtenerActividadesHijas(Integer proyectoId){
+		List<Actividad> ret = new ArrayList<Actividad>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "SELECT * FROM actividad a where a.id IN (" +
+					"select min(a1.id) "+
+					"from actividad a1 " +
+					"where a1.treePath like '"+(10000000+proyectoId)+"%' "+
+					"and not exists (select * from actividad a2 where a2.objeto_id=a1.id and a2.objeto_tipo=5) " +
+					"group by left(a1.treePath,length(a1.treePath)-8) "
+					+ ")";
+			Query<Actividad> criteria = session.createNativeQuery(query,Actividad.class);
+			ret = criteria.getResultList();
 		}
+		catch(Throwable e){
+			CLogger.write("20", ActividadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return ret;
 	}
+	
+	public static boolean calcularCostoyFechas(Integer actividadId){
+		boolean ret = false;
+		ArrayList<ArrayList<Nodo>> listas = EstructuraProyectoDAO.getEstructuraObjetoArbolCalculos(actividadId, 5);
+		for(int i=listas.size()-2; i>=0; i--){
+			for(int j=0; j<listas.get(i).size(); j++){
+				Nodo nodo = listas.get(i).get(j);
+				Double costo=0.0d;
+				Timestamp fecha_maxima=new Timestamp(0);
+				Timestamp fecha_minima=new Timestamp((new DateTime(2999,12,31,0,0,0)).getMillis());
+				for(Nodo nodo_hijo:nodo.children){
+					costo += nodo_hijo.costo;
+					fecha_minima = (nodo_hijo.fecha_inicio.getTime()<fecha_minima.getTime()) ? nodo_hijo.fecha_inicio : fecha_minima;
+					fecha_maxima = (nodo_hijo.fecha_fin.getTime()>fecha_maxima.getTime()) ? nodo_hijo.fecha_fin : fecha_maxima;
+				}
+				nodo.objeto = ObjetoDAO.getObjetoPorIdyTipo(nodo.id, nodo.objeto_tipo);
+				if(nodo.children!=null && nodo.children.size()>0){
+					nodo.fecha_inicio = fecha_minima;
+					nodo.fecha_fin = fecha_maxima;
+					nodo.costo = costo;
+				}
+				else{
+					nodo.costo = calcularActividadCosto((Actividad)nodo.objeto).doubleValue();
+				}
+				nodo.duracion = Utils.getWorkingDays(new DateTime(nodo.fecha_inicio), new DateTime(nodo.fecha_fin));
+				setDatosCalculados(nodo.objeto,nodo.fecha_inicio,nodo.fecha_fin,nodo.costo, nodo.duracion);
+			}
+			ret = true;
+		}
+		ret= ret && guardarActividadBatch(listas);	
+		return ret;
+	}
+	
+	private static void setDatosCalculados(Object objeto,Timestamp fecha_inicio, Timestamp fecha_fin, Double costo, int duracion){
+		try{
+			if(objeto!=null){
+				Method setFechaInicio =objeto.getClass().getMethod("setFechaInicio",Date.class);
+				Method setFechaFin =  objeto.getClass().getMethod("setFechaFin",Date.class);
+				Method setCosto = objeto.getClass().getMethod("setCosto",BigDecimal.class);
+				Method setDuracion = objeto.getClass().getMethod("setDuracion", int.class);
+				setFechaInicio.invoke(objeto, new Date(fecha_inicio.getTime()));
+				setFechaFin.invoke(objeto, new Date(fecha_fin.getTime()));
+				setCosto.invoke(objeto, new BigDecimal(costo));
+				setDuracion.invoke(objeto, duracion);
+			}
+		}
+		catch(Throwable e){
+			CLogger.write("17", ActividadDAO.class, e);
+		}
+		
+	}
+	
+	private static boolean guardarActividadBatch(ArrayList<ArrayList<Nodo>> listas){
+		boolean ret = true;
+		try{
+			Session session = CHibernateSession.getSessionFactory().openSession();
+			session.beginTransaction();
+			int count=0;
+			for(int i=0; i<listas.size()-1; i++){
+				for(int j=0; j<listas.get(i).size();j++){
+					session.saveOrUpdate(listas.get(i).get(j).objeto);
+					if ( ++count % 20 == 0 ) {
+				        session.flush();
+				        session.clear();
+				    }
+				}
+			}
+			session.flush();
+			session.getTransaction().commit();
+			session.close();
+		}
+		catch(Throwable e){
+			ret = false;
+			CLogger.write("18", ActividadDAO.class, e);
+		}
+		return ret;
+	}
+	
+	public static List<Actividad> getActividadsPaginaPorObjetoHistory( int objetoId, int objetoTipo,String lineaBase){
+		List<Actividad> ret = new ArrayList<Actividad>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ","select * from sipro_history.actividad a ",
+					"where a.estado = 1",
+					"and a.objeto_tipo = ?1",
+					"and a.objeto_id = ?2",
+					lineaBase != null ? "and a.linea_base like '%" + lineaBase + "%'" : "and a.actual = 1");
+			Query<Actividad> criteria = session.createNativeQuery(query,Actividad.class);
+			criteria.setParameter(1, objetoTipo);
+			criteria.setParameter(2, objetoId);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("19", ActividadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static Actividad getActividadHistory(Integer actividadId,String lineaBase){
+		Actividad ret = null;
+		List<Actividad> listRet = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "select * ", 
+					"from sipro_history.actividad a ",
+					"where a.estado = 1 ",
+					"and a.id = ?1 ",
+					lineaBase != null ? "and a.linea_base like '%" + lineaBase + "%'" : "and a.actual = 1",
+							"order by a.id desc");
+			Query<Actividad> criteria = session.createNativeQuery(query, Actividad.class);
+			criteria.setParameter(1, actividadId);
+			listRet =   criteria.getResultList();
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
+		}
+		catch(Throwable e){
+			CLogger.write("20", ActividadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static String getVersiones (Integer id){
+		String resultado = "";
+		String query = "SELECT DISTINCT(version) "
+				+ " FROM sipro_history.actividad "
+				+ " WHERE id = "+id;
+		List<?> versiones = CHistoria.getVersiones(query);
+		if(versiones!=null){
+			for(int i=0; i<versiones.size(); i++){
+				if(!resultado.isEmpty()){
+					resultado+=",";
+				}
+				resultado+=(Integer)versiones.get(i);
+			}
+		}
+		return resultado;
+	}
+	
+	public static String getHistoria (Integer id, Integer version){
+		String resultado = "";
+		String query = "SELECT a.version, a.nombre, a.descripcion, ati.nombre tipo, a.costo, ac.nombre tipo_costo, "
+				+ " a.programa, a.subprograma, a.proyecto, a.actividad, a.obra, a.renglon, a.ubicacion_geografica, a.latitud, a.longitud, "
+				+ " a.fecha_inicio, a.fecha_fin, a.duracion, a.fecha_inicio_real, a.fecha_fin_real, "
+				+ " a.porcentaje_avance, "
+				+ " a.fecha_creacion, a.usuario_creo, a.fecha_actualizacion, a.usuario_actualizo, "
+				+ " CASE WHEN a.estado = 1 "
+				+ " THEN 'Activo' "
+				+ " ELSE 'Inactivo' "
+				+ " END AS estado "
+				+ " FROM sipro_history.actividad a "
+				+ " JOIN sipro_history.actividad_tipo ati ON a.actividad_tipoid = ati.id "
+				+ " JOIN sipro_history.acumulacion_costo ac ON a.acumulacion_costo = ac.id "
+				+ " WHERE a.id = "+id
+				+ " AND a.version = " +version;
+		
+		String [] campos = {"Version", "Nombre", "Descripción", "Tipo", "Monto Planificado", "Tipo Acumulación de Monto Planificado", 
+				"Programa", "Subprograma", "Proyecto", "Actividad", "Obra", "Renglon", "Ubicación Geográfica", "Latitud", "Longitud", 
+				"Fecha Inicio", "Fecha Fin", "Duración", "Fecha Inicio Real", "Fecha Fin Real",
+				"Porcentaje de Avance", 
+				"Fecha Creación", "Usuario que creo", "Fecha Actualización", "Usuario que actualizó", 
+				"Estado"};
+		resultado = CHistoria.getHistoria(query, campos);
+		return resultado;
+	}
+	
 }

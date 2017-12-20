@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -24,15 +25,17 @@ import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
 import dao.ActividadPropiedadDAO;
 import dao.ActividadPropiedadValorDAO;
 import dao.AsignacionRaciDAO;
-import dao.ComponenteDAO;
-import dao.MatrizRaciDAO;
-import dao.ProductoDAO;
+import dao.ObjetoDAO;
+import dao.PagoPlanificadoDAO;
 import dao.ProyectoDAO;
 import dao.SubproductoDAO;
 import pojo.Actividad;
@@ -43,9 +46,7 @@ import pojo.ActividadTipo;
 import pojo.AcumulacionCosto;
 import pojo.AsignacionRaci;
 import pojo.Colaborador;
-import pojo.Componente;
-import pojo.MatrizRaci;
-import pojo.Producto;
+import pojo.PagoPlanificado;
 import pojo.Proyecto;
 import pojo.Subproducto;
 import utilities.Utils;
@@ -90,6 +91,12 @@ public class SActividad extends HttpServlet {
 		Integer avanceFinanciero;
 		int estado;
 		Integer proyectoBase;
+		boolean tieneHijos;
+		String fechaInicioReal;
+		String fechaFinReal;
+		Integer congelado;
+		String fechaElegibilidad;
+		String fechaCierre;
 	}
 
 	class stdatadinamico {
@@ -107,16 +114,11 @@ public class SActividad extends HttpServlet {
 		String nombrerol;
 	}
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+
     public SActividad() {
         super();
     }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String response_text = "{ \"success\": false }";
 
@@ -130,9 +132,6 @@ public class SActividad extends HttpServlet {
         output.close();
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		HttpSession sesionweb = request.getSession();
@@ -159,6 +158,21 @@ public class SActividad extends HttpServlet {
 			List<Actividad> actividads = ActividadDAO.getActividadsPagina(pagina, numeroActividades, filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion,
 					columna_ordenada, orden_direccion,usuario);
 			List<stactividad> stactividads=new ArrayList<stactividad>();
+			
+			
+			int congelado = 0;
+			String fechaElegibilidad = null;
+			String fechaCierre = null;
+			
+			if(actividads!=null && actividads.size()>0){
+				Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(actividads.get(0).getTreePath());
+				if(proyecto!=null){
+					congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
+					fechaElegibilidad = Utils.formatDate(proyecto.getFechaElegibilidad());
+					fechaCierre = Utils.formatDate(proyecto.getFechaCierre());
+				}
+			}
+			
 			for(Actividad actividad:actividads){
 				stactividad temp =new stactividad();
 				temp.descripcion = actividad.getDescripcion();
@@ -185,6 +199,13 @@ public class SActividad extends HttpServlet {
 				temp.acumulacionCostoId = actividad.getAcumulacionCosto().getId();
 				temp.acumulacionCostoNombre = actividad.getAcumulacionCosto().getNombre();
 				temp.proyectoBase = actividad.getProyectoBase();
+				temp.fechaInicioReal = Utils.formatDate(actividad.getFechaInicioReal());
+				temp.fechaFinReal = Utils.formatDate(actividad.getFechaFinReal());
+				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
+				
+				temp.congelado = congelado;
+				temp.fechaElegibilidad = fechaElegibilidad;
+				temp.fechaCierre = fechaCierre;
 				
 				stactividads.add(temp);
 			}
@@ -196,6 +217,20 @@ public class SActividad extends HttpServlet {
 		else if(accion.equals("getActividads")){
 			List<Actividad> actividads = ActividadDAO.getActividads(usuario);
 			List<stactividad> stactividads=new ArrayList<stactividad>();
+			
+			int congelado = 0;
+			String fechaElegibilidad = null;
+			String fechaCierre = null;
+			
+			if(actividads!=null && actividads.size()>0){
+				Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(actividads.get(0).getTreePath());
+				if(proyecto!=null){
+					congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
+					fechaElegibilidad = Utils.formatDate(proyecto.getFechaElegibilidad());
+					fechaCierre = Utils.formatDate(proyecto.getFechaCierre());
+				}
+			}
+			
 			for(Actividad actividad:actividads){
 				stactividad temp =new stactividad();
 				temp.descripcion = actividad.getDescripcion();
@@ -224,6 +259,13 @@ public class SActividad extends HttpServlet {
 				temp.fechaInicio = Utils.formatDate(actividad.getFechaInicio());
 				temp.fechaFin = Utils.formatDate(actividad.getFechaFin());
 				temp.proyectoBase = actividad.getProyectoBase();
+				temp.fechaInicioReal = actividad.getFechaInicioReal() != null ? Utils.formatDate(actividad.getFechaInicioReal()) : null;
+				temp.fechaFinReal = actividad.getFechaFinReal() != null ? Utils.formatDate(actividad.getFechaFinReal()) : null;
+				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
+
+				temp.congelado = congelado;
+				temp.fechaElegibilidad = fechaElegibilidad;
+				temp.fechaCierre = fechaCierre;;
 				stactividads.add(temp);
 			}
 
@@ -243,8 +285,9 @@ public class SActividad extends HttpServlet {
 					String nombre = map.get("nombre");
 					String descripcion = map.get("descripcion");
 					int actividadtipoid =Utils.getParameterInteger(map, "actividadtipoid");
-					Date fechaInicio = Utils.dateFromString(map.get("fechainicio"));
-					Date fechaFin = Utils.dateFromString(map.get("fechafin"));
+					Date fechaInicio = Utils.dateFromStringCeroHoras(map.get("fechainicio"));
+					Date fechaFin = Utils.dateFromStringCeroHoras(map.get("fechafin"));
+					
 					Long snip = Utils.String2Long(map.get("snip"));
 					Integer programa= Utils.getParameterInteger(map, "programa");
 					Integer subprograma= Utils.getParameterInteger(map, "subprograma");
@@ -262,6 +305,7 @@ public class SActividad extends HttpServlet {
 					Integer acumulacionCostoid = Utils.String2Int(map.get("acumulacionCosto"), null);
 					Integer renglon = map.get("renglon")!=null ? Integer.parseInt(map.get("renglon")):null;
 					Integer ubicacionGeografica = map.get("ubicacionGeografica")!=null ? Integer.parseInt(map.get("ubicacionGeografica")):null;
+					
 					proyectoBase = null;
 					componenteBase = null;
                     productoBase = null;
@@ -302,14 +346,23 @@ public class SActividad extends HttpServlet {
 					
 					Actividad actividad;
 					if(esnuevo){
-						
 						duracion = (int) ((fechaFin.getTime()-fechaInicio.getTime())/86400000);
 						duracionDimension = "d";
+						
+						Date fechaInicioReal = null;
+						Date fechaFinReal = null;
+						
+						if(porcentajeAvance > 0 && porcentajeAvance < 100)
+							fechaInicioReal = new Date();
+						else if(porcentajeAvance == 100){
+							fechaFinReal = new Date();
+							fechaInicioReal = new Date();
+						}
 						
 						actividad = new Actividad(actividadTipo, acumulacionCosto, nombre, descripcion, fechaInicio, fechaFin,
 								porcentajeAvance, usuario, null, new Date(), null, 1, snip, programa, subprograma, proyecto, iactividad, obra,
 								objetoId,objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,costo,renglon, ubicacionGeografica, null, null,null
-								, proyectoBase,componenteBase,productoBase,null,null);
+								, proyectoBase,componenteBase,productoBase,fechaInicioReal,fechaFinReal,null,null);
 					}
 					else{
 						actividad = ActividadDAO.getActividadPorId(id);
@@ -337,40 +390,26 @@ public class SActividad extends HttpServlet {
 						actividad.setProyectoBase(proyectoBase);
 						actividad.setComponenteBase(componenteBase);
 						actividad.setProductoBase(productoBase);
+						
+						if(porcentajeAvance > 0 && porcentajeAvance < 100 && actividad.getFechaInicioReal() == null)
+							actividad.setFechaInicioReal(new Date());
+						else if(porcentajeAvance == 100 && actividad.getFechaFinReal() == null){
+							actividad.setFechaFinReal(new Date());
+							
+							if(actividad.getFechaInicioReal() == null)
+								actividad.setFechaInicioReal(new Date());
+						}
 					}
 					
-					result = ActividadDAO.guardarActividad(actividad);
+					result = ActividadDAO.guardarActividad(actividad, true);
 					
 					if (result){
-						List<AsignacionRaci> asignaciones_temp = AsignacionRaciDAO.getAsignacionPorTarea(actividad.getId(), 5);
+						List<AsignacionRaci> asignaciones_temp = AsignacionRaciDAO.getAsignacionPorTarea(actividad.getId(), 5, null);
 						
 						if (asignaciones_temp!=null){
 							for (AsignacionRaci asign : asignaciones_temp){
 								AsignacionRaciDAO.eliminarTotalAsignacion(asign);
 							}
-						}
-						
-						Integer proyectoId =null;
-						if(actividad.getProyectoBase()!=null)
-							proyectoId = actividad.getProyectoBase();
-						else if(actividad.getComponenteBase()!=null){
-							Componente c = ComponenteDAO.getComponente(actividad.getComponenteBase());
-							proyectoId = c.getProyecto().getId();
-						}
-						else if(actividad.getProductoBase()!=null){
-							Producto p = ProductoDAO.getProductoPorId(actividad.getProductoBase());
-							proyectoId = p.getComponente().getProyecto().getId();
-						}
-						MatrizRaci matrizRaci = AsignacionRaciDAO.getMatrizPorObjeto(proyectoId, 1);
-						if (matrizRaci == null){
-							matrizRaci = new MatrizRaci();
-							matrizRaci.setEstado(1);
-							matrizRaci.setFechaCreacion(new Date());
-							Proyecto proyTemp = ProyectoDAO.getProyecto(proyectoId);
-							matrizRaci.setProyecto(proyTemp);
-							matrizRaci.setUsuarioCreo(usuario);
-							MatrizRaciDAO.guardarMatrizRaci(matrizRaci);
-							
 						}
 						
 						String asignaciones_param = map.get("asignacionroles");
@@ -387,13 +426,36 @@ public class SActividad extends HttpServlet {
 									asigna_temp.setColaborador(colaborador);
 									asigna_temp.setEstado(1);
 									asigna_temp.setFechaCreacion(new Date());
-									asigna_temp.setMatrizRaci(matrizRaci);
 									asigna_temp.setObjetoId(actividad.getId());
 									asigna_temp.setObjetoTipo(5);
 									asigna_temp.setRolRaci(datosaasignacion[1]);
 									asigna_temp.setUsuarioCreo(usuario);
 									result = result && AsignacionRaciDAO.guardarAsignacion(asigna_temp);
 								}
+							}
+						}
+					}
+					
+					
+					if(result){
+						String pagosPlanificados = map.get("pagosPlanificados");
+						if(!acumulacionCostoid.equals(2)  || pagosPlanificados!= null && pagosPlanificados.replace("[", "").replace("]", "").length()>0 ){
+							List<PagoPlanificado> pagosActuales = PagoPlanificadoDAO.getPagosPlanificadosPorObjeto(actividad.getId(), 5);
+							for (PagoPlanificado pagoTemp : pagosActuales){
+								PagoPlanificadoDAO.eliminarTotalPagoPlanificado(pagoTemp);
+							}
+						}
+							
+						if (acumulacionCostoid.equals(2) && pagosPlanificados!= null && pagosPlanificados.replace("[", "").replace("]", "").length()>0){
+							JsonParser parser = new JsonParser();
+							JsonArray pagosArreglo = parser.parse(pagosPlanificados).getAsJsonArray();
+							for(int i=0; i<pagosArreglo.size(); i++){
+								JsonObject objeto = pagosArreglo.get(i).getAsJsonObject();
+								Date fechaPago = objeto.get("fechaPago").isJsonNull() ? null : Utils.stringToDate(objeto.get("fechaPago").getAsString());
+								BigDecimal monto = objeto.get("pago").isJsonNull() ? null : objeto.get("pago").getAsBigDecimal();
+								
+								PagoPlanificado pagoPlanificado = new PagoPlanificado(fechaPago, monto, actividad.getId(), 5, usuario, null, new Date(), null, 1);
+								result = result && PagoPlanificadoDAO.guardar(pagoPlanificado);
 							}
 						}
 					}
@@ -435,20 +497,15 @@ public class SActividad extends HttpServlet {
 						}
 					}
 					
-					/*Session session = COrden.getSessionCalculoOrden();
-					
-					if(result){
-						COrden orden = new COrden();
-						result = orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoBase,componenteBase,productoBase);
-					}*/
-					
 					response_text = String.join("","{ \"success\": ",(result ? "true" : "false"),", "
 							+ "\"id\": " + actividad.getId() ,","
 							, "\"usuarioCreo\": \"" , actividad.getUsuarioCreo(),"\","
 							, "\"fechaCreacion\":\" " , Utils.formatDateHour(actividad.getFechaCreacion()),"\","
 							, "\"usuarioactualizo\": \"" , actividad.getUsuarioActualizo() != null ? actividad.getUsuarioActualizo() : "","\","
-							, "\"fechaactualizacion\": \"" , Utils.formatDateHour(actividad.getFechaActualizacion()),"\""+
-							" }");
+							, "\"fechaactualizacion\": \"" , Utils.formatDateHour(actividad.getFechaActualizacion()),"\","
+							, "\"fechaInicioReal\": " , actividad.getFechaInicioReal() != null ? "\"" + Utils.formatDate(actividad.getFechaInicioReal()) + "\"" : null, ","
+							, "\"fechaFinReal\": " , actividad.getFechaFinReal() != null ? "\"" + Utils.formatDate(actividad.getFechaFinReal()) + "\"" : null
+							, " }");
 				}
 				else
 					response_text = "{ \"success\": false }";
@@ -462,27 +519,8 @@ public class SActividad extends HttpServlet {
 			int id = map.get("id")!=null ? Integer.parseInt(map.get("id")) : 0;
 			if(id>0){
 				Actividad actividad = ActividadDAO.getActividadPorId(id);
-				/*Integer objetoId = actividad.getObjetoId();
-				Integer objetoTipo = actividad.getObjetoTipo();
-				Integer proyectoId = actividad.getProyectoBase();
-				Integer componenteId = actividad.getComponenteBase();
-				Integer productoId = actividad.getProductoBase(); */
 				
-				actividad.setUsuarioActualizo(usuario);
-				boolean result = false;
-				actividad.setUsuarioActualizo(usuario);
-				actividad.setFechaActualizacion(new Date());
-				ActividadDAO.eliminarActividad(actividad);
-				
-				/*if(eliminado){
-					
-					Session session = COrden.getSessionCalculoOrden();
-					
-					COrden orden = new COrden();
-					result = orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoId, componenteId, productoId);
-				}*/
-				
-				response_text = String.join("","{ \"success\": ",( result ? "true" : "false")," }");
+				response_text = String.join("","{ \"success\": ",( ObjetoDAO.borrarHijos(actividad.getTreePath(), 5, usuario) ? "true" : "false")," }");
 			}
 			else
 				response_text = "{ \"success\": false }";
@@ -515,6 +553,18 @@ public class SActividad extends HttpServlet {
 			String orden_direccion = map.get("orden_direccion");
 			List<Actividad> actividads = ActividadDAO.getActividadsPaginaPorObjeto(pagina, numeroActividads, objetoId, objetoTipo,
 					filtro_nombre, filtro_usuario_creo, filtro_fecha_creacion, columna_ordenada, orden_direccion,usuario);
+			
+			int congelado = 0;
+			String fechaElegibilidad = null;
+			String fechaCierre = null;
+			if(actividads!=null && actividads.size()>0){
+				Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(actividads.get(0).getTreePath());
+				if(proyecto!=null){
+					congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
+					fechaElegibilidad = Utils.formatDate(proyecto.getFechaElegibilidad());
+					fechaCierre = Utils.formatDate(proyecto.getFechaCierre());
+				}
+			}
 			List<stactividad> stactividads=new ArrayList<stactividad>();
 			for(Actividad actividad:actividads){
 				stactividad temp =new stactividad();
@@ -546,11 +596,18 @@ public class SActividad extends HttpServlet {
 				temp.duracion = actividad.getDuracion();
 				temp.duracionDimension = actividad.getDuracionDimension();
 				temp.proyectoBase = actividad.getProyectoBase();
+				temp.fechaInicioReal = actividad.getFechaInicioReal() != null ? Utils.formatDate(actividad.getFechaInicioReal()) : null;
+				temp.fechaFinReal = actividad.getFechaFinReal() != null ? Utils.formatDate(actividad.getFechaFinReal()) : null;
+				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
+				temp.congelado = congelado;
+				temp.fechaElegibilidad = fechaElegibilidad;
+				temp.fechaCierre = fechaCierre;
 				stactividads.add(temp);
 			}
 
 			response_text=new GsonBuilder().serializeNulls().create().toJson(stactividads);
 	        response_text = String.join("", "\"actividades\":",response_text);
+	        response_text = String.join("", response_text, ", \"congelado\":",String.valueOf(congelado));
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");
 		}
 		else if(accion.equals("obtenerActividadPorId")){
@@ -596,6 +653,16 @@ public class SActividad extends HttpServlet {
 			temp.acumulacionCostoId = actividad.getAcumulacionCosto()!=null ? actividad.getAcumulacionCosto().getId(): null;
 			temp.acumulacionCostoNombre = actividad.getAcumulacionCosto()!=null ? actividad.getAcumulacionCosto().getNombre(): null;
 			temp.proyectoBase = actividad.getProyectoBase();
+			temp.fechaInicioReal = actividad.getFechaInicioReal() != null ? Utils.formatDate(actividad.getFechaInicioReal()) : null;
+			temp.fechaFinReal = actividad.getFechaFinReal() != null ? Utils.formatDate(actividad.getFechaFinReal()) : null;
+			temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
+
+			Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(actividad.getTreePath());
+			if(proyecto!=null){
+				temp.congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
+				temp.fechaElegibilidad = Utils.formatDate(proyecto.getFechaElegibilidad());
+				temp.fechaCierre = Utils.formatDate(proyecto.getFechaCierre());
+			}
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"actividad\":",response_text);
@@ -621,30 +688,7 @@ public class SActividad extends HttpServlet {
 				ActividadTipo actividadTipo= new ActividadTipo();
 				actividadTipo.setId(actividadtipoid);
 				Integer proyectoBase=null;
-				/*Integer componenteBase = null;
-				Integer productoBase = null; 
-				switch (objetoTipo){
-                case 1:
-                    proyectoBase = objetoId;
-                    break;
-                case 2:
-                    componenteBase = objetoId;
-                    break;
-                case 3:
-                    productoBase = objetoId;
-                	break;
-                case 4:
-                    Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId);
-                    productoBase = subproducto.getProducto().getId();
-                break;
-                case 5:
-                    Actividad actividadTemp = ActividadDAO.getActividadPorId(objetoId);
-                    proyectoBase = actividadTemp.getProyectoBase();
-                    componenteBase = actividadTemp.getComponenteBase();
-                    productoBase = actividadTemp.getProductoBase();
-                    break;
-            } */
-				
+
 				if (esnuevo){
 					actividad = new Actividad(actividadTipo, nombre, fechaInicio, fechaFin, porcentajeAvance
 							, usuario, new Date(), 1, objetoId, objetoTipo, duracion, duracionDimension);
@@ -666,13 +710,7 @@ public class SActividad extends HttpServlet {
 					
 					
 				}
-				result = ActividadDAO.guardarActividad(actividad);
-				
-				/*Session session = COrden.getSessionCalculoOrden();
-				
-				COrden orden = new COrden();
-				result = orden.calcularOrdenObjetosSuperiores(objetoId, objetoTipo, usuario, session,proyectoBase,componenteBase, productoBase);
-				*/
+				result = ActividadDAO.guardarActividad(actividad, true);
 			}
 			
 			if (result){
@@ -691,6 +729,71 @@ public class SActividad extends HttpServlet {
 			}
 			
 			
+		}else if(accion.equals("getCantidadHistoria")){
+			Integer id = Utils.String2Int(map.get("id"));
+			String resultado = ActividadDAO.getVersiones(id); 
+			response_text = String.join("", "{\"success\":true, \"versiones\": [" + resultado + "]}");
+		}else if(accion.equals("getHistoria")){
+			Integer id = Utils.String2Int(map.get("id"));
+			Integer version = Utils.String2Int(map.get("version"));
+			String resultado = ActividadDAO.getHistoria(id, version); 
+			response_text = String.join("", "{\"success\":true, \"historia\":" + resultado + "}");
+		}else if(accion.equals("getValidacionAsignado")){
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(new Date());
+			Integer ejercicio = cal.get(Calendar.YEAR);
+			Integer id = Utils.String2Int(map.get("id"));
+			
+			Actividad objActividad = ActividadDAO.getActividadPorId(id);
+			Proyecto objProyecto = ProyectoDAO.getProyectobyTreePath(objActividad.getTreePath());
+			
+			Integer unidadEjecutora = objProyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
+			Integer entidad = objProyecto.getUnidadEjecutora().getId().getEntidadentidad();
+			
+			Integer programa = Utils.String2Int(map.get("programa"));
+			Integer subprograma = Utils.String2Int(map.get("subprograma"));
+			Integer proyecto = Utils.String2Int(map.get("proyecto"));
+			Integer actividad = Utils.String2Int(map.get("actividad"));
+			Integer obra = Utils.String2Int(map.get("obra"));
+			Integer renglon = Utils.String2Int(map.get("renglon"));
+			Integer geografico = Utils.String2Int(map.get("geografico"));
+			BigDecimal asignado = ObjetoDAO.getAsignadoPorLineaPresupuestaria(ejercicio, entidad, unidadEjecutora, programa, 
+					subprograma, proyecto, actividad, obra, renglon, geografico);
+			
+			BigDecimal planificado = new BigDecimal(0);
+			switch(objActividad.getAcumulacionCosto().getId()){
+				case 1:
+					cal.setTime(objActividad.getFechaInicio());
+					Integer ejercicioInicial = cal.get(Calendar.YEAR);
+					if(ejercicio.equals(ejercicioInicial)){
+						planificado = objActividad.getCosto();
+					}
+					break;
+				case 2:
+					List<PagoPlanificado> lstPagos = PagoPlanificadoDAO.getPagosPlanificadosPorObjeto(objActividad.getId(), 5);
+					for(PagoPlanificado pago : lstPagos){
+						cal.setTime(pago.getFechaPago());
+						Integer ejercicioPago = cal.get(Calendar.YEAR);
+						if(ejercicio.equals(ejercicioPago)){
+							planificado = planificado.add(pago.getPago());
+						}
+					}
+					break;
+				case 3:
+					cal.setTime(objActividad.getFechaFin());
+					Integer ejercicioFinal = cal.get(Calendar.YEAR);
+					if(ejercicio.equals(ejercicioFinal)){
+						planificado = objActividad.getCosto();
+					}
+					break;
+			}
+			
+			if(asignado.subtract(planificado).compareTo(new BigDecimal(0)) == -1){
+				response_text = ",\"asignado\": " + asignado + ",\"sobrepaso\": " + true;
+			}else{
+				response_text = ",\"asignado\": " + asignado + ",\"sobrepaso\": " + false;
+			}
+			response_text = String.join(" ", "{ \"success\" : true ", response_text, "}");
 		}
 		else{
 			response_text = "{ \"success\": false }";

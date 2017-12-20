@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 2, 2017 5:12:50 PM by Hibernate Tools 5.2.3.Final
+// Generated Dec 13, 2017 9:28:15 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -28,7 +28,7 @@ public class PlanAdquisicion implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2309067504283940150L;
 	private Integer id;
 	private CategoriaAdquisicion categoriaAdquisicion;
 	private TipoAdquisicion tipoAdquisicion;
@@ -56,22 +56,22 @@ public class PlanAdquisicion implements java.io.Serializable {
 	private Integer bloqueado;
 	private String numeroContrato;
 	private BigDecimal montoContrato;
-	private Integer nog;
+	private Long nog;
+	private Integer tipoRevision;
 	private Set<PlanAdquisicionPago> planAdquisicionPagos = new HashSet<PlanAdquisicionPago>(0);
 
 	public PlanAdquisicion() {
 	}
 
-	public PlanAdquisicion(CategoriaAdquisicion categoriaAdquisicion, TipoAdquisicion tipoAdquisicion,
-			String unidadMedida, int objetoId, int objetoTipo, String usuarioCreo, Date fechaCreacion, int estado) {
-		this.categoriaAdquisicion = categoriaAdquisicion;
+	public PlanAdquisicion(TipoAdquisicion tipoAdquisicion, int objetoId, int objetoTipo, String usuarioCreo,
+			Date fechaCreacion, int estado, BigDecimal montoContrato) {
 		this.tipoAdquisicion = tipoAdquisicion;
-		this.unidadMedida = unidadMedida;
 		this.objetoId = objetoId;
 		this.objetoTipo = objetoTipo;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
+		this.montoContrato = montoContrato;
 	}
 
 	public PlanAdquisicion(CategoriaAdquisicion categoriaAdquisicion, TipoAdquisicion tipoAdquisicion,
@@ -81,7 +81,7 @@ public class PlanAdquisicion implements java.io.Serializable {
 			Date adjudicacionPlanificado, Date adjudicacionReal, Date firmaContratoPlanificado, Date firmaContratoReal,
 			int objetoId, int objetoTipo, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
 			Date fechaActualizacion, int estado, Integer bloqueado, String numeroContrato, BigDecimal montoContrato,
-			Integer nog, Set<PlanAdquisicionPago> planAdquisicionPagos) {
+			Long nog, Integer tipoRevision, Set<PlanAdquisicionPago> planAdquisicionPagos) {
 		this.categoriaAdquisicion = categoriaAdquisicion;
 		this.tipoAdquisicion = tipoAdquisicion;
 		this.unidadMedida = unidadMedida;
@@ -109,6 +109,7 @@ public class PlanAdquisicion implements java.io.Serializable {
 		this.numeroContrato = numeroContrato;
 		this.montoContrato = montoContrato;
 		this.nog = nog;
+		this.tipoRevision = tipoRevision;
 		this.planAdquisicionPagos = planAdquisicionPagos;
 	}
 
@@ -125,7 +126,7 @@ public class PlanAdquisicion implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "categoria_adquisicion", nullable = false)
+	@JoinColumn(name = "categoria_adquisicion")
 	public CategoriaAdquisicion getCategoriaAdquisicion() {
 		return this.categoriaAdquisicion;
 	}
@@ -144,7 +145,7 @@ public class PlanAdquisicion implements java.io.Serializable {
 		this.tipoAdquisicion = tipoAdquisicion;
 	}
 
-	@Column(name = "unidad_medida", nullable = false, length = 30)
+	@Column(name = "unidad_medida", length = 30)
 	public String getUnidadMedida() {
 		return this.unidadMedida;
 	}
@@ -363,7 +364,7 @@ public class PlanAdquisicion implements java.io.Serializable {
 		this.numeroContrato = numeroContrato;
 	}
 
-	@Column(name = "monto_contrato", precision = 15)
+	@Column(name = "monto_contrato", nullable = false, precision = 15)
 	public BigDecimal getMontoContrato() {
 		return this.montoContrato;
 	}
@@ -373,12 +374,21 @@ public class PlanAdquisicion implements java.io.Serializable {
 	}
 
 	@Column(name = "nog")
-	public Integer getNog() {
+	public Long getNog() {
 		return this.nog;
 	}
 
-	public void setNog(Integer nog) {
+	public void setNog(Long nog) {
 		this.nog = nog;
+	}
+
+	@Column(name = "tipo_revision")
+	public Integer getTipoRevision() {
+		return this.tipoRevision;
+	}
+
+	public void setTipoRevision(Integer tipoRevision) {
+		this.tipoRevision = tipoRevision;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "planAdquisicion")

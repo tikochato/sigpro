@@ -27,7 +27,7 @@
 						<label class="btn btn-primary" ng-click="permisosc.nuevoPermiso()" uib-tooltip="Nuevo">
 				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 					</shiro:hasPermission>
-					<shiro:hasPermission name="20010">
+					<shiro:hasPermission name="20020">
 						<label class="btn btn-primary" ng-click="permisosc.editarPermiso()" uib-tooltip="Editar">
 				<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 					</shiro:hasPermission>
@@ -110,8 +110,10 @@
 								<label for="nombre" class="floating-label">* Nombre</label>
 							</div>
 							<div class="form-group">
-								<input type="text" class="inputText" id="descripcion" ng-model="permisosc.permisoSelected.descripcion" ng-value="permisosc.permisoSelected.descripcion" onblur="this.setAttribute('value', this.value);" ng-required="true">
-								<label for="Descripcion" class="floating-label">* Descripción</label>
+							   <textarea class="inputText" rows="4"
+							   ng-model="permisosc.permisoSelected.descripcion" ng-value="permisosc.permisoSelected.descripcion"   
+							   onblur="this.setAttribute('value', this.value);" ng-required="true" ></textarea>
+							   <label class="floating-label">* Descripción</label>
 							</div>
 							<div class="panel panel-default">
 					<div class="panel-heading label-form" style="text-align: center;" >Datos de auditoría</div>

@@ -27,12 +27,18 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
+import dao.ActividadDAO;
 import dao.CategoriaAdquisicionDAO;
 import dao.PlanAdquisicionDAO;
 import dao.PlanAdquisicionPagoDAO;
+import dao.ProductoDAO;
+import dao.SubproductoDAO;
 import dao.TipoAdquisicionDAO;
+import pojo.Actividad;
 import pojo.PlanAdquisicion;
 import pojo.PlanAdquisicionPago;
+import pojo.Producto;
+import pojo.Subproducto;
 import utilities.CLogger;
 import utilities.Utils;
 
@@ -55,7 +61,7 @@ public class SPlanAdquisicion extends HttpServlet {
 		Integer cantidad;
 		BigDecimal precioUnitario;
 		BigDecimal total;
-		Integer nog;
+		Long nog;
 		String numeroContrato;
 		BigDecimal montoContrato;
 		String preparacionDocumentoPlanificada;
@@ -69,6 +75,19 @@ public class SPlanAdquisicion extends HttpServlet {
 		String firmaContratoPlanificada;
 		String firmaContratoReal;
 		stpago pagos[];
+		Integer tipoRevision;
+		String tipoRevisionNombre;
+	}
+	
+	class stnog{
+		Integer nog;
+		String numeroContrato;
+		BigDecimal montoContrato;
+		String preparacionDocumentosReal;
+		String lanzamientoEventoReal;
+		String recepcionOfertasReal;
+		String adjudicacionReal;
+		String firmaContratoReal;
 	}
 		
     public SPlanAdquisicion() {
@@ -97,35 +116,31 @@ public class SPlanAdquisicion extends HttpServlet {
 			String accion = map.get("accion")!=null ? map.get("accion") : "";
 			String response_text = "";
 			
-			if(accion.equals("guardarAdquisiciones")){
-				Integer objetoId = Utils.String2Int(map.get("objetoId"));
-				Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
-				String sadquisiciones = map.get("adquisiciones");
-				JsonParser parser = new JsonParser();
-				JsonArray adquisiciones = parser.parse(sadquisiciones).getAsJsonArray();
-				ArrayList<Integer> ids=new ArrayList<Integer>();
-				for(int i=0; i<adquisiciones.size(); i++){
-					JsonObject objeto = adquisiciones.get(i).getAsJsonObject();
-					Date adjudicacionPlanificado = objeto.has("adjudicacionPlanificado")==false || objeto.get("adjudicacionPlanificado").isJsonNull() ? null : Utils.stringToDate(objeto.get("adjudicacionPlanificado").getAsString());
-					Date adjudicacionReal = objeto.has("adjudicacionReal")==false || objeto.get("adjudicacionReal").isJsonNull() ? null : Utils.stringToDate(objeto.get("adjudicacionReal").getAsString());
-					Integer cantidad = objeto.has("cantidad")==false || objeto.get("cantidad").isJsonNull() ?  null : objeto.get("cantidad").getAsInt();
-					Integer categoriaId = objeto.has("categoriaId")==false || objeto.get("categoriaId").isJsonNull() ? null : objeto.get("categoriaId").getAsInt();
-					Date firmaContratoPlanificado = objeto.has("firmaContratoPlanificado")==false || objeto.get("firmaContratoPlanificado").isJsonNull() ? null : Utils.stringToDate(objeto.get("firmaContratoPlanificado").getAsString());
-					Date firmaContratoReal = objeto.has("firmaContratoReal")==false || objeto.get("firmaContratoReal").isJsonNull() ? null : Utils.stringToDate(objeto.get("firmaContratoReal").getAsString());
-					Integer id = objeto.has("id")==false || objeto.get("id").isJsonNull() ?  null : objeto.get("id").getAsInt();
-					Date lanzamientoEventoPlanificado = objeto.has("lanzamientoEventoPlanificado")==false || objeto.get("lanzamientoEventoPlanificado").isJsonNull() ? null : Utils.stringToDate(objeto.get("lanzamientoEventoPlanificado").getAsString());
-					Date lanzamientoEventoReal = objeto.has("lanzamientoEventoReal")==false || objeto.get("lanzamientoEventoReal").isJsonNull() ? null : Utils.stringToDate(objeto.get("lanzamientoEventoReal").getAsString());
-					BigDecimal montoContrato = objeto.has("montoContrato")==false || objeto.get("montoContrato").isJsonNull() ? null : objeto.get("montoContrato").getAsBigDecimal();
-					Integer nog = objeto.has("nog")==false || objeto.get("nog").isJsonNull() ? null : objeto.get("nog").getAsInt();
-					String numeroContrato =  objeto.has("numeroContrato")==false || objeto.get("numeroContrato").isJsonNull() ?  null :  objeto.get("numeroContrato").getAsString();
-					BigDecimal precioUnitario =  objeto.has("precioUnitario")==false || objeto.get("precioUnitario").isJsonNull() ? null : objeto.get("precioUnitario").getAsBigDecimal();
-					Date preparacionDocPlanificado = objeto.has("preparacionDocumentoPlanificado")==false || objeto.get("preparacionDocumentoPlanificado").isJsonNull() ? null : Utils.stringToDate(objeto.get("preparacionDocumentoPlanificado").getAsString());
-					Date preparacionDocReal = objeto.has("preparacionDocumentoReal")==false || objeto.get("preparacionDocumentoReal").isJsonNull() ? null : Utils.stringToDate(objeto.get("preparacionDocumentoReal").getAsString());
-					Date recepcionOfertasPlanificado = objeto.has("recepcionOfertasPlanificado")==false || objeto.get("recepcionOfertasPlanificado").isJsonNull() ? null : Utils.stringToDate(objeto.get("recepcionOfertasPlanificado").getAsString());
-					Date recepcionOfertasReal = objeto.has("recepcionOfertasReal")==false || objeto.get("recepcionOfertasReal").isJsonNull() ? null : Utils.stringToDate(objeto.get("recepcionOfertasReal").getAsString());
-					Integer tipoId = objeto.has("tipoId")==false || objeto.get("tipoId").isJsonNull() ? null : objeto.get("tipoId").getAsInt();
-					BigDecimal total = objeto.has("total")==false || objeto.get("total").isJsonNull() ? null : objeto.get("total").getAsBigDecimal();
-					String unidadMedida =  objeto.has("medidaNombre")==false || objeto.has("medidaNombre")==false || objeto.get("medidaNombre").isJsonNull() ?  null :  objeto.get("medidaNombre").getAsString();
+			if(accion.equals("guardarAdquisicion")){
+				Integer objetoId = map.get("objetoId")!=null ? Utils.String2Int(map.get("objetoId")) : null;
+				Integer objetoTipo = map.get("objetoTipo")!=null ? Utils.String2Int(map.get("objetoTipo")) : null;
+				
+				Date adjudicacionPlanificado = map.get("adjudicacionPlanificada")!=null ? Utils.stringToDateZ(map.get("adjudicacionPlanificada").toString()) : null;
+				Date adjudicacionReal = map.get("adjudicacionReal")!=null ? Utils.stringToDateZ(map.get("adjudicacionReal").toString()) : null;
+					Integer cantidad = map.get("cantidad")!=null ? Utils.String2Int(map.get("cantidad").toString()) : null;
+					Integer categoriaId = map.get("categoriaId")!=null ? Utils.String2Int(map.get("categoriaId").toString()) : null;
+					Date firmaContratoPlanificado = map.get("firmaContratoPlanificada")!=null ? Utils.stringToDateZ(map.get("firmaContratoPlanificada").toString()) : null;
+					Date firmaContratoReal = map.get("firmaContratoReal")!=null ? Utils.stringToDateZ(map.get("firmaContratoReal").toString()) : null;
+					Integer id = map.get("id")!=null ? Utils.String2Int(map.get("id").toString()) : null;
+					Date lanzamientoEventoPlanificado = map.get("lanzamientoEventoPlanificada")!=null ? Utils.stringToDateZ(map.get("lanzamientoEventoPlanificada").toString()) : null;
+					Date lanzamientoEventoReal = map.get("lanzamientoEventoReal")!=null ? Utils.stringToDateZ(map.get("lanzamientoEventoReal").toString()) : null;
+					BigDecimal montoContrato = map.get("montoContrato")!=null ? Utils.String2BigDecimal(map.get("montoContrato").toString(),null) : null;
+					Long nog = map.get("nog")!=null ? Utils.String2Long(map.get("nog").toString()) : null;
+					String numeroContrato =  map.get("numeroContrato")!=null ? map.get("numeroContrato").toString() : null;
+					BigDecimal precioUnitario =  map.get("precioUnitario")!=null ? Utils.String2BigDecimal(map.get("precioUnitario").toString(),null) : null;
+					Date preparacionDocPlanificado = map.get("preparacionDocumentosPlanificada")!=null ? Utils.stringToDateZ(map.get("preparacionDocumentosPlanificada").toString()) : null;
+					Date preparacionDocReal = map.get("preparacionDocumentosReal")!=null ? Utils.stringToDateZ(map.get("preparacionDocumentosReal").toString()) : null;
+					Date recepcionOfertasPlanificado = map.get("recepcionOfertasPlanificada")!=null ? Utils.stringToDateZ(map.get("recepcionOfertasPlanificada").toString()) : null;
+					Date recepcionOfertasReal = map.get("recepcionOfertasReal")!=null ? Utils.stringToDateZ(map.get("recepcionOfertasReal").toString()) : null;
+					Integer tipoId = map.get("tipoId")!=null ? Utils.String2Int(map.get("tipoId").toString()) : null;
+					BigDecimal total = map.get("total")!=null ? Utils.String2BigDecimal(map.get("total").toString(),null) : null;
+					String unidadMedida =  map.get("medidaNombre")!=null ? map.get("medidaNombre").toString() : null;
+					Integer tipoRevision = Utils.String2Int(map.get("tipoRevision"));
 					PlanAdquisicion pa;
 					if(id==null || id == -1)
 						pa = new PlanAdquisicion(CategoriaAdquisicionDAO.getCategoriaPorId(categoriaId), 
@@ -133,7 +148,7 @@ public class SPlanAdquisicion extends HttpServlet {
 							preparacionDocPlanificado, preparacionDocReal, lanzamientoEventoPlanificado, lanzamientoEventoReal, 
 							recepcionOfertasPlanificado, recepcionOfertasReal, adjudicacionPlanificado, adjudicacionReal, 
 							firmaContratoPlanificado, firmaContratoReal, objetoId, objetoTipo,usuario, null, 
-							new DateTime().toDate(), null, 1, 0, numeroContrato, montoContrato, nog, null);
+							new DateTime().toDate(), null, 1, 0, numeroContrato, montoContrato, nog, tipoRevision, null);
 					else{
 						pa = PlanAdquisicionDAO.getPlanAdquisicionById(id);
 						pa.setCategoriaAdquisicion(CategoriaAdquisicionDAO.getCategoriaPorId(categoriaId));
@@ -161,74 +176,159 @@ public class SPlanAdquisicion extends HttpServlet {
 						pa.setNumeroContrato(numeroContrato);
 						pa.setMontoContrato(montoContrato);
 						pa.setNog(nog);
+						pa.setTipoRevision(tipoRevision);
 						PlanAdquisicionPagoDAO.eliminarPagos(new ArrayList<PlanAdquisicionPago>(pa.getPlanAdquisicionPagos()));
 					}
 					PlanAdquisicionDAO.guardarPlanAdquisicion(pa);
-					ids.add(pa.getId());
-					JsonArray pagos = objeto.get("pagos").getAsJsonArray();
-					for(int j=0; j<pagos.size(); j++){
-						JsonObject objeto_pago = pagos.get(j).getAsJsonObject();
-						Date fechaPago = objeto_pago.get("fecha").isJsonNull() ? null : Utils.stringToDate(objeto_pago.get("fecha").getAsString());
-						BigDecimal dpago = objeto_pago.get("pago").isJsonNull() ? null : objeto_pago.get("pago").getAsBigDecimal();
-						PlanAdquisicionPago pago = new PlanAdquisicionPago(pa, fechaPago, dpago, "", usuario, null, new DateTime().toDate(), null, 1);
-						PlanAdquisicionPagoDAO.guardarPago(pago);
+										
+					BigDecimal bpagos = new BigDecimal(0);
+					boolean tiene_pagos = false;
+					if(map.get("pagos")!=null){
+						JsonParser parser = new JsonParser();
+						JsonArray pagos = parser.parse(map.get("pagos").toString()).getAsJsonArray();
+						for(int j=0; j<pagos.size(); j++){
+							JsonObject objeto_pago = pagos.get(j).getAsJsonObject();
+							Date fechaPago = objeto_pago.get("fecha").isJsonNull() ? null : Utils.stringToDate(objeto_pago.get("fecha").getAsString());
+							BigDecimal dpago = objeto_pago.get("pago").isJsonNull() ? null : objeto_pago.get("pago").getAsBigDecimal();
+							PlanAdquisicionPago pago = new PlanAdquisicionPago(pa, fechaPago, dpago, "", usuario, null, new DateTime().toDate(), null, 1);
+							PlanAdquisicionPagoDAO.guardarPago(pago);
+							bpagos = bpagos.add(dpago);
+							tiene_pagos=true;
+						}
 					}
-				}
-				List<PlanAdquisicion> aborrar=PlanAdquisicionDAO.getAdquisicionesNotIn(objetoId,objetoTipo,ids);
-				for(PlanAdquisicion borrar:aborrar){
-					PlanAdquisicionDAO.borrarPlan(borrar);
-				}
-				String sids="";
-				for(int k=0; k<ids.size(); k++)
-					sids = sids + "," +ids.get(k);
-				response_text = String.join("","{ \"success\": true, \"ids\":\"",(sids.length()>0 ? sids.substring(1, sids.length()-1) : ""),"\" }");
+					List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(objetoId, objetoTipo);
+					switch(objetoTipo){
+						case 3:
+							Producto producto = ProductoDAO.getProductoPorId(objetoId);
+							if(!(producto.getSubproductos()!=null && producto.getSubproductos().size()>0) &&
+									!(actividades!=null && actividades.size()>0)){
+								if(tiene_pagos)
+									producto.setCosto(bpagos);
+								else
+									producto.setCosto(pa.getTotal());
+								ProductoDAO.guardarProducto(producto, true);
+							}	
+							break;
+						case 4:
+							Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId);
+							if(!(actividades!=null && actividades.size()>0)){
+								if(tiene_pagos)
+									subproducto.setCosto(bpagos);
+								else
+									subproducto.setCosto(pa.getTotal());
+								SubproductoDAO.guardarSubproducto(subproducto, true);
+							}	
+							break;
+						case 5:
+							Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
+							if(!(actividades!=null && actividades.size()>0)){
+								if(tiene_pagos)
+									actividad.setCosto(bpagos);
+								else
+									actividad.setCosto(pa.getTotal());
+								ActividadDAO.guardarActividad(actividad, true);
+							}	
+							break;
+					}
+				response_text = String.join("","{ \"success\": true, \"id\": "+pa.getId()+" }");
 			}
 			else if(accion.equals("getPlanAdquisicionPorObjeto")){
 				Integer objetoId = Utils.String2Int(map.get("objetoId"));
 				Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
-				List<PlanAdquisicion> adquisiciones=PlanAdquisicionDAO.getPlanAdquisicionByObjeto(objetoTipo, objetoId);
-				ArrayList<stadquisicion> adquisiciones_t=new ArrayList<stadquisicion>();
-				if(adquisiciones!=null){
-					for(PlanAdquisicion adq: adquisiciones){
+				PlanAdquisicion adquisicion=PlanAdquisicionDAO.getPlanAdquisicionByObjeto(objetoTipo, objetoId);
+				if(adquisicion!=null){
 						stadquisicion temp = new stadquisicion();
-						temp.id = adq.getId();
-						temp.adjudicacionPlanificada = Utils.formatDate(adq.getAdjudicacionPlanificado());
-						temp.adjudicacionReal = Utils.formatDate(adq.getAdjudicacionReal());
-						temp.cantidad = adq.getCantidad();
-						temp.categoriaId = adq.getCategoriaAdquisicion().getId();
-						temp.categoriaNombre = adq.getCategoriaAdquisicion().getNombre();
-						temp.firmaContratoPlanificada = Utils.formatDate(adq.getFirmaContratoPlanificado());
-						temp.firmaContratoReal = Utils.formatDate(adq.getFirmaContratoReal());
-						temp.lanzamientoEventoPlanificada = Utils.formatDate(adq.getLanzamientoEventoPlanificado());
-						temp.lanzamientoEventoReal = Utils.formatDate(adq.getLanzamientoEventoReal());
-						temp.medidaNombre = adq.getUnidadMedida();
-						temp.montoContrato = adq.getMontoContrato();
-						temp.nog = adq.getNog();
-						temp.numeroContrato = adq.getNumeroContrato();
-						temp.precioUnitario = adq.getPrecioUnitario();
-						temp.preparacionDocumentoPlanificada = Utils.formatDate(adq.getPreparacionDocPlanificado());
-						temp.preparacionDocumentoReal = Utils.formatDate(adq.getPreparacionDocReal());
-						temp.recepcionOfertasPlanificada =  Utils.formatDate(adq.getRecepcionOfertasPlanificado());
-						temp.recepcionOfertasReal = Utils.formatDate(adq.getRecepcionOfertasReal());
-						temp.tipoId = adq.getTipoAdquisicion().getId();
-						temp.tipoNombre = adq.getTipoAdquisicion().getNombre();
-						temp.total = adq.getCantidad()!=null && adq.getPrecioUnitario()!=null ? adq.getPrecioUnitario().multiply(new BigDecimal(adq.getCantidad())) : adq.getTotal();
-						if(adq.getPlanAdquisicionPagos()!=null && adq.getPlanAdquisicionPagos().size()>0){
-							stpago[] pagos = new stpago[adq.getPlanAdquisicionPagos().size()];
-							ArrayList<PlanAdquisicionPago> apagos = new ArrayList<PlanAdquisicionPago>(adq.getPlanAdquisicionPagos());
-							for(int i=0; i<apagos.size();i++){
-								pagos[i] = new stpago();
-								pagos[i].fechaPago = Utils.formatDate(apagos.get(i).getFechaPago());
-								pagos[i].pago = apagos.get(i).getPago();
+						temp.id = adquisicion.getId();
+						temp.adjudicacionPlanificada = Utils.formatDate(adquisicion.getAdjudicacionPlanificado());
+						temp.adjudicacionReal = Utils.formatDate(adquisicion.getAdjudicacionReal());
+						temp.cantidad = adquisicion.getCantidad();
+						temp.categoriaId = adquisicion.getCategoriaAdquisicion().getId();
+						temp.categoriaNombre = adquisicion.getCategoriaAdquisicion().getNombre();
+						temp.firmaContratoPlanificada = Utils.formatDate(adquisicion.getFirmaContratoPlanificado());
+						temp.firmaContratoReal = Utils.formatDate(adquisicion.getFirmaContratoReal());
+						temp.lanzamientoEventoPlanificada = Utils.formatDate(adquisicion.getLanzamientoEventoPlanificado());
+						temp.lanzamientoEventoReal = Utils.formatDate(adquisicion.getLanzamientoEventoReal());
+						temp.medidaNombre = adquisicion.getUnidadMedida();
+						temp.montoContrato = adquisicion.getMontoContrato().compareTo(BigDecimal.ZERO) != 0 ? adquisicion.getMontoContrato() : null;
+						temp.nog = adquisicion.getNog();
+						temp.numeroContrato = adquisicion.getNumeroContrato();
+						temp.precioUnitario = adquisicion.getPrecioUnitario();
+						temp.preparacionDocumentoPlanificada = Utils.formatDate(adquisicion.getPreparacionDocPlanificado());
+						temp.preparacionDocumentoReal = Utils.formatDate(adquisicion.getPreparacionDocReal());
+						temp.recepcionOfertasPlanificada =  Utils.formatDate(adquisicion.getRecepcionOfertasPlanificado());
+						temp.recepcionOfertasReal = Utils.formatDate(adquisicion.getRecepcionOfertasReal());
+						temp.tipoId = adquisicion.getTipoAdquisicion().getId();
+						temp.tipoNombre = adquisicion.getTipoAdquisicion().getNombre();
+						temp.total = adquisicion.getTotal()!= null ? adquisicion.getTotal() : new BigDecimal(0);
+						temp.tipoRevision = adquisicion.getTipoRevision();
+						temp.tipoRevisionNombre = temp.tipoRevision != null ? (temp.tipoRevision == 1 ? "Ex-ante" : temp.tipoRevision == 2 ? "Ex-Post" : null) : null;
+						
+						
+						List<PlanAdquisicionPago> lstpagos = PlanAdquisicionDAO.getPagos(adquisicion.getId());
+						if(lstpagos!=null && lstpagos.size()>0){
+							ArrayList<stpago> pagos = new ArrayList<stpago>();
+							stpago pago = null;
+
+							for(int i=0; i<lstpagos.size();i++){
+								if(lstpagos.get(i).getEstado() == 1){
+									pago = new stpago();
+									pago.fechaPago = Utils.formatDate(lstpagos.get(i).getFechaPago());
+									pago.pago = lstpagos.get(i).getPago();
+									pagos.add(pago);	
+								}
 							}
-							temp.pagos = pagos;
+							temp.pagos = pagos.toArray(new stpago[pagos.size()]);
 						}
-						adquisiciones_t.add(temp);
+						
+						response_text = new GsonBuilder().serializeNulls().create().toJson(temp);
+						response_text = String.join("", "\"adquisicion\":",response_text);
+				        response_text = String.join("", "{\"success\":true,", response_text, "}");
 					}
+				else
+					response_text = String.join("", "{\"success\":false }");
+			}
+			else if(accion.equals("borrarTodasAdquisiciones")){
+				Integer objetoId = Utils.String2Int(map.get("objetoId"));
+				Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
+				PlanAdquisicionDAO.borrarTodosPlan(objetoId, objetoTipo);
+				response_text = String.join("", "{\"success\":true }");
+			}
+			else if(accion.equals("getInfoNog")){
+				Integer nog = Utils.String2Int(map.get("nog"));
+				
+				List<?> infoNogObj = PlanAdquisicionDAO.getInfoNog(nog);
+				List<stnog> lstnog = new ArrayList<stnog>();
+				if(infoNogObj!= null && infoNogObj.size() > 0){
+					stnog temp = new stnog();
+					for(Object objetoNog : infoNogObj){
+						Object[] obj = (Object[])objetoNog;
+						temp = new stnog();
+						temp.nog = (Integer)obj[0];
+						temp.numeroContrato = (String)obj[1];
+						temp.montoContrato = (BigDecimal)obj[2];
+						temp.preparacionDocumentosReal = Utils.formatDate((Date)obj[3]);
+						temp.lanzamientoEventoReal = Utils.formatDate((Date)obj[4]);
+						temp.recepcionOfertasReal = Utils.formatDate((Date)obj[5]);
+						temp.adjudicacionReal = Utils.formatDate((Date)obj[6]);
+						temp.firmaContratoReal = Utils.formatDate((Date)obj[7]);
+						lstnog.add(temp);
+					}	
 				}
-				response_text = new GsonBuilder().serializeNulls().create().toJson(adquisiciones_t);
-				response_text = String.join("", "\"adquisiciones\":",response_text);
-		        response_text = String.join("", "{\"success\":true,", response_text, "}");
+				
+				response_text = new GsonBuilder().serializeNulls().create().toJson(lstnog);
+				response_text = String.join("", "\"nogInfo\":",response_text);
+		        response_text = String.join("", "{\"success\":", lstnog.size() > 0 ? "true," : "false,", response_text, "}");
+			}else if(accion.equals("getCantidadHistoria")){
+				Integer objetoId = Utils.String2Int(map.get("id"));
+				Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
+				String resultado = PlanAdquisicionDAO.getVersiones(objetoId, objetoTipo); 
+				response_text = String.join("", "{\"success\":true, \"versiones\": [" + resultado + "]}");
+			}else if(accion.equals("getHistoria")){
+				Integer objetoId = Utils.String2Int(map.get("id"));
+				Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"));
+				Integer version = Utils.String2Int(map.get("version"));
+				String resultado = PlanAdquisicionDAO.getHistoria(objetoId, objetoTipo, version); 
+				response_text = String.join("", "{\"success\":true, \"historia\":" + resultado + "}");
 			}
 			
 			response.setHeader("Content-Encoding", "gzip");

@@ -52,6 +52,8 @@ public class SPrestamoMetas extends HttpServlet {
 		Integer unidadDeMedida;
 		BigDecimal porcentajeAvance;
 		BigDecimal metaFinal;
+		BigDecimal metaAcumuladaP;
+		BigDecimal metaAcumuladaR;
 		Integer nivel;
 		stanio[] anios; 
 	}
@@ -118,7 +120,9 @@ public class SPrestamoMetas extends HttpServlet {
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 			Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
 			Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
-			List<stprestamo> lstPrestamo = getMetasPrestamo(idPrestamo, anioInicial, anioFinal, usuario);
+			String lineaBase = map.get("lineaBase");
+			
+			List<stprestamo> lstPrestamo = getMetasPrestamo(idPrestamo, anioInicial, anioFinal, lineaBase, usuario);
 			
 			if (null != lstPrestamo && !lstPrestamo.isEmpty()){
 				response_text=new GsonBuilder().serializeNulls().create().toJson(lstPrestamo);
@@ -135,12 +139,13 @@ public class SPrestamoMetas extends HttpServlet {
 			int tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
 			
 			try{
-		        byte [] outArray = exportarExcel(proyectoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, usuario);
+				String lineaBase = map.get("lineaBase");
+		        byte [] outArray = exportarExcel(proyectoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, lineaBase, usuario);
 			
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
 				response.setHeader("Cache-Control", "no-cache"); 
-				response.setHeader("Content-Disposition", "attachment; Metas_de_Prestamo.xls");
+				response.setHeader("Content-Disposition", "attachment; Avance_de_Metas.xls");
 				OutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
 				outStream.flush();
@@ -148,16 +153,18 @@ public class SPrestamoMetas extends HttpServlet {
 				CLogger.write("1", SPrestamoMetas.class, e);
 			}
 		}else if(accion.equals("exportarPdf")){
-			CPdf archivo = new CPdf("Metas de Prestamo");
+			CPdf archivo = new CPdf("Avance de Metas");
 			int proyectoId = Utils.String2Int(map.get("proyectoid"), 0);
 			int anioInicio = Utils.String2Int(map.get("fechaInicio"), 0);
 			int anioFin = Utils.String2Int(map.get("fechaFin"), 0);
 			int agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
 			int tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
+			String lineaBase = map.get("lineaBase");
 			String headers[][];
 			String datosMetas[][];
 			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
-			datosMetas = generarDatosMetas(proyectoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
+
+			datosMetas = generarDatosMetas(proyectoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, lineaBase, usuario);
 			String path = archivo.ExportPdfMetasPrestamo(headers, datosMetas,tipoVisualizacion);
 			File file=new File(path);
 			if(file.exists()){
@@ -193,7 +200,7 @@ public class SPrestamoMetas extends HttpServlet {
 				response.setContentType("application/pdf");
 				response.setContentLength(outArray.length);
 				response.setHeader("Cache-Control", "no-cache");  
-				response.setHeader("Content-Disposition", "in-line; 'Metas_de_Prestamo.pdf'");
+				response.setHeader("Content-Disposition", "in-line; 'Avance_de_Metas.pdf'");
 				OutputStream outStream = response.getOutputStream();
 				outStream.write(outArray);
 				outStream.flush();
@@ -216,25 +223,24 @@ public class SPrestamoMetas extends HttpServlet {
 		}
 	}
 	
-	private List<stprestamo> getMetasPrestamo(int idPrestamo, int anioInicial, int anioFinal, String usuario){
+	private List<stprestamo> getMetasPrestamo(int idPrestamo, int anioInicial, int anioFinal, String lineaBase, String usuario){
 		List<stprestamo> lstPrestamo= new ArrayList<>();
-		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
+		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo, lineaBase);
 		for(Object objeto : estructuraProyecto){
 			Object[] obj = (Object[]) objeto;
-			Integer nivel = ((String)obj[3]).length();
+			Integer nivel = (obj[3]!=null) ? ((String)obj[3]).length()/8 : 0;
 			if(nivel!= null){
-				nivel = nivel/8;
 				stprestamo tempPrestamo =  new stprestamo();
 				tempPrestamo.objeto_id = (Integer)obj[0];
 				tempPrestamo.nombre = (String)obj[1];
-				tempPrestamo.nivel = nivel +1;
+				tempPrestamo.nivel = nivel;
 				tempPrestamo.objeto_tipo = ((BigInteger) obj[2]).intValue();
 				if(tempPrestamo.objeto_tipo <=3){
 					ArrayList<ArrayList<BigDecimal>> metaValores = new ArrayList<ArrayList<BigDecimal>>();
 					tempPrestamo = getMetas(metaValores, anioInicial, anioFinal, tempPrestamo);
 					lstPrestamo.add(tempPrestamo);
 					if(tempPrestamo.objeto_tipo == 3){
-						List<Meta> metas = MetaDAO.getMetasObjeto(tempPrestamo.objeto_id, tempPrestamo.objeto_tipo);
+						List<Meta> metas = MetaDAO.getMetasObjetoLineaBase(tempPrestamo.objeto_id, tempPrestamo.objeto_tipo, lineaBase);
 						if(metas!=null){
 							Iterator<Meta> iterator = metas.iterator();
 				    	    while(iterator.hasNext()) {
@@ -244,7 +250,7 @@ public class SPrestamoMetas extends HttpServlet {
 									tempMeta.objeto_id = tempPrestamo.objeto_id;
 									tempMeta.nombre = meta.getNombre();
 									tempMeta.nivel = nivel +2;
-									tempMeta.objeto_tipo = 0;
+									tempMeta.objeto_tipo = 10;
 									if(meta.getMetaUnidadMedida()!=null){
 										tempMeta.unidadDeMedida = meta.getMetaUnidadMedida().getId();
 									}
@@ -253,9 +259,12 @@ public class SPrestamoMetas extends HttpServlet {
 									}else if(meta.getDatoTipo()!=null && meta.getDatoTipo().getId().equals(3)){
 										tempMeta.metaFinal = meta.getMetaFinalDecimal();
 									}
-									tempMeta.porcentajeAvance = PrestamoMetasDAO.getPorcentajeAvanceMeta(meta);
+									BigDecimal acumulados[] = PrestamoMetasDAO.getPorcentajeAvanceMeta(meta, lineaBase);
+									tempMeta.metaAcumuladaP = acumulados[0]!=null?acumulados[0]:new BigDecimal(0);
+									tempMeta.metaAcumuladaR = acumulados[1]!=null?acumulados[1]:new BigDecimal(0);
+									tempMeta.porcentajeAvance = acumulados[2]!=null?acumulados[2]:new BigDecimal(0);
 									metaValores = new ArrayList<ArrayList<BigDecimal>>();
-									metaValores = PrestamoMetasDAO.getMetaValores(meta.getId(), anioInicial, anioFinal);
+									metaValores = PrestamoMetasDAO.getMetaValores(meta.getId(), anioInicial, anioFinal, lineaBase);
 									tempMeta = getMetas(metaValores, anioInicial, anioFinal, tempMeta);
 									lstPrestamo.add(tempMeta);
 				    	    	}
@@ -344,7 +353,7 @@ public class SPrestamoMetas extends HttpServlet {
 		return anio;		
 	}
 	
-	private byte[] exportarExcel(int prestamoId, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, String usuario) throws IOException{
+	private byte[] exportarExcel(int prestamoId, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, String lineaBase, String usuario) throws IOException{
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -353,10 +362,10 @@ public class SPrestamoMetas extends HttpServlet {
 		Workbook wb=null;
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{		
-			excel = new CExcel("Metas de Préstamo", false, null);
+			excel = new CExcel("Avance de Metas", false, null);
 			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
-			datosMetas = generarDatosMetas(prestamoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
-			wb=excel.generateExcelOfData(datosMetas, "Reporte de Metas - Préstamo "+ProyectoDAO.getProyecto(prestamoId).getNombre(), headers, null, true, usuario);
+			datosMetas = generarDatosMetas(prestamoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, lineaBase, usuario);
+			wb=excel.generateExcelOfData(datosMetas, "Avance de Metas - "+ProyectoDAO.getProyecto(prestamoId).getNombre(), headers, null, true, usuario);
 		
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
@@ -376,14 +385,14 @@ public class SPrestamoMetas extends HttpServlet {
 			{"Anual"}
 		};
 		
-		int totalesCant = 3;
+		int totalesCant = 4;
 		int aniosDiferencia =(anioFin-anioInicio)+1; 
 		int columnasTotal = (aniosDiferencia*(AgrupacionesTitulo[agrupacion-1].length));
 		int factorVisualizacion = 1;
 		if(tipoVisualizacion == 2){
 			columnasTotal = columnasTotal*2;
 			totalesCant+=(aniosDiferencia*2);
-			columnasTotal += 2+totalesCant+1;
+			columnasTotal += 2+totalesCant+2;
 			factorVisualizacion = 2;
 		}else{
 			totalesCant+=aniosDiferencia;
@@ -474,6 +483,24 @@ public class SPrestamoMetas extends HttpServlet {
 			columnasOperacion[pos]=totales[totalesCant-1];
 			pos++;
 		}
+		titulo[pos] = "Total Acumulado";
+		tipo[pos] = "double";
+		operacionesFila[pos]="";
+		columnasOperacion[pos]="";
+		if(tipoVisualizacion==1){
+			subtitulo[pos]="Real";
+		}else{
+			subtitulo[pos]="Planificado";
+		}
+		pos++;
+		if(tipoVisualizacion == 2){
+			titulo[pos] = "";
+			tipo[pos] = "double";
+			subtitulo[pos]="Real";
+			operacionesFila[pos]="";
+			columnasOperacion[pos]="";
+			pos++;
+		}
 		titulo[pos] = "Meta Final";
 		tipo[pos] = "double";
 		subtitulo[pos]="";
@@ -500,28 +527,22 @@ public class SPrestamoMetas extends HttpServlet {
 		return headers;
 	}
 	
-	public String[][] generarDatosMetas(int prestamoId, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, int columnasTotal, String usuario){
+	public String[][] generarDatosMetas(int prestamoId, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, int columnasTotal, String lineaBase, String usuario){
 		String[][] datos = null;
 		int columna = 0;int factorVisualizacion=1;
 		if(tipoVisualizacion==2){
 			factorVisualizacion = 2;
 		}
 		int sumaColumnas = ((anioFin-anioInicio) + 1)*factorVisualizacion;
-		List<stprestamo> lstPrestamo = getMetasPrestamo(prestamoId, anioInicio, anioFin, usuario);		
+		List<stprestamo> lstPrestamo = getMetasPrestamo(prestamoId, anioInicio, anioFin, lineaBase, usuario);		
 		if (lstPrestamo != null && !lstPrestamo.isEmpty()){
 			datos = new String[lstPrestamo.size()][columnasTotal];
 			for (int i=0; i<lstPrestamo.size(); i++){
 				columna = 0;
 				stprestamo prestamo = lstPrestamo.get(i);
-				String sangria;
-				switch (prestamo.objeto_tipo){
-					case 0: sangria = "         "; break;
-					case 1: sangria = ""; break;
-					case 2: sangria = "   "; break;
-					case 3: sangria = "      "; break;
-					case 4: sangria = "         "; break;
-					case 5: sangria = "            "; break;
-					default: sangria = "";
+				String sangria="";
+				for(int s=1; s<prestamo.nivel; s++){
+					sangria+="   ";
 				}
 				datos[i][columna] = sangria+prestamo.nombre;
 				columna++;
@@ -530,7 +551,7 @@ public class SPrestamoMetas extends HttpServlet {
 					datos[i][columna] = unidad!=null ? unidad.getNombre() : "";
 				}
 				columna++;
-				if(lstPrestamo.get(i).objeto_tipo == 0){ //es meta
+				if(lstPrestamo.get(i).objeto_tipo == 10){ //es meta
 					int posicion = columna;
 					BigDecimal totalAniosP = new BigDecimal(0);
 					BigDecimal totalAniosR = new BigDecimal(0);
@@ -709,6 +730,16 @@ public class SPrestamoMetas extends HttpServlet {
 					}
 					if(tipoVisualizacion==1 || tipoVisualizacion == 2){
 						datos[i][posicion]= totalAniosR.toString();
+					}
+					posicion++;
+					if(tipoVisualizacion==0 || tipoVisualizacion==2){ 
+						datos[i][posicion]= lstPrestamo.get(i).metaAcumuladaP.toString();
+					}
+					if(tipoVisualizacion == 2){
+						posicion++;
+					}
+					if(tipoVisualizacion==1 || tipoVisualizacion == 2){
+						datos[i][posicion]= lstPrestamo.get(i).metaAcumuladaR.toString();
 					}
 					datos[i][columnasTotal-2]=prestamo.metaFinal!=null ? prestamo.metaFinal.toString() : "";
 					datos[i][columnasTotal-1]=prestamo.porcentajeAvance!=null ? prestamo.porcentajeAvance.toString() : "";

@@ -1,7 +1,7 @@
-var app = angular.module('componenteController', []);
+var app = angular.module('componenteController', ['smart-table']);
 
-app.controller('componenteController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q', 'dialogoConfirmacion', 
-	function($scope,$rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion) {
+app.controller('componenteController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q', 'dialogoConfirmacion','historia','pagoplanificado', 
+	function($scope,$rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion, $historia, $pagoplanificado) {
 		var mi=this;
 		
 		mi.esTreeview = $rootScope.treeview;
@@ -9,6 +9,8 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 		
 		if(!mi.esTreeview)
 			$window.document.title = $utilidades.sistema_nombre+' - Componentes';
+		
+		mi.acumulacionesCosto = [];
 		
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
@@ -27,8 +29,8 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 		mi.componentenombre = "";
 		mi.unidadejecutoraid="";
 		mi.unidadejecutoranombre="";
-		mi.proyectoid = $routeParams.proyecto_id;
 		mi.formatofecha = 'dd/MM/yyyy';
+		mi.altformatofecha = ['d!/M!/yyyy'];
 		mi.camposdinamicos = {};
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
@@ -39,6 +41,13 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 		mi.coordenadas = "";
 		mi.entidad='';
 		mi.ejercicio = '';
+		mi.esDeSigade = false;
+		
+		mi.riesgos=undefined;
+		mi.active=0;
+		mi.child_riesgos=null;
+		
+		mi.pagos = [];
 
 		mi.dimensiones = [
 			{value:1,nombre:'Dias',sigla:'d'}
@@ -58,7 +67,44 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 					mi.proyectoid = response.id;
 					mi.proyectoNombre = response.nombre;
 					mi.objetoTipoNombre = "Proyecto";
+					mi.prestamoId = response.prestamoId;
+					mi.unidadejecutoraid = response.unidadEjecutora;
+					mi.unidadejecutoranombre = response.unidadEjecutoraNombre;
+					mi.entidad = response.entidad;
+					mi.ejercicio = response.ejercicio;
+					mi.entidadnombre = response.entidadNombre;
+					mi.congelado = response.congelado;
 		});
+		
+		$http.post('/SAcumulacionCosto', { accion: 'getAcumulacionesCosto', t: (new Date()).getTime()}).success(
+				function(response) {
+					mi.acumulacionesCosto = response.acumulacionesTipos;
+		});
+		
+		mi.blurCategoria=function(){
+			if(document.getElementById("acumulacionCosto_value").defaultValue!=mi.componente.acumulacionCostoNombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','acumulacionCosto');
+			}
+		}
+		
+		mi.cambioAcumulacionCosto=function(selected){
+			if(selected!== undefined){
+				mi.componente.acumulacionCostoNombre = selected.originalObject.nombre;
+				mi.componente.acumulacionCostoId = selected.originalObject.id;
+				
+				if(mi.componente.acumulacionCostoId == 2){
+					mi.componente.costo = null;
+					mi.bloquearCosto = true;
+				}else{
+					mi.componente.costo = null;
+					mi.bloquearCosto = false;
+				}
+			}
+			else{
+				mi.componente.acumulacionCostoNombre="";
+				mi.componente.acumulacionCostoId="";
+			}
+		}
 		
 		mi.fechaOptions = {
 				formatYear : 'yy',
@@ -153,7 +199,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 			}).success(
 					function(response) {
 						mi.componentes = response.componentes;
-						
+						mi.esDeSigade = response.esDeSigade;
 						for(x in mi.componentes){
 							if(mi.componentes[x].fechaInicio != "")
 								mi.componentes[x].fechaInicio = moment(mi.componentes[x].fechaInicio, 'DD/MM/YYYY').toDate();
@@ -198,11 +244,14 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 					longitud: mi.componente.longitud,
 					latitud : mi.componente.latitud,
 					costo: mi.componente.costo == null ? null : mi.componente.costo,
+					costoTecho: mi.componente.costoTecho != null ?  mi.componente.costoTecho : null,
 					acumulacionCosto: mi.componente.acumulacionCostoId == null ? null : mi.componente.acumulacionCostoId,
 					fechaInicio: moment(mi.componente.fechaInicio).format('DD/MM/YYYY'),
 					fechaFin: moment(mi.componente.fechaFin).format('DD/MM/YYYY'),
 					duaracion: mi.componente.duracion,
 					duracionDimension: mi.duracionDimension.sigla,
+					esDeSigade: 0,
+					pagosPlanificados: JSON.stringify(mi.pagos),
 					datadinamica : JSON.stringify(mi.camposdinamicos),
 				}).success(function(response){
 					if(response.success){
@@ -217,10 +266,17 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 							if(!mi.esnuevo)
 								mi.t_cambiarNombreNodo();
 							else
-								mi.t_crearNodo(mi.componente.id,mi.componente.nombre,2,true);
+								mi.t_crearNodo(mi.componente.id,mi.componente.nombre,1,true);
 						}
+						if(mi.child_riesgos!=null){
+							ret = mi.child_riesgos.guardar('Componente '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+									'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Componente');
+						}
+						else
+							$utilidades.mensaje('success','Componente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
 						mi.esnuevo = false;
-						$utilidades.mensaje('success','Componente '+(mi.esnuevo ? 'creado' : 'guardado')+' con éxito');
+						
+						mi.getAsignado();
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'creado' : 'guardado')+' el Componente');
@@ -264,8 +320,8 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 		mi.nuevo = function() {
 			mi.datotipoid = "";
 			mi.datotiponombre = "";
-			mi.unidadejecutoraid="";
-			mi.unidadejecutoranombre="";
+			mi.unidadejecutoraid= mi.prestamoId != null ? mi.unidadejecutoraid :  "";
+			mi.unidadejecutoranombre= mi.prestamoId != null ? mi.unidadejecutoranombre : "";
 			mi.componentetipoid="";
 			mi.componentetiponombre="";
 			mi.mostraringreso=true;
@@ -278,6 +334,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 			if(!mi.esTreeview)
 				mi.gridApi.selection.clearSelectedRows();
 			$utilidades.setFocus(document.getElementById("nombre"));
+			mi.active=0;
 		};
 
 		mi.editar = function() {
@@ -296,6 +353,12 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 					mi.duracionDimension = mi.dimensiones[0];
 				}
 				
+				if(mi.componente.acumulacionCostoId==2){
+					mi.bloquearCosto = true;
+				}else{
+					mi.bloquearCosto = false;
+				}
+				
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
 				mi.coordenadas = (mi.componente.latitud !=null ?  mi.componente.latitud : '') +
@@ -311,6 +374,8 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 
 				$http.post('/SComponentePropiedad', parametros).then(function(response){
 					mi.camposdinamicos = response.data.componentepropiedades;
+					mi.riesgos=undefined;
+					mi.active=0;
 					for (campos in mi.camposdinamicos) {
 						switch (mi.camposdinamicos[campos].tipo){
 							case "fecha":
@@ -327,8 +392,8 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 								break;
 						}
 					}
-					
 					$utilidades.setFocus(document.getElementById("nombre"));
+					mi.getAsignado();
 				});
 			}
 			else
@@ -391,21 +456,27 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 			}
 		}
 		
+		mi.irASubComponente=function(componenteid){
+			if(mi.componente!=null){
+				$location.path('/subcomponente/'+componenteid);
+			}
+		};
+		
 		mi.irAProductos=function(componenteid){
 			if(mi.componente!=null){
-				$location.path('/producto/'+componenteid);
+				$location.path('/producto/'+componenteid+'/1');
 			}
 		};
 		
 		mi.irAActividades=function(componenteid){
 			if(mi.componente!=null){
-				$location.path('/actividad/'+ componenteid +'/2' );
+				$location.path('/actividad/'+ componenteid +'/1' );
 			}
 		};
 		
 		mi.irARiesgos=function(componenteid){
 			if(mi.componente!=null){
-				$location.path('/riesgo/'+ componenteid +'/2' );
+				$location.path('/riesgo/'+ componenteid +'/1' );
 			}
 		};
 		
@@ -426,6 +497,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 						mi.totalComponentes = response.data.totalcomponentes;
 						mi.paginaActual = 1;
 						mi.cargarTabla(mi.paginaActual);
+						
 			});
 		}
 		
@@ -638,6 +710,17 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 			});
 		  };
 		  
+		  mi.verHistoria = function(){
+				$historia.getHistoria($scope, 'Componente', '/SComponente',mi.componente.id, 1, false, true, false, false)
+				.result.then(function(data) {
+					if (data != ""){
+						
+					}
+				}, function(){
+					
+				});
+			}
+		  
 		  if(mi.esTreeview){
 			  if($routeParams.nuevo==1){
 				  mi.nuevo();
@@ -650,6 +733,10 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 								mi.componente.fechaInicio = moment(mi.componente.fechaInicio, 'DD/MM/YYYY').toDate();
 							if(mi.componente.fechaFin != "")
 								mi.componente.fechaFin = moment(mi.componente.fechaFin, 'DD/MM/YYYY').toDate();
+							if(mi.componente.fechaInicioReal != "")
+								mi.componente.fechaInicioReal = moment(mi.componente.fechaInicioReal, 'DD/MM/YYYY').toDate();
+							if(mi.componente.fechaFinReal != "")
+								mi.componente.fechaFinReal = moment(mi.componente.fechaFinReal, 'DD/MM/YYYY').toDate();
 							mi.editar();
 						}
 					});
@@ -698,7 +785,60 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 			
 			mi.t_crearNodo=function(id,nombre,objeto_tipo,estado){
 				$rootScope.$emit("crearNodo",{ id: id, nombre: nombre, objeto_tipo: objeto_tipo, estado: estado })
+			};
+			
+			mi.agregarPagos = function() {
+				$pagoplanificado.getPagoPlanificado($scope, mi.componente.id,1, 
+				function(objetoId, objetoTipo){
+					return{
+						accion: 'getPagos',
+						objetoId: objetoId,
+						objetoTipo : objetoTipo
+					}
+				}, mi.componente.fechaInicio,mi.componente.fechaFin)
+				.result.then(function(data) {
+					mi.pagos=data;
+					mi.componente.costo = 0;
+					for (x in mi.pagos){
+						mi.componente.costo += mi.pagos[x].pago;
+					}
+				}, function(){
+				});
+			};
+			
+		
+		mi.getAsignado = function(){
+			if(mi.componente.programa != null){
+				$http.post('/SComponente', {
+					accion: 'getValidacionAsignado',
+					id: mi.componente.id,
+					programa: mi.componente.programa,
+					subprograma: mi.componente.subprograma,
+					proyecto: mi.componente.proyecto,
+					actividad: mi.componente.actividad,
+					obra: mi.componente.obra,
+					renglon: mi.componente.renglon,
+					geografico: mi.componente.ubicacionGeografica,
+					t: new Date().getTime()
+				}).success(function(response){
+					if(response.success){
+						mi.asignado = response.asignado;
+						mi.sobrepaso = response.sobrepaso;
+					}
+				});
 			}
+		}
+		
+		mi.validarAsignado = function(){
+			if(mi.componente.costo != null){
+				if(mi.componente.programa != null){
+					if(mi.componente.costo <= mi.asignado)
+						mi.sobrepaso = false;
+					else
+						mi.sobrepaso = true;
+				}
+			}
+		}
 } ]);
 
 app.controller('buscarPorComponente', [ '$uibModalInstance',
@@ -886,3 +1026,4 @@ app.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout', 'uiGmapGoogl
 		  $uibModalInstance.close(null);
 	  };
 }]);
+

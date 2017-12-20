@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 2, 2017 5:12:50 PM by Hibernate Tools 5.2.3.Final
+// Generated Dec 13, 2017 9:28:15 AM by Hibernate Tools 5.2.3.Final
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +25,7 @@ public class UnidadEjecutora implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -7892088800518473517L;
 	private UnidadEjecutoraId id;
 	private Entidad entidad;
 	private String nombre;
@@ -34,6 +34,7 @@ public class UnidadEjecutora implements java.io.Serializable {
 	private Set<Subproducto> subproductos = new HashSet<Subproducto>(0);
 	private Set<Producto> productos = new HashSet<Producto>(0);
 	private Set<Prestamo> prestamos = new HashSet<Prestamo>(0);
+	private Set<Subcomponente> subcomponentes = new HashSet<Subcomponente>(0);
 	private Set<Componente> componentes = new HashSet<Componente>(0);
 
 	public UnidadEjecutora() {
@@ -47,7 +48,7 @@ public class UnidadEjecutora implements java.io.Serializable {
 
 	public UnidadEjecutora(UnidadEjecutoraId id, Entidad entidad, String nombre, Set<Proyecto> proyectos,
 			Set<Colaborador> colaboradors, Set<Subproducto> subproductos, Set<Producto> productos,
-			Set<Prestamo> prestamos, Set<Componente> componentes) {
+			Set<Prestamo> prestamos, Set<Subcomponente> subcomponentes, Set<Componente> componentes) {
 		this.id = id;
 		this.entidad = entidad;
 		this.nombre = nombre;
@@ -56,6 +57,7 @@ public class UnidadEjecutora implements java.io.Serializable {
 		this.subproductos = subproductos;
 		this.productos = productos;
 		this.prestamos = prestamos;
+		this.subcomponentes = subcomponentes;
 		this.componentes = componentes;
 	}
 
@@ -137,6 +139,15 @@ public class UnidadEjecutora implements java.io.Serializable {
 
 	public void setPrestamos(Set<Prestamo> prestamos) {
 		this.prestamos = prestamos;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "unidadEjecutora")
+	public Set<Subcomponente> getSubcomponentes() {
+		return this.subcomponentes;
+	}
+
+	public void setSubcomponentes(Set<Subcomponente> subcomponentes) {
+		this.subcomponentes = subcomponentes;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "unidadEjecutora")

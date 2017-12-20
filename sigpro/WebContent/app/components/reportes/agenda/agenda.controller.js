@@ -1,8 +1,8 @@
 var app = angular.module('agendaController', []);
 
 
-app.controller('agendaController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
+app.controller('agendaController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
+	function($scope,$rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
 	
 	var mi=this;
 	mi.proyectoid = "";
@@ -21,7 +21,7 @@ app.controller('agendaController',['$scope','$http','$interval','i18nService','U
 	$http.post('/SProyecto',{accion: 'getProyectos'}).success(
 			function(response) {
 				mi.prestamos = [];
-				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un proyecto'});
+				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un '+$rootScope.etiquetas.proyecto});
 				if (response.success){
 					for (var i = 0; i < response.entidades.length; i++){
 						mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
@@ -51,7 +51,7 @@ app.controller('agendaController',['$scope','$http','$interval','i18nService','U
 			 mi.agenda = [].concat(mi.lista);
 			 var tab = "\t";
 			 for (x in mi.agenda){
-				 mi.agenda[x].nombre = tab.repeat(mi.agenda[x].objetoTipo -1) + mi.agenda[x].nombre; 
+				 mi.agenda[x].nombre = tab.repeat(mi.agenda[x].nivel) + mi.agenda[x].nombre; 
 			 }
 			 mi.mostrarcargando = false;
 			 if(mi.lista.length > 0)
@@ -78,16 +78,18 @@ app.controller('agendaController',['$scope','$http','$interval','i18nService','U
 		 mi.claseIcon = function (objetoTipo) {
 			   
 			    switch (objetoTipo) {
-			        case 1:
+			        case 0:
 			            return 'glyphicon glyphicon-record';
-			        case 2:
+			        case 1:
 			            return 'glyphicon glyphicon-th';
+			        case 2:
+			            return 'glyphicon glyphicon-equalizer';
 			        case 3:
 			            return 'glyphicon glyphicon-certificate';
 			        case 4:
 			            return 'glyphicon glyphicon-link';
 			        case 5:
-			            return 'glyphicon glyphicon-th-list';
+			            return 'glyphicon glyphicon-time';
 			    }
 			   
 			};

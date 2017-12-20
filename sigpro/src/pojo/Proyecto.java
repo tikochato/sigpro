@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 2, 2017 5:12:50 PM by Hibernate Tools 5.2.3.Final
+// Generated Dec 13, 2017 9:28:15 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -29,11 +30,12 @@ public class Proyecto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -2613764411471214859L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Colaborador colaborador;
-	private Cooperante cooperante;
+	private Etiqueta etiqueta;
+	private Prestamo prestamo;
 	private ProyectoTipo proyectoTipo;
 	private UnidadEjecutora unidadEjecutora;
 	private String nombre;
@@ -60,18 +62,28 @@ public class Proyecto implements java.io.Serializable {
 	private Integer ubicacionGeografica;
 	private Date fechaInicio;
 	private Date fechaFin;
-	private Integer duracion;
+	private int duracion;
 	private String duracionDimension;
 	private Integer orden;
 	private String treePath;
 	private Integer nivel;
 	private Integer ejecucionFisicaReal;
+	private Integer projectCargado;
+	private String observaciones;
+	private Integer coordinador;
+	private Date fechaElegibilidad;
+	private Date fechaCierre;
+	private Date fechaInicioReal;
+	private Date fechaFinReal;
+	private Integer congelado;
 	private Set<Desembolso> desembolsos = new HashSet<Desembolso>(0);
 	private Set<Hito> hitos = new HashSet<Hito>(0);
+	private PepDetalle pepDetalle;
 	private Set<ProgramaProyecto> programaProyectos = new HashSet<ProgramaProyecto>(0);
-	private Set<MatrizRaci> matrizRacis = new HashSet<MatrizRaci>(0);
+	private Set<LineaBase> lineaBases = new HashSet<LineaBase>(0);
 	private Set<ProyectoMiembro> proyectoMiembros = new HashSet<ProyectoMiembro>(0);
 	private Set<ProyectoImpacto> proyectoImpactos = new HashSet<ProyectoImpacto>(0);
+	private Set<ProyectoRolColaborador> proyectoRolColaboradors = new HashSet<ProyectoRolColaborador>(0);
 	private Set<ProyectoPropiedadValor> proyectoPropiedadValors = new HashSet<ProyectoPropiedadValor>(0);
 	private Set<ProyectoUsuario> proyectoUsuarios = new HashSet<ProyectoUsuario>(0);
 	private Set<Componente> componentes = new HashSet<Componente>(0);
@@ -79,30 +91,35 @@ public class Proyecto implements java.io.Serializable {
 	public Proyecto() {
 	}
 
-	public Proyecto(Cooperante cooperante, ProyectoTipo proyectoTipo, String nombre, String usuarioCreo,
-			Date fechaCreacion, int estado) {
-		this.cooperante = cooperante;
+	public Proyecto(Etiqueta etiqueta, ProyectoTipo proyectoTipo, String nombre, String usuarioCreo, Date fechaCreacion,
+			int estado, int duracion) {
+		this.etiqueta = etiqueta;
 		this.proyectoTipo = proyectoTipo;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
+		this.duracion = duracion;
 	}
 
-	public Proyecto(AcumulacionCosto acumulacionCosto, Colaborador colaborador, Cooperante cooperante,
+	public Proyecto(AcumulacionCosto acumulacionCosto, Colaborador colaborador, Etiqueta etiqueta, Prestamo prestamo,
 			ProyectoTipo proyectoTipo, UnidadEjecutora unidadEjecutora, String nombre, String descripcion,
 			String usuarioCreo, String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado,
 			Long snip, Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra,
 			String latitud, String longitud, String objetivo, String enunciadoAlcance, BigDecimal costo,
 			String objetivoEspecifico, String visionGeneral, Integer renglon, Integer ubicacionGeografica,
-			Date fechaInicio, Date fechaFin, Integer duracion, String duracionDimension, Integer orden, String treePath,
-			Integer nivel, Integer ejecucionFisicaReal, Set<Desembolso> desembolsos, Set<Hito> hitos,
-			Set<ProgramaProyecto> programaProyectos, Set<MatrizRaci> matrizRacis, Set<ProyectoMiembro> proyectoMiembros,
-			Set<ProyectoImpacto> proyectoImpactos, Set<ProyectoPropiedadValor> proyectoPropiedadValors,
-			Set<ProyectoUsuario> proyectoUsuarios, Set<Componente> componentes) {
+			Date fechaInicio, Date fechaFin, int duracion, String duracionDimension, Integer orden, String treePath,
+			Integer nivel, Integer ejecucionFisicaReal, Integer projectCargado, String observaciones,
+			Integer coordinador, Date fechaElegibilidad, Date fechaCierre, Date fechaInicioReal, Date fechaFinReal,
+			Integer congelado, Set<Desembolso> desembolsos, Set<Hito> hitos, PepDetalle pepDetalle,
+			Set<ProgramaProyecto> programaProyectos, Set<LineaBase> lineaBases, Set<ProyectoMiembro> proyectoMiembros,
+			Set<ProyectoImpacto> proyectoImpactos, Set<ProyectoRolColaborador> proyectoRolColaboradors,
+			Set<ProyectoPropiedadValor> proyectoPropiedadValors, Set<ProyectoUsuario> proyectoUsuarios,
+			Set<Componente> componentes) {
 		this.acumulacionCosto = acumulacionCosto;
 		this.colaborador = colaborador;
-		this.cooperante = cooperante;
+		this.etiqueta = etiqueta;
+		this.prestamo = prestamo;
 		this.proyectoTipo = proyectoTipo;
 		this.unidadEjecutora = unidadEjecutora;
 		this.nombre = nombre;
@@ -135,12 +152,22 @@ public class Proyecto implements java.io.Serializable {
 		this.treePath = treePath;
 		this.nivel = nivel;
 		this.ejecucionFisicaReal = ejecucionFisicaReal;
+		this.projectCargado = projectCargado;
+		this.observaciones = observaciones;
+		this.coordinador = coordinador;
+		this.fechaElegibilidad = fechaElegibilidad;
+		this.fechaCierre = fechaCierre;
+		this.fechaInicioReal = fechaInicioReal;
+		this.fechaFinReal = fechaFinReal;
+		this.congelado = congelado;
 		this.desembolsos = desembolsos;
 		this.hitos = hitos;
+		this.pepDetalle = pepDetalle;
 		this.programaProyectos = programaProyectos;
-		this.matrizRacis = matrizRacis;
+		this.lineaBases = lineaBases;
 		this.proyectoMiembros = proyectoMiembros;
 		this.proyectoImpactos = proyectoImpactos;
+		this.proyectoRolColaboradors = proyectoRolColaboradors;
 		this.proyectoPropiedadValors = proyectoPropiedadValors;
 		this.proyectoUsuarios = proyectoUsuarios;
 		this.componentes = componentes;
@@ -179,13 +206,23 @@ public class Proyecto implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cooperanteid", nullable = false)
-	public Cooperante getCooperante() {
-		return this.cooperante;
+	@JoinColumn(name = "proyecto_clase", nullable = false)
+	public Etiqueta getEtiqueta() {
+		return this.etiqueta;
 	}
 
-	public void setCooperante(Cooperante cooperante) {
-		this.cooperante = cooperante;
+	public void setEtiqueta(Etiqueta etiqueta) {
+		this.etiqueta = etiqueta;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "prestamoid")
+	public Prestamo getPrestamo() {
+		return this.prestamo;
+	}
+
+	public void setPrestamo(Prestamo prestamo) {
+		this.prestamo = prestamo;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -430,12 +467,12 @@ public class Proyecto implements java.io.Serializable {
 		this.fechaFin = fechaFin;
 	}
 
-	@Column(name = "duracion")
-	public Integer getDuracion() {
+	@Column(name = "duracion", nullable = false)
+	public int getDuracion() {
 		return this.duracion;
 	}
 
-	public void setDuracion(Integer duracion) {
+	public void setDuracion(int duracion) {
 		this.duracion = duracion;
 	}
 
@@ -484,6 +521,82 @@ public class Proyecto implements java.io.Serializable {
 		this.ejecucionFisicaReal = ejecucionFisicaReal;
 	}
 
+	@Column(name = "project_cargado")
+	public Integer getProjectCargado() {
+		return this.projectCargado;
+	}
+
+	public void setProjectCargado(Integer projectCargado) {
+		this.projectCargado = projectCargado;
+	}
+
+	@Column(name = "observaciones", length = 2000)
+	public String getObservaciones() {
+		return this.observaciones;
+	}
+
+	public void setObservaciones(String observaciones) {
+		this.observaciones = observaciones;
+	}
+
+	@Column(name = "coordinador")
+	public Integer getCoordinador() {
+		return this.coordinador;
+	}
+
+	public void setCoordinador(Integer coordinador) {
+		this.coordinador = coordinador;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_elegibilidad", length = 19)
+	public Date getFechaElegibilidad() {
+		return this.fechaElegibilidad;
+	}
+
+	public void setFechaElegibilidad(Date fechaElegibilidad) {
+		this.fechaElegibilidad = fechaElegibilidad;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_cierre", length = 19)
+	public Date getFechaCierre() {
+		return this.fechaCierre;
+	}
+
+	public void setFechaCierre(Date fechaCierre) {
+		this.fechaCierre = fechaCierre;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_inicio_real", length = 19)
+	public Date getFechaInicioReal() {
+		return this.fechaInicioReal;
+	}
+
+	public void setFechaInicioReal(Date fechaInicioReal) {
+		this.fechaInicioReal = fechaInicioReal;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_fin_real", length = 19)
+	public Date getFechaFinReal() {
+		return this.fechaFinReal;
+	}
+
+	public void setFechaFinReal(Date fechaFinReal) {
+		this.fechaFinReal = fechaFinReal;
+	}
+
+	@Column(name = "congelado")
+	public Integer getCongelado() {
+		return this.congelado;
+	}
+
+	public void setCongelado(Integer congelado) {
+		this.congelado = congelado;
+	}
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
 	public Set<Desembolso> getDesembolsos() {
 		return this.desembolsos;
@@ -502,6 +615,15 @@ public class Proyecto implements java.io.Serializable {
 		this.hitos = hitos;
 	}
 
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "proyecto")
+	public PepDetalle getPepDetalle() {
+		return this.pepDetalle;
+	}
+
+	public void setPepDetalle(PepDetalle pepDetalle) {
+		this.pepDetalle = pepDetalle;
+	}
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
 	public Set<ProgramaProyecto> getProgramaProyectos() {
 		return this.programaProyectos;
@@ -512,12 +634,12 @@ public class Proyecto implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
-	public Set<MatrizRaci> getMatrizRacis() {
-		return this.matrizRacis;
+	public Set<LineaBase> getLineaBases() {
+		return this.lineaBases;
 	}
 
-	public void setMatrizRacis(Set<MatrizRaci> matrizRacis) {
-		this.matrizRacis = matrizRacis;
+	public void setLineaBases(Set<LineaBase> lineaBases) {
+		this.lineaBases = lineaBases;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
@@ -536,6 +658,15 @@ public class Proyecto implements java.io.Serializable {
 
 	public void setProyectoImpactos(Set<ProyectoImpacto> proyectoImpactos) {
 		this.proyectoImpactos = proyectoImpactos;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")
+	public Set<ProyectoRolColaborador> getProyectoRolColaboradors() {
+		return this.proyectoRolColaboradors;
+	}
+
+	public void setProyectoRolColaboradors(Set<ProyectoRolColaborador> proyectoRolColaboradors) {
+		this.proyectoRolColaboradors = proyectoRolColaboradors;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "proyecto")

@@ -2,6 +2,8 @@ package servlets;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
@@ -31,15 +33,16 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.DesembolsoDAO;
 import dao.DesembolsoReal;
-import dao.EstructuraProyectoDAO;
+import dao.ObjetoCosto;
+import dao.ObjetoDAO;
 import dao.PrestamoDAO;
 import dao.ProyectoDAO;
 import pojo.Prestamo;
 import utilities.CExcel;
 import utilities.CLogger;
 import utilities.CMariaDB;
+import utilities.CPdf;
 import utilities.Utils;
-import utilities.CPrestamoCostos;
 
 @WebServlet("/SFlujoCaja")
 public class SFlujoCaja extends HttpServlet {
@@ -54,6 +57,8 @@ public class SFlujoCaja extends HttpServlet {
 		BigDecimal[] filaVariacionPorcentaje = new BigDecimal[12];
 		BigDecimal[] filaDesembolsos = new BigDecimal[12];
 		BigDecimal[] filaDesembolsosReal = new BigDecimal[12];
+		BigDecimal[] filaSaldoCuenta = new BigDecimal[12];
+		BigDecimal[] filaAnticipos = new BigDecimal[12];
 		BigDecimal[] filaSaldo = new BigDecimal[12];
 				
 		BigDecimal totalPlanificado = new BigDecimal(0);
@@ -64,6 +69,8 @@ public class SFlujoCaja extends HttpServlet {
 		BigDecimal totalVariacionPorcentaje = new BigDecimal(0);
 		BigDecimal totalDesembolsosReal = new BigDecimal(0);
 		BigDecimal totalDesembolsos = new BigDecimal(0);
+		BigDecimal totalSaldoCuenta = new BigDecimal(0);
+		BigDecimal totalAnticipos = new BigDecimal(0);
 		BigDecimal totalSaldo = new BigDecimal(0);
 
 	}
@@ -111,28 +118,35 @@ public class SFlujoCaja extends HttpServlet {
 		String response_text = "";
 
 		if(accion.equals("getFlujoCaja")){
-			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
-			Date fechaCorte = Utils.dateFromString(map.get("fechaCorte"));
-			List<CPrestamoCostos> lstPrestamo = getFlujoCaja(idPrestamo, fechaCorte, usuario);
-			
-			
-			if (null != lstPrestamo && !lstPrestamo.isEmpty()){
-				stTotales stTotales = getFlujoCajaTotales(lstPrestamo, fechaCorte, usuario);
-				String totales = new GsonBuilder().serializeNulls().create().toJson(stTotales);
-				response_text=new GsonBuilder().serializeNulls().create().toJson(lstPrestamo);
-		        response_text = String.join("", "\"prestamo\":",response_text);
-		        response_text = String.join("", response_text, ", \"totales\":",totales);
-		        response_text = String.join("", "{\"success\":true,", response_text, "}");
-			}else{
-				response_text = String.join("", "{\"success\":false}");
+			try{
+				Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
+				Integer idProyecto = Utils.String2Int(map.get("idProyecto"),0);
+				Date fechaCorte = Utils.dateFromString(map.get("fechaCorte"));
+				String lineaBase = map.get("lineaBase");
+				List<ObjetoCosto> lstPrestamo = getFlujoCaja(idPrestamo, idProyecto, fechaCorte, lineaBase, usuario);
+				
+				if (null != lstPrestamo && !lstPrestamo.isEmpty()){
+					stTotales stTotales = getFlujoCajaTotales(idPrestamo, lstPrestamo, fechaCorte, lineaBase, usuario);
+					String totales = new GsonBuilder().serializeNulls().create().toJson(stTotales);
+					response_text=new GsonBuilder().serializeNulls().create().toJson(lstPrestamo);
+			        response_text = String.join("", "\"prestamo\":",response_text);
+			        response_text = String.join("", response_text, ", \"totales\":",totales);
+			        response_text = String.join("", "{\"success\":true,", response_text, "}");
+				}else{
+					response_text = String.join("", "{\"success\":false}");
+				}
+			}catch(Exception e){
+				CLogger.write("1", SFlujoCaja.class, e);
 			}
 		}else if (accion.equals("exportarExcel")){
+			int prestamoId = Utils.String2Int(map.get("prestamoid"), 0);
 			int proyectoId = Utils.String2Int(map.get("proyectoid"), 0);
 			Date fechaCorte = Utils.dateFromString(map.get("fechaCorte"));
 			int agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
 			
 			try{
-		        byte [] outArray = exportarExcel(proyectoId, fechaCorte, agrupacion, usuario);
+				String lineaBase = map.get("lineaBase");
+				byte [] outArray = exportarExcel(prestamoId, proyectoId, fechaCorte, agrupacion, lineaBase, usuario);
 			
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
@@ -142,60 +156,60 @@ public class SFlujoCaja extends HttpServlet {
 				outStream.write(outArray);
 				outStream.flush();
 			}catch(Exception e){
-				CLogger.write("1", SFlujoCaja.class, e);
+				CLogger.write("2", SFlujoCaja.class, e);
 			}
 		}else if(accion.equals("exportarPdf")){
-//			CPdf archivo = new CPdf("Flujo de Caja");
-//			int proyectoId = Utils.String2Int(map.get("proyectoid"), 0);
-//			int anioInicio = Utils.String2Int(map.get("fechaInicio"), 0);
-//			int anioFin = Utils.String2Int(map.get("fechaFin"), 0);
-//			int agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
-//			int tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
-//			String headers[][];
-//			String datosMetas[][];
-//			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
-//			datosMetas = generarDatosFlujoCaja(proyectoId, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
-////			String path = archivo.ExportPdfFlujoCaja(headers, datosMetas,tipoVisualizacion);
-//			String path="";
-//			File file=new File(path);
-//			if(file.exists()){
-//		        FileInputStream is = null;
-//		        try {
-//		        	is = new FileInputStream(file);
-//		        }
-//		        catch (Exception e) {
-//		        	
-//		        }
-//		        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
-//		        
-//		        int readByte = 0;
-//		        byte[] buffer = new byte[2024];
-//
-//                while(true)
-//                {
-//                    readByte = is.read(buffer);
-//                    if(readByte == -1)
-//                    {
-//                        break;
-//                    }
-//                    outByteStream.write(buffer);
-//                }
-//                
-//                file.delete();
-//                
-//                is.close();
-//                outByteStream.flush();
-//                outByteStream.close();
-//                
-//		        byte [] outArray = Base64.encode(outByteStream.toByteArray());
-//				response.setContentType("application/pdf");
-//				response.setContentLength(outArray.length);
-//				response.setHeader("Cache-Control", "no-cache");  
-//				response.setHeader("Content-Disposition", "in-line; 'Flujo_de_Caja.pdf'");
-//				OutputStream outStream = response.getOutputStream();
-//				outStream.write(outArray);
-//				outStream.flush();
-//			}
+			try{
+				int proyectoId = Utils.String2Int(map.get("proyectoid"), 0);
+				int prestamoId = Utils.String2Int(map.get("prestamoid"), 0);
+				Date fechaCorte = Utils.dateFromString(map.get("fechaCorte"));
+				int agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
+	
+				CPdf archivo = new CPdf("Flujo de Caja");
+				String headers[][];
+				String datos[][];
+				headers = generarHeaders(fechaCorte, agrupacion);
+				String lineaBase = map.get("lineaBase");
+				datos = generarDatosFlujoCaja(prestamoId, proyectoId, fechaCorte, agrupacion, headers[0].length, lineaBase, usuario);
+				String path = archivo.ExportarPdfFlujoCaja(headers, datos, usuario);
+				File file=new File(path);
+				if(file.exists()){
+			        FileInputStream is = null;
+		        	is = new FileInputStream(file);
+			        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+			        
+			        int readByte = 0;
+			        byte[] buffer = new byte[2024];
+	
+	                while(true)
+	                {
+	                    readByte = is.read(buffer);
+	                    if(readByte == -1)
+	                    {
+	                        break;
+	                    }
+	                    outByteStream.write(buffer);
+	                }
+	                
+	                file.delete();
+	                
+	                is.close();
+	                outByteStream.flush();
+	                outByteStream.close();
+	                
+			        byte [] outArray = Base64.encode(outByteStream.toByteArray());
+					response.setContentType("application/pdf");
+					response.setContentLength(outArray.length);
+					response.setHeader("Cache-Control", "no-cache"); 
+					response.setHeader("Content-Disposition", "in-line; 'Flujo_Caja.pdf'");
+					OutputStream outStream = response.getOutputStream();
+					outStream.write(outArray);
+					outStream.flush();
+				}
+
+			}catch(Exception e){
+				CLogger.write("4", SFlujoCaja.class, e);
+			}
 			
 		}
 		else{
@@ -214,62 +228,62 @@ public class SFlujoCaja extends HttpServlet {
 		}
 	}
 	
-	private List<CPrestamoCostos> getFlujoCaja(int idPrestamo, Date fechaCorte, String usuario){
+	private List<ObjetoCosto> getFlujoCaja(int idPrestamo, int idProyecto, Date fechaCorte, String lineaBase, String usuario) throws SQLException{
 		DateTime fecha = new DateTime(fechaCorte);
 		Integer anio = fecha.getYear();
-		EstructuraProyectoDAO estructura = new EstructuraProyectoDAO();
-		List<CPrestamoCostos> lstPrestamo = estructura.getEstructuraConCostos(idPrestamo, anio, anio, usuario);
-		estructura = null;
+		List<ObjetoCosto> lstPrestamo = ObjetoDAO.getEstructuraConCosto(idProyecto, anio, anio, true, true, null, lineaBase, usuario);
 		return lstPrestamo;
 	}
 	
-	private stTotales getFlujoCajaTotales(List<CPrestamoCostos> lstPrestamo, Date fechaCorte, String usuario){
+	private stTotales getFlujoCajaTotales(Integer prestamoId, List<ObjetoCosto> lstPrestamo, Date fechaCorte, String lineaBase, String usuario) throws SQLException{
 		stTotales totales = new stTotales();		
-		
-		BigDecimal planificadoAcumulado = new BigDecimal(0);
-		BigDecimal ejecutadoAcumulado = new BigDecimal(0);
-		for(int i=0;i<lstPrestamo.size();i++){
-			CPrestamoCostos prestamo = lstPrestamo.get(i);
-			if(prestamo.getObjeto_tipo() == 1){				
-					for(int m=0; m<12; m++){
-						BigDecimal planificadoActual = prestamo.getAnios()[0].mes[m].planificado!=null ? prestamo.getAnios()[0].mes[m].planificado : new BigDecimal(0);
-						totales.filaPlanificado[m] = planificadoActual;
-						planificadoAcumulado = planificadoAcumulado.add(planificadoActual);
-						totales.filaPlanificadoAcumulado[m] = planificadoAcumulado;
-						totales.totalPlanificado = totales.totalPlanificado.add(planificadoActual); 
-						totales.totalPlanificadoAcumulado = planificadoAcumulado;
-						BigDecimal ejecutadoActual = prestamo.getAnios()[0].mes[m].real!=null ? prestamo.getAnios()[0].mes[m].real : new BigDecimal(0);
-						totales.filaEjecutado[m] = ejecutadoActual;
-						ejecutadoAcumulado = ejecutadoAcumulado.add(ejecutadoActual);
-						totales.filaEjecutadoAcumulado[m] = ejecutadoAcumulado;
-						totales.totalEjecutado = totales.totalEjecutado.add(ejecutadoActual); 
-						totales.totalEjecutadoAcumulado = ejecutadoAcumulado;
-						
-						totales.filaVariacion[m] = planificadoActual.subtract(ejecutadoActual);
-						totales.filaVariacionPorcentaje[m] = planificadoActual.compareTo(BigDecimal.ZERO)==0 ? new BigDecimal(0) : totales.filaVariacion[m].divide(planificadoActual);
-						
+		if(CMariaDB.connectAnalytic()){
+			Connection conn_analytic = CMariaDB.getConnection_analytic();
+			BigDecimal planificadoAcumulado = new BigDecimal(0);
+			BigDecimal ejecutadoAcumulado = new BigDecimal(0);
+			for(int i=0;i<lstPrestamo.size();i++){
+				ObjetoCosto prestamo = lstPrestamo.get(i);
+				if(prestamo.getObjeto_tipo() == 0){				
+						for(int m=0; m<12; m++){
+							BigDecimal planificadoActual = prestamo.getAnios()[0].mes[m].planificado!=null ? prestamo.getAnios()[0].mes[m].planificado : new BigDecimal(0);
+							totales.filaPlanificado[m] = planificadoActual;
+							planificadoAcumulado = planificadoAcumulado.add(planificadoActual);
+							totales.filaPlanificadoAcumulado[m] = planificadoAcumulado;
+							totales.totalPlanificado = totales.totalPlanificado.add(planificadoActual); 
+							totales.totalPlanificadoAcumulado = planificadoAcumulado;
+							BigDecimal ejecutadoActual = prestamo.getAnios()[0].mes[m].real!=null ? prestamo.getAnios()[0].mes[m].real : new BigDecimal(0);
+							totales.filaEjecutado[m] = ejecutadoActual;
+							ejecutadoAcumulado = ejecutadoAcumulado.add(ejecutadoActual);
+							totales.filaEjecutadoAcumulado[m] = ejecutadoAcumulado;
+							totales.totalEjecutado = totales.totalEjecutado.add(ejecutadoActual); 
+							totales.totalEjecutadoAcumulado = ejecutadoAcumulado;
+							totales.filaVariacion[m] = planificadoActual.subtract(ejecutadoActual);
+							totales.filaVariacionPorcentaje[m] = (planificadoActual.compareTo(BigDecimal.ZERO)==0 || totales.filaVariacion[m]==null) ? new BigDecimal(0) : totales.filaVariacion[m].divide(planificadoActual, 2, BigDecimal.ROUND_HALF_UP);
+							totales.totalVariacion = totales.totalVariacion.add(totales.filaVariacion[m]);
+							totales.filaSaldoCuenta[m] = null;
+							totales.filaAnticipos[m] = null;
+							totales.totalSaldoCuenta = null;
+							totales.totalAnticipos = null;
+						}
+	
+					DateTime fecha = new DateTime(fechaCorte);
+					Integer anioFinal = fecha.getYear();
+					Integer mesFinal = fecha.getMonthOfYear();
+					Date fechaInicial = Utils.dateFromString("01/01/"+ anioFinal);
+					List<?> objDesembolso =DesembolsoDAO.getDesembolsosEntreFechas(prestamo.getObjeto_id(),fechaInicial,fechaCorte, lineaBase);
+					for(int d=0; d<objDesembolso.size(); d++){
+						Integer anio = (Integer) ((Object[]) objDesembolso.get(d))[0];
+						Integer mes = (Integer) ((Object[]) objDesembolso.get(d))[1];
+						if (anio.compareTo((anioFinal)) == 0){
+							BigDecimal valor = (BigDecimal) ((Object[]) objDesembolso.get(d))[2];
+							totales.filaDesembolsos[mes-1] = totales.filaDesembolsos[mes-1]!=null ? totales.filaDesembolsos[mes-1].add(valor) : valor;
+							totales.totalDesembolsos = totales.totalDesembolsos!=null ? totales.totalDesembolsos.add(valor) : valor;
+						} 
 					}
-
-				DateTime fecha = new DateTime(fechaCorte);
-				Integer anioFinal = fecha.getYear();
-				Integer mesFinal = fecha.getMonthOfYear();
-				Date fechaInicial = Utils.dateFromString("01/01/"+ anioFinal);
-				List<?> objDesembolso =DesembolsoDAO.getDesembolsosEntreFechas(prestamo.getObjeto_id(),fechaInicial,fechaCorte);
-				for(int d=0; d<objDesembolso.size(); d++){
-					Integer anio = (Integer) ((Object[]) objDesembolso.get(d))[0];
-					Integer mes = (Integer) ((Object[]) objDesembolso.get(d))[1];
-					if (anio.compareTo((anioFinal)) == 0){
-						BigDecimal valor = (BigDecimal) ((Object[]) objDesembolso.get(d))[2];
-						totales.filaDesembolsos[mes-1] = totales.filaDesembolsos[mes-1]!=null ? totales.filaDesembolsos[mes-1].add(valor) : valor;
-						totales.totalDesembolsos = totales.totalDesembolsos!=null ? totales.totalDesembolsos.add(valor) : valor;
-					} 
-				}
-				
-				try {
-					Prestamo prestamoObj = PrestamoDAO.getPrestamoPorObjetoYTipo(prestamo.getObjeto_id(), prestamo.getObjeto_tipo());
-					if(prestamoObj!=null){
-						if(CMariaDB.connectAnalytic()){
-							Connection conn_analytic = CMariaDB.getConnection_analytic();
+					
+					Prestamo prestamoObj = PrestamoDAO.getObjetoPrestamoPorId(prestamoId);
+					
+					if(prestamoObj!=null){						
 							ArrayList<DesembolsoReal> desembolsosReal = DesembolsoDAO.getDesembolsosReales(prestamoObj.getCodigoPresupuestario(), 1, anioFinal, mesFinal, anioFinal, conn_analytic);
 							for(int d=0; d<desembolsosReal.size();d++){
 								DesembolsoReal desembolso = desembolsosReal.get(d); 
@@ -280,50 +294,46 @@ public class SFlujoCaja extends HttpServlet {
 									totales.totalDesembolsosReal = totales.totalDesembolsosReal!=null ? totales.totalDesembolsosReal.add(valor) : valor;
 								} 
 							}
-							
-							
-							conn_analytic.close();
-						}
 					}
-				} catch (SQLException e) {
-					CLogger.write("7", SFlujoCaja.class, e);
+					
+					//Calculo primer mes diferente
+					totales.filaDesembolsosReal[0] = totales.filaDesembolsosReal[0]!=null ? totales.filaDesembolsosReal[0] : new BigDecimal(0);
+					totales.filaSaldo[0] = totales.filaDesembolsosReal[0].add(totales.filaDesembolsos[0]!=null ? totales.filaDesembolsos[0] : new BigDecimal(0));
+					totales.filaSaldo[0] = totales.filaSaldo[0].subtract(totales.filaEjecutado[0]!=null ? totales.filaEjecutado[0] : new BigDecimal(0));
+					totales.totalSaldo = totales.filaSaldo[0]; 
+					for(int mes=1; mes<mesFinal; mes++){
+						totales.filaSaldo[mes-1] = totales.filaSaldo[mes-1]!=null ? totales.filaSaldo[mes-1] : new BigDecimal(0);
+						totales.filaSaldo[mes] = totales.filaSaldo[mes-1].add(totales.filaDesembolsos[mes]!=null ? totales.filaDesembolsos[mes] : new BigDecimal(0));
+						totales.filaSaldo[mes] = totales.filaSaldo[mes].subtract(totales.filaEjecutado[mes]!=null ? totales.filaEjecutado[mes] : new BigDecimal(0));
+						totales.totalSaldo = totales.totalSaldo.add(totales.filaSaldo[mes]);
+					}
+					for(int mes=mesFinal; mes<12; mes++){
+						totales.filaSaldo[mes-1] = totales.filaSaldo[mes-1]!=null ? totales.filaSaldo[mes-1] : new BigDecimal(0);
+						totales.filaSaldo[mes] = totales.filaSaldo[mes-1].add(totales.filaDesembolsos[mes]!=null ? totales.filaDesembolsos[mes] : new BigDecimal(0));
+						totales.filaSaldo[mes] = totales.filaSaldo[mes].subtract(totales.filaPlanificado[mes]!=null ? totales.filaPlanificado[mes] : new BigDecimal(0));
+						totales.totalSaldo = totales.totalSaldo.add(totales.filaSaldo[mes]);
+					}
+					break;
 				}
-				
-				//Calculo primer mes diferente
-				totales.filaDesembolsosReal[0] = totales.filaDesembolsosReal[0]!=null ? totales.filaDesembolsosReal[0] : new BigDecimal(0);
-				totales.filaSaldo[0] = totales.filaDesembolsosReal[0].add(totales.filaDesembolsos[0]!=null ? totales.filaDesembolsos[0] : new BigDecimal(0));
-				totales.filaSaldo[0] = totales.filaSaldo[0].subtract(totales.filaEjecutado[0]!=null ? totales.filaEjecutado[0] : new BigDecimal(0));
-				for(int mes=1; mes<mesFinal; mes++){
-					totales.filaSaldo[mes-1] = totales.filaSaldo[mes-1]!=null ? totales.filaSaldo[mes-1] : new BigDecimal(0);
-					totales.filaSaldo[mes] = totales.filaSaldo[mes-1].add(totales.filaDesembolsos[mes]!=null ? totales.filaDesembolsos[mes] : new BigDecimal(0));
-					totales.filaSaldo[mes] = totales.filaSaldo[mes].subtract(totales.filaEjecutado[mes]!=null ? totales.filaEjecutado[mes] : new BigDecimal(0));
-				}
-				for(int mes=mesFinal; mes<12; mes++){
-					totales.filaSaldo[mes-1] = totales.filaSaldo[mes-1]!=null ? totales.filaSaldo[mes-1] : new BigDecimal(0);
-					totales.filaSaldo[mes] = totales.filaSaldo[mes-1].add(totales.filaDesembolsos[mes]!=null ? totales.filaDesembolsos[mes] : new BigDecimal(0));
-					totales.filaSaldo[mes] = totales.filaSaldo[mes].subtract(totales.filaPlanificado[mes]!=null ? totales.filaPlanificado[mes] : new BigDecimal(0));
-				}
-				break;
 			}
+			conn_analytic.close();
 		}
-		
-		
 		return totales;
 	}
 	
-	private byte[] exportarExcel(int prestamoId, Date fechaCorte, int agrupacion, String usuario) throws IOException{
+	private byte[] exportarExcel(int prestamoId, int proyectoId, Date fechaCorte, int agrupacion, String lineaBase, String usuario) throws IOException{
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
-		String datosMetas[][];
+		String datos[][];
 		
 		Workbook wb=null;
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{		
 			excel = new CExcel("Flujo de Caja", false, null);
 			headers = generarHeaders(fechaCorte, agrupacion);
-			datosMetas = generarDatosFlujoCaja(prestamoId, fechaCorte, agrupacion, headers[0].length, usuario);
-			wb=excel.generateExcelOfData(datosMetas, "Flujo de Caja - Préstamo "+ProyectoDAO.getProyecto(prestamoId).getNombre(), headers, null, true, usuario);
+			datos = generarDatosFlujoCaja(prestamoId, proyectoId, fechaCorte, agrupacion, headers[0].length, lineaBase, usuario);
+			wb=excel.generateExcelOfData(datos, "Flujo de Caja - "+ProyectoDAO.getProyecto(prestamoId).getNombre(), headers, null, true, usuario);
 		
 		wb.write(outByteStream);
 		outArray = Base64.encode(outByteStream.toByteArray());
@@ -335,7 +345,7 @@ public class SFlujoCaja extends HttpServlet {
 	
 	private String[][] generarHeaders(Date fechaCorte, int agrupacion){
 		String headers[][];
-		String[][] AgrupacionesTitulo = new String[][]{{"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"},
+		String[][] AgrupacionesTitulo = new String[][]{{"Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"},
 			{"Bimestre 1", "Bimestre 2","Bimestre 3","Bimestre 4","Bimestre 5","Bimestre 6"},
 			{"Trimestre 1", "Trimestre 2", "Trimestre 3", "Trimestre 4"},
 			{"Cuatrimestre 1", "Cuatrimestre 2", "Cuatrimestre 3"},
@@ -393,24 +403,19 @@ public class SFlujoCaja extends HttpServlet {
 		return headers;
 	}
 	
-	public String[][] generarDatosFlujoCaja(int prestamoId, Date fechaCorte, int agrupacion, int columnasTotal, String usuario){
+	public String[][] generarDatosFlujoCaja(int prestamoId, int proyectoId, Date fechaCorte, int agrupacion, int columnasTotal, String lineaBase, String usuario) throws SQLException{
 		String[][] datos = null;
 		int columna = 0;
-		List<CPrestamoCostos> lstPrestamo = getFlujoCaja(prestamoId, fechaCorte, usuario);
+		List<ObjetoCosto> lstPrestamo = getFlujoCaja(prestamoId, proyectoId, fechaCorte, lineaBase, usuario);
 		if (lstPrestamo != null && !lstPrestamo.isEmpty()){
-			stTotales stTotales = getFlujoCajaTotales(lstPrestamo, fechaCorte, usuario);
+			stTotales stTotales = getFlujoCajaTotales(prestamoId, lstPrestamo, fechaCorte, lineaBase, usuario);
 			datos = new String[lstPrestamo.size()+9][columnasTotal];
 			for (int i=0; i<lstPrestamo.size(); i++){
 				columna = 0;
-				CPrestamoCostos prestamo = lstPrestamo.get(i);
-				String sangria;
-				switch (prestamo.getObjeto_tipo()){
-					case 1: sangria = ""; break;
-					case 2: sangria = "   "; break;
-					case 3: sangria = "      "; break;
-					case 4: sangria = "         "; break;
-					case 5: sangria = "            "; break;
-					default: sangria = "";
+				ObjetoCosto prestamo = lstPrestamo.get(i);
+				String sangria="";
+				for(int s=1; s<prestamo.getNivel(); s++){
+					sangria+="   ";
 				}
 				datos[i][columna] = sangria+prestamo.getNombre();
 				columna++;
@@ -419,7 +424,7 @@ public class SFlujoCaja extends HttpServlet {
 				BigDecimal total = new BigDecimal(0);
 				//Valores planificado-real
 				for(int a=0; a<prestamo.getAnios().length; a++){
-					CPrestamoCostos.stanio anio = prestamo.getAnios()[a];
+					ObjetoCosto.stanio anio = prestamo.getAnios()[a];
 					//Verificar nullos y volverlos 0
 					for(int m=0; m<12; m++){
 						anio.mes[m].planificado = anio.mes[m].planificado!=null ? anio.mes[m].planificado : new BigDecimal(0);

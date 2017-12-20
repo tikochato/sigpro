@@ -1,7 +1,7 @@
 var app = angular.module('responsablerolController',[]);
 
-app.controller('responsablerolController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','dialogoConfirmacion',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion) {
+app.controller('responsablerolController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','dialogoConfirmacion',
+	function($scope,$rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion) {
 	var mi = this;
 	
 	mi.totalResponsablesrol = 0;
@@ -251,7 +251,7 @@ app.controller('responsablerolController',['$scope','$http','$interval','i18nSer
 			});
 		}
 		else
-			$utilidades.mensaje('warning','Debe seleccionar el Préstamo que desea borrar');
+			$utilidades.mensaje('warning','Debe seleccionar el '+$rootScope.etiquetas.proyecto+' que desea borrar');
 	};
 	
 	mi.llamarModalBusqueda = function(servlet, accionServlet, datosCarga,columnaId,columnaNombre) {

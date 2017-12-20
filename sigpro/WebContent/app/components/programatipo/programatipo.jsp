@@ -24,7 +24,7 @@
 					<label class="btn btn-primary" ng-click="programatipoc.nuevo()" uib-tooltip="Nuevo">
 				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 				</shiro:hasPermission>
-				<shiro:hasPermission name="39010">
+				<shiro:hasPermission name="39020">
 					<label class="btn btn-primary" ng-click="programatipoc.editar()" uib-tooltip="Editar">
 				<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 				</shiro:hasPermission>
@@ -100,9 +100,10 @@
 						<label for="nombre" class="floating-label">* Nombre</label>
 				</div>
 				<div class="form-group">
-					<input type="text" class="inputText" id="descripcion" 
-						ng-model="programatipoc.programatipo.descripcion"  ng-value="programatipoc.programatipo.descripcion" onblur="this.setAttribute('value', this.value);" >
-					<label for="descripcion" class="floating-label">Descripción</label> 
+				   <textarea class="inputText" rows="4"
+				   ng-model="programatipoc.programatipo.descripcion" ng-value="programatipoc.programatipo.descripcion"   
+				   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+				   <label class="floating-label">Descripción</label>
 				</div>
 				<br />
 				<div align="center">

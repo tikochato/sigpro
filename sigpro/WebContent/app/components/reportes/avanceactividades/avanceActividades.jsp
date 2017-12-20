@@ -57,17 +57,43 @@
 	    	<div class="col-sm-12">
 	    		<div class="row">
     				<div class="panel panel-default" style="max-width:{{controller.tamanoPantalla}}px;">
-	  					<div class="panel-heading"><h3>Reporte de Avance</h3></div>
+	  					<div class="panel-heading"><h3>Reporte de Avance de Actividades e Hitos</h3></div>
 					</div>
 				</div>
     			<br>
-    			<div class="row" style="width: 100%; height: 15%">
-		    		<div class="form-group col-sm-5">
-						<select  class="inputText" ng-model="controller.prestamo"
-							ng-options="a.text for a in controller.prestamos" ng-change="controller.generar()"></select>
+    			<div class="row">
+		    		<div class="form-group col-sm-6" align="left">
+						<div id="prestamo" angucomplete-alt placeholder="" pause="100" selected-object="controller.cambioPrestamo"
+							  local-data="controller.lprestamos" search-fields="proyectoPrograma" title-field="proyectoPrograma" field-required="true" field-label="* Préstamo"
+							  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+							  initial-value="controller.prestamoNombre" focus-out="controller.blurPrestamo()" input-name="prestamo"></div>
+						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
 					</div>
-					<div class="form-group col-sm-3">
-						<input type="text"  class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" ng-model="controller.fechaCorte" is-open="controller.fi_abierto"
+		    	</div>
+		    	<div class="row">
+		    		<div class="form-group col-sm-6" align="left">
+						<div id="pep" angucomplete-alt placeholder="" pause="100" selected-object="controller.cambioPep"
+							  local-data="controller.peps" search-fields="nombre" title-field="nombre" field-required="true" 
+							  field-label="* {{etiquetas.proyecto}}"
+							  minlength="1" input-class="form-control form-control-small field-angucomplete inputText"
+							   match-class="angucomplete-highlight"
+							  initial-value="controller.pepNombre" focus-out="controller.blurPep()" input-name="pep"
+							   disable-input="controller.prestamoId==null"></div>
+						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+					</div>
+		    	</div>
+		    	<div class="row">
+		    		<div class="form-group col-sm-4" align="left">
+						<div id= "lineaBase" angucomplete-alt placeholder="" pause="100" selected-object="controller.cambioLineaBase"
+							  local-data="controller.lineasBase" search-fields="nombre" title-field="nombre" 
+							  field-required="true" field-label="* Linea Base" minlength="1" input-class="form-control form-control-small field-angucomplete inputText" 
+							  match-class="angucomplete-highlight" initial-value="controller.lineaBaseNombre" 
+							  focus-out="controller.blurLineaBase()" input-name="lineaBase"></div>
+						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+					</div>
+					<div class="form-group col-sm-2" style="margin-top: 5px;">
+						<input type="text"  class="inputText" uib-datepicker-popup="{{controller.formatofecha}}" alt-input-formats="{{controller.altformatofecha}}"
+							ng-model="controller.fechaCorte" is-open="controller.fi_abierto"
 				            datepicker-options="controller.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="controller.validarFecha(controller.fechaCorte)" 
 				            ng-required="true"
 				            ng-value="controller.fechaCorte" onblur="this.setAttribute('value', this.value);"/>
@@ -80,13 +106,13 @@
 		    			<div class="btn-group" role="group" aria-label="">
 							<label class="btn btn-default" ng-click="controller.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!controller.mostrardiv" role="button" tabindex="0" aria-hidden="false" style="">
 							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-							<label class="btn btn-default" ng-click="controller.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="!controller.mostrardiv">
+							<label class="btn btn-default" ng-click="controller.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="true">
 							<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 						</div>
 		    		</div>
-	    		</div>
+		    	</div>
 		    </div>
-		    <div class="col-sm-12">
+		    <div class="col-sm-12" style="margin-top: 20px;">
 	    		<div ng-hide="!controller.mostrarCargando" style="width: 100%; height: 400px;">
 		    		<div class="grid_loading" ng-hide="!controller.mostrarCargando">
 						<div class="msg">
@@ -98,7 +124,7 @@
 					</div>	
 	    		</div>
 		    	<div style="width: 100%; height: 85%;" ng-hide="!controller.mostrardiv">
-		    		<div class="row">
+		    		<div class="row" style="width: 90%;">
 		    			<div class="row">
 			    			<div class="col-sm-12">
 				    			<div style="height: 5%; width: 100%">
@@ -156,22 +182,26 @@
 			    				<div style="text-align: center" >
 					    			<label class="label-form2">Estado de Actividades</label>
 					    		</div>
+					    		<div style="width: 400px;">
 		    					<canvas id="pie" class="chart chart-pie"
   									chart-data="controller.dataPieProyecto" chart-labels="controller.labelsPieProyecto" 
   									chart-options="controller.optionsPieProyecto" chart-colors = "controller.pieColors" >
 								</canvas> 
+								</div>
 		    				</div>
 			    			<div class="form-group col-sm-6" align="center">
 			    				<div style="text-align: center" >
 		    						<label class="label-form2">Totales</label>
 		    					</div>
+		    					<div style="width: 400px;">
    								<canvas id="bar" class="chart chart-bar" chart-data="controller.dataBarraProyecto" chart-labels="controller.labelsBarProyecto" 
    									chart-options="controller.charOptions" chart-colors = "controller.pieColors" chart-series="controller.labelsPieProyecto">
    								</canvas>
+   								</div>
 		    				</div>
 		    			</div>
-		    			<br>
-		    			<div class="row" ng-hide="!controller.mostrarHitos">
+		    			<hr />
+		    			<div class="row" style="width: 90%;">
 			    			<div class="col-sm-12">
 				    			<div style="height: 5%; width: 100%">
 									<div><h4><b>Hitos</b></h4></div>
@@ -220,7 +250,7 @@
 								</div>
 				    		</div>
 		    			</div>
-		    			<br/>
+		    			<hr />
 		    			<div class="row" ng-hide="!controller.mostrarHitos">
 			    			<div class="form-group col-sm-6" align="center">
 			    				<div style="text-align: center" >
@@ -241,7 +271,7 @@
 		    				</div>
 		    			</div>
 		    			<br/>
-			    		<div class="row">
+			    		<div class="row" style="width: 90%;">
 				    		<div class="col-sm-12">
 								<div style="height: 5%; width: 100%">
 									<div><h4><b>Productos</b></h4></div>

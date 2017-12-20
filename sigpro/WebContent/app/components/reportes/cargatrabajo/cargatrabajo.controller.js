@@ -3,8 +3,8 @@ var app = angular.module('cargatrabajoController', ['ngTouch','smart-table','ivh
 
 
 
-app.controller('cargatrabajoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter,ivhTreeviewMgr) {
+app.controller('cargatrabajoController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
+	function($scope, $rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter,ivhTreeviewMgr) {
 	var mi = this;
 	i18nService.setCurrentLang('es');
 	
@@ -26,6 +26,94 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
     mi.actividadesterminadas = [];
     mi.estructuraPrestamo = [];
     mi.mostrarcargando=false;
+    mi.prestamoId=null;
+    
+    mi.lprestamos = [];
+	
+	
+	$http.post('/SPrestamo', {accion: 'getPrestamos', t: (new Date()).getTime()}).then(
+		function(response){
+			if(response.data.success){
+				mi.lprestamos = response.data.prestamos;
+			}	
+	});
+	
+	mi.blurPrestamo=function(){
+		if(document.getElementById("prestamo_value").defaultValue!=mi.prestamoNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','prestamo');
+		}
+	}
+	
+	mi.cambioPrestamo=function(selected){
+		if(selected!== undefined){
+			mi.prestamoNombre = selected.originalObject.proyectoPrograma;
+			mi.prestamoId = selected.originalObject.id;
+			$scope.$broadcast('angucomplete-alt:clearInput', 'pep');
+			$scope.$broadcast('angucomplete-alt:clearInput', 'lineaBase');
+			mi.getPeps(mi.prestamoId);
+		}
+		else{
+			mi.prestamoNombre="";
+			mi.prestamoId=null;
+		}
+	}
+	
+	mi.blurPep=function(){
+		if(document.getElementById("pep_value").defaultValue!=mi.pepNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','pep');
+		}
+	}
+	
+	mi.cambioPep=function(selected){
+		if(selected!== undefined){
+			mi.pepNombre = selected.originalObject.nombre;
+			mi.pepId = selected.originalObject.id;
+			$scope.$broadcast('angucomplete-alt:clearInput', 'lineaBase');
+			mi.getLineasBase(mi.pepId);			
+		}
+		else{
+			mi.pepNombre="";
+			mi.pepId="";
+		}
+	}
+	
+	mi.blurLineaBase=function(){
+		if(document.getElementById("lineaBase_value").defaultValue!=mi.lineaBaseNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+		}
+	};
+	
+	mi.cambioLineaBase=function(selected){
+		if(selected!== undefined){
+			mi.lineaBaseNombre = selected.originalObject.nombre;
+			mi.lineaBaseId = selected.originalObject.id;
+			mi.getEstructura();
+		}
+		else{
+			mi.lineaBaseNombre="";
+			mi.lineaBaseId=null;
+		}
+	};
+	
+	mi.getPeps = function(prestamoId){
+		$http.post('/SProyecto',{accion: 'getProyectos', prestamoid: prestamoId}).success(
+			function(response) {
+				mi.peps = [];
+				if (response.success){
+					mi.peps = response.entidades;
+				}
+		});	
+	}
+	
+	mi.getLineasBase = function(proyectoId){
+		$http.post('/SProyecto',{accion: 'getLineasBase', proyectoId: proyectoId}).success(
+			function(response) {
+				mi.lineasBase = [];
+				if (response.success){
+					mi.lineasBase = response.lineasBase;
+				}
+		});	
+	}
     
     
     mi.pieColors = ['#fd7b7d','#dddd7d','#bae291','#9cc3e2'];
@@ -33,18 +121,17 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
     mi.lineColors = ['#9cc3e2'];
     
     
-    	mi.optionsPie = {
-    			
-			legend: {
-				display: true,
-				position: 'right'
-			},
-			pieceLabel: {
-			    render: 'percentage',
-			    fontColor: ['green', 'white', 'red'],
-			    precision: 2
-			  }
-			  };
+	mi.optionsPie = {	
+		legend: {
+			display: true,
+			position: 'right'
+		},
+		pieceLabel: {
+		    render: 'percentage',
+		    fontColor: ['green', 'white', 'red'],
+		    precision: 2
+		}
+	};
     	
     	
     	
@@ -105,23 +192,9 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 			$location.path('/cargatrabajo/rv');
 	}
     
-    $http.post('/SProyecto',{accion: 'getProyectos',
-		t: new Date().getTime()}).success(
-		function(response) {
-			mi.prestamos = []; 
-			mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un préstamo'});
-			if (response.success){
-				for (var i = 0; i < response.entidades.length; i++){
-					mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
-				}
-				mi.prestamo = mi.prestamos[0];
-								
-			}
-		});
-    
 	mi.tObjetos = [
 		{value: 0,text: "Seleccione una Opción"},
-		{value: 1,text: 'Préstamo'},
+		{value: 1,text: $rootScope.etiquetas.proyecto},
 		{value: 2,text: 'Componente'},
 		{value: 3,text: 'Producto'},
 		{value: 4,text: 'Sub Producto'}
@@ -143,7 +216,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 			{value: 0, text: "Seleccione una opción"}
 		]
 		
-		mi.prestamos = [
+		mi.peps = [
 			{value: 0,text: "Seleccione una opción"}
 		];
 		
@@ -161,7 +234,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 		
 		mi.entidad = mi.entidades[0];
 		mi.unidadEjecutora = mi.unidadesEjecutoras[0];
-		mi.prestamo = mi.prestamos[0];
+		mi.pep = mi.peps[0];
 		mi.componente = mi.componentes[0];
 		mi.producto = mi.productos[0];
 		mi.subProducto = mi.subProductos[0];
@@ -172,7 +245,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 		if(objetoSeleccionado === 0){
 			mi.entidadHide = false;
 			mi.unidadEjecutoraHide = false;
-			mi.prestamoHide = false;
+			mi.pepHide = false;
 			mi.componenteHide = false;
 			mi.productoHide = false;
 			mi.subProductoHide = false;
@@ -180,7 +253,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 		}else if(objetoSeleccionado === 1){
 			mi.entidadHide = true;
 			mi.unidadEjecutoraHide = true;
-			mi.prestamoHide = true;
+			mi.pepHide = true;
 			mi.componenteHide = false;
 			mi.productoHide = false;
 			mi.subProductoHide = false;
@@ -189,7 +262,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 		}else if(objetoSeleccionado === 2){
 			mi.entidadHide = true;
 			mi.unidadEjecutoraHide = true;
-			mi.prestamoHide = true;
+			mi.pepHide = true;
 			mi.componenteHide = true;
 			mi.productoHide = false;
 			mi.subProductoHide = false;
@@ -198,7 +271,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 		}else if (objetoSeleccionado === 3){
 			mi.entidadHide = true;
 			mi.unidadEjecutoraHide = true;
-			mi.prestamoHide = true;
+			mi.pepHide = true;
 			mi.componenteHide = true;
 			mi.productoHide = true;
 			mi.subProductoHide = false;
@@ -207,7 +280,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 		}else if (objetoSeleccionado === 4){
 			mi.entidadHide = true;
 			mi.unidadEjecutoraHide = true;
-			mi.prestamoHide = true;
+			mi.pepHide = true;
 			mi.componenteHide = true;
 			mi.productoHide = true;
 			mi.subProductoHide = true;
@@ -247,12 +320,15 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 	
 	mi.generar = function(){
 		
-		if (mi.tObjeto.value == 1 || mi.prestamo.value != 0){
+		if (mi.tObjeto.value == 1 || mi.pepId != 0){
 			mi.grafica = true;
-			mi.idPrestamo = mi.prestamo.value;
+			mi.idPrestamo = mi.pepId;
 			mi.mostrar = false;
 			mi.mostrarcargando=true;
-			$http.post('/SCargaTrabajo', {accion: 'getEstructrua', idPrestamo :mi.prestamo.value,
+			$http.post('/SCargaTrabajo', {
+				accion: 'getEstructrua', 
+				idPrestamo :mi.pepId,
+				lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				t: new Date().getTime()}).success(
 					function(response){
 						mi.estructuraPrestamo = response.estructura;
@@ -270,6 +346,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 									idProductos:idProductos,
 									idSubproductos:idSubproductos,
 									anio_inicio:mi.fechaInicio,
+									lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 									anio_fin: mi.fechaFin,
 									t: new Date().getTime()
 									
@@ -314,6 +391,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 									idSubproductos:idSubproductos,
 									anio_inicio:mi.fechaInicio,
 									anio_fin: mi.fechaFin,
+									lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 									t: new Date().getTime()
 									
 									
@@ -325,17 +403,14 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 										
 										var aniotemp=0;
 										for (x in mi.actividadesterminadas ){
-											
-											
 											if (x > 0 ){
 												var sigueinteMes = mi.obtenerSiguienteMes(mestemp,aniotemp);
-												while (sigueinteMes.mes < mi.actividadesterminadas[x].mes 
-														|| sigueinteMes.anio < mi.actividadesterminadas[x].anio){
+												while (sigueinteMes.mes < mi.actividadesterminadas[x].mes || sigueinteMes.anio < mi.actividadesterminadas[x].anio){
 													mi.dataChartLine.push(0);
 													mi.etiquetasChartLine.push (mi.obtenerMes(sigueinteMes.mes) + 
 															(mi.fechaInicio != mi.fechaFin ? "-" + sigueinteMes.anio : ""));
 													
-						sigueinteMes = mi.obtenerSiguienteMes(sigueinteMes.mes,sigueinteMes.anio);	
+													sigueinteMes = mi.obtenerSiguienteMes(sigueinteMes.mes,sigueinteMes.anio);	
 												}
 											}
 											mi.dataChartLine.push(mi.actividadesterminadas[x].total)
@@ -460,7 +535,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 	
 	mi.getEstructura = function (){
 		
-		if(mi.prestamo.value > 0)
+		if(mi.pepId > 0)
 		{
 			if(mi.fechaInicio != null && mi.fechaInicio.toString().length == 4 && 
 					mi.fechaFin != null && mi.fechaFin.toString().length == 4)
@@ -505,7 +580,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 	};
 	
 	mi.filtrarEstrucrura = function(titulo, mensaje){
-		var resultado = mi.llamarModal(mi.prestamo.value); 
+		var resultado = mi.llamarModal(mi.pepId); 
 		mi.mostrar = false;
 		resultado.then(function(itemSeleccionados) {
 			mi.objetosSeleccionados = itemSeleccionados;
@@ -601,7 +676,7 @@ app.controller('cargatrabajoController',['$scope','$http','$interval','i18nServi
 	
 	
 	mi.actividadesResponsable = function(valor){
-		var resultado = mi.llamarModalEstructuraResponsable(mi.prestamo.value,valor.id,mi.fechaInicio,mi.fechaFin);
+		var resultado = mi.llamarModalEstructuraResponsable(mi.pepId,valor.id,mi.fechaInicio,mi.fechaFin);
 	};
 	
 	
@@ -724,15 +799,14 @@ function modalEstructuraResponsable($uibModalInstance, $scope, $http, $interval,
 	
 	mi.model = [];
 	mi.idsResponsables = $idresponsable;
+	mi.buttonText = { buttonDefaultText: "Seleccione colaborador" };
 	
 	mi.settings = { 
 			keyboardControls: true, 
 			enableSearch: false, 
 			smartButtonMaxItems: 10,
 			showCheckAll: false,
-			showUncheckAll: false,
-			buttonDefaultText: "Seleccione colaborador"
-			
+			showUncheckAll: false
 	};
 	
 	$http.post('/SCargaTrabajo', {
@@ -786,7 +860,7 @@ function modalEstructuraResponsable($uibModalInstance, $scope, $http, $interval,
 	        case 4:
 	            return 'glyphicon glyphicon-link';
 	        case 5:
-	            return 'glyphicon glyphicon-th-list';
+	            return 'glyphicon glyphicon-time';
 	    }
 	};
 	

@@ -15,6 +15,7 @@ import pojo.Meta;
 import pojo.MetaAvance;
 import pojo.MetaPlanificado;
 import utilities.CHibernateSession;
+import utilities.CHistoria;
 import utilities.CLogger;
 
 public class MetaDAO {
@@ -159,7 +160,7 @@ public class MetaDAO {
 		List<Meta> ret = new ArrayList<Meta>();
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String query = "SELECT m FROM Meta m WHERE m.estado = 1 and m.objetoId=:objetoId AND m.objetoTipo=:objetoTipo ";
+			String query = "SELECT m FROM Meta m WHERE m.estado = 1 and m.objetoId=:objetoId AND m.objetoTipo=:objetoTipo and m.objetoId > 0 ";
 			
 			Query<Meta> criteria = session.createQuery(query,Meta.class);
 			criteria.setParameter("objetoId", id);
@@ -267,19 +268,22 @@ public class MetaDAO {
 		return ret;
 	}
 	
-	public static List<Meta> getMetasPorObjeto(Integer objetoId, Integer objetoTipo){
+	public static List<Meta> getMetasPorObjeto(Integer objetoId, Integer objetoTipo,String lineaBase){
 		List<Meta> ret=null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = String.join(" ", "select  *",
-				"from meta m",
+				"from sipro_history.meta m",
 				"where m.objeto_id = ?1",
 				"and m.objeto_tipo = ?2",
-				"and m.dato_tipoid in (2,3)");
+				"and m.dato_tipoid in (2,3)",
+				lineaBase != null ? "and m.linea_base = ?3" : "and m.actual = 1");
 			
 			Query<Meta> metavalor = session.createNativeQuery(query,Meta.class);
 			metavalor.setParameter("1", objetoId);
 			metavalor.setParameter("2", objetoTipo);
+			if (lineaBase != null)
+				metavalor.setParameter("3", lineaBase);
 			
 			ret =  metavalor.getResultList();
 		}
@@ -292,18 +296,20 @@ public class MetaDAO {
 		return ret;
 	}
 	
-	public static List<MetaPlanificado> getMetasPlanificadas(Integer metaId){
+	public static List<MetaPlanificado> getMetasPlanificadas(Integer metaId,String lineaBase){
 		List<MetaPlanificado> ret=null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			String query = String.join(" ", "select *",
-					"from meta_planificado mp",
+					"from sipro_history.meta_planificado mp",
 					"where mp.metaid = ?1",
-					"and mp.estado = 1");
+					"and mp.estado = 1",
+					lineaBase != null ? "and mp.linea_base = ?2": "and mp.actual = 1");
 			
 			Query<MetaPlanificado> metavalor = session.createNativeQuery(query,MetaPlanificado.class);
 			metavalor.setParameter("1", metaId);
-			
+			if (lineaBase != null)
+				metavalor.setParameter("2", lineaBase);
 			ret =  metavalor.getResultList();
 		}
 		catch(Throwable e){
@@ -333,5 +339,71 @@ public class MetaDAO {
 			session.close();
 		}
 		return ret;
+	}
+	
+	public static List<Meta> getMetasObjetoLineaBase(int id, int tipo, String lineaBase){
+		List<Meta> ret = new ArrayList<Meta>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = "SELECT id, nombre, descripcion, usuario_creo, usuario_actualizo, fecha_creacion, fecha_actualizacion, "
+					+ "estado, meta_unidad_medidaid, dato_tipoid, objeto_id, objeto_tipo, meta_final_entero, meta_final_string, "
+					+ "meta_final_decimal, meta_final_fecha "
+					+ "FROM sipro_history.meta m "
+					+ "WHERE m.estado = 1 and m.objeto_id=?1 "
+					+ "AND m.objeto_tipo=?2 "
+					+" and m.objeto_id > 0 ";
+			
+			query += lineaBase!=null ? " and m.linea_base like '%"+lineaBase+"%' " : " and m.actual = 1 ";
+			
+			Query<Meta> metavalor = session.createNativeQuery(query,Meta.class);
+			metavalor.setParameter("1", id);
+			metavalor.setParameter("2", tipo);
+			
+			ret =  metavalor.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("15", MetaDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static String getVersiones(Integer objeto_id, Integer objeto_tipo){
+		String resultado = "";
+		String query = "SELECT DISTINCT(version) "
+			+ "FROM sipro_history.meta "
+			+ "WHERE objeto_id="+ objeto_id
+			+ " AND objeto_tipo="+objeto_tipo;
+		List<?> versiones = CHistoria.getVersiones(query);
+		if(versiones!=null){
+			for(int i=0; i<versiones.size(); i++){
+				if(!resultado.isEmpty()){
+					resultado+=",";
+				}
+				resultado+=(Integer)versiones.get(i);
+			}
+		}
+		return resultado;
+	}
+	
+	public static String getHistoria(Integer objeto_id, Integer objeto_tipo, Integer version){
+		String resultado = "";
+		String query = "SELECT m.version, m.nombre, m.descripcion, mum.nombre as unidad_medida, dt.nombre as dato_tipo, "
+			+ "IFNULL(m.meta_final_entero, m.meta_final_decimal) meta_final, m.usuario_creo, m.usuario_actualizo, "
+			+ "m.fecha_creacion, m.fecha_actualizacion, m.estado "
+			+ "FROM sipro_history.meta m, sipro_history.meta_unidad_medida mum, sipro.dato_tipo dt "
+			+ "WHERE mum.id=m.meta_unidad_medidaid "
+			+ "AND dt.id=m.dato_tipoid "
+			+ "AND m.objeto_id=" + objeto_id
+			+ " AND m.objeto_tipo=" + objeto_tipo
+			+ " AND m.version=" + version;
+		
+		String [] campos = {"Version", "Nombre", "Descripción", "Unidad Medida", "Tipo de Dato", 
+				"Meta Final", "Usuario Creo", "Usuario Actualizó", "Fecha de Creación", "Fecha de Actualización", 
+				"Estado"};
+		resultado = CHistoria.getHistoria(query, campos);
+		return resultado;
 	}
 }

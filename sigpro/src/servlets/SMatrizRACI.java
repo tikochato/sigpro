@@ -30,6 +30,7 @@ import com.google.gson.reflect.TypeToken;
 import dao.ActividadDAO;
 import dao.AsignacionRaciDAO;
 import dao.ComponenteDAO;
+import dao.SubComponenteDAO;
 import dao.EstructuraProyectoDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
@@ -40,6 +41,7 @@ import pojo.Colaborador;
 import pojo.Componente;
 import pojo.Producto;
 import pojo.Proyecto;
+import pojo.Subcomponente;
 import pojo.Subproducto;
 import utilities.CExcel;
 import utilities.CLogger;
@@ -118,8 +120,8 @@ public class SMatrizRACI extends HttpServlet {
 		if(accion.equals("getMatriz")){
 			List<stmatriz> lstMatriz;
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
-			
-			lstMatriz = getMatriz(idPrestamo);
+			String lineaBase = map.get("lineaBase");
+			lstMatriz = getMatriz(idPrestamo, lineaBase);
 			boolean sinColaborador = false;
 			List<stcolaborador> stcolaboradores = getColaboradores(idPrestamo, usuario);
 			if (stcolaboradores.size() ==0){
@@ -156,17 +158,22 @@ public class SMatrizRACI extends HttpServlet {
 		}else if(accion.equals("getInformacionTarea")){
 			Integer objetoId = Utils.String2Int(map.get("objetoId"),0);
 			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"),0);
+			String lineaBase = map.get("lineaBase");
 			String rol = map.get("rol");
 			stinformacion informacion = new stinformacion();
 			
 			switch (objetoTipo){
-			case 1:
+			case 0:
 				Proyecto proyecto = ProyectoDAO.getProyectoPorId(objetoId, usuario);
 				informacion.nombreTarea = proyecto.getNombre();
 			break;
-			case 2:
+			case 1:
 				Componente componente = ComponenteDAO.getComponentePorId(objetoId, usuario);
 				informacion.nombreTarea = componente.getNombre();
+			break;
+			case 2:
+				Subcomponente subcomponente = SubComponenteDAO.getSubComponentePorId(objetoId, usuario);
+				informacion.nombreTarea = subcomponente.getNombre();
 			break;
 			case 3:
 				Producto producto = ProductoDAO.getProductoPorId(objetoId, usuario);
@@ -176,13 +183,13 @@ public class SMatrizRACI extends HttpServlet {
 				Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId, usuario);
 				informacion.nombreTarea = subproducto.getNombre();
 			break;
-				case 5:
-					Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
-					informacion.nombreTarea = actividad.getNombre();
-				break;
+			case 5:
+				Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
+				informacion.nombreTarea = actividad.getNombre();
+			break;
 			}
 			
-			AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(objetoId, objetoTipo, rol);
+			AsignacionRaci asignacion = AsignacionRaciDAO.getAsignacionPorRolTarea(objetoId, objetoTipo, rol, lineaBase);
 			
 			if (rol.equalsIgnoreCase("R")){
 				informacion.rol = "Responsable";
@@ -208,7 +215,7 @@ public class SMatrizRACI extends HttpServlet {
 		}else if  (accion.equals("getAsignacionPorObjeto")){
 			Integer objetoId = Utils.String2Int(map.get("objetoId"),0);
 			Integer objetoTipo = Utils.String2Int(map.get("objetoTipo"),0);
-			List<AsignacionRaci> asignaciones  = AsignacionRaciDAO.getAsignacionesRaci(objetoId, objetoTipo);
+			List<AsignacionRaci> asignaciones  = AsignacionRaciDAO.getAsignacionesRaci(objetoId, objetoTipo, null);
 			List<stasignacion> asignacionesRet = new ArrayList<>();
 			for (AsignacionRaci asignacion : asignaciones){
 				stasignacion temp = new stasignacion();
@@ -226,7 +233,7 @@ public class SMatrizRACI extends HttpServlet {
 			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 			
 			try{
-	        byte [] outArray = exportarExcel(idPrestamo, usuario);
+				byte [] outArray = exportarExcel(idPrestamo, null, usuario);
 		
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
@@ -245,7 +252,7 @@ public class SMatrizRACI extends HttpServlet {
 			String datos[][];
 			List<stcolaborador> colaboradores = getColaboradores(idPrestamo, usuario);
 			headers = generarHeaders(colaboradores);
-			datos = generarDatos(idPrestamo, colaboradores, usuario);
+			datos = generarDatos(idPrestamo, colaboradores, null, usuario);
 			String path = archivo.exportarMatrizRaci(headers, datos,usuario);
 			File file=new File(path);
 			if(file.exists()){
@@ -304,9 +311,9 @@ public class SMatrizRACI extends HttpServlet {
 	
 	}
 	
-	private List<stmatriz> getMatriz(Integer idPrestamo){
+	private List<stmatriz> getMatriz(Integer idPrestamo, String lineaBase){
 		List<stmatriz> lstMatriz= new ArrayList<>();
-		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
+		List<?> estructuraProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo, lineaBase);
 		for(Object objeto : estructuraProyecto){
 			Object[] obj = (Object[]) objeto;
 			stmatriz tempmatriz = new stmatriz();
@@ -314,7 +321,7 @@ public class SMatrizRACI extends HttpServlet {
 			tempmatriz.objetoNombre = (String)obj[1];
 			tempmatriz.nivel = (obj[3]!=null) ? ((String)obj[3]).length()/8 : 0;
 			tempmatriz.objetoTipo = ((BigInteger) obj[2]).intValue();
-			getAsignacionRACI(tempmatriz);
+			getAsignacionRACI(tempmatriz, lineaBase);
 			lstMatriz.add(tempmatriz);
 		}
 		return lstMatriz;
@@ -325,7 +332,7 @@ public class SMatrizRACI extends HttpServlet {
 		Proyecto proyecto = ProyectoDAO.getProyectoPorId(idPrestamo, usuario);
 		
 		if(proyecto != null){
-			List<Colaborador> colaboradores = AsignacionRaciDAO.getColaboradoresPorProyecto(idPrestamo);
+			List<Colaborador> colaboradores = AsignacionRaciDAO.getColaboradoresPorProyecto(idPrestamo, null);
 			stcolaboradores = new ArrayList<stcolaborador>();
 			for (Colaborador colaborador : colaboradores){
 				stcolaborador temp = new stcolaborador();
@@ -338,8 +345,8 @@ public class SMatrizRACI extends HttpServlet {
 		return stcolaboradores;
 	}
 	
-	public void getAsignacionRACI(stmatriz item){
-		List<AsignacionRaci> asignaciones = AsignacionRaciDAO.getAsignacionesRaci(item.objetoId,item.objetoTipo);
+	public void getAsignacionRACI(stmatriz item, String lineaBase){
+		List<AsignacionRaci> asignaciones = AsignacionRaciDAO.getAsignacionesRaci(item.objetoId,item.objetoTipo, lineaBase);
 		if (!asignaciones.isEmpty()){
 			for (AsignacionRaci asignacion: asignaciones){
 				
@@ -360,7 +367,7 @@ public class SMatrizRACI extends HttpServlet {
 		}
 	}
 	
-	private byte[] exportarExcel(Integer idPrestamo, String usuario) throws IOException{
+	private byte[] exportarExcel(Integer idPrestamo, String lineaBase, String usuario) throws IOException{
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -392,9 +399,10 @@ public class SMatrizRACI extends HttpServlet {
 			}
 			
 			headers = generarHeaders(colaboradores);
-			datos = generarDatos(idPrestamo, colaboradores, usuario);
+			datos = generarDatos(idPrestamo, colaboradores, lineaBase, usuario);
 			excel = new CExcel("Matriz RACI", false, null);
-			wb=excel.generateExcelOfData(datos, "Matriz RACI", headers, null, true, usuario);
+			Proyecto proyecto = ProyectoDAO.getProyecto(idPrestamo);
+			wb=excel.generateExcelOfData(datos, "Matriz RACI - "+proyecto.getNombre(), headers, null, true, usuario);
 			wb.write(outByteStream);
 			outArray = Base64.encode(outByteStream.toByteArray());
 			
@@ -434,22 +442,17 @@ public class SMatrizRACI extends HttpServlet {
 		return headers;
 	}
 	
-	public String[][] generarDatos(Integer idPrestamo, List<stcolaborador> colaboradores, String usuario){
-		List<stmatriz> stmatriz = getMatriz(idPrestamo);
+	public String[][] generarDatos(Integer idPrestamo, List<stcolaborador> colaboradores, String lineaBase, String usuario){
+		List<stmatriz> stmatriz = getMatriz(idPrestamo, lineaBase);
 		String[][] datos = null;
 		
 		if(stmatriz!= null && colaboradores!=null){
 			datos = new String[stmatriz.size()][colaboradores.size()+1];
 			for (int i=0; i<stmatriz.size(); i++){
 				stmatriz matriz = stmatriz.get(i);
-				String sangria;
-				switch (matriz.objetoTipo){
-					case 1: sangria = ""; break;
-					case 2: sangria = "   "; break;
-					case 3: sangria = "      "; break;
-					case 4: sangria = "         "; break;
-					case 5: sangria = "            "; break;
-					default: sangria = "";
+				String sangria="";
+				for(int s=1; s<matriz.nivel; s++){
+					sangria+="   ";
 				}
 				datos[i][0]=sangria+matriz.objetoNombre;
 				for(int c=0; c<colaboradores.size(); c++){

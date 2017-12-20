@@ -12,7 +12,7 @@ import org.hibernate.query.Query;
 import pojo.Actividad;
 import pojo.Componente;
 import pojo.Producto;
-import pojo.Proyecto;
+import pojo.Subcomponente;
 import pojo.Subproducto;
 import pojo.TipoAdquisicion;
 import utilities.CHibernateSession;
@@ -96,27 +96,36 @@ public class TipoAdquisicionDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		int cooperanteCodigo=0;
 		switch(objetoTipo){
+			case 1:
+				Componente componente = ComponenteDAO.getComponente(objetoId);
+				cooperanteCodigo = componente.getProyecto().getPrestamo().getCooperante().getCodigo();
+				break;
+			case 2:
+				Subcomponente subcomponente = SubComponenteDAO.getSubComponente(objetoId);
+				cooperanteCodigo = subcomponente.getComponente().getProyecto().getPrestamo().getCooperante().getCodigo();
+				break;
 			case 3: 
 				Producto producto = ProductoDAO.getProductoPorId(objetoId);
-				cooperanteCodigo = producto.getComponente().getProyecto().getCooperante().getCodigo();
+				if(producto.getComponente()!=null){
+					cooperanteCodigo = producto.getComponente().getProyecto().getPrestamo().getCooperante().getCodigo();
+				}else if(producto.getSubcomponente()!=null){
+					cooperanteCodigo = producto.getSubcomponente().getComponente().getProyecto().getPrestamo().getCooperante().getCodigo();
+				} 
 				break;
 			case 4: 
 				Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId);
-				cooperanteCodigo = subproducto.getProducto().getComponente().getProyecto().getCooperante().getCodigo();
+				if(subproducto.getProducto().getComponente()!=null){
+					cooperanteCodigo = subproducto.getProducto().getComponente().getProyecto().getPrestamo().getCooperante().getCodigo();
+				}else if(subproducto.getProducto().getSubcomponente()!=null){
+					cooperanteCodigo = subproducto.getProducto().getSubcomponente().getComponente().getProyecto().getPrestamo().getCooperante().getCodigo();
+				} 
 				break;
 			case 5: 
 				Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
-				if(actividad.getProyectoBase()!=null){
-					Proyecto proyecto = ProyectoDAO.getProyecto(actividad.getProyectoBase());
-					cooperanteCodigo = (proyecto!=null) ? proyecto.getCooperante().getCodigo() : 0;
-				}
-				else if(actividad.getComponenteBase()!=null){
-					Componente componente = ComponenteDAO.getComponente(actividad.getComponenteBase());
-					cooperanteCodigo = (componente!=null) ? componente.getProyecto().getCooperante().getCodigo() : 0;
-				}
-				else if(actividad.getProductoBase()!=null){
-					Producto tproducto = ProductoDAO.getProductoPorId(actividad.getProductoBase());
-					cooperanteCodigo = (tproducto!=null) ? tproducto.getComponente().getProyecto().getCooperante().getCodigo() : 0;
+				if(actividad.getTreePath()!=null){
+					Integer proyectoId = Integer.parseInt(actividad.getTreePath().substring(0,8))-10000000;
+					if(proyectoId!=null)
+						cooperanteCodigo = ProyectoDAO.getProyecto(proyectoId).getPrestamo().getCooperante().getCodigo();
 				}
 				break;
 		}

@@ -96,18 +96,18 @@
 			      <label class="floating-label">* Nombre</label>
 				</div>
 				
-				<div class="form-group">
-					<input type="text" ng-model="controller.responsableRol.descripcion"
-						class="inputText" id="campo2" 
-						ng-value="controller.responsableRol.descripcion" onblur="this.setAttribute('value', this.value);">
-					<label for="campo2" class="floating-label">Descripción</label>
-				</div>
-				
 				<div class="form-group" >
 		            	<input type="text" class="inputText" id="iproyt" name="iproyt" ng-model="controller.responsableRol.responsableTipoNombre" ng-value="controller.responsableRol.responsableTipoNombre" 
 		            		ng-click="controller.buscarResponsableTipo()" onblur="this.setAttribute('value', this.value);" ng-readonly="true" ng-required="true"/>
 		            	<span class="label-icon" ng-click="controller.buscarResponsableTipo()"><i class="glyphicon glyphicon-search"></i></span>
 		          	<label for="campo3" class="floating-label">* Tipo de Responsable</label>
+				</div>
+				
+				<div class="form-group">
+				   <textarea class="inputText" rows="4"
+				   ng-model="controller.responsableRol.descripcion" ng-value="controller.responsableRol.descripcion"   
+				   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+				   <label class="floating-label">Descripción</label>
 				</div>
 			
 				<div class="panel panel-default">

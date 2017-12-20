@@ -25,7 +25,7 @@
 			       			<span class="glyphicon glyphicon-plus"></span>Nuevo
 			       		</label>
 			       </shiro:hasPermission> 
-			       <shiro:hasPermission name="15010">
+			       <shiro:hasPermission name="15020">
 			       		<label class="btn btn-primary" ng-click="hitoc.editar()">
 			       			<span class="glyphicon glyphicon-pencil"></span>Editar
 			       		</label>
@@ -109,7 +109,8 @@
 						</div>
 						<div class="form-group">
 							
-							<input type="text" class="inputText" uib-datepicker-popup="{{hitoc.formatofecha}}" ng-model="hitoc.fecha" 
+							<input type="text" class="inputText" uib-datepicker-popup="{{hitoc.formatofecha}}" alt-input-formats="{{hitoc.altformatofecha}}"
+								ng-model="hitoc.fecha" 
 	    						is-open="hitoc.popupfecha.abierto" datepicker-options="hitoc.fechaOptions"  close-text="Cerrar" 
 	    						alt-input-formats="altInputFormats" current-text="Hoy" clear-text="Borrar" ng-required="true"
 	    						ng-click="hitoc.abirpopup()"
@@ -123,10 +124,11 @@
 					        
 						</div>
 						<div class="form-group">
-    						<input type="text" class="inputText" ng-model="hitoc.hito.descripcion" 
-    						ng-value="hitoc.hito.descripcion" onblur="this.setAttribute('value', this.value);">
-    						<label class="floating-label">Descripción</label>
-						</div>
+							   <textarea class="inputText" rows="4"
+							   ng-model="hitoc.hito.descripcion" ng-value="hitoc.hito.descripcion"   
+							   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+							   <label class="floating-label">Descripción</label>
+							</div>
 						<div class="form-group"> 
 			            	<input type="text" class="inputText"  ng-model="hitoc.hitotipoNombre" ng-readonly="true" ng-required="true"
 			            	ng-click="hitoc.buscarHitoTipo()"
@@ -146,7 +148,8 @@
 										ng-value="hitoc.hitoresultado" onblur="this.setAttribute('value', this.value);"/>
 								<input ng-switch-when="4" type="checkbox"  ng-model="hitoc.hitoresultado"/>
 								<p ng-switch-when="5">
-									<input type="text"  class="inputText" uib-datepicker-popup="{{hitoc.formatofecha}}" ng-model="hitoc.hitoresultado" is-open="hitoc.popupfecharesultado.abierto"
+									<input type="text"  class="inputText" uib-datepicker-popup="{{hitoc.formatofecha}}"  alt-input-formats="{{hitoc.altformatofecha}}"
+											ng-model="hitoc.hitoresultado" is-open="hitoc.popupfecharesultado.abierto"
 											datepicker-options="hitoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
 											ng-value="hitoc.hitoresultado" onblur="this.setAttribute('value', this.value);"
 											ng-click="hitoc.abirpopupreultado()"/>

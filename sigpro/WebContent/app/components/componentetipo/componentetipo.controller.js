@@ -327,7 +327,6 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 		}
 		
 		mi.buscarPropiedad = function(titulo, mensaje) {
-			titulo = 'Propiedades de Componente';
 			var modalInstance = $uibModal.open({
 			    animation : 'true',
 			    ariaLabelledBy : 'modal-title',
@@ -349,9 +348,6 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 				    		}
 				    	}
 					    return idspropiedad;
-					},
-					$titulo : function(){
-						return titulo;
 					}
 			    }
 
@@ -367,10 +363,10 @@ app.controller('componentetipoController',['$scope','$http','$interval','i18nSer
 
 app.controller('modalBuscarComponentePropiedad', [
 	'$uibModalInstance', '$scope', '$http', '$interval', 'i18nService',
-	'Utilidades', '$timeout', '$log','idspropiedad','$titulo', modalBuscarComponentePropiedad
+	'Utilidades', '$timeout', '$log','idspropiedad', modalBuscarComponentePropiedad
 ]);
 
-function modalBuscarComponentePropiedad($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log,idspropiedad, $titulo) {
+function modalBuscarComponentePropiedad($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log,idspropiedad) {
 	
 	var mi = this;
 
@@ -378,7 +374,6 @@ function modalBuscarComponentePropiedad($uibModalInstance, $scope, $http, $inter
 	mi.paginaActual = 1;
 	mi.numeroMaximoPaginas = 5;
 	mi.elementosPorPagina = 9;
-	mi.titulo = $titulo;
 	mi.mostrarCargando = false;
 	mi.data = [];
 	

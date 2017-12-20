@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 2, 2017 5:12:50 PM by Hibernate Tools 5.2.3.Final
+// Generated Dec 13, 2017 9:28:15 AM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -23,7 +23,7 @@ public class Cooperante implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 6809365803201785636L;
 	private int id;
 	private int codigo;
 	private String siglas;
@@ -35,7 +35,6 @@ public class Cooperante implements java.io.Serializable {
 	private Date fechaActualizacion;
 	private int estado;
 	private Integer ejercicio;
-	private Set<Proyecto> proyectos = new HashSet<Proyecto>(0);
 	private Set<Prestamo> prestamos = new HashSet<Prestamo>(0);
 
 	public Cooperante() {
@@ -52,7 +51,7 @@ public class Cooperante implements java.io.Serializable {
 
 	public Cooperante(int id, int codigo, String siglas, String nombre, String descripcion, String usuarioCreo,
 			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, Integer ejercicio,
-			Set<Proyecto> proyectos, Set<Prestamo> prestamos) {
+			Set<Prestamo> prestamos) {
 		this.id = id;
 		this.codigo = codigo;
 		this.siglas = siglas;
@@ -64,7 +63,6 @@ public class Cooperante implements java.io.Serializable {
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
 		this.ejercicio = ejercicio;
-		this.proyectos = proyectos;
 		this.prestamos = prestamos;
 	}
 
@@ -169,15 +167,6 @@ public class Cooperante implements java.io.Serializable {
 
 	public void setEjercicio(Integer ejercicio) {
 		this.ejercicio = ejercicio;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cooperante")
-	public Set<Proyecto> getProyectos() {
-		return this.proyectos;
-	}
-
-	public void setProyectos(Set<Proyecto> proyectos) {
-		this.proyectos = proyectos;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cooperante")

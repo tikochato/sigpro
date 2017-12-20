@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 2, 2017 5:12:50 PM by Hibernate Tools 5.2.3.Final
+// Generated Dec 13, 2017 9:28:15 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class Subproducto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1250615618944077719L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Producto producto;
@@ -55,11 +55,13 @@ public class Subproducto implements java.io.Serializable {
 	private Integer ubicacionGeografica;
 	private Date fechaInicio;
 	private Date fechaFin;
-	private Integer duracion;
+	private int duracion;
 	private String duracionDimension;
 	private Integer orden;
 	private String treePath;
 	private Integer nivel;
+	private Date fechaInicioReal;
+	private Date fechaFinReal;
 	private Set<SubproductoPropiedadValor> subproductoPropiedadValors = new HashSet<SubproductoPropiedadValor>(0);
 	private Set<SubproductoUsuario> subproductoUsuarios = new HashSet<SubproductoUsuario>(0);
 
@@ -67,13 +69,14 @@ public class Subproducto implements java.io.Serializable {
 	}
 
 	public Subproducto(Producto producto, SubproductoTipo subproductoTipo, String nombre, String usuarioCreo,
-			Date fechaCreacion, int estado) {
+			Date fechaCreacion, int estado, int duracion) {
 		this.producto = producto;
 		this.subproductoTipo = subproductoTipo;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
+		this.duracion = duracion;
 	}
 
 	public Subproducto(AcumulacionCosto acumulacionCosto, Producto producto, SubproductoTipo subproductoTipo,
@@ -81,8 +84,9 @@ public class Subproducto implements java.io.Serializable {
 			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, Long snip,
 			Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra, String latitud,
 			String longitud, BigDecimal costo, Integer renglon, Integer ubicacionGeografica, Date fechaInicio,
-			Date fechaFin, Integer duracion, String duracionDimension, Integer orden, String treePath, Integer nivel,
-			Set<SubproductoPropiedadValor> subproductoPropiedadValors, Set<SubproductoUsuario> subproductoUsuarios) {
+			Date fechaFin, int duracion, String duracionDimension, Integer orden, String treePath, Integer nivel,
+			Date fechaInicioReal, Date fechaFinReal, Set<SubproductoPropiedadValor> subproductoPropiedadValors,
+			Set<SubproductoUsuario> subproductoUsuarios) {
 		this.acumulacionCosto = acumulacionCosto;
 		this.producto = producto;
 		this.subproductoTipo = subproductoTipo;
@@ -112,6 +116,8 @@ public class Subproducto implements java.io.Serializable {
 		this.orden = orden;
 		this.treePath = treePath;
 		this.nivel = nivel;
+		this.fechaInicioReal = fechaInicioReal;
+		this.fechaFinReal = fechaFinReal;
 		this.subproductoPropiedadValors = subproductoPropiedadValors;
 		this.subproductoUsuarios = subproductoUsuarios;
 	}
@@ -354,12 +360,12 @@ public class Subproducto implements java.io.Serializable {
 		this.fechaFin = fechaFin;
 	}
 
-	@Column(name = "duracion")
-	public Integer getDuracion() {
+	@Column(name = "duracion", nullable = false)
+	public int getDuracion() {
 		return this.duracion;
 	}
 
-	public void setDuracion(Integer duracion) {
+	public void setDuracion(int duracion) {
 		this.duracion = duracion;
 	}
 
@@ -397,6 +403,26 @@ public class Subproducto implements java.io.Serializable {
 
 	public void setNivel(Integer nivel) {
 		this.nivel = nivel;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_inicio_real", length = 19)
+	public Date getFechaInicioReal() {
+		return this.fechaInicioReal;
+	}
+
+	public void setFechaInicioReal(Date fechaInicioReal) {
+		this.fechaInicioReal = fechaInicioReal;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_fin_real", length = 19)
+	public Date getFechaFinReal() {
+		return this.fechaFinReal;
+	}
+
+	public void setFechaFinReal(Date fechaFinReal) {
+		this.fechaFinReal = fechaFinReal;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "subproducto")

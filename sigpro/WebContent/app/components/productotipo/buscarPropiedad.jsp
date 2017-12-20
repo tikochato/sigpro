@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <div class="modal-body" id="modal-body">
 <div class="row">
-  	<div class="col-sm-12" style="font-weight: bold;">Propiedad</div>
+  	<div class="col-sm-12" style="font-weight: bold;">Propiedades</div>
   </div>
   <br/>
 	<div class="row">

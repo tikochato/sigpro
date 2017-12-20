@@ -22,7 +22,7 @@
 			       		<label class="btn btn-primary" ng-click="recursoc.nuevo()" uib-tooltip="Nuevo">
 				<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			       </shiro:hasPermission>
-			       <shiro:hasPermission name="26010"><label class="btn btn-primary" ng-click="recursoc.editar()" uib-tooltip="Editar">
+			       <shiro:hasPermission name="26020"><label class="btn btn-primary" ng-click="recursoc.editar()" uib-tooltip="Editar">
 				<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 				</shiro:hasPermission>
 			       <shiro:hasPermission name="26030">
@@ -130,7 +130,8 @@
 									<label for="campo.id" class="floating-label">{{ campo.label }}</label>
 								</div>
 								<div ng-switch-when="fecha" class="form-group" >
-									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{recursoc.formatofecha}}" ng-model="campo.valor" is-open="campo.isOpen"
+									<input type="text" id="{{ 'campo_'+campo.id }}" class="inputText" uib-datepicker-popup="{{recursoc.formatofecha}}" alt-input-formats="{{recursoc.altformatofecha}}"
+														ng-model="campo.valor" is-open="campo.isOpen"
 														datepicker-options="recursoc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="recursoc.abrirPopupFecha($index)"
 														ng-value="campo.valor" onblur="this.setAttribute('value', this.value);"/>
 														<span class="label-icon" ng-click="recursoc.abrirPopupFecha($index)">
@@ -150,9 +151,10 @@
 						</div>
 						
 						<div class="form-group">
-    						<input type="text" class="inputText" id="descripcion" ng-model="recursoc.recurso.descripcion"
-    						ng-value="recursoc.recurso.descripcion" onblur="this.setAttribute('value', this.value);">
-							<label for="descripcion" class="floating-label">Descripción</label>
+						   <textarea class="inputText" rows="4"
+						   ng-model="recursoc.recurso.descripcion" ng-value="recursoc.recurso.descripcion"   
+						   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
+						   <label class="floating-label">Descripción</label>
 						</div>
 						<br/>
 						<div class="panel panel-default">

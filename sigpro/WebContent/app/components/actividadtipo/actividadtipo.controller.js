@@ -336,7 +336,6 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 		}
 		
 		mi.buscarPropiedad = function(titulo, mensaje) {
-			titulo = 'Propiedades de Actividad'
 			var modalInstance = $uibModal.open({
 			    animation : 'true',
 			    ariaLabelledBy : 'modal-title',
@@ -358,9 +357,6 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 				    		}
 				    	}
 					    return idspropiedad;
-					},
-					$titulo : function(){
-						return titulo;
 					}
 			    }
 
@@ -376,10 +372,10 @@ app.controller('actividadtipoController',['$scope','$http','$interval','i18nServ
 
 app.controller('modalBuscarActividadPropiedad', [
 	'$uibModalInstance', '$scope', '$http', '$interval', 'i18nService',
-	'Utilidades', '$timeout', '$log','idspropiedad','$titulo', modalBuscarActividadPropiedad
+	'Utilidades', '$timeout', '$log','idspropiedad',modalBuscarActividadPropiedad
 ]);
 
-function modalBuscarActividadPropiedad($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log,idspropiedad, $titulo) {
+function modalBuscarActividadPropiedad($uibModalInstance, $scope, $http, $interval, i18nService, $utilidades, $timeout, $log,idspropiedad) {
 	
 	var mi = this;
 
@@ -387,7 +383,6 @@ function modalBuscarActividadPropiedad($uibModalInstance, $scope, $http, $interv
 	mi.paginaActual = 1;
 	mi.numeroMaximoPaginas = 5;
 	mi.elementosPorPagina = 9;
-	mi.titulo = $titulo;
 	mi.mostrarCargando = false;
 	mi.data = [];
 	

@@ -13,6 +13,8 @@
 <link rel="stylesheet" type="text/css" href="/assets/css/ivh-treeview.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/angular-tree/tree-control-attribute.css" />
 <link rel="stylesheet" type="text/css" href="/assets/css/angular-tree/tree-control.css" />
+<link rel="stylesheet" type="text/css" href="/assets/css/angular-resizable.min.css" />
+
 <script type="text/javascript" src="/assets/libs/angular/angular.js"></script>
 <script type="text/javascript" src="/assets/libs/angular/angular-route.min.js"></script>
 <script type="text/javascript" src="/assets/libs/angular/angular-animate.min.js"></script>
@@ -60,11 +62,16 @@
 <script type="text/javascript" src="/assets/libs/angucomplete-alt.js"></script>
 <script type="text/javascript" src="/assets/libs/angular-tree-control.js"></script>
 <script type="text/javascript" src="/assets/libs/tri-state.js"></script>
+<script type="text/javascript" src="/assets/libs/angular-vs-repeat.min.js"></script>
+<script type="text/javascript" src="/assets/libs/angular-resizable.min.js"></script>
 
+<script type="text/javascript" src="/assets/libs/scrollEspejo.js"></script>
 <script type="text/javascript" src="/app/components/meta/meta.controller.js"></script>
 <script type="text/javascript" src="/app/components/desembolso/desembolso.controller.js"></script>
 <script type="text/javascript" src="/app/components/riesgo/riesgo.controller.js"></script>
 <script type="text/javascript" src="/app/components/adquisicion/adquisicion.controller.js"></script>
+<script type="text/javascript" src="/assets/libs/historia.js"></script>
+<script type="text/javascript" src="/assets/libs/pagoplanificado.js"></script>
 
 <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPq-t4dJ1GV1kdtXoVZfG7PtfEAHrhr00&callback=initMap" type="text/javascript"></script> -->
 <script>
@@ -76,3 +83,6 @@
   ga('create', 'UA-74443600-1', 'auto');
   ga('send', 'pageview');
 </script>
+
+   
+   

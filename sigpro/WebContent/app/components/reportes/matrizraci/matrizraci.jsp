@@ -237,21 +237,39 @@
 	
 		<div align="center"  class="contenedor">
 				<form name="form">
-					<div class="form-group col-sm-4" >
-							<select  class="inputText" ng-model="racic.prestamoSeleccionado" 
-								ng-options="a.text for a in racic.prestamos"
-								ng-readonly="true"
-								ng-required="true"
-								ng-change = "racic.generarMatriz()">
-								<option value="">Seleccione un préstamo</option>
-								</select>
-		
-					</div>
+					<div class="row">
+			    		<div class="form-group col-sm-6" align="left">
+							<div id="prestamo" angucomplete-alt placeholder="" pause="100" selected-object="racic.cambioPrestamo"
+								  local-data="racic.lprestamos" search-fields="proyectoPrograma" title-field="proyectoPrograma" field-required="true" field-label="* Préstamo"
+								  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+								  initial-value="racic.prestamoNombre" focus-out="racic.blurPrestamo()" input-name="prestamo"></div>
+							<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+						</div>
+			    	</div>
+			    	<div class="row">
+			    		<div class="form-group col-sm-6" align="left">
+							<div id="pep" angucomplete-alt placeholder="" pause="100" selected-object="racic.cambioPep"
+								  local-data="racic.peps" search-fields="nombre" title-field="nombre" field-required="true" field-label="* {{etiquetas.proyecto}}"
+								  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+								  initial-value="racic.pepNombre" focus-out="racic.blurPep()" input-name="pep" disable-input="racic.prestamoId==null"></div>
+							<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+						</div>
+			    	</div>
+			    	<div class="row">
+			    		<div class="form-group col-sm-6" align="left">
+							<div id= "lineaBase" angucomplete-alt placeholder="" pause="100" selected-object="racic.cambioLineaBase"
+								  local-data="racic.lineasBase" search-fields="nombre" title-field="nombre" 
+								  field-required="true" field-label="* Linea Base" minlength="1" input-class="form-control form-control-small field-angucomplete inputText" 
+								  match-class="angucomplete-highlight" initial-value="racic.lineaBaseNombre" 
+								  focus-out="racic.blurLineaBase()" input-name="lineaBase"></div>
+							<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+						</div>
+			    	</div>
 					<div class="operation_buttons"  style="float: right;">
 		    			<div class="btn-group" role="group" aria-label="">
 							<label class="btn btn-default" ng-click="racic.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!racic.mostrarExport">
 							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-							<label class="btn btn-default" ng-click="racic.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="!racic.mostrarExport">
+							<label class="btn btn-default" ng-click="racic.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="true">
 								<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 							
 						</div>
@@ -270,23 +288,22 @@
 				
 				<div class="divTabla" ng-hide="!racic.mostrarExport">
 	  			
-					<table st-table="racic.matrizRaci" class="table table-header-rotated  table-striped table-hover table-condensed" >
+					<table class="table table-header-rotated  table-striped table-hover table-condensed" >
 							<thead class="cabecera">
-							<tr >
+							<tr>
 								
-								<th  class="{{racic.claseHeader($index)}}"   ng-repeat="n in racic.encabezadoMatriz track by $index"
-								 >
-										<div><span>{{n.nombre}} </span></div>
+								<th  class="{{racic.claseHeader($index)}}"   ng-repeat="n in racic.encabezadoMatriz track by $index">
+										<div><span>{{ n.nombre}} </span></div>
 								</th>
 							</tr>
 							</thead>
-							<tbody >
-							<tr  ng-repeat="row in racic.matrizRaci track by $index " >
+							<tbody vs-repeat>
+							<tr  ng-repeat="row in racic.matrizRaci track by $index">
 								<td ng-repeat = "col in row track by $index" class="{{racic.claseBody(col)}}" 
 								ng-click="$index > 0 ? racic.mostrarColaborador(col) : ''" 
 								style="border-right: 2px solid #ddd;">
 								 	 <div ng-if="$index == 0" class="{{ $index == 0 ? racic.claseIcon(row) : ''}}" style="margin-left: {{col.nivel-1}}em"></div>
-								 	 <span>{{col.rol}}</span>
+								 	 <span>{{ col.rol}}</span>
 								 </td>
 							</tr>
 							</tbody>

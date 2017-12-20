@@ -23,6 +23,9 @@ import pojo.ComponenteUsuario;
 import pojo.ComponenteUsuarioId;
 import pojo.Cooperante;
 import pojo.Permiso;
+import pojo.Prestamo;
+import pojo.PrestamoUsuario;
+import pojo.PrestamoUsuarioId;
 import pojo.Producto;
 import pojo.ProductoUsuario;
 import pojo.ProductoUsuarioId;
@@ -31,6 +34,9 @@ import pojo.ProyectoUsuario;
 import pojo.ProyectoUsuarioId;
 import pojo.RolUsuarioProyecto;
 import pojo.RolUsuarioProyectoId;
+import pojo.Subcomponente;
+import pojo.SubcomponenteUsuario;
+import pojo.SubcomponenteUsuarioId;
 import pojo.UnidadEjecutora;
 
 import java.util.ArrayList;
@@ -105,7 +111,7 @@ public class UsuarioDAO {
 		return ret;
 	}
 	
-	public static boolean registroUsuario(String cadenausuario, String email, String passwordTextoPlano, String usuarioCreo){
+	public static boolean registroUsuario(String cadenausuario, String email, String passwordTextoPlano, String usuarioCreo, Integer sistemaUsuario){
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
@@ -121,6 +127,7 @@ public class UsuarioDAO {
 			usuario.setFechaCreacion(new DateTime().toDate());
 			usuario.setUsuarioCreo(usuarioCreo);
 			usuario.setEstado(1);
+			usuario.setSistemaUsuario(sistemaUsuario);
 			session.save(usuario);
 			session.getTransaction().commit();
 			ret = true;
@@ -137,7 +144,6 @@ public class UsuarioDAO {
 		boolean ret = false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			//session.beginTransaction();
 			Usuario usuarioCambio= session.get(Usuario.class,usuario);
 			if(usuarioCambio!=null){
 				session.beginTransaction();
@@ -148,7 +154,7 @@ public class UsuarioDAO {
 				usuarioCambio.setSalt(salt.toString());
 				usuarioCambio.setUsuarioActualizo(usuarioActualizo);
 				usuarioCambio.setFechaActualizacion(new DateTime().toDate());
-				session.saveOrUpdate(usuarioCambio);
+				session.update(usuarioCambio);
 				session.getTransaction().commit();
 				ret = true;
 			} 
@@ -188,6 +194,7 @@ public class UsuarioDAO {
 		
 		return ret;
 	}
+	
 	public static boolean asignarPrestamos(String usuario, List <Integer> prestamos, String usuario_creo){
 		boolean ret =false;
 		Session session = CHibernateSession.getSessionFactory().openSession();
@@ -195,8 +202,34 @@ public class UsuarioDAO {
 			session.beginTransaction();
 			
 			for(int i =0; i<prestamos.size();i++){
-				Proyecto proyecto = ProyectoDAO.getProyecto(prestamos.get(i));
-				ProyectoUsuario pu = new ProyectoUsuario(new ProyectoUsuarioId(prestamos.get(i), usuario), proyecto, UsuarioDAO.getUsuario(usuario),
+				Prestamo prestamo = PrestamoDAO.getPrestamoById(prestamos.get(i));
+				PrestamoUsuario pu = new PrestamoUsuario(new PrestamoUsuarioId(prestamos.get(i), usuario),prestamo, UsuarioDAO.getUsuario(usuario),
+						usuario_creo,null, new Date(), null);
+				pu.setPrestamo(prestamo);
+				session.save(pu);
+			}			
+			session.getTransaction().commit();
+			ret = true;
+		}catch(Throwable e){
+			CLogger.write("8", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return ret;
+	}
+	
+	
+	public static boolean asignarProyectos(String usuario, List <Integer> proyectos, String usuario_creo){
+		boolean ret =false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			
+			for(int i =0; i<proyectos.size();i++){
+				Proyecto proyecto = ProyectoDAO.getProyecto(proyectos.get(i));
+				ProyectoUsuario pu = new ProyectoUsuario(new ProyectoUsuarioId(proyectos.get(i), usuario), proyecto, UsuarioDAO.getUsuario(usuario),
 						usuario_creo,null, new Date(), null);
 				pu.setProyecto(proyecto);
 				session.save(pu);
@@ -254,6 +287,7 @@ public class UsuarioDAO {
 				session.delete(pu);
 			}			
 			session.getTransaction().commit();
+			session.flush();
 			ret = true;
 		}catch(Throwable e){
 			CLogger.write("10", UsuarioDAO.class, e);
@@ -430,7 +464,7 @@ public class UsuarioDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
-			Query<UsuarioPermiso> criteria = session.createQuery("FROM UsuarioPermiso where usuariousuario=:usuario and estado = 1", UsuarioPermiso.class);
+			Query<UsuarioPermiso> criteria = session.createQuery("FROM UsuarioPermiso where usuariousuario=:usuario and estado = 1 ORDER BY permiso.nombre", UsuarioPermiso.class);
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getResultList();
 		}catch(Throwable e){
@@ -462,7 +496,7 @@ public class UsuarioDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
-			Query<Permiso> criteria = session.createQuery("FROM Permiso where id not in (Select permiso from UsuarioPermiso where usuariousuario =:usuario )", Permiso.class);
+			Query<Permiso> criteria = session.createQuery("FROM Permiso where id not in (Select permiso from UsuarioPermiso where usuariousuario =:usuario ) ORDER BY nombre", Permiso.class);
 			criteria.setParameter("usuario", usuario);
 			ret = criteria.getResultList();
 		}catch(Throwable e){
@@ -628,6 +662,48 @@ public class UsuarioDAO {
 		return ret;
 	}
 	
+	public static boolean asignarSubComponentes(String usuario, List <Integer> subcomponentes, String usuario_creo){
+		boolean ret =false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			
+			for(int i =0; i<subcomponentes.size();i++){
+				Subcomponente subcomponente = SubComponenteDAO.getSubComponente(subcomponentes.get(i));
+				SubcomponenteUsuario cu = new SubcomponenteUsuario(new SubcomponenteUsuarioId(subcomponentes.get(i), usuario), subcomponente);
+				cu.setSubcomponente(subcomponente);
+				session.save(cu);
+			}			
+			session.getTransaction().commit();
+			ret = true;
+		}catch(Throwable e){
+			CLogger.write("27", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return ret;
+	}
+	
+	public static boolean checkUsuarioPrestamo(String usuario, int prestmoid){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		boolean ret = false;
+		try {
+			Query <PrestamoUsuario> criteria = session.createQuery("FROM PrestamoUsuario where usuario.usuario=:usuario and prestamo.id=:id", PrestamoUsuario.class);
+			criteria.setParameter("usuario",usuario);
+			criteria.setParameter("id", prestmoid);
+			List<PrestamoUsuario> listRet = null;
+			listRet = criteria.getResultList();
+			ret = !listRet.isEmpty() ? true : false;
+		} catch (Throwable e) {
+			CLogger.write("28", UsuarioDAO.class, e);
+		} finally {
+			session.close();
+		}
+		return ret;
+	}
+	
 	public static boolean checkUsuarioProyecto(String usuario, int proyectoid){
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		boolean ret = false;
@@ -639,7 +715,7 @@ public class UsuarioDAO {
 			listRet = criteria.getResultList();
 			ret = !listRet.isEmpty() ? true : false;
 		} catch (Throwable e) {
-			CLogger.write("27", UsuarioDAO.class, e);
+			CLogger.write("28", UsuarioDAO.class, e);
 		} finally {
 			session.close();
 		}
@@ -657,7 +733,25 @@ public class UsuarioDAO {
 			listRet = criteria.getResultList();
 			ret = !listRet.isEmpty() ? true : false;
 		} catch (Throwable e) {
-			CLogger.write("28", UsuarioDAO.class, e);
+			CLogger.write("29", UsuarioDAO.class, e);
+		} finally {
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static boolean checkUsuarioSubComponente(String usuario, int subcomponenteid){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		boolean ret = false;
+		try {
+			Query <SubcomponenteUsuario> criteria = session.createQuery("FROM SubcomponenteUsuario where id.usuario=:usuario and id.subcomponenteid=:id", SubcomponenteUsuario.class);
+			criteria.setParameter("usuario",usuario);
+			criteria.setParameter("id", subcomponenteid);
+			List<SubcomponenteUsuario> listRet = null;
+			listRet = criteria.getResultList();
+			ret = !listRet.isEmpty() ? true : false;
+		} catch (Throwable e) {
+			CLogger.write("30", UsuarioDAO.class, e);
 		} finally {
 			session.close();
 		}
@@ -675,7 +769,7 @@ public class UsuarioDAO {
 			listRet = criteria.getResultList();
 			ret = !listRet.isEmpty() ? true : false;
 		} catch (Throwable e) {
-			CLogger.write("29", UsuarioDAO.class, e);
+			CLogger.write("31", UsuarioDAO.class, e);
 		} finally {
 			session.close();
 		}
@@ -697,7 +791,7 @@ public class UsuarioDAO {
 			session.getTransaction().commit();
 			ret = true;
 		}catch(Throwable e){
-			CLogger.write("30", UsuarioDAO.class, e);
+			CLogger.write("32", UsuarioDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -711,19 +805,26 @@ public class UsuarioDAO {
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
 			session.beginTransaction();
+			Query<?> criteria_prs = session.createQuery("delete PrestamoUsuario where id.usuario=:usuario ");
+			criteria_prs.setParameter("usuario", usuario);
+			criteria_prs.executeUpdate();
 			Query<?> criteria = session.createQuery("delete ProyectoUsuario where id.usuario=:usuario ");
 			criteria.setParameter("usuario", usuario);
 			criteria.executeUpdate();
 			Query<?> criteria_c = session.createQuery("delete ComponenteUsuario where id.usuario=:usuario ");
 			criteria_c.setParameter("usuario", usuario);
 			criteria_c.executeUpdate();
+			Query<?> criteria_sc = session.createQuery("delete SubcomponenteUsuario where id.usuario=:usuario ");
+			criteria_sc.setParameter("usuario", usuario);
+			criteria_sc.executeUpdate();
 			Query<?> criteria_u = session.createQuery("delete ProductoUsuario where id.usuario=:usuario ");
 			criteria_u.setParameter("usuario", usuario);
 			criteria_u.executeUpdate();
 			session.getTransaction().commit();
+//			session.flush();
 			ret = true;
 		}catch(Throwable e){
-			CLogger.write("31", UsuarioDAO.class, e);
+			CLogger.write("33", UsuarioDAO.class, e);
 		}
 		finally{
 			session.close();
@@ -732,4 +833,44 @@ public class UsuarioDAO {
 		return ret;
 	}
 	
+	public static boolean desasignarPermisos(String usuario){
+		boolean ret = false;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			session.beginTransaction();
+			Query<?> criteria = session.createQuery("delete UsuarioPermiso up where up.usuario.usuario=:usuario ");
+			criteria.setParameter("usuario", usuario);
+			criteria.executeUpdate();
+			session.getTransaction().commit();
+			//session.flush();
+			ret = true;
+		}catch(Throwable e){
+			CLogger.write("34", UsuarioDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		
+		return ret;
+	}
+	
+	
+	public static Usuario setNuevoPassword(Usuario usuario,String password){
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			if(usuario!=null){
+				session.beginTransaction();
+				RandomNumberGenerator rng = new SecureRandomNumberGenerator();
+				Object salt = rng.nextBytes();
+				String hashedPasswordBase64 = new Sha256Hash(password, salt,1024).toBase64();
+				usuario.setPassword(hashedPasswordBase64);
+				usuario.setSalt(salt.toString());
+			} 
+		}catch(Throwable e){
+			CLogger.write("35", UsuarioDAO.class, e);
+		}finally{
+			session.close();
+		}
+		return usuario;
+	}
 }

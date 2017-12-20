@@ -29,7 +29,6 @@ public class SRegistro extends HttpServlet {
      */
     public SRegistro() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -55,7 +54,7 @@ public class SRegistro extends HttpServlet {
 		HttpSession sesionweb = request.getSession();
 		if(nuevousuario!=null && nuevopassword!=null && nuevomail != null){
 			if(nuevousuario.compareTo("")!=0 && nuevopassword.compareTo("")!=0 && nuevomail.compareTo("")!=0){
-				boolean registro = UsuarioDAO.registroUsuario(nuevousuario, nuevomail, nuevopassword,sesionweb.getAttribute("usuario").toString());
+				boolean registro = UsuarioDAO.registroUsuario(nuevousuario, nuevomail, nuevopassword,sesionweb.getAttribute("usuario").toString(), 3);
 				if(registro){
 					response.getWriter().write("{ \"success\": true, \"message\":\"Usuario registrado exitosamente\" }");
 				}else{

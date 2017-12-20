@@ -55,7 +55,6 @@ public class SActividadPropiedad extends HttpServlet {
      */
     public SActividadPropiedad() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -218,7 +217,7 @@ public class SActividadPropiedad extends HttpServlet {
 		}
 		else if(accion.equals("getActividadPropiedadPorTipo")){
 			int idActividad = map.get("idActividad")!=null  ? Integer.parseInt(map.get("idActividad")) : 0;
-			int idActividadTipo = map.get("idActividadTipo")!=null  ? Integer.parseInt(map.get("idActividadTipo")) : 0;
+			int idActividadTipo = map.get("idActividadTipo")!=null || !map.get("idActividadTipo").isEmpty() ? Integer.parseInt(map.get("idActividadTipo")) : 0;
 			List<ActividadPropiedad> actividadpropiedades = ActividadPropiedadDAO.getActividadPropiedadesPorTipoActividad(idActividadTipo);
 			
 			List<HashMap<String,Object>> campos = new ArrayList<>();

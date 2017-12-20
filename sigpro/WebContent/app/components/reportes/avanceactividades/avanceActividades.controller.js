@@ -1,4 +1,4 @@
-var app = angular.module('avanceActividadesController',['ngAnimate', 'ngTouch','smart-table']);
+var app = angular.module('avanceActividadesController',['ngAnimate', 'ngTouch','smart-table','angularjs-dropdown-multiselect']);
 
 app.filter('calculatePercentage', function () {
 	  return function (input, resultField, row) {
@@ -9,13 +9,17 @@ app.filter('calculatePercentage', function () {
 	  };
 	});
 
-app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$window','$q','$uibModal',
-	function($scope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$window, $q,$uibModal){
+app.controller('avanceActividadesController',['$scope','$rootScope', '$http', '$interval', 'uiGridTreeViewConstants','Utilidades','i18nService','uiGridConstants','$window','$q','$uibModal',
+	function($scope, $rootScope, $http, $interval, uiGridTreeViewConstants,$utilidades,i18nService,uiGridConstants,$window, $q,$uibModal){
 		var mi = this;
 		mi.mostrarCargando = false;
 		mi.mostrardiv=false;
 		
+		mi.pepId=null;
+		mi.prestamoId=null;
+		
 		mi.formatofecha = 'dd/MM/yyyy';
+		mi.altformatofecha = ['d!/M!/yyyy'];
 		
 		mi.totalActividades = 0;
 		mi.totalActividadesCompletadas = 0;
@@ -30,6 +34,7 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 		
 		mi.totalProductos = 0;
 		mi.totalHitos = 0;
+		mi.lineasBase = [];
 		
 		mi.calcularTamanosPantalla = function(){
 			mi.tamanoPantalla = Math.floor(document.getElementById("reporte").offsetWidth);
@@ -41,33 +46,97 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 		
 		mi.calcularTamanosPantalla();
 		
-		mi.prestamos = [
-			{'value' : 0, 'text' : 'Seleccione un préstamo'},
-		];
+		mi.lprestamos = [];
+		
+		$http.post('/SPrestamo', {accion: 'getPrestamos', t: (new Date()).getTime()}).then(
+			function(response){
+				if(response.data.success){
+					mi.lprestamos = response.data.prestamos;
+				}	
+		});
+		
+		mi.blurPrestamo=function(){
+			if(document.getElementById("prestamo_value").defaultValue!=mi.prestamoNombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','prestamo');
+			}
+		}
+		
+		mi.cambioPrestamo=function(selected){
+			if(selected!== undefined){
+				mi.prestamoNombre = selected.originalObject.proyectoPrograma;
+				mi.prestamoId = selected.originalObject.id;
+				$scope.$broadcast('angucomplete-alt:clearInput', 'pep');
+				$scope.$broadcast('angucomplete-alt:clearInput', 'lineaBase');
+				mi.getPeps(mi.prestamoId);
+			}
+			else{
+				mi.prestamoNombre="";
+				mi.prestamoId=null;
+			}
+		}
+		
+		mi.blurPep=function(){
+			if(document.getElementById("pep_value").defaultValue!=mi.pepNombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','pep');
+			}
+		};
+		
+		mi.cambioPep=function(selected){
+			if(selected!== undefined){
+				mi.pepNombre = selected.originalObject.nombre;
+				mi.pepId = selected.originalObject.id;
+				$scope.$broadcast('angucomplete-alt:clearInput', 'lineaBase');
+				mi.getLineasBase(mi.pepId);
+			}
+			else{
+				mi.pepNombre="";
+				mi.pepId=null;
+			}
+		};
+		
+		mi.blurLineaBase=function(){
+			if(document.getElementById("lineaBase_value").defaultValue!=mi.lineaBaseNombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+			}
+		};
+		
+		mi.cambioLineaBase=function(selected){
+			if(selected!== undefined){
+				mi.lineaBaseNombre = selected.originalObject.nombre;
+				mi.lineaBaseId = selected.originalObject.id;
+				mi.validarFecha(mi.fechaCorte);
+			}
+			else{
+				mi.lineaBaseNombre="";
+				mi.lineaBaseId=null;
+			}
+		};
+		
+		mi.getPeps = function(prestamoId){
+			$http.post('/SProyecto',{accion: 'getProyectos', prestamoid: prestamoId}).success(
+				function(response) {
+					mi.peps = [];
+					if (response.success){
+						mi.peps = response.entidades;
+					}
+			});	
+		}
+		
+		mi.getLineasBase = function(proyectoId){
+			$http.post('/SProyecto',{accion: 'getLineasBase', proyectoId: proyectoId}).success(
+				function(response) {
+					mi.lineasBase = [];
+					if (response.success){
+						mi.lineasBase = response.lineasBase;
+					}
+			});	
+		}
 		
 		mi.validarFecha = function(fecha1){
-			if(fecha1 != null)
+			if(fecha1 != null && mi.pepId != null )
 				mi.generar();
 		}
-		
-		mi.prestamo = mi.prestamos[0];
-		
-		mi.getPrestamos = function(){
-			$http.post('/SProyecto',{accion: 'getProyectos'}).success(
-				function(response) {
-					mi.prestamos = [];
-					mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un préstamo'});
-					if (response.success){
-						for (var i = 0; i < response.entidades.length; i++){
-							mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
-						}
-						mi.prestamo = mi.prestamos[0];
-					}
-				});
-		}
-		
-		mi.getPrestamos();
-		
+				
 		mi.abrirPopupFecha = function(index) {
 			switch(index){
 				case 1000: mi.fi_abierto = true; break;
@@ -75,7 +144,7 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 		};
 		
 		mi.generar = function(){
-			if(mi.prestamo.value != 0){
+			if(mi.pepId != 0 ){
 				if(mi.fechaCorte != null){
 					mi.mostrardiv = false;
 					mi.rowCollectionActividades = [];
@@ -103,7 +172,8 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 					mi.mostrarCargando = true;
 					$http.post('/SAvanceActividades', {
 						accion: 'getAvance',
-						idPrestamo: mi.prestamo.value,
+						idPrestamo: mi.pepId,
+						lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 						fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY')
 					}).success(function(response){
 						if (response.success){
@@ -130,6 +200,8 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 							mi.totalHitosCompletados = 0;
 							mi.totalHitosSinIniciar = 0;
 							mi.totalHitosRetrasados = 0;
+							mi.totalHitosEsperados = 0;
+							mi.totalHitosAnioSiguientes = 0;
 							
 							if(response.actividades != undefined){
 								mi.rowCollectionActividades = response.actividades;
@@ -309,6 +381,12 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 				resolve : {
 					objetoRow : function(){
 						return objetoRow;
+					},
+					fechaCorte : function(){
+						return mi.fechaCorte
+					},
+					lineaBase: function(){
+						return mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null;
 					}
 				}
 			});
@@ -322,8 +400,9 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 		mi.exportarExcel = function(){
 			$http.post('/SAvanceActividades', { 
 				accion: 'exportarExcel', 	
-				idPrestamo: mi.prestamo.value,
+				idPrestamo: mi.pepId,
 				fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY'),
+				lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
@@ -341,8 +420,9 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 		mi.exportarPdf=function(){
 			$http.post('/SAvanceActividades', { 
 				accion: 'exportarPdf', 	
-				idPrestamo: mi.prestamo.value,
+				idPrestamo: mi.pepId,
 				fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY'),
+				lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
@@ -360,18 +440,20 @@ app.controller('avanceActividadesController',['$scope', '$http', '$interval', 'u
 
 app.controller('modalAvance', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log', 'objetoRow',modalAvance ]);
+	'$timeout', '$log', 'objetoRow','fechaCorte','$rootScope', 'lineaBase', modalAvance ]);
 
-function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $utilidades, $timeout, $log, objetoRow) {
+function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $utilidades, $timeout, $log, objetoRow, fechaCorte, $rootScope, lineaBase) {
 	var mi = this;	
-
+	
 	if(objetoRow.objetoTipo == 1){
 		mi.mostrarcargando = true;
-		mi.nombre = "Actividades de préstamo";
+		mi.nombre = "Actividades de "+$rootScope.etiquetas.proyecto;
 		$http.post('/SAvanceActividades', {
 			accion: 'getActividadesProyecto',
 			idPrestamo: objetoRow.objetoId,
-			fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY')
+			fechaCorte: moment(fechaCorte).format('DD/MM/YYYY'),
+			lineaBase: lineaBase,
+			t:moment().unix()
 		}).success(function(response){
 			if (response.success){
 				mi.items = response.items;
@@ -381,11 +463,13 @@ function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $u
 		});
 	}else if(objetoRow.objetoTipo == 10){
 		mi.mostrarcargando = true;
-		mi.nombre = "Hitos de préstamo";
+		mi.nombre = "Hitos de "+$rootScope.etiquetas.proyecto;
 		$http.post('/SAvanceActividades', {
 			accion: 'getHitos',
+			lineaBase: lineaBase,
 			idPrestamo: objetoRow.objetoId,
-			fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY')
+			fechaCorte: moment(fechaCorte).format('DD/MM/YYYY'),
+			t:moment().unix()
 		}).success(function(response){
 			if (response.success){
 				mi.items = response.items;
@@ -398,8 +482,10 @@ function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $u
 		mi.nombre = "Actividades de producto: " + objetoRow.nombre;
 		$http.post('/SAvanceActividades', {
 			accion: 'getActividadesProducto',
+			lineaBase: lineaBase,
 			productoId: objetoRow.objetoId,
-			fechaCorte: moment(mi.fechaCorte).format('DD/MM/YYYY')
+			fechaCorte: moment(fechaCorte).format('DD/MM/YYYY'),
+			t:moment().unix()
 		}).success(function(response){
 			if (response.success){
 				mi.items = response.items;
@@ -408,7 +494,77 @@ function modalAvance($uibModalInstance, $scope, $http, $interval,i18nService, $u
 			}
 		});
 	}
-
+	
+	mi.obtenerColor = function(row){
+		var style={}
+		if(row.avance >= 0 && row.avance <= 40){
+			style.color='red'
+		}else if(row.avance > 40 && row.avance <= 60){
+			style.color='yellow'
+		}else if(row.avance > 60 && row.avance <= 100){
+			style.color='green'
+		}
+		return style;
+	}
+	
+	mi.exportarDetalleExcel = function(){
+		if(objetoRow.objetoTipo == 1){
+			$http.post('/SAvanceActividades', {
+				accion: 'exportarDetalleExcel',
+				id: objetoRow.objetoId,
+				fechaCorte: moment(fechaCorte).format('DD/MM/YYYY'),
+				objetoTipo: 1,
+				t:moment().unix()
+			}).then(
+					  function successCallback(response) {
+						  var anchor = angular.element('<a/>');
+						  anchor.attr({
+					         href: 'data:application/ms-excel;base64,' + response.data,
+					         target: '_blank',
+					         download: 'DetalleAvancePep.xls'
+						  })[0].click();
+					  }.bind(this), function errorCallback(response){
+				 	}
+			  	);
+		}else if(objetoRow.objetoTipo == 10){
+			$http.post('/SAvanceActividades', {
+				accion: 'exportarDetalleExcel',
+				id: objetoRow.objetoId,
+				fechaCorte: moment(fechaCorte).format('DD/MM/YYYY'),
+				objetoTipo: 10,
+				t:moment().unix()
+			}).then(
+					  function successCallback(response) {
+						  var anchor = angular.element('<a/>');
+						  anchor.attr({
+					         href: 'data:application/ms-excel;base64,' + response.data,
+					         target: '_blank',
+					         download: 'DetaleAvanceHitos.xls'
+						  })[0].click();
+					  }.bind(this), function errorCallback(response){
+				 	}
+			  	);
+		}else if(objetoRow.objetoTipo == 3){
+			$http.post('/SAvanceActividades', {
+				accion: 'exportarDetalleExcel',
+				id: objetoRow.objetoId,
+				fechaCorte: moment(fechaCorte).format('DD/MM/YYYY'),
+				objetoTipo: 3,
+				t:moment().unix()
+			}).then(
+					  function successCallback(response) {
+						  var anchor = angular.element('<a/>');
+						  anchor.attr({
+					         href: 'data:application/ms-excel;base64,' + response.data,
+					         target: '_blank',
+					         download: 'DetalleAvanceProductos.xls'
+						  })[0].click();
+					  }.bind(this), function errorCallback(response){
+				 	}
+			  	);
+		}
+	}
+	
 	mi.ok = function() {
 		
 	};

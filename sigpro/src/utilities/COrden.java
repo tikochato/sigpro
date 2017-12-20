@@ -189,7 +189,7 @@ public class COrden {
 				objProyecto = new Object[]{2, proyectoId, 1, componente, componente.getId(), 2, componente.getTreePath()};
 				lstProyecto.add(objProyecto);
 				
-				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(), null, null, null, null, null, usuario);
+				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(), null, null, null, null, null, null, usuario);
 				for(Producto producto : productos){
 					objProyecto = new Object[]{ 3, producto.getComponente().getId(), 2, producto, producto.getId(), 3, producto.getTreePath()};
 					lstProyecto.add(objProyecto);

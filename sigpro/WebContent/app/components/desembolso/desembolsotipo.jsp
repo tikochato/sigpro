@@ -18,7 +18,7 @@
 			    <label class="btn btn-primary" ng-click="desembolsotipoc.nuevo()" uib-tooltip="Nuevo">
 			    <span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			  </shiro:hasPermission>
-			  <shiro:hasPermission name="35010">
+			  <shiro:hasPermission name="35020">
 			    <label class="btn btn-primary" ng-click="desembolsotipoc.editar()" uib-tooltip="Editar">
 			    <span class="glyphicon glyphicon-pencil"></span> Editar</label>
 			  </shiro:hasPermission>
@@ -76,10 +76,10 @@
 		   <div class="operation_buttons" align="right">
 			  <div class="btn-group">
 			    <shiro:hasPermission name="35020">
-			      <label class="btn btn-success" ng-click="form.$valid ? desembolsotipoc.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
+			      <label class="btn btn-success" ng-click="form.$valid ? desembolsotipoc.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
 			      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 			    </shiro:hasPermission>
-			    <label class="btn btn-primary" ng-click="desembolsotipoc.irATabla()" title="Ir a Tabla">
+			    <label class="btn btn-primary" ng-click="desembolsotipoc.irATabla()" uib-tooltip="Ir a Tabla">
 			    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			  </div>
 			</div>
@@ -98,9 +98,9 @@
 						   <label class="floating-label">* Nombre</label>
 						</div>
 						<div class="form-group">
-						   <input type="text" name="descripcion"  class="inputText" id="descripcion" 
-						     ng-model="desembolsotipoc.desembolsotipo.descripcion" ng-value="desembolsotipoc.desembolsotipo.descripcion"   
-						     onblur="this.setAttribute('value', this.value);" ng-required="false" >
+						   <textarea class="inputText" rows="4"
+						   ng-model="desembolsotipoc.desembolsotipo.descripcion" ng-value="desembolsotipoc.desembolsotipo.descripcion"   
+						   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
 						   <label class="floating-label">Descripción</label>
 						</div>
 						<br/>
@@ -144,10 +144,10 @@
     		<div class="col-sm-12 operation_buttons" align="right">
 			  <div class="btn-group">
 			    <shiro:hasPermission name="35020">
-			      <label class="btn btn-success" ng-click="form.$valid ? desembolsotipoc.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
+			      <label class="btn btn-success" ng-click="form.$valid ? desembolsotipoc.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
 			      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 			    </shiro:hasPermission>
-			    <label class="btn btn-primary" ng-click="desembolsotipoc.irATabla()" title="Ir a Tabla">
+			    <label class="btn btn-primary" ng-click="desembolsotipoc.irATabla()" uib-tooltip="Ir a Tabla">
 			    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			  </div>
 			</div>

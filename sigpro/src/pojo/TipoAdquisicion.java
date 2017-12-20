@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 2, 2017 5:12:50 PM by Hibernate Tools 5.2.3.Final
+// Generated Dec 13, 2017 9:28:15 AM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -25,7 +25,7 @@ public class TipoAdquisicion implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1018301995907052284L;
 	private Integer id;
 	private int cooperantecodigo;
 	private String nombre;
@@ -34,6 +34,7 @@ public class TipoAdquisicion implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
+	private Integer convenioCdirecta;
 	private Set<PlanAdquisicion> planAdquisicions = new HashSet<PlanAdquisicion>(0);
 
 	public TipoAdquisicion() {
@@ -48,7 +49,8 @@ public class TipoAdquisicion implements java.io.Serializable {
 	}
 
 	public TipoAdquisicion(int cooperantecodigo, String nombre, String usuarioCreo, String usuarioActualizo,
-			Date fechaCreacion, Date fechaActualizacion, int estado, Set<PlanAdquisicion> planAdquisicions) {
+			Date fechaCreacion, Date fechaActualizacion, int estado, Integer convenioCdirecta,
+			Set<PlanAdquisicion> planAdquisicions) {
 		this.cooperantecodigo = cooperantecodigo;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
@@ -56,6 +58,7 @@ public class TipoAdquisicion implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
+		this.convenioCdirecta = convenioCdirecta;
 		this.planAdquisicions = planAdquisicions;
 	}
 
@@ -134,6 +137,15 @@ public class TipoAdquisicion implements java.io.Serializable {
 
 	public void setEstado(int estado) {
 		this.estado = estado;
+	}
+
+	@Column(name = "convenio_cdirecta")
+	public Integer getConvenioCdirecta() {
+		return this.convenioCdirecta;
+	}
+
+	public void setConvenioCdirecta(Integer convenioCdirecta) {
+		this.convenioCdirecta = convenioCdirecta;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "tipoAdquisicion")

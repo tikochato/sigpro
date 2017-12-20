@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
 import dao.ComponenteDAO;
+import dao.SubComponenteDAO;
 import dao.ProductoDAO;
 import dao.ProyectoDAO;
 import dao.SubproductoDAO;
@@ -30,6 +32,7 @@ import pojo.Actividad;
 import pojo.Componente;
 import pojo.Producto;
 import pojo.Proyecto;
+import pojo.Subcomponente;
 import pojo.Subproducto;
 import utilities.Utils;
 
@@ -37,8 +40,9 @@ import utilities.Utils;
 @WebServlet("/SMapa")
 public class SMapa extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static int OBJETO_ID_PROYECTO = 1;
-	private static int OBJETO_ID_COMPONENTE = 2;
+	private static int OBJETO_ID_PROYECTO = 0;
+	private static int OBJETO_ID_COMPONENTE = 1;
+	private static int OBJETO_ID_SUBCOMPONENTE = 2;
 	private static int OBJETO_ID_PRODUCTO = 3;
 	private static int OBJETO_ID_SUBPRODUCTO = 4;
 	private static int OBJETO_ID_ACTIVIDAD= 5;
@@ -107,7 +111,7 @@ public class SMapa extends HttpServlet {
 				if (proyecto.getLongitud()!=null && proyecto.getLatitud()!=null){
 					id++;
 					marcas = String.join(marcas.length() > 0 ? "," : "", marcas,
-					getMarca(id,proyecto.getId(),1, proyecto.getNombre(),proyecto.getLatitud(), proyecto.getLongitud(),null,null,null,null,null));
+					getMarca(id,proyecto.getId(),0, proyecto.getNombre(),proyecto.getLatitud(), proyecto.getLongitud(),null,null,null,null,null));
 				}
 			}
 			
@@ -116,7 +120,16 @@ public class SMapa extends HttpServlet {
 				if (componente.getLatitud()!=null && componente.getLongitud()!=null){
 					id++;
 					marcas = String.join(marcas.length() > 0 ? "," : "", marcas,
-							getMarca(id,componente.getId(),2, componente.getNombre(),componente.getLatitud(), componente.getLongitud(),null,null,null,null,null));
+							getMarca(id,componente.getId(),1, componente.getNombre(),componente.getLatitud(), componente.getLongitud(),null,null,null,null,null));
+				}
+			}
+			
+			List<Subcomponente> subcomponentes = SubComponenteDAO.getSubComponentes(usuario);
+			for (Subcomponente subcomponente : subcomponentes){
+				if (subcomponente.getLatitud()!=null && subcomponente.getLongitud()!=null){
+					id++;
+					marcas = String.join(marcas.length() > 0 ? "," : "", marcas,
+							getMarca(id,subcomponente.getId(),2, subcomponente.getNombre(),subcomponente.getLatitud(), subcomponente.getLongitud(),null,null,null,null,null));
 				}
 			}
 			
@@ -152,12 +165,11 @@ public class SMapa extends HttpServlet {
 			
 		}else if (accion.equals("getMarcasPorProyecto")){
 			
-			
-			
 			int id = 0;
 			String marcas = "";
 			int proyectoId = Utils.String2Int(map.get("proyectoId"),0);
-			Proyecto proyecto = ProyectoDAO.getProyectoPorId(proyectoId, usuario);
+			String lineaBase = map.get("lineaBase");
+			Proyecto proyecto = ProyectoDAO.getProyectoHistory(proyectoId, lineaBase);
 			
 			if (proyecto.getLongitud()!=null && proyecto.getLatitud()!=null){
 				id++;
@@ -167,28 +179,53 @@ public class SMapa extends HttpServlet {
 				
 			
 				
-			List<Componente> componentes = ComponenteDAO.getComponentesPaginaPorProyecto(0, 0, proyecto.getId(),
-					null, null, null,null,null, usuario);
+			List<Componente> componentes = ComponenteDAO.getComponentesPorProyectoHistory(proyecto.getId(),lineaBase);
 			for (Componente componente : componentes){
 				
-				List<Producto> productos = ProductoDAO.getProductosPagina(0, 0, componente.getId(),
-						null, null, null, null, null, usuario);
+				List<Subcomponente> subcomponentes = SubComponenteDAO.getSubcomponentesPorComponenteHistory(componente.getId(),lineaBase);
+				
+				List<Producto> productos = new ArrayList<Producto>();
+				
+				int totalActividadesSubcomponente = 0;
+				int totalActividadesCompletadasSubcomponente = 0;
+				for (Subcomponente subcomponente : subcomponentes){
+					productos.addAll(ProductoDAO.getProductosHistory(null, subcomponente.getId(),lineaBase));
+					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjetoHistory(subcomponente.getId(), OBJETO_ID_SUBCOMPONENTE,lineaBase);
+					totalCompletadas = 0;
+					for (Actividad actividad :actividades){
+						if (actividad.getLatitud()!=null && actividad.getLongitud()!=null){
+							id++;
+							marcas = String.join(marcas.length() > 0 ? "," : "", marcas,
+									getMarca(id, actividad.getId(),OBJETO_ID_ACTIVIDAD, actividad.getNombre(),actividad.getLatitud(), actividad.getLongitud()
+											,actividad.getFechaInicio(),actividad.getFechaFin(),actividad.getPorcentajeAvance(),null,null));
+						}
+					}	
+					if (subcomponente.getLatitud()!=null && subcomponente.getLongitud()!=null){
+						id++;
+						marcas = String.join(marcas.length() > 0 ? "," : "", marcas,
+								getMarca(id,subcomponente.getId(),OBJETO_ID_SUBCOMPONENTE, subcomponente.getNombre(),
+										subcomponente.getLatitud(), subcomponente.getLongitud(),
+										null,null,null
+										,actividades.size() + totalActividadesSubcomponente,totalCompletadas + totalActividadesCompletadasSubcomponente));
+					}
+				}
+				
+				productos.addAll(ProductoDAO.getProductosHistory(componente.getId(), null,lineaBase));
 				
 				int totalActividadesProducto = 0;
 				int totalActividadesCompletadasProducto = 0;
 				
 				for (Producto producto :productos){
 					
-					List<Subproducto> subproductos = SubproductoDAO.getSubproductosPagina(0, 0, producto.getId(),
-							null, null, null, null, null, usuario);
+					List<Subproducto> subproductos = SubproductoDAO.getSubproductosHistory(producto.getId(),lineaBase);
 					
 					int totalActividadessubp = 0;
 					int totalActividadesCompletadassubp = 0;
 					for (Subproducto subproducto :subproductos){
 						
 						
-						List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, subproducto.getId(), OBJETO_ID_SUBPRODUCTO
-								, null, null, null, null, null, usuario);
+						List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjetoHistory(subproducto.getId(), OBJETO_ID_SUBPRODUCTO
+								,lineaBase);
 						totalCompletadas = 0;
 						
 						
@@ -213,8 +250,8 @@ public class SMapa extends HttpServlet {
 						
 						
 					} // fin subproducto
-					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, producto.getId(), OBJETO_ID_PRODUCTO
-							, null, null, null, null, null, usuario);
+					List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjetoHistory(producto.getId(), OBJETO_ID_PRODUCTO
+							,lineaBase);
 					totalCompletadas = 0;
 					for (Actividad actividad :actividades){
 						if (actividad.getLatitud()!=null && actividad.getLongitud()!=null){
@@ -238,8 +275,9 @@ public class SMapa extends HttpServlet {
 					totalActividadesCompletadasProducto = totalActividadesCompletadasProducto + totalCompletadas + totalActividadesCompletadassubp;
 					
 				}
-				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, componente.getId(), OBJETO_ID_COMPONENTE
-						, null, null, null, null, null, usuario);
+				
+				List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjetoHistory(componente.getId(), OBJETO_ID_COMPONENTE
+						, lineaBase);
 				totalCompletadas = 0;
 				for (Actividad actividad :actividades){
 					if (actividad.getLatitud()!=null && actividad.getLongitud()!=null){
@@ -260,8 +298,8 @@ public class SMapa extends HttpServlet {
 				
 			}// fin componente
 			
-			List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjeto(0, 0, proyecto.getId(), OBJETO_ID_PROYECTO
-					, null, null, null, null, null, usuario);
+			List<Actividad> actividades = ActividadDAO.getActividadsPaginaPorObjetoHistory(proyecto.getId(), OBJETO_ID_PROYECTO
+					,lineaBase);
 			for (Actividad actividad :actividades){
 				if (actividad.getLatitud()!=null && actividad.getLongitud()!=null){
 					id++;
@@ -270,18 +308,17 @@ public class SMapa extends HttpServlet {
 									,actividad.getFechaInicio(),actividad.getFechaFin(),actividad.getPorcentajeAvance(),null,null));
 				}
 			}
-			
-			
 			response_text = String.join("","{\"marcas\" : [",marcas,"]}" );
 			
 		}
 		else if(accion.equals("getObjeto")){
 			int objetoId = Utils.String2Int(map.get("objetoId"), 0);
 			int objetoTipo = Utils.String2Int(map.get("objetoTipo"), 0);
+			String lineaBase = map.get("lineaBase");
 			stobjeto objeto = new stobjeto();
 			switch (objetoTipo){
-			case 1: 
-				Proyecto proyecto = ProyectoDAO.getProyectoPorId(objetoId, usuario);
+			case 0: 
+				Proyecto proyecto = ProyectoDAO.getProyectoHistory(objetoId, lineaBase);
 				objeto.nombreOjetoTipo = "Proyecto";
 				objeto.id = proyecto.getId();
 				objeto.nombre = proyecto.getNombre();
@@ -291,8 +328,8 @@ public class SMapa extends HttpServlet {
 				objeto.usuarioactualizo = proyecto.getUsuarioActualizo();
 				
 				break;
-			case 2:
-				Componente componente = ComponenteDAO.getComponentePorId(objetoId, usuario);
+			case 1:
+				Componente componente = ComponenteDAO.getComponenteHistory(objetoId, lineaBase);
 				objeto.nombreOjetoTipo = "Componente";
 				objeto.id = componente.getId();
 				objeto.nombre = componente.getNombre();
@@ -301,8 +338,18 @@ public class SMapa extends HttpServlet {
 				objeto.fechaactualizacion = Utils.formatDate(componente.getFechaActualizacion());
 				objeto.usuarioactualizo = componente.getUsuarioActualizo();
 				break;
+			case 2:
+				Subcomponente subcomponente = SubComponenteDAO.getSubcomponenteHistory(objetoId, lineaBase);
+				objeto.nombreOjetoTipo = "Subcomponente";
+				objeto.id = subcomponente.getId();
+				objeto.nombre = subcomponente.getNombre();
+				objeto.fechaCreacion = Utils.formatDate(subcomponente.getFechaCreacion());
+				objeto.usuarioCreo = subcomponente.getUsuarioCreo();
+				objeto.fechaactualizacion = Utils.formatDate(subcomponente.getFechaActualizacion());
+				objeto.usuarioactualizo = subcomponente.getUsuarioActualizo();
+				break;
 			case 3:
-				Producto prodcuto = ProductoDAO.getProductoPorId(objetoId);
+				Producto prodcuto = ProductoDAO.getProductoHistory(objetoId,lineaBase);
 				objeto.nombreOjetoTipo = "Producto";
 				objeto.id = prodcuto.getId();
 				objeto.nombre = prodcuto.getNombre();
@@ -312,7 +359,7 @@ public class SMapa extends HttpServlet {
 				objeto.usuarioactualizo = prodcuto.getUsuarioActualizo();
 				break;
 			case 4:
-				Subproducto subprodcuto = SubproductoDAO.getSubproductoPorId(objetoId);
+				Subproducto subprodcuto = SubproductoDAO.getSubproductoHistory(objetoId,lineaBase);
 				objeto.nombreOjetoTipo = "Subproducto";
 				objeto.id = subprodcuto.getId();
 				objeto.nombre = subprodcuto.getNombre();
@@ -322,7 +369,7 @@ public class SMapa extends HttpServlet {
 				objeto.usuarioactualizo = subprodcuto.getUsuarioActualizo();
 				break;
 			case 5:
-				Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
+				Actividad actividad = ActividadDAO.getActividadHistory(objetoId,lineaBase);
 				objeto.nombreOjetoTipo = "Actividad";
 				objeto.id = actividad.getId();
 				objeto.nombre = actividad.getNombre();
@@ -403,7 +450,10 @@ public class SMapa extends HttpServlet {
 	}
 	
 	private String getEstadoObjeto(Integer total, Integer enProceso){
-		double avance = (enProceso*1.0/total)*100.0;
+		double avance = 0;
+		if(total!=0){
+			avance = (enProceso*1.0/total)*100.0;
+		}
 		return "\"porcentajeEstado\" : " + avance + ",\"mostrar\":\"true\",";
 	}
 

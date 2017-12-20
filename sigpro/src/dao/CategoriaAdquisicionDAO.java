@@ -139,4 +139,21 @@ public class CategoriaAdquisicionDAO {
 		return ret;
 	}
 
+	public static List<CategoriaAdquisicion> getCategoriaAdquisicionLB(String lineaBase){
+		List<CategoriaAdquisicion> ret = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			String query = String.join(" ", "SELECT ca.* FROM sipro_history.categoria_adquisicion ca", 
+					"where ca.estado = 1",
+					lineaBase != null ? "and ca.linea_base like '%" + lineaBase + "%'" : "and ca.actual=1");
+			Query<CategoriaAdquisicion> criteria = session.createNativeQuery(query, CategoriaAdquisicion.class);
+			ret = criteria.getResultList();
+		}catch(Throwable e){
+			CLogger.write("1", CategoriaAdquisicionDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
 }

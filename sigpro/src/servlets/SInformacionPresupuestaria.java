@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -26,12 +27,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import dao.EstructuraProyectoDAO;
+import dao.ObjetoCosto;
+import dao.ObjetoDAO;
+import dao.PrestamoDAO;
+import dao.ProyectoDAO;
+import pojo.Prestamo;
+import pojo.Proyecto;
 import utilities.CExcel;
 import utilities.CGraficaExcel;
 import utilities.CLogger;
 import utilities.CPdf;
-import utilities.CPrestamoCostos;
 import utilities.Utils;
 
 @WebServlet("/SInformacionPresupuestaria")
@@ -74,9 +79,8 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
 				Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
 				Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
-				EstructuraProyectoDAO estructura = new EstructuraProyectoDAO();
-				List<CPrestamoCostos> lstPrestamo = estructura.getEstructuraConCostos(idPrestamo, anioInicial, anioFinal, usuario);
-				estructura = null;
+				String lineaBase = map.get("lineaBase");
+				List<ObjetoCosto> lstPrestamo = ObjetoDAO.getEstructuraConCosto(idPrestamo, anioInicial, anioFinal, true, true, null, lineaBase, usuario);
 				
 				if (null != lstPrestamo && !lstPrestamo.isEmpty()){
 					response_text=new GsonBuilder().serializeNulls().create().toJson(lstPrestamo);
@@ -100,7 +104,8 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
 				Integer agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
 				Integer tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
-		        byte [] outArray = exportarExcel(idPrestamo, anioInicial, anioFinal, agrupacion, tipoVisualizacion, usuario);
+				String lineaBase = map.get("lineaBase");
+		        byte [] outArray = exportarExcel(idPrestamo, anioInicial, anioFinal, agrupacion, tipoVisualizacion, lineaBase, usuario);
 				response.setContentType("application/ms-excel");
 				response.setContentLength(outArray.length);
 				response.setHeader("Cache-Control", "no-cache"); 
@@ -119,9 +124,8 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				String headers[][];
 				String datosMetas[][];
 				headers = generarHeaders(anioInicial, anioFinal, agrupacion, tipoVisualizacion);
-				EstructuraProyectoDAO estructura = new EstructuraProyectoDAO();
-				List<CPrestamoCostos> lstPrestamo = estructura.getEstructuraConCostos(idPrestamo, anioInicial, anioFinal, usuario);
-				estructura = null;
+				String lineaBase = map.get("lineaBase");
+				List<ObjetoCosto> lstPrestamo = ObjetoDAO.getEstructuraConCosto(idPrestamo, anioInicial, anioFinal, true, true, null, lineaBase, usuario);
 				datosMetas = generarDatosReporte(lstPrestamo, anioInicial, anioFinal, agrupacion, tipoVisualizacion, headers[0].length, usuario);
 				String path = archivo.ExportarPdfEjecucionPresupuestaria(headers, datosMetas,tipoVisualizacion);
 				File file=new File(path);
@@ -165,6 +169,44 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				}
 	
 				
+			}else if(accion.equals("getvigente")){
+				Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
+				Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
+				Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
+				String lineaBase = map.get("lineaBase");
+				
+				Proyecto proyecto = ProyectoDAO.getProyectoHistory(idPrestamo, lineaBase);
+				Prestamo prestamo = PrestamoDAO.getPrestamoByIdHistory(proyecto.getPrestamo().getId(), lineaBase);
+				Integer fuente = Integer.parseInt((prestamo.getCodigoPresupuestario()+"").substring(0, 2));
+				Integer organismo = Integer.parseInt((prestamo.getCodigoPresupuestario()+"").substring(3, 6));
+				Integer correlativo = Integer.parseInt((prestamo.getCodigoPresupuestario()+"").substring(7, 10));
+				String valores_text="";
+				
+				Calendar fecha = Calendar.getInstance();
+			    int anio = fecha.get(Calendar.YEAR);
+			    int mes =  anioFinal < anio ? 12 : fecha.get(Calendar.MONTH) + 1;
+				
+				for (int x = anioInicial; x<= anioFinal; x++){
+					List<?> vigente = ObjetoDAO.getVigente(fuente, organismo, correlativo, anioInicial, mes, 
+							proyecto.getUnidadEjecutora().getId().getUnidadEjecutora(), proyecto.getUnidadEjecutora().getId().getEntidadentidad());
+					Object valores [] = (Object[]) vigente.get(0);
+					for (int y = 0 ; y< 12; y++)
+						valores_text = String.join("", valores_text,valores_text.length()> 0 ? ",":"",
+								(valores[y]!=null ? (BigDecimal) valores[y] : new BigDecimal(0)).toString());
+				}
+				
+		        response_text = String.join("", "\"vigente\": [",valores_text,"]");
+		        response_text = String.join("", "{\"success\":true,", response_text, "}");
+		        
+		        response.setHeader("Content-Encoding", "gzip");
+				response.setCharacterEncoding("UTF-8");
+		
+		        OutputStream output = response.getOutputStream();
+				GZIPOutputStream gz = new GZIPOutputStream(output);
+		        gz.write(response_text.getBytes("UTF-8"));
+		        gz.close();
+		        output.close();
+		        
 			}
 		}catch(Exception e){
 			CLogger.write("2", SInformacionPresupuestaria.class, e);		
@@ -172,7 +214,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 	}
 	
 		
-	private byte[] exportarExcel(int prestamoId, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, String usuario){
+	private byte[] exportarExcel(int prestamoId, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, String lineaBase, String usuario){
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
@@ -182,13 +224,12 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
 			headers = generarHeaders(anioInicio, anioFin, agrupacion, tipoVisualizacion);
-			EstructuraProyectoDAO estructura = new EstructuraProyectoDAO();
-			List<CPrestamoCostos> lstPrestamo = estructura.getEstructuraConCostos(prestamoId, anioInicio, anioFin, usuario);
-			estructura = null;
+			List<ObjetoCosto> lstPrestamo = ObjetoDAO.getEstructuraConCosto(prestamoId, anioInicio, anioFin, true, true, null, lineaBase, usuario);
 			datosInforme = generarDatosReporte(lstPrestamo, anioInicio, anioFin, agrupacion, tipoVisualizacion, headers[0].length, usuario);
 			CGraficaExcel grafica = generarGrafica(datosInforme, tipoVisualizacion, agrupacion, anioInicio, anioFin);
 			excel = new CExcel("Ejecucion presupuestaria", false, grafica);
-			wb=excel.generateExcelOfData(datosInforme, "Ejecucion presupuestaria", headers, null, true, usuario);
+			Proyecto proyecto = ProyectoDAO.getProyecto(prestamoId);
+			wb=excel.generateExcelOfData(datosInforme, "Ejecucion presupuestaria - "+proyecto.getNombre(), headers, null, true, usuario);
 			wb.write(outByteStream);
 			outByteStream.close();
 			outArray = Base64.encode(outByteStream.toByteArray());
@@ -316,7 +357,7 @@ public class SInformacionPresupuestaria extends HttpServlet {
 		return headers;
 	}
 	
-	public String[][] generarDatosReporte(List<CPrestamoCostos> lstPrestamo, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, int columnasTotal, String usuario){
+	public String[][] generarDatosReporte(List<ObjetoCosto> lstPrestamo, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, int columnasTotal, String usuario){
 		String[][] datos = null;
 		int columna = 0;int factorVisualizacion=1;
 		if(tipoVisualizacion==2){
@@ -328,15 +369,10 @@ public class SInformacionPresupuestaria extends HttpServlet {
 			datos = new String[lstPrestamo.size()][columnasTotal];
 			for (int i=0; i<lstPrestamo.size(); i++){
 				columna = 0;
-				CPrestamoCostos prestamo = lstPrestamo.get(i);
-				String sangria;
-				switch (prestamo.getObjeto_tipo()){
-					case 1: sangria = ""; break;
-					case 2: sangria = "   "; break;
-					case 3: sangria = "      "; break;
-					case 4: sangria = "         "; break;
-					case 5: sangria = "            "; break;
-					default: sangria = "";
+				ObjetoCosto prestamo = lstPrestamo.get(i);
+				String sangria="";
+				for(int s=1; s<prestamo.getNivel(); s++){
+					sangria+="   ";
 				}
 				datos[i][columna] = sangria+prestamo.getNombre();
 				columna++;

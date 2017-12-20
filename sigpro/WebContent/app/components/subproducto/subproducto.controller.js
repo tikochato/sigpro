@@ -3,16 +3,19 @@ var moduloSubproducto = angular.module('moduloSubproducto', [ 'ngTouch',
 
 moduloSubproducto.controller('controlSubproducto', [ '$rootScope','$scope', '$routeParams',
 		'$route', '$window', '$location', '$mdDialog', '$uibModal', '$http',
-		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', '$q', 'dialogoConfirmacion', 
+		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', '$q', 'dialogoConfirmacion', 'historia', 'pagoplanificado',
 		controlSubproducto ]);
 
 function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $location,
 		$mdDialog, $uibModal, $http, $interval, i18nService, $utilidades,
-		$timeout, $log, $q, $dialogoConfirmacion) {
+		$timeout, $log, $q, $dialogoConfirmacion, $historia,$pagoplanificado) {
 	var mi = this;  
 	i18nService.setCurrentLang('es');
 	mi.esTreeview = $rootScope.treeview;
 	mi.botones = true;
+	
+	mi.child_adquisiciones = null;
+	mi.child_riesgos =  null;
 	
 	if(!mi.esTreeview)
 		$window.document.title = $utilidades.sistema_nombre+' - Subroducto';
@@ -25,11 +28,15 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 	mi.seleccionada = false;
 	mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 	mi.elementosPorPagina = $utilidades.elementosPorPagina;
-	mi.productoid = "";
 	mi.productoNombre = "";
 	mi.objetoTipoNombre = "";
 	mi.entidad='';
 	mi.ejercicio = '';
+
+	mi.formatofecha = 'dd/MM/yyyy';
+	mi.altformatofecha = ['d!/M!/yyyy'];
+	
+	mi.acumulacionesCosto = [];
 	
 	mi.fechaFinPadre;
 
@@ -51,29 +58,72 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 	mi.coordenadas = "";
 	
 	mi.botones =  true;
-
-/*	
-	$http.post('/SSubproducto', { accion: 'obtenerSubproductoPorId', id: $routeParams.subproducto_id, t: (new Date()).getTime() }).success(
+	
+	mi.adquisicionesCargadas = false;
+	mi.riesgos = false;
+	mi.pagos = [];
+	
+	mi.verHistoria = function(){
+		$historia.getHistoria($scope, 'Sub Producto', '/SSubproducto',mi.subproducto.id, 4, true, true, false, false)
+		.result.then(function(data) {
+			if (data != ""){
+				
+			}
+		}, function(){
+			
+		});
+	}
+	
+	mi.objetoTipoNombre = "Producto:";
+	$http.post('/SProducto', { accion: 'obtenerProductoPorId', id: mi.productoid, t: (new Date()).getTime()}).success(
+		function(response) {
+			mi.productoid = response.id;
+			mi.prestamoId = response.prestamoId;
+			mi.unidadEjecutora = response.unidadEjecutora;
+			mi.unidadEjecutoraNombre = response.unidadEjecutoraNombre;
+			mi.entidad = response.entidad;
+			mi.ejercicio = response.ejercicio;
+			mi.entidadnombre = response.entidadNombre;
+			mi.productoNombre = response.nombre;
+			var fechaInicioPadre = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
+			mi.modificarFechaInicial(fechaInicioPadre);
+			mi.congelado = response.congelado;
+		});
+	
+	$http.post('/SAcumulacionCosto', { accion: 'getAcumulacionesCosto', t: (new Date()).getTime()}).success(
 			function(response) {
-				mi.subproductoid = response.id;
-				mi.subproductoNombre = response.nombre;				
+				mi.acumulacionesCosto = response.acumulacionesTipos;
 	});
 	
-	$http.post('/SProducto', { accion: 'obtenerProductoPorId', id: $routeParams.producto_id , t: (new Date()).getTime()}).success(
-			function(response) {
-				mi.productoid = response.id;
-				mi.productoNombre = response.nombre;
-				mi.objetoTipoNombre = "Producto";
-				var fechaInicioPadre = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
-				mi.modificarFechaInicial(fechaInicioPadre);
-	});*/
+	mi.blurCategoria=function(){
+		if(document.getElementById("acumulacionCosto_value").defaultValue!=mi.subproducto.acumulacionCostoNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','acumulacionCosto');
+		}
+	}
+	
+	mi.cambioAcumulacionCosto=function(selected){
+		if(selected!== undefined){
+			mi.subproducto.acumulacionCostoNombre = selected.originalObject.nombre;
+			mi.subproducto.acumulacionCosto = selected.originalObject.id;
+			
+			if(mi.subproducto.acumulacionCostoId == 2){
+				mi.subproducto.costo = null;
+				mi.bloquearCosto = true;
+			}else{
+				mi.subproducto.costo = null;
+				mi.bloquearCosto = false;
+			}
+		}
+		else{
+			mi.subproducto.acumulacionCostoNombre="";
+			mi.subproducto.acumulacionCosto="";
+		}
+	}
 	
 	mi.modificarFechaInicial = function(fechaPadre){
 		mi.fi_opciones.minDate = fechaPadre;
 	}
-	
-	mi.formatofecha = 'dd/MM/yyyy';
-	
+		
 	mi.fechaOptions = {
 			formatYear : 'yy',
 			maxDate : new Date(2030, 12, 31),
@@ -152,7 +202,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width:90%;" ng-keypress="grid.appScope.subproducto.filtrar($event,1)" ></input></div>'
 			}, 
 			{ displayName : 'Descripción', name : 'descripcion', cellClass : 'grid-align-left' },
-			{ displayName : 'Tipo', name : 'subproductoTipo', cellClass : 'grid-align-left', enableFiltering: false, enableSorting: false},  
+			{ displayName : 'Tipo', name : 'subProductoTipo', cellClass : 'grid-align-left', enableFiltering: false, enableSorting: false},  
 			{ displayName : 'Producto', name : 'producto', cellClass : 'grid-align-left', visible : false },
 			{ displayName : 'Subproducto', name : 'subproducto', cellClass : 'grid-align-left', visible : false },
 			{ name: 'usuarioCreo', displayName: 'Usuario Creación',cellClass: 'grid-align-left',
@@ -208,6 +258,10 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 		    }
 		}
 	}
+	
+	mi.actualizarCosto = function(costo){
+		mi.subproducto.costo = costo;
+	}
 
 	mi.guardarEstado = function() {
 		var estado = mi.gridApi.saveState.save();
@@ -235,15 +289,23 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 		
 		mi.tipo = null;
 		mi.tipoNombre = "";
-
-		mi.unidadEjecutora = null;
-		mi.unidadEjecutoraNombre = "";
+		
+		mi.unidadEjecutora= mi.prestamoId != null ? mi.unidadEjecutora :  null;
+		mi.unidadEjecutoraNombre= mi.prestamoId != null ? mi.unidadEjecutoraNombre : "";
 
 		mi.propiedadesValor = [];
 		mi.subproducto = {};
 		mi.coordenadas = "";
 		
 		$utilidades.setFocus(document.getElementById("nombre"));
+		
+		mi.child_adquisiciones = null;
+		mi.child_riesgos = null;
+		
+		mi.riesgos = undefined;
+		mi.adquisicionesCargadas = false;
+		
+		mi.activeTab = 0;
 	}
 
 	mi.limpiarSeleccion = function() {
@@ -330,13 +392,14 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 				datadinamica : JSON.stringify(mi.camposdinamicos),
 				longitud: mi.subproducto.longitud,
 				costo: mi.subproducto.costo == null ? 0 : mi.subproducto.costo,
-				acumulacionCostoId: mi.subproducto.acumulacionCostoId == null ? 0 : mi.subproducto.acumulacionCostoId,
+				acumulacionCostoId: mi.subproducto.acumulacionCosto == null ? 0 : mi.subproducto.acumulacionCosto,
 				fechaInicio: moment(mi.subproducto.fechaInicio).format('DD/MM/YYYY'),
 				fechaFin: moment(mi.subproducto.fechaFin).format('DD/MM/YYYY'),
 				duaracion: mi.subproducto.duracion,
 				duracionDimension: mi.duracionDimension.sigla,
 				latitud : mi.subproducto.latitud,
 				esnuevo : mi.esNuevo,
+				pagosPlanificados: JSON.stringify(mi.pagos),
 				t: (new Date()).getTime()
 			};
 
@@ -345,12 +408,22 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 						if (response.data.success) {
 							mi.data = response.data.subproductos;
 							mi.opcionesGrid.data = mi.data;
-							$utilidades.mensaje('success','Subproducto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
 							mi.subproducto.id = response.data.id;
 							mi.subproducto.usuarioCreo = response.data.usuarioCreo;
 							mi.subproducto.fechaCreacion = response.data.fechaCreacion;
 							mi.subproducto.usuarioActualizo = response.data.usuarioactualizo;
 							mi.subproducto.fechaActualizacion = response.data.fechaactualizacion;
+							if(mi.child_adquisiciones!=null)
+								mi.child_adquisiciones.guardar((mi.child_riesgos!=null) ? mi.child_riesgos.guardar : null,'Subproducto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+									'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Subproducto');
+							else{
+								if(mi.child_riesgos){
+									mi.child_riesgos.guardar('Subproducto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+											'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Subproducto');
+								}
+								else
+									$utilidades.mensaje('success','Subproducto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+							}
 							if(!mi.esTreeview)
 								mi.cargarTabla(mi.paginaActual);
 							else{
@@ -361,7 +434,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 							}
 							mi.esNuevo = false;
 							
-							
+							mi.getAsignado();
 						} else {
 							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Subproducto');
 						}
@@ -373,6 +446,8 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 	mi.cancelar = function() {
 		mi.esForma = false;
 		mi.esNuevo=false;
+		mi.child_adquisiciones = null;
+		mi.child_riesgos = null;
 	};
 	
 	mi.editar = function() {
@@ -380,8 +455,16 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 			mi.esForma = true;
 			mi.entityselected = null;
 			mi.esNuevo = false;
-			mi.tipo = mi.subproducto.subProductoTipoId;
+			mi.tipo = mi.subproducto.idSubproductoTipo; 
 			mi.tipoNombre = mi.subproducto.subProductoTipo;
+			
+			if(mi.subproducto.acumulacionCostoId==2){
+				mi.bloquearCosto = true;
+			}else{
+				mi.bloquearCosto = false;
+			}
+			
+			mi.productoid = mi.subproducto.idProducto;
 			
 			if(mi.subproducto.duracionDimension == 'd'){
 				mi.duracionDimension = mi.dimensiones[0];
@@ -389,12 +472,6 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 
 			mi.subproductoPadre = mi.subproducto.idSubproducto;
 			mi.subproductoPadreNombre = mi.subproducto.subproducto;
-			
-			mi.unidadEjecutora = mi.subproducto.unidadEjectuora;
-			mi.unidadEjecutoraNombre = mi.subproducto.nombreUnidadEjecutora;
-			mi.ejercicio = mi.subproducto.ejercicio;
-			mi.entidad = mi.subproducto.entidadentidad;
-			mi.entidadnombre = mi.subproducto.entidadnombre;
 			
 			if(mi.fechaFinPadre != null && !isNaN(mi.fechaFinPadre)){
 				mi.subproducto.fechaInicio = mi.sumarDias(mi.fechaFinPadre,2, 'd');
@@ -412,7 +489,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 					t: (new Date()).getTime()
 			}
 			$http.post('/SSubproductoPropiedad', parametros).then(function(response){
-				mi.camposdinamicos = response.data.subproductopropiedades
+				mi.camposdinamicos = response.data.subproductopropiedades;
 				for (campos in mi.camposdinamicos) {
 					switch (mi.camposdinamicos[campos].tipo){
 						case "fecha":
@@ -426,6 +503,12 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 							break;
 					}
 				}
+				
+				mi.adquisicionesCargadas = false;
+				mi.riesgos = false;
+				
+				mi.activeTab = 0;
+				mi.getAsignado();
 			});
 		} else {
 			$utilidades.mensaje('warning', 'Debe seleccionar un subproducto');
@@ -490,7 +573,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 		
 		resultado.then(function(itemSeleccionado){
 			mi.subproducto.acumulacionCostoNombre = itemSeleccionado.nombre;
-			mi.subproducto.acumulacionCostoId = itemSeleccionado.id;
+			mi.subproducto.acumulacionCosto = itemSeleccionado.id;
 		});
 	}
 	
@@ -705,6 +788,10 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 								mi.subproducto.fechaInicio = moment(mi.subproducto.fechaInicio, 'DD/MM/YYYY').toDate();
 							if(mi.subproducto.fechaFin != "")
 								mi.subproducto.fechaFin = moment(mi.subproducto.fechaFin, 'DD/MM/YYYY').toDate();
+							if(mi.subproducto.fechaInicioReal != "")
+								mi.subproducto.fechaInicioReal = moment(mi.subproducto.fechaInicioReal, 'DD/MM/YYYY').toDate();
+							if(mi.subproducto.fechaFinReal != "")
+								mi.subproducto.fechaFinReal = moment(mi.subproducto.fechaFinReal, 'DD/MM/YYYY').toDate();
 							mi.editar();
 						}
 					});
@@ -758,6 +845,64 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 		mi.adquisicionesActivo = function(){
 			if(!mi.adquisicionesCargadas){
 				mi.adquisicionesCargadas = true;
+			}
+		}
+		
+		mi.riesgosActivo = function(){
+			if(!mi.riesgos){
+				mi.riesgos = true;
+			}
+		};
+		
+		mi.agregarPagos = function() {
+			$pagoplanificado.getPagoPlanificado($scope, mi.subproducto.id,4, 
+			function(objetoId, objetoTipo){
+				return{
+					accion: 'getPagos',
+					objetoId: objetoId,
+					objetoTipo : objetoTipo
+				}
+			},mi.subproducto.fechaInicio,mi.subproducto.fechaFin)
+			.result.then(function(data) {
+				mi.pagos=data;
+				mi.subproducto.costo = 0;
+				for (x in mi.pagos){
+					mi.subproducto.costo += mi.pagos[x].pago;
+				}
+			}, function(){
+			});
+		};
+		
+		mi.getAsignado = function(){
+			if(mi.subproducto.programa != null){
+				$http.post('/SSubproducto', {
+					accion: 'getValidacionAsignado',
+					id: mi.subproducto.id,
+					programa: mi.subproducto.programa,
+					subprograma: mi.subproducto.subprograma,
+					proyecto: mi.subproducto.proyecto,
+					actividad: mi.subproducto.actividad,
+					obra: mi.subproducto.obra,
+					renglon: mi.subproducto.renglon,
+					geografico: mi.subproducto.ubicacionGeografica,
+					t: new Date().getTime()
+				}).success(function(response){
+					if(response.success){
+						mi.asignado = response.asignado;
+						mi.sobrepaso = response.sobrepaso;
+					}
+				});
+			}
+		}
+		
+		mi.validarAsignado = function(){
+			if(mi.subproducto.costo != null){
+				if(mi.subproducto.programa != null){
+					if(mi.subproducto.costo <= mi.asignado)
+						mi.sobrepaso = false;
+					else
+						mi.sobrepaso = true;
+				}
 			}
 		}
 }
@@ -945,3 +1090,5 @@ moduloSubproducto.controller('mapCtrl',[ '$scope','$uibModalInstance','$timeout'
 		  $uibModalInstance.close($scope.posicion);
 	  };
 }]);
+
+

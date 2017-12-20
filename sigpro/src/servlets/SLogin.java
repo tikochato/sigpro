@@ -21,7 +21,9 @@ import org.apache.shiro.subject.Subject;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import dao.EtiquetaDAO;
 import dao.UsuarioDAO;
+import pojo.Etiqueta;
 import pojo.Usuario;
 import shiro.utilities.CShiro;
 
@@ -30,6 +32,10 @@ import shiro.utilities.CShiro;
  */
 @WebServlet("/SLogin")
 public class SLogin extends HttpServlet {
+	public class stetiqueta{
+		public String proyecto;
+		public String colorPrincipal;
+	}
 	
 	/**
 	 * 
@@ -81,6 +87,13 @@ public class SLogin extends HttpServlet {
 				sesionweb.setAttribute("usuario", user.getUsuario());
 				CShiro.setAttribute("username", user.getUsuario());
 				CShiro.setAttribute("user",user);
+				
+				Integer sistemaUsuario = user.getSistemaUsuario();
+				Etiqueta etiquetaUsuario = EtiquetaDAO.getEtiquetaPorId(sistemaUsuario);
+				stetiqueta etiqueta = new stetiqueta();
+				etiqueta.proyecto = etiquetaUsuario.getProyecto();
+				etiqueta.colorPrincipal = etiquetaUsuario.getColorPrincipal();
+				CShiro.setAttribute("sistemausuario", etiqueta);
 				response.getWriter().write("{ \"success\": true }");
 				UsuarioDAO.userLoginHistory(user.getUsuario());
 			} catch (UnknownAccountException uae) {

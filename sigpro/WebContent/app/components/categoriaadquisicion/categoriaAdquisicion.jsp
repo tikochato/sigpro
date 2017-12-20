@@ -101,7 +101,9 @@
 					   <label class="floating-label">* Nombre</label>
 					</div>
 					<div class="form-group">
-					   <input type="text" name="inombre"  class="inputText" id="inombre" ng-model="controller.categoriaAdquisicion.descripcion" ng-value="controller.categoriaAdquisicion.descripcion"  onblur="this.setAttribute('value', this.value);">
+					   <textarea class="inputText" rows="4"
+					   ng-model="controller.categoriaAdquisicion.descripcion" ng-value="controller.categoriaAdquisicion.descripcion"   
+					   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
 					   <label class="floating-label">Descripción</label>
 					</div>
 				</div>
@@ -145,10 +147,10 @@
 		<div align="center" class="label-form">Los campos marcados con * son obligatorios</div>
 			<div class="btn-group">
 				<shiro:hasPermission name="24020">
-					<label class="btn btn-success" ng-click="form.$valid ? controller.guardar() : ''" ng-disabled="!form.$valid" title="Guardar" uib-tooltip="Guardar">
+					<label class="btn btn-success" ng-click="form.$valid ? controller.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
 					<span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 				</shiro:hasPermission>
-				<label class="btn btn-primary" ng-click="controller.irATabla()" title="Ir a Tabla" uib-tooltip="Ir a Tabla">
+				<label class="btn btn-primary" ng-click="controller.irATabla()" uib-tooltip="Ir a Tabla">
 				<span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 			</div>
 		</div>

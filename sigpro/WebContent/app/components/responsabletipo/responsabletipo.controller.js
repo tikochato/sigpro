@@ -1,7 +1,7 @@
 var app = angular.module('responsabletipoController', []);
 
-app.controller('responsabletipoController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','dialogoConfirmacion',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion) {
+app.controller('responsabletipoController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','dialogoConfirmacion',
+	function($scope,$rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q, $dialogoConfirmacion) {
 	var mi = this;
 	
 	mi.totalResponsablesTipos = 0;
@@ -120,7 +120,7 @@ app.controller('responsabletipoController',['$scope','$http','$interval','i18nSe
 			});
 		}
 		else
-			$utilidades.mensaje('warning','Debe seleccionar el Préstamo que desea borrar');
+			$utilidades.mensaje('warning','Debe seleccionar el '+$rootScope.etiquetas.proyecto+' que desea borrar');
 	};
 	
 	mi.editarElemento = function (event) {

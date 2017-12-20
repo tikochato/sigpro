@@ -2,21 +2,19 @@ package servlets;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,77 +23,61 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.codec.Base64;
-import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dao.ActividadDAO;
-import dao.CategoriaAdquisicionDAO;
 import dao.EstructuraProyectoDAO;
 import dao.PlanAdquisicionDAO;
-import dao.PlanAdquisicionPagoDAO;
-import dao.ProductoDAO;
-import dao.SubproductoDAO;
+import dao.ProyectoDAO;
 import pojo.Actividad;
-import pojo.CategoriaAdquisicion;
 import pojo.PlanAdquisicion;
-import pojo.PlanAdquisicionPago;
-import pojo.Producto;
-import pojo.Subproducto;
+import pojo.Proyecto;
 import utilities.CExcel;
 import utilities.CLogger;
+import utilities.CPdf;
 import utilities.Utils;
 
 @WebServlet("/SPlanAdquisiciones")
 public class SPlanAdquisiciones extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    
-	class stpresupuestoPlan{
-		BigDecimal planificado;
-	}
 	
-	class stplan{
-		stpresupuestoPlan[] mes = new stpresupuestoPlan[12];
-		Integer anio;
-	}
-	
-	class sttotal{
-		stpresupuestoPlan[] total = new stpresupuestoPlan[1];
-		Integer anio;
-	}
-	
-	class stcomponenteplanadquisicion{
+	class stplanadquisiciones{
 		Integer objetoId;
+		Integer objetoTipo;
+		Integer predecesorId;
+		Integer objetoPredecesorTipo;
+		Integer idPlanAdquisicion;
 		String nombre;
 		Integer nivel;
-		Integer objetoTipo;
-		Integer planadquisicionId;
-		Integer acumulacionCosto;
-		Integer objetoTipoPadre;
-		Integer objetoIdPadre;
-		DateTime fechaIncial;
-		DateTime fechaFinal;
+		Integer tipoAdquisicion;
+		String tipoAdquisicionNombre;
+		Integer categoriaAdquisicion;
+		String categoriaAdquisicionNombre;
+		String unidadMedida;
+		Integer cantidad;
 		BigDecimal costo;
-		stplan[] anioPlan;
-		sttotal[] anioTotalPlan;
 		BigDecimal total;
+		Long nog;
+		String planificadoDocs;
+		String realDocs;
+		String planificadoLanzamiento;
+		String realLanzamiento;
+		String planificadoRecepcionEval;
+		String realRecepcionEval;
+		String planificadoAdjudica;
+		String realAdjudica;
+		String planificadoFirma;
+		String realFirma;
+		String numeroContrato;
+		BigDecimal montoContrato;
+		List<String> hijos;
+		Integer tipoRevision;
+		String tipoRevisionNombre;
 	}
 	
-	class stcategoria{
-		Integer categoriaId;
-		String nombre;
-		ArrayList<List<Integer>> objetos = new ArrayList<List<Integer>>();
-	}
-	
-	final int AGRUPACION_MES= 1;
-	final int AGRUPACION_BIMESTRE = 2;
-	final int AGRUPACION_TRIMESTRE = 3;
-	final int AGRUPACION_CUATRIMESTRE= 4;
-	final int AGRUPACION_SEMESTRE= 5;
-	final int AGRUPACION_ANUAL= 6;
-		
     public SPlanAdquisiciones() {
         super();
     }
@@ -122,542 +104,317 @@ public class SPlanAdquisiciones extends HttpServlet {
 			String accion = map.get("accion")!=null ? map.get("accion") : "";
 			String response_text = "";
 			
-			Integer idPrestamo = Utils.String2Int(map.get("idPrestamo"),0);
-			Integer fechaInicio = Utils.String2Int(map.get("fechaInicio"));
-			Integer fechaFin = Utils.String2Int(map.get("fechaFin"));
+			Integer proyectoId = Utils.String2Int(map.get("proyectoId"),0);
 			
-			if(accion.equals("generarPlan")){
+			if (accion.equals("generarPlan")){
+				
 				try{
-					List<stcomponenteplanadquisicion> lstprestamo = generarPlan(idPrestamo, usuario, fechaInicio, fechaFin);
+					String lineaBase = map.get("lineaBase");
+					List<stplanadquisiciones> lstprestamo = generarPlan(proyectoId, lineaBase, usuario);
 										
 					response_text=new GsonBuilder().serializeNulls().create().toJson(lstprestamo);
 			        response_text = String.join("", "\"proyecto\":",response_text);
 			        response_text = String.join("", "{\"success\":true,", response_text, "}");
 				}
 				catch (Exception e){
-					CLogger.write("2", SControlAdquisiciones.class, e);
+					CLogger.write("2", SPlanAdquisiciones.class, e);
 				}
 			}else if(accion.equals("exportarExcel")){
-				Integer agrupacion = Utils.String2Int(map.get("agrupacion"), 0);
-				Integer tipoVisualizacion = Utils.String2Int(map.get("tipoVisualizacion"), 0);
-				byte [] outArray = exportarExcel(idPrestamo, agrupacion, usuario, fechaInicio, fechaFin, tipoVisualizacion);
-				response.setContentType("application/ms-excel");
-				response.setContentLength(outArray.length);
-				response.setHeader("Cache-Control", "no-cache"); 
-				response.setHeader("Content-Disposition", "attachment; Ejecucion_Presupuestaria.xls");
-				ServletOutputStream outStream = response.getOutputStream();
-				outStream.write(outArray);
-				outStream.flush();
-				outStream.close();
+				Integer idPlanAdquisicion = Utils.String2Int(map.get("idPlanAdquisicion"), null);
+				try{ 
+					String lineaBase = map.get("lineaBase");
+					byte [] outArray = exportarExcel(idPlanAdquisicion, proyectoId, lineaBase, usuario);
+					
+					response.setContentType("application/ms-excel");
+					response.setContentLength(outArray.length);
+					response.setHeader("Cache-Control", "no-cache"); 
+					response.setHeader("Content-Disposition", "attachment; Plan_de_Adquisiciones.xls");
+					OutputStream outStream = response.getOutputStream();
+					outStream.write(outArray);
+					outStream.flush();
+				}catch(Exception e){
+					CLogger.write("4", SPlanAdquisiciones.class, e);
+				}
+			}else if(accion.equals("exportarPdf")){
+				CPdf archivo = new CPdf("Plan de adquisiciones");
+				String headers[][];
+				String datos[][];
+				headers = generarHeaders();
+				String lineaBase = map.get("lineaBase");
+				datos = generarDatos(proyectoId, lineaBase, usuario);
+				String path = archivo.exportarPlanAdquisiciones(headers, datos,usuario);
+				File file=new File(path);
+				if(file.exists()){
+			        FileInputStream is = null;
+			        try {
+			        	is = new FileInputStream(file);
+			        }
+			        catch (Exception e) {
+						CLogger.write("5", SAdministracionTransaccional.class, e);
+			        }
+			        ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+			        
+			        int readByte = 0;
+			        byte[] buffer = new byte[2024];
+
+	                while(true)
+	                {
+	                    readByte = is.read(buffer);
+	                    if(readByte == -1)
+	                    {
+	                        break;
+	                    }
+	                    outByteStream.write(buffer);
+	                }
+	                
+	                file.delete();
+	                
+	                is.close();
+	                outByteStream.flush();
+	                outByteStream.close();
+	                
+			        byte [] outArray = Base64.encode(outByteStream.toByteArray());
+					response.setContentType("application/pdf");
+					response.setContentLength(outArray.length);
+					response.setHeader("Cache-Control", "no-cache"); 
+					response.setHeader("Content-Disposition", "in-line; 'PlanAdquisicion.pdf'");
+					OutputStream outStream = response.getOutputStream();
+					outStream.write(outArray);
+					outStream.flush();
+				}
+			}
+			else{
+				response_text = "{ \"success\": false }";
 			}
 			
-			response.setHeader("Content-Encoding", "gzip");
-			response.setCharacterEncoding("UTF-8");
+			if(!accion.equals("exportarExcel") && !accion.equals("exportarPdf")){
+				response.setHeader("Content-Encoding", "gzip");
+				response.setCharacterEncoding("UTF-8");
 
-	        OutputStream output = response.getOutputStream();
-			GZIPOutputStream gz = new GZIPOutputStream(output);
-	        gz.write(response_text.getBytes("UTF-8"));
-	        gz.close();
-	        output.close();
-
+		        OutputStream output = response.getOutputStream();
+				GZIPOutputStream gz = new GZIPOutputStream(output);
+		        gz.write(response_text.getBytes("UTF-8"));
+		        gz.close();
+		        output.close();
+			}
 		}catch(Exception e){
 			CLogger.write("1", SPlanAdquisiciones.class, e);
 		}
 	}
 	
-	private List<stcomponenteplanadquisicion> generarPlan(Integer idPrestamo, String usuario, Integer fechaInicial, Integer fechaFinal) throws Exception{
+	private List<stplanadquisiciones> generarPlan(Integer IdProyecto, String lineaBase, String usuario) throws Exception{
 		try{
-			List<stcomponenteplanadquisicion> lstPrestamo = new ArrayList<>();
-			List<?> estruturaProyecto = EstructuraProyectoDAO.getEstructuraProyecto(idPrestamo);
-			stcomponenteplanadquisicion temp = null;
-			
-			List<CategoriaAdquisicion> lstCategorias = CategoriaAdquisicionDAO.getCategoriaAdquisicion(); 
-			List<stcategoria> lsttempCategorias = new ArrayList<stcategoria>();
-			stcategoria tempCategoria = null;
-			for(CategoriaAdquisicion categoria : lstCategorias){
-				tempCategoria = new stcategoria();
-				tempCategoria.categoriaId = categoria.getId();
-				tempCategoria.nombre = categoria.getNombre();
-				lsttempCategorias.add(tempCategoria);
-			}
+			List<stplanadquisiciones> lstPrestamo = new ArrayList<>();
+			List<?> estruturaProyecto = EstructuraProyectoDAO.getEstructuraProyecto(IdProyecto, lineaBase);
+			stplanadquisiciones temp = null;
+			Integer proyectoId = 0;
+			Integer componenteId = 0;
+			Integer productoId = 0;
+			Integer subProductoId = 0;
+			Integer actividadId = 0;
 			
 			for(Object objeto: estruturaProyecto){
-				temp = new stcomponenteplanadquisicion();
-				Object[] obj = (Object[])objeto;
-				BigInteger objetoTipo = (BigInteger)obj[2];
-				Integer tipo = objetoTipo.intValue();
-				if(tipo == 2){
-					Integer componenteid = (Integer)obj[0]; 
+				Object[] obj = (Object[]) objeto;
+				Integer nivel = (obj[3]!=null) ? ((String)obj[3]).length()/8 : 0;
+				if(nivel != null){
+					temp = new stplanadquisiciones();
 					temp.objetoId = (Integer)obj[0];
 					temp.nombre = (String)obj[1];
-					temp.nivel = 0;
-					temp.objetoTipo = tipo;
-					lstPrestamo.add(temp);
+					temp.objetoTipo = ((BigInteger)obj[2]).intValue();
+					temp.nivel = nivel;
+					List<PlanAdquisicion> adquisiciones = null;
+					inicializarPlanAdquisicion(temp);
 					
-					List<List<Integer>> hijos = EstructuraProyectoDAO.getHijosCompleto((String)obj[3], estruturaProyecto);
-					
-					for(List<Integer> objetoHijo : hijos){
-						List<PlanAdquisicion> lstplan = PlanAdquisicionDAO.getPlanAdquisicionByObjeto(objetoHijo.get(1), objetoHijo.get(0));
-						
-						if(lstplan != null && !lstplan.isEmpty()){
-							for(PlanAdquisicion plan : lstplan){
-								for(stcategoria cat : lsttempCategorias){
-									if(cat.categoriaId == plan.getCategoriaAdquisicion().getId()){
-										List<Integer> objH = new ArrayList<Integer>();
-										objH.add(objetoHijo.get(0));
-										objH.add(objetoHijo.get(1));
-										objH.add(plan.getId());
-										cat.objetos.add(objH);
-									}
-								}
-							}
-						}
-					}
-					
-					for(stcategoria cat : lsttempCategorias){
-						if(!cat.objetos.isEmpty()){
-							temp = new stcomponenteplanadquisicion();
-							temp.nombre = cat.nombre;
-							temp.nivel = 1;
-							lstPrestamo.add(temp);
+					switch(temp.objetoTipo){
+						case 1:
+							temp.objetoPredecesorTipo = 0;
+							temp.predecesorId = 0;
+							proyectoId = temp.objetoId;
 							
-							for(List<Integer> objCat : cat.objetos){
-								temp = new stcomponenteplanadquisicion();
-								String nombre = null;
-								Date fechaInicio = new Date();
-								Date fechaFin = new Date();
-								Integer acumulacionCosto = 0;
-								BigDecimal costo = new BigDecimal(0);
+							temp.hijos = EstructuraProyectoDAO.getHijos((String)obj[3], estruturaProyecto);
+							
+							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionesByObjetoLB(temp.objetoTipo, proyectoId, lineaBase);
+							break;
+						case 2:
+							temp.objetoPredecesorTipo = 1;
+							temp.predecesorId = proyectoId;
+							componenteId = temp.objetoId;
+							
+							temp.hijos = EstructuraProyectoDAO.getHijos((String)obj[3], estruturaProyecto);
+							
+							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionesByObjetoLB(temp.objetoTipo, componenteId, lineaBase);
+						break;
+						case 3:
+							temp.objetoPredecesorTipo = 2;
+							temp.predecesorId = componenteId;
+							productoId = temp.objetoId;
+							
+							temp.hijos = EstructuraProyectoDAO.getHijos((String)obj[3], estruturaProyecto);
+							
+							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionesByObjetoLB(temp.objetoTipo, productoId, lineaBase);
+						break;
+						case 4:
+							temp.objetoPredecesorTipo = 3;
+							temp.predecesorId = productoId;
+							temp.hijos = EstructuraProyectoDAO.getHijos((String)obj[3], estruturaProyecto);
+							subProductoId = temp.objetoId;
+							
+							adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionesByObjetoLB(temp.objetoTipo, subProductoId, lineaBase);
+						break;
+						case 5:
+							Actividad actividad = ActividadDAO.getActividadPorId(temp.objetoId);
+							if(actividad != null){
+								temp.predecesorId = actividad.getObjetoId();
+								temp.objetoPredecesorTipo = actividad.getPredObjetoTipo();
+								temp.hijos = EstructuraProyectoDAO.getHijos((String)obj[3], estruturaProyecto);
+								actividadId = temp.objetoId;
 								
-								switch(objCat.get(1)){
-								case 3:
-									Producto producto = ProductoDAO.getProductoPorId(objCat.get(0));
-									costo = producto.getCosto();
-									nombre = producto.getNombre();
-									fechaInicio = producto.getFechaInicio();
-									fechaFin = producto.getFechaFin();
-									acumulacionCosto = producto.getAcumulacionCosto() != null ? producto.getAcumulacionCosto().getId() : 3;
-									break;
-								case 4:
-									Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objCat.get(0));
-									costo = subproducto.getCosto();
-									nombre = subproducto.getNombre();
-									fechaInicio = subproducto.getFechaInicio();
-									fechaFin = subproducto.getFechaFin();
-									acumulacionCosto = subproducto.getAcumulacionCosto() != null ? subproducto.getAcumulacionCosto().getId() : 3;
-									break;
-								case 5:
-									Actividad actividad = ActividadDAO.getActividadPorId(objCat.get(0));
-									costo = actividad.getCosto();
-									nombre = actividad.getNombre();
-									fechaInicio = actividad.getFechaInicio();
-									fechaFin = actividad.getFechaFin();
-									acumulacionCosto = actividad.getAcumulacionCosto() != null ? actividad.getAcumulacionCosto().getId() : 3;
-									break;
-								}
-								
-								temp.nombre = nombre;
-								temp.objetoId = objCat.get(0);
-								temp.objetoTipo = objCat.get(1);
-								temp.nivel = 2;
-								temp.anioPlan = inicializarStplan(fechaInicial, fechaFinal);
-								temp.costo = costo;
-								temp.acumulacionCosto = acumulacionCosto;
-								temp.fechaIncial = new DateTime(fechaInicio);
-								temp.fechaFinal = new DateTime(fechaFin);
-								temp.planadquisicionId = objCat.get(2);
-								temp.objetoIdPadre = componenteid;
-								temp.objetoTipoPadre = 2;
-								
-								temp = getCostoPagos(temp);
-								
-								temp.fechaIncial = null;
-								temp.fechaFinal = null;
-								lstPrestamo.add(temp);
+								adquisiciones = PlanAdquisicionDAO.getPlanAdquisicionesByObjetoLB(temp.objetoTipo, actividadId, lineaBase);
 							}
-						}
+						break;
 					}
 					
-					inicializarObjCategoria(lsttempCategorias);
+					if(adquisiciones != null){
+						for(PlanAdquisicion adquisicion : adquisiciones){
+							temp.planificadoDocs = Utils.formatDate(adquisicion.getPreparacionDocPlanificado());
+							temp.realDocs = Utils.formatDate(adquisicion.getPreparacionDocReal());
+							temp.planificadoRecepcionEval = Utils.formatDate(adquisicion.getRecepcionOfertasPlanificado());
+							temp.realRecepcionEval = Utils.formatDate(adquisicion.getRecepcionOfertasReal());
+							temp.planificadoLanzamiento = Utils.formatDate(adquisicion.getLanzamientoEventoPlanificado());
+							temp.realLanzamiento = Utils.formatDate(adquisicion.getLanzamientoEventoReal());
+							temp.planificadoAdjudica = Utils.formatDate(adquisicion.getAdjudicacionPlanificado());
+							temp.realAdjudica = Utils.formatDate(adquisicion.getAdjudicacionReal());
+							temp.planificadoFirma = Utils.formatDate(adquisicion.getFirmaContratoPlanificado());
+							temp.realFirma = Utils.formatDate(adquisicion.getFirmaContratoReal());
+							temp.tipoAdquisicion = adquisicion.getTipoAdquisicion() != null ? adquisicion.getTipoAdquisicion().getId() : 0;
+							temp.tipoAdquisicionNombre = adquisicion.getTipoAdquisicion() != null ? adquisicion.getTipoAdquisicion().getNombre() : "";
+							temp.categoriaAdquisicion = adquisicion.getCategoriaAdquisicion() != null ? adquisicion.getCategoriaAdquisicion().getId() : 0;
+							temp.categoriaAdquisicionNombre = adquisicion.getCategoriaAdquisicion() != null ? adquisicion.getCategoriaAdquisicion().getNombre() : "";
+							temp.unidadMedida = adquisicion.getUnidadMedida();
+							temp.cantidad = adquisicion.getCantidad() != null ? adquisicion.getCantidad() : 0;
+							temp.costo = adquisicion.getPrecioUnitario() != null ? adquisicion.getPrecioUnitario() : new BigDecimal(0);
+							temp.total = adquisicion.getTotal() != null ? adquisicion.getTotal() : new BigDecimal(0);
+							temp.tipoRevision = adquisicion.getTipoRevision();
+							temp.tipoRevisionNombre = temp.tipoRevision != null ? temp.tipoRevision == 1 ? "Ex-ante" : temp.tipoRevision == 2 ? "Ex-Post" : null : null;
+							temp.nog = adquisicion.getNog();
+							temp.numeroContrato = adquisicion.getNumeroContrato();
+							temp.montoContrato = adquisicion.getMontoContrato().compareTo(BigDecimal.ZERO) > 0 ? adquisicion.getMontoContrato() : null;							
+						}
+						lstPrestamo.add(temp);
+					}	
 				}
 			}
-			for(stcomponenteplanadquisicion stprestamo : lstPrestamo){
-				sttotal[] sttotaltemp = inicializarStTotalPlan(fechaInicial, fechaFinal);
-				if(stprestamo.anioPlan != null){
-					for(int j = 0; j < stprestamo.anioPlan.length; j++){
-						for(int i = 0; i< stprestamo.anioPlan[j].mes.length; i++){
-							if(sttotaltemp[j].anio.equals(stprestamo.anioPlan[j].anio)){
-								sttotaltemp[j].total[0].planificado = sttotaltemp[j].total[0].planificado.add(stprestamo.anioPlan[j].mes[i].planificado);
-							}
-						}
-					}
-					
-					stprestamo.anioTotalPlan =  sttotaltemp;
-				}				
-			}
-			
-			int posComponente = 0;
-			for(int i = 0; i < lstPrestamo.size(); i++){
-				if(lstPrestamo.get(i).objetoTipo != null && lstPrestamo.get(i).objetoTipo == 2){
-					posComponente = i;
-					lstPrestamo.get(i).anioTotalPlan = inicializarStTotalPlan(fechaInicial, fechaFinal);
-				}else{
-					if(lstPrestamo.get(i).anioTotalPlan != null){
-						for(int j=0; j < lstPrestamo.get(i).anioTotalPlan.length; j++){
-							for(int h = 0; h < lstPrestamo.get(i).anioTotalPlan[j].total.length; h++){
-								if(lstPrestamo.get(posComponente).anioTotalPlan[j].anio.equals(lstPrestamo.get(i).anioTotalPlan[j].anio)){
-									lstPrestamo.get(posComponente).anioTotalPlan[j].total[h].planificado = lstPrestamo.get(posComponente).anioTotalPlan[j].total[h].planificado.add(lstPrestamo.get(i).anioTotalPlan[j].total[h].planificado); 
-								}
-							}
-						}						
-					}
-				}		
-			}
-			
-			for(stcomponenteplanadquisicion stprestamo : lstPrestamo){
-				if(stprestamo.anioTotalPlan != null){
-					stprestamo.total = new BigDecimal(0);
-					for(int j = 0; j < stprestamo.anioTotalPlan.length; j++){
-						for(int i = 0; i< stprestamo.anioTotalPlan[j].total.length; i++){
-							stprestamo.total = stprestamo.total.add(stprestamo.anioTotalPlan[j].total[i].planificado);
-						}
-					}
-				}
-			}
-			
 			return lstPrestamo;
 		}catch(Exception e){
-			CLogger.write("1", SControlAdquisiciones.class, e);
+			CLogger.write("1", SPlanAdquisiciones.class, e);
 			return null;
 		}
 	}
 	
-	private stcomponenteplanadquisicion getCostoPagos(stcomponenteplanadquisicion stcomponente){
-		PlanAdquisicion plan = PlanAdquisicionDAO.getPlanAdquisicionById(stcomponente.planadquisicionId);
-		Calendar fechaInicial = Calendar.getInstance();
-		for(stplan anioObj: stcomponente.anioPlan){
-			List<PlanAdquisicionPago> pagos = PlanAdquisicionPagoDAO.getPagosByPlan(plan.getId());
-			if(pagos != null && !pagos.isEmpty()){
-				for(PlanAdquisicionPago pago : pagos){
-					fechaInicial.setTime(pago.getFechaPago());
-					int mes = fechaInicial.get(Calendar.MONTH);
-					int anio = fechaInicial.get(Calendar.YEAR);					
-					if(anio == anioObj.anio){
-						anioObj.mes[mes].planificado = anioObj.mes[mes].planificado.add(pago.getPago());
-					}
-				}
-			}else{
-				int diaInicial = stcomponente.fechaIncial.getDayOfMonth();
-				int mesInicial = stcomponente.fechaIncial.getMonthOfYear() -1;
-				int anioInicial = stcomponente.fechaIncial.getYear();
-				int diaFinal = stcomponente.fechaFinal.getDayOfMonth();
-				int mesFinal = stcomponente.fechaFinal.getMonthOfYear() -1;
-				int anioFinal = stcomponente.fechaFinal.getYear();
-				
-				if(anioObj.anio >= anioInicial && anioObj.anio<=anioFinal){
-					if(stcomponente.acumulacionCosto != null){
-						if(stcomponente.acumulacionCosto == 1){						
-							if(anioInicial == anioObj.anio){
-								anioObj.mes[mesInicial].planificado =  stcomponente.costo != null ? stcomponente.costo : new BigDecimal(0);
-							}
-						}else if(stcomponente.acumulacionCosto == 2){
-							int dias = (int)((stcomponente.fechaFinal.getMillis() - stcomponente.fechaIncial.getMillis())/(1000*60*60*24));
-							BigDecimal costoDiario = stcomponente.costo != null ? stcomponente.costo.divide(new BigDecimal(dias),5, BigDecimal.ROUND_HALF_UP) : new BigDecimal(0);
-							int inicioActual = 0;
-							if(anioObj.anio == anioInicial){
-								inicioActual = mesInicial;
-							}
-							
-							int finMes = anioObj.anio==anioFinal ? mesFinal : 11;
-							for(int m=inicioActual; m<=finMes; m++){
-								if(anioObj.anio == anioInicial && m==mesInicial){
-									if(m==mesFinal){
-										int diasMes = diaFinal-diaInicial;
-										anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
-									}else{
-										Calendar cal = new GregorianCalendar(anioObj.anio, m, 1); 
-										int diasMes = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-										diasMes = diasMes-diaInicial;
-										anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
-									}
-								}else if(anioObj.anio == anioFinal && m== mesFinal){
-									anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diaFinal));
-								}else{
-									Calendar cal = new GregorianCalendar(anioObj.anio, m, 1); 
-									int diasMes = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-									anioObj.mes[m].planificado = costoDiario.multiply(new BigDecimal(diasMes));
-								}
-							}
-						}else if(stcomponente.acumulacionCosto ==3){
-							if(anioFinal == anioObj.anio){
-								anioObj.mes[mesFinal].planificado =  stcomponente.costo != null ? stcomponente.costo : new BigDecimal(0);
-							}
-						}
-					}
-				}
-			}
-		}
-		return stcomponente;
+	private void inicializarPlanAdquisicion(stplanadquisiciones tempPrestamo){
+		tempPrestamo.idPlanAdquisicion = 0;
+		tempPrestamo.tipoAdquisicion = 0;
+		tempPrestamo.tipoAdquisicionNombre = "";
+		tempPrestamo.categoriaAdquisicion = 0;
+		tempPrestamo.categoriaAdquisicionNombre = "";
+		tempPrestamo.unidadMedida = "";
+		tempPrestamo.cantidad = 0;
+		tempPrestamo.costo = new BigDecimal(0);
+		tempPrestamo.total = new BigDecimal(0);
+		tempPrestamo.planificadoDocs = null;
+		tempPrestamo.realDocs = null;
+		tempPrestamo.planificadoLanzamiento = null;
+		tempPrestamo.realLanzamiento = null;
+		tempPrestamo.planificadoRecepcionEval = null;
+		tempPrestamo.realRecepcionEval = null;
+		tempPrestamo.planificadoAdjudica = null;
+		tempPrestamo.realAdjudica = null;
+		tempPrestamo.planificadoFirma = null;
+		tempPrestamo.realFirma = null;
+		tempPrestamo.numeroContrato = null;
+		tempPrestamo.nog = null;
+		tempPrestamo.montoContrato = new BigDecimal(0);
 	}
-	
-	private void inicializarObjCategoria(List<stcategoria> lsttempCategorias){
-		for(stcategoria cat : lsttempCategorias){
-			cat.objetos = new ArrayList<List<Integer>>();
-		}
-	}
-	
-	private stplan[] inicializarStplan(Integer anioInicial, Integer anioFinal){		
-		int longitudArrelgo = anioFinal - anioInicial+1;
 		
-		stplan[] anios = new stplan[longitudArrelgo];
-		
-		for (int i = 0;i <longitudArrelgo; i++){
-			stplan temp = new stplan();
-			for(int m=0; m<12; m++){
-				temp.mes[m]= new stpresupuestoPlan();
-				temp.mes[m].planificado = new BigDecimal(0);
-			}
-			temp.anio = anioInicial+i;
-			anios[i] = temp;
-		}
-		return anios;
-	}
-	
-	private sttotal[] inicializarStTotalPlan(Integer anioInicial, Integer anioFinal){		
-		int longitudArrelgo = anioFinal - anioInicial+1;
-		
-		sttotal[] anios = new sttotal[longitudArrelgo];
-		
-		for (int i = 0;i <longitudArrelgo; i++){
-			sttotal temp = new sttotal();
-			for(int m=0; m<1; m++){
-				temp.total[m]= new stpresupuestoPlan();
-				temp.total[m].planificado = new BigDecimal(0);
-			}
-			temp.anio = anioInicial+i;
-			anios[i] = temp;
-		}
-		return anios;
-	}
-	
-	private byte[] exportarExcel(int prestamoId, int agrupacion, String usuario, Integer fechaInicial, Integer fechaFinal, Integer tipoVisualizacion){
+	private byte[] exportarExcel(Integer idPlanAdquisicion, Integer idPrestamo, String lineaBase, String usuario) throws IOException{
 		byte [] outArray = null;
 		CExcel excel=null;
 		String headers[][];
-		String datosInforme[][];
+		String datos[][];
 		
 		Workbook wb=null;
 		ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 		try{			
-			headers = generarHeaders(fechaInicial, fechaFinal, agrupacion, tipoVisualizacion);
-			List<stcomponenteplanadquisicion> lstPrestamo = generarPlan(prestamoId, usuario, fechaInicial, fechaFinal);	
-			datosInforme = generarDatosReporte(lstPrestamo, fechaInicial, fechaFinal, agrupacion, tipoVisualizacion, headers[0].length, usuario);
+			headers = generarHeaders();
+			datos = generarDatos(idPrestamo, lineaBase, usuario);
 			excel = new CExcel("Plan de Adquisiciones", false, null);
-			wb=excel.generateExcelOfData(datosInforme, "Plan de Adquisiciones", headers, null, true, usuario);
-			wb.write(outByteStream);
-			outByteStream.close();
-			outArray = Base64.encode(outByteStream.toByteArray());
+			Proyecto proyecto = ProyectoDAO.getProyecto(idPrestamo);
+			wb=excel.generateExcelOfData(datos, "Plan de Adquisiciones - "+proyecto.getNombre(), headers, null, true, usuario);
+		
+		wb.write(outByteStream);
+		outArray = Base64.encode(outByteStream.toByteArray());
 		}catch(Exception e){
-			CLogger.write("5", SInformacionPresupuestaria.class, e);
+			CLogger.write("3", SPlanAdquisiciones.class, e);
 		}
 		return outArray;
 	}
 	
-	private String[][] generarHeaders(int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion){
+	private String[][] generarHeaders(){
 		String headers[][];
-		String[][] AgrupacionesTitulo = new String[][]{{"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"},
-			{"Bimestre 1", "Bimestre 2","Bimestre 3","Bimestre 4","Bimestre 5","Bimestre 6"},
-			{"Trimestre 1", "Trimestre 2", "Trimestre 3", "Trimestre 4"},
-			{"Cuatrimestre 1", "Cuatrimestre 2", "Cuatrimestre 3"},
-			{"Semestre 1","Semestre 2"},
-			{"Anual"}
-		};
-		
-		int totalesCant = 1;
-		int aniosDiferencia =(anioFin-anioInicio)+1; 
-		int columnasTotal = (aniosDiferencia*(AgrupacionesTitulo[agrupacion-1].length));
-		int factorVisualizacion = 1;
-		if(tipoVisualizacion == 2){
-			columnasTotal = columnasTotal*2;
-			totalesCant=(aniosDiferencia*2)+(totalesCant*2);
-			columnasTotal += 1+totalesCant;
-			factorVisualizacion = 2;
-		}else{
-			totalesCant+=aniosDiferencia;
-			columnasTotal += 1+totalesCant; //Nombre, totales por a�o, total
-		}
-		
-		String titulo[] = new String[columnasTotal];
-		String tipo[] = new String[columnasTotal];
-		String operacionesFila[] = new String[columnasTotal];
-		String columnasOperacion[] = new String[columnasTotal];
-		String totales[] = new String[totalesCant];
-		String sumtotalesCol[] = new String[columnasTotal];
-		titulo[0]="Nombre";
-		tipo[0]="string";
-		operacionesFila[0]="";
-		columnasOperacion[0]="";
-		sumtotalesCol[0]="";
-		for(int i=0;i<totalesCant;i++){ //Inicializar totales
-			totales[i]="";
-		}
-		int pos=1;
-		for(int i=0; i<AgrupacionesTitulo[agrupacion-1].length; i++){
-			for (int j=0; j<aniosDiferencia; j++){
-				titulo[pos] = AgrupacionesTitulo[agrupacion-1][i] + " " + (anioInicio+j);
-				tipo[pos] = "double";
-				operacionesFila[pos]="";
-				columnasOperacion[pos]="";				
-				totales[j*factorVisualizacion]+=pos+",";
-				sumtotalesCol[pos]="sum";
-				pos++;
-			}
-		}
-		for (int j=0; j<aniosDiferencia; j++){
-			titulo[pos] = "Total " + (anioInicio+j);
-			tipo[pos] = "double";
-			operacionesFila[pos]="";
-			columnasOperacion[pos]= "";
-			totales[totalesCant-factorVisualizacion] += pos+",";
-			sumtotalesCol[pos]="";
-			pos++;
-		}
-		titulo[pos] = "Total";
-		tipo[pos] = "double";
-		operacionesFila[pos]="sum";
-		sumtotalesCol[pos]="";
-		columnasOperacion[pos]=totales[totalesCant-factorVisualizacion];
-		pos++;
 		
 		headers = new String[][]{
-			titulo,  //titulos
-			{""}, //mapeo
-			tipo, //tipo dato
-			sumtotalesCol, //operaciones columnas
-			{""}, //operaciones div
+			{"Nombre", "Tipo de Adquisicion", "Unidad de Medida", "Categoria de Aquisicion", "Cantidad", "Costo", "Total", "Preparacion de Documentos", "", "Lanzamiento de Evento","", 
+				"Recepcion y Evaluacion de Ofertas", "", "Adjudicacion", "", "Firma de Contrato", ""},  //titulos
+			null, //mapeo
+			{"string", "string", "string", "string", "double", "double", "double", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string"}, //tipo dato
+			null, //operaciones columnas
+			null, //operaciones div
+			{"", "", "", "", "", "", "", "Planificado", "Real", "Planificado","Real", 
+				"Planificado", "Real", "Planificado", "Real", "Planificado", "Real"},
 			null,
-			operacionesFila,
-			columnasOperacion
-			};
+			null
+			};				
 			
 		return headers;
 	}
 	
-	public String[][] generarDatosReporte(List<stcomponenteplanadquisicion> lstPrestamo, int anioInicio, int anioFin, int agrupacion, int tipoVisualizacion, int columnasTotal, String usuario){
+	public String[][] generarDatos(Integer idPrestamo, String lineaBase, String usuario){
 		String[][] datos = null;
-		int columna = 0;int factorVisualizacion=1;
-		if(tipoVisualizacion==2){
-			factorVisualizacion = 2;
+		List<stplanadquisiciones> lstprestamo;
+		try {
+			lstprestamo = generarPlan(idPrestamo, lineaBase, usuario);
+			
+			if (lstprestamo != null && !lstprestamo.isEmpty()){ 
+				datos = new String[lstprestamo.size()][17];
+				for (int i=0; i<lstprestamo.size(); i++){
+					
+					String sangria="";
+					for(int s=1; s<lstprestamo.get(i).nivel; s++){
+						sangria+="   ";
+					}
+						datos[i][0] = sangria + lstprestamo.get(i).nombre;
+						datos[i][1] = lstprestamo.get(i).tipoAdquisicionNombre;
+						datos[i][2] = lstprestamo.get(i).unidadMedida;
+						datos[i][3] = lstprestamo.get(i).categoriaAdquisicionNombre;
+						datos[i][4] = lstprestamo.get(i).cantidad.toString();
+						datos[i][5] = lstprestamo.get(i).costo.toString();
+						datos[i][6] = lstprestamo.get(i).total.toString();
+						datos[i][7] = lstprestamo.get(i).planificadoDocs;
+						datos[i][8] = lstprestamo.get(i).realDocs;
+						datos[i][9] = lstprestamo.get(i).planificadoLanzamiento;
+						datos[i][10] = lstprestamo.get(i).realLanzamiento;
+						datos[i][11] = lstprestamo.get(i).planificadoRecepcionEval;
+						datos[i][12] = lstprestamo.get(i).realRecepcionEval;
+						datos[i][13] = lstprestamo.get(i).planificadoAdjudica;
+						datos[i][14] = lstprestamo.get(i).realAdjudica;
+						datos[i][15] = lstprestamo.get(i).planificadoFirma;
+						datos[i][16] = lstprestamo.get(i).realFirma;
+				}
+			}
+		} catch (Exception e) {
+			CLogger.write("1", SPlanAdquisiciones.class, e);
 		}
-		int sumaColumnas = ((anioFin-anioInicio) + 1)*factorVisualizacion;
 		
-		if (lstPrestamo != null && !lstPrestamo.isEmpty()){
-			datos = new String[lstPrestamo.size()][columnasTotal];
-			for (int i=0; i<lstPrestamo.size(); i++){
-				columna = 0;
-				stcomponenteplanadquisicion prestamo = lstPrestamo.get(i);
-				String sangria;
-				switch (prestamo.nivel + 1){
-					case 1: sangria = ""; break;
-					case 2: sangria = "   "; break;
-					case 3: sangria = "      "; break;
-					case 4: sangria = "         "; break;
-					case 5: sangria = "            "; break;
-					default: sangria = "";
-				}
-				datos[i][columna] = sangria+prestamo.nombre;
-				columna++;
-				int posicion = columna;
-				BigDecimal totalAniosP = new BigDecimal(0);
-				//Valores planificado-real
-				
-				if(prestamo.anioPlan != null){
-					for(int a=0; a<prestamo.anioPlan.length; a++){
-						posicion = columna + (a*factorVisualizacion);
-						
-						for(int m=0; m<12; m++){
-							prestamo.anioPlan[a].mes[m].planificado=(prestamo.anioPlan[a].mes[m].planificado==null) ? new BigDecimal(0) : prestamo.anioPlan[a].mes[m].planificado.setScale(2, BigDecimal.ROUND_DOWN);							
-						}
-						
-						switch(agrupacion){
-							case AGRUPACION_MES:
-								if(tipoVisualizacion==0 || tipoVisualizacion==2){
-									datos[i][posicion]= prestamo.anioPlan[a].mes[0].planificado.toString();
-									datos[i][posicion+(1*sumaColumnas)]= prestamo.anioPlan[a].mes[1].planificado.toString();
-									datos[i][posicion+(2*sumaColumnas)]= prestamo.anioPlan[a].mes[2].planificado.toString();
-									datos[i][posicion+(3*sumaColumnas)]= prestamo.anioPlan[a].mes[3].planificado.toString();
-									datos[i][posicion+(4*sumaColumnas)]= prestamo.anioPlan[a].mes[4].planificado.toString();
-									datos[i][posicion+(5*sumaColumnas)]= prestamo.anioPlan[a].mes[5].planificado.toString();
-									datos[i][posicion+(6*sumaColumnas)]= prestamo.anioPlan[a].mes[6].planificado.toString();
-									datos[i][posicion+(7*sumaColumnas)]= prestamo.anioPlan[a].mes[7].planificado.toString();
-									datos[i][posicion+(8*sumaColumnas)]= prestamo.anioPlan[a].mes[8].planificado.toString();
-									datos[i][posicion+(9*sumaColumnas)]= prestamo.anioPlan[a].mes[9].planificado.toString();
-									datos[i][posicion+(10*sumaColumnas)]= prestamo.anioPlan[a].mes[10].planificado.toString();
-									datos[i][posicion+(11*sumaColumnas)]= prestamo.anioPlan[a].mes[11].planificado.toString();
-								}							
-								posicion = posicion+(12*sumaColumnas)+1;
-								break;
-							case AGRUPACION_BIMESTRE:
-								if(tipoVisualizacion==0 || tipoVisualizacion==2){
-									datos[i][posicion]= (prestamo.anioPlan[a].mes[0].planificado.add(prestamo.anioPlan[a].mes[1].planificado)).toString();
-									datos[i][posicion+(1*sumaColumnas)]= (prestamo.anioPlan[a].mes[2].planificado.add(prestamo.anioPlan[a].mes[3].planificado)).toString();
-									datos[i][posicion+(2*sumaColumnas)]= (prestamo.anioPlan[a].mes[4].planificado.add(prestamo.anioPlan[a].mes[5].planificado)).toString();
-									datos[i][posicion+(3*sumaColumnas)]= (prestamo.anioPlan[a].mes[6].planificado.add(prestamo.anioPlan[a].mes[7].planificado)).toString();
-									datos[i][posicion+(4*sumaColumnas)]= (prestamo.anioPlan[a].mes[8].planificado.add(prestamo.anioPlan[a].mes[9].planificado)).toString();
-									datos[i][posicion+(5*sumaColumnas)]= (prestamo.anioPlan[a].mes[10].planificado.add(prestamo.anioPlan[a].mes[11].planificado)).toString();
-								}
-								posicion = posicion+(6*sumaColumnas)+1;
-								break;
-							case AGRUPACION_TRIMESTRE:
-								if(tipoVisualizacion==0 || tipoVisualizacion==2){
-									datos[i][posicion]= (prestamo.anioPlan[a].mes[0].planificado.add(prestamo.anioPlan[a].mes[1].planificado.add(prestamo.anioPlan[a].mes[2].planificado))).toString();
-									datos[i][posicion+(1*sumaColumnas)]= (prestamo.anioPlan[a].mes[3].planificado.add(prestamo.anioPlan[a].mes[4].planificado.add(prestamo.anioPlan[a].mes[5].planificado))).toString();
-									datos[i][posicion+(2*sumaColumnas)]= (prestamo.anioPlan[a].mes[6].planificado.add(prestamo.anioPlan[a].mes[7].planificado.add(prestamo.anioPlan[a].mes[8].planificado))).toString();
-									datos[i][posicion+(3*sumaColumnas)]= (prestamo.anioPlan[a].mes[9].planificado.add(prestamo.anioPlan[a].mes[10].planificado.add(prestamo.anioPlan[a].mes[11].planificado))).toString();
-								}
-								posicion = posicion+(4*sumaColumnas)+1;
-								break;
-							case AGRUPACION_CUATRIMESTRE:
-								if(tipoVisualizacion==0 || tipoVisualizacion==2){
-									datos[i][posicion]= (prestamo.anioPlan[a].mes[0].planificado.add(prestamo.anioPlan[a].mes[1].planificado).add(prestamo.anioPlan[a].mes[2].planificado.add(prestamo.anioPlan[a].mes[3].planificado))).toString();
-									datos[i][posicion+(1*sumaColumnas)]= (prestamo.anioPlan[a].mes[4].planificado).add(prestamo.anioPlan[a].mes[5].planificado.add(prestamo.anioPlan[a].mes[6].planificado.add(prestamo.anioPlan[a].mes[7].planificado))).toString();
-									datos[i][posicion+(2*sumaColumnas)]= (prestamo.anioPlan[a].mes[8].planificado.add(prestamo.anioPlan[a].mes[9].planificado).add(prestamo.anioPlan[a].mes[10].planificado.add(prestamo.anioPlan[a].mes[11].planificado))).toString();
-								}
-								posicion = posicion+(3*sumaColumnas)+1;
-								break;
-							case AGRUPACION_SEMESTRE:
-								if(tipoVisualizacion==0 || tipoVisualizacion==2){
-									datos[i][posicion]= (prestamo.anioPlan[a].mes[0].planificado.add(prestamo.anioPlan[a].mes[1].planificado).add(prestamo.anioPlan[a].mes[2].planificado.add(prestamo.anioPlan[a].mes[3].planificado.add(prestamo.anioPlan[a].mes[4].planificado.add(prestamo.anioPlan[a].mes[5].planificado))))).toString();
-									datos[i][posicion+(1*sumaColumnas)]= (prestamo.anioPlan[a].mes[6].planificado.add(prestamo.anioPlan[a].mes[7].planificado).add(prestamo.anioPlan[a].mes[8].planificado.add(prestamo.anioPlan[a].mes[9].planificado.add(prestamo.anioPlan[a].mes[10].planificado.add(prestamo.anioPlan[a].mes[11].planificado))))).toString();
-								}
-								posicion = posicion+(2*sumaColumnas)+1;
-								break;
-							case AGRUPACION_ANUAL:
-								if(tipoVisualizacion==0 || tipoVisualizacion==2){
-									BigDecimal totalAnualP = new BigDecimal(0);
-									for(int m=0; m<12; m++){
-										totalAnualP = totalAnualP.add(prestamo.anioPlan[a].mes[m].planificado);						
-									}
-									totalAniosP = totalAniosP.add(totalAnualP);
-									datos[i][posicion]= totalAnualP.toString();
-								}
-								posicion = posicion+(1*sumaColumnas)+1;
-								break;
-							}
-						}				
-					}
-					
-					posicion = columnasTotal-1-sumaColumnas;
-					if(prestamo.anioTotalPlan != null){
-						for(int a=0; a < prestamo.anioTotalPlan.length; a++){	
-							datos[i][posicion] = prestamo.anioTotalPlan[a].total[0].planificado.toString();
-							posicion++;
-						}
-					}
-					
-					datos[i][columnasTotal-1] = prestamo.total != null ? prestamo.total.toString() : null;
-				}
-			}			
-		return datos;
+return datos;
 	}
 }

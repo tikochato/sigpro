@@ -15,8 +15,6 @@
 	<div class="panel panel-default">
 		<div class="panel-heading"><h3>Tipo de Actividad</h3></div>
 	</div>
-		
-
 
 	<div class="row" align="center" ng-if="!actividadtipoc.mostraringreso">
 		<div class="col-sm-12 operation_buttons" align="right">
@@ -25,7 +23,7 @@
 		    <label class="btn btn-primary" ng-click="actividadtipoc.nuevo()" uib-tooltip="Nueva">
 		    <span class="glyphicon glyphicon-plus"></span> Nueva</label>
 		  </shiro:hasPermission>
-		  <shiro:hasPermission name="3010">
+		  <shiro:hasPermission name="3020">
 		    <label class="btn btn-primary" ng-click="actividadtipoc.editar()" uib-tooltip="Editar">
 		    <span class="glyphicon glyphicon-pencil"></span> Editar</label>
 		  </shiro:hasPermission>
@@ -81,10 +79,10 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 		  <div class="btn-group">
 		    <shiro:hasPermission name="3020">
-		      <label class="btn btn-success" ng-click="form.$valid ? actividadtipoc.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
+		      <label class="btn btn-success" ng-click="form.$valid ? actividadtipoc.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
 		      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 		    </shiro:hasPermission>
-		    <label class="btn btn-primary" ng-click="actividadtipoc.irATabla()" title="Ir a Tabla">
+		    <label class="btn btn-primary" ng-click="actividadtipoc.irATabla()" uib-tooltip="Ir a Tabla">
 		    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 		  </div>
 		</div>
@@ -101,9 +99,9 @@
 				   <label class="floating-label">* Nombre</label>
 				</div>
 				<div class="form-group">
-				   <input type="text" name="descripcion"  class="inputText" id="descripcion" 
-				     ng-model="actividadtipoc.actividadtipo.descripcion" ng-value="actividadtipoc.actividadtipo.descripcion"   
-				     onblur="this.setAttribute('value', this.value);"  >
+				   <textarea class="inputText" rows="4"
+				   ng-model="actividadtipoc.actividadtipo.descripcion" ng-value="actividadtipoc.actividadtipo.descripcion"   
+				   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
 				   <label class="floating-label">Descripción</label>
 				</div>
 				<br/>
@@ -194,10 +192,10 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 		  <div class="btn-group">
 		    <shiro:hasPermission name="3020">
-		      <label class="btn btn-success" ng-click="form.$valid ? actividadtipoc.guardar() : ''" ng-disabled="!form.$valid" title="Guardar">
+		      <label class="btn btn-success" ng-click="form.$valid ? actividadtipoc.guardar() : ''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
 		      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 		    </shiro:hasPermission>
-		    <label class="btn btn-primary" ng-click="actividadtipoc.irATabla()" title="Ir a Tabla">
+		    <label class="btn btn-primary" ng-click="actividadtipoc.irATabla()" uib-tooltip="Ir a Tabla">
 		    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 		  </div>
 		</div>

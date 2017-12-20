@@ -7,6 +7,7 @@ html {
 body {
 	height: 100%;
 	background-color: transparent;
+	line-height: unset;
 }
 
 #mainview{
@@ -237,8 +238,8 @@ nav.navbar{
 }
 
 .gantt-chart{
-	overflow-y: scroll;
-	height: calc(100% - 105px);
+	overflow: hidden;
+	width: 100%;
 	position: relative;
 }
 
@@ -257,16 +258,20 @@ nav.navbar{
 
 input:focus ~ .floating-label,
 input:not([value='']) ~ .floating-label,
-input:focus:not([value]) ~ .floating-label{
+input:focus:not([value]) ~ .floating-label,
+textarea:focus ~ .floating-label,
+textarea:not([value='']) ~ .floating-label,
+textarea:focus:not([value]) ~ .floating-label{
   top: -2px;
   bottom: 10px;
-  font-size: 11px;
+  font-size: 13px;
   opacity: 1;
   border: none;
   outline-width: 0;
 }
 
-input:not([value]) ~ .floating-label{
+input:not([value]) ~ .floating-label,
+textarea:not([value]) ~ .floating-label{
   font-size: 14px;
   position: absolute;
   pointer-events: none;
@@ -277,18 +282,25 @@ input:not([value]) ~ .floating-label{
   font-weight: bold;
 }
 
-input:focus ~ .floating-label{
+input:focus ~ .floating-label,
+textarea:focus ~ .floating-label{
   color: rgb(63, 81, 181);
 }
 
-input:focus{
-	outline-width: 0;
+textarea:focus, input:focus, .uneditable-input:focus {  
+  outline: 0 none !important;
+}
+
+textarea{	
+  box-shadow: 0 0px 0px inset, 0 0 0px !important;    
+  height: auto !important;
+  margin-top: 8px !important;
 }
 
 select ~ .floating-label{
   top: -2px;
   bottom: 10px;
-  font-size: 11px;
+  font-size: 13px;
   opacity: 1;
   border: none;
   outline-width: 0;
@@ -307,7 +319,7 @@ input[type='checkbox'] ~ .floating-label {
 	top: -5px !important;
 	top: -2px;
 	bottom: 10px;
-	font-size: 11px;
+	font-size: 13px;
 	opacity: 1;
 	border: none;
 	outline-width: 0;
@@ -326,6 +338,11 @@ input[type='checkbox'] ~ .floating-label {
   background: transparent;
   z-index: 2;
   position: relative;
+  margin-top: 3px;
+}
+
+input[type="checkbox"] {
+    margin: 10px 0 0;
 }
 		
 .form-group {
@@ -359,7 +376,7 @@ input[type='checkbox'] ~ .floating-label {
 }
 
 .label-form{
-	 font-size: 11px;
+	 font-size: 13px;
 	 opacity: 1;
 	 color: rgba(0,0,0,0.38) !important;
 	 font-weight: bold;
@@ -553,7 +570,7 @@ h2 {
 }
 
 .cols_treeview{
-	height: calc(100% - 55px) !important;
+	height: calc(100% - 155px) !important;
 }
 
 .tree-node-noselected > div > span{
@@ -591,7 +608,47 @@ h2 {
 }
 
 .div_tree{
-	margin: 10px 5px 0px 15px; 
+	margin: 10px 15px 0px 15px; 
 	float: left; 
 	width: 250px;
 }
+
+.componente_sigade{
+	background-color: #98fb98;
+	text-align: center;
+	width: 100%;
+	margin-top: 15px;
+	margin-bottom: 10px;
+}
+
+.form-control[disabled], .form-control[readonly] {
+    background-color: initial;
+}
+
+input.riesgos[type="range"]{
+    -webkit-appearance: none;
+    -moz-apperance: none;
+    border-radius: 6px;
+    height: 6px;
+    outline: none;
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        right top,
+        color-stop(0.15, #43a047),
+        color-stop(0.15, #C5C5C5)
+    );
+}
+
+input.riesgos[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    background-color: #E9E9E9;
+    border: 1px solid #CECECE;
+    height: 15px;
+    width: 15px;
+}
+
+input.riesgos[type='range']::-webkit-slider-thumb {
+		background-color: #607d8b;
+	}
+

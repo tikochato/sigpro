@@ -3,12 +3,12 @@ var moduloProducto = angular.module('moduloProducto', [ 'ngTouch',
 
 moduloProducto.controller('controlProducto', [ '$scope', '$routeParams',
 		'$route', '$window', '$location', '$mdDialog', '$uibModal', '$http', '$rootScope',
-		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', '$q', 'uiGridTreeBaseService','uiGridConstants', 'dialogoConfirmacion', 
+		'$interval', 'i18nService', 'Utilidades', '$timeout', '$log', '$q', 'uiGridTreeBaseService','uiGridConstants', 'dialogoConfirmacion', 'historia','pagoplanificado', 
 		controlProducto ]);
 
 function controlProducto($scope, $routeParams, $route, $window, $location,
 		$mdDialog, $uibModal, $http, $rootScope, $interval, i18nService, $utilidades,
-		$timeout, $log, $q, uiGridTreeBaseService,uiGridConstants, $dialogoConfirmacion) {
+		$timeout, $log, $q, uiGridTreeBaseService,uiGridConstants, $dialogoConfirmacion, $historia,$pagoplanificado) {
 	var mi = this;  
 	i18nService.setCurrentLang('es');
 	
@@ -19,8 +19,11 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		$window.document.title = $utilidades.sistema_nombre+' - Producto';
 	mi.child_metas = null;
 	mi.child_adquisiciones = null;
+	mi.child_riesgos = null;
 	
-	mi.componenteid = $routeParams.componente_id;
+	mi.objetoId = $routeParams.objeto_id;
+	mi.objetoTipo = $routeParams.objeto_tipo;
+	
 	mi.esForma = false;
 	mi.totalElementos = 0;
 	mi.paginaActual = 1;
@@ -31,6 +34,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	
 	mi.propiedadesValor = [];
 	mi.camposdinamicos = {};
+	
+	mi.acumulacionesCosto = [];
 	
 	mi.columnaOrdenada=null;
 	mi.ordenDireccion = null;
@@ -44,6 +49,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	
 	mi.metasCargadas = false;
 	mi.adquisicionesCargadas = false;
+	mi.riesgos = false;
+	mi.pagos = [];
 	
 	mi.dimensiones = [
 		{value:1,nombre:'Dias',sigla:'d'}
@@ -51,14 +58,62 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	
 	mi.duracionDimension = mi.dimensiones[0];
 	
-	$http.post('/SComponente', { accion: 'obtenerComponentePorId', id: $routeParams.componente_id, t: (new Date()).getTime()}).success(
+	mi.verHistoria = function(){
+		$historia.getHistoria($scope, 'Producto', '/SProducto', mi.producto.id, 3, true, true, false, true)
+		.result.then(function(data) {
+			if (data != ""){
+				
+			}
+		}, function(){
+			
+		});
+	}
+	
+	if(mi.objetoTipo==1){
+		mi.objetoTipoNombre = "Componente";
+		$http.post('/SComponente', { accion: 'obtenerComponentePorId', id: mi.objetoId, t: (new Date()).getTime()}).success(
 			function(response) {
 				mi.componenteid = response.id;
-				mi.componenteNombre = response.nombre;
-				mi.objetoTipoNombre = "Componente";
+				mi.prestamoId = response.prestamoId;
+				mi.unidadEjecutora = response.unidadEjecutora;
+				mi.unidadEjecutoraNombre = response.unidadEjecutoraNombre;
+				mi.entidad = response.entidad;
+				mi.ejercicio = response.ejercicio;
+				mi.entidadnombre = response.entidadNombre;
+				mi.objetoNombre = response.nombre;
 				var fechaInicioPadre = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
 				mi.modificarFechaInicial(fechaInicioPadre);
+				mi.congelado = response.congelado;
+			});
+	}else if(mi.objetoTipo==2){
+		mi.objetoTipoNombre = "Subcomponente";
+		$http.post('/SSubComponente', { accion: 'obtenerSubComponentePorId', id: mi.objetoId, t: (new Date()).getTime()}).success(
+				function(response) {
+					mi.subcomponenteid = response.id;
+					mi.objetoNombre = response.nombre;
+					mi.prestamoId = response.prestamoId;
+					mi.unidadEjecutora = response.unidadEjecutora;
+					mi.unidadEjecutoraNombre = response.unidadEjecutoraNombre;
+					mi.entidad = response.entidad;
+					mi.ejercicio = response.ejercicio;
+					mi.entidadnombre = response.entidadNombre;
+					mi.objetoNombre = response.nombre;
+					var fechaInicioPadre = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
+					mi.modificarFechaInicial(fechaInicioPadre);
+					mi.congelado = response.congelado;
+				});
+	}
+	
+	$http.post('/SAcumulacionCosto', { accion: 'getAcumulacionesCosto', t: (new Date()).getTime()}).success(
+			function(response) {
+				mi.acumulacionesCosto = response.acumulacionesTipos;
 	});
+	
+	mi.blurCategoria=function(){
+		if(document.getElementById("acumulacionCosto_value").defaultValue!=mi.producto.acumulacionCostoNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','acumulacionCosto');
+		}
+	}
 	
 	mi.modificarFechaInicial = function(fechaPadre){
 		mi.fi_opciones.minDate = fechaPadre;
@@ -86,6 +141,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 	
 	mi.formatofecha = 'dd/MM/yyyy';
+	mi.altformatofecha = ['d!/M!/yyyy'];
 
 	mi.cambioPagina = function() {
 		mi.cargarTabla(mi.paginaActual);
@@ -99,7 +155,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			accion : 'cargar',
 			pagina : pagina,
 			registros : mi.elementosPorPagina,
-			componenteid : $routeParams.componente_id,
+			componenteid : mi.componenteid,
+			subcomponenteid : mi.subcomponenteid,
 			numeroproyecto:  $utilidades.elementosPorPagina, 
 			filtro_nombre: mi.filtros['nombre'],
 			filtro_usuario_creo: mi.filtros['usuarioCreo'], 
@@ -127,6 +184,10 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 
 
+	mi.actualizarCosto = function(costo){
+		mi.producto.costo = costo;
+	}
+
 	mi.editarElemento = function (event) {
         var filaId = angular.element(event.toElement).scope().rowRenderIndex;
         mi.gridApi.selection.selectRow(mi.opcionesGrid.data[filaId]);
@@ -153,7 +214,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			}, 
 			{ displayName : 'Descripción', name : 'descripcion', cellClass : 'grid-align-left', enableFiltering: false },
 			{ displayName : 'Tipo', name : 'productoTipo', cellClass : 'grid-align-left', enableFiltering: false, enableSorting: false},  
-			{ displayName : 'Componente', name : 'componente', cellClass : 'grid-align-left', visible : false },
+			{ displayName : mi.objetoTipoNombre, name : mi.objetoTipoNombre.toLowerCase(), cellClass : 'grid-align-left', visible : false },
 			{ displayName : 'Producto', name : 'producto', cellClass : 'grid-align-left', visible : false },
 			{ name: 'usuarioCreo', displayName: 'Usuario Creación',cellClass: 'grid-align-left',
 				filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text"  style="width: 90%;" ng-keypress="grid.appScope.producto.filtrar($event,2)" ></input></div>'
@@ -207,6 +268,25 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		    }
 		}
 	}
+	
+	mi.cambioAcumulacionCosto=function(selected){
+		if(selected!== undefined){
+			mi.producto.acumulacionCostoNombre = selected.originalObject.nombre;
+			mi.producto.acumulacionCostoId = selected.originalObject.id;
+			
+			if(mi.producto.acumulacionCostoId == 2){
+				mi.producto.costo = null;
+				mi.bloquearCosto = true;
+			}else{
+				mi.producto.costo = null;
+				mi.bloquearCosto = false;
+			}
+		}
+		else{
+			mi.producto.acumulacionCostoNombre="";
+			mi.producto.acumulacionCostoId="";
+		}
+	}
 
 	mi.guardarEstado = function() {
 		var estado = mi.gridApi.saveState.save();
@@ -234,9 +314,9 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		
 		mi.tipo = null;
 		mi.tipoNombre = "";
-
-		mi.unidadEjecutora = null;
-		mi.unidadEjecutoraNombre = "";
+		
+		mi.unidadEjecutora= mi.prestamoId != null ? mi.unidadEjecutora :  null;
+		mi.unidadEjecutoraNombre= mi.prestamoId != null ? mi.unidadEjecutoraNombre : "";
 
 		mi.propiedadesValor = [];
 		mi.producto = {};
@@ -250,6 +330,9 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			mi.camposdinamicos[campos].valor = null;
 		}
 		mi.metasCargadas = false;
+		mi.adquisicionesCargadas = false;
+		mi.riesgos = undefined;
+		
 		mi.activeTab = 0;
 		$utilidades.setFocus(document.getElementById("nombre"));
 	}
@@ -326,6 +409,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				renglon: mi.producto.renglon,
 				ubicacionGeografica: mi.producto.ubicacionGeografica,
 				componente : mi.componenteid,
+				subcomponente : mi.subcomponenteid,
 				productoPadre : mi.productoPadre,
 				tipoproductoid : mi.tipo,
 				unidadEjecutora : mi.unidadEjecutora,
@@ -341,6 +425,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				duracionDimension: mi.duracionDimension.sigla,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
 				esnuevo : mi.esNuevo,
+				pagosPlanificados: JSON.stringify(mi.pagos),
 				t: (new Date()).getTime()
 			};
 
@@ -353,14 +438,19 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 							mi.producto.usuarioactualizo = response.data.usuarioactualizo;
 							mi.producto.fechaactualizacion = response.data.fechaactualizacion;
 							if(mi.child_metas!=null)
-								mi.child_metas.guardar(mi.child_adquisiciones,'Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+								mi.child_metas.guardar((mi.child_adquisiciones!=null) ? mi.child_adquisiciones.guardar : null, (mi.child_riesgos!=null) ?  mi.child_riesgos.guardar : null,'Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
 										'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Producto');
 							else{
 								if(mi.child_adquisiciones!=null)
-									mi.child_adquisiciones.guardar('Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+									mi.child_adquisiciones.guardar((mi.child_riesgos!=null) ? mi.child_riesgos.guardar : null,'Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
 										'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Producto');
-								else
-									$utilidades.mensaje('success','Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+								else{
+									if(mi.child_riesgos!=null)
+										mi.child_riesgos.guardar('Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito',
+												'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' el Producto');
+									else
+										$utilidades.mensaje('success','Producto '+(mi.esNuevo ? 'creado' : 'guardado')+' con éxito');
+								}
 							}
 							if(!mi.esTreeview)
 								mi.obtenerTotalProductos();
@@ -371,6 +461,8 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 									mi.t_crearNodo(mi.producto.id,mi.producto.nombre,3,true);
 							}
 							mi.esNuevo = false;
+							
+							mi.getAsignado();
 						} else {
 							$utilidades.mensaje('danger','Error al '+(mi.esNuevo ? 'crear' : 'guardar')+' el Producto');
 						}
@@ -384,6 +476,9 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	mi.cancelar = function() {
 		mi.esForma = false;
 		mi.esNuevo=false;
+		mi.child_metas = null;
+		mi.child_adquisiciones = null;
+		mi.child_riesgos = null;
 	};
 	
 	mi.editar = function() {
@@ -394,19 +489,21 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 			mi.tipo = mi.producto.idProductoTipo;
 			mi.tipoNombre = mi.producto.productoTipo;
 		
+			if(mi.producto.acumulacionCostoId==2){
+				mi.bloquearCosto = true;
+			}else{
+				mi.bloquearCosto = false;
+			}
 			
 			if(mi.producto.duracionDimension == 'd'){
 				mi.duracionDimension = mi.dimensiones[0];
 			}
+			
+			mi.componenteid = mi.producto.idComponente;
+			mi.subcomponenteid = mi.producto.idSubComponente;
 
 			mi.productoPadre = mi.producto.idProducto;
 			mi.productoPadreNombre = mi.producto.producto;
-			
-			mi.unidadEjecutora = mi.producto.unidadEjectuora;
-			mi.unidadEjecutoraNombre = mi.producto.nombreUnidadEjecutora;
-			mi.entidad = mi.producto.entidadentidad;
-			mi.ejercicio = mi.producto.ejercicio;
-			mi.entidadnombre = mi.producto.entidadnombre;
 			
 			mi.coordenadas = (mi.producto.latitud !=null ?  mi.producto.latitud : '') +
 			(mi.producto.latitud!=null ? ', ' : '') + (mi.producto.longitud!=null ? mi.producto.longitud : '');
@@ -433,8 +530,12 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 					}
 				}
 				mi.metasCargadas = false;
+				mi.adquisicionesCargadas = false;
+				mi.riesgos = false;
+				
 				mi.activeTab = 0;
 				$utilidades.setFocus(document.getElementById("nombre"));
+				mi.getAsignado();
 			});
 		} else {
 			$utilidades.mensaje('warning', 'Debe seleccionar el producto que desee editar');
@@ -443,10 +544,10 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 	
 	mi.reiniciarVista = function() {
-		if($location.path()==('/producto/'+ $routeParams.componente_id + '/rv'))
+		if($location.path()==('/producto/'+ mi.objetoId + '/' + mi.objetoTipo + '/rv'))
 			$route.reload();
 		else
-			$location.path('/producto/'+ $routeParams.componente_id + '/rv');
+			$location.path('/producto/'+ mi.objetoId + '/' + mi.objetoTipo + '/rv');
 		
 	}
 	
@@ -464,7 +565,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 	};
 
 	mi.obtenerTotalProductos = function(){
-		$http.post('/SProducto', { accion: 'totalElementos',componenteid : $routeParams.componente_id,
+		$http.post('/SProducto', { accion: 'totalElementos',componenteid : mi.componenteid, subcomponenteid : mi.subcomponenteid, 
 			filtro_nombre: mi.filtros['nombre'],
 			filtro_usuario_creo: mi.filtros['usuarioCreo'], filtro_fecha_creacion: mi.filtros['fechaCreacion'], t: (new Date()).getTime() }).then(
 				function(response) {
@@ -736,6 +837,10 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 								mi.producto.fechaInicio = moment(mi.producto.fechaInicio, 'DD/MM/YYYY').toDate();
 							if(mi.producto.fechaFin != "")
 								mi.producto.fechaFin = moment(mi.producto.fechaFin, 'DD/MM/YYYY').toDate();
+							if(mi.producto.fechaInicioReal != "")
+								mi.producto.fechaInicioReal = moment(mi.producto.fechaInicioReal, 'DD/MM/YYYY').toDate();
+							if(mi.producto.fechaFinReal != "")
+								mi.producto.fechaFinReal = moment(mi.producto.fechaFinReal, 'DD/MM/YYYY').toDate();
 							mi.editar();
 						}
 					});
@@ -795,6 +900,64 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		mi.adquisicionesActivo = function(){
 			if(!mi.adquisicionesCargadas){
 				mi.adquisicionesCargadas = true;
+			}
+		}
+		
+		mi.riesgosActivo = function(){
+			if(!mi.riesgos){
+				mi.riesgos = true;
+			}
+		};
+		
+		mi.agregarPagos = function() {
+			$pagoplanificado.getPagoPlanificado($scope, mi.producto.id,3, 
+			function(objetoId, objetoTipo){
+				return{
+					accion: 'getPagos',
+					objetoId: objetoId,
+					objetoTipo : objetoTipo
+				}
+			}, mi.producto.fechaInicio,mi.producto.fechaFin)
+			.result.then(function(data) {
+				mi.pagos=data;
+				mi.producto.costo = 0;
+				for (x in mi.pagos){
+					mi.producto.costo += mi.pagos[x].pago;
+				}
+			}, function(){
+			});
+		};
+		
+		mi.getAsignado = function(){
+			if(mi.producto.programa != null){
+				$http.post('/SProducto', {
+					accion: 'getValidacionAsignado',
+					id: mi.producto.id,
+					programa: mi.producto.programa,
+					subprograma: mi.producto.subprograma,
+					proyecto: mi.producto.proyecto,
+					actividad: mi.producto.actividad,
+					obra: mi.producto.obra,
+					renglon: mi.producto.renglon,
+					geografico: mi.producto.ubicacionGeografica,
+					t: new Date().getTime()
+				}).success(function(response){
+					if(response.success){
+						mi.asignado = response.asignado;
+						mi.sobrepaso = response.sobrepaso;
+					}
+				});
+			}
+		}
+		
+		mi.validarAsignado = function(){
+			if(mi.producto.costo != null){
+				if(mi.producto.programa != null){
+					if(mi.producto.costo <= mi.asignado)
+						mi.sobrepaso = false;
+					else
+						mi.sobrepaso = true;
+				}
 			}
 		}
 	  

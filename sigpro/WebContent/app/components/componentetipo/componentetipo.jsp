@@ -24,7 +24,7 @@
 		    <label class="btn btn-primary" ng-click="componentetipoc.nuevo()" uib-tooltip="Nuevo">
 		    <span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 		  </shiro:hasPermission>
-		  <shiro:hasPermission name="7010">
+		  <shiro:hasPermission name="7020">
 		    <label class="btn btn-primary" ng-click="componentetipoc.editar()" uib-tooltip="Editar">
 		    <span class="glyphicon glyphicon-pencil"></span> Editar</label>
 		  </shiro:hasPermission>
@@ -81,10 +81,10 @@
 		<div class="operation_buttons" align="right">
 		  <div class="btn-group">
 		    <shiro:hasPermission name="7020">
-		      <label class="btn btn-success" ng-click="form.$valid ? componentetipoc.guardar():''" ng-disabled="!form.$valid" title="Guardar">
+		      <label class="btn btn-success" ng-click="form.$valid ? componentetipoc.guardar():''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
 		      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 		    </shiro:hasPermission>
-		    <label class="btn btn-primary" ng-click="componentetipoc.irATabla()" title="Ir a Tabla">
+		    <label class="btn btn-primary" ng-click="componentetipoc.irATabla()" uib-tooltip="Ir a Tabla">
 		    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 		  </div>
 		</div>
@@ -103,9 +103,9 @@
 				</div>
 				
 				<div class="form-group">
-				   <input type="text" name="idescrip"  class="inputText" id="idescrip" 
-				     ng-model="componentetipoc.componentetipo.descripcion" value="{{componentetipoc.componentetipo.descripcion}}"   
-				     onblur="this.setAttribute('value', this.value);" ng-required="false" >
+				   <textarea class="inputText" rows="4"
+				   ng-model="componentetipoc.componentetipo.descripcion" ng-value="componentetipoc.componentetipo.descripcion"   
+				   onblur="this.setAttribute('value', this.value);" ng-required="false" ></textarea>
 				   <label class="floating-label">Descripción</label>
 				</div>
 				<br/>
@@ -196,10 +196,10 @@
 		<div class="col-sm-12 operation_buttons" align="right">
 		  <div class="btn-group">
 		    <shiro:hasPermission name="7020">
-		      <label class="btn btn-success" ng-click="form.$valid ? componentetipoc.guardar():''" ng-disabled="!form.$valid" title="Guardar">
+		      <label class="btn btn-success" ng-click="form.$valid ? componentetipoc.guardar():''" ng-disabled="!form.$valid" uib-tooltip="Guardar">
 		      <span class="glyphicon glyphicon-floppy-saved"></span> Guardar</label>
 		    </shiro:hasPermission>
-		    <label class="btn btn-primary" ng-click="componentetipoc.irATabla()" title="Ir a Tabla">
+		    <label class="btn btn-primary" ng-click="componentetipoc.irATabla()" uib-tooltip="Ir a Tabla">
 		    <span class="glyphicon glyphicon-list-alt"></span> Ir a Tabla</label>
 		  </div>
 		</div>

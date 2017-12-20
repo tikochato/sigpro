@@ -18,14 +18,14 @@
 			<div class="col-sm-12 operation_buttons" align="right">
 				<div class="btn-group">
 			       <shiro:hasPermission name="17040">
-			       		<label class="btn btn-primary" ng-click="metavc.nuevoValor()" title="Nuevo">
+			       		<label class="btn btn-primary" ng-click="metavc.nuevoValor()" uib-tooltip="Nuevo">
 						<span class="glyphicon glyphicon-plus"></span> Nuevo</label>
 			       </shiro:hasPermission> 
-			       <shiro:hasPermission name="17010">
-			       		<label class="btn btn-primary" ng-click="metavc.editar()" title="Editar">
+			       <shiro:hasPermission name="17020">
+			       		<label class="btn btn-primary" ng-click="metavc.editar()" uib-tooltip="Editar">
 						<span class="glyphicon glyphicon-pencil"></span> Editar</label>
 			       </shiro:hasPermission>	
-			       <shiro:hasPermission name="15030">
+			       <shiro:hasPermission name="17030">
 			       		<label class="btn btn-danger" ng-click="metavc.borrar()">
 			       		<span class="glyphicon glyphicon-trash"></span>Borrar
 			       		</label>
@@ -103,7 +103,8 @@
     						<label  class="floating-label">Tipo de Dato</label>
 						</div>
 						<div class="form-group">
-							<input type="text" id="fecha" class="inputText" uib-datepicker-popup="{{metavc.formatofecha}}" ng-model="metavc.metavalor.fecha" is-open="metavc.fc_abierto"
+							<input type="text" id="fecha" class="inputText" uib-datepicker-popup="{{metavc.formatofecha}}" alt-input-formats="{{metavc.altformatofecha}}"
+												ng-model="metavc.metavalor.fecha" is-open="metavc.fc_abierto"
 												datepicker-options="metavc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-click="metavc.abrirPopupFecha(1000)"
 												ng-value="metavc.metavalor.fecha" onblur="this.setAttribute('value', this.value);"  ng-required="true" ng-readonly="true"/>
 												<span class="label-icon" ng-click="metavc.abrirPopupFecha(1000)">
@@ -123,7 +124,8 @@
 										ng-value="metavc.metavalor.valor" onblur="this.setAttribute('value', this.value);"/>
 								<input ng-switch-when="4" type="checkbox"  ng-model="hitoc.hitoresultado"/>
 								
-								<input ng-switch-when="5" type="text"  class="inputText" uib-datepicker-popup="{{metavc.formatofecha}}" ng-model="metavc.metavalor.valor" is-open="metavc.popupfecharesultado.abierto"
+								<input ng-switch-when="5" type="text"  class="inputText" uib-datepicker-popup="{{metavc.formatofecha}}" alt-input-formats="{{metavc.altformatofecha}}"
+										ng-model="metavc.metavalor.valor" is-open="metavc.popupfecharesultado.abierto"
 										datepicker-options="metavc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" 
 										ng-value="metavc.metavalor.valor" onblur="this.setAttribute('value', this.value);"
 										ng-click="metavc.abirpopupreultado()" ng-readonly="true"/>

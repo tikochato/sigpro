@@ -1,7 +1,7 @@
-var app = angular.module('informacionPresupuestariaController',['ngAnimate', 'ngTouch', 'smart-table']);
+var app = angular.module('informacionPresupuestariaController',['ngAnimate', 'ngTouch', 'smart-table', 'vs-repeat']);
 
-app.controller('informacionPresupuestariaController', ['$scope', '$http', '$interval', 'Utilidades','i18nService','$timeout','$window', '$q','dialogoConfirmacion',
-	function($scope, $http, $interval, $utilidades,i18nService,$timeout,$window, $q, $dialogoConfirmacion){
+app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '$http', '$interval', 'Utilidades','i18nService','$timeout','$window', '$q','dialogoConfirmacion',
+	function($scope, $rootScope, $http, $interval, $utilidades,i18nService,$timeout,$window, $q, $dialogoConfirmacion){
 		var mi = this;
 		i18nService.setCurrentLang('es');
 		mi.fechaInicio = "";
@@ -23,8 +23,98 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 		mi.porcentajeCeldaPipe = "width: 2%; float: left;";
 		mi.data = [];
 		mi.dataOriginal=[];
+		mi.vigenteOriginal=[];
 		mi.totales = [];
 		mi.scrollPosicion = 0;
+		mi.vigente = [];
+		
+		mi.lprestamos = [];
+		
+		$window.document.title = $utilidades.sistema_nombre+' - Ejecución Presupuestaria';
+		
+		$http.post('/SPrestamo', {accion: 'getPrestamos', t: (new Date()).getTime()}).then(
+			function(response){
+				if(response.data.success){
+					mi.lprestamos = response.data.prestamos;
+				}	
+		});
+		
+		mi.blurPrestamo=function(){
+			if(document.getElementById("prestamo_value").defaultValue!=mi.prestamoNombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','prestamo');
+			}
+		}
+		
+		mi.cambioPrestamo=function(selected){
+			if(selected!== undefined){
+				mi.prestamoNombre = selected.originalObject.proyectoPrograma;
+				mi.prestamoId = selected.originalObject.id;
+				$scope.$broadcast('angucomplete-alt:clearInput', 'pep');
+				$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+				mi.getPeps(mi.prestamoId);
+			}
+			else{
+				mi.prestamoNombre="";
+				mi.prestamoId=null;
+			}
+		}
+		
+		mi.blurPep=function(){
+			if(document.getElementById("pep_value").defaultValue!=mi.pepNombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','pep');
+			}
+		}
+		
+		mi.cambioPep=function(selected){
+			if(selected!== undefined){
+				mi.pepNombre = selected.originalObject.nombre;
+				mi.pepId = selected.originalObject.id;
+				$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+				mi.getLineasBase(mi.pepId);
+			}
+			else{
+				mi.pepNombre="";
+				mi.pepId="";
+			}
+		}
+		
+		mi.getPeps = function(prestamoId){
+			$http.post('/SProyecto',{accion: 'getProyectos', prestamoid: prestamoId}).success(
+				function(response) {
+					mi.peps = [];
+					if (response.success){
+						mi.peps = response.entidades;
+					}
+			});	
+		}
+		
+		mi.blurLineaBase=function(){
+			if(document.getElementById("lineaBase_value").defaultValue!=mi.lineaBaseNombre){
+				$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+			}
+		};
+		
+		mi.cambioLineaBase=function(selected){
+			if(selected!== undefined){
+				mi.lineaBaseNombre = selected.originalObject.nombre;
+				mi.lineaBaseId = selected.originalObject.id;
+				mi.validar(1);
+			}
+			else{
+				mi.lineaBaseNombre="";
+				mi.lineaBaseId=null;
+			}
+		};
+
+		mi.getLineasBase = function(proyectoId){
+			$http.post('/SProyecto',{accion: 'getLineasBase', proyectoId: proyectoId}).success(
+				function(response) {
+					mi.lineasBase = [];
+					if (response.success){
+						mi.lineasBase = response.lineasBase;
+					}
+			});	
+		}
 		
 		var AGRUPACION_MES= 1;
 		var AGRUPACION_BIMESTRE = 2;
@@ -42,23 +132,19 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 		var ANUAL_DISPLAY_NAME = ['Anual'];
 		
 		
-		$scope.divActivo = "";
-		mi.activarScroll = function(id){
-			$scope.divActivo = id;
-	    }
-				
-
 		mi.iconoObjetoTipo = {
-		    1: "glyphicon glyphicon-record",
-		    2: "glyphicon glyphicon-th",
+		    0: "glyphicon glyphicon-record",
+		    1: "glyphicon glyphicon-th",
+		    2: "glyphicon glyphicon-equalizer",
 		    3: "glyphicon glyphicon-certificate",
 		    4: "glyphicon glyphicon-link",
-		    5: "glyphicon glyphicon-th-list",
+		    5: "glyphicon glyphicon-time",
 		};
 		
 		mi.tooltipObjetoTipo = {
-		    1: "Proyecto",
-		    2: "Componente",
+		    0: "Proyecto",
+		    1: "Componente",
+		    2: "Subcomponente",
 		    3: "Producto",
 		    4: "Subproducto",
 		    5: "Actividad",
@@ -101,18 +187,6 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 			    startingDay: 1,
 			    minMode: 'year'
 		};
-		
-		$http.post('/SProyecto',{accion: 'getProyectos'}).success(
-			function(response) {
-				mi.prestamos = [];
-				mi.prestamos.push({'value' : 0, 'text' : 'Seleccione un préstamo'});
-				if (response.success){
-					for (var i = 0; i < response.entidades.length; i++){
-						mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
-					}
-					mi.prestamo = mi.prestamos[0];
-				}
-		});
 				
 		mi.anterior = function(){
 			var elemento = document.getElementById("divTablaDatos");
@@ -153,7 +227,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 		}
 		
 		mi.validar = function(noElemento){
-			if(mi.prestamo.value > 0)
+			if(mi.pepId > 0)
 			{
 				if(mi.fechaInicio != null && mi.fechaInicio.toString().length == 4 && 
 						mi.fechaFin != null && mi.fechaFin.toString().length == 4)
@@ -223,9 +297,10 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 		mi.cargarTabla = function(agrupacion) {			
 			var datos = {
 				accion : 'generarInforme',
-				idPrestamo: mi.prestamo.value,
+				idPrestamo: mi.pepId,
 				anioInicial: mi.fechaInicio,
 				anioFinal: mi.fechaFin,
+				lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				t: (new Date()).getTime()
 			};
 			
@@ -268,6 +343,13 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 					mi.mostrarDescargar = true;
 					mi.movimiento = true;
 					
+					datos.accion = "getvigente";
+					$http.post('/SInformacionPresupuestaria', datos).then(function(response) {
+						mi.vigenteOriginal = response.data.vigente;
+						mi.agruparVigente(mi.agrupacionActual);
+					})
+					
+					
 					$timeout(function(){
 						mi.mostrarCargando = false;
 					})
@@ -277,10 +359,10 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 			});
 		}
 		
-		mi.lineColors = ['#88b4df','#8ecf4c'];
+		mi.lineColors = ['#88b4df','#8ecf4c','#feadae'];
 		
 		mi.cambiarAgrupacion = function(agrupacion){
-			if(mi.prestamo.value > 0)
+			if(mi.pepId > 0)
 			{
 				if(mi.fechaInicio != null && mi.fechaFin != null)
 				{
@@ -296,13 +378,14 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 								 }
 							}
 							mi.renderizaTabla();
+							mi.agruparVigente (agrupacion);
 						}
 					}else
 						$utilidades.mensaje('warning','La fecha inicial es mayor a la fecha final');
 				}else
 					$utilidades.mensaje('warning','Favor de ingresar un año inicial y final válido');
 			}else
-				$utilidades.mensaje('warning','Debe de seleccionar un préstamo');
+				$utilidades.mensaje('warning','Debe de seleccionar un '+$rootScope.etiquetas.proyecto);
 		}
 		
 		mi.agruparMeses = function(anio){
@@ -475,8 +558,19 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 			    montoPlanificado,
 			    montoReal
 			];
+			
+			mi.dataGraficaAcumulado = [];
+			mi.dataGraficaAcumulado[0] = [];
+			mi.dataGraficaAcumulado[1] = [];
+			
+			for (x in mi.dataGrafica[0]){
+				mi.dataGraficaAcumulado[0][x] = x == 0 ? mi.dataGrafica[0][x] : mi.dataGraficaAcumulado[0][x -1] +  mi.dataGrafica[0][x];
+				mi.dataGraficaAcumulado[1][x] = x == 0 ? mi.dataGrafica[1][x] : mi.dataGraficaAcumulado[1][x -1] +  mi.dataGrafica[1][x];
+			}
+			
+			  
 				
-			mi.series = ['Planificado', 'Real'];
+			mi.series = ['Planificado', 'Real','Vigente'];
 			
 			mi.convertirMillones();
 		}
@@ -486,10 +580,12 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 				for(k in mi.dataGrafica[h]){
 					if(mi.enMillones){
 						mi.dataGrafica[h][k] = mi.dataGrafica[h][k] / 1000000;
+						mi.dataGraficaAcumulado[h][k] = mi.dataGraficaAcumulado[h][k] / 1000000;
 						mi.optionsGrafica.scales.yAxes[0].scaleLabel.labelString = "Monto en millones de quetzales";
 					}
 					else{
 						mi.dataGrafica[h][k] = mi.dataGrafica[h][k] * 1000000;
+						mi.dataGraficaAcumulado[h][k] = mi.dataGraficaAcumulado[h][k] * 1000000;
 						mi.optionsGrafica.scales.yAxes[0].scaleLabel.labelString = "Monto en quetzales";
 					}
 				}
@@ -540,7 +636,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 			  };
 		
 		mi.generar = function(agrupacion){
-			if(mi.prestamo.value > 0)
+			if(mi.pepId > 0)
 			{
 				if(mi.fechaInicio != null && mi.fechaFin != null)
 				{
@@ -555,7 +651,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 				}else
 					$utilidades.mensaje('warning','Favor de ingresar un año inicial y final válido');
 			}else
-				$utilidades.mensaje('warning','Debe de seleccionar un préstamo');
+				$utilidades.mensaje('warning','Debe de seleccionar un '+$rootScope.etiquetas.proyecto);
 		}
 		
 		mi.renderizaTabla = function(){
@@ -634,11 +730,13 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 			}
 		}
 		
-		mi.getPlanificado=function(itemIndice, indice){
+		mi.getPlanificado=function(item, indice){
 			mes = Math.floor((indice)/mi.aniosTotal.length);
 			anio = indice - (mes*mi.aniosTotal.length);
-			var item = mi.data[itemIndice];
-			var valor = item.anios[anio].mes[mes];
+			if(item.anios[anio].mes[mes].planificado == null){
+				item.anios[anio].mes[mes].planificado = 0;
+			}
+			var valor = item.anios[anio].mes[mes]; 
 			return valor;
 		};
 		
@@ -647,6 +745,12 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 			return valor;
 		};
 		
+		angular.element($window).bind('resize', function(){ 
+            mi.calcularTamaniosCeldas();
+            $scope.$digest();
+          });
+        $scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
+        
 		mi.exportarPdf=function(){
 			 var tipoVisualizacion = 0;
 			 if (mi.grupoMostrado.planificado && mi.grupoMostrado.real){
@@ -656,11 +760,12 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 			 }
 			$http.post('/SInformacionPresupuestaria', { 
 				accion: 'exportarPdf',
-				idPrestamo: mi.prestamo.value,
+				idPrestamo: mi.pepId,
 				anioInicial: mi.fechaInicio,
 				anioFinal: mi.fechaFin,
 				agrupacion: mi.agrupacionActual,
 				tipoVisualizacion: tipoVisualizacion,
+				lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
@@ -684,11 +789,12 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 			 }
 			 $http.post('/SInformacionPresupuestaria', { 
 				 accion: 'exportarExcel', 
-				 idPrestamo: mi.prestamo.value,
+				 idPrestamo: mi.pepId,
 				 anioInicial: mi.fechaInicio,
 				 anioFinal: mi.fechaFin,
 				 agrupacion: mi.agrupacionActual,
 				 tipoVisualizacion: tipoVisualizacion,
+				 lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				 t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
@@ -702,38 +808,89 @@ app.controller('informacionPresupuestariaController', ['$scope', '$http', '$inte
 				 	}
 			  	);
 			};
+			
+	mi.agruparVigente = function(agrupacion){
+		mi.vigente=[];
+		mi.vigenteAcumulado=[];
+		mi.vigente.push(...mi.vigenteOriginal)
+		var vigenteTemp = [];
+		var vigenteTempAcumulado = [];
+		
+		
+		
+		if(mi.enMillones){
+			for (x in mi.vigente){
+				mi.vigente[x] = mi.vigente[x] / 1000000;
+				mi.vigenteAcumulado[x] = mi.vigenteAcumulado[x] / 1000000;
+			}
+		}
+		
+		switch (agrupacion){
+			case 1:
+				for(x = 0; x<mi.vigente.length; x++){
+					vigenteTemp.push(mi.vigente[x]);
+					//vigenteTempAcumulado.push(mi.vigenteAcumulado[x]);
+				}
+				break;
+			case 2:
+				for(x = 0; x<mi.vigente.length ; ){
+					vigenteTemp.push(mi.vigente[x] + mi.vigente[x+1]);
+					//vigenteTempAcumulado.push(mi.vigenteAcumulado[x] + mi.vigenteAcumulado[x + 1] );
+					x = x+2;
+				}
+				break;
+			case 3:
+				for(x = 0; x<mi.vigente.length ; ){
+					vigenteTemp.push(mi.vigente[x] + mi.vigente[x+1] + mi.vigente[x+2]);
+					/*vigenteTempAcumulado.push(mi.vigenteAcumulado[x] + mi.vigenteAcumulado[x + 1] + mi.vigenteAcumulado[x + 2] );*/
+					x = x+3;
+				}
+				break;
+			case 4:
+				for(x = 0; x<mi.vigente.length ; ){
+					vigenteTemp.push(mi.vigente[x] + mi.vigente[x+1] + mi.vigente[x+2] + mi.vigente[x+3]);
+					/*vigenteTempAcumulado.push(mi.vigenteAcumulado[x] + mi.vigenteAcumulado[x + 1] + mi.vigenteAcumulado[x + 2]
+					+ mi.vigenteAcumulado[x + 3]);*/
+					x = x+4;
+				}
+				break;
+			case 5:
+				for(x = 0; x<mi.vigente.length ; ){
+					vigenteTemp.push(mi.vigente[x] + mi.vigente[x+1] + mi.vigente[x+2] + mi.vigente[x+3]
+					+ mi.vigente[x+4] + mi.vigente[x+5]);
+					/*vigenteTempAcumulado.push(mi.vigenteAcumulado[x] + mi.vigenteAcumulado[x + 1] + mi.vigenteAcumulado[x + 2]
+					+ mi.vigenteAcumulado[x + 3] + mi.vigenteAcumulado[x + 4] + mi.vigenteAcumulado[x + 5]);*/
+					x = x+6;
+				}
+				break;
+			case 6:
+				for(x = 0; x<mi.vigente.length ; ){
+					vigenteTemp.push(mi.vigente[x] + mi.vigente[x+1] + mi.vigente[x+2] + mi.vigente[x+3]
+					+ mi.vigente[x+4] + mi.vigente[x+5] + mi.vigente[x+6] + mi.vigente[x+7] + mi.vigente[x+8] + mi.vigente[x+9]
+					+ mi.vigente[x+10] + mi.vigente[x+11]);
+					/*vigenteTempAcumulado.push(mi.vigenteAcumulado[x] + mi.vigenteAcumulado[x + 1] + mi.vigenteAcumulado[x + 2]
+					+ mi.vigenteAcumulado[x + 3] + mi.vigenteAcumulado[x + 4] + mi.vigenteAcumulado[x + 5]
+					+ mi.vigenteAcumulado[x + 6] + mi.vigenteAcumulado[x + 7] + mi.vigenteAcumulado[x + 8]
+					+ mi.vigenteAcumulado[x + 9] + mi.vigenteAcumulado[x + 10] + mi.vigenteAcumulado[x + 11]);*/
+					x = x+12;
+				}
+				break;
+		
+		}
+		
+		mi.vigenteAcumulado = [];
+		for (x in vigenteTemp){
+			mi.vigenteAcumulado[x] = x == 0 ? vigenteTemp[x] : mi.vigenteAcumulado[x -1] +  vigenteTemp[x];
+		}
+		
+		if(mi.dataGrafica.length == 3)
+			mi.dataGrafica.splice(2,1);
+		
+		if(mi.dataGraficaAcumulado.length == 3)
+			mi.dataGraficaAcumulado.splice(2,1);
+		
+		mi.dataGrafica.push(vigenteTemp);
+		mi.dataGraficaAcumulado.push(mi.vigenteAcumulado);
+	}
 		
 }]);
-
-app.directive('scrollespejo', ['$window', function($window) {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-            element.bind('scroll', function() {
-                var elemento = element[0];
-                if (elemento.id == scope.divActivo){
-      	          if(elemento.id == 'divTablaNombres'){
-      	            document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
-      	            document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
-      	          }else if(elemento.id == 'divTablaDatos'){
-      	        	if(Math.abs(scope.controller.scrollPosicion-element[0].scrollLeft)<scope.controller.tamanoCelda){//bloquear scroll horizontal
-                  		element[0].scrollLeft = scope.controller.scrollPosicion;
-                  	}
-      	            document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
-      	            document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
-      	          }else{
-      	            document.getElementById("divTablaNombres").scrollTop = elemento.scrollTop ;
-      	            document.getElementById("divTablaDatos").scrollTop = elemento.scrollTop ;
-      	          }
-      	        }
-            });
-            angular.element($window).bind('resize', function(){ 
-                scope.controller.calcularTamaniosCeldas();
-                scope.$digest();
-              });
-            scope.$on('$destroy', function () { window.angular.element($window).off('resize');});
-        }
-    };
-}])
-
-;

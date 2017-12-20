@@ -49,7 +49,8 @@
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group" >
-							  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaInicio" is-open="actividadc.fi_abierto"
+							  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" alt-input-formats="{{actividadc.altformatofecha}}"
+							  			ng-model="actividadc.actividad.fechaInicio" is-open="actividadc.fi_abierto"
 							            datepicker-options="actividadc.fechaOptions" close-text="Cerrar" current-text="Hoy" clear-text="Borrar" ng-change="actividadc.cambioDuracion()" ng-required="true"  
 							            ng-click="actividadc.abrirPopupFecha(1000)" ng-value="actividadc.actividad.fechaInicio" onblur="this.setAttribute('value', this.value);"
 							            ng-readonly="!actividadc.primeraActividad"/>
@@ -63,7 +64,8 @@
 						<div class="col-sm-6">
 						
 							<div class="form-group" >
-							  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" ng-model="actividadc.actividad.fechaFin" is-open="actividadc.ff_abierto"
+							  <input type="text"  class="inputText" uib-datepicker-popup="{{actividadc.formatofecha}}" alt-input-formats="{{actividadc.altformatofecha}}"
+							  			ng-model="actividadc.actividad.fechaFin" is-open="actividadc.ff_abierto"
 							            datepicker-options="actividadc.ff_opciones" close-text="Cerrar" current-text="Hoy" clear-text="Borrar"  ng-required="true"  ng-click="actividadc.abrirPopupFecha(-1)"
 							            ng-value="actividadc.actividad.fechaFin" onblur="this.setAttribute('value', this.value);"
 							            ng-readonly="true"/>
@@ -88,7 +90,7 @@
 		    <div class="col-sm-12 operation_buttons" align="right">
 			    <div class="btn-group">
 			        <label class="btn btn-success" ng-click="form.$valid ? actividadc.ok() : ''" 
-			        ng-disabled="!form.$valid" title="Guardar" uib-tooltip="Guardar"> Guardar</label>
+			        ng-disabled="!form.$valid" uib-tooltip="Guardar"> Guardar</label>
 					<label class="btn btn-primary" ng-click="actividadc.cancel()">Cancelar</label>
 					<label class="btn btn-danger" ng-click="actividadc.borrar()" ng-disabled="actividadc.esnuevo">Borrar</label>
 		    	</div>

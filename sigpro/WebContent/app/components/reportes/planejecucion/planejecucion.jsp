@@ -30,7 +30,7 @@
 		</shiro:lacksPermission>
 		
 		<div class="panel panel-default">
-			<div class="panel-heading"><h3>Plan de Ejecución</h3></div>
+			<div class="panel-heading"><h3>Informe General del Préstamo</h3></div>
 		</div>
 		
 		<br>
@@ -38,20 +38,20 @@
 			<div class="col-sm-12 ">
 			
 			<form name="form">
-				<div class="form-group col-sm-6" >
-						<select  class="inputText" ng-model="planc.prestamoSeleccionado" 
-							ng-options="a.text for a in planc.prestamos"
-							ng-readonly="true"
-							ng-required="true"
-							ng-change = "planc.generarReporte()">
-							<option value="">Seleccione una préstamo</option>
-							</select>
-				</div>
-				<div class="col-sm-6 operation_buttons" style="text-align: right;"  >
+				<div class="row">
+		    		<div class="form-group col-sm-6" align="left">
+						<div id="prestamo" angucomplete-alt placeholder="" pause="100" selected-object="planc.cambioPrestamo"
+							  local-data="planc.lprestamos" search-fields="proyectoPrograma" title-field="proyectoPrograma" field-required="true" field-label="* Préstamo"
+							  minlength="1" input-class="form-control form-control-small field-angucomplete inputText" match-class="angucomplete-highlight"
+							  initial-value="planc.prestamoNombre" focus-out="planc.blurPrestamo()" input-name="prestamo"></div>
+						<span class="label-icon" tabindex="-1"><i class="glyphicon glyphicon-search"></i></span>
+					</div>
+		    	</div>
+				<div class="col-sm-12 operation_buttons" style="text-align: right;"  >
 		    			<div class="btn-group" role="group" aria-label="" >
 							<label class="btn btn-default" ng-click="planc.exportarExcel()" uib-tooltip="Exportar a Excel" ng-hide="!planc.mostrarExport">
 							<span class="glyphicon glyphicon glyphicon-export" aria-hidden="true"></span></label>
-							<label class="btn btn-default" ng-click="controller.exportarPdf()" uib-tooltip="Exportar a PDF" ng-hide="!planc.mostrarExport" >
+							<label class="btn btn-default" ng-click="planc.exportarJasper()" uib-tooltip="Exportar a PDF" ng-hide="true" >
 								<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
 						</div>
 		    		</div>
@@ -119,7 +119,7 @@
 						<tbody>
       						<tr>
       							<td style="width: 20%">
-      								<label class="label-form1" >Número de Prestamo</label>
+      								<label class="label-form1" >Número de {{etiquetas.proyecto}}</label>
       							</td>
       							<td style="width: 35%">
       								<p>{{ planc.prestamo.numeroPrestamo }}</pl>
@@ -193,7 +193,7 @@
       						
       						<tr>
       							<td>
-      								<label  class="label-form1" >Moneda de prestamo</label>
+      								<label  class="label-form1" >Moneda de {{etiquetas.proyecto}}</label>
       							</td>
       							<td>
 				  					<p>{{ planc.prestamo.tipoMonedaNombre }}</p>

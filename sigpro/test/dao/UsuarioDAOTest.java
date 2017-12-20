@@ -17,7 +17,7 @@ public class UsuarioDAOTest {
 	
 	@Test
 	public void 	registroUsuarioTest(){
-		assertEquals(UsuarioDAO.registroUsuario(null, null, null, null),false);
+		assertEquals(UsuarioDAO.registroUsuario(null, null, null, null, 3),false);
 	}
 	
 	@Test

@@ -1,0 +1,940 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.3.final using JasperReports Library version 6.4.3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Desembolsos" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c0c45383-5721-429a-baef-8c47d579dfd8">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<style name="Table_TH" mode="Opaque" forecolor="#FCFAFA" backcolor="#A4A4A4">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#D9D4D4">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Tabla" uuid="14c01c5e-7c02-4909-af9a-c2a36fa96141">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+		<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="516"/>
+		<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="470"/>
+		<parameter name="proyectoIdG" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[29]]></defaultValueExpression>
+		</parameter>
+		<parameter name="diciembreR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="noviembreR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="octubreR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="septiembreR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="agostoR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="julioR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="junioR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="mayoR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="abrilR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="marzoR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="febreroR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="eneroR_g" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="fechaCorte" class="java.util.Date">
+			<defaultValueExpression><![CDATA[NOW( )]]></defaultValueExpression>
+		</parameter>
+		<parameter name="lineaBase" class="java.lang.String"/>
+		<parameter name="queryPo" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" po.linea_base like '%"+$P{lineaBase}+"%' ":" po.actual=1 "]]></defaultValueExpression>
+		</parameter>
+		<queryString language="SQL">
+			<![CDATA[select 'planificada' tipo, 1 mes,  $P{eneroR_g} monto
+union 
+select 'planificada',2, $P{febreroR_g} 
+union 
+select 'planificada',3, $P{marzoR_g} 
+union 
+select 'planificada',4, $P{abrilR_g} 
+union 
+select 'planificada',5, $P{mayoR_g} 
+union 
+select 'planificada',6, $P{junioR_g} 
+union 
+select 'planificada',7, $P{julioR_g} 
+union 
+select 'planificada',8, $P{agostoR_g} 
+union 
+select 'planificada',9, $P{septiembreR_g} 
+union 
+select 'planificada',10, $P{octubreR_g} 
+union 
+select 'planificada',11, $P{noviembreR_g} 
+union 
+select 'planificada',12, $P{diciembreR_g} 
+union
+select 'real' tipo , e.mes, sum(e.ejecutado) monto
+from sipro_analytic.mv_ep_ejec_asig_vige e, sipro_history.proyecto po ,sipro.prestamo pe
+where pe.id = po.prestamoid
+and e.entidad = po.entidad
+and  $P!{queryPo} 
+and e.fuente = cast(substring(pe.codigo_presupuestario,1,2) as Integer) 
+and e.organismo = cast(substring(pe.codigo_presupuestario,3,4) as Integer)
+and e.correlativo = cast(substring(pe.codigo_presupuestario,7,4) as Integer)
+and e.ejercicio = year( $P{fechaCorte} )
+and e.mes <= month( $P{fechaCorte} )
+and po.id =  $P{proyectoIdG} 
+and e.mes > 0
+group by  e.ejercicio, e.mes]]>
+		</queryString>
+		<field name="tipo" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="tipo"/>
+		</field>
+		<field name="mes" class="java.lang.Long">
+			<property name="com.jaspersoft.studio.field.label" value="mes"/>
+		</field>
+		<field name="monto" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="monto"/>
+		</field>
+	</subDataset>
+	<subDataset name="gastos" uuid="01fe2ac5-eafc-4fcb-bbd7-bb79cc12b229">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+		<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="625"/>
+		<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="361"/>
+		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="81"/>
+		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="908"/>
+		<parameter name="proyectoId_t" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[6]]></defaultValueExpression>
+		</parameter>
+		<parameter name="costoRealEnero_t" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="costoRealFebrero_t" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="costoRealMarzo_t" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="costoRealAbril_t" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="costoRealMayo_t" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="costoRealJunio_t" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="costoRealJulio_t" class="java.math.BigDecimal"/>
+		<parameter name="costoRealAgosto_t" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="costoRealSeptiembre_t" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="costoRealOctubre_t" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="costoRealNoviembre_t" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="costoRealDiciembre_t" class="java.math.BigDecimal">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="fechaCorte" class="java.util.Date">
+			<defaultValueExpression><![CDATA[NOW( )]]></defaultValueExpression>
+		</parameter>
+		<parameter name="lineaBase_t" class="java.lang.String"/>
+		<parameter name="queryPo1" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{lineaBase_t}!=null?" po.linea_base like '%"+$P{lineaBase_t}+"%' ":" po.actual=1 "]]></defaultValueExpression>
+		</parameter>
+		<queryString language="SQL">
+			<![CDATA[select 'Gasto real' gasto,
+sum(case
+  when t1.mes = 1 then t1.ejecutado
+  else null
+end) enero,
+sum(case
+  when t1.mes = 2 then t1.ejecutado
+  else null
+end) febrero,
+sum(case
+  when t1.mes = 3 then t1.ejecutado
+  else null
+end) marzo,
+sum(case
+  when t1.mes = 4 then t1.ejecutado
+  else null
+end) abril,
+sum(case
+  when t1.mes = 5 then t1.ejecutado
+  else null
+end) mayo,
+sum(case
+  when t1.mes = 6 then t1.ejecutado
+  else null
+end) junio,
+sum(case
+  when t1.mes = 7 then t1.ejecutado
+  else null
+end) julio,
+sum(case
+  when t1.mes = 8 then t1.ejecutado
+  else null
+end) agosto,
+sum(case
+  when t1.mes = 9 then t1.ejecutado
+  else null
+end) septiembre,
+sum(case
+  when t1.mes = 10 then t1.ejecutado
+  else null
+end) octubre,
+sum(case
+  when t1.mes = 11 then t1.ejecutado
+  else null
+end) noviembre,
+sum(case
+  when t1.mes = 12 then t1.ejecutado
+  else null
+end) diciembre
+from (
+	select e.ejercicio, e.mes, sum(e.ejecutado) ejecutado
+	from sipro_analytic.mv_ep_ejec_asig_vige e, sipro_history.proyecto po ,sipro.prestamo pe
+	where pe.id = po.prestamoid
+	and e.entidad = po.entidad
+	and  $P!{queryPo1} 
+	and e.fuente = cast(substring(pe.codigo_presupuestario,1,2) as Integer) 
+	and e.organismo = cast(substring(pe.codigo_presupuestario,3,4) as Integer)
+	and e.correlativo = cast(substring(pe.codigo_presupuestario,7,4) as Integer)
+	and e.ejercicio = year( $P{fechaCorte} )
+	and e.mes <= month( $P{fechaCorte} )
+	and po.id =  $P{proyectoId_t} 
+	and e.mes > 0
+	group by  e.ejercicio, e.mes 
+) t1
+union
+select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFebrero_t}  febrero,
+  $P{costoRealMarzo_t} marzo, $P{costoRealAbril_t}   abril,  $P{costoRealMayo_t} mayo, 
+   $P{costoRealJunio_t}  junio, $P{costoRealJulio_t}   julio, $P{costoRealAgosto_t}  agosto
+,  $P{costoRealSeptiembre_t} septiembre,  $P{costoRealOctubre_t}  octubre,
+ $P{costoRealNoviembre_t}  noviembre, $P{costoRealDiciembre_t}  diciembre]]>
+		</queryString>
+		<field name="gasto" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="gasto"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value=""/>
+		</field>
+		<field name="enero" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="enero"/>
+		</field>
+		<field name="febrero" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="febrero"/>
+		</field>
+		<field name="marzo" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="marzo"/>
+		</field>
+		<field name="abril" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="abril"/>
+		</field>
+		<field name="mayo" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="mayo"/>
+		</field>
+		<field name="junio" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="junio"/>
+		</field>
+		<field name="julio" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="julio"/>
+		</field>
+		<field name="agosto" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="agosto"/>
+		</field>
+		<field name="septiembre" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="septiembre"/>
+		</field>
+		<field name="octubre" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="octubre"/>
+		</field>
+		<field name="noviembre" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="noviembre"/>
+		</field>
+		<field name="diciembre" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="diciembre"/>
+		</field>
+		<variable name="real" class="java.math.BigDecimal" resetType="Column">
+			<variableExpression><![CDATA[IF($F{gasto}.equals( "Gasto real"),($F{enero}!=null?$F{enero}:new BigDecimal(0)).add(($F{febrero}!=null?$F{febrero}:new BigDecimal(0)).add(($F{marzo}!=null?$F{marzo}:new BigDecimal(0)).add(($F{abril}!=null?$F{abril}:new BigDecimal(0)).add( ($F{mayo}!=null?$F{mayo}:new BigDecimal(0)).add(($F{junio}!=null?$F{junio}:new BigDecimal(0)).add( ($F{julio}!=null?$F{julio}:new BigDecimal(0)).add( ($F{agosto}!=null?$F{agosto}:new BigDecimal(0)).add(($F{septiembre}!=null?$F{septiembre}:new BigDecimal(0)).add(($F{octubre}!=null?$F{octubre}:new BigDecimal(0)).add(($F{noviembre}!=null?$F{noviembre}:new BigDecimal(0)).add(($F{diciembre}!=null?$F{diciembre}:new BigDecimal(0))))) )))))))),$V{real})]]></variableExpression>
+		</variable>
+		<variable name="planificado" class="java.math.BigDecimal" resetType="Column">
+			<variableExpression><![CDATA[IF($F{gasto}.equals( "Gasto programado"),($F{enero}!=null?$F{enero}:new BigDecimal(0)).add(($F{febrero}!=null?$F{febrero}:new BigDecimal(0)).add(($F{marzo}!=null?$F{marzo}:new BigDecimal(0)).add(($F{abril}!=null?$F{abril}:new BigDecimal(0)).add( ($F{mayo}!=null?$F{mayo}:new BigDecimal(0)).add(($F{junio}!=null?$F{junio}:new BigDecimal(0)).add( ($F{julio}!=null?$F{julio}:new BigDecimal(0)).add( ($F{agosto}!=null?$F{agosto}:new BigDecimal(0)).add(($F{septiembre}!=null?$F{septiembre}:new BigDecimal(0)).add(($F{octubre}!=null?$F{octubre}:new BigDecimal(0)).add(($F{noviembre}!=null?$F{noviembre}:new BigDecimal(0)).add(($F{diciembre}!=null?$F{diciembre}:new BigDecimal(0))))) )))))))),$V{planificado})]]></variableExpression>
+		</variable>
+	</subDataset>
+	<parameter name="usuario" class="java.lang.String"/>
+	<parameter name="proyectoId" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[29]]></defaultValueExpression>
+	</parameter>
+	<parameter name="esSubreporte" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="costoPlanificado" class="java.util.ArrayList" nestedType="java.math.BigDecimal">
+		<parameterDescription><![CDATA[Lista de costos reales]]></parameterDescription>
+	</parameter>
+	<parameter name="fechaCorte" class="java.util.Date">
+		<defaultValueExpression><![CDATA[NOW( )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lineaBase" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select 1]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="456" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Transparent" x="213" y="1" width="335" height="30" backcolor="#0D0D0D" uuid="1a7a0892-ae96-4935-a3ec-dbace311c26e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Gráfica de Gasto Programado Vrs. Real]]></text>
+			</staticText>
+			<areaChart>
+				<chart evaluationTime="Report" renderType="draw" theme="default">
+					<reportElement x="115" y="71" width="530" height="200" uuid="3d41a647-6133-4d2a-909a-00dd7ce07439"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend>
+						<font fontName="Arial" isBold="false"/>
+					</chartLegend>
+				</chart>
+				<categoryDataset>
+					<dataset>
+						<datasetRun subDataset="Tabla" uuid="2eb68565-d6c1-472f-a151-20399782be6b">
+							<datasetParameter name="proyectoIdG">
+								<datasetParameterExpression><![CDATA[$P{proyectoId}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="eneroR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoPlanificado}.isEmpty()  &&  $P{costoPlanificado}.size() > 0 ? $P{costoPlanificado}.get( 0 ) : new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="febreroR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoPlanificado}.isEmpty()  &&  $P{costoPlanificado}.size() >  1 ? $P{costoPlanificado}.get( 1) : new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="marzoR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoPlanificado}.isEmpty()  &&  $P{costoPlanificado}.size() >  2 ? $P{costoPlanificado}.get( 2) : new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="abrilR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoPlanificado}.isEmpty()  &&  $P{costoPlanificado}.size() >  3 ? $P{costoPlanificado}.get( 3) : new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="mayoR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoPlanificado}.isEmpty()  &&  $P{costoPlanificado}.size() >  4 ? $P{costoPlanificado}.get( 4) : new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="junioR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoPlanificado}.isEmpty()  &&  $P{costoPlanificado}.size() >  5 ? $P{costoPlanificado}.get( 5) : new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="julioR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoPlanificado}.isEmpty()  &&  $P{costoPlanificado}.size() >  6 ? $P{costoPlanificado}.get( 6) : new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="agostoR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoPlanificado}.isEmpty()  &&  $P{costoPlanificado}.size() > 7 ? $P{costoPlanificado}.get( 7) : new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="septiembreR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoPlanificado}.isEmpty()  &&  $P{costoPlanificado}.size() >  8 ? $P{costoPlanificado}.get( 8) : new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="octubreR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoPlanificado}.isEmpty()  &&  $P{costoPlanificado}.size() >  9 ? $P{costoPlanificado}.get( 9) : new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="noviembreR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoPlanificado}.isEmpty()  &&  $P{costoPlanificado}.size() >  10 ? $P{costoPlanificado}.get( 10) : new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="diciembreR_g">
+								<datasetParameterExpression><![CDATA[!$P{costoPlanificado}.isEmpty()  &&  $P{costoPlanificado}.size() >  11  ?  $P{costoPlanificado}.get( 11)  :  new BigDecimal(0)]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="fechaCorte">
+								<datasetParameterExpression><![CDATA[$P{fechaCorte}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="lineaBase">
+								<datasetParameterExpression><![CDATA[$P{lineaBase}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+					</dataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{tipo}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{mes}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{monto}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<areaPlot>
+					<plot backgroundAlpha="0.75" foregroundAlpha="0.55">
+						<seriesColor seriesOrder="0" color="#99BEE3"/>
+						<seriesColor seriesOrder="1" color="#93D153"/>
+					</plot>
+					<categoryAxisLabelExpression><![CDATA["Mes"]]></categoryAxisLabelExpression>
+					<categoryAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+					</categoryAxisFormat>
+					<valueAxisLabelExpression><![CDATA["Monto (Q)"]]></valueAxisLabelExpression>
+					<valueAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+					</valueAxisFormat>
+				</areaPlot>
+			</areaChart>
+			<componentElement>
+				<reportElement stretchType="ElementGroupBottom" x="14" y="332" width="716" height="118" uuid="7dce348a-cd40-48d9-8047-afe1db12b4ef">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="gastos" uuid="caeee877-0887-4afc-b79a-d132e121af58">
+						<datasetParameter name="proyectoId_t">
+							<datasetParameterExpression><![CDATA[$P{proyectoId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealEnero_t">
+							<datasetParameterExpression><![CDATA[! $P{costoPlanificado}.isEmpty()  && $P{costoPlanificado}.size() > 0  ?    $P{costoPlanificado}.get( 0 ) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealFebrero_t">
+							<datasetParameterExpression><![CDATA[! $P{costoPlanificado}.isEmpty()  && $P{costoPlanificado}.size() > 1  ? $P{costoPlanificado}.get( 1 ) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealMarzo_t">
+							<datasetParameterExpression><![CDATA[! $P{costoPlanificado}.isEmpty()  && $P{costoPlanificado}.size() > 2  ?$P{costoPlanificado}.get( 2 ) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealAbril_t">
+							<datasetParameterExpression><![CDATA[! $P{costoPlanificado}.isEmpty()  && $P{costoPlanificado}.size() > 3  ?$P{costoPlanificado}.get( 3) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealMayo_t">
+							<datasetParameterExpression><![CDATA[! $P{costoPlanificado}.isEmpty()  && $P{costoPlanificado}.size() > 4 ?$P{costoPlanificado}.get( 4) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealJunio_t">
+							<datasetParameterExpression><![CDATA[! $P{costoPlanificado}.isEmpty()  && $P{costoPlanificado}.size() > 5  ?$P{costoPlanificado}.get( 5) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealJulio_t">
+							<datasetParameterExpression><![CDATA[! $P{costoPlanificado}.isEmpty()  && $P{costoPlanificado}.size() > 6  ? $P{costoPlanificado}.get( 6) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealAgosto_t">
+							<datasetParameterExpression><![CDATA[! $P{costoPlanificado}.isEmpty()  && $P{costoPlanificado}.size() > 7  ?$P{costoPlanificado}.get( 7) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealSeptiembre_t">
+							<datasetParameterExpression><![CDATA[! $P{costoPlanificado}.isEmpty()  && $P{costoPlanificado}.size() > 8  ? $P{costoPlanificado}.get( 8) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealOctubre_t">
+							<datasetParameterExpression><![CDATA[! $P{costoPlanificado}.isEmpty()  && $P{costoPlanificado}.size() > 9  ?$P{costoPlanificado}.get( 9 ) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealNoviembre_t">
+							<datasetParameterExpression><![CDATA[! $P{costoPlanificado}.isEmpty()  && $P{costoPlanificado}.size() > 10  ? $P{costoPlanificado}.get( 10) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="costoRealDiciembre_t">
+							<datasetParameterExpression><![CDATA[! $P{costoPlanificado}.isEmpty()  && $P{costoPlanificado}.size() > 11  ? $P{costoPlanificado}.get( 11) : new BigDecimal(0)]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="fechaCorte">
+							<datasetParameterExpression><![CDATA[$P{fechaCorte}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="lineaBase_t">
+							<datasetParameterExpression><![CDATA[$P{lineaBase}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="165" uuid="3567e540-282b-450e-bbea-e338d16a0f68">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [3]"/>
+						<jr:columnFooter style="Table_TD" height="60" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="165" height="30" uuid="010f2484-64c8-42f4-abb2-571906bef31b">
+									<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+								</reportElement>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="8" isBold="true"/>
+									<paragraph leftIndent="3"/>
+								</textElement>
+								<text><![CDATA[Total Gasto Real (Q)]]></text>
+							</staticText>
+							<staticText>
+								<reportElement x="0" y="30" width="165" height="30" uuid="b35e19d8-59b7-4c85-b639-cdc04c6aa996">
+									<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+								</reportElement>
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="8" isBold="true"/>
+									<paragraph leftIndent="3"/>
+								</textElement>
+								<text><![CDATA[Total Gasto Planificado (Q)]]></text>
+							</staticText>
+						</jr:columnFooter>
+						<jr:column width="55" uuid="521c7f5f-7bc0-48ec-92d8-c4d5f5b88310">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+							<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+								<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.grid.JSSGridBagLayout"/>
+								<staticText>
+									<reportElement positionType="Float" x="0" y="0" width="55" height="30" uuid="e3aa9293-37f3-401b-be08-1d9f637d38be">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Mes]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="30">
+								<textField isBlankWhenNull="true">
+									<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="ecc797c8-3894-44b9-bb98-86e534699292">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial" size="8" isBold="true"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[($F{gasto}!=null?$F{gasto}:"")+" (Q)"]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="55" uuid="b96e4dcb-9b68-4675-b2ef-8c43a1fa3c80">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+							<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="8b3e5d1e-dbf7-4d0d-80d0-2fc51a9d4fec">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Enero]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="30">
+								<textField pattern="#,##0.00#" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="d67c50c8-2bf0-42c4-a0ab-3e34d966b1f3">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial" size="8"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{enero} != null ? $F{enero} : 0]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="55" uuid="6ae730f7-372f-4cf0-af3b-7e2721e699f4">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+							<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="9e9ce1e2-5c67-4b39-b97e-86eb176cc703">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Febrero]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="30">
+								<textField pattern="#,##0.00#" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="1604fd0d-e6b6-4bee-9176-5d817174b85e">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial" size="8"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{febrero} != null ? $F{febrero} : 0]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="551" uuid="5b79ea9a-338e-4398-8859-45f374c7185e">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [10]"/>
+						<jr:columnFooter style="Table_TD" height="60" rowSpan="1">
+							<textField pattern="#,##0.00#" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="551" height="30" uuid="0da42b6e-af4e-4853-95af-734aa20a9c3d">
+									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+								</reportElement>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial"/>
+									<paragraph rightIndent="3"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{real}]]></textFieldExpression>
+							</textField>
+							<textField pattern="#,##0.00#" isBlankWhenNull="true">
+								<reportElement x="0" y="30" width="551" height="30" uuid="0a4f7389-7ec6-4cf9-91c2-b5a65d22a535">
+									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+								</reportElement>
+								<box>
+									<pen lineWidth="0.0"/>
+									<topPen lineWidth="0.25"/>
+								</box>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="10"/>
+									<paragraph rightIndent="3"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{planificado}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:column width="56" uuid="82bf5456-fcb5-4b8d-b7e7-0f7253698d07">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+							<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="56" height="30" uuid="b8980417-b978-4e2c-a505-898c4c83bf21">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Marzo]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="30">
+								<textField pattern="#,##0.00#" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="56" height="30" uuid="485ade3c-1fd1-477c-bfca-b493d78866cc">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial" size="8"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{marzo} != null ? $F{marzo} : 0]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="55" uuid="7fe9076d-8db8-4150-8bd4-9892c8b6bd41">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+							<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="534b96ba-c199-4be3-ba52-15fd9497dc50">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Abril]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="30">
+								<textField pattern="#,##0.00#" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="c5a05034-bcae-4ff5-bdcf-7570e2e7f3e6">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial" size="8"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{abril} != null ?  $F{abril}  : 0]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="55" uuid="0f90a0a3-78ef-49ff-ba9a-9fe7d5c5be7b">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+							<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="c755f5f8-0407-403f-bb8d-28fc9e8e4ca0">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Mayo]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="30">
+								<textField pattern="#,##0.00#" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="78b47a1a-81e7-436a-9a61-79fb565e0b58">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial" size="8"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{mayo} != null ? $F{mayo} : 0]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="55" uuid="3e1855b5-72ca-451b-ad88-69b4345585e7">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+							<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="966c4553-4d22-4b0b-979e-6187a2cce6d9">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Junio]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="30">
+								<textField pattern="#,##0.00#" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="d127012c-224d-487f-9010-da036ac6d222">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial" size="8"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{junio} != null ? $F{junio} : 0]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="55" uuid="d32d7d9e-200a-4726-bbc5-765b67364cfd">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
+							<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="38c1ce79-37c6-470f-b383-53c1fc7f8bf3">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Julio]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="30">
+								<textField pattern="#,##0.00#" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="0d957ab7-6822-4266-9d72-d59bd5603c27">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial" size="8"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{julio} != null ? $F{julio} : 0]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="55" uuid="498fbbc5-b1b6-4645-94c9-1c2a24bc02cb">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column9"/>
+							<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="e072bcca-f2cf-49ea-9b6e-1d3ded5f869d">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Agosto]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="30">
+								<textField pattern="#,##0.00#" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="b29298fa-70e0-4f06-9c1d-34bf4b05dbb4">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial" size="8"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{agosto} != null ? $F{agosto} : 0]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="55" uuid="b639b552-c8eb-4c0b-9034-e3ecd19a6cfa">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
+							<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="a96376d5-4f76-45f1-b339-ec312e61d196">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Septiembre]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="30">
+								<textField pattern="#,##0.00#" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="a29405bf-ed73-4bf4-bc48-f32686268f1a">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial" size="8"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{septiembre} != null ? $F{septiembre} : 0]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="55" uuid="fbfdff50-97a8-4ddd-830d-440ea9b4016a">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column11"/>
+							<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="054c21ad-9c41-4c81-b25c-84d10b086038">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Octubre]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="30">
+								<textField pattern="#,##0.00#" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="b5301daa-633f-44ee-b178-a239fc493a94">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial" size="8"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{octubre} != null ? $F{octubre} : 0]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="55" uuid="d642e314-af95-448e-9eac-c9815a08807f">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column12"/>
+							<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="22367caf-2d6e-429c-a183-ce77618ce598">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Noviembre]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="30">
+								<textField pattern="#,##0.00#" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="dc8758ce-84c0-4c5a-8b6a-31c720e39594">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial" size="8"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{noviembre} != null ? $F{noviembre} : 0]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="55" uuid="8b103722-4d73-46b5-b528-6c89d1beb8e6">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column13"/>
+							<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="25558b47-a109-440b-b11a-90301442cbb4">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Diciembre]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell style="Table_TD" height="30">
+								<textField pattern="#,##0.00#" isBlankWhenNull="true">
+									<reportElement positionType="Float" x="0" y="0" width="55" height="30" uuid="36e8d9a5-8df7-4bcd-a2aa-33e239fdd9d7">
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+										<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+										<font fontName="Arial" size="8"/>
+										<paragraph lineSpacing="Single" rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{diciembre} != null ? $F{diciembre} : 0]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+		</band>
+	</title>
+	<pageFooter>
+		<band height="40" splitType="Stretch">
+			<printWhenExpression><![CDATA[$P{esSubreporte}==false]]></printWhenExpression>
+			<staticText>
+				<reportElement x="0" y="30" width="70" height="10" uuid="bb31fbbf-4ff8-4e11-80ed-ff4ad82fe79c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Usuario:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="70" y="30" width="143" height="10" uuid="902ecc7e-5e58-421b-908a-fe332a742401">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="70" height="10" uuid="fccc6c89-dbe9-4375-b1cf-866e0bbe426b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Fecha generación:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy hh:mm:ss a">
+				<reportElement x="70" y="20" width="143" height="10" uuid="9181ddf1-bf8c-4424-ae4f-88b6d94da4bb">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="450" y="30" width="300" height="10" uuid="76121df5-aadb-4e21-bcbf-9977aeb24d31">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

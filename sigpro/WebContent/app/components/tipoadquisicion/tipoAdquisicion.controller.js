@@ -7,8 +7,23 @@ app.controller('tipoAdquisicionController', ['$scope','$http','$interval','i18nS
 		$window.document.title = $utilidades.sistema_nombre+' - Tipo de Adquisición';
 		i18nService.setCurrentLang('es');
 		mi.mostrarcargando=true;
-		
+		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
+		mi.elementosPorPagina = $utilidades.elementosPorPagina;
+		mi.paginaActual = 1;
+		mi.tipoAdquisicion;
+		mi.tipoAdquisiciones = [];
 		mi.filtros = [];
+		
+		mi.cambioPagina = function() {
+			mi.cargarTabla(mi.paginaActual);
+		}
+		
+		mi.reiniciarVista=function(){
+			if($location.path()==('/tipoadquisicion' + '/rv'))
+				$route.reload();
+			else
+				$location.path('/tipoadquisicion' + '/rv');
+		}
 		
 		mi.guardarEstado=function(){
 			var estado = mi.gridApi.saveState.save();
@@ -41,8 +56,8 @@ app.controller('tipoAdquisicionController', ['$scope','$http','$interval','i18nS
 			    }).success(
 			
 					function(response) {
-						mi.tipoAdquisicion = response.tipoAdquisicion;
-						mi.gridOptions.data = mi.tipoAdquisicion;
+						mi.tipoAdquisiciones = response.tipoAdquisicion;
+						mi.gridOptions.data = mi.tipoAdquisiciones;
 						mi.mostrarcargando = false;
 					});
 		}
@@ -61,7 +76,7 @@ app.controller('tipoAdquisicionController', ['$scope','$http','$interval','i18nS
 			    rowTemplate: '<div ng-dblclick="grid.appScope.controller.editarElemento($event)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + \'-\' + col.uid + \'-cell\'" class="ui-grid-cell ng-scope ui-grid-disable-selection grid-align-right" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" role="gridcell" ui-grid-cell="" ></div>',
 				columnDefs : [
 					{ name: 'id', width: 100, displayName: 'ID', cellClass: 'grid-align-right', type: 'number', enableFiltering: false },
-					{ name: 'cooperante', width: 200, displayName: 'Cooperante', cellClass: 'grid-align-left'
+					{ name: 'cooperanteNombre', width: 200, displayName: 'Cooperante', cellClass: 'grid-align-left'
 						,filterHeaderTemplate: '<div class="ui-grid-filter-container"><input type="text" style="width: 90%;" ng-model="grid.appScope.controller.filtros[\'cooperante\']" ng-keypress="grid.appScope.controller.filtrar($event)" style="width:175px;"></input></div>'
 					},
 				    { name: 'nombre', width: 200, displayName: 'Nombre',cellClass: 'grid-align-left'
@@ -183,10 +198,12 @@ app.controller('tipoAdquisicionController', ['$scope','$http','$interval','i18nS
 		
 		mi.nuevo = function(){
 			mi.limpiarSeleccion();
-			
 			mi.mostraringreso = true;
 			mi.esNuevo = true;
 			$utilidades.setFocus(document.getElementById("icoope"));
+			mi.tipoAdquisicion = {};
+			mi.tipoAdquisicion.cooperanteCodigo = 0;
+			mi.tipoAdquisicion.cooperanteNombre = '';
 		}
 		
 		mi.limpiarSeleccion = function() {
@@ -211,8 +228,8 @@ app.controller('tipoAdquisicionController', ['$scope','$http','$interval','i18nS
 			},'id','nombre');
 
 			resultado.then(function(itemSeleccionado) {
-				mi.tipoAdquisicion.cooperanteId= itemSeleccionado.id;
-				mi.tipoAdquisicion.cooperante = itemSeleccionado.siglas + " - " + itemSeleccionado.nombre;
+				mi.tipoAdquisicion.cooperanteCodigo= itemSeleccionado.codigo;
+				mi.tipoAdquisicion.cooperanteNombre = itemSeleccionado.siglas != null ? itemSeleccionado.siglas + " - " + itemSeleccionado.nombre : itemSeleccionado.nombre;
 			});
 		};
 		
@@ -258,9 +275,10 @@ app.controller('tipoAdquisicionController', ['$scope','$http','$interval','i18nS
 			$http.post('/STipoAdquisicion', {
 				accion: 'guardarTipoAdquisicion',
 				idTipoAdquisicion : mi.tipoAdquisicion.id,
-				idCooperante : mi.tipoAdquisicion.cooperanteId,
+				cooperanteCodigo : mi.tipoAdquisicion.cooperanteCodigo,
 				nombreTipoAdquisicion : mi.tipoAdquisicion.nombre,
 				esNuevo : mi.esNuevo,
+				convenioCDirecta: mi.tipoAdquisicion.esConvevioCdirecta == true ? 1 : 0,
 				t: (new Date()).getTime()
 			}).success(function(response){
 				if(response.success){
@@ -271,6 +289,7 @@ app.controller('tipoAdquisicionController', ['$scope','$http','$interval','i18nS
 					mi.tipoAdquisicion.id=response.id;
 					mi.esNuevo=false;
 					$utilidades.mensaje('success', 'Tipo de adquisicion guardado con éxito');
+					mi.obtenerTotalTipoAdquisicion();
 				}
 			})
 		}

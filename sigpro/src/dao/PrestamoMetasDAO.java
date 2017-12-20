@@ -4,22 +4,27 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperPrint;
 import pojo.Meta;
-import pojo.MetaAvance;
+import pojo.Proyecto;
 import utilities.CHibernateSession;
+import utilities.CJasperReport;
 import utilities.CLogger;
 import utilities.CMariaDB;
  
 public class PrestamoMetasDAO {
         
-    public static ArrayList<ArrayList<BigDecimal>> getMetaValores(Integer metaId, Integer anioInicial, Integer anioFinal){
+    public static ArrayList<ArrayList<BigDecimal>> getMetaValores(Integer metaId, Integer anioInicial, Integer anioFinal, String lineaBase){
     	ArrayList<ArrayList<BigDecimal>> result = new ArrayList<ArrayList<BigDecimal>>();
 
 		try{
@@ -56,10 +61,11 @@ public class PrestamoMetasDAO {
 						"CASE WHEN m.dato_tipoid = 2 THEN mp.diciembre_entero",
 						"WHEN m.dato_tipoid = 3 THEN mp.diciembre_decimal  END diciembreP ,",
 						"0 eneroR, 0 febreroR, 0 marzoR, 0 abrilR, 0 mayoR, 0 junioR, 0 julioR, 0 agostoR, 0 septiembreR, 0 octubreR, 0 noviembreR, 0 diciembreR",
-						"from meta_planificado mp",
-						"join meta m on mp.metaid = m.id",
+						"from sipro_history.meta_planificado mp",
+						"join sipro_history.meta m on mp.metaid = m.id",
 						"where metaid = ? ",
 						"and ejercicio between ? and ?",
+						lineaBase!=null ? " and m.linea_base like '%"+lineaBase+"%' and mp.linea_base like '%"+lineaBase+"%' " : " and m.actual = 1 and mp.actual = 1 ",
 						"union",
 						"select t1.metaid, t1.anio ejercicio,", 
 						"0 eneroP, 0 febreroP, 0 marzoP, 0 abrilP, 0 mayoP, 0 junioP, 0 julioP, 0 agostoP, 0 septiembreP, 0 octubreP, 0 noviembreP, 0 diciembreP,",
@@ -81,11 +87,12 @@ public class PrestamoMetasDAO {
 						"WHEN m.dato_tipoid = 2 THEN ma.valor_entero",
 						"WHEN m.dato_tipoid = 3 THEN ma.valor_decimal",
 						"END valor", 
-						"from meta_avance ma", 
-						"join meta m on ma.metaid = m.id",
+						"from sipro_history.meta_avance ma", 
+						"join sipro_history.meta m on ma.metaid = m.id",
 						"where ma.metaid = ?",
 						"and ma.estado = 1", 
 						"and YEAR(ma.fecha) between ? and ?",
+						lineaBase!=null ? " and m.linea_base like '%"+lineaBase+"%' and ma.linea_base like '%"+lineaBase+"%' " : " and m.actual = 1 and ma.actual = 1 ",
 						") t1",
 						"group by t1.anio",
 						") valores", 
@@ -136,61 +143,105 @@ public class PrestamoMetasDAO {
 			}
 		}
 		catch(Throwable e){
-			CLogger.write("8", PrestamoMetasDAO.class, e);
+			CLogger.write("1", PrestamoMetasDAO.class, e);
 		}
 		
 		return result;
 	}
     
-    public static BigDecimal getPorcentajeAvanceMeta(Meta meta){
-    	BigDecimal totalAvance = null;
+    public static BigDecimal[] getPorcentajeAvanceMeta(Meta meta, String lineaBase){
+    	BigDecimal respuesta[] = new BigDecimal[3];
     	Integer datoTipo = meta.getDatoTipo().getId(); 
     	if(datoTipo.equals(2) || datoTipo.equals(3)){
-	    	totalAvance = new BigDecimal(0);
+    		respuesta[0] = new BigDecimal(0);
+    		respuesta[1] = new BigDecimal(0);
+    		respuesta[2] = new BigDecimal(0);
 	    	
-	    	List<MetaAvance> ret = new ArrayList<MetaAvance>();
+    		List<?> ret = null;
 			Session session = CHibernateSession.getSessionFactory().openSession();
 			try{
-				Query<MetaAvance> criteria = session.createQuery("FROM MetaAvance ma where ma.id.metaid =:metaid ", MetaAvance.class);
-				criteria.setParameter("metaid", meta.getId());
+				String query = "SELECT id, SUM(enteroP), SUM(decimalP), SUM(enteroR), SUM(decimalR) "
+						+ " FROM( "
+						+ " SELECT m.id, "
+						+ " sum(mp.enero_entero+mp.febrero_entero+mp.marzo_entero+mp.abril_entero+mp.mayo_entero+mp.junio_entero+mp.julio_entero "
+						+ " +mp.agosto_entero+mp.septiembre_entero+mp.octubre_entero+mp.noviembre_entero+mp.diciembre_entero) enteroP, "
+						+ " sum(mp.enero_decimal+mp.febrero_decimal+mp.marzo_decimal+mp.abril_decimal+mp.mayo_decimal+mp.junio_decimal+mp.julio_decimal "
+						+ " +mp.agosto_decimal+mp.septiembre_decimal+mp.octubre_decimal+mp.noviembre_decimal+mp.diciembre_decimal) decimalP "
+						+ " , 0 enteroR, 0 decimalR "
+						+ " FROM sipro_history.meta m "
+						+ " LEFT JOIN sipro_history.meta_planificado mp ON (m.id = mp.metaid "
+						+ (lineaBase!=null ? " and mp.linea_base like '%"+lineaBase+"%' " : " and mp.actual = 1 ")
+						+ " ) "
+						+ " where m.id = " + meta.getId()
+						+ (lineaBase!=null ? " and m.linea_base like '%"+lineaBase+"%' " : " and m.actual = 1 ")
+						+ " and m.estado=1 and mp.estado = 1 "
+						+ " UNION "
+						+ " Select m.id, 0 enteroP, 0 decimalP, "
+						+ " sum(ma.valor_entero) enteroR, sum(ma.valor_decimal) decimalR "
+						+ " FROM sipro_history.meta m "
+						+ " LEFT JOIN sipro_history.meta_avance ma ON (m.id = ma.metaid "
+						+ (lineaBase!=null ? " and ma.linea_base like '%"+lineaBase+"%' " : " and ma.actual = 1 ")
+						+ " ) "
+						+ " where m.id = " + meta.getId()
+						+ (lineaBase!=null ? " and m.linea_base like '%"+lineaBase+"%' " : " and m.actual = 1 ")
+						+ " and m.estado=1 and ma.estado = 1 "
+						+ " )t ";
+
+				Query<?> criteria = session.createNativeQuery(query);
 				ret = criteria.getResultList();
-				
-				BigDecimal sumaDecimal = new BigDecimal(0);
-	    		Integer sumaEntero = 0;
-	    		Iterator<MetaAvance> iterator = ret.iterator();
-	    	    while(iterator.hasNext()) {
-	    	    	MetaAvance avance = iterator.next();
-	    			if(datoTipo.equals(2)){
-	    				if(avance.getValorEntero()!=null){
-	    					sumaEntero += avance.getValorEntero();
-	    				}
-	    			}else if(datoTipo.equals(3)){
-	    				if(avance.getValorDecimal()!=null){
-	    					sumaDecimal = sumaDecimal.add(avance.getValorDecimal());
-	    				}
-	    			}
+
+				BigDecimal sumaDecimalP = new BigDecimal(0);
+	    		Integer sumaEnteroP = 0;
+				BigDecimal sumaDecimalR = new BigDecimal(0);
+	    		Integer sumaEnteroR = 0;
+	    		if(ret!=null && ret.size()>0){
+	    			Object[] dato = (Object[]) ret.get(0);
+	    			sumaEnteroP = dato[1]!=null? ((BigDecimal)dato[1]).toBigInteger().intValue():0;
+	    			sumaDecimalP = dato[2]!=null? (BigDecimal)dato[2]:new BigDecimal(0);
+	    			sumaEnteroR = dato[3]!=null? ((BigDecimal)dato[3]).toBigInteger().intValue():0;
+	    			sumaDecimalR = dato[4]!=null? (BigDecimal)dato[4]:new BigDecimal(0);
 	    		}
+
+	    		
+	    		
 	    		Integer metaFinalEntero = meta.getMetaFinalEntero()!=null ? meta.getMetaFinalEntero() : 0;
 	    		BigDecimal metaFinalDecimal = meta.getMetaFinalDecimal()!=null ? meta.getMetaFinalDecimal() : new BigDecimal(0);
 	    		if(datoTipo.equals(2) && metaFinalEntero.compareTo(0)!=0){
-	    			BigDecimal total = new BigDecimal(sumaEntero); 
+	    			BigDecimal total = new BigDecimal(sumaEnteroR); 
 	    			total = (total.divide(new BigDecimal(metaFinalEntero), 3, BigDecimal.ROUND_HALF_UP));
     				total = total.multiply(new BigDecimal(100));
-    				totalAvance = total.setScale(2, BigDecimal.ROUND_HALF_UP);
+    				respuesta[0] = new BigDecimal(sumaEnteroP);
+    				respuesta[1] = new BigDecimal(sumaEnteroR);
+    				respuesta[2] = total.setScale(2, BigDecimal.ROUND_HALF_UP);
     			}else if(datoTipo.equals(3)&& metaFinalDecimal.compareTo(new BigDecimal(0))!=0){
-    				BigDecimal total = (sumaDecimal.divide(metaFinalDecimal, 3, BigDecimal.ROUND_HALF_UP));
+    				BigDecimal total = (sumaDecimalR.divide(metaFinalDecimal, 3, BigDecimal.ROUND_HALF_UP));
     				total = total.multiply(new BigDecimal(100));
-    				totalAvance = total.setScale(2, BigDecimal.ROUND_HALF_UP);
+    				respuesta[0] = sumaDecimalP;
+    				respuesta[1] = sumaDecimalR;
+    				respuesta[2] = total.setScale(2, BigDecimal.ROUND_HALF_UP);
     			}
 			}
 			catch(Throwable e){
-				CLogger.write("1", PrestamoMetasDAO.class, e);
+				CLogger.write("2", PrestamoMetasDAO.class, e);
 			}
 			finally{
 				session.close();
 			}
     	}
-    	return totalAvance;
+    	return respuesta;
     }
+    
+    public static JasperPrint generarJasper(Integer proyectoId, String usuario) throws JRException, SQLException{
+		JasperPrint jasperPrint = null;
+		Proyecto proyecto = ProyectoDAO.getProyecto(proyectoId);
+		if (proyecto!=null){
+
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("proyectoId",proyectoId);
+			parameters.put("usuario",usuario);
+			jasperPrint = CJasperReport.reporteJasperPrint(CJasperReport.PLANTILLA_METAS, parameters);
+		}
+		return jasperPrint;
+	}
     
 }

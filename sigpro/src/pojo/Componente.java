@@ -1,5 +1,5 @@
 package pojo;
-// Generated Oct 2, 2017 5:12:50 PM by Hibernate Tools 5.2.3.Final
+// Generated Dec 13, 2017 9:28:15 AM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,9 +29,10 @@ public class Componente implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 4278172737016883203L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
+	private ComponenteSigade componenteSigade;
 	private ComponenteTipo componenteTipo;
 	private Proyecto proyecto;
 	private UnidadEjecutora unidadEjecutora;
@@ -55,37 +56,48 @@ public class Componente implements java.io.Serializable {
 	private Integer ubicacionGeografica;
 	private Date fechaInicio;
 	private Date fechaFin;
-	private Integer duracion;
+	private int duracion;
 	private String duracionDimension;
 	private Integer orden;
 	private String treePath;
 	private Integer nivel;
+	private Integer esDeSigade;
+	private BigDecimal fuentePrestamo;
+	private BigDecimal fuenteDonacion;
+	private BigDecimal fuenteNacional;
+	private Date fechaInicioReal;
+	private Date fechaFinReal;
 	private Set<ComponenteUsuario> componenteUsuarios = new HashSet<ComponenteUsuario>(0);
 	private Set<Producto> productos = new HashSet<Producto>(0);
 	private Set<ComponentePropiedadValor> componentePropiedadValors = new HashSet<ComponentePropiedadValor>(0);
+	private Set<Subcomponente> subcomponentes = new HashSet<Subcomponente>(0);
 
 	public Componente() {
 	}
 
 	public Componente(ComponenteTipo componenteTipo, Proyecto proyecto, String nombre, String usuarioCreo,
-			Date fechaCreacion, int estado) {
+			Date fechaCreacion, int estado, int duracion) {
 		this.componenteTipo = componenteTipo;
 		this.proyecto = proyecto;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
+		this.duracion = duracion;
 	}
 
-	public Componente(AcumulacionCosto acumulacionCosto, ComponenteTipo componenteTipo, Proyecto proyecto,
-			UnidadEjecutora unidadEjecutora, String nombre, String descripcion, String usuarioCreo,
-			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, Long snip,
-			Integer programa, Integer subprograma, Integer proyecto_1, Integer actividad, Integer obra, String latitud,
-			String longitud, BigDecimal costo, Integer renglon, Integer ubicacionGeografica, Date fechaInicio,
-			Date fechaFin, Integer duracion, String duracionDimension, Integer orden, String treePath, Integer nivel,
+	public Componente(AcumulacionCosto acumulacionCosto, ComponenteSigade componenteSigade,
+			ComponenteTipo componenteTipo, Proyecto proyecto, UnidadEjecutora unidadEjecutora, String nombre,
+			String descripcion, String usuarioCreo, String usuarioActualizo, Date fechaCreacion,
+			Date fechaActualizacion, int estado, Long snip, Integer programa, Integer subprograma, Integer proyecto_1,
+			Integer actividad, Integer obra, String latitud, String longitud, BigDecimal costo, Integer renglon,
+			Integer ubicacionGeografica, Date fechaInicio, Date fechaFin, int duracion, String duracionDimension,
+			Integer orden, String treePath, Integer nivel, Integer esDeSigade, BigDecimal fuentePrestamo,
+			BigDecimal fuenteDonacion, BigDecimal fuenteNacional, Date fechaInicioReal, Date fechaFinReal,
 			Set<ComponenteUsuario> componenteUsuarios, Set<Producto> productos,
-			Set<ComponentePropiedadValor> componentePropiedadValors) {
+			Set<ComponentePropiedadValor> componentePropiedadValors, Set<Subcomponente> subcomponentes) {
 		this.acumulacionCosto = acumulacionCosto;
+		this.componenteSigade = componenteSigade;
 		this.componenteTipo = componenteTipo;
 		this.proyecto = proyecto;
 		this.unidadEjecutora = unidadEjecutora;
@@ -114,9 +126,16 @@ public class Componente implements java.io.Serializable {
 		this.orden = orden;
 		this.treePath = treePath;
 		this.nivel = nivel;
+		this.esDeSigade = esDeSigade;
+		this.fuentePrestamo = fuentePrestamo;
+		this.fuenteDonacion = fuenteDonacion;
+		this.fuenteNacional = fuenteNacional;
+		this.fechaInicioReal = fechaInicioReal;
+		this.fechaFinReal = fechaFinReal;
 		this.componenteUsuarios = componenteUsuarios;
 		this.productos = productos;
 		this.componentePropiedadValors = componentePropiedadValors;
+		this.subcomponentes = subcomponentes;
 	}
 
 	@Id
@@ -139,6 +158,16 @@ public class Componente implements java.io.Serializable {
 
 	public void setAcumulacionCosto(AcumulacionCosto acumulacionCosto) {
 		this.acumulacionCosto = acumulacionCosto;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "componente_sigadeid")
+	public ComponenteSigade getComponenteSigade() {
+		return this.componenteSigade;
+	}
+
+	public void setComponenteSigade(ComponenteSigade componenteSigade) {
+		this.componenteSigade = componenteSigade;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -357,12 +386,12 @@ public class Componente implements java.io.Serializable {
 		this.fechaFin = fechaFin;
 	}
 
-	@Column(name = "duracion")
-	public Integer getDuracion() {
+	@Column(name = "duracion", nullable = false)
+	public int getDuracion() {
 		return this.duracion;
 	}
 
-	public void setDuracion(Integer duracion) {
+	public void setDuracion(int duracion) {
 		this.duracion = duracion;
 	}
 
@@ -402,6 +431,62 @@ public class Componente implements java.io.Serializable {
 		this.nivel = nivel;
 	}
 
+	@Column(name = "es_de_sigade")
+	public Integer getEsDeSigade() {
+		return this.esDeSigade;
+	}
+
+	public void setEsDeSigade(Integer esDeSigade) {
+		this.esDeSigade = esDeSigade;
+	}
+
+	@Column(name = "fuente_prestamo", precision = 15)
+	public BigDecimal getFuentePrestamo() {
+		return this.fuentePrestamo;
+	}
+
+	public void setFuentePrestamo(BigDecimal fuentePrestamo) {
+		this.fuentePrestamo = fuentePrestamo;
+	}
+
+	@Column(name = "fuente_donacion", precision = 15)
+	public BigDecimal getFuenteDonacion() {
+		return this.fuenteDonacion;
+	}
+
+	public void setFuenteDonacion(BigDecimal fuenteDonacion) {
+		this.fuenteDonacion = fuenteDonacion;
+	}
+
+	@Column(name = "fuente_nacional", precision = 15)
+	public BigDecimal getFuenteNacional() {
+		return this.fuenteNacional;
+	}
+
+	public void setFuenteNacional(BigDecimal fuenteNacional) {
+		this.fuenteNacional = fuenteNacional;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_inicio_real", length = 19)
+	public Date getFechaInicioReal() {
+		return this.fechaInicioReal;
+	}
+
+	public void setFechaInicioReal(Date fechaInicioReal) {
+		this.fechaInicioReal = fechaInicioReal;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_fin_real", length = 19)
+	public Date getFechaFinReal() {
+		return this.fechaFinReal;
+	}
+
+	public void setFechaFinReal(Date fechaFinReal) {
+		this.fechaFinReal = fechaFinReal;
+	}
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "componente")
 	public Set<ComponenteUsuario> getComponenteUsuarios() {
 		return this.componenteUsuarios;
@@ -427,6 +512,15 @@ public class Componente implements java.io.Serializable {
 
 	public void setComponentePropiedadValors(Set<ComponentePropiedadValor> componentePropiedadValors) {
 		this.componentePropiedadValors = componentePropiedadValors;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "componente")
+	public Set<Subcomponente> getSubcomponentes() {
+		return this.subcomponentes;
+	}
+
+	public void setSubcomponentes(Set<Subcomponente> subcomponentes) {
+		this.subcomponentes = subcomponentes;
 	}
 
 }

@@ -1,7 +1,7 @@
 var app = angular.module('desembolsosController', []);
 
-app.controller('desembolsosController',['$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
-	function($scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
+app.controller('desembolsosController',['$scope','$rootScope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal', '$document','$timeout','$q','$filter',
+	function($scope, $rootScope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$document,$timeout,$q,$filter) {
 	
 	var mi=this;
 	mi.proyectoid = "";
@@ -12,9 +12,8 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 	mi.tabla = {};
 	mi.anioFiscal = "";
 	mi.mesReportado = "";
-	mi.anioInicial=0;
-	mi.anioFinal=0;
 	mi.mostrarDescargar = false;
+	mi.mostrarBotones = false;
 	
 	mi.desembolsos= [];
 	mi.desembolsosOriginal = [];
@@ -31,7 +30,94 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 	mi.enMillonesAux = true; 
 	
 	mi.datosOrigniales;
+	mi.lprestamos = [];
+	mi.acumulacion = [];
+	mi.datosAcumulacionTabla = [];
 	
+	
+	$http.post('/SPrestamo', {accion: 'getPrestamos', t: (new Date()).getTime()}).then(
+		function(response){
+			if(response.data.success){
+				mi.lprestamos = response.data.prestamos;
+			}	
+	});
+	
+	mi.blurPrestamo=function(){
+		if(document.getElementById("prestamo_value").defaultValue!=mi.prestamoNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','prestamo');
+		}
+	}
+	
+	mi.cambioPrestamo=function(selected){
+		if(selected!== undefined){
+			mi.prestamoNombre = selected.originalObject.proyectoPrograma;
+			mi.prestamoId = selected.originalObject.id;
+			$scope.$broadcast('angucomplete-alt:clearInput', 'pep');
+			$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+			mi.getPeps(mi.prestamoId);
+		}
+		else{
+			mi.prestamoNombre="";
+			mi.prestamoId=null;
+		}
+	}
+	
+	mi.blurPep=function(){
+		if(document.getElementById("pep_value").defaultValue!=mi.pepNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','pep');
+		}
+	}
+	
+	mi.cambioPep=function(selected){
+		if(selected!== undefined){
+			mi.pepNombre = selected.originalObject.nombre;
+			mi.pepId = selected.originalObject.id;
+			$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+			mi.getLineasBase(mi.pepId);
+		}
+		else{
+			mi.pepNombre="";
+			mi.pepId="";
+		}
+	}
+	
+	mi.getPeps = function(prestamoId){
+		$http.post('/SProyecto',{accion: 'getProyectos', prestamoid: prestamoId}).success(
+			function(response) {
+				mi.peps = [];
+				if (response.success){
+					mi.peps = response.entidades;
+				}
+		});	
+	}
+	
+	mi.blurLineaBase=function(){
+		if(document.getElementById("lineaBase_value").defaultValue!=mi.lineaBaseNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+		}
+	};
+	
+	mi.cambioLineaBase=function(selected){
+		if(selected!== undefined){
+			mi.lineaBaseNombre = selected.originalObject.nombre;
+			mi.lineaBaseId = selected.originalObject.id;
+			mi.generarReporte();
+		}
+		else{
+			mi.lineaBaseNombre="";
+			mi.lineaBaseId=null;
+		}
+	};
+
+	mi.getLineasBase = function(proyectoId){
+		$http.post('/SProyecto',{accion: 'getLineasBase', proyectoId: proyectoId}).success(
+			function(response) {
+				mi.lineasBase = [];
+				if (response.success){
+					mi.lineasBase = response.lineasBase;
+				}
+		});	
+	}
 	
 	mi.fechaOptions = {
 			datepickerMode:"year",
@@ -52,7 +138,6 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 		{id:4,nombre:"Cuatrimestral"},{id:5,nombre:"Semestral"},{id:6,nombre:"Anual"}];
 	
 	mi.optionsMillones = {
-			
 			legend: {
 				display: true,
 				position: 'bottom'
@@ -65,18 +150,16 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 			          display: true,
 			          position: 'left',
 			          ticks: {
-	                        
 			        	     callback: function (value) {
 			        	    	 if (mi.enMillones)
-			        	    		 value = value / 1000000;
-			        	    	 return numeral(value).format('$ 0,0')
+			        	    		 value = (value / 1000000).toFixed(2);
+			        	    	 return '$'+numeral(value).format(' 0.0')
 	                        }
 	                   },
 	                   scaleLabel: {
 	                       display: true,
 	                       labelString: 'Monto'
 	                     }
-			        	
 			        }
 			      ],
 			      xAxes: [{
@@ -91,7 +174,6 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 	
 	
 	mi.options = {
-			
 			legend: {
 				display: true,
 				position: 'bottom'
@@ -106,14 +188,13 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 			          ticks: {
 	                        
 			        	     callback: function (value) {
-			        	    	 return numeral(value).format('$ 0,0')
+			        	    	 return '$'+numeral(value).format(' 0.0')
 	                        }
 	                   },
 	                   scaleLabel: {
 	                       display: true,
 	                       labelString: 'Monto'
 	                     }
-			        	
 			        }
 			      ],
 			      xAxes: [{
@@ -125,17 +206,6 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 			      ]
 			    }
 			  };
-	
-	
-	$http.post('/SProyecto',{accion: 'getProyectos'}).success(
-			function(response) {
-				mi.prestamos = [];
-				if (response.success){
-					for (var i = 0; i < response.entidades.length; i++){
-						mi.prestamos.push({'value': response.entidades[i].id, 'text': response.entidades[i].nombre});
-					}
-				}
-	});
 	
 	mi.inicializarDatos = function (){
 		mi.proyectoid = "";
@@ -157,17 +227,17 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 	}
 	
 	mi.generarReporte = function (){
-		
 		mi.inicializarDatos();
 		mi.mostrarDescargar = false;
 		
-		if ( mi.prestamoSeleccionado != null && mi.anio_inicio > 0 &&  mi.anio_inicio.toString().length == 4 ){
+		if ( mi.pepId != null && mi.anio_inicio > 0 &&  mi.anio_inicio.toString().length == 4 ){
 			mi.inicializarDatos();
 			mi.mostrar=true;
 			$http.post('/SDesembolsos', { accion: 'getDesembolsos',
-				 proyectoId: mi.prestamoSeleccionado.value,
+				 proyectoId: mi.pepId,
 				 anio_inicial:mi.anio_inicio,
 				 anio_final:mi.anio_fin,
+				 lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				 t: new Date().getTime()
 				
 				}).success(
@@ -179,13 +249,12 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 						
 						mi.mostrar = true;
 						mi.mostrarDescargar = true;
-						
+						mi.mostrarBotones = true;
 						
 				}else{
-					$utilidades.mensaje('warning','No se encontraron datos para el préstamo');
+					$utilidades.mensaje('warning','No se encontraron datos para el '+$rootScope.etiquetas.proyecto);
 					mi.mostrar = false;
 				}
-					
 			});	
 		}else{
 			mi.mostrar = false
@@ -193,7 +262,6 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 	}
 	
 	mi.asignarSerie2 = function (planificado, real,costo, reald,agrupacion){
-		
 		var totalReal=0;
 		var totalReald=0;
 		var totalPlanificado=0;
@@ -205,39 +273,47 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 		var desembolsoReal = [];
 		var desembolsoReald = [];
 		var costoPlan = [];
+		var desembolsosAcumuladosReal = [];
+		var desembolsosAcumuladosPlan = [];
+		var variacionDesembolsoAcumulado = [];
+		var porcentajaVaracionAcumulado = [];
+		
 		mi.tabla=[];
+		mi.tablaAcumulado=[];
+		mi.datosAcumulacionTabla = [];
+				
 		var totalItems = 0;
 		
 		switch (agrupacion){
 			case 1:
 				totalItems = (mi.anio_fin - mi.anio_inicio +1) * 12;
 				
-				costoPlan.push ("Costo");
+				costoPlan.push ("Monto planificado PEP");
 				costoPlan.push (...costo.slice());
 			
-				desembolsoPlanificado.push("Planificado");
+				desembolsoPlanificado.push("Desembolso Planificado ($)");
 				desembolsoPlanificado.push(...planificado.slice());
 				
-				desembolsoReal.push("Real");
+				desembolsoReal.push("Desembolso Real");
 				desembolsoReal.push(...real.slice());
 				
-				desembolsoReald.push("Real ($)");
+				desembolsoReald.push("Desembolso Real ($)");
 				desembolsoReald.push(...reald.slice());
 				
-				variaciones.push("Variación");
-				porcentajeVariaciones.push("Porcentaje");
+				variaciones.push("Variación de desembolso");
+				porcentajeVariaciones.push("Porcentaje de variación");
 				
 				for (x = 1;x<=totalItems;x++){
 					totalPlanificado = totalPlanificado+ desembolsoPlanificado[x];
 					totalReal = totalReal + desembolsoReal[x];
 					totalReald = totalReald + desembolsoReald[x];
 					totalCostoPlan= totalCostoPlan + costoPlan[x];
-					var variacion = desembolsoPlanificado[x] - desembolsoReal[x];
+					var variacion = desembolsoPlanificado[x] - desembolsoReald[x];
 					var var1 = variacion / desembolsoPlanificado[x];
-					var var2 = variacion / desembolsoReal[x];
+					var var2 = variacion / desembolsoReald[x];
 					var1 = (var1 * 100).toFixed(2);
 					var2 = (var2 * 100).toFixed(2);
-					var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsoPlanificado[x] : desembolsoReal[x] ) * 100).toFixed(2);
+					var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsoPlanificado[x] : desembolsoReald[x] ) * 100).toFixed(2);
 					
 					variaciones.push (variacion)
 					porcentajeVariaciones.push(isNaN(porcentajeVariacion) ? "0%" :porcentajeVariacion+"%" );
@@ -266,8 +342,8 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 			case 2:
 				totalItems = (mi.anio_fin - mi.anio_inicio +1) * 6;
 				
-				costoPlan.push ("Costo");
-				desembolsoPlanificado.push("Planificado");
+				costoPlan.push ("Monto");
+				desembolsoPlanificado.push("Planificado ($)");
 				desembolsoReal.push("Real");
 				desembolsoReald.push("Real ($)");
 				variaciones.push("Variación");
@@ -303,12 +379,12 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 					totalReal = totalReal + desembolsoReal[x];
 					totalReald = totalReald + desembolsoReald[x];
 					totalCostoPlan= totalCostoPlan + costoPlan[x];
-					var variacion = desembolsoPlanificado[x] - desembolsoReal[x];
+					var variacion = desembolsoPlanificado[x] - desembolsoReald[x];
 					var var1 = variacion / desembolsoPlanificado[x];
-					var var2 = variacion / desembolsoReal[x];
+					var var2 = variacion / desembolsoReald[x];
 					var1 = (var1 * 100).toFixed(2);
 					var2 = (var2 * 100).toFixed(2);
-					var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsoPlanificado[x] : desembolsoReal[x] ) * 100).toFixed(2);
+					var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsoPlanificado[x] : desembolsoReald[x] ) * 100).toFixed(2);
 					
 					variaciones.push (variacion)
 					porcentajeVariaciones.push(isNaN(porcentajeVariacion) ? "0%" :porcentajeVariacion+"%" );
@@ -337,8 +413,8 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 			case 3:
 				totalItems = (mi.anio_fin - mi.anio_inicio +1) * 4;
 				
-				costoPlan.push ("Costo");
-				desembolsoPlanificado.push("Planificado");
+				costoPlan.push ("Monto");
+				desembolsoPlanificado.push("Planificado ($)");
 				desembolsoReal.push("Real");
 				desembolsoReald.push("Real ($)");
 				variaciones.push("Variación");
@@ -374,12 +450,12 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 					totalReal = totalReal + desembolsoReal[x];
 					totalReald = totalReald + desembolsoReald[x];
 					totalCostoPlan= totalCostoPlan + costoPlan[x];
-					var variacion = desembolsoPlanificado[x] - desembolsoReal[x];
+					var variacion = desembolsoPlanificado[x] - desembolsoReald[x];
 					var var1 = variacion / desembolsoPlanificado[x];
-					var var2 = variacion / desembolsoReal[x];
+					var var2 = variacion / desembolsoReald[x];
 					var1 = (var1 * 100).toFixed(2);
 					var2 = (var2 * 100).toFixed(2);
-					var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsoPlanificado[x] : desembolsoReal[x] ) * 100).toFixed(2);
+					var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsoPlanificado[x] : desembolsoReald[x] ) * 100).toFixed(2);
 					
 					variaciones.push (variacion)
 					porcentajeVariaciones.push(isNaN(porcentajeVariacion) ? "0%" :porcentajeVariacion+"%" );
@@ -408,8 +484,8 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 			case 4:
 				totalItems = (mi.anio_fin - mi.anio_inicio +1) * 3;
 				
-				costoPlan.push ("Costo");
-				desembolsoPlanificado.push("Planificado");
+				costoPlan.push ("Monto");
+				desembolsoPlanificado.push("Planificado ($)");
 				desembolsoReal.push("Real");
 				desembolsoReald.push("Real ($)");
 				variaciones.push("Variación");
@@ -445,12 +521,12 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 					totalReal = totalReal + desembolsoReal[x];
 					totalReald = totalReald + desembolsoReald[x];
 					totalCostoPlan= totalCostoPlan + costoPlan[x];
-					var variacion = desembolsoPlanificado[x] - desembolsoReal[x];
+					var variacion = desembolsoPlanificado[x] - desembolsoReald[x];
 					var var1 = variacion / desembolsoPlanificado[x];
-					var var2 = variacion / desembolsoReal[x];
+					var var2 = variacion / desembolsoReald[x];
 					var1 = (var1 * 100).toFixed(2);
 					var2 = (var2 * 100).toFixed(2);
-					var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsoPlanificado[x] : desembolsoReal[x] ) * 100).toFixed(2);
+					var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsoPlanificado[x] : desembolsoReald[x] ) * 100).toFixed(2);
 					
 					variaciones.push (variacion)
 					porcentajeVariaciones.push(isNaN(porcentajeVariacion) ? "0%" :porcentajeVariacion+"%" );
@@ -479,8 +555,8 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 			case 5:
 				totalItems = (mi.anio_fin - mi.anio_inicio +1) * 2;
 				
-				costoPlan.push ("Costo");
-				desembolsoPlanificado.push("Planificado");
+				costoPlan.push ("Monto");
+				desembolsoPlanificado.push("Planificado ($)");
 				desembolsoReal.push("Real");
 				desembolsoReald.push("Real ($)");
 				variaciones.push("Variación");
@@ -550,7 +626,7 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 			case 6:
 				totalItems = (mi.anio_fin - mi.anio_inicio +1) * 1;
 				
-				costoPlan.push ("Costo");
+				costoPlan.push ("Monto");
 				desembolsoPlanificado.push("Planificado");
 				desembolsoReal.push("Real");
 				desembolsoReald.push("Real ($)");
@@ -623,15 +699,46 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 				break;
 		}
 		
-		mi.tabla[4][totalItems+1] = mi.tabla[1][totalItems+1] - mi.tabla[2][totalItems+1];
-		 
+		
+		mi.columnasAcumulado=[];
+		mi.columnasAcumulado.push(...mi.columnas.slice(0,mi.columnas.length -1));
+		
+		mi.tabla[4][totalItems+1] = mi.tabla[1][totalItems+1] - mi.tabla[3][totalItems+1];
 		
 		mi.tabla[5][[totalItems+1]] = (mi.tabla[4][totalItems+1] != 0 ? 
 				(mi.tabla[4][totalItems+1] / 
 						(mi.tabla[4][totalItems+1]  > 0 ? mi.tabla[1][totalItems+1] : 
-							mi.tabla[2][totalItems+1] ) * 100 ).toFixed(2) : "0") + "%";
+							mi.tabla[3][totalItems+1] ) * 100 ).toFixed(3) : "0") + "%";
 		
 		
+		
+		desembolsosAcumuladosReal.push("Desembolsos Acumulados Real");
+		desembolsosAcumuladosPlan.push("Desembolsos Acumulados Planificado");
+		variacionDesembolsoAcumulado.push("Variacion de Desembolsos Acumulados");
+		porcentajaVaracionAcumulado.push("Porcentaje de Variacion Acumulados");
+		
+		for (x in mi.tabla[1]){
+			if(x>0 && x< mi.tabla[1].length -1){
+				desembolsosAcumuladosReal.push(x == 1 ? mi.tabla[3][x] : desembolsosAcumuladosReal[x-1] + mi.tabla[3][x] );
+				desembolsosAcumuladosPlan.push(x == 1 ? mi.tabla[1][x] : desembolsosAcumuladosPlan[x-1] + mi.tabla[1][x] );
+				
+				var variacion = desembolsosAcumuladosPlan[x] - desembolsosAcumuladosReal[x];
+				var var1 = variacion / desembolsosAcumuladosPlan[x];
+				var var2 = variacion / desembolsosAcumuladosReal[x];
+				var1 = (var1 * 100).toFixed(2);
+				var2 = (var2 * 100).toFixed(2);
+				var porcentajeVariacion = (variacion / (variacion > 0 ? desembolsosAcumuladosPlan[x] : desembolsosAcumuladosReal[x] ) * 100).toFixed(2);
+				
+				variacionDesembolsoAcumulado.push (variacion)
+				porcentajaVaracionAcumulado.push(isNaN(porcentajeVariacion) ? "0%" :porcentajeVariacion+"%" );
+			
+			}
+		}
+		
+		mi.tablaAcumulado.push(desembolsosAcumuladosPlan);
+		mi.tablaAcumulado.push(desembolsosAcumuladosReal);
+		mi.tablaAcumulado.push(variacionDesembolsoAcumulado);
+		mi.tablaAcumulado.push(porcentajaVaracionAcumulado);
 	}
 	
 	mi.generarEtiquetas = function(agrupacion,totalItems){
@@ -761,12 +868,7 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 	
 	mi.agruparDatos = function(agrupacion){
 		mi.asignarSerie2(mi.datosOrigniales.planificado, mi.datosOrigniales.real,mi.datosOrigniales.costos,mi.datosOrigniales.reald,agrupacion);
-		
 	};
-	
-	
-	
-	
 	
 	
 	mi.abrirPopupFecha = function(index) {
@@ -807,26 +909,37 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 		 }
 	 }
 	 
-	 
 	 mi.convertirMillones = function(){
 		 mi.desembolsosGrafica = [];
 		 mi.desembolsosGrafica[0] = [];
 		 mi.desembolsosGrafica[1] = [];
+		 mi.acumulacion[0] = [];
+		 mi.acumulacion[1] = [];
+		 mi.datosAcumulacionTabla[0] = [];
+		 mi.datosAcumulacionTabla[1] = [];
 		
 		 mi.desembolsosGrafica[0].push(...mi.tabla[1].slice(1,mi.tabla[1].length -1));
-		 mi.desembolsosGrafica[1].push(...mi.tabla[2].slice(1,mi.tabla[2].length -1));
+		 mi.desembolsosGrafica[1].push(...mi.tabla[3].slice(1,mi.tabla[3].length -1));
 		 
 		 for (y = 0; y<mi.datosOrigniales.planificado.length ; y++){
+			 
+			 mi.datosAcumulacionTabla[0][y] = y==0 ? mi.desembolsosGrafica[0][y] : mi.datosAcumulacionTabla[0][y -1] + mi.desembolsosGrafica[0][y];
+			 mi.datosAcumulacionTabla[1][y] = y==0 ? mi.desembolsosGrafica[1][y] : mi.datosAcumulacionTabla[1][y -1] + mi.desembolsosGrafica[1][y];
+			 
 			 if (mi.enMillones){
 				 mi.desembolsosGrafica[0][y] = mi.desembolsosGrafica[0][y] / 1000000;
 				 mi.desembolsosGrafica[1][y] = mi.desembolsosGrafica[1][y] / 1000000;
-			 }else
-				 break;
-		 }  
+			 }
+			  
+			 mi.acumulacion[0][y] = y==0 ? mi.desembolsosGrafica[0][y] : mi.acumulacion[0][y -1] + mi.desembolsosGrafica[0][y];
+			 mi.acumulacion[1][y] = y==0 ? mi.desembolsosGrafica[1][y] : mi.acumulacion[1][y -1] + mi.desembolsosGrafica[1][y];
+		 } 
+		 
+		 
 	 }
 	 
 
-		mi.exportarExcel = function(){
+	mi.exportarExcel = function(){
 			 $http.post('/SDesembolsos', { 
 				 accion: 'exportarExcel',
 				 agrupacion: mi.agrupacion,
@@ -837,6 +950,7 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 				 variacion: JSON.stringify(mi.tabla[4].slice(0)),
 				 porcentaje:  JSON.stringify(mi.tabla[5].slice(0)),
 				 headers: JSON.stringify(mi.columnas),
+				 lineaBase: mi.lineaBaseId != null ? "|lb"+mi.lineaBaseId+"|" : null,
 				 t:moment().unix()
 			  } ).then(
 					  function successCallback(response) {
@@ -880,7 +994,6 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 			if(mi.anio_inicio != null && mi.anio_inicio.toString().length == 4 && 
 					mi.anio_fin != null && mi.anio_fin.toString().length == 4)
 			{
-
 				if (mi.anio_inicio <= mi.anio_fin){
 					
 					mi.generarReporte();
@@ -888,6 +1001,5 @@ app.controller('desembolsosController',['$scope','$http','$interval','i18nServic
 					$utilidades.mensaje('warning','La fecha inicial es mayor a la fecha final');
 				}
 			}
-		}
-	 
+		};
 }]);

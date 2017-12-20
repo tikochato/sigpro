@@ -62,13 +62,17 @@
 			</div>
 			<br/>
 			<div class="total-rows">Total de {{  controller.totalTipoAdquisicion + (controller.totalTipoAdquisicion == 1 ? " Tipo de Adquisición" : " Tipos de Adquisición" ) }}</div>
-			<ul uib-pagination total-items="controller.totalTipoAdquisicion"
-				ng-model="controller.paginaActual"
-				max-size="controller.numeroMaximoPaginas"
-				items-per-page="controller.elementosPorPagina"
-				first-text="Primero" last-text="Último" next-text="Siguiente"
-				previous-text="Anterior" class="pagination-sm" boundary-links="true"
-				force-ellipses="true" ng-change="controller.cambioPagina()"></ul>
+				<ul uib-pagination total-items="controller.totalTipoAdquisicion"
+						ng-model="controller.paginaActual"
+						max-size="controller.numeroMaximoPaginas"
+						items-per-page="controller.elementosPorPagina"
+						first-text="Primera"
+						last-text="Última"
+						next-text="Siguiente"
+						previous-text="Anterior"
+						class="pagination-sm" boundary-links="true" force-ellipses="true"
+						ng-change="controller.cambioPagina()"
+				></ul>
 		</div>
 		</shiro:hasPermission>	
 	</div>
@@ -97,8 +101,8 @@
 				</div>
 				
 				<div class="form-group">
-	            	<input type="text" class="inputText" id="icoope" name="icoope" ng-model="controller.tipoAdquisicion.cooperante" ng-readonly="true" ng-required="true" 
-	            		ng-click="controller.buscarCooperante()" ng-value="controller.tipoAdquisicion.cooperante" onblur="this.setAttribute('value', this.value);"/>
+	            	<input type="text" class="inputText" id="icoope" name="icoope" ng-model="controller.tipoAdquisicion.cooperanteNombre" ng-readonly="true" ng-required="true" 
+	            		ng-click="controller.buscarCooperante()" ng-value="controller.tipoAdquisicion.cooperanteNombre" onblur="this.setAttribute('value', this.value);"/>
 	            	<span class="label-icon" ng-click="controller.buscarCooperante()"><i class="glyphicon glyphicon-search"></i></span>
 		          	<label for="campo3" class="floating-label">* Cooperante</label>
 				</div>
@@ -106,6 +110,11 @@
 				<div class="form-group">
 					<input type="text" class="inputText" id="nombre" ng-model="controller.tipoAdquisicion.nombre" ng-value="controller.tipoAdquisicion.nombre" onblur="this.setAttribute('value', this.value);" ng-required="true">
 						<label for="nombre" class="floating-label">* Nombre</label>
+				</div>
+				<br />
+				<div class="form-group">
+ 					<input type="checkbox" id="chkConvenioCDirecta" ng-model="controller.tipoAdquisicion.esConvenioCdirecta" ng-value="controller.tipoAdquisicion.esConvenioCdirecta"/>
+ 					<label for="chkConvenioCDirecta" class="floating-label">¿Es convenio o compra directa?</label>
 				</div>
 				<br />
 				<div class="panel panel-default">

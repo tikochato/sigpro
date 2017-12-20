@@ -1,7 +1,7 @@
-var app = angular.module('actividadController', []);
+var app = angular.module('actividadController', ['smart-table']);
 
-app.controller('actividadController',['$rootScope','$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$sce','uiGmapGoogleMapApi', 'dialogoConfirmacion','documentoAdjunto', 
-	function($rootScope,$scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$sce,uiGmapGoogleMapApi, $dialogoConfirmacion, $documentoAdjunto) {
+app.controller('actividadController',['$rootScope','$scope','$http','$interval','i18nService','Utilidades','$routeParams','$window','$location','$route','uiGridConstants','$mdDialog','$uibModal','$q','$sce','uiGmapGoogleMapApi', 'dialogoConfirmacion','documentoAdjunto','historia','pagoplanificado', 
+	function($rootScope,$scope, $http, $interval,i18nService,$utilidades,$routeParams,$window,$location,$route,uiGridConstants,$mdDialog,$uibModal,$q,$sce,uiGmapGoogleMapApi, $dialogoConfirmacion, $documentoAdjunto, $historia,$pagoplanificado) {
 		var mi=this;
 
 		mi.rowCollection = [];
@@ -30,13 +30,20 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 		mi.actividadtipoid = "";
 		mi.actividadnombre = "";
 		mi.formatofecha = 'dd/MM/yyyy';
+		mi.altformatofecha = ['d!/M!/yyyy'];
 		mi.camposdinamicos = {};
 		mi.numeroMaximoPaginas = $utilidades.numeroMaximoPaginas;
 		mi.elementosPorPagina = $utilidades.elementosPorPagina;
 		mi.responsables=[];
 		
+		mi.child_adquisiciones = null;
+		mi.adquisicionesCargadas = false;
+		
 		mi.tipos=[];
 		mi.acumulacionCostos=[];
+		mi.pagos = [];
+		
+		mi.congelado = 0;
 		
 		$http.post('/SActividadTipo', { accion: 'getActividadtipos', t: (new Date()).getTime()}).success(
 				function(response) {
@@ -48,19 +55,58 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 					mi.acumulacionCostos = response.acumulacionesTipos;
 		});
 		
+		mi.verHistoria = function(){
+			$historia.getHistoria($scope, 'Actividad', '/SActividad',mi.actividad.id, 5, true, false, false, false)
+			.result.then(function(data) {
+				if (data != ""){
+					
+				}
+			}, function(){
+				
+			});
+		}
+		
 		mi.cambioTipo=function(selected){
 			if(selected!== undefined){
-				mi.actividad.actividadtipoombre=selected.originalObject.nombre;
+				mi.actividad.actividadtiponombre=selected.originalObject.nombre;
 				mi.actividad.actividadtipoid=selected.originalObject.id;
 			}
 			else{
-				mi.actividad.actividadtipoombre="";
+				mi.actividad.actividadtiponombre="";
 				mi.actividad.actividadtipoid="";
 			}
+			
+			
+			var parametros = {
+					accion: 'getActividadPropiedadPorTipo',
+					idActividad: mi.actividad.id != null ? mi.actividad.id : 0,
+				    idActividadTipo: mi.actividad.actividadtipoid, t: new Date().getTime()
+			}
+			$http.post('/SActividadPropiedad', parametros).then(function(response){
+				mi.camposdinamicos = response.data.actividadpropiedades
+				for (campos in mi.camposdinamicos) {
+					switch (mi.camposdinamicos[campos].tipo){
+						case "fecha":
+							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
+							break;
+						case "entero":
+							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? Number(mi.camposdinamicos[campos].valor): null;
+							break;
+						case "decimal":
+							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? Number(mi.camposdinamicos[campos].valor) : null;
+							break;
+						case "booleano":
+							mi.camposdinamicos[campos].valor = mi.camposdinamicos[campos].valor == 'true' ? true : false;
+							break;
+					}
+
+				}
+				$utilidades.setFocus(document.getElementById("inombre"));
+			});
 		}
 		
 		mi.blurTipo=function(){
-			if(document.getElementById("tipoNombre_value").defaultValue!=mi.actividad.actividadtipoombre){
+			if(document.getElementById("tipoNombre_value").defaultValue!=mi.actividad.actividadtiponombre){
 				$scope.$broadcast('angucomplete-alt:clearInput','tipoNombre');
 			}
 		}
@@ -69,11 +115,23 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 			if(selected!== undefined){
 				mi.actividad.acumulacionCostoNombre=selected.originalObject.nombre;
 				mi.actividad.acumulacionCostoId=selected.originalObject.id;
+				
+				if(mi.actividad.acumulacionCostoId == 2){
+					mi.actividad.costo = null;
+					mi.bloquearCosto = true;
+				}else{
+					mi.actividad.costo = null;
+					mi.bloquearCosto = false;
+				}
 			}
 			else{
 				mi.actividad.acumulacionCostoNombre="";
 				mi.actividad.acumulacionCostoId="";
 			}
+		}
+		
+		mi.actualizarCosto = function(costo){
+			mi.actividad.costo = costo;
 		}
 		
 		mi.blurAcumulacionCosto=function(){
@@ -90,7 +148,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 		}
 		
 		mi.adjuntarDocumentos = function(){
-			$documentoAdjunto.getModalDocumento($scope, 5, mi.actividad.id)
+			$documentoAdjunto.getModalDocumento($scope,  mi.actividad.id,5)
 			.result.then(function(data) {
 				if (data != ""){
 					mi.rowCollection = [];
@@ -136,7 +194,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 				       mi.rowCollection.splice(indice, 1);		       
 				    }
 					mi.rowCollection = [];
-					mi.getDocumentosAdjuntos(5, mi.actividad.id);
+					mi.getDocumentosAdjuntos( mi.actividad.id,5);
 				}
 			});
 		};
@@ -177,7 +235,6 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 		if(!mi.esTreeview)
 			$http.post('/SObjeto', { accion: 'getObjetoPorId', id: $routeParams.objeto_id, tipo: mi.objetotipo, t: new Date().getTime()}).success(
 					function(response) {
-						mi.objetoid = response.id;
 						mi.objetoNombre = response.nombre;
 						mi.objetoTipoNombre = response.tiponombre;
 						var fechaInicioPadre = moment(response.fechaInicio, 'DD/MM/YYYY').toDate();
@@ -303,6 +360,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 							mi.actividades[x].fechaInicio = moment(mi.actividades[x].fechaInicio,'DD/MM/YYYY').toDate();
 							mi.actividades[x].fechaFin = moment(mi.actividades[x].fechaFin,'DD/MM/YYYY').toDate();
 						}
+						mi.congelado = response.congelado;
 						mi.gridOptions.data = mi.actividades;
 						mi.mostrarcargando = false;
 						mi.paginaActual = pagina;
@@ -327,7 +385,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 					esnuevo: mi.esnuevo,
 					actividadtipoid : mi.actividad.actividadtipoid,
 					id: mi.actividad.id,
-					objetoid: $routeParams.objeto_id,
+					objetoid: mi.objetoid,
 					objetotipo: mi.objetotipo,
 					nombre: mi.actividad.nombre,
 					descripcion: mi.actividad.descripcion,
@@ -342,7 +400,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 					longitud: mi.actividad.longitud,
 					latitud : mi.actividad.latitud,
 					costo: mi.actividad.costo == null ? null : mi.actividad.costo,
-					acumulacionCosto: mi.actividad.acumulacionCostoId == null ? 0 : mi.actividad.acumulacionCostoId,
+					acumulacionCosto: (mi.actividad.acumulacionCostoId != null && mi.actividad.acumulacionCostoId != "") ? mi.actividad.acumulacionCostoId : 0,
 					renglon: mi.actividad.renglon,
 					ubicacionGeografica: mi.actividad.ubicacionGeografica,
 					asignacionroles: asignaciones,
@@ -350,6 +408,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 					fechaFin: moment(mi.actividad.fechaFin).format('DD/MM/YYYY'),
 					duaracion: mi.actividad.duracion,
 					duracionDimension: mi.duracionDimension.sigla,
+					pagosPlanificados: JSON.stringify(mi.pagos),
 					datadinamica : JSON.stringify(mi.camposdinamicos),
 					t: new Date().getTime()
 				}).success(function(response){
@@ -359,6 +418,10 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 						mi.actividad.fechaCreacion=response.fechaCreacion;
 						mi.actividad.usuarioActualizo=response.usuarioactualizo;
 						mi.actividad.fechaActualizacion=response.fechaactualizacion;
+						if(response.fechaInicioReal != null)
+							mi.actividad.fechaInicioReal = moment(response.fechaInicioReal, 'DD/MM/YYYY').toDate();
+						if(response.fechaFinReal != null)
+							mi.actividad.fechaFinReal = moment(response.fechaFinReal, 'DD/MM/YYYY').toDate();
 						if(!mi.esTreeview)
 							mi.obtenerTotalActividades();
 						else{
@@ -369,7 +432,13 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 						}
 						mi.esnuevo = false;		
 						mi.esNuevoDocumento = false;
-						$utilidades.mensaje('success','Actividad '+(mi.esnuevo ? 'creada' : 'guardada')+' con éxito');
+						if(mi.child_adquisiciones!=null)
+							mi.child_adquisiciones.guardar(null,'Actividad '+(mi.esNuevo ? 'creada' : 'guardada')+' con éxito',
+								'Error al '+(mi.esNuevo ? 'creado' : 'guardado')+' la Actividad', null);
+						else{
+							$utilidades.mensaje('success','Actividad '+(mi.esNuevo ? 'creada' : 'guardada')+' con éxito');
+							mi.getAsignado();
+						}
 					}
 					else
 						$utilidades.mensaje('danger','Error al '+(mi.esnuevo ? 'crear' : 'guardar')+' la Actividad');
@@ -413,6 +482,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 		};
 
 		mi.nuevo = function() {
+			mi.adquisicionesCargadas = false;
 			mi.esNuevoDocumento = true;
 			mi.datotipoid = "";
 			mi.datotiponombre = "";
@@ -427,20 +497,32 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 			if(!mi.esTreeview)
 				mi.gridApi.selection.clearSelectedRows();
 			mi.actividad.porcentajeavance = 0;
+			mi.actividad.actividadtiponombre = '';
 			$utilidades.setFocus(document.getElementById("inombre"));
 			mi.responsables =[];
+			mi.activeTab = 0;
+			
+			$scope.$broadcast('angucomplete-alt:clearInput','acumulacionCosto');
+			$scope.$broadcast('angucomplete-alt:clearInput','tipoNombre');
 		};
 
 		mi.editar = function() {
 			if(mi.actividad!=null && mi.actividad.id!=null){
-				mi.getDocumentosAdjuntos(5, mi.actividad.id);
+				mi.adquisicionesCargadas = false;
+				mi.getDocumentosAdjuntos( mi.actividad.id,5);
 				mi.esNuevoDocumento = false;
 				mi.actividadResponsable = "";
 				mi.mostraringreso = true;
 				mi.esnuevo = false;
+				mi.activeTab = 0;
+				if(mi.actividad.acumulacionCostoId==2){
+					mi.bloquearCosto = true;
+				}else{
+					mi.bloquearCosto = false;
+				}
 				
-				$scope.$broadcast('angucomplete-alt:changeInput','acumulacionTipo', mi.actividad.acumulacionTipoNombre);
-				$scope.$broadcast('angucomplete-alt:changeInput','tipoNombre', mi.actividad.actividadtiponombre);
+				$scope.$broadcast('angucomplete-alt:changeInput','acumulacionCosto');
+				$scope.$broadcast('angucomplete-alt:changeInput','tipoNombre');
 				
 				if(mi.actividad.duracionDimension.toLowerCase() == 'd'){
 					mi.duracionDimension = mi.dimensiones[0];
@@ -498,6 +580,8 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 						}
 					}
 				});
+				
+				mi.getAsignado();
 			}
 			else
 				$utilidades.mensaje('warning','Debe seleccionar la Actividad que desea editar');
@@ -506,6 +590,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 		mi.irATabla = function() {
 			mi.mostraringreso=false;
 			mi.esNuevo = false;
+			mi.child_adquisiciones = null;
 		}
 
 		mi.guardarEstado=function(){
@@ -716,62 +801,6 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 		};
 		
 
-		mi.buscarActividadTipo = function(titulo, mensaje) {
-			titulo = 'Tipo de Actividad';
-			var modalInstance = $uibModal.open({
-				animation : 'true',
-				ariaLabelledBy : 'modal-title',
-				ariaDescribedBy : 'modal-body',
-				templateUrl : 'buscarActividadTipo.jsp',
-				controller : 'modalBuscarActividadTipo',
-				controllerAs : 'modalBuscar',
-				backdrop : 'static',
-				size : 'md',
-				resolve : {
-					titulo : function() {
-						return titulo;
-					},
-					mensaje : function() {
-						return mensaje;
-					}
-				}
-			});
-
-			modalInstance.result.then(function(selectedItem) {
-				mi.actividad.actividadtipoid = selectedItem.id;
-				mi.actividad.actividadtiponombre = selectedItem.nombre;
-
-				var parametros = {
-						accion: 'getActividadPropiedadPorTipo',
-						idActividad: mi.actividad!=null ? mi.actividad.id : 0,
-						idActividadTipo: selectedItem.id, t: new Date().getTime()
-				}
-
-				$http.post('/SActividadPropiedad', parametros).then(function(response){
-					mi.camposdinamicos = response.data.actividadpropiedades;
-					for (campos in mi.camposdinamicos) {
-						switch (mi.camposdinamicos[campos].tipo){
-						case "fecha":
-							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? moment(mi.camposdinamicos[campos].valor,'DD/MM/YYYY').toDate() : null;
-							break;
-						case "entero":
-							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? Number(mi.camposdinamicos[campos].valor): null;
-							break;
-						case "decimal":
-							mi.camposdinamicos[campos].valor = (mi.camposdinamicos[campos].valor!='') ? Number(mi.camposdinamicos[campos].valor) : null;
-							break;
-						case "booleano":
-							mi.camposdinamicos[campos].valor = mi.camposdinamicos[campos].valor == 'true' ? true : false;
-							break;
-						}
-
-					}
-				});
-
-			}, function() {
-			});
-	};
-
 	mi.open = function (posicionlat, posicionlong) {
 		$scope.geoposicionlat = posicionlat;
 		$scope.geoposicionlong = posicionlong;
@@ -835,6 +864,11 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 								mi.actividad.fechaInicio = moment(mi.actividad.fechaInicio, 'DD/MM/YYYY').toDate();
 							if(mi.actividad.fechaFin != "")
 								mi.actividad.fechaFin = moment(mi.actividad.fechaFin, 'DD/MM/YYYY').toDate();
+							if(mi.actividad.fechaInicioReal != null)
+								mi.actividad.fechaInicioReal = moment(mi.actividad.fechaInicioReal, 'DD/MM/YYYY').toDate();
+							if(mi.actividad.fechaFinReal != null)
+								mi.actividad.fechaFinReal = moment(mi.actividad.fechaFinReal, 'DD/MM/YYYY').toDate();
+							mi.congelado = mi.actividad.congelado;
 							mi.editar();
 						}
 					});
@@ -884,6 +918,65 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 		mi.t_crearNodo=function(id,nombre,objeto_tipo,estado){
 			$rootScope.$emit("crearNodo",{ id: id, nombre: nombre, objeto_tipo: objeto_tipo, estado: estado })
 		}
+		
+		mi.adquisicionesActivo = function(){
+			if(!mi.adquisicionesCargadas){
+				mi.adquisicionesCargadas = true;
+			}
+		};
+		
+		mi.agregarPagos = function() {
+			$pagoplanificado.getPagoPlanificado($scope, mi.actividad.id,5, 
+			function(objetoId, objetoTipo){
+				return{
+					accion: 'getPagos',
+					objetoId: objetoId,
+					objetoTipo : objetoTipo
+				}
+			}, mi.actividad.fechaInicio,mi.actividad.fechaFin)
+			.result.then(function(data) {
+				mi.pagos=data;
+				mi.actividad.costo = 0;
+				for (x in mi.pagos){
+					mi.actividad.costo += mi.pagos[x].pago;
+				}
+			}, function(){
+			});
+		};
+		
+		mi.getAsignado = function(){
+			if(mi.actividad.programa != null){
+				$http.post('/SActividad', {
+					accion: 'getValidacionAsignado',
+					id: mi.actividad.id,
+					programa: mi.actividad.programa,
+					subprograma: mi.actividad.subprograma,
+					proyecto: mi.actividad.proyecto,
+					actividad: mi.actividad.actividad,
+					obra: mi.actividad.obra,
+					renglon: mi.actividad.renglon,
+					geografico: mi.actividad.ubicacionGeografica,
+					t: new Date().getTime()
+				}).success(function(response){
+					if(response.success){
+						mi.asignado = response.asignado;
+						mi.sobrepaso = response.sobrepaso;
+					}
+				});
+			}
+		}
+		
+		mi.validarAsignado = function(){
+			if(mi.actividad.costo != null){
+				if(mi.actividad.programa != null){
+					if(mi.actividad.costo <= mi.asignado)
+						mi.sobrepaso = false;
+					else
+						mi.sobrepaso = true;
+				}
+			}
+		}
+		
 } ]);
 
 
@@ -1042,4 +1135,6 @@ function modalBuscar($uibModalInstance, $scope, $http, $interval,
 	mi.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
 	};
-}
+};
+
+
