@@ -534,7 +534,7 @@
 								<font fontName="Arial" size="7"/>
 								<paragraph rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 							</textElement>
-							<textFieldExpression><![CDATA[$F{ejecutado}]]></textFieldExpression>
+							<textFieldExpression><![CDATA[$F{totalR}]]></textFieldExpression>
 						</textField>
 						<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
 							<reportElement stretchType="ElementGroupHeight" mode="Opaque" x="566" y="0" width="46" height="20" uuid="898c5eb6-2659-49d8-86bd-caf6f0b63c2d">
