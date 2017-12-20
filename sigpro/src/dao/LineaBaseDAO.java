@@ -942,5 +942,25 @@ public class LineaBaseDAO {
 		}
 		return ret;
 	}
+	
+	public static LineaBase getLineasBaseByNombre(Integer proyectoId, String nombre){
+		LineaBase ret = null;
+		List<LineaBase> listRet = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<LineaBase> criteria = session.createQuery("select l from LineaBase l where l.proyecto.id = ?1 and l.nombre = ?2 ", LineaBase.class);
+			criteria.setParameter(1, proyectoId);
+			criteria.setParameter(2, nombre);
+			listRet = criteria.getResultList();
+			
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
+			
+		}catch(Throwable e){
+			CLogger.write("25", LineaBaseDAO.class, e);
+		}finally{
+			session.close();
+		}
+		return ret;
+	}
 }
 

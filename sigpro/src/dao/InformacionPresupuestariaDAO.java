@@ -648,7 +648,7 @@ public class InformacionPresupuestariaDAO {
     
 
     public static ArrayList<BigDecimal> getPresupuestosPorObjeto(Integer fuente, Integer organismo, Integer correlativo, Integer ejercicio,
-    		Integer mes, Integer unidad_ejecutora, Integer entidad, Integer programa, Integer subprograma, 
+    		Integer mes, Integer entidad, Integer programa, Integer subprograma, 
     		Integer proyecto, Integer actividad, Integer obra, Integer renglon, Integer geografico, Connection conn){
     	ArrayList<BigDecimal> result = new ArrayList<BigDecimal>();
     	result.add(new BigDecimal(0));
@@ -664,7 +664,7 @@ public class InformacionPresupuestariaDAO {
 						+ " where "
 						+ " mes = 0 ";
 						str_Query += entidad!=null? " and entidad = '"+entidad+"' " : "";
-						str_Query += unidad_ejecutora!=null? " and unidad_ejecutra = "+unidad_ejecutora : "";
+//						str_Query += unidad_ejecutora!=null? " and unidad_ejecutra = "+unidad_ejecutora : "";
 						str_Query += programa!=null? " and programa = "+programa : "";
 						str_Query += subprograma!=null? " and subprograma = "+subprograma  : "";
 						str_Query += proyecto!=null? " and proyecto = "+proyecto : "";
@@ -681,7 +681,7 @@ public class InformacionPresupuestariaDAO {
 						+ " from sipro_analytic.mv_ep_ejec_asig_vige  "
 						+ " where ejercicio = "+ejercicio;
 						str_Query += entidad!=null? " and entidad = '"+entidad+"' " : "";
-						str_Query += unidad_ejecutora!=null? " and unidad_ejecutra = "+unidad_ejecutora : "";
+//						str_Query += unidad_ejecutora!=null? " and unidad_ejecutra = "+unidad_ejecutora : "";
 						str_Query += programa!=null? " and programa = "+programa : "";
 						str_Query += subprograma!=null? " and subprograma = "+subprograma  : "";
 						str_Query += proyecto!=null? " and proyecto = "+proyecto : "";
@@ -698,7 +698,7 @@ public class InformacionPresupuestariaDAO {
 						+ " from sipro_analytic.mv_ep_ejec_asig_vige  "
 						+ " where ejercicio = "+ejercicio;
 						str_Query += entidad!=null? " and entidad = '"+entidad+"' " : "";
-						str_Query += unidad_ejecutora!=null? " and unidad_ejecutra = "+unidad_ejecutora : "";
+//						str_Query += unidad_ejecutora!=null? " and unidad_ejecutra = "+unidad_ejecutora : "";
 						str_Query += programa!=null? " and programa = "+programa : "";
 						str_Query += subprograma!=null? " and subprograma = "+subprograma  : "";
 						str_Query += proyecto!=null? " and proyecto = "+proyecto : "";

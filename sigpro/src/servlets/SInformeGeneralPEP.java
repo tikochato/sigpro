@@ -256,7 +256,7 @@ public class SInformeGeneralPEP extends HttpServlet {
 		Integer mes = Integer.parseInt(sdf.format(fechaActual));
 		
 		BigDecimal desembolsadoAFecha = DataSigadeDAO.totalDesembolsadoAFechaRealDolaresPorEntidad(prestamo.getCodigoPresupuestario() + "", 
-				anio, mes,proyecto.getUnidadEjecutora().getId().getEntidadentidad(),proyecto.getUnidadEjecutora().getId().getUnidadEjecutora());
+				anio, mes,proyecto.getUnidadEjecutora().getId().getEntidadentidad());
 		
 		datos[10][0] = "Desembolsos realizados a la fecha";
 		datos[10][1] = desembolsadoAFecha.toString();

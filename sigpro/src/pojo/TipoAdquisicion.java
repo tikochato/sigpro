@@ -1,5 +1,5 @@
 package pojo;
-// Generated Dec 13, 2017 9:28:15 AM by Hibernate Tools 5.2.3.Final
+// Generated Dec 19, 2017 2:59:18 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -25,7 +25,7 @@ public class TipoAdquisicion implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1018301995907052284L;
+	private static final long serialVersionUID = 8754763186643134247L;
 	private Integer id;
 	private int cooperantecodigo;
 	private String nombre;
@@ -34,22 +34,24 @@ public class TipoAdquisicion implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
-	private Integer convenioCdirecta;
+	private int convenioCdirecta;
 	private Set<PlanAdquisicion> planAdquisicions = new HashSet<PlanAdquisicion>(0);
 
 	public TipoAdquisicion() {
 	}
 
-	public TipoAdquisicion(int cooperantecodigo, String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
+	public TipoAdquisicion(int cooperantecodigo, String nombre, String usuarioCreo, Date fechaCreacion, int estado,
+			int convenioCdirecta) {
 		this.cooperantecodigo = cooperantecodigo;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
+		this.convenioCdirecta = convenioCdirecta;
 	}
 
 	public TipoAdquisicion(int cooperantecodigo, String nombre, String usuarioCreo, String usuarioActualizo,
-			Date fechaCreacion, Date fechaActualizacion, int estado, Integer convenioCdirecta,
+			Date fechaCreacion, Date fechaActualizacion, int estado, int convenioCdirecta,
 			Set<PlanAdquisicion> planAdquisicions) {
 		this.cooperantecodigo = cooperantecodigo;
 		this.nombre = nombre;
@@ -139,12 +141,12 @@ public class TipoAdquisicion implements java.io.Serializable {
 		this.estado = estado;
 	}
 
-	@Column(name = "convenio_cdirecta")
-	public Integer getConvenioCdirecta() {
+	@Column(name = "convenio_cdirecta", nullable = false)
+	public int getConvenioCdirecta() {
 		return this.convenioCdirecta;
 	}
 
-	public void setConvenioCdirecta(Integer convenioCdirecta) {
+	public void setConvenioCdirecta(int convenioCdirecta) {
 		this.convenioCdirecta = convenioCdirecta;
 	}
 
