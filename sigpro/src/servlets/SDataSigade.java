@@ -246,8 +246,8 @@ public class SDataSigade extends HttpServlet {
 		}else if(accion.equals("getMontoDesembolsosUEALaFecha")){
 			String codPrep = map.get("codPrep");
 			Integer entidad = Utils.String2Int(map.get("entidad"));
-			Integer ue = Utils.String2Int(map.get("ue"));
-			List<DtmAvanceFisfinanDetDti> lstDesembolsos = DataSigadeDAO.getInfPorUnidadEjecutoraALaFecha(codPrep, entidad, ue);
+//			Integer ue = Utils.String2Int(map.get("ue"));
+			List<DtmAvanceFisfinanDetDti> lstDesembolsos = DataSigadeDAO.getInfPorUnidadEjecutoraALaFecha(codPrep, entidad);
 			
 			BigDecimal montoDesembolsado = new BigDecimal(0);
 			

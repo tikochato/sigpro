@@ -254,8 +254,7 @@ public class SDesembolso extends HttpServlet {
 			proyecto.getPrestamo();
 			if (proyecto!=null && proyecto.getPrestamo()!=null && proyecto.getUnidadEjecutora()!=null){
 				Long codigoPresupuestario = proyecto.getPrestamo().getCodigoPresupuestario();
-				List<DtmAvanceFisfinanDetDti> desembolsosReales = DataSigadeDAO.getInfPorUnidadEjecutoraALaFecha(codigoPresupuestario.toString(), proyecto.getUnidadEjecutora().getId().getEntidadentidad(),
-						proyecto.getUnidadEjecutora().getId().getUnidadEjecutora());
+				List<DtmAvanceFisfinanDetDti> desembolsosReales = DataSigadeDAO.getInfPorUnidadEjecutoraALaFecha(codigoPresupuestario.toString(), proyecto.getUnidadEjecutora().getId().getEntidadentidad());
 				
 				for (DtmAvanceFisfinanDetDti dr : desembolsosReales){
 					stdesembolsoreal temp =new stdesembolsoreal();
