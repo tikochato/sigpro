@@ -1000,7 +1000,7 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			});
 	  };
 	  
-	  mi.congelar = function () {
+	  mi.congelar = function (tipoLineaBase) {
 		  var modalInstance = $uibModal.open({
 				animation : 'true',
 				ariaLabelledBy : 'modal-title',
@@ -1013,19 +1013,21 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				resolve: {
 			        proyectoid: function(){
 			        	return mi.proyecto.id;
+			        },
+			        tipoLineaBase: function(){
+			        	return tipoLineaBase;
 			        }
 			     }
 			});
 		  
-		  
-		  
 		  modalInstance.result.then(function(resultado) {
-				if (resultado != undefined && resultado ){
+				if (resultado != undefined && resultado  && resultado.success){
 					mi.proyecto.congelado = 1;
 					mi.congelado = 1;
-					$utilidades.mensaje('success', 'Se creó la linea base correctamente');
+					$utilidades.mensaje('success', 'Se generaron los datos correctamente');
 				}else{
-					$utilidades.mensaje('danger', 'Error al generar linea base');
+					$utilidades.mensaje('danger', 'Error al guardar' + 
+							(resultado != undefined && resultado.mensaje != undefined ? ' : ' + resultado.mensaje : ''));
 				}
 			}, function() {
 			});
@@ -1492,16 +1494,22 @@ function modalGenerarReporte($uibModalInstance, $scope, $http, $interval,
 
 app.controller('modalCongelar', [ '$uibModalInstance',
 	'$scope', '$http', '$interval', 'i18nService', 'Utilidades',
-	'$timeout', '$log',   '$uibModal', '$q', 'proyectoid' ,modalCongelar ]);
+	'$timeout', '$log',   '$uibModal', '$q', 'proyectoid','tipoLineaBase' ,modalCongelar ]);
 
 function modalCongelar($uibModalInstance, $scope, $http, $interval,
-	i18nService, $utilidades, $timeout, $log, $uibModal, $q, proyectoid) {
+	i18nService, $utilidades, $timeout, $log, $uibModal, $q, proyectoid,tipoLineaBase) {
 
 	var mi = this;
 	mi.mostrarcargando=false;
 	mi.lineasBase = [];
 	mi.nuevaLineaBase = 1;
 	mi.bloquerBoton = false;
+	mi.tipoLineaBase = tipoLineaBase;
+	
+	mi.mes = [{nombre:'Enero',id:1},{nombre:'Febrero',id:2},{nombre:'Marzo',id:3},
+		{nombre:'Abril',id:4},{nombre:'Mayo',id:5},{nombre:'Junio',id:6},
+		{nombre:'Julio',id:7},{nombre:'Agosto',id:8},{nombre:'Septiembre',id:9},
+		{nombre:'Octubre',id:10},{nombre:'Noviembre',id:11},{nombre:'Diciembre',id:12}]
 	
 	mi.ok = function() {
 		mi.mostrarcargando=true;
@@ -1512,12 +1520,15 @@ function modalCongelar($uibModalInstance, $scope, $http, $interval,
 			lineaBaseId: mi.lineaBaseId,
 			nuevo : mi.nuevaLineaBase,
 			nombre: mi.nombre,
+			tipoLineaBase:mi.tipoLineaBase,
+			mes:mi.mesNombre,
+			anio:mi.anio,
 			t: (new Date()).getTime() }).success(
 				function(response) {
 					console.log(response.success);
 					mi.mostrarcargando=true;
 					mi.bloquearBoton = false;
-					$uibModalInstance.close(response.success);
+					$uibModalInstance.close(response);
 				});
 	};
 
@@ -1556,6 +1567,24 @@ function modalCongelar($uibModalInstance, $scope, $http, $interval,
 		mi.lineaBaseNombre="";
 		mi.lineaBaseId=null;
 	}
+	
+	mi.cambioMes=function(selected){
+		if(selected!== undefined){
+			mi.mesNombre = selected.originalObject.nombre;
+			mi.mesId = selected.originalObject.id;
+		}
+		else{
+			mi.mesNombre="";
+			mi.mesId=null;
+		}
+	};
+	
+	mi.blurLineaBase=function(){
+		if(document.getElementById("lineaBase_value").defaultValue!=mi.lineaBaseNombre){
+			$scope.$broadcast('angucomplete-alt:clearInput','lineaBase');
+		}
+	};
+	
 
 	
 }

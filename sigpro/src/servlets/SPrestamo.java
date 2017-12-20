@@ -1219,6 +1219,7 @@ public class SPrestamo extends HttpServlet {
 				JsonObject objeto = pepsArreglo.get(i).getAsJsonObject();
 				Integer id = objeto.get("id").isJsonNull() ? null : objeto.get("id").getAsInt();
 				Integer congelado = objeto.get("congelado").isJsonNull() ? null : objeto.get("congelado").getAsBoolean() ? 1 : 0;
+				Integer tipoLinea = Utils.String2Int(map.get("tipoLineaBase"),1);
 				Proyecto proyecto = ProyectoDAO.getProyecto(id);
 				
 				if (!congelado.equals(proyecto.getCongelado())){
@@ -1226,8 +1227,7 @@ public class SPrestamo extends HttpServlet {
 					ret = ret && ProyectoDAO.guardarProyecto(proyecto, false);
 					
 					if (ret && proyecto.getCongelado().equals(1) && generarLineasBases.equals(1)){
-						
-						LineaBase lineaBase = new LineaBase(proyecto, nombre, usuario, null, new Date(), null);
+						LineaBase lineaBase = new LineaBase(proyecto, nombre, usuario, null, new Date(), null,tipoLinea,null);
 						ret = LineaBaseDAO.guardarLineaBase(lineaBase,lineaBaseId);
 					}
 				}

@@ -991,24 +991,53 @@ public class SProyecto extends HttpServlet {
 			Proyecto proyecto =  ProyectoDAO.getProyecto(pepId);
 			Integer nuevaLinaBase = Utils.String2Int(map.get("nuevo"));
 			Integer lineaBaseId = Utils.String2Int(map.get("lineaBaseId"),0);
+			Integer tipoLinea = Utils.String2Int(map.get("tipoLineaBase"),1);
+			String mes = map.get("mes");
+			String anio = map.get("anio");
 			String lineaBaseEditar = null;
-			
-			proyecto.setCongelado(1);
-			ret = ProyectoDAO.guardarProyecto(proyecto, false);
 			LineaBase lineaTemp = null;
-			if(ret){
-				if (nuevaLinaBase.equals(2) && lineaBaseId > 0){
-					lineaTemp = LineaBaseDAO.getLineaBasePorId(lineaBaseId);
-					nombre = lineaTemp != null ? lineaTemp.getNombre() : "";
+			switch (tipoLinea){
+				case 1:
+					
+					if (nuevaLinaBase.equals(2) && lineaBaseId > 0){
+						lineaTemp = LineaBaseDAO.getLineaBasePorId(lineaBaseId);
+						nombre = lineaTemp != null ? lineaTemp.getNombre() : "";
+						lineaBaseEditar = lineaTemp != null ? "|lb"+lineaTemp.getId().toString() + "|" : null;
+					}
+					
+					LineaBase lineaBase = new LineaBase(proyecto, nombre, usuario, null, new Date(), null,tipoLinea,1);
+					if(lineaTemp !=null)
+						ret = LineaBaseDAO.eliminarTotalLineaBase(lineaTemp);
+					ret = LineaBaseDAO.guardarLineaBase(lineaBase,lineaBaseEditar);
+					response_text = String.join("","{ \"success\":  ", ret ? "true" : "false",response_text,"}");
+					break;
+				case 2:
+					proyecto.setCongelado(1);
+					ret = ProyectoDAO.guardarProyecto(proyecto, false);
+					nombre = mes + "_" + anio; 
+					lineaTemp = LineaBaseDAO.getLineasBaseByNombre(proyecto.getId(), nombre);
 					lineaBaseEditar = lineaTemp != null ? "|lb"+lineaTemp.getId().toString() + "|" : null;
-				}
-				
-				LineaBase lineaBase = new LineaBase(proyecto, nombre, usuario, null, new Date(), null);
-				if(lineaTemp !=null)
-					ret = LineaBaseDAO.eliminarTotalLineaBase(lineaTemp);
-				ret = LineaBaseDAO.guardarLineaBase(lineaBase,lineaBaseEditar);
+					lineaBase = new LineaBase(proyecto, nombre, usuario, null, new Date(), null,tipoLinea,1);
+					if(lineaTemp!=null){
+						if(lineaTemp.getSobreescribir()!= null && lineaTemp.getSobreescribir()==1){
+							ret = LineaBaseDAO.eliminarTotalLineaBase(lineaTemp);
+						
+							ret = LineaBaseDAO.guardarLineaBase(lineaBase,lineaBaseEditar);
+							response_text = String.join("","{ \"success\":  ", ret ? "true" : "false",response_text,"}");
+						}else{
+							response_text = String.join("","{ \"success\": false, \"mensaje\": \"No tiene permiso para editar el congelamiento \" }");
+						}
+					}else{
+						ret = LineaBaseDAO.guardarLineaBase(lineaBase,lineaBaseEditar);
+						response_text = String.join("","{ \"success\":  ", ret ? "true" : "false",response_text,"}");
+					}
+					
+					
+					break;
 			}
-			response_text = String.join("","{ \"success\":  ", ret ? "true" : "false",response_text,"}");
+			
+			
+			
 		}else if(accion.equals("getCantidadHistoria")){
 			Integer id = Utils.String2Int(map.get("id"));
 			String resultado = ProyectoDAO.getVersiones(id); 
