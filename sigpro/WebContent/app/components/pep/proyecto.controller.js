@@ -452,14 +452,19 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 				$http.post('/SProyecto', { accion: 'obtenerMontoTechos', id: mi.proyecto.id }).then(
 					function(response){
 					if(response.data.success){
-						mi.MontoTechos = response.data.techoPep;	
+						mi.montoTechos = response.data.techoPep;	
+						
+						if(mi.proyecto.costo > mi.montoTechos)
+							mi.sobrepaso = true;
+						else
+							mi.sobrepaso = false;
 						
 						$http.post('/SDataSigade', { accion: 'getMontoDesembolsosUE', codPrep: mi.codigoPresupuestario, ejercicio: mi.proyecto.ejercicio, entidad: mi.proyecto.entidadentidad, ue: mi.proyecto.unidadejecutoraid}).then(
 							function(response){
 								if(response.data.success){
 									mi.montoDesembolsadoUE = response.data.montoDesembolsadoUE;
 									
-									mi.montoPorDesembolsar = mi.MontoTechos - mi.montoDesembolsadoUE;
+									mi.montoPorDesembolsar = mi.montoTechos - mi.montoDesembolsadoUE;
 									
 									$http.post('/SDataSigade', { accion: 'getMontoDesembolsosUEALaFecha', codPrep: mi.codigoPresupuestario, entidad: mi.proyecto.entidadentidad, ue: mi.proyecto.unidadejecutoraid}).then(
 										function(response){
@@ -477,8 +482,6 @@ app.controller('proyectoController',['$rootScope','$scope','$http','$interval','
 			}
 			mi.getDocumentosAdjuntos( mi.proyecto.id,0);
 			$scope.active = 0;
-			
-			
 		}
 		else
 			$utilidades.mensaje('warning','Debe seleccionar el '+$rootScope.etiquetas.proyecto+' que desea editar');
@@ -1480,11 +1483,15 @@ function modalGenerarReporte($uibModalInstance, $scope, $http, $interval,
 						console.log(response.detalle);
 					}
 				});
-		var resultado = {
-				fechaCorte : mi.fechaCorte, 
-				lineaBase : mi.lineaBaseId
+		if(mi.lineaBaseNombre!=null && mi.lineaBaseNombre!=""){
+			var resultado = {
+					fechaCorte : mi.fechaCorte, 
+					lineaBase : mi.lineaBaseId
+			}
+			$uibModalInstance.close(resultado);
+		}else{
+			$utilidades.mensaje('warning', 'Debe seleccionar una línea Base');
 		}
-		$uibModalInstance.close(resultado);
 	};
 
 	mi.cancel = function() {

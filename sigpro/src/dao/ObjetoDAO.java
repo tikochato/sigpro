@@ -491,10 +491,10 @@ public class ObjetoDAO {
 	
 	private static ObjetoCosto getPresupuestos(ObjetoCosto objetoCosto, Integer fuente, Integer organismo, Integer correlativo, Integer ejercicio, Integer mes, Connection conn, String usuario){
 		if(fuente!=null && organismo!=null && correlativo!=null && ejercicio!=null && ejercicio>0 && mes!=null && mes>0
-				&& objetoCosto.getUnidad_ejecutora()!=null && objetoCosto.getUnidad_ejecutora()>=0 && objetoCosto.getPrograma()!=null && objetoCosto.getPrograma()>=0){
+				&& objetoCosto.getPrograma()!=null && objetoCosto.getPrograma()>=0){
 			ArrayList<BigDecimal> presupuestoPrestamo = new ArrayList<BigDecimal>();
 			presupuestoPrestamo = InformacionPresupuestariaDAO.getPresupuestosPorObjeto(fuente, organismo, correlativo, ejercicio, mes, 
-				objetoCosto.getUnidad_ejecutora(), objetoCosto.getEntidad(), 
+				objetoCosto.getEntidad(), 
 				objetoCosto.getPrograma(), objetoCosto.getSubprograma(), objetoCosto.getProyecto(), objetoCosto.getActividad(), objetoCosto.getObra(), 
 				objetoCosto.getRenglon(), objetoCosto.getGeografico(), conn);
 				
@@ -792,7 +792,7 @@ public class ObjetoDAO {
 	}
 	
 	public static List<?> getVigente(Integer fuente, Integer organismo, Integer correlativo,
-			int ejercicio, int mesMaximo,int unidad_ejecutora, int entidad){
+			int ejercicio, int mesMaximo, int entidad){
 		List<?> ret = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		
@@ -818,7 +818,7 @@ public class ObjetoDAO {
 				"and fuente = ?2",
 				"and correlativo = ?3",
 				"and entidad = ?4",
-				"and unidad_ejecutra = ?5",
+//				"and unidad_ejecutra = ?5",
 				"and ejercicio = ?6",
 				"and mes between 1 and ?7",
 				"group by  v.ejercicio,v.mes",
@@ -830,7 +830,7 @@ public class ObjetoDAO {
 			criteria.setParameter("2", fuente);
 			criteria.setParameter("3", correlativo);
 			criteria.setParameter("4", entidad);
-			criteria.setParameter("5", unidad_ejecutora);
+//			criteria.setParameter("5", unidad_ejecutora);
 			criteria.setParameter("6", ejercicio);
 			criteria.setParameter("7", mesMaximo);
 			ret = criteria.getResultList();
@@ -844,7 +844,7 @@ public class ObjetoDAO {
 		return  ret;
 	}
 	
-	public static BigDecimal getAsignadoPorLineaPresupuestaria(Integer ejercicio, Integer entidad, Integer unidadEjecutora, 
+	public static BigDecimal getAsignadoPorLineaPresupuestaria(Integer ejercicio, Integer entidad,  
 			Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra, Integer renglon, Integer geografico){
 		
 		BigDecimal ret = new BigDecimal(0);
@@ -873,7 +873,7 @@ public class ObjetoDAO {
 			criteria.setParameter("7", geografico);
 			criteria.setParameter("8", ejercicio);
 			criteria.setParameter("9", entidad);
-			criteria.setParameter("10", unidadEjecutora);
+//			criteria.setParameter("10", unidadEjecutora);
 			lstret = criteria.getResultList();
 			
 			if(!lstret.isEmpty()){

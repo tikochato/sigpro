@@ -137,6 +137,7 @@ select "Ejecucion Fisica",
 	<parameter name="lineaBaseQuery" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{lineaBase}!=null?" py.linea_base like '%"+$P{lineaBase}+"%' and c.linea_base like '%"+$P{lineaBase}+"%'  ":" py.actual = 1 and c.actual= 1 "]]></defaultValueExpression>
 	</parameter>
+	<parameter name="nombreLineaBase" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT ps.proyecto_programa proyecto,  ue.nombre unidad_ejecutora, ps.numero_prestamo, ps.codigo_presupuestario, co.nombre organismo_financiero,
 tm.simbolo moneda, ps.monto_contratado,
@@ -929,7 +930,9 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 				</textField>
 			</frame>
 			<componentElement>
-				<reportElement key="" style="Estilo_grafica" stretchType="RelativeToTallestObject" x="171" y="312" width="410" height="169" uuid="e0bf1d04-8db3-4951-a5f4-3e31d532e116"/>
+				<reportElement key="" style="Estilo_grafica" stretchType="RelativeToTallestObject" x="171" y="312" width="410" height="169" uuid="e0bf1d04-8db3-4951-a5f4-3e31d532e116">
+					<property name="net.sf.jasperreports.style.mode" value="Transparent"/>
+				</reportElement>
 				<sc:spiderChart xmlns:sc="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<sc:chartSettings>
 						<chartTitle/>
@@ -1010,6 +1013,15 @@ py.fecha_cierre, ps.fecha_cierre_actual_ue, py.fecha_cierre, ps.meses_prorroga_u
 					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="453" y="2" width="300" height="10" uuid="014825ae-00d8-4528-91aa-6e628ae3fbee">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nombreLineaBase}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>

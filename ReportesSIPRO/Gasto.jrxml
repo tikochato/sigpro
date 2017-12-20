@@ -314,6 +314,7 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 		<defaultValueExpression><![CDATA[NOW( )]]></defaultValueExpression>
 	</parameter>
 	<parameter name="lineaBase" class="java.lang.String"/>
+	<parameter name="nombreLineaBase" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[select 1]]>
 	</queryString>
@@ -473,7 +474,7 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [3]"/>
 						<jr:columnFooter style="Table_TD" height="60" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="165" height="30" uuid="010f2484-64c8-42f4-abb2-571906bef31b">
+								<reportElement mode="Transparent" x="0" y="0" width="165" height="30" uuid="010f2484-64c8-42f4-abb2-571906bef31b">
 									<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 								</reportElement>
 								<textElement verticalAlignment="Middle">
@@ -483,7 +484,7 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 								<text><![CDATA[Total Gasto Real (Q)]]></text>
 							</staticText>
 							<staticText>
-								<reportElement x="0" y="30" width="165" height="30" uuid="b35e19d8-59b7-4c85-b639-cdc04c6aa996">
+								<reportElement mode="Transparent" x="0" y="30" width="165" height="30" uuid="b35e19d8-59b7-4c85-b639-cdc04c6aa996">
 									<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 								</reportElement>
 								<box>
@@ -516,7 +517,7 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="30">
 								<textField isBlankWhenNull="true">
-									<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="ecc797c8-3894-44b9-bb98-86e534699292">
+									<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="0" width="55" height="30" uuid="ecc797c8-3894-44b9-bb98-86e534699292">
 										<property name="com.jaspersoft.studio.unit.width" value="px"/>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
@@ -543,7 +544,7 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="30">
 								<textField pattern="#,##0.00#" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="d67c50c8-2bf0-42c4-a0ab-3e34d966b1f3">
+									<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="0" width="55" height="30" uuid="d67c50c8-2bf0-42c4-a0ab-3e34d966b1f3">
 										<property name="com.jaspersoft.studio.unit.width" value="px"/>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
@@ -570,7 +571,7 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="30">
 								<textField pattern="#,##0.00#" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="1604fd0d-e6b6-4bee-9176-5d817174b85e">
+									<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="0" width="55" height="30" uuid="1604fd0d-e6b6-4bee-9176-5d817174b85e">
 										<property name="com.jaspersoft.studio.unit.width" value="px"/>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
@@ -587,7 +588,7 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [10]"/>
 						<jr:columnFooter style="Table_TD" height="60" rowSpan="1">
 							<textField pattern="#,##0.00#" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="551" height="30" uuid="0da42b6e-af4e-4853-95af-734aa20a9c3d">
+								<reportElement mode="Transparent" x="0" y="0" width="551" height="30" uuid="0da42b6e-af4e-4853-95af-734aa20a9c3d">
 									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 								</reportElement>
 								<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -597,7 +598,7 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 								<textFieldExpression><![CDATA[$V{real}]]></textFieldExpression>
 							</textField>
 							<textField pattern="#,##0.00#" isBlankWhenNull="true">
-								<reportElement x="0" y="30" width="551" height="30" uuid="0a4f7389-7ec6-4cf9-91c2-b5a65d22a535">
+								<reportElement mode="Transparent" x="0" y="30" width="551" height="30" uuid="0a4f7389-7ec6-4cf9-91c2-b5a65d22a535">
 									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 								</reportElement>
 								<box>
@@ -626,7 +627,7 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="30">
 								<textField pattern="#,##0.00#" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="56" height="30" uuid="485ade3c-1fd1-477c-bfca-b493d78866cc">
+									<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="0" width="56" height="30" uuid="485ade3c-1fd1-477c-bfca-b493d78866cc">
 										<property name="com.jaspersoft.studio.unit.width" value="px"/>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
@@ -653,7 +654,7 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="30">
 								<textField pattern="#,##0.00#" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="c5a05034-bcae-4ff5-bdcf-7570e2e7f3e6">
+									<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="0" width="55" height="30" uuid="c5a05034-bcae-4ff5-bdcf-7570e2e7f3e6">
 										<property name="com.jaspersoft.studio.unit.width" value="px"/>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
@@ -680,7 +681,7 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="30">
 								<textField pattern="#,##0.00#" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="78b47a1a-81e7-436a-9a61-79fb565e0b58">
+									<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="0" width="55" height="30" uuid="78b47a1a-81e7-436a-9a61-79fb565e0b58">
 										<property name="com.jaspersoft.studio.unit.width" value="px"/>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
@@ -707,7 +708,7 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="30">
 								<textField pattern="#,##0.00#" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="d127012c-224d-487f-9010-da036ac6d222">
+									<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="0" width="55" height="30" uuid="d127012c-224d-487f-9010-da036ac6d222">
 										<property name="com.jaspersoft.studio.unit.width" value="px"/>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
@@ -734,7 +735,7 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="30">
 								<textField pattern="#,##0.00#" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="0d957ab7-6822-4266-9d72-d59bd5603c27">
+									<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="0" width="55" height="30" uuid="0d957ab7-6822-4266-9d72-d59bd5603c27">
 										<property name="com.jaspersoft.studio.unit.width" value="px"/>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
@@ -761,7 +762,7 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="30">
 								<textField pattern="#,##0.00#" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="b29298fa-70e0-4f06-9c1d-34bf4b05dbb4">
+									<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="0" width="55" height="30" uuid="b29298fa-70e0-4f06-9c1d-34bf4b05dbb4">
 										<property name="com.jaspersoft.studio.unit.width" value="px"/>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
@@ -788,7 +789,7 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="30">
 								<textField pattern="#,##0.00#" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="a29405bf-ed73-4bf4-bc48-f32686268f1a">
+									<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="0" width="55" height="30" uuid="a29405bf-ed73-4bf4-bc48-f32686268f1a">
 										<property name="com.jaspersoft.studio.unit.width" value="px"/>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
@@ -815,7 +816,7 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="30">
 								<textField pattern="#,##0.00#" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="b5301daa-633f-44ee-b178-a239fc493a94">
+									<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="0" width="55" height="30" uuid="b5301daa-633f-44ee-b178-a239fc493a94">
 										<property name="com.jaspersoft.studio.unit.width" value="px"/>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
@@ -842,7 +843,7 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="30">
 								<textField pattern="#,##0.00#" isBlankWhenNull="true">
-									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="30" uuid="dc8758ce-84c0-4c5a-8b6a-31c720e39594">
+									<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="0" width="55" height="30" uuid="dc8758ce-84c0-4c5a-8b6a-31c720e39594">
 										<property name="com.jaspersoft.studio.unit.width" value="px"/>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
@@ -869,7 +870,7 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 							</jr:columnHeader>
 							<jr:detailCell style="Table_TD" height="30">
 								<textField pattern="#,##0.00#" isBlankWhenNull="true">
-									<reportElement positionType="Float" x="0" y="0" width="55" height="30" uuid="36e8d9a5-8df7-4bcd-a2aa-33e239fdd9d7">
+									<reportElement positionType="Float" mode="Transparent" x="0" y="0" width="55" height="30" uuid="36e8d9a5-8df7-4bcd-a2aa-33e239fdd9d7">
 										<property name="com.jaspersoft.studio.unit.width" value="px"/>
 										<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -934,6 +935,15 @@ select 'Gasto programado' gasto ,   $P{costoRealEnero_t} enero,  $P{costoRealFeb
 					<font fontName="Arial" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="450" y="20" width="300" height="10" uuid="2c38d4fb-30eb-4c17-a681-7e7e57d317ca">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nombreLineaBase}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>

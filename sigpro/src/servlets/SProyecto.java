@@ -1047,8 +1047,7 @@ public class SProyecto extends HttpServlet {
 			Integer version = Utils.String2Int(map.get("version"));
 			String resultado = ProyectoDAO.getHistoria(id, version); 
 			response_text = String.join("", "{\"success\":true, \"historia\":" + resultado + "}");
-		}
-		
+		}		
 		else
 			response_text = "{ \"success\": false }";
 		

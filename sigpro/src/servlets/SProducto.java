@@ -1105,7 +1105,7 @@ public class SProducto extends HttpServlet {
 			Producto objProducto = ProductoDAO.getProductoPorId(id);
 			Proyecto objProyecto = ProyectoDAO.getProyectobyTreePath(objProducto.getTreePath());
 			
-			Integer unidadEjecutora = objProyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
+//			Integer unidadEjecutora = objProyecto.getUnidadEjecutora().getId().getUnidadEjecutora();
 			Integer entidad = objProyecto.getUnidadEjecutora().getId().getEntidadentidad();
 			
 			Integer programa = Utils.String2Int(parametro.get("programa"));
@@ -1115,7 +1115,7 @@ public class SProducto extends HttpServlet {
 			Integer obra = Utils.String2Int(parametro.get("obra"));
 			Integer renglon = Utils.String2Int(parametro.get("renglon"));
 			Integer geografico = Utils.String2Int(parametro.get("geografico"));
-			BigDecimal asignado = ObjetoDAO.getAsignadoPorLineaPresupuestaria(ejercicio, entidad, unidadEjecutora, programa, subprograma, 
+			BigDecimal asignado = ObjetoDAO.getAsignadoPorLineaPresupuestaria(ejercicio, entidad, programa, subprograma, 
 					proyecto, actividad, obra, renglon, geografico);
 			
 			BigDecimal planificado = new BigDecimal(0);

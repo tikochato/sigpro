@@ -1,3 +1,5 @@
+<%@page import="pojo.LineaBase"%>
+<%@page import="dao.LineaBaseDAO"%>
 <%@page import="dao.ProyectoDAO"%>
 <%@page import="pojo.PepDetalle"%>
 <%@page import="java.util.Date"%>
@@ -41,7 +43,7 @@
 			
 			List<ObjetoCostoJasper> listadoCostos = ObjetoDAO.getEstructuraConCostoJasper(proyectoId, dateTime.getYear(), dateTime.getYear(), dateTime.getMonthOfYear(), lineaBase, usuario);
 			parameters.put("costos",listadoCostos);
-			
+						
 			ArrayList<BigDecimal> costoReal = new ArrayList<BigDecimal>();
 			costoReal.add(listadoCostos.get(0).getEneroP());
 			costoReal.add(listadoCostos.get(0).getFebreroP());
@@ -59,6 +61,15 @@
 			parameters.put("costoReal",costoReal);
 			parameters.put("fechaCorte", fechaCorte);
 			parameters.put("lineaBase", lineaBase);
+			parameters.put("esReportePrevio", (lineaBase!=null?0:1));
+			
+			String nombreLineaBase = "";
+			Integer lineaBaseId = request.getParameter("lb")!=null?Utils.String2Int(request.getParameter("lb")):0;
+			LineaBase lineaBaseObj = LineaBaseDAO.getLineaBasePorId(lineaBaseId);
+			if(lineaBaseObj!=null){
+				nombreLineaBase = lineaBaseObj.getNombre()+" - "+(lineaBaseObj.getFechaActualizacion()!=null?Utils.formatDateHour(lineaBaseObj.getFechaActualizacion()):Utils.formatDateHour(lineaBaseObj.getFechaCreacion()));
+				parameters.put("nombreLineaBase", nombreLineaBase);
+			}
 			
 			PepDetalle detalle = ProyectoDAO.getPepDetalle(proyectoId);
 			if(detalle!=null){
