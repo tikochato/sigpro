@@ -110,6 +110,8 @@ public class SProyecto extends HttpServlet {
 		Integer congelado; 
 		Integer coordinador;
 		Integer porcentajeAvance;
+		boolean permisoEditarCongelar;
+		Integer lineaBaseId;
 	};
 
 	class stdatadinamico {
@@ -156,6 +158,7 @@ public class SProyecto extends HttpServlet {
     	String usuarioActualizo;
     	String fechaCreacion;
     	String fechaActualizacion;
+    	boolean sobreescribir;
     }
     
 	public SProyecto() {
@@ -676,13 +679,42 @@ public class SProyecto extends HttpServlet {
 				temp.usuarioActualizo = lineaBase.getUsuarioActualizo();
 				temp.fechaCreacion = Utils.formatDate(lineaBase.getFechaCreacion());
 				temp.fechaActualizacion = Utils.formatDate(lineaBase.getFechaActualizacion());
+				temp.sobreescribir = lineaBase.getSobreescribir()!=null && lineaBase.getSobreescribir() == 1 ;
 				lstlineabase.add(temp);
 			}
 			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(lstlineabase);
 			response_text = String.join("", "\"lineasBase\":",response_text);
 			response_text = String.join("", "{\"success\":true,", response_text,"}");
-		}else
+		} else if(accion.equals("getLineasBasePorTipo")){
+			Integer proyectoid = Utils.String2Int(map.get("proyectoId"));
+			Integer tipoLineaBase = Utils.String2Int(map.get("tipoLineaBase"),0);
+			List<LineaBase> lstLineasBase = LineaBaseDAO.getLineasBaseByIdProyectoTipo(proyectoid,tipoLineaBase);
+			
+			List<stlineasbase> lstlineabase = new ArrayList<stlineasbase>();
+			
+			stlineasbase temp = new stlineasbase();
+			temp.id = null;
+			temp.nombre = "Actual";
+			lstlineabase.add(temp);
+			
+			for(LineaBase lineaBase : lstLineasBase){
+				temp = new stlineasbase();
+				temp.id = lineaBase.getId();
+				temp.nombre = lineaBase.getNombre();
+				temp.proyectoid = lineaBase.getProyecto().getId();
+				temp.usuarioCreo = lineaBase.getUsuarioCreo();
+				temp.usuarioActualizo = lineaBase.getUsuarioActualizo();
+				temp.fechaCreacion = Utils.formatDate(lineaBase.getFechaCreacion());
+				temp.fechaActualizacion = Utils.formatDate(lineaBase.getFechaActualizacion());
+				temp.sobreescribir = lineaBase.getSobreescribir()!=null && lineaBase.getSobreescribir() == 1 ;
+				lstlineabase.add(temp);
+			}
+			
+			response_text=new GsonBuilder().serializeNulls().create().toJson(lstlineabase);
+			response_text = String.join("", "\"lineasBase\":",response_text);
+			response_text = String.join("", "{\"success\":true,", response_text,"}");
+		} else
 
 		if (accion.equals("guardarModal")){
 			try{
@@ -1048,7 +1080,32 @@ public class SProyecto extends HttpServlet {
 			String resultado = ProyectoDAO.getHistoria(id, version); 
 			response_text = String.join("", "{\"success\":true, \"historia\":" + resultado + "}");
 		}		
-		else
+		else if (accion.equals("getProyectosLineaBase")) {
+			Integer prestamoId = (map.get("prestamoid")!=null) ? Utils.String2Int(map.get("prestamoid"),-1) : null;
+			List<Proyecto> proyectos = (prestamoId!=null) ? ProyectoDAO.getProyectos(prestamoId,usuario) : 
+				ProyectoDAO.getProyectos(usuario);
+			
+			response.setHeader("Content-Encoding", "gzip");
+			response.setCharacterEncoding("UTF-8");
+
+			List <datos> datos_ = new ArrayList<datos>();
+			for (Proyecto proyecto : proyectos){
+				datos dato = new datos();
+				dato.id = proyecto.getId();
+				dato.nombre = proyecto.getNombre();
+				dato.congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
+				LineaBase lineaBase = LineaBaseDAO.getUltimaLinaBasePorProyecto(dato.id,2);
+				dato.permisoEditarCongelar = lineaBase!= null && lineaBase.getSobreescribir()!=null 
+						&& lineaBase.getSobreescribir().equals(1) && dato.congelado.equals(1) ;
+				dato.lineaBaseId = lineaBase!= null ? lineaBase.getId(): 0;
+				datos_.add(dato);
+			}
+
+			response_text = new GsonBuilder().serializeNulls().create().toJson(datos_);
+			response_text = String.join("", "\"entidades\":", response_text);
+			response_text = String.join("", "{\"success\":true,", response_text, "}");
+
+		} else
 			response_text = "{ \"success\": false }";
 		
 		response.setHeader("Content-Encoding", "gzip");

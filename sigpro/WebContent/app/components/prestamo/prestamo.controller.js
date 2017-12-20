@@ -1581,7 +1581,7 @@ function modalCongelarDescongelar($uibModalInstance, $scope, $http, $interval,
 	mi.mostrarcargando=true;
 	mi.crearLineaBase = false;
 	$http.post('/SProyecto', { 
-		accion: 'getProyectos', 
+		accion: 'getProyectosLineaBase', 
 		prestamoid: prestamoid,
 		t: (new Date()).getTime() }).success(
 			function(response) {
@@ -1597,6 +1597,8 @@ function modalCongelarDescongelar($uibModalInstance, $scope, $http, $interval,
 			var pep = {};
 			pep.id = mi.peps[x].id;
 			pep.congelado = mi.peps[x].congeladoTemp;
+			pep.permiso = mi.peps[x].permisoEditarCongelar;
+			pep.lineaBaseId = mi.peps[x].lineaBaseId;
 			peps.push(pep);
 		}
 		
@@ -1622,5 +1624,10 @@ function modalCongelarDescongelar($uibModalInstance, $scope, $http, $interval,
 	
 	mi.cambioCheck = function (){
 		mi.nombre = '';
+	}
+	
+	mi.cambioCongelado = function(pos){
+		if(!mi.peps[pos].congeladoTemp)
+			mi.peps[pos].permisoEditarCongelar = false;
 	}
 };

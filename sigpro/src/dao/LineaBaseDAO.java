@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -957,6 +958,64 @@ public class LineaBaseDAO {
 			
 		}catch(Throwable e){
 			CLogger.write("25", LineaBaseDAO.class, e);
+		}finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static LineaBase getUltimaLinaBasePorProyecto(Integer proyectoId,Integer tipoLineaBase){
+		LineaBase ret = null;
+		List<LineaBase> listRet = null;
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<LineaBase> criteria = session.createQuery("select l from LineaBase l where l.proyecto.id = ?1 and l.tipoLineaBase = ?2 order by l.id desc ", LineaBase.class);
+			criteria.setParameter(1, proyectoId);
+			criteria.setParameter(2, tipoLineaBase);
+			criteria.setMaxResults(1);
+			listRet = criteria.getResultList();
+			ret = !listRet.isEmpty() ? listRet.get(0) : null;
+			
+		}catch(Throwable e){
+			CLogger.write("25", LineaBaseDAO.class, e);
+		}finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static boolean guardarLineaBase(LineaBase lineaBase){
+		boolean ret = false;
+		
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			
+			session.beginTransaction();	
+			session.saveOrUpdate(lineaBase);
+			session.flush();
+			session.getTransaction().commit();
+			session.close();
+			 ret = true;
+		}
+		catch(Throwable e){
+			CLogger.write("26", LineaBaseDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	}
+	
+	public static List<LineaBase> getLineasBaseByIdProyectoTipo(Integer proyectoid,Integer tipoLineaBase){
+		List<LineaBase> ret = new ArrayList<LineaBase>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<LineaBase> criteria = session.createQuery("FROM LineaBase lb where lb.proyecto.id=:proyectoid and lb.tipoLineaBase = :tipoLinea", LineaBase.class);
+			criteria.setParameter("proyectoid", proyectoid);
+			criteria.setParameter("tipoLinea", tipoLineaBase);
+			ret = criteria.getResultList();
+		}catch(Throwable e){
+			CLogger.write("1", LineaBaseDAO.class, e);
 		}finally{
 			session.close();
 		}

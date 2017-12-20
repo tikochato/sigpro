@@ -1,5 +1,5 @@
 package pojo;
-// Generated Dec 19, 2017 2:59:18 PM by Hibernate Tools 5.2.3.Final
+// Generated Dec 20, 2017 3:43:57 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class Subcomponente implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 743912262643170449L;
+	private static final long serialVersionUID = 7604072389992562069L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Componente componente;
@@ -62,6 +62,7 @@ public class Subcomponente implements java.io.Serializable {
 	private Integer nivel;
 	private Date fechaInicioReal;
 	private Date fechaFinReal;
+	private int inversionNueva;
 	private Set<SubcomponenteUsuario> subcomponenteUsuarios = new HashSet<SubcomponenteUsuario>(0);
 	private Set<Producto> productos = new HashSet<Producto>(0);
 	private Set<SubcomponentePropiedadValor> subcomponentePropiedadValors = new HashSet<SubcomponentePropiedadValor>(0);
@@ -70,7 +71,7 @@ public class Subcomponente implements java.io.Serializable {
 	}
 
 	public Subcomponente(Componente componente, SubcomponenteTipo subcomponenteTipo, String nombre, String usuarioCreo,
-			Date fechaCreacion, int estado, int duracion) {
+			Date fechaCreacion, int estado, int duracion, int inversionNueva) {
 		this.componente = componente;
 		this.subcomponenteTipo = subcomponenteTipo;
 		this.nombre = nombre;
@@ -78,6 +79,7 @@ public class Subcomponente implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
 		this.duracion = duracion;
+		this.inversionNueva = inversionNueva;
 	}
 
 	public Subcomponente(AcumulacionCosto acumulacionCosto, Componente componente, SubcomponenteTipo subcomponenteTipo,
@@ -86,8 +88,9 @@ public class Subcomponente implements java.io.Serializable {
 			Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra, String latitud,
 			String longitud, BigDecimal costo, Integer renglon, Integer ubicacionGeografica, Date fechaInicio,
 			Date fechaFin, int duracion, String duracionDimension, Integer orden, String treePath, Integer nivel,
-			Date fechaInicioReal, Date fechaFinReal, Set<SubcomponenteUsuario> subcomponenteUsuarios,
-			Set<Producto> productos, Set<SubcomponentePropiedadValor> subcomponentePropiedadValors) {
+			Date fechaInicioReal, Date fechaFinReal, int inversionNueva,
+			Set<SubcomponenteUsuario> subcomponenteUsuarios, Set<Producto> productos,
+			Set<SubcomponentePropiedadValor> subcomponentePropiedadValors) {
 		this.acumulacionCosto = acumulacionCosto;
 		this.componente = componente;
 		this.subcomponenteTipo = subcomponenteTipo;
@@ -119,6 +122,7 @@ public class Subcomponente implements java.io.Serializable {
 		this.nivel = nivel;
 		this.fechaInicioReal = fechaInicioReal;
 		this.fechaFinReal = fechaFinReal;
+		this.inversionNueva = inversionNueva;
 		this.subcomponenteUsuarios = subcomponenteUsuarios;
 		this.productos = productos;
 		this.subcomponentePropiedadValors = subcomponentePropiedadValors;
@@ -425,6 +429,15 @@ public class Subcomponente implements java.io.Serializable {
 
 	public void setFechaFinReal(Date fechaFinReal) {
 		this.fechaFinReal = fechaFinReal;
+	}
+
+	@Column(name = "inversion_nueva", nullable = false)
+	public int getInversionNueva() {
+		return this.inversionNueva;
+	}
+
+	public void setInversionNueva(int inversionNueva) {
+		this.inversionNueva = inversionNueva;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "subcomponente")

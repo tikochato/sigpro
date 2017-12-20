@@ -3,7 +3,7 @@
 		
 </style>
 <div class="modal-header">
-    <h3 class="modal-title">{{ modalcc == 1 ? 'Linea Base' :'Congelar PEP'}}</h3>
+    <h3 class="modal-title">{{ modalcc.tipoLineaBase == 1 ? 'Linea Base' :'Congelar PEP'}}</h3>
 </div>
 <div class="modal-body" id="modal-body">
 	<div class="grid_loading" ng-hide="!modalcc.mostrarcargando" style="position:relative; z-index:4;   ">
@@ -16,7 +16,7 @@
 	</div>
 	<div class="row main-form">
 		<form name="form" style="margin-top: 10px;">
-			<div class="col-sm-12" ng-if="mi.tipoLineaBase == 1">
+			<div class="col-sm-12" ng-if="modalcc.tipoLineaBase == 1">
 			
 			   <div class="form-group" >
 			   		<div class="btn-group">

@@ -314,7 +314,7 @@ public class SSubComponente extends HttpServlet {
 								nombre, descripcion, usuario, null, new DateTime().toDate(), null, 1, 
 								snip, programa, subPrograma, proyecto_, actividad, obra, latitud, longitud, costo, renglon, 
 								ubicacionGeografica, fechaInicio, fechaFin, duracion, duracionDimension, null, null, null, 
-								null, null, null,null,null);						
+								null, null, 0,null,null,null);						
 					}
 					else{
 						subcomponente = SubComponenteDAO.getSubComponentePorId(id,usuario);

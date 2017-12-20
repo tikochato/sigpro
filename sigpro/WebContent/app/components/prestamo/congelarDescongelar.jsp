@@ -27,7 +27,8 @@
 				<tr>
 					<th style="width: 60px;">ID</th>
 					<th>Nombre</th>
-					<th style="width: 30px;">Congelar/Descongelar</th>
+					<th style="width: 30px;">Congelar / Descongelar</th>
+					<th style="width: 30px;">Permiso Editar</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -36,7 +37,10 @@
 					<td>{{row.id}}</td>
 					<td>{{row.nombre}}</td>
 					<td style="text-align: center;">
-						<input type="checkbox" ng-model="row.congeladoTemp"/>
+						<input type="checkbox" ng-model="row.congeladoTemp" ng-change="modalcc.cambioCongelado($index)"/>
+					</td>
+					<td style="text-align: center;">
+						<input type="checkbox" ng-model="row.permisoEditarCongelar" ng-disabled="!row.congeladoTemp"/>
 					</td>
 				</tr>
 			</tbody>

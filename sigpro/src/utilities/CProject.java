@@ -231,7 +231,7 @@ public class CProject {
 				, null,usuario, null, new Date(), null, 1, null, null, null, null, null, null, null, null, 
 				new BigDecimal(task.getCost().toString()),null,null,Utils.setDateCeroHoras(task.getStart()),
 				Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
-				, task.getDuration().getUnits().getName(),null,null,1,0,null,null,null,task.getActualStart(),task.getActualFinish(),null,null ,null,null);
+				, task.getDuration().getUnits().getName(),null,null,1,0,null,null,null,task.getActualStart(),task.getActualFinish(),0,null,null ,null,null);
 		
 		return ComponenteDAO.guardarComponente(componente, false) ? componente : null;
 	}
@@ -263,7 +263,7 @@ public class CProject {
 				, null,usuario, null, new Date(), null, 1, null, null, null, null, null, null, null, null, 
 				new BigDecimal(task.getCost().toString()),null,null,Utils.setDateCeroHoras(task.getStart()),
 				Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
-				, task.getDuration().getUnits().getName(),null,null,2,task.getActualStart(),task.getActualFinish(),null ,null,null);
+				, task.getDuration().getUnits().getName(),null,null,2,task.getActualStart(),task.getActualFinish(),0,null ,null,null);
 		
 		return SubComponenteDAO.guardarSubComponente(subcomponente, false) ? subcomponente : null;
 	}
@@ -294,7 +294,7 @@ public class CProject {
 				null, null, new BigDecimal(task.getCost().toString()),null,null,
 				Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
 				, task.getDuration().getUnits().getName(),
-				null,null,3,task.getActualStart(),task.getActualFinish(),null ,null,null);
+				null,null,3,task.getActualStart(),task.getActualFinish(),0,null ,null,null);
 		
 		return ProductoDAO.guardarProducto(producto, false) ? producto : null;
 	}
@@ -325,7 +325,7 @@ public class CProject {
 				new BigDecimal(task.getCost().toString()),null,null,
 				Utils.setDateCeroHoras(task.getStart()),Utils.setDateCeroHoras(task.getFinish()),(( Double ) task.getDuration().getDuration()).intValue()
 				, task.getDuration().getUnits().getName(),
-				null,null,4,task.getActualStart(),task.getActualFinish(),null,null);
+				null,null,4,task.getActualStart(),task.getActualFinish(),0,null,null);
 		
 		return SubproductoDAO.guardarSubproducto(subproducto, false) ? subproducto : null;
 	}
@@ -369,7 +369,7 @@ public class CProject {
 				, itemPredecesor != null ? itemPredecesor.objetoTipo : null
 				, null, null, new BigDecimal(task.getCost().toString()),null,null,null,null,
 				nivel,proyectoBase,componenteBase,productoBase,
-				task.getActualStart(),task.getActualFinish(),null,null
+				task.getActualStart(),task.getActualFinish(),0,null,null
 				);
 		
 		return ActividadDAO.guardarActividad(actividad, false) ? actividad : null;

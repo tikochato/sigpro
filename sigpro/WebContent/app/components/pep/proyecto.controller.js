@@ -1561,7 +1561,7 @@ function modalCongelar($uibModalInstance, $scope, $http, $interval,
 	};
 	
 	
-	$http.post('/SProyecto',{accion: 'getLineasBase', proyectoId: proyectoid}).success(
+	$http.post('/SProyecto',{accion: 'getLineasBasePorTipo', proyectoId: proyectoid, tipoLineaBase:1}).success(
 		function(response) {
 			mi.lineasBase = [];
 			if (response.success){

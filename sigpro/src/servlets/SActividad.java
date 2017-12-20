@@ -362,7 +362,7 @@ public class SActividad extends HttpServlet {
 						actividad = new Actividad(actividadTipo, acumulacionCosto, nombre, descripcion, fechaInicio, fechaFin,
 								porcentajeAvance, usuario, null, new Date(), null, 1, snip, programa, subprograma, proyecto, iactividad, obra,
 								objetoId,objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,costo,renglon, ubicacionGeografica, null, null,null
-								, proyectoBase,componenteBase,productoBase,fechaInicioReal,fechaFinReal,null,null);
+								, proyectoBase,componenteBase,productoBase,fechaInicioReal,fechaFinReal,0,null,null);
 					}
 					else{
 						actividad = ActividadDAO.getActividadPorId(id);
@@ -691,7 +691,7 @@ public class SActividad extends HttpServlet {
 
 				if (esnuevo){
 					actividad = new Actividad(actividadTipo, nombre, fechaInicio, fechaFin, porcentajeAvance
-							, usuario, new Date(), 1, objetoId, objetoTipo, duracion, duracionDimension);
+							, usuario, new Date(), 1, objetoId, objetoTipo, duracion, duracionDimension,0);
 					actividad.setProyectoBase(proyectoBase);
 				}else{
 					actividad = ActividadDAO.getActividadPorId(id);

@@ -335,7 +335,7 @@ public class SProducto extends HttpServlet {
 					producto = new Producto(acumulacionCosto, componente, productoTipo,subcomponente, unidadEjecutora, nombre, descripcion, 
 							usuario, null, new DateTime().toDate(), null, 1, snip, programa, subprograma, proyecto_, 
 							actividad, obra, latitud, longitud,null,costo, renglon, ubicacionGeografica,fechaInicio, 
-							fechaFin, duracion, duracionDimension,null,null,null,null,null,null,null,null);
+							fechaFin, duracion, duracionDimension,null,null,null,null,null,0,null,null,null);
 					
 				}else{
 					producto = ProductoDAO.getProductoPorId(id);
@@ -954,7 +954,7 @@ public class SProducto extends HttpServlet {
 				productoTipo.setId(tipoproductoId);
 				UnidadEjecutora unidadEjecutora = UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidadId, unidadEjecutoraId);
 				if(esnuevo){
-					producto = new Producto( productoTipo,  nombre, usuario, new Date(),1,0);
+					producto = new Producto( productoTipo,  nombre, usuario, new Date(),1,0,0);
 					Componente componente = componenteId!=null ? ComponenteDAO.getComponente(componenteId) : null;
 					Subcomponente subcomponente = subcomponenteId!=null ? SubComponenteDAO.getSubComponente(subcomponenteId) : null;
 					producto.setComponente(componente);

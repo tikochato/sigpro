@@ -1,5 +1,5 @@
 package pojo;
-// Generated Dec 19, 2017 2:59:18 PM by Hibernate Tools 5.2.3.Final
+// Generated Dec 20, 2017 3:43:57 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class Subproducto implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1250615618944077719L;
+	private static final long serialVersionUID = -3749268011793566470L;
 	private Integer id;
 	private AcumulacionCosto acumulacionCosto;
 	private Producto producto;
@@ -62,6 +62,7 @@ public class Subproducto implements java.io.Serializable {
 	private Integer nivel;
 	private Date fechaInicioReal;
 	private Date fechaFinReal;
+	private int inversionNueva;
 	private Set<SubproductoPropiedadValor> subproductoPropiedadValors = new HashSet<SubproductoPropiedadValor>(0);
 	private Set<SubproductoUsuario> subproductoUsuarios = new HashSet<SubproductoUsuario>(0);
 
@@ -69,7 +70,7 @@ public class Subproducto implements java.io.Serializable {
 	}
 
 	public Subproducto(Producto producto, SubproductoTipo subproductoTipo, String nombre, String usuarioCreo,
-			Date fechaCreacion, int estado, int duracion) {
+			Date fechaCreacion, int estado, int duracion, int inversionNueva) {
 		this.producto = producto;
 		this.subproductoTipo = subproductoTipo;
 		this.nombre = nombre;
@@ -77,6 +78,7 @@ public class Subproducto implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
 		this.duracion = duracion;
+		this.inversionNueva = inversionNueva;
 	}
 
 	public Subproducto(AcumulacionCosto acumulacionCosto, Producto producto, SubproductoTipo subproductoTipo,
@@ -85,8 +87,8 @@ public class Subproducto implements java.io.Serializable {
 			Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra, String latitud,
 			String longitud, BigDecimal costo, Integer renglon, Integer ubicacionGeografica, Date fechaInicio,
 			Date fechaFin, int duracion, String duracionDimension, Integer orden, String treePath, Integer nivel,
-			Date fechaInicioReal, Date fechaFinReal, Set<SubproductoPropiedadValor> subproductoPropiedadValors,
-			Set<SubproductoUsuario> subproductoUsuarios) {
+			Date fechaInicioReal, Date fechaFinReal, int inversionNueva,
+			Set<SubproductoPropiedadValor> subproductoPropiedadValors, Set<SubproductoUsuario> subproductoUsuarios) {
 		this.acumulacionCosto = acumulacionCosto;
 		this.producto = producto;
 		this.subproductoTipo = subproductoTipo;
@@ -118,6 +120,7 @@ public class Subproducto implements java.io.Serializable {
 		this.nivel = nivel;
 		this.fechaInicioReal = fechaInicioReal;
 		this.fechaFinReal = fechaFinReal;
+		this.inversionNueva = inversionNueva;
 		this.subproductoPropiedadValors = subproductoPropiedadValors;
 		this.subproductoUsuarios = subproductoUsuarios;
 	}
@@ -423,6 +426,15 @@ public class Subproducto implements java.io.Serializable {
 
 	public void setFechaFinReal(Date fechaFinReal) {
 		this.fechaFinReal = fechaFinReal;
+	}
+
+	@Column(name = "inversion_nueva", nullable = false)
+	public int getInversionNueva() {
+		return this.inversionNueva;
+	}
+
+	public void setInversionNueva(int inversionNueva) {
+		this.inversionNueva = inversionNueva;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "subproducto")
