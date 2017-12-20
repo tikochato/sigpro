@@ -30,6 +30,7 @@ from sipro_analytic.dtm_avance_fisfinan_det_dti d
 join sipro.prestamo ps ON d.codigo_presupuestario = ps.codigo_presupuestario
 join sipro_history.proyecto pr ON pr.prestamoid = ps.id and  $P!{queryPr1} 
 where pr.id =  $P{proyectoIdG} 
+and d.entidad_sicoin = pr.entidad
 and d.ejercicio_fiscal = YEAR($P{fechaCorte} )
  and CAST(d.mes_desembolso AS UNSIGNED) <= MONTH( $P{fechaCorte} )
 group by d.ejercicio_fiscal,d.mes_desembolso
@@ -116,6 +117,7 @@ from sipro_analytic.dtm_avance_fisfinan_det_dti d
 join sipro.prestamo ps ON d.codigo_presupuestario = ps.codigo_presupuestario 
 join sipro_history.proyecto pr ON pr.prestamoid = ps.id and  $P!{queryPr} 
 where pr.id =  $P{proyectoId} 
+and d.entidad_sicoin = pr.entidad
 and d.ejercicio_fiscal = YEAR($P{fechaCorte} )
 and CAST(d.mes_desembolso AS UNSIGNED) <= MONTH( $P{fechaCorte} )
 group by d.ejercicio_fiscal,d.mes_desembolso

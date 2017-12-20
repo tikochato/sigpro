@@ -409,7 +409,7 @@ public class SFlujoCaja extends HttpServlet {
 		List<ObjetoCosto> lstPrestamo = getFlujoCaja(prestamoId, proyectoId, fechaCorte, lineaBase, usuario);
 		if (lstPrestamo != null && !lstPrestamo.isEmpty()){
 			stTotales stTotales = getFlujoCajaTotales(prestamoId, lstPrestamo, fechaCorte, lineaBase, usuario);
-			datos = new String[lstPrestamo.size()+9][columnasTotal];
+			datos = new String[lstPrestamo.size()+11][columnasTotal];
 			for (int i=0; i<lstPrestamo.size(); i++){
 				columna = 0;
 				ObjetoCosto prestamo = lstPrestamo.get(i);
@@ -521,17 +521,29 @@ public class SFlujoCaja extends HttpServlet {
 				}
 				datos[fila][13] = stTotales.totalVariacionPorcentaje.toString();
 				fila++; 
-				datos[fila][0] = "Desembolsos Ejecutados";
+				datos[fila][0] = "Desembolsos Reales";
 				for(int m=0; m<12; m++){
 					datos[fila][1+m] = stTotales.filaDesembolsosReal[m]!=null ? stTotales.filaDesembolsosReal[m].toString() : "";
 				}
 				datos[fila][13] = stTotales.totalDesembolsosReal.toString();
 				fila++; 
-				datos[fila][0] = "Desembolsos";
+				datos[fila][0] = "Desembolsos Planificados";
 				for(int m=0; m<12; m++){
 					datos[fila][1+m] = stTotales.filaDesembolsos[m]!=null ? stTotales.filaDesembolsos[m].toString() : "";
 				}
 				datos[fila][13] = stTotales.totalDesembolsos.toString();
+				fila++; 
+				datos[fila][0] = "Saldo de Cuenta";
+				for(int m=0; m<12; m++){
+					datos[fila][1+m] = stTotales.filaSaldoCuenta[m]!=null ? stTotales.filaSaldoCuenta[m].toString() : "";
+				}
+				datos[fila][13] = stTotales.totalSaldoCuenta!=null?stTotales.totalSaldoCuenta.toString():"";
+				fila++; 
+				datos[fila][0] = "Anticipos";
+				for(int m=0; m<12; m++){
+					datos[fila][1+m] = stTotales.filaAnticipos[m]!=null ? stTotales.filaAnticipos[m].toString() : "";
+				}
+				datos[fila][13] = stTotales.totalAnticipos!=null?stTotales.totalAnticipos.toString():"";
 				fila++; 
 				datos[fila][0] = "Saldo";
 				for(int m=0; m<12; m++){
@@ -612,6 +624,24 @@ public class SFlujoCaja extends HttpServlet {
 				datos[fila][6] = (stTotales.filaDesembolsos[10].add(stTotales.filaDesembolsos[11])).toString();
 				datos[fila][7] = stTotales.totalDesembolsos.toString();
 				fila++; 
+				datos[fila][0] = "Saldo de Cuenta";
+				datos[fila][1] = ((stTotales.filaSaldoCuenta[0]!=null?stTotales.filaSaldoCuenta[0]:new BigDecimal(0)).add((stTotales.filaSaldoCuenta[1]!=null?stTotales.filaSaldoCuenta[1]:new BigDecimal(0)))).toString();
+				datos[fila][2] = ((stTotales.filaSaldoCuenta[2]!=null?stTotales.filaSaldoCuenta[2]:new BigDecimal(0)).add((stTotales.filaSaldoCuenta[3]!=null?stTotales.filaSaldoCuenta[3]:new BigDecimal(0)))).toString();
+				datos[fila][3] = ((stTotales.filaSaldoCuenta[4]!=null?stTotales.filaSaldoCuenta[4]:new BigDecimal(0)).add((stTotales.filaSaldoCuenta[5]!=null?stTotales.filaSaldoCuenta[5]:new BigDecimal(0)))).toString();
+				datos[fila][4] = ((stTotales.filaSaldoCuenta[6]!=null?stTotales.filaSaldoCuenta[6]:new BigDecimal(0)).add((stTotales.filaSaldoCuenta[7]!=null?stTotales.filaSaldoCuenta[7]:new BigDecimal(0)))).toString();
+				datos[fila][5] = ((stTotales.filaSaldoCuenta[8]!=null?stTotales.filaSaldoCuenta[8]:new BigDecimal(0)).add((stTotales.filaSaldoCuenta[9]!=null?stTotales.filaSaldoCuenta[9]:new BigDecimal(0)))).toString();
+				datos[fila][6] = ((stTotales.filaSaldoCuenta[10]!=null?stTotales.filaSaldoCuenta[10]:new BigDecimal(0)).add((stTotales.filaSaldoCuenta[11]!=null?stTotales.filaSaldoCuenta[11]:new BigDecimal(0)))).toString();
+				datos[fila][7] = (stTotales.totalSaldoCuenta!=null?stTotales.totalSaldoCuenta:new BigDecimal(0)).toString();
+				fila++; 
+				datos[fila][0] = "Anticipos";
+				datos[fila][1] = ((stTotales.filaAnticipos[0]!=null?stTotales.filaAnticipos[0]:new BigDecimal(0)).add((stTotales.filaAnticipos[1]!=null?stTotales.filaAnticipos[1]:new BigDecimal(0)))).toString();
+				datos[fila][2] = ((stTotales.filaAnticipos[2]!=null?stTotales.filaAnticipos[2]:new BigDecimal(0)).add((stTotales.filaAnticipos[3]!=null?stTotales.filaAnticipos[3]:new BigDecimal(0)))).toString();
+				datos[fila][3] = ((stTotales.filaAnticipos[4]!=null?stTotales.filaAnticipos[4]:new BigDecimal(0)).add((stTotales.filaAnticipos[5]!=null?stTotales.filaAnticipos[5]:new BigDecimal(0)))).toString();
+				datos[fila][4] = ((stTotales.filaAnticipos[6]!=null?stTotales.filaAnticipos[6]:new BigDecimal(0)).add((stTotales.filaAnticipos[7]!=null?stTotales.filaAnticipos[7]:new BigDecimal(0)))).toString();
+				datos[fila][5] = ((stTotales.filaAnticipos[8]!=null?stTotales.filaAnticipos[8]:new BigDecimal(0)).add((stTotales.filaAnticipos[9]!=null?stTotales.filaAnticipos[9]:new BigDecimal(0)))).toString();
+				datos[fila][6] = ((stTotales.filaAnticipos[10]!=null?stTotales.filaAnticipos[10]:new BigDecimal(0)).add((stTotales.filaAnticipos[11]!=null?stTotales.filaAnticipos[11]:new BigDecimal(0)))).toString();
+				datos[fila][7] = (stTotales.totalAnticipos!=null?stTotales.totalAnticipos:new BigDecimal(0)).toString();
+				fila++; 
 				datos[fila][0] = "Saldo";
 				datos[fila][1] = (stTotales.filaSaldo[0].add(stTotales.filaSaldo[1])).toString();
 				datos[fila][2] = (stTotales.filaSaldo[2].add(stTotales.filaSaldo[3])).toString();
@@ -678,6 +708,20 @@ public class SFlujoCaja extends HttpServlet {
 				datos[fila][4] = (stTotales.filaDesembolsos[9].add(stTotales.filaDesembolsos[10]).add(stTotales.filaDesembolsos[11])).toString();
 				datos[fila][5] = stTotales.totalDesembolsos.toString();
 				fila++; 
+				datos[fila][0] = "Saldo de Cuenta";
+				datos[fila][1] = ((stTotales.filaSaldoCuenta[0]!=null?stTotales.filaSaldoCuenta[0]:new BigDecimal(0)).add((stTotales.filaSaldoCuenta[1]!=null?stTotales.filaSaldoCuenta[1]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[2]!=null?stTotales.filaSaldoCuenta[2]:new BigDecimal(0)))).toString();
+				datos[fila][2] = ((stTotales.filaSaldoCuenta[3]!=null?stTotales.filaSaldoCuenta[3]:new BigDecimal(0)).add((stTotales.filaSaldoCuenta[4]!=null?stTotales.filaSaldoCuenta[4]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[5]!=null?stTotales.filaSaldoCuenta[5]:new BigDecimal(0)))).toString();
+				datos[fila][3] = ((stTotales.filaSaldoCuenta[6]!=null?stTotales.filaSaldoCuenta[6]:new BigDecimal(0)).add((stTotales.filaSaldoCuenta[7]!=null?stTotales.filaSaldoCuenta[7]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[8]!=null?stTotales.filaSaldoCuenta[8]:new BigDecimal(0)))).toString();
+				datos[fila][4] = ((stTotales.filaSaldoCuenta[9]!=null?stTotales.filaSaldoCuenta[9]:new BigDecimal(0)).add((stTotales.filaSaldoCuenta[10]!=null?stTotales.filaSaldoCuenta[10]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[11]!=null?stTotales.filaSaldoCuenta[11]:new BigDecimal(0)))).toString();
+				datos[fila][5] = (stTotales.totalSaldoCuenta!=null?stTotales.totalSaldoCuenta:new BigDecimal(0)).toString();
+				fila++; 
+				datos[fila][0] = "Anticipos";
+				datos[fila][1] = ((stTotales.filaAnticipos[0]!=null?stTotales.filaAnticipos[0]:new BigDecimal(0)).add((stTotales.filaAnticipos[1]!=null?stTotales.filaAnticipos[1]:new BigDecimal(0)).add(stTotales.filaAnticipos[2]!=null?stTotales.filaAnticipos[2]:new BigDecimal(0)))).toString();
+				datos[fila][2] = ((stTotales.filaAnticipos[3]!=null?stTotales.filaAnticipos[3]:new BigDecimal(0)).add((stTotales.filaAnticipos[4]!=null?stTotales.filaAnticipos[4]:new BigDecimal(0)).add(stTotales.filaAnticipos[5]!=null?stTotales.filaAnticipos[5]:new BigDecimal(0)))).toString();
+				datos[fila][3] = ((stTotales.filaAnticipos[6]!=null?stTotales.filaAnticipos[6]:new BigDecimal(0)).add((stTotales.filaAnticipos[7]!=null?stTotales.filaAnticipos[7]:new BigDecimal(0)).add(stTotales.filaAnticipos[8]!=null?stTotales.filaAnticipos[8]:new BigDecimal(0)))).toString();
+				datos[fila][4] = ((stTotales.filaAnticipos[9]!=null?stTotales.filaAnticipos[9]:new BigDecimal(0)).add((stTotales.filaAnticipos[10]!=null?stTotales.filaAnticipos[10]:new BigDecimal(0)).add(stTotales.filaAnticipos[11]!=null?stTotales.filaAnticipos[11]:new BigDecimal(0)))).toString();
+				datos[fila][5] = (stTotales.totalAnticipos!=null?stTotales.totalAnticipos:new BigDecimal(0)).toString();
+				fila++; 
 				datos[fila][0] = "Saldo";
 				datos[fila][1] = (stTotales.filaSaldo[0].add(stTotales.filaSaldo[1]).add(stTotales.filaSaldo[2])).toString();
 				datos[fila][2] = (stTotales.filaSaldo[3].add(stTotales.filaSaldo[4]).add(stTotales.filaSaldo[5])).toString();
@@ -735,6 +779,18 @@ public class SFlujoCaja extends HttpServlet {
 				datos[fila][3] = (stTotales.filaDesembolsos[8].add(stTotales.filaDesembolsos[9]).add(stTotales.filaDesembolsos[10]).add(stTotales.filaDesembolsos[11])).toString();
 				datos[fila][4] = stTotales.totalDesembolsos.toString();
 				fila++; 
+				datos[fila][0] = "Saldo de Cuenta";
+				datos[fila][1] = ((stTotales.filaSaldoCuenta[0]!=null?stTotales.filaSaldoCuenta[0]:new BigDecimal(0)).add((stTotales.filaSaldoCuenta[1]!=null?stTotales.filaSaldoCuenta[1]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[2]!=null?stTotales.filaSaldoCuenta[2]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[3]!=null?stTotales.filaSaldoCuenta[3]:new BigDecimal(0)))).toString();
+				datos[fila][2] = ((stTotales.filaSaldoCuenta[4]!=null?stTotales.filaSaldoCuenta[4]:new BigDecimal(0)).add((stTotales.filaSaldoCuenta[5]!=null?stTotales.filaSaldoCuenta[5]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[6]!=null?stTotales.filaSaldoCuenta[6]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[7]!=null?stTotales.filaSaldoCuenta[7]:new BigDecimal(0)))).toString();
+				datos[fila][3] = ((stTotales.filaSaldoCuenta[8]!=null?stTotales.filaSaldoCuenta[8]:new BigDecimal(0)).add((stTotales.filaSaldoCuenta[9]!=null?stTotales.filaSaldoCuenta[9]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[10]!=null?stTotales.filaSaldoCuenta[10]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[11]!=null?stTotales.filaSaldoCuenta[11]:new BigDecimal(0)))).toString();
+				datos[fila][4] = (stTotales.totalSaldoCuenta!=null?stTotales.totalSaldoCuenta:new BigDecimal(0)).toString();
+				fila++; 
+				datos[fila][0] = "Anticipos";
+				datos[fila][1] = ((stTotales.filaAnticipos[0]!=null?stTotales.filaAnticipos[0]:new BigDecimal(0)).add((stTotales.filaAnticipos[1]!=null?stTotales.filaAnticipos[1]:new BigDecimal(0)).add(stTotales.filaAnticipos[2]!=null?stTotales.filaAnticipos[2]:new BigDecimal(0)).add(stTotales.filaAnticipos[3]!=null?stTotales.filaAnticipos[3]:new BigDecimal(0)))).toString();
+				datos[fila][2] = ((stTotales.filaAnticipos[4]!=null?stTotales.filaAnticipos[4]:new BigDecimal(0)).add((stTotales.filaAnticipos[5]!=null?stTotales.filaAnticipos[5]:new BigDecimal(0)).add(stTotales.filaAnticipos[6]!=null?stTotales.filaAnticipos[6]:new BigDecimal(0)).add(stTotales.filaAnticipos[7]!=null?stTotales.filaAnticipos[7]:new BigDecimal(0)))).toString();
+				datos[fila][3] = ((stTotales.filaAnticipos[8]!=null?stTotales.filaAnticipos[8]:new BigDecimal(0)).add((stTotales.filaAnticipos[9]!=null?stTotales.filaAnticipos[9]:new BigDecimal(0)).add(stTotales.filaAnticipos[10]!=null?stTotales.filaAnticipos[10]:new BigDecimal(0)).add(stTotales.filaAnticipos[11]!=null?stTotales.filaAnticipos[11]:new BigDecimal(0)))).toString();
+				datos[fila][4] = (stTotales.totalAnticipos!=null?stTotales.totalAnticipos:new BigDecimal(0)).toString();
+				fila++; 
 				datos[fila][0] = "Saldo";
 				datos[fila][1] = (stTotales.filaSaldo[0].add(stTotales.filaSaldo[1]).add(stTotales.filaSaldo[2]).add(stTotales.filaSaldo[3])).toString();
 				datos[fila][2] = (stTotales.filaSaldo[4].add(stTotales.filaSaldo[5]).add(stTotales.filaSaldo[6]).add(stTotales.filaSaldo[7])).toString();
@@ -782,6 +838,16 @@ public class SFlujoCaja extends HttpServlet {
 				datos[fila][2] = (stTotales.filaDesembolsos[6].add(stTotales.filaDesembolsos[7]).add(stTotales.filaDesembolsos[8]).add(stTotales.filaDesembolsos[9]).add(stTotales.filaDesembolsos[10]).add(stTotales.filaDesembolsos[11])).toString();
 				datos[fila][3] = stTotales.totalDesembolsos.toString();
 				fila++; 
+				datos[fila][0] = "Saldo de Cuenta";
+				datos[fila][1] = ((stTotales.filaSaldoCuenta[0]!=null?stTotales.filaSaldoCuenta[0]:new BigDecimal(0)).add((stTotales.filaSaldoCuenta[1]!=null?stTotales.filaSaldoCuenta[1]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[2]!=null?stTotales.filaSaldoCuenta[2]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[3]!=null?stTotales.filaSaldoCuenta[3]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[4]!=null?stTotales.filaSaldoCuenta[4]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[5]!=null?stTotales.filaSaldoCuenta[5]:new BigDecimal(0)))).toString();
+				datos[fila][2] = ((stTotales.filaSaldoCuenta[6]!=null?stTotales.filaSaldoCuenta[6]:new BigDecimal(0)).add((stTotales.filaSaldoCuenta[7]!=null?stTotales.filaSaldoCuenta[7]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[8]!=null?stTotales.filaSaldoCuenta[8]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[9]!=null?stTotales.filaSaldoCuenta[9]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[10]!=null?stTotales.filaSaldoCuenta[10]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[11]!=null?stTotales.filaSaldoCuenta[11]:new BigDecimal(0)))).toString();
+				datos[fila][3] = (stTotales.totalSaldoCuenta!=null?stTotales.totalSaldoCuenta:new BigDecimal(0)).toString();
+				fila++; 
+				datos[fila][0] = "Anticipos";
+				datos[fila][1] = ((stTotales.filaAnticipos[0]!=null?stTotales.filaAnticipos[0]:new BigDecimal(0)).add((stTotales.filaAnticipos[1]!=null?stTotales.filaAnticipos[1]:new BigDecimal(0)).add(stTotales.filaAnticipos[2]!=null?stTotales.filaAnticipos[2]:new BigDecimal(0)).add(stTotales.filaAnticipos[3]!=null?stTotales.filaAnticipos[3]:new BigDecimal(0)).add(stTotales.filaAnticipos[4]!=null?stTotales.filaAnticipos[4]:new BigDecimal(0)).add(stTotales.filaAnticipos[5]!=null?stTotales.filaAnticipos[5]:new BigDecimal(0)))).toString();
+				datos[fila][2] = ((stTotales.filaAnticipos[6]!=null?stTotales.filaAnticipos[6]:new BigDecimal(0)).add((stTotales.filaAnticipos[7]!=null?stTotales.filaAnticipos[7]:new BigDecimal(0)).add(stTotales.filaAnticipos[8]!=null?stTotales.filaAnticipos[8]:new BigDecimal(0)).add(stTotales.filaAnticipos[9]!=null?stTotales.filaAnticipos[9]:new BigDecimal(0)).add(stTotales.filaAnticipos[10]!=null?stTotales.filaAnticipos[10]:new BigDecimal(0)).add(stTotales.filaAnticipos[11]!=null?stTotales.filaAnticipos[11]:new BigDecimal(0)))).toString();
+				datos[fila][3] = (stTotales.totalAnticipos!=null?stTotales.totalAnticipos:new BigDecimal(0)).toString();
+				fila++; 
 				datos[fila][0] = "Saldo";
 				datos[fila][1] = (stTotales.filaSaldo[0].add(stTotales.filaSaldo[1]).add(stTotales.filaSaldo[2]).add(stTotales.filaSaldo[3]).add(stTotales.filaSaldo[4]).add(stTotales.filaSaldo[5])).toString();
 				datos[fila][2] = (stTotales.filaSaldo[6].add(stTotales.filaSaldo[7]).add(stTotales.filaSaldo[8]).add(stTotales.filaSaldo[9]).add(stTotales.filaSaldo[10]).add(stTotales.filaSaldo[11])).toString();
@@ -819,6 +885,14 @@ public class SFlujoCaja extends HttpServlet {
 				datos[fila][0] = "Desembolsos";
 				datos[fila][1] = (stTotales.filaDesembolsos[0].add(stTotales.filaDesembolsos[1]).add(stTotales.filaDesembolsos[2]).add(stTotales.filaDesembolsos[3]).add(stTotales.filaDesembolsos[4]).add(stTotales.filaDesembolsos[5]).add(stTotales.filaDesembolsos[6]).add(stTotales.filaDesembolsos[7]).add(stTotales.filaDesembolsos[8]).add(stTotales.filaDesembolsos[9]).add(stTotales.filaDesembolsos[10]).add(stTotales.filaDesembolsos[11])).toString();
 				datos[fila][2] = stTotales.totalDesembolsos.toString();
+				fila++; 
+				datos[fila][0] = "Saldo de Cuenta";
+				datos[fila][1] = ((stTotales.filaSaldoCuenta[0]!=null?stTotales.filaSaldoCuenta[0]:new BigDecimal(0)).add((stTotales.filaSaldoCuenta[1]!=null?stTotales.filaSaldoCuenta[1]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[2]!=null?stTotales.filaSaldoCuenta[2]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[3]!=null?stTotales.filaSaldoCuenta[3]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[4]!=null?stTotales.filaSaldoCuenta[4]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[5]!=null?stTotales.filaSaldoCuenta[5]:new BigDecimal(0)).add((stTotales.filaSaldoCuenta[6]!=null?stTotales.filaSaldoCuenta[6]:new BigDecimal(0)).add((stTotales.filaSaldoCuenta[7]!=null?stTotales.filaSaldoCuenta[7]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[8]!=null?stTotales.filaSaldoCuenta[8]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[9]!=null?stTotales.filaSaldoCuenta[9]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[10]!=null?stTotales.filaSaldoCuenta[10]:new BigDecimal(0)).add(stTotales.filaSaldoCuenta[11]!=null?stTotales.filaSaldoCuenta[11]:new BigDecimal(0)))))).toString();
+				datos[fila][2] = (stTotales.totalSaldoCuenta!=null?stTotales.totalSaldoCuenta:new BigDecimal(0)).toString();
+				fila++; 
+				datos[fila][0] = "Anticipos";
+				datos[fila][1] = ((stTotales.filaAnticipos[0]!=null?stTotales.filaAnticipos[0]:new BigDecimal(0)).add((stTotales.filaAnticipos[1]!=null?stTotales.filaAnticipos[1]:new BigDecimal(0)).add(stTotales.filaAnticipos[2]!=null?stTotales.filaAnticipos[2]:new BigDecimal(0)).add(stTotales.filaAnticipos[3]!=null?stTotales.filaAnticipos[3]:new BigDecimal(0)).add(stTotales.filaAnticipos[4]!=null?stTotales.filaAnticipos[4]:new BigDecimal(0)).add(stTotales.filaAnticipos[5]!=null?stTotales.filaAnticipos[5]:new BigDecimal(0)).add((stTotales.filaAnticipos[6]!=null?stTotales.filaAnticipos[6]:new BigDecimal(0)).add((stTotales.filaAnticipos[7]!=null?stTotales.filaAnticipos[7]:new BigDecimal(0)).add(stTotales.filaAnticipos[8]!=null?stTotales.filaAnticipos[8]:new BigDecimal(0)).add(stTotales.filaAnticipos[9]!=null?stTotales.filaAnticipos[9]:new BigDecimal(0)).add(stTotales.filaAnticipos[10]!=null?stTotales.filaAnticipos[10]:new BigDecimal(0)).add(stTotales.filaAnticipos[11]!=null?stTotales.filaAnticipos[11]:new BigDecimal(0)))))).toString();
+				datos[fila][2] = (stTotales.totalAnticipos!=null?stTotales.totalAnticipos:new BigDecimal(0)).toString();
 				fila++; 
 				datos[fila][0] = "Saldo";
 				datos[fila][1] = (stTotales.filaSaldo[0].add(stTotales.filaSaldo[1]).add(stTotales.filaSaldo[2]).add(stTotales.filaSaldo[3]).add(stTotales.filaSaldo[4]).add(stTotales.filaSaldo[5]).add(stTotales.filaSaldo[6]).add(stTotales.filaSaldo[7]).add(stTotales.filaSaldo[8]).add(stTotales.filaSaldo[9]).add(stTotales.filaSaldo[10]).add(stTotales.filaSaldo[11])).toString();

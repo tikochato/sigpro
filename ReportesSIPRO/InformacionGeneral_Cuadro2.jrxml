@@ -53,7 +53,6 @@
 	where des.codigo_presupuestario= ps.codigo_presupuestario
 	and py.prestamoid = ps.id
 	and  $P!{queryPy}
-	and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora
 	and des.entidad_sicoin = py.entidad
 	and py.id = $P{proyectoId}
 	and des.mes_desembolso = month( $P{fechaCorte} )
@@ -66,8 +65,16 @@
     and py.id = $P{proyectoId}
     and  $P!{queryD}
     and  $P!{queryPy}
-    and month(fecha) = month( $P{fechaCorte})+1
-    and year(fecha) = year( $P{fechaCorte} )
+    and month(fecha) = CASE 
+                  WHEN month( $P{fechaCorte})+1 > 12
+                     THEN 1 
+                  ELSE month( $P{fechaCorte})+1
+             END 
+    and year(fecha) = CASE 
+                  WHEN month( $P{fechaCorte} )+1 > 12
+                     THEN  year( $P{fechaCorte} )+1
+                  ELSE year( $P{fechaCorte} )
+             END 
 ) desembolso_planificado_proximo_mes,
 	(
 	select sum(desembolsos_mes_usd) 
@@ -75,7 +82,6 @@
 	where des.codigo_presupuestario= ps.codigo_presupuestario
 	and py.prestamoid = ps.id
 	and  $P!{queryPy}
-	and des.unidad_ejecutora_sicoin = py.unidad_ejecutoraunidad_ejecutora
 	and des.entidad_sicoin = py.entidad
 	and py.id = $P{proyectoId}
 	and des.ejercicio_fiscal = year( $P{fechaCorte})
@@ -554,7 +560,7 @@ from dual]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{ejecucion_fisica}]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="$ #,##0.00#" isBlankWhenNull="true">
 					<reportElement x="279" y="40" width="93" height="40" uuid="d8a174e9-f658-4ccf-85cd-096177d4931b">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -572,7 +578,7 @@ from dual]]>
 					</textElement>
 					<textFieldExpression><![CDATA[IF($F{desembolso_planificado_mes}!=null, $F{desembolso_planificado_mes}, 0)]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="$ #,##0.00#" isBlankWhenNull="true">
 					<reportElement x="279" y="80" width="93" height="40" uuid="47a67242-8655-4c9d-85e5-b6e2a1d6d3cb">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -590,7 +596,7 @@ from dual]]>
 					</textElement>
 					<textFieldExpression><![CDATA[IF($F{desembolso_realizado_mes}!=null,$F{desembolso_realizado_mes},0)]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="$ #,##0.00#" isBlankWhenNull="true">
 					<reportElement x="279" y="120" width="93" height="40" uuid="f56175af-acf1-44a3-9f04-b107aa35fc00">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -611,7 +617,7 @@ $F{desembolso_planificado_mes}.subtract($F{desembolso_realizado_mes}) : (
 	$F{desembolso_realizado_mes}!=null ? $F{desembolso_realizado_mes}.multiply(new BigDecimal(-1)) : new BigDecimal(0)
 )]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="$ #,##0.00#" isBlankWhenNull="true">
 					<reportElement x="279" y="160" width="93" height="40" uuid="3b2fa2c4-72c1-402e-8167-afe570a477f2">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -629,7 +635,7 @@ $F{desembolso_planificado_mes}.subtract($F{desembolso_realizado_mes}) : (
 					</textElement>
 					<textFieldExpression><![CDATA[IF($F{desembolso_planificado_proximo_mes}!=null, $F{desembolso_planificado_proximo_mes}, 0)]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="$ #,##0.00#" isBlankWhenNull="true">
 					<reportElement x="465" y="40" width="93" height="40" uuid="6e543a4f-a677-4eb6-816d-47196cd3b35c">
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
