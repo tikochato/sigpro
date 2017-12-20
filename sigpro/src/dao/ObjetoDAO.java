@@ -69,7 +69,8 @@ public class ObjetoDAO {
 					"p.fecha_fin, p.duracion, p.duracion_dimension,p.costo,0, p.acumulacion_costoid,  "+
 					"p.programa, p.subprograma, p.proyecto, p.actividad, p.obra, p.renglon, p.ubicacion_geografica geografico, "+
 					"p.fecha_inicio_real, p.fecha_fin_real, " +
-					"p.unidad_ejecutoraunidad_ejecutora unidad_ejecutora, p.entidad entidad, p.ejecucion_fisica_real ejecucion_fisica "+
+					"p.unidad_ejecutoraunidad_ejecutora unidad_ejecutora, p.entidad entidad, p.ejecucion_fisica_real ejecucion_fisica, "+
+					"NULL inversion_nueva "+
 					"from sipro_history.proyecto p "+
 					"where p.id= ?1 and p.estado=1  "+
 					queryVersionP +
@@ -78,7 +79,8 @@ public class ObjetoDAO {
 					"c.fecha_fin , c.duracion, c.duracion_dimension,c.costo,0,c.acumulacion_costoid, "+
 					"c.programa, c.subprograma, c.proyecto, c.actividad, c.obra, c.renglon, c.ubicacion_geografica geografico, "+
 					"c.fecha_inicio_real, c.fecha_fin_real, " +
-					"p.unidad_ejecutoraunidad_ejecutora unidad_ejecutora, p.entidad entidad, 0 ejecucion_fisica "+
+					"p.unidad_ejecutoraunidad_ejecutora unidad_ejecutora, p.entidad entidad, 0 ejecucion_fisica, "+
+					"c.inversion_nueva "+
 					"from sipro_history.componente c "+
 					"left outer join sipro_history.proyecto p on p.id=c.proyectoid "+ queryVersionP +
 					"where c.proyectoid=?1 and c.estado=1 and p.estado=1 "+
@@ -88,7 +90,8 @@ public class ObjetoDAO {
 					"sc.fecha_fin , sc.duracion, sc.duracion_dimension,sc.costo,0,sc.acumulacion_costoid,  "+  
 					"sc.programa, sc.subprograma, sc.proyecto, sc.actividad, sc.obra, sc.renglon, sc.ubicacion_geografica geografico,  "+
 					"sc.fecha_inicio_real, sc.fecha_fin_real, " +
-					"p.unidad_ejecutoraunidad_ejecutora unidad_ejecutora, p.entidad entidad, 0 ejecucion_fisica "+
+					"p.unidad_ejecutoraunidad_ejecutora unidad_ejecutora, p.entidad entidad, 0 ejecucion_fisica, "+
+					"sc.inversion_nueva "+
 					"from sipro_history.subcomponente sc  "+
 					"left outer join sipro_history.componente c on c.id = sc.componenteid  "+queryVersionC +
 					"left outer join sipro_history.proyecto p on p.id=c.proyectoid "+ queryVersionP +
@@ -99,7 +102,8 @@ public class ObjetoDAO {
 					"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid, "+
 					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra, pr.renglon, pr.ubicacion_geografica geografico, "+
 					"pr.fecha_inicio_real, pr.fecha_fin_real, " +
-					"p.unidad_ejecutoraunidad_ejecutora unidad_ejecutora, p.entidad entidad, 0 ejecucion_fisica "+
+					"p.unidad_ejecutoraunidad_ejecutora unidad_ejecutora, p.entidad entidad, 0 ejecucion_fisica, "+
+					"pr.inversion_nueva "+
 					"from sipro_history.producto pr "+
 					"left outer join sipro_history.componente c on c.id=pr.componenteid "+ queryVersionC +
 					"left outer join sipro_history.proyecto p on p.id=c.proyectoid "+ queryVersionP +
@@ -110,7 +114,8 @@ public class ObjetoDAO {
 					"pr.fecha_fin, pr.duracion, pr.duracion_dimension,pr.costo,0,pr.acumulacion_costoid,   "+  
 					"pr.programa, pr.subprograma, pr.proyecto, pr.actividad, pr.obra, pr.renglon, pr.ubicacion_geografica geografico,   "+
 					"pr.fecha_inicio_real, pr.fecha_fin_real, " +
-					"p.unidad_ejecutoraunidad_ejecutora unidad_ejecutora, p.entidad entidad, 0 ejecucion_fisica "+
+					"p.unidad_ejecutoraunidad_ejecutora unidad_ejecutora, p.entidad entidad, 0 ejecucion_fisica, "+
+					"pr.inversion_nueva "+
 					"from sipro_history.producto pr "+  
 					"left outer join sipro_history.subcomponente sc on sc.id=pr.subcomponenteid   "+   queryVersionSc +
 					"left outer join sipro_history.componente c on c.id = sc.componenteid   "+ queryVersionC +
@@ -122,7 +127,8 @@ public class ObjetoDAO {
 					"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid, "+
 					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra, sp.renglon, sp.ubicacion_geografica geografico, "+
 					"sp.fecha_inicio_real, sp.fecha_fin_real, " +
-					"p.unidad_ejecutoraunidad_ejecutora unidad_ejecutora, p.entidad entidad, 0 ejecucion_fisica "+
+					"p.unidad_ejecutoraunidad_ejecutora unidad_ejecutora, p.entidad entidad, 0 ejecucion_fisica, "+
+					"sp.inversion_nueva "+
 					"from sipro_history.subproducto sp "+
 					"left outer join sipro_history.producto pr on pr.id=sp.productoid "+ queryVersionPr +
 					"left outer join sipro_history.componente c on c.id=pr.componenteid "+ queryVersionC +
@@ -134,7 +140,8 @@ public class ObjetoDAO {
 					"sp.fecha_fin , sp.duracion, sp.duracion_dimension,sp.costo,0,sp.acumulacion_costoid, "+
 					"sp.programa, sp.subprograma, sp.proyecto, sp.actividad, sp.obra, sp.renglon, sp.ubicacion_geografica geografico, "+
 					"sp.fecha_inicio_real, sp.fecha_fin_real, " +
-					"p.unidad_ejecutoraunidad_ejecutora unidad_ejecutora, p.entidad entidad, 0 ejecucion_fisica "+
+					"p.unidad_ejecutoraunidad_ejecutora unidad_ejecutora, p.entidad entidad, 0 ejecucion_fisica, "+
+					"sp.inversion_nueva "+
 					"from sipro_history.subproducto sp "+
 					"left outer join sipro_history.producto pr on pr.id=sp.productoid "+ queryVersionPr +
 					"left outer join sipro_history.subcomponente sc on sc.id=pr.subcomponenteid "+ queryVersionSc +
@@ -147,7 +154,8 @@ public class ObjetoDAO {
 					"a.fecha_fin , a.duracion, a.duracion_dimension,a.costo,a.pred_objeto_id,a.acumulacion_costo acumulacion_costoid, "+
 					"a.programa, a.subprograma, a.proyecto, a.actividad, a.obra, a.renglon, a.ubicacion_geografica geografico, "+
 					"a.fecha_inicio_real, a.fecha_fin_real, " +
-					"p.unidad_ejecutoraunidad_ejecutora unidad_ejecutora, p.entidad entidad, a.porcentaje_avance ejecucion_fisica "+
+					"p.unidad_ejecutoraunidad_ejecutora unidad_ejecutora, p.entidad entidad, a.porcentaje_avance ejecucion_fisica, "+
+					"a.inversion_nueva "+
 					"from sipro_history.actividad a "+
 					"JOIN sipro_history.proyecto p on p.id = ?1 "+queryVersionP +
 					"where a.estado=1 and  a.treepath like '"+(10000000+proyectoId)+"%'"+
@@ -264,12 +272,13 @@ public class ObjetoDAO {
 						Integer unidad_ejecutora = dato[20]!=null ? (Integer)dato[20] : null;
 						Integer entidad = dato[21]!=null ? (Integer)dato[21] : null;
 						Integer avance_fisico = dato[22]!=null ? Integer.valueOf(((BigInteger)dato[22]).toString()) : null;
-						BigDecimal totalPagos = dato[23]!=null ? (BigDecimal)dato[23] : null;
-												
+						Integer inversion_nueva = dato[23]!=null ? (Integer)dato[23] : null;
+						BigDecimal totalPagos = dato[25]!=null ? (BigDecimal)dato[25] : null;
+																		
 						root =  new ObjetoCosto(nombre, objeto_id, objeto_tipo, nivel, fecha_inicial, fecha_final, 
 								fecha_inicial_real, fecha_final_real, duracion, null,
 								acumulacion_costoid, costo, totalPagos, 
-								unidad_ejecutora, entidad, avance_fisico,
+								unidad_ejecutora, entidad, avance_fisico, inversion_nueva,
 								programa, subprograma, proyecto, actividad, obra, reglon, geografico, treePath);
 						root.inicializarStanio(anioInicial, anioFinal);
 						
@@ -311,12 +320,13 @@ public class ObjetoDAO {
 							unidad_ejecutora = dato[20]!=null ? (Integer)dato[20] : null;
 							entidad = dato[21]!=null ? (Integer)dato[21] : null;
 							avance_fisico = dato[22]!=null ? Integer.valueOf(((BigInteger)dato[22]).toString()) : null;
-							totalPagos = dato[23]!=null ? (BigDecimal)dato[23] : null;
+							inversion_nueva = dato[23]!=null ? (Integer)dato[23] : null;
+							totalPagos = dato[25]!=null ? (BigDecimal)dato[25] : null;
 							
 							ObjetoCosto nodo =  new ObjetoCosto(nombre, objeto_id, objeto_tipo, nivel, fecha_inicial, fecha_final,
 									fecha_inicial_real, fecha_final_real, duracion, null,
 									acumulacion_costoid, costo, totalPagos, 
-									unidad_ejecutora, entidad, avance_fisico,
+									unidad_ejecutora, entidad, avance_fisico, inversion_nueva,
 									programa, subprograma, proyecto, actividad, obra, reglon, geografico, treePath);
 							nodo.inicializarStanio(anioInicial, anioFinal);
 							
@@ -363,7 +373,7 @@ public class ObjetoDAO {
 	
 	
 	public static List<ObjetoCostoJasper> getEstructuraConCostoJasper(Integer proyectoId, int anioInicial, int anioFinal, Integer mesPresupuestos, String lineaBase, String usuario) throws SQLException{
-		List<ObjetoCosto> listadoObjetos = getEstructuraConCosto(proyectoId, anioInicial, anioFinal, true, false, mesPresupuestos, lineaBase, usuario);
+		List<ObjetoCosto> listadoObjetos = getEstructuraConCosto(proyectoId, anioInicial, anioFinal, true, true, mesPresupuestos, lineaBase, usuario);
 		List<ObjetoCostoJasper> listadoCostos = new ArrayList<ObjetoCostoJasper>(); 
 				
 		for (int i=0; i<listadoObjetos.size(); i++){
@@ -382,7 +392,7 @@ public class ObjetoDAO {
 					temp.anios[0].mes[3].real.setScale(2, BigDecimal.ROUND_HALF_UP), temp.anios[0].mes[4].real.setScale(2, BigDecimal.ROUND_HALF_UP), temp.anios[0].mes[5].real.setScale(2, BigDecimal.ROUND_HALF_UP), 
 					temp.anios[0].mes[6].real.setScale(2, BigDecimal.ROUND_HALF_UP), temp.anios[0].mes[7].real.setScale(2, BigDecimal.ROUND_HALF_UP), temp.anios[0].mes[8].real.setScale(2, BigDecimal.ROUND_HALF_UP), 
 					temp.anios[0].mes[9].real.setScale(2, BigDecimal.ROUND_HALF_UP), temp.anios[0].mes[10].real.setScale(2, BigDecimal.ROUND_HALF_UP), temp.anios[0].mes[11].real.setScale(2, BigDecimal.ROUND_HALF_UP),
-					temp.ejecutado, temp.asignado, temp.modificaciones, temp.avance_fisico);
+					temp.ejecutado, temp.asignado, temp.modificaciones, temp.avance_fisico, temp.inversion_nueva);
 			listadoCostos.add(elemento);
 		}
 		return listadoCostos;

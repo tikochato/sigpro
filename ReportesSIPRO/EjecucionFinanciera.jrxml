@@ -46,7 +46,7 @@
 	<parameter name="costos" class="java.util.List" nestedType="dao.ObjetoCostoJasper"/>
 	<parameter name="nombreLineaBase" class="java.lang.String"/>
 	<queryString language="SQL">
-		<![CDATA[select 1]]>
+		<![CDATA[select 1 from dual]]>
 	</queryString>
 	<variable name="Lista" class="java.lang.String"/>
 	<background>
