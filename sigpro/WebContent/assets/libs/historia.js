@@ -401,19 +401,24 @@ function historiaMatrizController($uibModalInstance, $scope, $http, $interval, i
 	}
 	
 	mi.desHabilitarBotones = function(){
-		if(mi.posicion == 0)
-			mi.disabledInicio=true;
-		else
-			mi.disabledInicio=false;
-		
-		if(mi.posicion == mi.totalVersiones -1)
+		if(mi.totalVersiones == 0){
+			mi.disabledInicio = true;
 			mi.disabledFin = true;
-		else
-			mi.disabledFin = false;
-		
-		if(mi.totalVersiones == 1){
-			mi.disabledInicio=true;
-			mi.disabledFin = true;
+		}else{
+			if(mi.posicion == 0)
+				mi.disabledInicio=true;
+			else
+				mi.disabledInicio=false;
+			
+			if(mi.posicion == mi.totalVersiones -1)
+				mi.disabledFin = true;
+			else
+				mi.disabledFin = false;
+			
+			if(mi.totalVersiones == 1){
+				mi.disabledInicio=true;
+				mi.disabledFin = true;
+			}	
 		}
 	}
 	
