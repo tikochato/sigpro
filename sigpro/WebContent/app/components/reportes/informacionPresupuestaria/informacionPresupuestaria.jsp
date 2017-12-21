@@ -308,8 +308,9 @@
 		    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos">
 							<thead class="theadDatos">
 								<tr>
-		          				<th nowrap colspan={{controller.colspan}} style="{{controller.estiloCelda}} text-align: center;" class="label-form">Total Anual</th>
-			          				<th rowspan="2" style="{{controller.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Total</th>
+			          				<th nowrap colspan={{controller.colspan}} style="{{controller.estiloCelda}} text-align: center;" class="label-form">Total Anual</th>
+				          			<th rowspan="2" style="{{controller.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Total</th>
+				          			<th rowspan="2" style="{{controller.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Asignado</th>
 			          			</tr>
 			          			<tr>
 		          				<th ng-repeat="a in controller.aniosTotal" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};" class="label-form">{{a.anio}}</th>
@@ -328,6 +329,11 @@
 											<span ng-show="controller.grupoMostrado.real" class="colorReal">{{total.valor.real | formatoMillones : controller.enMillones}}</span>
 										</div>
 									</td>
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};  min-height: 55px; height: 55px;">
+										<div style="{{controller.porcentajeCeldaValor}}">
+											<span  class="colorPlanificado">{{ totales.asignado | formatoMillones : controller.enMillones}}</span>
+						      			</div>
+									<td>
 						      	</tr>
 							</tbody>
 						</table>

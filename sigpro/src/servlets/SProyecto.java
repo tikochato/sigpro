@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -711,9 +712,15 @@ public class SProyecto extends HttpServlet {
 				lstlineabase.add(temp);
 			}
 			
+		
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(new Date());
+			int anioActual = cal.get(Calendar.YEAR);
+			
+			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(lstlineabase);
 			response_text = String.join("", "\"lineasBase\":",response_text);
-			response_text = String.join("", "{\"success\":true,", response_text,"}");
+			response_text = String.join("", "{\"success\":true, \"anioActual\": ",anioActual + "",",", response_text,"}");
 		} else
 
 		if (accion.equals("guardarModal")){
@@ -1049,7 +1056,7 @@ public class SProyecto extends HttpServlet {
 					nombre = mes + "_" + anio; 
 					lineaTemp = LineaBaseDAO.getLineasBaseByNombre(proyecto.getId(), nombre);
 					lineaBaseEditar = lineaTemp != null ? "|lb"+lineaTemp.getId().toString() + "|" : null;
-					lineaBase = new LineaBase(proyecto, nombre, usuario, null, new Date(), null,tipoLinea,1);
+					lineaBase = new LineaBase(proyecto, nombre, usuario, null, new Date(), null,tipoLinea,0);
 					if(lineaTemp!=null){
 						if(lineaTemp.getSobreescribir()!= null && lineaTemp.getSobreescribir()==1){
 							ret = LineaBaseDAO.eliminarTotalLineaBase(lineaTemp);

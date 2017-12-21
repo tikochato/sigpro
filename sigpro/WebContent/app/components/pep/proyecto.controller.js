@@ -1512,6 +1512,8 @@ function modalCongelar($uibModalInstance, $scope, $http, $interval,
 	mi.nuevaLineaBase = 1;
 	mi.bloquerBoton = false;
 	mi.tipoLineaBase = tipoLineaBase;
+	mi.maxYear=0;
+	mi.minYear =0;
 	
 	mi.mes = [{nombre:'Enero',id:1},{nombre:'Febrero',id:2},{nombre:'Marzo',id:3},
 		{nombre:'Abril',id:4},{nombre:'Mayo',id:5},{nombre:'Junio',id:6},
@@ -1566,6 +1568,9 @@ function modalCongelar($uibModalInstance, $scope, $http, $interval,
 			mi.lineasBase = [];
 			if (response.success){
 				mi.lineasBase = response.lineasBase;
+				mi.maxYear = response.anioActual;
+				mi.minYear = response.anioActual-1;
+				mi.anio = mi.maxYear;
 			}
 	});	
 	

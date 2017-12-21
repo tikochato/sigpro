@@ -56,7 +56,7 @@
 				<div class="form-group col-sm-6" style="padding: 10px 2px;">
 					<input type="number"  class="inputText" ng-model="modalcc.anio" maxlength="4" minlength="4"  
 						ng-value="modalcc.anio" onblur="this.setAttribute('value', this.value);"	
-						ng-required="true"/>
+						ng-required="true"  min="{{ modalcc.minYear }}" max="{{ modalcc.maxYear }}"/>
 					  	<label  class="floating-label">*Año</label>
 				</div>
 			</div>

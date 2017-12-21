@@ -336,6 +336,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 						 var tot = {"valor": {"planificado": totalFinalPlanificado, "real": totalFinalReal}};
 						 fila.push(tot);
 						 var tot = {"anio": fila};
+						 tot.asignado = mi.data[x].asignado;
 						 mi.totales.push(tot);
 					}
 					 
