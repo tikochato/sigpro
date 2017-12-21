@@ -329,7 +329,7 @@
 											<span ng-show="controller.grupoMostrado.real" class="colorReal">{{total.valor.real | formatoMillones : controller.enMillones}}</span>
 										</div>
 									</td>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};  min-height: 55px; height: 55px;">
+									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};  min-height: 35px; height: 35px;">
 										<div style="{{controller.porcentajeCeldaValor}}">
 											<span  class="colorPlanificado">{{ totales.asignado | formatoMillones : controller.enMillones}}</span>
 						      			</div>
