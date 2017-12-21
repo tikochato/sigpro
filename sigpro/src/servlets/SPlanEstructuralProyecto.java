@@ -263,7 +263,7 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 						break;
 					}
 					
-					temp.costoPlanificado = objeto.getCosto();
+					temp.costoPlanificado = objeto.getCosto()!=null?objeto.getCosto():new BigDecimal(0);
 					
 					ObjetoCosto.stanio[] anios = objeto.getAnios();
 					
@@ -272,6 +272,9 @@ public class SPlanEstructuralProyecto extends HttpServlet {
 						if(anioC.anio >= anio && anioC.anio <= anio){							
 							for(int i=0; i<12;i++){
 								ejecutado = ejecutado.add(anioC.mes[i].real);
+								if(temp.objetoTipo.compareTo(0)==0){
+									temp.costoPlanificado = temp.costoPlanificado.add(anioC.mes[i].planificado);
+								}
 							}
 						}
 					}

@@ -34,13 +34,14 @@ public class ObjetoCosto {
 	BigDecimal asignado = new BigDecimal(0);
 	BigDecimal modificaciones = new BigDecimal(0);
 	Integer avance_fisico = 0;
+	Integer inversion_nueva = 0;
 	transient ObjetoCosto parent;
 	transient List<ObjetoCosto> children;
 	
 	public ObjetoCosto(String nombre, Integer objeto_id, int objeto_tipo, Integer nivel, DateTime fecha_inicial,
 			DateTime fecha_final, DateTime fecha_inicial_real, DateTime fecha_final_real, Integer duracion, stanio[] anios, 
 			Integer acumulacion_costoid, BigDecimal costo, BigDecimal totalPagos, 
-			Integer unidad_ejecutora, Integer entidad, Integer avance_fisico,
+			Integer unidad_ejecutora, Integer entidad, Integer avance_fisico, Integer inversion_nueva,
 			Integer programa, Integer subprograma, Integer proyecto, Integer actividad, Integer obra, Integer renglon, 
 			Integer geografico, String treePath) {
 		super();
@@ -68,6 +69,7 @@ public class ObjetoCosto {
 		this.unidad_ejecutora = unidad_ejecutora;
 		this.entidad  = entidad;
 		this.avance_fisico = avance_fisico;
+		this.inversion_nueva = inversion_nueva;
 		children = new ArrayList<ObjetoCosto>();
 	}
 
@@ -365,6 +367,15 @@ public class ObjetoCosto {
 	public void setEntidad(Integer entidad) {
 		this.entidad = entidad;
 	}
-	
+
+
+	public Integer getInversion_nueva() {
+		return inversion_nueva;
+	}
+
+
+	public void setInversion_nueva(Integer inversion_nueva) {
+		this.inversion_nueva = inversion_nueva;
+	}
 	
 }
