@@ -169,7 +169,7 @@
 				<span class="glyphicon glyphicon-user"></span></label>
 				<label class="btn btn-default" ng-click="controller.generarReporte()" uib-tooltip="Plan Anual de Ejecución">
 				<span class="glyphicon glyphicon glyphicon-save-file" aria-hidden="true"></span></label>
-				<label class="btn btn-default" ng-click="controller.congelado?'':controller.congelar(1)" uib-tooltip="Crear línea base" ng-disabled="controller.congelado">
+				<label class="btn btn-default" ng-click="controller.congelado || controller.sobrepaso ? '' : controller.congelar(1)" uib-tooltip="Crear línea base" ng-disabled="controller.congelado || controller.sobrepaso">
 				<span class="glyphicon glyphicon glyphicon-bookmark" aria-hidden="true"></span></label>
 				<label class="btn btn-default" ng-click="!controller.congelado?'':controller.congelar(2)" uib-tooltip="Congelar" ng-disabled="!controller.congelado">
 				<span class="glyphicon glyphicon glyphicon-duplicate" aria-hidden="true"></span></label>
