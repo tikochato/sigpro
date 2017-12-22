@@ -13,7 +13,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 		mi.AnteriorActivo = false;
 		mi.enMillones = true;
 		mi.agrupacionActual = 1
-		mi.columnasTotal = 1;
+		mi.columnasTotal = 2;
 		mi.limiteAnios = 5;
 		mi.tamanioMinimoColumna = 130;
 		mi.tamanioMinimoColumnaMillones = 80;

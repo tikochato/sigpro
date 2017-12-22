@@ -1071,7 +1071,6 @@ public class SProyecto extends HttpServlet {
 						response_text = String.join("","{ \"success\":  ", ret ? "true" : "false",response_text,"}");
 					}
 					
-					
 					break;
 			}
 			
