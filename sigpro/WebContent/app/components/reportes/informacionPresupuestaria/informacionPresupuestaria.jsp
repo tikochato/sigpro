@@ -275,10 +275,9 @@
 								</thead>
 								<tbody vs-repeat class="cuerpoTablaNombres" id="divTablaNombres"  style="max-height: 390px; margin-bottom: -15px;" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)">
 									<tr ng-repeat="item in controller.data">
-										<td nowrap style="min-width:20px; min-height: 35px; height: 35px;">
+										<td nowrap style="max-width:20px; min-height: 35px; height: 35px;">
 							      			<div   uib-tooltip="Lo planificado es mayor a lo vigente" class="warningFormat"
-							      			ng-if="item.planificado > item.asignado"
-							      			>
+							      			ng-if="item.planificado > item.asignado" tooltip-placement="right">
 							      				<span class=" glyphicon glyphicon-alert"  ></span>
 							      			</div>
 							      		</td>
@@ -329,9 +328,9 @@
 		    			<table st-table="rowCollection" st-safe-src="datosTabla" class="table table-striped tablaDatos">
 							<thead class="theadDatos">
 								<tr>
-			          				<th nowrap colspan={{controller.colspan}} style="{{controller.estiloCelda}} text-align: center;" class="label-form">Total Anual</th>
+			          				<th nowrap colspan={{controller.colspan}} style="{{controller.estiloCelda}} text-align: center;" class="label-form">{{(controller.grupoMostrado.planificado && controller.grupoMostrado.real)?"Total":"Tot."}} Anual</th>
 				          			<th rowspan="2" style="{{controller.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Total</th>
-				          			<th rowspan="2" style="{{controller.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Asignado</th>
+				          			<th rowspan="2" style="width:{{controller.enMillones?controller.tamanioMinimoColumnaMillones:controller.tamanioMinimoColumna}}px;min-width:{{controller.enMillones?controller.tamanioMinimoColumnaMillones:controller.tamanioMinimoColumna}}px; max-width:{{controller.enMillones?controller.tamanioMinimoColumnaMillones:controller.tamanioMinimoColumna}}px; text-align: center; vertical-align: top;" class="label-form">Asignado</th>
 			          			</tr>
 			          			<tr>
 		          				<th ng-repeat="a in controller.aniosTotal" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};" class="label-form">{{a.anio}}</th>
@@ -350,9 +349,9 @@
 											<span ng-show="controller.grupoMostrado.real" class="colorReal">{{total.valor.real | formatoMillones : controller.enMillones}}</span>
 										</div>
 									</td>
-									<td nowrap style="min-width:70px; min-height: 35px; height: 35px;">
-							      			<div  class="nombreFormat">
-											<span  class="colorPlanificado">{{ totales.asignado | formatoMillones : controller.enMillones}}</span>
+									<td nowrap style="width:{{controller.enMillones?controller.tamanioMinimoColumnaMillones:controller.tamanioMinimoColumna}}px;min-width:{{controller.enMillones?controller.tamanioMinimoColumnaMillones:controller.tamanioMinimoColumna}}px; max-width:{{controller.enMillones?controller.tamanioMinimoColumnaMillones:controller.tamanioMinimoColumna}}px;">
+							      			<div  class="nombreFormat" style="text-align: right;">
+											<span  class="">{{ totales.asignado | formatoMillones : controller.enMillones}}</span>
 						      			</div>
 									<td>
 						      	</tr>

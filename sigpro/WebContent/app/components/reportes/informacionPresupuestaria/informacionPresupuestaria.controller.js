@@ -13,7 +13,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 		mi.AnteriorActivo = false;
 		mi.enMillones = true;
 		mi.agrupacionActual = 1
-		mi.columnasTotal = 2;
+		mi.columnasTotal = 1;
 		mi.limiteAnios = 5;
 		mi.tamanioMinimoColumna = 130;
 		mi.tamanioMinimoColumnaMillones = 80;
@@ -279,7 +279,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 			if(mi.grupoMostrado.planificado && mi.grupoMostrado.real){
 				tamanioMinimo = tamanioMinimo * 2;
 			}
-			mi.tamanoPantalla = Math.floor(document.getElementById("reporte").offsetWidth) - 200;
+			mi.tamanoPantalla = Math.floor(document.getElementById("reporte").offsetWidth) - 200 - (mi.enMillones?mi.tamanioMinimoColumnaMillones:mi.tamanioMinimoColumna);
 			mi.totalAnios = Number(mi.fechaFin) - Number(mi.fechaInicio) + 1;
 			mi.totalCabecerasAMostrar = $utilidades.getCantidadCabecerasReporte(mi.tamanoPantalla, mi.totalAnios, mi.totalCabeceras, tamanioMinimo, mi.columnasTotal);
 			if(mi.totalCabecerasAMostrar == 0){
