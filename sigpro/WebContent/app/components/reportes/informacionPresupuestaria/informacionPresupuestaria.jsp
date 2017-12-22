@@ -139,6 +139,19 @@
 			font-weight: bold;
 		}
 		
+		.warningFormat {    
+		    margin: 0 0 2px;
+		    color: #fa5454;
+		    word-break: none;
+		    word-wrap: break-word;
+		    background-color: transparent;
+		    border: none;
+		    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+		    padding: 0px;
+		    line-height: normal;	
+		    overflow: initial;	     
+		}
+		
 	</style>
 
 <div ng-controller="informacionPresupuestariaController as controller" class="maincontainer all_page" id="title" style="height: 100%">
@@ -262,6 +275,14 @@
 								</thead>
 								<tbody vs-repeat class="cuerpoTablaNombres" id="divTablaNombres"  style="max-height: 390px; margin-bottom: -15px;" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)">
 									<tr ng-repeat="item in controller.data">
+										<td nowrap style="min-width:20px; min-height: 35px; height: 35px;">
+							      			<div   uib-tooltip="Lo planificado es mayor a lo vigente" class="warningFormat"
+							      			ng-if="item.planificado > item.asignado"
+							      			>
+							      				<span class=" glyphicon glyphicon-alert"  ></span>
+							      			</div>
+							      		</td>
+							      		
 							      		<td nowrap style="min-width:200px; min-height: 35px; height: 35px;">
 							      			<div uib-tooltip="{{item.nombre}}" class="nombreFormat">
 							      				<span ng-class="controller.iconoObjetoTipo[item.objeto_tipo]" uib-tooltip="{{controller.tooltipObjetoTipo[item.objeto_tipo]}}" style="margin-left: {{item.nivel}}em"></span>
@@ -329,8 +350,8 @@
 											<span ng-show="controller.grupoMostrado.real" class="colorReal">{{total.valor.real | formatoMillones : controller.enMillones}}</span>
 										</div>
 									</td>
-									<td style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};  min-height: 35px; height: 35px;">
-										<div style="{{controller.porcentajeCeldaValor}}">
+									<td nowrap style="min-width:70px; min-height: 35px; height: 35px;">
+							      			<div  class="nombreFormat">
 											<span  class="colorPlanificado">{{ totales.asignado | formatoMillones : controller.enMillones}}</span>
 						      			</div>
 									<td>

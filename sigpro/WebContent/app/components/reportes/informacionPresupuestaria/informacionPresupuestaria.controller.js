@@ -332,8 +332,11 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 							 totalFinalReal += totalAnualReal;
 							 var tot = {"valor": {"planificado": totalAnualPlanificado, "real": totalAnualReal}};
 							 fila.push(tot);
+							 mi.data[x].planificado = totalAnualPlanificado;
+							 mi.dataOriginal[x].planificado = totalAnualPlanificado;
 						 }
 						 var tot = {"valor": {"planificado": totalFinalPlanificado, "real": totalFinalReal}};
+						 
 						 fila.push(tot);
 						 var tot = {"anio": fila};
 						 tot.asignado = mi.data[x].asignado;
@@ -361,6 +364,8 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 					})
 					
 					mi.cambiarAgrupacion(agrupacion);
+					
+					
 				}
 			});
 		}
@@ -749,6 +754,8 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 			var valor = item.anios[anio].mes[mes]; 
 			return valor;
 		};
+		
+		
 		
 		mi.getTotal=function(itemIndice, anioIndice){
 			var valor = mi.totales[itemIndice].anio[anioIndice].valor;
