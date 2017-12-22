@@ -104,6 +104,7 @@ public class SProducto extends HttpServlet {
 		String fechaFinReal;
 		String fechaElegibilidad;
 		String fechaCierre;
+		Integer inversionNueva;
 	}
 	
 	class stdatadinamico {
@@ -264,6 +265,7 @@ public class SProducto extends HttpServlet {
 			
 				temp.fechaElegibilidad = fechaElegibilidad;
 				temp.fechaCierre = fechaCierre;
+				temp.inversionNueva = producto.getInversionNueva();
 				
 				listaProducto.add(temp);
 			}
@@ -308,6 +310,7 @@ public class SProducto extends HttpServlet {
 				Date fechaFin = Utils.dateFromStringCeroHoras(parametro.get("fechaFin"));
 				Integer duracion = Utils.String2Int(parametro.get("duaracion"), null);
 				String duracionDimension = parametro.get("duracionDimension");
+				Integer inversionNueva = Utils.String2Int(parametro.get("inversionNueva"), 0);
 				
 				AcumulacionCosto acumulacionCosto = null;
 				if(acumulacionCostoid!= null && acumulacionCostoid > 0){
@@ -335,7 +338,7 @@ public class SProducto extends HttpServlet {
 					producto = new Producto(acumulacionCosto, componente, productoTipo,subcomponente, unidadEjecutora, nombre, descripcion, 
 							usuario, null, new DateTime().toDate(), null, 1, snip, programa, subprograma, proyecto_, 
 							actividad, obra, latitud, longitud,null,costo, renglon, ubicacionGeografica,fechaInicio, 
-							fechaFin, duracion, duracionDimension,null,null,null,null,null,0,null,null,null);
+							fechaFin, duracion, duracionDimension,null,null,null,null,null,inversionNueva,null,null,null);
 					
 				}else{
 					producto = ProductoDAO.getProductoPorId(id);
@@ -364,6 +367,7 @@ public class SProducto extends HttpServlet {
 					producto.setFechaFin(fechaFin);
 					producto.setDuracion(duracion);
 					producto.setDuracionDimension(duracionDimension);
+					producto.setInversionNueva(inversionNueva);
 				}
 				
 				ret = ProductoDAO.guardarProducto(producto, true);
@@ -564,6 +568,7 @@ public class SProducto extends HttpServlet {
 					
 					temp.fechaElegibilidad = fechaElegibilidad;
 					temp.fechaCierre = fechaCierre;
+					temp.inversionNueva = producto.getInversionNueva();
 					
 					listaProducto.add(temp);
 				}
@@ -691,6 +696,7 @@ public class SProducto extends HttpServlet {
 				
 				temp.fechaElegibilidad = fechaElegibilidad;
 				temp.fechaCierre = fechaCierre;
+				temp.inversionNueva = producto.getInversionNueva();
 				
 				listaProducto.add(temp);
 			}
@@ -805,6 +811,7 @@ public class SProducto extends HttpServlet {
 				
 				temp.fechaElegibilidad = fechaElegibilidad;
 				temp.fechaCierre = fechaCierre;
+				temp.inversionNueva = producto.getInversionNueva();
 				
 				stproductos.add(temp);
 			}
@@ -924,6 +931,7 @@ public class SProducto extends HttpServlet {
 				Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(producto.getTreePath());
 				temp.fechaElegibilidad = Utils.formatDate(proyecto.getFechaElegibilidad());
 				temp.fechaCierre = Utils.formatDate(proyecto.getFechaCierre());
+				temp.inversionNueva = producto.getInversionNueva();
 			}
 
 			response_text = new GsonBuilder().serializeNulls().create().toJson(temp);
@@ -1038,6 +1046,7 @@ public class SProducto extends HttpServlet {
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 3);
 				temp.fechaInicioReal = Utils.formatDate(producto.getFechaInicioReal());
 				temp.fechaFinReal = Utils.formatDate(producto.getFechaFinReal());
+				temp.inversionNueva = producto.getInversionNueva();
 				
 				response_text = new GsonBuilder().serializeNulls().create().toJson(temp);
 				response_text = String.join("", "\"producto\":",response_text);
@@ -1063,6 +1072,7 @@ public class SProducto extends HttpServlet {
 				temp.fechaCreacion = Utils.formatDateHour(producto.getFechaCreacion());
 				temp.fechaactualizacion = Utils.formatDateHour(producto.getFechaActualizacion());
 				temp.peso = producto.getPeso();
+				temp.inversionNueva = producto.getInversionNueva();
 				stproductos.add(temp);
 			}
 			

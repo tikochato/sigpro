@@ -372,9 +372,14 @@
 							            </span>
 							  <label class="floating-label">Fecha de Fin Real</label>
 							</div>
+						</div>						
 						</div>
 						
+						<div class="form-group">
+    						<input type="checkbox"  ng-model="componentec.componente.inversionNueva" /> 
+    						<label class="floating-label">Es Inversion Nueva</label>   						
 						</div>
+						
 						<div ng-repeat="campo in componentec.camposdinamicos">
 							<div ng-switch="campo.tipo">
 								<div ng-switch-when="texto" class="form-group" >

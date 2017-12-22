@@ -97,6 +97,7 @@ public class SActividad extends HttpServlet {
 		Integer congelado;
 		String fechaElegibilidad;
 		String fechaCierre;
+		Integer inversionNueva;
 	}
 
 	class stdatadinamico {
@@ -202,6 +203,7 @@ public class SActividad extends HttpServlet {
 				temp.fechaInicioReal = Utils.formatDate(actividad.getFechaInicioReal());
 				temp.fechaFinReal = Utils.formatDate(actividad.getFechaFinReal());
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
+				temp.inversionNueva = actividad.getInversionNueva();
 				
 				temp.congelado = congelado;
 				temp.fechaElegibilidad = fechaElegibilidad;
@@ -262,6 +264,7 @@ public class SActividad extends HttpServlet {
 				temp.fechaInicioReal = actividad.getFechaInicioReal() != null ? Utils.formatDate(actividad.getFechaInicioReal()) : null;
 				temp.fechaFinReal = actividad.getFechaFinReal() != null ? Utils.formatDate(actividad.getFechaFinReal()) : null;
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
+				temp.inversionNueva = actividad.getInversionNueva();
 
 				temp.congelado = congelado;
 				temp.fechaElegibilidad = fechaElegibilidad;
@@ -305,6 +308,7 @@ public class SActividad extends HttpServlet {
 					Integer acumulacionCostoid = Utils.String2Int(map.get("acumulacionCosto"), null);
 					Integer renglon = map.get("renglon")!=null ? Integer.parseInt(map.get("renglon")):null;
 					Integer ubicacionGeografica = map.get("ubicacionGeografica")!=null ? Integer.parseInt(map.get("ubicacionGeografica")):null;
+					Integer inversionNueva = Utils.String2Int(map.get("inversionNueva"), 0);
 					
 					proyectoBase = null;
 					componenteBase = null;
@@ -362,7 +366,7 @@ public class SActividad extends HttpServlet {
 						actividad = new Actividad(actividadTipo, acumulacionCosto, nombre, descripcion, fechaInicio, fechaFin,
 								porcentajeAvance, usuario, null, new Date(), null, 1, snip, programa, subprograma, proyecto, iactividad, obra,
 								objetoId,objetoTipo,duracion,duracionDimension,null,null,latitud,longitud,costo,renglon, ubicacionGeografica, null, null,null
-								, proyectoBase,componenteBase,productoBase,fechaInicioReal,fechaFinReal,0,null,null);
+								, proyectoBase,componenteBase,productoBase,fechaInicioReal,fechaFinReal,inversionNueva,null,null);
 					}
 					else{
 						actividad = ActividadDAO.getActividadPorId(id);
@@ -390,6 +394,7 @@ public class SActividad extends HttpServlet {
 						actividad.setProyectoBase(proyectoBase);
 						actividad.setComponenteBase(componenteBase);
 						actividad.setProductoBase(productoBase);
+						actividad.setInversionNueva(inversionNueva);
 						
 						if(porcentajeAvance > 0 && porcentajeAvance < 100 && actividad.getFechaInicioReal() == null)
 							actividad.setFechaInicioReal(new Date());
@@ -602,6 +607,7 @@ public class SActividad extends HttpServlet {
 				temp.congelado = congelado;
 				temp.fechaElegibilidad = fechaElegibilidad;
 				temp.fechaCierre = fechaCierre;
+				temp.inversionNueva = actividad.getInversionNueva();
 				stactividads.add(temp);
 			}
 
@@ -656,6 +662,7 @@ public class SActividad extends HttpServlet {
 			temp.fechaInicioReal = actividad.getFechaInicioReal() != null ? Utils.formatDate(actividad.getFechaInicioReal()) : null;
 			temp.fechaFinReal = actividad.getFechaFinReal() != null ? Utils.formatDate(actividad.getFechaFinReal()) : null;
 			temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
+			temp.inversionNueva = actividad.getInversionNueva();
 
 			Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(actividad.getTreePath());
 			if(proyecto!=null){
@@ -684,6 +691,7 @@ public class SActividad extends HttpServlet {
 				Integer duracion = Utils.String2Int(map.get("duracion"), null);
 				String duracionDimension = map.get("duracionDimension");
 				int actividadtipoid =Utils.getParameterInteger(map, "actividadtipoid");
+				Integer inversionNueva = Utils.String2Int(map.get("inversionNueva"), 0);
 				
 				ActividadTipo actividadTipo= new ActividadTipo();
 				actividadTipo.setId(actividadtipoid);
@@ -691,7 +699,7 @@ public class SActividad extends HttpServlet {
 
 				if (esnuevo){
 					actividad = new Actividad(actividadTipo, nombre, fechaInicio, fechaFin, porcentajeAvance
-							, usuario, new Date(), 1, objetoId, objetoTipo, duracion, duracionDimension,0);
+							, usuario, new Date(), 1, objetoId, objetoTipo, duracion, duracionDimension,inversionNueva);
 					actividad.setProyectoBase(proyectoBase);
 				}else{
 					actividad = ActividadDAO.getActividadPorId(id);
@@ -707,7 +715,7 @@ public class SActividad extends HttpServlet {
 					actividad.setDuracionDimension(duracionDimension);
 					objetoTipo = actividad.getObjetoTipo();
 					objetoId = actividad.getObjetoId();
-					
+					actividad.setInversionNueva(inversionNueva);
 					
 				}
 				result = ActividadDAO.guardarActividad(actividad, true);

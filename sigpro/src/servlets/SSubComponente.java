@@ -33,6 +33,7 @@ import com.google.gson.reflect.TypeToken;
 import dao.SubComponenteDAO;
 import dao.SubComponentePropiedadDAO;
 import dao.SubComponentePropiedadValorDAO;
+import dao.AcumulacionCostoDAO;
 import dao.ComponenteDAO;
 import dao.ObjetoDAO;
 import dao.PagoPlanificadoDAO;
@@ -94,6 +95,7 @@ public class SSubComponente extends HttpServlet {
 		String fechaInicioReal;
 		String fechaFinReal;
 		Integer congelado;
+		Integer inversionNueva;
 	}
 
 	class stdatadinamico {
@@ -192,6 +194,7 @@ public class SSubComponente extends HttpServlet {
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
 				temp.fechaInicioReal = Utils.formatDate(subcomponente.getFechaInicioReal());
 				temp.fechaFinReal = Utils.formatDate(subcomponente.getFechaFinReal());
+				temp.inversionNueva = subcomponente.getInversionNueva();
 				stsubcomponentes.add(temp);
 			}
 
@@ -251,6 +254,7 @@ public class SSubComponente extends HttpServlet {
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
 				temp.fechaInicioReal = Utils.formatDate(subcomponente.getFechaInicioReal());
 				temp.fechaFinReal = Utils.formatDate(subcomponente.getFechaFinReal());
+				temp.inversionNueva = subcomponente.getInversionNueva();
 				
 				stsubcomponentes.add(temp);
 			}
@@ -285,16 +289,16 @@ public class SSubComponente extends HttpServlet {
 					String latitud = map.get("latitud");
 					String longitud = map.get("longitud");
 					BigDecimal costo = Utils.String2BigDecimal(map.get("costo") != null && map.get("costo").equals("0") ? null : map.get("costo"), null);
-					Integer acumulacionCostoid = Utils.String2Int(map.get("acumulacionCosto"), null);
+					Integer acumulacionCostoid = Utils.String2Int(map.get("acumulacionCosto"), 3);
 					Date fechaInicio = Utils.dateFromStringCeroHoras(map.get("fechaInicio"));
 					Date fechaFin = Utils.dateFromStringCeroHoras(map.get("fechaFin"));
 					Integer duracion = Utils.String2Int(map.get("duaracion"), null);
 					String duracionDimension = map.get("duracionDimension");
+					Integer inversionNueva = Utils.String2Int(map.get("inversionNueva"), 0);
 					
 					AcumulacionCosto acumulacionCosto = null;
 					if(acumulacionCostoid != null){
-						acumulacionCosto = new AcumulacionCosto();
-						acumulacionCosto.setId(Utils.String2Int(map.get("acumulacionCosto")));
+						acumulacionCosto = AcumulacionCostoDAO.getAcumulacionCostoById(acumulacionCostoid);
 					}
 					
 					SubcomponenteTipo subcomponenteTipo= new SubcomponenteTipo();
@@ -314,7 +318,7 @@ public class SSubComponente extends HttpServlet {
 								nombre, descripcion, usuario, null, new DateTime().toDate(), null, 1, 
 								snip, programa, subPrograma, proyecto_, actividad, obra, latitud, longitud, costo, renglon, 
 								ubicacionGeografica, fechaInicio, fechaFin, duracion, duracionDimension, null, null, null, 
-								null, null, 0,null,null,null);						
+								null, null, inversionNueva,null,null,null);						
 					}
 					else{
 						subcomponente = SubComponenteDAO.getSubComponentePorId(id,usuario);
@@ -340,6 +344,7 @@ public class SSubComponente extends HttpServlet {
 						subcomponente.setDuracionDimension(duracionDimension);
 						subcomponente.setUnidadEjecutora(unidadEjecutora_);
 						subcomponente.setSubcomponenteTipo(subcomponenteTipo);
+						subcomponente.setInversionNueva(inversionNueva);
 					}
 					result = SubComponenteDAO.guardarSubComponente(subcomponente, true);
 					
@@ -491,6 +496,7 @@ public class SSubComponente extends HttpServlet {
 				temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
 				temp.fechaInicioReal = Utils.formatDate(subcomponente.getFechaInicioReal());
 				temp.fechaFinReal = Utils.formatDate(subcomponente.getFechaFinReal());
+				temp.inversionNueva = subcomponente.getInversionNueva();
 				
 				stsubcomponentes.add(temp);
 			}
@@ -571,6 +577,7 @@ public class SSubComponente extends HttpServlet {
 			temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
 			temp.fechaInicioReal = Utils.formatDate(subcomponente.getFechaInicioReal());
 			temp.fechaFinReal = Utils.formatDate(subcomponente.getFechaFinReal());
+			temp.inversionNueva = subcomponente.getInversionNueva();
 			
 			Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(subcomponente.getTreePath());
 			temp.congelado = proyecto.getCongelado() != null ? proyecto.getCongelado() : 0;

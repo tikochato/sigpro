@@ -96,6 +96,7 @@ public class SComponente extends HttpServlet {
 		Integer prestamoId;
 		String fechaInicioReal;
 		String fechaFinReal;
+		Integer inversionNueva;
 	}
 
 	class stdatadinamico {
@@ -170,7 +171,7 @@ public class SComponente extends HttpServlet {
 				temp.fechaInicio = Utils.formatDate(componente.getFechaInicio());
 				temp.fechaFin = Utils.formatDate(componente.getFechaFin());
 				temp.obra = componente.getObra();
-				
+								
 				if(componente.getUnidadEjecutora() != null){
 					temp.unidadejecutoraid = componente.getUnidadEjecutora().getId().getUnidadEjecutora();
 					temp.ejercicio = componente.getUnidadEjecutora().getId().getEjercicio();
@@ -199,6 +200,7 @@ public class SComponente extends HttpServlet {
 				temp.prestamoId = componente.getProyecto().getPrestamo().getId();
 				temp.fechaInicioReal = Utils.formatDate(componente.getFechaInicioReal());
 				temp.fechaFinReal = Utils.formatDate(componente.getFechaFinReal());
+				temp.inversionNueva = componente.getInversionNueva();
 				
 				stcomponentes.add(temp);
 			}
@@ -264,6 +266,7 @@ public class SComponente extends HttpServlet {
 				temp.prestamoId = componente.getProyecto().getPrestamo().getId();
 				temp.fechaInicioReal = Utils.formatDate(componente.getFechaInicioReal());
 				temp.fechaFinReal = Utils.formatDate(componente.getFechaFinReal());
+				temp.inversionNueva = componente.getInversionNueva();
 				
 				stcomponentes.add(temp);
 			}
@@ -304,6 +307,7 @@ public class SComponente extends HttpServlet {
 					Integer duracion = Utils.String2Int(map.get("duaracion"), null);
 					String duracionDimension = map.get("duracionDimension");
 					Integer esDeSigade = Utils.String2Boolean(map.get("esDeSigade"),0);
+					Integer inversionNueva = Utils.String2Int(map.get("inversionNueva"), 0);
 					
 					AcumulacionCosto acumulacionCosto = null;
 					if(acumulacionCostoid != null){
@@ -329,7 +333,7 @@ public class SComponente extends HttpServlet {
 								descripcion, usuario, null, new DateTime().toDate(), null, 1,
 								snip, programa, subPrograma, proyecto_, actividad,obra, latitud,longitud, costo, renglon, 
 								ubicacionGeografica, fechaInicio, fechaFin, duracion, duracionDimension, null,null,null,esDeSigade,
-								null,null,null,null,null, 0,null,null,null,null);
+								null,null,null,null,null, inversionNueva,null,null,null,null);
 					}
 					else{
 						componente = ComponenteDAO.getComponentePorId(id,usuario);
@@ -355,6 +359,7 @@ public class SComponente extends HttpServlet {
 						componente.setDuracionDimension(duracionDimension);
 						componente.setUnidadEjecutora(unidadEjecutora_);
 						componente.setComponenteTipo(componenteTipo);
+						componente.setInversionNueva(inversionNueva);
 					}
 					result = ComponenteDAO.guardarComponente(componente, true);
 					
@@ -512,6 +517,7 @@ public class SComponente extends HttpServlet {
 				esDeSigade = esDeSigade || temp.esDeSigade;
 				temp.fechaInicioReal = Utils.formatDate(componente.getFechaInicioReal());
 				temp.fechaFinReal = Utils.formatDate(componente.getFechaFinReal());
+				temp.inversionNueva = componente.getInversionNueva();
 				
 				stcomponentes.add(temp);
 			}
@@ -601,7 +607,8 @@ public class SComponente extends HttpServlet {
 			temp.latitud = componente.getLatitud();
 			temp.fechaInicioReal = Utils.formatDate(componente.getFechaInicioReal());
 			temp.fechaFinReal = Utils.formatDate(componente.getFechaFinReal());
-
+			temp.inversionNueva = componente.getInversionNueva();
+			
 			response_text=new GsonBuilder().serializeNulls().create().toJson(temp);
 	        response_text = String.join("", "\"componente\":",response_text);
 	        response_text = String.join("", "{\"success\":true,", response_text,"}");

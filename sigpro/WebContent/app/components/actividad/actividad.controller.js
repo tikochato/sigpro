@@ -359,6 +359,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 						for(x in mi.actividades){
 							mi.actividades[x].fechaInicio = moment(mi.actividades[x].fechaInicio,'DD/MM/YYYY').toDate();
 							mi.actividades[x].fechaFin = moment(mi.actividades[x].fechaFin,'DD/MM/YYYY').toDate();
+							mi.actividades[x].inversionNueva = mi.actividades[x].inversionNueva == 1;
 						}
 						mi.congelado = response.congelado;
 						mi.gridOptions.data = mi.actividades;
@@ -408,6 +409,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 					fechaFin: moment(mi.actividad.fechaFin).format('DD/MM/YYYY'),
 					duaracion: mi.actividad.duracion,
 					duracionDimension: mi.duracionDimension.sigla,
+					inversionNueva: mi.actividad.inversionNueva ? 1 : 0,
 					pagosPlanificados: JSON.stringify(mi.pagos),
 					datadinamica : JSON.stringify(mi.camposdinamicos),
 					t: new Date().getTime()
@@ -591,6 +593,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 			mi.mostraringreso=false;
 			mi.esNuevo = false;
 			mi.child_adquisiciones = null;
+			mi.sobrepaso = false;
 		}
 
 		mi.guardarEstado=function(){
@@ -869,6 +872,7 @@ app.controller('actividadController',['$rootScope','$scope','$http','$interval',
 							if(mi.actividad.fechaFinReal != null)
 								mi.actividad.fechaFinReal = moment(mi.actividad.fechaFinReal, 'DD/MM/YYYY').toDate();
 							mi.congelado = mi.actividad.congelado;
+							mi.actividad.inversionNueva = mi.actividad.inversionNueva == 1; 
 							mi.editar();
 						}
 					});

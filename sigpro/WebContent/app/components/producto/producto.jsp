@@ -341,6 +341,12 @@
 							</div>
 						</div>
 					</div>
+					
+					<div class="form-group">
+   						<input type="checkbox"  ng-model="producto.producto.inversionNueva" /> 
+   						<label class="floating-label">Es Inversion Nueva</label>   						
+					</div>
+						
 					<div class="form-group" ng-repeat="campo in producto.camposdinamicos">
 						<div ng-switch="campo.tipo">
 								<div ng-switch-when="texto" class="form-group" >

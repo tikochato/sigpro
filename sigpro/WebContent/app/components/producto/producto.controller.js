@@ -178,6 +178,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 						mi.data[x].fechaInicio = moment(mi.data[x].fechaInicio, 'DD/MM/YYYY').toDate();
 					if(mi.data[x].fechaFin != "")
 						mi.data[x].fechaFin = moment(mi.data[x].fechaFin, 'DD/MM/YYYY').toDate();
+					mi.data[x].inversionNueva = mi.data[x].inversionNueva == 1;
 				}
 			}
 		});
@@ -423,6 +424,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 				fechaFin: moment(mi.producto.fechaFin).format('DD/MM/YYYY'),
 				duaracion: mi.producto.duracion,
 				duracionDimension: mi.duracionDimension.sigla,
+				inversionNueva: mi.producto.inversionNueva ? 1 : 0,
 				datadinamica : JSON.stringify(mi.camposdinamicos),
 				esnuevo : mi.esNuevo,
 				pagosPlanificados: JSON.stringify(mi.pagos),
@@ -479,6 +481,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 		mi.child_metas = null;
 		mi.child_adquisiciones = null;
 		mi.child_riesgos = null;
+		mi.sobrepaso = false;
 	};
 	
 	mi.editar = function() {
@@ -841,6 +844,7 @@ function controlProducto($scope, $routeParams, $route, $window, $location,
 								mi.producto.fechaInicioReal = moment(mi.producto.fechaInicioReal, 'DD/MM/YYYY').toDate();
 							if(mi.producto.fechaFinReal != "")
 								mi.producto.fechaFinReal = moment(mi.producto.fechaFinReal, 'DD/MM/YYYY').toDate();
+							mi.producto.inversionNueva = mi.producto.inversionNueva == 1;
 							mi.editar();
 						}
 					});

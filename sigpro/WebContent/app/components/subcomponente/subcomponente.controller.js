@@ -202,6 +202,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 								mi.subcomponentes[x].fechaInicio = moment(mi.subcomponentes[x].fechaInicio, 'DD/MM/YYYY').toDate();
 							if(mi.subcomponentes[x].fechaFin != "")
 								mi.subcomponentes[x].fechaFin = moment(mi.subcomponentes[x].fechaFin, 'DD/MM/YYYY').toDate();
+							mi.subcomponentes[x].inversionNueva = mi.subcomponentes[x].inversionNueva == 1;
 						}
 
 						mi.gridOptions.data = mi.subcomponentes;
@@ -246,6 +247,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 					fechaFin: moment(mi.subcomponente.fechaFin).format('DD/MM/YYYY'),
 					duaracion: mi.subcomponente.duracion,
 					duracionDimension: mi.duracionDimension.sigla,
+					inversionNueva: mi.subcomponente.inversionNueva ? 1 : 0,
 					pagosPlanificados: JSON.stringify(mi.pagos),
 					datadinamica : JSON.stringify(mi.camposdinamicos),
 				}).success(function(response){
@@ -395,6 +397,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 			mi.child_riesgos = null;
 			mi.mostraringreso=false;
 			mi.esnuevo=false;
+			mi.sobrepaso = false;
 		}
 
 		mi.guardarEstado=function(){
@@ -721,6 +724,7 @@ app.controller('subcomponenteController',['$scope','$rootScope','$http','$interv
 								mi.subcomponente.fechaInicioReal = moment(mi.subcomponente.fechaInicioReal, 'DD/MM/YYYY').toDate();
 							if(mi.subcomponente.fechaFinReal != "")
 								mi.subcomponente.fechaFinReal = moment(mi.subcomponente.fechaFinReal, 'DD/MM/YYYY').toDate();
+							mi.subcomponente.inversionNueva = mi.subcomponente.inversionNueva == 1;
 							mi.editar();
 						}
 					});

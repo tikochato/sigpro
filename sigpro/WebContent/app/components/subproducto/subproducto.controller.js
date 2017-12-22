@@ -172,6 +172,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 						mi.data[x].fechaInicio = moment(mi.data[x].fechaInicio, 'DD/MM/YYYY').toDate();
 					if(mi.data[x].fechaFin != "")
 						mi.data[x].fechaFin = moment(mi.data[x].fechaFin, 'DD/MM/YYYY').toDate();
+					mi.data[x].inversionNueva = mi.data[x].inversionNueva == 1;
 				}
 			}
 		});
@@ -399,6 +400,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 				duracionDimension: mi.duracionDimension.sigla,
 				latitud : mi.subproducto.latitud,
 				esnuevo : mi.esNuevo,
+				inversionNueva: mi.subproducto.inversionNueva ? 1 : 0,
 				pagosPlanificados: JSON.stringify(mi.pagos),
 				t: (new Date()).getTime()
 			};
@@ -448,6 +450,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 		mi.esNuevo=false;
 		mi.child_adquisiciones = null;
 		mi.child_riesgos = null;
+		mi.sobrepaso = false;
 	};
 	
 	mi.editar = function() {
@@ -792,6 +795,7 @@ function controlSubproducto($rootScope,$scope, $routeParams, $route, $window, $l
 								mi.subproducto.fechaInicioReal = moment(mi.subproducto.fechaInicioReal, 'DD/MM/YYYY').toDate();
 							if(mi.subproducto.fechaFinReal != "")
 								mi.subproducto.fechaFinReal = moment(mi.subproducto.fechaFinReal, 'DD/MM/YYYY').toDate();
+							mi.subproducto.inversionNueva = mi.subproducto.inversionNueva == 1;
 							mi.editar();
 						}
 					});

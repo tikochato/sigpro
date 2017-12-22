@@ -321,6 +321,10 @@
 							<label class="floating-label">Coordenadas</label>
 						</div>
 						
+						<div class="form-group">
+    						<input type="checkbox"  ng-model="actividadc.actividad.inversionNueva" /> 
+    						<label class="floating-label">Es Inversion Nueva</label>   						
+						</div>
 						
 						<div ng-repeat="campo in actividadc.camposdinamicos">
 							<div ng-switch="campo.tipo">

@@ -107,6 +107,7 @@ public class SSubproducto extends HttpServlet {
 		String fechaFinReal;
 		String fechaElegibilidad;
 		String fechaCierre;
+		Integer inversionNueva;
 	}
 	
 	
@@ -279,6 +280,7 @@ public class SSubproducto extends HttpServlet {
 			Date fechaFin = Utils.dateFromStringCeroHoras(map.get("fechaFin"));
 			Integer duracion = Utils.String2Int(map.get("duaracion"), null);
 			String duracionDimension = map.get("duracionDimension");
+			Integer inversionNueva = Utils.String2Int(map.get("inversionNueva"), 0);
 			
 			AcumulacionCosto acumulacionCosto = null;
 			if(acumulacionCostoid != 0){
@@ -303,7 +305,7 @@ public class SSubproducto extends HttpServlet {
 				subproducto = new Subproducto(acumulacionCosto, producto, subproductoTipo, unidadEjecutora, nombre, descripcion, 
 						 usuario, null, new DateTime().toDate(), null, 1, snip, programa, subprograma, proyecto_, actividad, 
 						 obra, latitud, longitud,costo,renglon, ubicacionGeografica, fechaInicio, fechaFin, duracion, 
-						 duracionDimension, null,null, null,null,null,0, null,null);
+						 duracionDimension, null,null, null,null,null,inversionNueva, null,null);
 				
 			}else{
 				subproducto = SubproductoDAO.getSubproductoPorId(id);
@@ -330,6 +332,7 @@ public class SSubproducto extends HttpServlet {
 				subproducto.setFechaFin(fechaFin);
 				subproducto.setDuracion(duracion);
 				subproducto.setDuracionDimension(duracionDimension);
+				subproducto.setInversionNueva(inversionNueva);
 			}
 			ret = SubproductoDAO.guardarSubproducto(subproducto, true);
 			
@@ -538,6 +541,7 @@ public class SSubproducto extends HttpServlet {
 						
 			temp.fechaElegibilidad = fechaElegibilidad;
 			temp.fechaCierre = fechaCierre;
+			temp.inversionNueva = subproducto.getInversionNueva();
 			
 			listaSubProducto.add(temp);
 		}
@@ -647,6 +651,7 @@ public class SSubproducto extends HttpServlet {
 			temp.congelado = proyecto.getCongelado() != null ? proyecto.getCongelado() : 0;
 			temp.fechaElegibilidad = Utils.formatDate(proyecto.getFechaElegibilidad());
 			temp.fechaCierre = Utils.formatDate(proyecto.getFechaCierre());
+			temp.inversionNueva = subproducto.getInversionNueva();
 			
 			resultadoJson = new GsonBuilder().serializeNulls().create().toJson(temp);
 			resultadoJson = "{\"success\":true," +" \"subproducto\": " + resultadoJson + "}";	
@@ -722,6 +727,7 @@ public class SSubproducto extends HttpServlet {
 					temp.fechaFin = Utils.formatDate(subproducto.getFechaFin());
 					temp.duracion = subproducto.getDuracion();
 					temp.duracionDimension = subproducto.getDuracionDimension();
+					temp.inversionNueva = subproducto.getInversionNueva();
 					resultadoJson = Utils.getJSonString("subproducto", temp);
 					resultadoJson = "{\"success\":true," + resultadoJson + "}";
 				}else{

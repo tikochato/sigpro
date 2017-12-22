@@ -112,7 +112,7 @@
 				<span class="glyphicon glyphicon-time"></span></label>
 				<label class="btn btn-default" ng-click="subcomponentec.verHistoria()" uib-tooltip="Ver Historia">
 				<span class="glyphicon glyphicon glyphicon-book" aria-hidden="true"></span></label>
-				<label class="btn btn-default" ng-click="subcomponentec.subcomponente.acumulacionCostoId == 2 ? subcomponentec..agregarPagos() : ''"
+				<label class="btn btn-default" ng-click="subcomponentec.subcomponente.acumulacionCostoId == 2 ? subcomponentec.agregarPagos() : ''"
 					 uib-tooltip="Pagos planificados" tooltip-placement="left" ng-disabled = "subcomponentec.subcomponente.acumulacionCostoId != 2">
 					<span class="glyphicon glyphicon-piggy-bank"></span></label>
 		      </div>
@@ -345,9 +345,14 @@
 							            </span>
 							  <label class="floating-label">Fecha de Fin Real</label>
 							</div>
+						</div>						
+						</div>
+												
+						<div class="form-group">
+    						<input type="checkbox"  ng-model="subcomponentec.subcomponente.inversionNueva" /> 
+    						<label class="floating-label">Es Inversion Nueva</label>   						
 						</div>
 						
-						</div>
 						<div ng-repeat="campo in subcomponentec.camposdinamicos">
 							<div ng-switch="campo.tipo">
 								<div ng-switch-when="texto" class="form-group" >

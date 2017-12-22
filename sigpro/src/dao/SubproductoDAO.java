@@ -72,6 +72,7 @@ public class SubproductoDAO {
 		public Integer congelado;
 		public String fechaElegibilidad;
 		public String fechaCierre;
+		public Integer inversionNueva;
 	}
 
 	public static List<Subproducto> getSubproductos(String usuario) {
@@ -344,6 +345,7 @@ public class SubproductoDAO {
 			estructuraPojo.congelado = congelado;
 			estructuraPojo.fechaElegibilidad = fechaElegibilidad;
 			estructuraPojo.fechaCierre = fechaCierre;
+			estructuraPojo.inversionNueva = pojo.getInversionNueva();
 			
 			listaEstructuraPojos.add(estructuraPojo);
 		}

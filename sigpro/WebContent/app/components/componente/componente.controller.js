@@ -205,6 +205,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 								mi.componentes[x].fechaInicio = moment(mi.componentes[x].fechaInicio, 'DD/MM/YYYY').toDate();
 							if(mi.componentes[x].fechaFin != "")
 								mi.componentes[x].fechaFin = moment(mi.componentes[x].fechaFin, 'DD/MM/YYYY').toDate();
+							mi.componentes[x].inversionNueva = mi.componentes[x].inversionNueva == 1;
 						}
 
 						mi.gridOptions.data = mi.componentes;
@@ -251,6 +252,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 					duaracion: mi.componente.duracion,
 					duracionDimension: mi.duracionDimension.sigla,
 					esDeSigade: 0,
+					inversionNueva: mi.componente.inversionNueva ? 1 : 0,
 					pagosPlanificados: JSON.stringify(mi.pagos),
 					datadinamica : JSON.stringify(mi.camposdinamicos),
 				}).success(function(response){
@@ -729,6 +731,7 @@ app.controller('componenteController',['$scope','$rootScope','$http','$interval'
 				  $http.post('/SComponente', { accion : 'getComponentePorId', id: $routeParams.id, t: (new Date()).getTime() }).then(function(response) {
 						if (response.data.success) {
 							mi.componente = response.data.componente;
+							mi.componente.inversionNueva = mi.componente.inversionNueva == 1;
 							if(mi.componente.fechaInicio != "")
 								mi.componente.fechaInicio = moment(mi.componente.fechaInicio, 'DD/MM/YYYY').toDate();
 							if(mi.componente.fechaFin != "")
