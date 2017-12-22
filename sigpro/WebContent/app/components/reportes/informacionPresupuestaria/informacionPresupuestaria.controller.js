@@ -339,7 +339,7 @@ app.controller('informacionPresupuestariaController', ['$scope', '$rootScope', '
 						 
 						 fila.push(tot);
 						 var tot = {"anio": fila};
-						 tot.asignado = mi.data[x].asignado;
+						 tot.asignado = mi.data[x].asignado!=null ? mi.data[x].asignado : 0;
 						 mi.totales.push(tot);
 					}
 					 
