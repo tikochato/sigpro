@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -80,7 +81,10 @@ public class SInformacionPresupuestaria extends HttpServlet {
 				Integer anioInicial = Utils.String2Int(map.get("anioInicial"),0);
 				Integer anioFinal = Utils.String2Int(map.get("anioFinal"),0);
 				String lineaBase = map.get("lineaBase");
-				List<ObjetoCosto> lstPrestamo = ObjetoDAO.getEstructuraConCosto(idPrestamo, anioInicial, anioFinal, true, true, null, lineaBase, usuario);
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(new Date());
+				Integer mes = cal.get(Calendar.MONTH) + 1;
+				List<ObjetoCosto> lstPrestamo = ObjetoDAO.getEstructuraConCosto(idPrestamo, anioInicial, anioFinal, true, true, mes, lineaBase, usuario);
 				
 				if (null != lstPrestamo && !lstPrestamo.isEmpty()){
 					response_text=new GsonBuilder().serializeNulls().create().toJson(lstPrestamo);
