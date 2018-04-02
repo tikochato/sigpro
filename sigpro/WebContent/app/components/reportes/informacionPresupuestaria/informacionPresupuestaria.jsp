@@ -331,7 +331,7 @@
 								<tr>
 			          				<th nowrap colspan={{controller.colspan}} style="{{controller.estiloCelda}} text-align: center;" class="label-form">Total Anual</th>
 				          			<th rowspan="2" style="{{controller.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Total</th>
-				          			<th rowspan="2" style="{{controller.estiloCelda}} text-align: center; vertical-align: top;" class="label-form">Asignado</th>
+				          			<th rowspan="2" style="{{(controller.estiloCelda)}} text-align: center; vertical-align: top;" class="label-form">Asignado</th>
 			          			</tr>
 			          			<tr>
 		          				<th ng-repeat="a in controller.aniosTotal" style="{{controller.estiloCelda}} {{controller.estiloAlineacion}};" class="label-form">{{a.anio}}</th>
@@ -350,8 +350,8 @@
 											<span ng-show="controller.grupoMostrado.real" class="colorReal">{{total.valor.real | formatoMillones : controller.enMillones}}</span>
 										</div>
 									</td>
-									<td nowrap style="min-width:70px; min-height: 35px; height: 35px;">
-							      			<div  class="nombreFormat">
+									<td nowrap style="{{(controller.estiloCelda)}}  text-align: center; min-height: 35px; height: 35px;">
+							      		<div class="nombreFormat">
 											<span  class="colorPlanificado">{{ totales.asignado | formatoMillones : controller.enMillones}}</span>
 						      			</div>
 									<td>
