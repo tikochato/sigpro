@@ -6,6 +6,11 @@ function activarScroll(id){
 	scrollPosicion = document.getElementById("divTablaDatos").scrollLeft;
 }
 
+function activarScrollAdqui(id){
+	divActivo = id;
+	scrollPosicion = document.getElementById("divTablaDatosAdqui").scrollLeft;
+}
+
 function scrollEspejo(elemento) {
 	 if (elemento.id == divActivo){
           if(elemento.id == 'divTablaNombres'){
@@ -23,6 +28,9 @@ function scrollEspejo(elemento) {
         	}
         	if(document.getElementById("divTotales")){
         		document.getElementById("divTotales").scrollTop = elemento.scrollTop ;
+        	}
+        	if(document.getElementById("divTablaDatosTotAdqui")){
+        		document.getElementById("divTablaDatosTotAdqui").scrollLeft = elemento.scrollLeft;
         	}
           }else if(elemento.id == 'divTablaDatosTot'){
         	  if(Math.abs(scrollPosicion-elemento.scrollLeft)<10){//bloquear scroll horizontal

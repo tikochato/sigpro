@@ -16,6 +16,10 @@ app.controller('planAdquisicionesController',['$scope', '$rootScope', '$http', '
 	mi.ddlOpcionesTipos = [];
 	mi.ddlcategoriaAdquisiciones = [];
 	i18nService.setCurrentLang('es');
+	mi.totCantidad = 0;
+	mi.totCosto = 0;
+	mi.totGeneral = 0;
+	mi.totMontoContrato = 0;
 	
 	mi.calcularTamanosPantalla = function(){
 		mi.tamanoPantalla = Math.floor(document.getElementById("reporte").offsetWidth);
@@ -268,6 +272,13 @@ app.controller('planAdquisicionesController',['$scope', '$rootScope', '$http', '
 	
 	mi.crearArbol = function(datos){
 		mi.data = datos;
+		
+		for(var i=0; i<mi.data.length; i++){
+			mi.totCantidad += mi.data[i].cantidad;
+			mi.totCosto += mi.data[i].costo;
+			mi.totGeneral += mi.data[i].total;
+			mi.totMontoContrato += mi.data[i].montoContrato;
+		}
 		
 		mi.rowCollectionPrestamo = [];
 		mi.rowCollectionPrestamo = mi.data;

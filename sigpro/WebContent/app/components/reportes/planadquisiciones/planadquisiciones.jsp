@@ -48,16 +48,16 @@
 			float: left;			
 			overflow-y:hidden;
 			overflow-x:hidden;
-			height: 100%;
-			height: 100%;
+			height: 500px;
+			height: 500px;
 		}
 		
 		.tablaDatos {
 			display: flex;
 		    flex-direction: column;
 		    align-items: stretch;
-		    min-height: 100%;
-		    max-height: 100%;  
+		    min-height: 500px;
+		    max-height: 500px;  
 		}
 		
 		.colorPlanificadoFondo{
@@ -109,6 +109,20 @@
 		    display: inline-block;
 		    text-align: center;
 		    font-size: 13px; 
+		}
+		
+		.cuerpoTablaNombresTot{
+			overflow-y: hidden;
+		    overflow-x: hidden;
+		    font-size: 13px;
+		}
+		
+		.tablaDatos {
+			display: flex;
+		    flex-direction: column;
+		    align-items: stretch;
+		    min-height: 500px;
+		    max-height: 500px;  
 		}
 	</style>
 	
@@ -252,7 +266,7 @@
 				    								{{row.numeroContrato}}
 					    						</td>
 					    						<td class="divisionColumna" style="min-width: 140px; max-width: 140px; text-align: right">
-				    								{{row.montoContrato}}
+				    								{{row.montoContrato | formatoMillones : ctrladqui.enMillones}}
 					    						</td>
 					    						<td class="colorPlanificado divisionColumna" style="text-align: left; min-width: 90px; max-width: 90px;">
 					    							{{row.planificadoDocs}}
@@ -291,6 +305,61 @@
 		    				</div>	    			
 			    		</div>
 		    		</div>
+		    		<div class="row" ng-hide="!ctrladqui.mostrarTablas">
+						<table class="table table-striped">
+							<tbody id="divTablaDatosTotAdqui" class="cuerpoTablaDatos" onmouseover="activarScroll(this.id)" onscroll="scrollEspejo(this)" style="max-width: {{ctrladqui.tamanoPantalla}}px; overflow: hidden;">
+								<tr style="height: 35px; max-height: 35px; min-height: 35px">
+									<td style="font-weight: bold; width: 300px; max-width: 300px; min-width: 300px;" align="right">
+										Totales: 
+									</td>
+									<td style="font-weight: bold; height: 35px; min-width: 200px; max-width: 200px">
+									</td>
+									<td style="font-weight: bold; height: 35px; min-width: 150px; max-width: 150px">
+									</td>
+									<td style="font-weight: bold; height: 35px; min-width: 200px; max-width: 200px">
+									</td>
+									<td style="font-weight: bold; height: 35px; text-align: right; min-width: 75px; max-width: 75px">
+										{{ctrladqui.totCantidad}}
+									</td>
+									<td style="font-weight: bold; height: 35px; text-align: right; min-width: 140px; max-width: 140px">
+										{{ctrladqui.totCosto | formatoMillones : ctrladqui.enMillones}}
+									</td>
+									<td style="font-weight: bold; height: 35px; text-align: right; min-width: 140px; max-width: 140px">
+										{{ctrladqui.totGeneral | formatoMillones : ctrladqui.enMillones}}
+									</td>
+									<td style="height: 35px; min-width: 140px; max-width: 140px;">
+									</td>
+									<td style="height: 35px; min-width: 140px; max-width: 140px;">
+									</td>
+									<td style="height: 35px; min-width: 140px; max-width: 140px;">
+									</td>
+									<td style="font-weight: bold; height: 35px; text-align: right; min-width: 140px; max-width: 140px;">
+										{{ctrladqui.totMontoContrato | formatoMillones : ctrladqui.enMillones}}
+									</td>
+									<td style="height: 35px; min-width: 90px; max-width: 90px;">
+									</td>
+									<td style="height: 35px; min-width: 90px; max-width: 90px;">
+									</td>
+									<td style="height: 35px; min-width: 90px; max-width: 90px;">
+									</td>
+									<td style="height: 35px; min-width: 90px; max-width: 90px;">
+									</td>
+									<td style="height: 35px; min-width: 90px; max-width: 90px;">
+									</td>
+									<td style="height: 35px; min-width: 90px; max-width: 90px;">
+									</td>
+									<td style="height: 35px; min-width: 90px; max-width: 90px;">
+									</td>
+									<td style="height: 35px; min-width: 90px; max-width: 90px;">
+									</td>
+									<td style="height: 35px; min-width: 90px; max-width: 90px;">
+									</td>
+									<td style="height: 35px; min-width: 90px; max-width: 90px;">
+									</td>
+								</tr>
+							</tbody>									
+						</table>
+					</div>
 		    		<div style="text-align: center;">
 			   			<br>
 			    		<ol class="leyendaTexto"  ng-hide="!ctrladqui.mostrarTablas">
