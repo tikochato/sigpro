@@ -5,7 +5,7 @@
 <hibernate-configuration>
     <session-factory>
     	<property name="hibernate.connection.datasource">java:comp/env/jdbc/sipro</property>
-        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+    	<property name="hibernate.bytecode.use_reflection_optimizer">false</property>
         <property name="hibernate.search.autoregister_listeners">true</property>
         <property name="hibernate.current_session_context_class">thread</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLInnoDBDialect</property>
@@ -39,7 +39,9 @@
         <mapping class="pojo.Desembolso" />
         <mapping class="pojo.DesembolsoTipo" />
         <mapping class="pojo.Documento" />
+        <mapping class="pojo.EjecucionEstado" />
         <mapping class="pojo.Entidad" />
+        <mapping class="pojo.EstadoInforme" />
         <mapping class="pojo.EstadoTabla" />
         <mapping class="pojo.Etiqueta" />
         <mapping class="pojo.Formulario" />
@@ -52,6 +54,7 @@
         <mapping class="pojo.HitoResultado" />
         <mapping class="pojo.HitoTipo" />
         <mapping class="pojo.InteresTipo" />
+        <mapping class="pojo.InformePresupuesto" />
         <mapping class="pojo.LineaBase" />
         <mapping class="pojo.Meta" />
         <mapping class="pojo.MetaTipo" />
@@ -65,17 +68,13 @@
         <mapping class="pojo.ObjetoRecurso" />
         <mapping class="pojo.ObjetoRiesgo" />
         <mapping class="pojo.ObjetoRiesgoId" />
-        <mapping class="pojo.PagoPlanificado" />
-        <mapping class="pojo.PepDetalle" />
-        <mapping class="pojo.PlanAdquisicionPago" />
         <mapping class="pojo.PlanAdquisicion" />
+        <mapping class="pojo.PepDetalle" />
         <mapping class="pojo.Permiso" />
         <mapping class="pojo.Prestamo" />
-        <mapping class="pojo.PrestamoUsuario" />
-        <mapping class="pojo.PrestamoUsuarioId" />
         <mapping class="pojo.PrestamoTipo" />
+        <mapping class="pojo.PrestamoUsuario" />
         <mapping class="pojo.PrestamoTipoPrestamo" />
-        <mapping class="pojo.PrestamoTipoPrestamoId" />
         <mapping class="pojo.ProdtipoPropiedad" />
         <mapping class="pojo.Producto" />
         <mapping class="pojo.ProductoPropiedad" />
@@ -91,8 +90,8 @@
         <mapping class="pojo.ProyectoImpacto" />
         <mapping class="pojo.ProyectoPropiedadValor" />
         <mapping class="pojo.ProyectoPropiedad" />
-        <mapping class="pojo.ProyectoRolColaborador" />
         <mapping class="pojo.ProgramaProyecto" />
+        <mapping class="pojo.ProyectoRolColaborador" />
         <mapping class="pojo.ProyectoTipo" />
         <mapping class="pojo.PtipoPropiedad" />
         <mapping class="pojo.RectipoPropiedad" />
@@ -115,10 +114,8 @@
         <mapping class="pojo.Subcomponente" />
         <mapping class="pojo.SubcomponentePropiedad" />
         <mapping class="pojo.SubcomponentePropiedadValor" />
-        <mapping class="pojo.SubcomponentePropiedadValorId" />
-        <mapping class="pojo.SubcomponenteTipo" />
         <mapping class="pojo.SubcomponenteUsuario" />
-        <mapping class="pojo.SubcomponenteUsuarioId" />
+        <mapping class="pojo.SubcomponenteTipo" />
         <mapping class="pojo.SubprodtipoPropiedad" />
         <mapping class="pojo.SubprodtipoPropiedadId" />
         <mapping class="pojo.Subproducto" />
@@ -136,7 +133,7 @@
         <mapping class="pojo.UsuarioLog" />
         <mapping class="pojo.UsuarioPermiso" />
         <mapping class="pojo.CategoriaAdquisicion" />
-        <mapping class="pojo.EjecucionEstado" />
+        <mapping class="pojo.PlanAdquisicionPago" />
         <mapping class="pojoSigade.DtmAvanceFisfinanDetDti" />
         <mapping class="pojoSigade.DtmAvanceFisfinanDti" />
     </session-factory>

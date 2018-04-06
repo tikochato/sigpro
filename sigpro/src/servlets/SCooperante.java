@@ -24,6 +24,7 @@ import com.google.gson.reflect.TypeToken;
 
 import dao.CooperanteDAO;
 import pojo.Cooperante;
+import pojo.CooperanteId;
 import utilities.Utils;
 
 @WebServlet("/SCooperante")
@@ -81,12 +82,12 @@ public class SCooperante extends HttpServlet {
 			List<stcooperante> stcooperantes=new ArrayList<stcooperante>();
 			for(Cooperante cooperante:cooperantes){
 				stcooperante temp =new stcooperante();
-				temp.codigo = cooperante.getCodigo();
+				temp.codigo = cooperante.getId().getCodigo();
 				temp.descripcion = cooperante.getDescripcion();
 				temp.estado = cooperante.getEstado();
 				temp.fechaActualizacion = Utils.formatDateHour(cooperante.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDateHour(cooperante.getFechaCreacion());
-				temp.id = cooperante.getId();
+				//temp.id = cooperante.getId();
 				temp.nombre = cooperante.getNombre();
 				temp.siglas = cooperante.getSiglas();
 				temp.usuarioActualizo = cooperante.getUsuarioActualizo();
@@ -103,12 +104,12 @@ public class SCooperante extends HttpServlet {
 			List<stcooperante> stcooperantes=new ArrayList<stcooperante>();
 			for(Cooperante cooperante:cooperantes){
 				stcooperante temp =new stcooperante();
-				temp.codigo = cooperante.getCodigo();
+				temp.codigo = cooperante.getId().getCodigo();
 				temp.descripcion = cooperante.getDescripcion();
 				temp.estado = cooperante.getEstado();
 				temp.fechaActualizacion = Utils.formatDateHour(cooperante.getFechaActualizacion());
 				temp.fechaCreacion = Utils.formatDateHour(cooperante.getFechaCreacion());
-				temp.id = cooperante.getId();
+				//temp.id = cooperante.getId();
 				temp.nombre = cooperante.getNombre();
 				temp.usuarioActualizo = cooperante.getUsuarioActualizo();
 				temp.usuarioCreo = cooperante.getUsuarioCreo();
@@ -130,15 +131,14 @@ public class SCooperante extends HttpServlet {
 				String descripcion = map.get("descripcion");
 				Cooperante cooperante;
 				Integer ejercicio = Utils.String2Int(map.get("ejercicio"));
+				CooperanteId cooperanteId = new CooperanteId(codigo, ejercicio);
+				
 				if(esnuevo){
-					
-					
-					cooperante = new Cooperante(0,codigo, siglas, nombre, descripcion, 
-							usuario, null, new DateTime().toDate(), null, 1,ejercicio, null);
+					cooperante = new Cooperante(cooperanteId, siglas, nombre, descripcion, usuario, null, new DateTime().toDate(), null, 1, null);
 				}
 				else{
 					cooperante = CooperanteDAO.getCooperantePorId(id);
-					cooperante.setCodigo(codigo);
+					cooperante.setId(cooperanteId);
 					cooperante.setNombre(nombre);
 					cooperante.setSiglas(siglas);
 					cooperante.setDescripcion(descripcion);

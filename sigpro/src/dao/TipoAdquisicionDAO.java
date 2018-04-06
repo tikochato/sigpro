@@ -98,26 +98,26 @@ public class TipoAdquisicionDAO {
 		switch(objetoTipo){
 			case 1:
 				Componente componente = ComponenteDAO.getComponente(objetoId);
-				cooperanteCodigo = componente.getProyecto().getPrestamo().getCooperante().getCodigo();
+				cooperanteCodigo = componente.getProyecto().getPrestamo().getCooperante().getId().getCodigo();
 				break;
 			case 2:
 				Subcomponente subcomponente = SubComponenteDAO.getSubComponente(objetoId);
-				cooperanteCodigo = subcomponente.getComponente().getProyecto().getPrestamo().getCooperante().getCodigo();
+				cooperanteCodigo = subcomponente.getComponente().getProyecto().getPrestamo().getCooperante().getId().getCodigo();
 				break;
 			case 3: 
 				Producto producto = ProductoDAO.getProductoPorId(objetoId);
 				if(producto.getComponente()!=null){
-					cooperanteCodigo = producto.getComponente().getProyecto().getPrestamo().getCooperante().getCodigo();
+					cooperanteCodigo = producto.getComponente().getProyecto().getPrestamo().getCooperante().getId().getCodigo();
 				}else if(producto.getSubcomponente()!=null){
-					cooperanteCodigo = producto.getSubcomponente().getComponente().getProyecto().getPrestamo().getCooperante().getCodigo();
+					cooperanteCodigo = producto.getSubcomponente().getComponente().getProyecto().getPrestamo().getCooperante().getId().getCodigo();
 				} 
 				break;
 			case 4: 
 				Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId);
 				if(subproducto.getProducto().getComponente()!=null){
-					cooperanteCodigo = subproducto.getProducto().getComponente().getProyecto().getPrestamo().getCooperante().getCodigo();
+					cooperanteCodigo = subproducto.getProducto().getComponente().getProyecto().getPrestamo().getCooperante().getId().getCodigo();
 				}else if(subproducto.getProducto().getSubcomponente()!=null){
-					cooperanteCodigo = subproducto.getProducto().getSubcomponente().getComponente().getProyecto().getPrestamo().getCooperante().getCodigo();
+					cooperanteCodigo = subproducto.getProducto().getSubcomponente().getComponente().getProyecto().getPrestamo().getCooperante().getId().getCodigo();
 				} 
 				break;
 			case 5: 
@@ -125,7 +125,7 @@ public class TipoAdquisicionDAO {
 				if(actividad.getTreePath()!=null){
 					Integer proyectoId = Integer.parseInt(actividad.getTreePath().substring(0,8))-10000000;
 					if(proyectoId!=null)
-						cooperanteCodigo = ProyectoDAO.getProyecto(proyectoId).getPrestamo().getCooperante().getCodigo();
+						cooperanteCodigo = ProyectoDAO.getProyecto(proyectoId).getPrestamo().getCooperante().getId().getCodigo();
 				}
 				break;
 		}

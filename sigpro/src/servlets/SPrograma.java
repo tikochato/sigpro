@@ -141,7 +141,7 @@ public class SPrograma extends HttpServlet {
 		BigDecimal desembolsoAFechaUeUsd;
 		BigDecimal montoPorDesembolsarUeUsd;
 		String nombreEntidadEjecutora;
-		int cooperanteid;
+		int cooperantecodigo;
 		String cooperantenombre;
 		String usuarioCreo;
 		String usuarioActualizo;
@@ -477,7 +477,7 @@ public class SPrograma extends HttpServlet {
 			ret.montoAsignadoUeQtz = prestamo.getMontoAsignadoUeQtz();
 			ret.desembolsoAFechaUeUsd = prestamo.getDesembolsoAFechaUeUsd();
 			ret.montoPorDesembolsarUeUsd = prestamo.getMontoPorDesembolsarUeUsd();
-			ret.cooperanteid = prestamo.getCooperante().getId();
+			ret.cooperantecodigo = prestamo.getCooperante().getId().getCodigo();
 			ret.cooperantenombre =  prestamo.getCooperante().getSiglas() + " - " + prestamo.getCooperante().getNombre();
 			ret.unidadejecutoraid = prestamo.getUnidadEjecutora() !=null ? prestamo.getUnidadEjecutora().getId().getUnidadEjecutora() : null;
 			ret.unidadejecutora = prestamo.getUnidadEjecutora() !=null ? prestamo.getUnidadEjecutora().getNombre() : null;

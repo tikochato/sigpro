@@ -1,5 +1,5 @@
 package pojo;
-// Generated Dec 20, 2017 3:43:57 PM by Hibernate Tools 5.2.3.Final
+// Generated 5/04/2018 04:15:52 PM by Hibernate Tools 5.2.3.Final
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -259,7 +259,8 @@ public class Prestamo implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cooperanteid", nullable = false)
+	@JoinColumns({ @JoinColumn(name = "cooperantecodigo", referencedColumnName = "codigo", nullable = false),
+			@JoinColumn(name = "cooperanteejercicio", referencedColumnName = "ejercicio", nullable = false) })
 	public Cooperante getCooperante() {
 		return this.cooperante;
 	}

@@ -1,13 +1,15 @@
 package pojo;
-// Generated Dec 20, 2017 3:43:57 PM by Hibernate Tools 5.2.3.Final
+// Generated 5/04/2018 04:15:52 PM by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -23,9 +25,8 @@ public class Cooperante implements java.io.Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6809365803201785636L;
-	private int id;
-	private int codigo;
+	private static final long serialVersionUID = -7197861432384652698L;
+	private CooperanteId id;
 	private String siglas;
 	private String nombre;
 	private String descripcion;
@@ -34,26 +35,22 @@ public class Cooperante implements java.io.Serializable {
 	private Date fechaCreacion;
 	private Date fechaActualizacion;
 	private int estado;
-	private Integer ejercicio;
 	private Set<Prestamo> prestamos = new HashSet<Prestamo>(0);
 
 	public Cooperante() {
 	}
 
-	public Cooperante(int id, int codigo, String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
+	public Cooperante(CooperanteId id, String nombre, String usuarioCreo, Date fechaCreacion, int estado) {
 		this.id = id;
-		this.codigo = codigo;
 		this.nombre = nombre;
 		this.usuarioCreo = usuarioCreo;
 		this.fechaCreacion = fechaCreacion;
 		this.estado = estado;
 	}
 
-	public Cooperante(int id, int codigo, String siglas, String nombre, String descripcion, String usuarioCreo,
-			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, Integer ejercicio,
-			Set<Prestamo> prestamos) {
+	public Cooperante(CooperanteId id, String siglas, String nombre, String descripcion, String usuarioCreo,
+			String usuarioActualizo, Date fechaCreacion, Date fechaActualizacion, int estado, Set<Prestamo> prestamos) {
 		this.id = id;
-		this.codigo = codigo;
 		this.siglas = siglas;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -62,28 +59,19 @@ public class Cooperante implements java.io.Serializable {
 		this.fechaCreacion = fechaCreacion;
 		this.fechaActualizacion = fechaActualizacion;
 		this.estado = estado;
-		this.ejercicio = ejercicio;
 		this.prestamos = prestamos;
 	}
 
-	@Id
+	@EmbeddedId
 
-	@Column(name = "id", unique = true, nullable = false)
-	public int getId() {
+	@AttributeOverrides({ @AttributeOverride(name = "codigo", column = @Column(name = "codigo", nullable = false)),
+			@AttributeOverride(name = "ejercicio", column = @Column(name = "ejercicio", nullable = false)) })
+	public CooperanteId getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(CooperanteId id) {
 		this.id = id;
-	}
-
-	@Column(name = "codigo", nullable = false)
-	public int getCodigo() {
-		return this.codigo;
-	}
-
-	public void setCodigo(int codigo) {
-		this.codigo = codigo;
 	}
 
 	@Column(name = "siglas", length = 45)
@@ -158,15 +146,6 @@ public class Cooperante implements java.io.Serializable {
 
 	public void setEstado(int estado) {
 		this.estado = estado;
-	}
-
-	@Column(name = "ejercicio")
-	public Integer getEjercicio() {
-		return this.ejercicio;
-	}
-
-	public void setEjercicio(Integer ejercicio) {
-		this.ejercicio = ejercicio;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cooperante")

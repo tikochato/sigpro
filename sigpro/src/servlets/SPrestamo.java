@@ -48,6 +48,7 @@ import pojo.Componente;
 import pojo.ComponenteSigade;
 import pojo.ComponenteTipo;
 import pojo.Cooperante;
+import pojo.CooperanteId;
 import pojo.EjecucionEstado;
 import pojo.Etiqueta;
 import pojo.InteresTipo;
@@ -134,7 +135,7 @@ public class SPrestamo extends HttpServlet {
 		BigDecimal desembolsoAFechaUeUsd;
 		BigDecimal montoPorDesembolsarUeUsd;
 		String nombreEntidadEjecutora;
-		int cooperanteid;
+		int cooperantecodigo;
 		String cooperantenombre;
 		String usuarioCreo;
 		String usuarioActualizo;
@@ -287,7 +288,7 @@ public class SPrestamo extends HttpServlet {
 						temp.montoAsignadoUeQtz = prestamo.getMontoAsignadoUeQtz();
 						temp.desembolsoAFechaUeUsd = prestamo.getDesembolsoAFechaUeUsd();
 						temp.montoPorDesembolsarUeUsd = prestamo.getMontoPorDesembolsarUeUsd();
-						temp.cooperanteid = prestamo.getCooperante().getId();
+						temp.cooperantecodigo = prestamo.getCooperante().getId().getCodigo();
 						temp.cooperantenombre =  (prestamo.getCooperante().getSiglas()!=null ? 
 								prestamo.getCooperante().getSiglas() + " - " : "") + prestamo.getCooperante().getNombre();
 						
@@ -333,7 +334,10 @@ public class SPrestamo extends HttpServlet {
 			UnidadEjecutora unidadEjecutora_ = UnidadEjecutoraDAO.getUnidadEjecutora(ejercicio, entidad, unidadEjecutoraPrestamo);
 			
 			Cooperante cooperanteUe = new Cooperante();
-			cooperanteUe.setId(map.get("cooperanteUeId")!=null ? Integer.parseInt(map.get("cooperanteUeId")): null);
+			CooperanteId cooperanteid = new CooperanteId(map.get("cooperanteUeId")!=null ? Integer.parseInt(map.get("cooperanteUeId")): null, ejercicio);
+			cooperanteid.setEjercicio(ejercicio);
+			
+			cooperanteUe.setId(cooperanteid);
 			
 			Date fechaDecreto = Utils.dateFromString(map.get("fechaDecreto"));
 			Date fechaSuscripcion = Utils.dateFromString(map.get("fechaSuscripcion"));
@@ -620,7 +624,7 @@ public class SPrestamo extends HttpServlet {
 				temp.montoAsignadoUeQtz = prestamo.getMontoAsignadoUeQtz();
 				temp.desembolsoAFechaUeUsd = prestamo.getDesembolsoAFechaUeUsd();
 				temp.montoPorDesembolsarUeUsd = prestamo.getMontoPorDesembolsarUeUsd();
-				temp.cooperanteid = prestamo.getCooperante().getId();
+				temp.cooperantecodigo = prestamo.getCooperante().getId().getCodigo();
 				temp.cooperantenombre =  (prestamo.getCooperante().getSiglas()!=null ? 
 						prestamo.getCooperante().getSiglas() + " - " : "") + prestamo.getCooperante().getNombre();
 				
@@ -965,7 +969,7 @@ public class SPrestamo extends HttpServlet {
 				temp.montoAsignadoUeQtz = prestamo.getMontoAsignadoUeQtz();
 				temp.desembolsoAFechaUeUsd = prestamo.getDesembolsoAFechaUeUsd();
 				temp.montoPorDesembolsarUeUsd = prestamo.getMontoPorDesembolsarUeUsd();
-				temp.cooperanteid = prestamo.getCooperante().getId();
+				temp.cooperantecodigo = prestamo.getCooperante().getId().getCodigo();
 				temp.cooperantenombre =  (prestamo.getCooperante().getSiglas()!=null ? 
 						prestamo.getCooperante().getSiglas() + " - " : "") + prestamo.getCooperante().getNombre();
 				
@@ -1060,7 +1064,7 @@ public class SPrestamo extends HttpServlet {
 					temp.montoAsignadoUeQtz = prestamo.getMontoAsignadoUeQtz();
 					temp.desembolsoAFechaUeUsd = prestamo.getDesembolsoAFechaUeUsd();
 					temp.montoPorDesembolsarUeUsd = prestamo.getMontoPorDesembolsarUeUsd();
-					temp.cooperanteid = prestamo.getCooperante().getId();
+					temp.cooperantecodigo = prestamo.getCooperante().getId().getCodigo();
 					temp.cooperantenombre =  (prestamo.getCooperante().getSiglas()!=null ? 
 							prestamo.getCooperante().getSiglas() + " - " : "") + prestamo.getCooperante().getNombre();
 					proyecto.getUnidadEjecutora();
@@ -1185,7 +1189,7 @@ public class SPrestamo extends HttpServlet {
 				temp.montoAsignadoUeQtz = prestamo.getMontoAsignadoUeQtz();
 				temp.desembolsoAFechaUeUsd = prestamo.getDesembolsoAFechaUeUsd();
 				temp.montoPorDesembolsarUeUsd = prestamo.getMontoPorDesembolsarUeUsd();
-				temp.cooperanteid = prestamo.getCooperante().getId();
+				temp.cooperantecodigo = prestamo.getCooperante().getId().getCodigo();
 				temp.cooperantenombre =  (prestamo.getCooperante().getSiglas()!=null ? 
 						prestamo.getCooperante().getSiglas() + " - " : "") + prestamo.getCooperante().getNombre();
 				

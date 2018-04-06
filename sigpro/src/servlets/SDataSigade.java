@@ -108,7 +108,7 @@ public class SDataSigade extends HttpServlet {
 		BigDecimal montoAsignadoUeQtz;
 		BigDecimal desembolsoAFechaUeUsd;
 		BigDecimal montoPorDesembolsarUeUsd;
-		int cooperanteid;
+		int cooperantecodigo;
 		String cooperantenombre;
 		String objetivo;
 	}
@@ -163,7 +163,7 @@ public class SDataSigade extends HttpServlet {
 			temp.proyectoPrograma = inf.getId().getNombrePrograma();
 			Cooperante cooperante = CooperanteDAO.getCooperantePorCodigo(inf.getId().getCodigoOrganismoFinan());
 			if(cooperante!=null){
-				temp.cooperanteid = cooperante.getId();
+				temp.cooperantecodigo = cooperante.getId().getCodigo();
 				temp.cooperantenombre = cooperante.getNombre();
 			}
 			
