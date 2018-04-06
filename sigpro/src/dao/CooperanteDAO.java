@@ -178,7 +178,7 @@ public class CooperanteDAO {
 		List<Cooperante> listRet = null;
 		Session session = CHibernateSession.getSessionFactory().openSession();
 		try{
-			String query = "SELECT c FROM Cooperante c WHERE c.estado=1 and c.codigo= :codigo";
+			String query = "SELECT c FROM Cooperante c WHERE c.estado=1 and c.id.codigo= :codigo";
 			
 			Query<Cooperante> conteo = session.createQuery(query,Cooperante.class);
 			conteo.setParameter("codigo", codigo);
